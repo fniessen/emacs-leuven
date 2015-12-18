@@ -147,6 +147,7 @@ http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions
 
 # https://scotch.io/bar-talk/sublime-text-keyboard-shortcuts
 # http://sweetme.at/2013/08/08/sublime-text-keyboard-shortcuts/
+# http://www.1729.us/xcode/Xcode%20Shortcuts.pdf
 
 ** General
 
@@ -154,9 +155,6 @@ Global key bindings.
 
 | Shortcut | What it runs                             |
 |----------+------------------------------------------|
-| <f1>     | info                                     |
-| <S-f1>   | man-follow                               |
-| <C-f1>   | info-lookup-symbol                       |
 | <f2>     | save-buffer                              |
 | <S-f2>   | org-save-buffer-and-do-related           |
 | <C-f2>   | (for interaction-log mode)               |
@@ -167,18 +165,26 @@ Global key bindings.
 | <f8>     | call-last-kbd-macro                      |
 | <S-f8>   | leuven-toggle-kbd-macro-recording-on/off |
 | <C-f8>   | name-last-kbd-macro                      |
-| <f9>     | recompile                                |
-| <S-f9>   | make-clean                               |
 | <C-f9>   | leuven-vc-jump                           |
-| <f10>    | next-error                               |
-| <S-f10>  | previous-error                           |
-| <C-f10>  | first-error                              |
-| <f11>    | undo                                     |
-| <S-f11>  | redo                                     |
 | <C-f11>  | bbdb                                     |
 | <f12>    | bury-buffer                              |
 | <S-f12>  | leuven-kill-this-buffer-without-query    |
 | <C-f12>  | leuven-revert-buffer-without-query       |
+
+** Help
+
+| Shortcut | What it runs       |
+|----------+--------------------|
+| <f1>     | info               |
+| <S-f1>   | man-follow         |
+| <C-f1>   | info-lookup-symbol |
+
+** Edit
+
+| Shortcut | What it runs |
+|----------+--------------|
+| <f11>    | undo         |
+| <S-f11>  | redo         |
 
 ** Windows
 
@@ -190,6 +196,13 @@ Global key bindings.
 | C-=      | compare-windows            |
 | C-c ~    | leuven-swap-windows        |
 | C-c \vert    | leuven-toggle-window-split |
+
+** Text
+
+| Shortcut | What it runs    |
+|----------+-----------------|
+| <next>   | pager-page-down |
+| <prior>  | pager-page-up   |
 
 ** Lines
 
@@ -220,6 +233,23 @@ Global key bindings.
 | C-c o    | helm-occur            |
 | C-o      | leuven--isearch-occur |
 | C-o      | occur                 |
+
+** Spelling
+
+| Shortcut | What it runs                      |
+|----------+-----------------------------------|
+| C-$      | flyspell-buffer                   |
+| C-M-$    | leuven-flyspell-toggle-dictionary |
+
+** Build
+
+| Shortcut | What it runs   |
+|----------+----------------|
+| <f9>     | recompile      |
+| <S-f9>   | make-clean     |
+| <f10>    | next-error     |
+| <S-f10>  | previous-error |
+| <C-f10>  | first-error    |
 
 ** Bookmarks
 
@@ -310,14 +340,11 @@ I still have to sort them out, by mode (when applicable).
 | <C-up>        | comint-previous-matching-input-from-input |
 | <down>        | comint-next-input                         |
 | <left>        | speedbar-contract-line                    |
-| <next>        | pager-page-down                           |
-| <prior>       | pager-page-up                             |
 | <right>       | speedbar-expand-line                      |
 | <S-return>    | leuven-ess-eval                           |
 | <tab>         | w3m-next-anchor                           |
 | <up>          | comint-previous-input                     |
 | >             | scroll-calendar-left                      |
-| C-$           | flyspell-buffer                           |
 | C-*           | leuven-hlt-highlight-current-word         |
 | C-c !         | shell                                     |
 | C-c .         | leuven-insert-current-date                |
@@ -338,7 +365,6 @@ I still have to sort them out, by mode (when applicable).
 | C-c z         | toggle-full-screen                        |
 | C-h A         | apropos-variable                          |
 | C-h E         | elisp-index-search                        |
-| C-M-$         | leuven-flyspell-toggle-dictionary         |
 | C-S-n         | hlt-next-highlight                        |
 | C-S-p         | hlt-previous-highlight                    |
 | C-t           | w3m-new-tab                               |
