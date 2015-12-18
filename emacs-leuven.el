@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151218.1456
+;; Version: 20151218.2240
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151218.1456"
+(defconst leuven--emacs-version "20151218.2240"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3251,8 +3251,10 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "key-chord"
 
     (with-eval-after-load "hideshow"    ; Package.
-      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block) ; Not autoloaded.
-      (key-chord-define hs-minor-mode-map "'." 'hs-show-block)) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "--" 'hs-hide-block) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "++" 'hs-show-block) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "//" 'hs-hide-all) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "**" 'hs-show-all)) ; Not autoloaded.
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
@@ -3597,7 +3599,7 @@ These packages are neither built-in nor already installed nor ignored."
               ;; (local-set-key (kbd "C-c C-S-s") #'org-show-subtree)
               ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
 
-              ;; (local-set-key (kbd "C-c h") #'hide-other) ; I should use it!!
+              ;; (local-set-key (kbd "C-c h") #'hide-other) ; XXX Helm
 
               ;; Table.
               (local-set-key (kbd "C-M-w") #'org-table-copy-region)
@@ -6557,9 +6559,21 @@ this with to-do items than with projects or headings."
     (define-key nxml-mode-map (kbd "C-c C-x") nil)
 
     ;; View the buffer contents in a browser.
-    (define-key nxml-mode-map (kbd "C-c C-v") #'browse-url-of-buffer))
-                                        ; XXX Normally bound to.
-                                        ; `rng-validate-mode'
+    (define-key nxml-mode-map (kbd "C-c C-v") #'browse-url-of-buffer)
+                                        ; XXX Normally bound to
+                                        ; `rng-validate-mode'.
+
+    (require 'sgml-mode)                ; For `sgml-skip-tag-forward'.
+    (add-to-list 'hs-special-modes-alist
+                 '(nxml-mode
+                   "<!--\\|<[^/>]*[^/]>"
+                   "-->\\|</[^/>]*[^/]>"
+
+                   "<!--"
+                   sgml-skip-tag-forward
+                   nil))
+
+    (add-hook 'nxml-mode-hook 'hs-minor-mode))
 
   ;; Highlight the current SGML tag context.
   (try-require 'hl-tags-mode)
@@ -6814,14 +6828,18 @@ mouse-3: go to end") "]")))
   (with-eval-after-load "hideshow"
 
     ;; Change those really awkward key bindings with `@' in the middle.
-    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") #'hs-hide-block) ; or H-left? or C-c left?
-                                        ; `C-c @ C-h' (collapse current fold) M-l in RStudio
-    (define-key hs-minor-mode-map (kbd "<C-M-S-right>") #'hs-show-block)
-                                        ; `C-c @ C-s' (expand current fold) M-S-l
-    (define-key hs-minor-mode-map (kbd "<C-M-S-up>") #'hs-hide-all)
-                                        ; `C-c @ C-M-h' (collapse all folds) M-o
-    (define-key hs-minor-mode-map (kbd "<C-M-S-down>") #'hs-show-all)
-                                        ; `C-c @ C-M-s' (expand all folds) M-S-o
+    (define-key hs-minor-mode-map (kbd "H--") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "<H-left>") #'hs-hide-block)
+                                        ; `C-c @ C-h' (collapse current fold)
+    (define-key hs-minor-mode-map (kbd "H-+") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "<H-right>") #'hs-show-block)
+                                        ; `C-c @ C-s' (expand current fold)
+    (define-key hs-minor-mode-map (kbd "H-/") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "<H-up>") #'hs-hide-all)
+                                        ; `C-c @ C-M-h' (collapse all folds)
+    (define-key hs-minor-mode-map (kbd "H-*") #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "<H-down>") #'hs-show-all)
+                                        ; `C-c @ C-M-s' (expand all folds)
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"

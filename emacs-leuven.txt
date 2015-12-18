@@ -1667,7 +1667,7 @@ prompted for the bookmark name, and it will open that file or directory.
 Key bindings:
 
 - ~C-x p RET~ (~C-F2~ in Emacs Leuven, Sublime Text and TextMate) ::
-     *Set* (or delete) a *bookmark* at point.
+     Toggle (*set* or delete) a *bookmark* at point.
 
 - ~C-x p C-down~ (~S-F2~ in Emacs Leuven, ~F2~ in Sublime Text and TextMate) ::
      Cycle to the *next* highlighted *bookmark* in the current buffer.
@@ -5691,8 +5691,10 @@ a factor 2!?
   (with-eval-after-load "key-chord"
 
     (with-eval-after-load "hideshow"    ; Package.
-      (key-chord-define hs-minor-mode-map "'," 'hs-hide-block) ; Not autoloaded.
-      (key-chord-define hs-minor-mode-map "'." 'hs-show-block)) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "--" 'hs-hide-block) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "++" 'hs-show-block) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "//" 'hs-hide-all) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "**" 'hs-show-all)) ; Not autoloaded.
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
@@ -6251,7 +6253,7 @@ interface).
               ;; (local-set-key (kbd "C-c C-S-s") #'org-show-subtree)
               ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
 
-              ;; (local-set-key (kbd "C-c h") #'hide-other) ; I should use it!!
+              ;; (local-set-key (kbd "C-c h") #'hide-other) ; XXX Helm
 
               ;; Table.
               (local-set-key (kbd "C-M-w") #'org-table-copy-region)
@@ -10840,9 +10842,23 @@ Some key bindings:
     (define-key nxml-mode-map (kbd "C-c C-x") nil)
 
     ;; View the buffer contents in a browser.
-    (define-key nxml-mode-map (kbd "C-c C-v") #'browse-url-of-buffer))
-                                        ; XXX Normally bound to.
-                                        ; `rng-validate-mode'
+    (define-key nxml-mode-map (kbd "C-c C-v") #'browse-url-of-buffer)
+                                        ; XXX Normally bound to
+                                        ; `rng-validate-mode'.
+#+end_src
+
+#+begin_src emacs-lisp
+    (require 'sgml-mode)                ; For `sgml-skip-tag-forward'.
+    (add-to-list 'hs-special-modes-alist
+                 '(nxml-mode
+                   "<!--\\|<[^/>]*[^/]>"
+                   "-->\\|</[^/>]*[^/]>"
+
+                   "<!--"
+                   sgml-skip-tag-forward
+                   nil))
+
+    (add-hook 'nxml-mode-hook 'hs-minor-mode))
 #+end_src
 
 ** Highlight the closing tag
@@ -11349,14 +11365,18 @@ many programming modes.
   (with-eval-after-load "hideshow"
 
     ;; Change those really awkward key bindings with `@' in the middle.
-    (define-key hs-minor-mode-map (kbd "<C-M-S-left>") #'hs-hide-block) ; or H-left? or C-c left?
-                                        ; `C-c @ C-h' (collapse current fold) M-l in RStudio
-    (define-key hs-minor-mode-map (kbd "<C-M-S-right>") #'hs-show-block)
-                                        ; `C-c @ C-s' (expand current fold) M-S-l
-    (define-key hs-minor-mode-map (kbd "<C-M-S-up>") #'hs-hide-all)
-                                        ; `C-c @ C-M-h' (collapse all folds) M-o
-    (define-key hs-minor-mode-map (kbd "<C-M-S-down>") #'hs-show-all)
-                                        ; `C-c @ C-M-s' (expand all folds) M-S-o
+    (define-key hs-minor-mode-map (kbd "H--") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "<H-left>") #'hs-hide-block)
+                                        ; `C-c @ C-h' (collapse current fold)
+    (define-key hs-minor-mode-map (kbd "H-+") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "<H-right>") #'hs-show-block)
+                                        ; `C-c @ C-s' (expand current fold)
+    (define-key hs-minor-mode-map (kbd "H-/") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "<H-up>") #'hs-hide-all)
+                                        ; `C-c @ C-M-h' (collapse all folds)
+    (define-key hs-minor-mode-map (kbd "H-*") #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "<H-down>") #'hs-show-all)
+                                        ; `C-c @ C-M-s' (expand all folds)
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"

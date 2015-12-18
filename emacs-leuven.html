@@ -528,7 +528,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151218.1457</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151218.2241</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -597,7 +597,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151218.1457"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151218.2241"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2479,7 +2479,7 @@ Key bindings:
 </p>
 
 <dl class="org-dl">
-<dt><code>C-x p RET</code> (<code>C-F2</code> in Emacs Leuven, Sublime Text and TextMate)</dt><dd><b>Set</b> (or delete) a <b>bookmark</b> at point.</dd>
+<dt><code>C-x p RET</code> (<code>C-F2</code> in Emacs Leuven, Sublime Text and TextMate)</dt><dd>Toggle (<b>set</b> or delete) a <b>bookmark</b> at point.</dd>
 
 <dt><code>C-x p C-down</code> (<code>S-F2</code> in Emacs Leuven, <code>F2</code> in Sublime Text and TextMate)</dt><dd>Cycle to the <b>next</b> highlighted <b>bookmark</b> in the current buffer.</dd>
 
@@ -7667,8 +7667,10 @@ a factor 2!?
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"key-chord"</span>
 
     (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"hideshow"</span>    <span class="org-comment-delimiter">; </span><span class="org-comment">Package.</span>
-      (key-chord-define hs-minor-mode-map <span class="org-string">"',"</span> 'hs-hide-block) <span class="org-comment-delimiter">; </span><span class="org-comment">Not autoloaded.</span>
-      (key-chord-define hs-minor-mode-map <span class="org-string">"'."</span> 'hs-show-block)) <span class="org-comment-delimiter">; </span><span class="org-comment">Not autoloaded.</span>
+      (key-chord-define hs-minor-mode-map <span class="org-string">"--"</span> 'hs-hide-block) <span class="org-comment-delimiter">; </span><span class="org-comment">Not autoloaded.</span>
+      (key-chord-define hs-minor-mode-map <span class="org-string">"++"</span> 'hs-show-block) <span class="org-comment-delimiter">; </span><span class="org-comment">Not autoloaded.</span>
+      (key-chord-define hs-minor-mode-map <span class="org-string">"//"</span> 'hs-hide-all) <span class="org-comment-delimiter">; </span><span class="org-comment">Not autoloaded.</span>
+      (key-chord-define hs-minor-mode-map <span class="org-string">"**"</span> 'hs-show-all)) <span class="org-comment-delimiter">; </span><span class="org-comment">Not autoloaded.</span>
 
     (key-chord-define-global <span class="org-string">"&lt;&lt;"</span> (<span class="org-keyword">lambda</span> () (<span class="org-keyword">interactive</span>) (insert <span class="org-string">"«"</span>)))
     (key-chord-define-global <span class="org-string">"&gt;&gt;"</span> (<span class="org-keyword">lambda</span> () (<span class="org-keyword">interactive</span>) (insert <span class="org-string">"»"</span>)))
@@ -8373,7 +8375,7 @@ interface).
               <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-set-key (kbd "C-c C-S-s") #'org-show-subtree)</span>
               <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-set-key (kbd "C-c s") #'org-show-subtree)</span>
 
-              <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-set-key (kbd "C-c h") #'hide-other) ; I should use it!!</span>
+              <span class="org-comment-delimiter">;; </span><span class="org-comment">(local-set-key (kbd "C-c h") #'hide-other) ; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Helm</span>
 
               <span class="org-comment-delimiter">;; </span><span class="org-comment">Table.</span>
               (local-set-key (kbd <span class="org-string">"C-M-w"</span>) #'org-table-copy-region)
@@ -14091,9 +14093,25 @@ Some key bindings:
     (define-key nxml-mode-map (kbd <span class="org-string">"C-c C-x"</span>) nil)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">View the buffer contents in a browser.</span>
-    (define-key nxml-mode-map (kbd <span class="org-string">"C-c C-v"</span>) #'browse-url-of-buffer))
-                                        <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Normally bound to.</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">rng-validate-mode</span></span><span class="org-comment">'</span>
+    (define-key nxml-mode-map (kbd <span class="org-string">"C-c C-v"</span>) #'browse-url-of-buffer)
+                                        <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Normally bound to</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">rng-validate-mode</span></span><span class="org-comment">'.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    (<span class="org-keyword">require</span> '<span class="org-constant">sgml-mode</span>)                <span class="org-comment-delimiter">; </span><span class="org-comment">For `</span><span class="org-constant"><span class="org-comment">sgml-skip-tag-forward</span></span><span class="org-comment">'.</span>
+    (add-to-list 'hs-special-modes-alist
+                 '(nxml-mode
+                   <span class="org-string">"&lt;!--</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">&lt;[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">/&gt;]*[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">/]&gt;"</span>
+                   <span class="org-string">"--&gt;</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">&lt;/[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">/&gt;]*[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">/]&gt;"</span>
+
+                   <span class="org-string">"&lt;!--"</span>
+                   sgml-skip-tag-forward
+                   nil))
+
+    (add-hook 'nxml-mode-hook 'hs-minor-mode))
 </pre>
 </div>
 </div>
@@ -14764,14 +14782,18 @@ many programming modes.
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"hideshow"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Change those really awkward key bindings with `@' in the middle.</span>
-    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-left&gt;"</span>) #'hs-hide-block) <span class="org-comment-delimiter">; </span><span class="org-comment">or H-left? or C-c left?</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-h' (collapse current fold) M-l in RStudio</span>
-    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-right&gt;"</span>) #'hs-show-block)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-s' (expand current fold) M-S-l</span>
-    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-up&gt;"</span>) #'hs-hide-all)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-M-h' (collapse all folds) M-o</span>
-    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;C-M-S-down&gt;"</span>) #'hs-show-all)
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-M-s' (expand all folds) M-S-o</span>
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"H--"</span>) #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;H-left&gt;"</span>) #'hs-hide-block)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-h' (collapse current fold)</span>
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"H-+"</span>) #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;H-right&gt;"</span>) #'hs-show-block)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-s' (expand current fold)</span>
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"H-/"</span>) #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;H-up&gt;"</span>) #'hs-hide-all)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-M-h' (collapse all folds)</span>
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"H-*"</span>) #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd <span class="org-string">"&lt;H-down&gt;"</span>) #'hs-show-all)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`C-c @ C-M-s' (expand all folds)</span>
 
     (<span class="org-keyword">defcustom</span> <span class="org-variable-name">hs-face</span> 'hs-face
       <span class="org-doc">"*Specify the face to to use for the hidden region indicator"</span>
