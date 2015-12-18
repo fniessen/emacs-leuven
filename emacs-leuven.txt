@@ -10848,14 +10848,13 @@ Some key bindings:
 #+end_src
 
 #+begin_src emacs-lisp
-    (require 'sgml-mode)                ; For `sgml-skip-tag-forward'.
+    ;; Fix XML folding.
     (add-to-list 'hs-special-modes-alist
                  '(nxml-mode
                    "<!--\\|<[^/>]*[^/]>"
                    "-->\\|</[^/>]*[^/]>"
-
                    "<!--"
-                   sgml-skip-tag-forward
+                   nxml-forward-element
                    nil))
 
     (add-hook 'nxml-mode-hook 'hs-minor-mode))

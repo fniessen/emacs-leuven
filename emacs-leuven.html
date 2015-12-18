@@ -528,7 +528,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151218.2241</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151218.2352</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -597,7 +597,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151218.2241"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151218.2352"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -14101,14 +14101,13 @@ Some key bindings:
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">    (<span class="org-keyword">require</span> '<span class="org-constant">sgml-mode</span>)                <span class="org-comment-delimiter">; </span><span class="org-comment">For `</span><span class="org-constant"><span class="org-comment">sgml-skip-tag-forward</span></span><span class="org-comment">'.</span>
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">Fix XML folding.</span>
     (add-to-list 'hs-special-modes-alist
                  '(nxml-mode
                    <span class="org-string">"&lt;!--</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">&lt;[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">/&gt;]*[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">/]&gt;"</span>
                    <span class="org-string">"--&gt;</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">&lt;/[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">/&gt;]*[</span><span class="org-negation-char"><span class="org-string">^</span></span><span class="org-string">/]&gt;"</span>
-
                    <span class="org-string">"&lt;!--"</span>
-                   sgml-skip-tag-forward
+                   nxml-forward-element
                    nil))
 
     (add-hook 'nxml-mode-hook 'hs-minor-mode))

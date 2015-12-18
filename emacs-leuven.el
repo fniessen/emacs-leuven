@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151218.2240
+;; Version: 20151218.2351
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151218.2240"
+(defconst leuven--emacs-version "20151218.2351"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -6563,14 +6563,13 @@ this with to-do items than with projects or headings."
                                         ; XXX Normally bound to
                                         ; `rng-validate-mode'.
 
-    (require 'sgml-mode)                ; For `sgml-skip-tag-forward'.
+    ;; Fix XML folding.
     (add-to-list 'hs-special-modes-alist
                  '(nxml-mode
                    "<!--\\|<[^/>]*[^/]>"
                    "-->\\|</[^/>]*[^/]>"
-
                    "<!--"
-                   sgml-skip-tag-forward
+                   nxml-forward-element
                    nil))
 
     (add-hook 'nxml-mode-hook 'hs-minor-mode))
