@@ -145,7 +145,10 @@ Save time and boost your productivity with Emacs Leuven keyboard shortcuts.
 Key binding conventions:
 http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
 
-** General shortcuts
+# https://scotch.io/bar-talk/sublime-text-keyboard-shortcuts
+# http://sweetme.at/2013/08/08/sublime-text-keyboard-shortcuts/
+
+** General
 
 Global key bindings.
 
@@ -160,9 +163,6 @@ Global key bindings.
 | <f3>     | find-file (or helm-for-files)            |
 | <f4>     | helm-semantic-or-imenu                   |
 | <M-f4>   | save-buffers-kill-terminal               |
-| <f5>     | delete-other-windows                     |
-| <f6>     | other-window                             |
-| <C-f6>   | balance-windows                          |
 | <f7>     | leuven-babel-translate                   |
 | <f8>     | call-last-kbd-macro                      |
 | <S-f8>   | leuven-toggle-kbd-macro-recording-on/off |
@@ -179,6 +179,50 @@ Global key bindings.
 | <f12>    | bury-buffer                              |
 | <S-f12>  | leuven-kill-this-buffer-without-query    |
 | <C-f12>  | leuven-revert-buffer-without-query       |
+
+** Windows
+
+| Shortcut | What it runs               |
+|----------+----------------------------|
+| <f5>     | delete-other-windows       |
+| <f6>     | other-window               |
+| <C-f6>   | balance-windows            |
+| C-=      | compare-windows            |
+| C-c ~    | leuven-swap-windows        |
+| C-c \vert    | leuven-toggle-window-split |
+
+** Lines
+
+| Shortcut | What it runs       |
+|----------+--------------------|
+| <return> | newline-and-indent |
+| C-c ^    | sort-lines         |
+| M-G      | what-line          |
+
+** Code folding
+
+| Shortcut | What it runs  |
+|----------+---------------|
+| H--      | hs-hide-block |
+| H-+      | hs-show-block |
+| H-/      | hs-hide-all   |
+| H-*      | hs-show-all   |
+|----------+---------------|
+| H-left   | hs-hide-block |
+| H-right  | hs-show-block |
+| H-up     | hs-hide-all   |
+| H-down   | hs-show-all   |
+
+** Bookmarks
+
+| Shortcut | What it runs                               |
+|----------+--------------------------------------------|
+| <C-f2>   | bmkp-toggle-autonamed-bookmark-set/delete  |
+| <S-f2>   | bmkp-next-bookmark-this-file/buffer-repeat |
+| <C-S-f2> | bmkp-delete-all-autonamed-for-this-buffer) |
+|----------+--------------------------------------------|
+| C-x r b  | helm-bookmark-ext                          |
+| C-x r l  | helm-bookmarks                             |
 
 ** Shortcuts for Org mode
 
@@ -197,7 +241,6 @@ Global key bindings.
 | C-c L       | org-insert-link-global                       |
 | C-c o       | org-open-at-point-global                     |
 | C-c C-b     | org-switch-to-agenda                         |
-| C-c h       | hide-other                                   |
 | \C-\M-n     | outline-next-visible-heading                 |
 | \C-\M-p     | outline-previous-visible-heading             |
 | \C-\M-u     | outline-up-heading                           |
@@ -235,11 +278,8 @@ Global key bindings.
 
 | Shortcut | What it runs                                   |
 |----------+------------------------------------------------|
-| <return> | newline-and-indent                             |
 | C-c SPC  | ace-jump                                       |
 | C-)      | match-paren                                    |
-| C-c @ h  | hs-hide-block                                  |
-| C-c @ s  | hs-show-block                                  |
 | x        | leuven-vc-dir-hide-up-to-date-and-unregistered |
 | E        | vc-ediff                                       |
 | =        | leuven-vc-diff                                 |
@@ -275,11 +315,8 @@ I still have to sort them out, by mode (when applicable).
 | >             | scroll-calendar-left                      |
 | C-$           | flyspell-buffer                           |
 | C-*           | leuven-hlt-highlight-current-word         |
-| C-=           | compare-windows                           |
 | C-c !         | shell                                     |
 | C-c .         | leuven-insert-current-date                |
-| C-c \vert     | leuven-toggle-window-split                |
-| C-c ^         | sort-lines                                |
 | C-c C-c       | tidy-buffer                               |
 | C-c C-x nil   |                                           |
 | C-c d l       | dictionary-lookup-definition              |
@@ -296,7 +333,6 @@ I still have to sort them out, by mode (when applicable).
 | C-c t         | toggle-truncate-lines                     |
 | C-c T         | multi-term                                |
 | C-c z         | toggle-full-screen                        |
-| C-c ~         | leuven-swap-windows                       |
 | C-h A         | apropos-variable                          |
 | C-h E         | elisp-index-search                        |
 | C-M-$         | leuven-flyspell-toggle-dictionary         |
@@ -310,12 +346,9 @@ I still have to sort them out, by mode (when applicable).
 | C-x C-b       | electric-buffer-list                      |
 | C-x C-b       | ibuffer                                   |
 | C-x p         | proced                                    |
-| C-x r b       | helm-bookmark-ext                         |
-| C-x r l       | helm-bookmarks                            |
 | F             | w3m-view-next-page                        |
 | f             | leuven-w3m-go-to-link-number              |
 | M--           | ess-smart-underscore                      |
-| M-G           | what-line                                 |
 | M-o           |                                           |
 | M-p           | ps-print-buffer-with-faces                |
 | M-x           | helm-M-x                                  |
