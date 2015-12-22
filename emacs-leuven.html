@@ -528,7 +528,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151218.2352</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151222.0954</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -597,7 +597,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151218.2352"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151222.0954"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1146,24 +1146,77 @@ like this into your configuration file:
     (package-initialize)                <span class="org-comment-delimiter">; </span><span class="org-comment">Add ALL ELPA subdirs to `</span><span class="org-constant"><span class="org-comment">load-path</span></span><span class="org-comment">'</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">and load `</span><span class="org-constant"><span class="org-comment">&lt;pkg&gt;-autoloads.el</span></span><span class="org-comment">'.</span>
 
-    (<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven-elpa-packages</span>
-      '(ace-jump-helm-line ace-jump-mode ace-link ace-window
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">aggressive-indent</span>
-        anzu auctex auto-complete bbdb bookmark+ boxquote
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">calfw</span>
-        circe color-identifiers-mode company company-quickhelp csv-mode
-        cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
-        expand-region fancy-narrow fill-column-indicator flycheck
-        flycheck-ledger fuzzy git-commit git-messenger git-timemachine
-        google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-        helm-descbinds helm-ls-git helm-swoop hideshowvis highlight-symbol
-        htmlize indent-guide key-chord litable idle-require imenu-anywhere info+
-        interaction-log ledger-mode leuven-theme
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">magit</span>
-        markdown-mode multi-term multiple-cursors pager pdf-tools powerline
-        rainbow-mode tidy unbound undo-tree ws-butler yasnippet
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber multi-term paredit redshank</span>
-        )
+    (<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven-elpa-packages</span> '(ace-jump-helm-line
+                                     ace-jump-mode
+                                     ace-link
+                                     ace-window
+                                     <span class="org-comment-delimiter">;; </span><span class="org-comment">aggressive-indent</span>
+                                     anzu
+                                     auctex
+                                     auto-complete
+                                     bbdb
+                                     bookmark+
+                                     boxquote
+                                     <span class="org-comment-delimiter">;; </span><span class="org-comment">calfw</span>
+                                     circe
+                                     color-identifiers-mode
+                                     company
+                                     company-quickhelp
+                                     csv-mode
+                                     cygwin-mount
+                                     dictionary
+                                     diff-hl
+                                     diminish
+                                     dired+
+                                     emacs-eclim
+                                     ess
+                                     expand-region
+                                     fancy-narrow
+                                     fill-column-indicator
+                                     flycheck
+                                     flycheck-ledger
+                                     fuzzy
+                                     git-commit
+                                     git-messenger
+                                     git-timemachine
+                                     google-this
+                                     google-translate
+                                     goto-chg
+                                     graphviz-dot-mode
+                                     guide-key
+                                     helm
+                                     helm-descbinds
+                                     helm-ls-git
+                                     helm-swoop
+                                     hideshowvis
+                                     highlight-symbol
+                                     htmlize
+                                     indent-guide
+                                     <span class="org-comment-delimiter">;; </span><span class="org-comment">jabber</span>
+                                     key-chord
+                                     litable
+                                     idle-require
+                                     imenu-anywhere
+                                     info+
+                                     interaction-log
+                                     ledger-mode
+                                     leuven-theme
+                                     <span class="org-comment-delimiter">;; </span><span class="org-comment">magit</span>
+                                     markdown-mode
+                                     multi-term
+                                     multiple-cursors
+                                     <span class="org-comment-delimiter">;; </span><span class="org-comment">multi-term</span>
+                                     pager
+                                     <span class="org-comment-delimiter">;; </span><span class="org-comment">paredit</span>
+                                     pdf-tools
+                                     powerline
+                                     rainbow-mode
+                                     <span class="org-comment-delimiter">;; </span><span class="org-comment">redshank</span>
+                                     tidy
+                                     unbound
+                                     undo-tree
+                                     ws-butler
+                                     yasnippet)
       <span class="org-doc">"A list of packages to ensure are installed at Emacs startup."</span>)
 
     (<span class="org-keyword">defcustom</span> <span class="org-variable-name">leuven-elpa-ignored-packages</span>
@@ -15314,6 +15367,10 @@ thereafter.
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore case distinctions in the default `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' command.</span>
   (<span class="org-keyword">setq</span> grep-command <span class="org-string">"grep -i -H -n -e "</span>)
+
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">(when (executable-find "ag")</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq grep-program "ag")</span>
+  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq grep-command "ag --nogroup --line-numbers"))</span>
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not append `</span><span class="org-constant"><span class="org-comment">null-device</span></span><span class="org-comment">' (`</span><span class="org-constant"><span class="org-comment">/dev/null</span></span><span class="org-comment">' or `</span><span class="org-constant"><span class="org-comment">NUL</span></span><span class="org-comment">') to `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' commands.</span>
   (<span class="org-keyword">setq</span> grep-use-null-device nil)       <span class="org-comment-delimiter">; </span><span class="org-comment">Not necessary if the `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' program</span>

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151218.2351
+;; Version: 20151222.0953
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151218.2351"
+(defconst leuven--emacs-version "20151222.0953"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -378,24 +378,77 @@ Last time is saved in global variable `leuven--before-section-time'."
     (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'.
 
-    (defconst leuven-elpa-packages
-      '(ace-jump-helm-line ace-jump-mode ace-link ace-window
-        ;; aggressive-indent
-        anzu auctex auto-complete bbdb bookmark+ boxquote
-        ;; calfw
-        circe color-identifiers-mode company company-quickhelp csv-mode
-        cygwin-mount dictionary diff-hl diminish dired+ emacs-eclim ess
-        expand-region fancy-narrow fill-column-indicator flycheck
-        flycheck-ledger fuzzy git-commit git-messenger git-timemachine
-        google-this google-translate goto-chg graphviz-dot-mode guide-key helm
-        helm-descbinds helm-ls-git helm-swoop hideshowvis highlight-symbol
-        htmlize indent-guide key-chord litable idle-require imenu-anywhere info+
-        interaction-log ledger-mode leuven-theme
-        ;; magit
-        markdown-mode multi-term multiple-cursors pager pdf-tools powerline
-        rainbow-mode tidy unbound undo-tree ws-butler yasnippet
-        ;; jabber multi-term paredit redshank
-        )
+    (defconst leuven-elpa-packages '(ace-jump-helm-line
+                                     ace-jump-mode
+                                     ace-link
+                                     ace-window
+                                     ;; aggressive-indent
+                                     anzu
+                                     auctex
+                                     auto-complete
+                                     bbdb
+                                     bookmark+
+                                     boxquote
+                                     ;; calfw
+                                     circe
+                                     color-identifiers-mode
+                                     company
+                                     company-quickhelp
+                                     csv-mode
+                                     cygwin-mount
+                                     dictionary
+                                     diff-hl
+                                     diminish
+                                     dired+
+                                     emacs-eclim
+                                     ess
+                                     expand-region
+                                     fancy-narrow
+                                     fill-column-indicator
+                                     flycheck
+                                     flycheck-ledger
+                                     fuzzy
+                                     git-commit
+                                     git-messenger
+                                     git-timemachine
+                                     google-this
+                                     google-translate
+                                     goto-chg
+                                     graphviz-dot-mode
+                                     guide-key
+                                     helm
+                                     helm-descbinds
+                                     helm-ls-git
+                                     helm-swoop
+                                     hideshowvis
+                                     highlight-symbol
+                                     htmlize
+                                     indent-guide
+                                     ;; jabber
+                                     key-chord
+                                     litable
+                                     idle-require
+                                     imenu-anywhere
+                                     info+
+                                     interaction-log
+                                     ledger-mode
+                                     leuven-theme
+                                     ;; magit
+                                     markdown-mode
+                                     multi-term
+                                     multiple-cursors
+                                     ;; multi-term
+                                     pager
+                                     ;; paredit
+                                     pdf-tools
+                                     powerline
+                                     rainbow-mode
+                                     ;; redshank
+                                     tidy
+                                     unbound
+                                     undo-tree
+                                     ws-butler
+                                     yasnippet)
       "A list of packages to ensure are installed at Emacs startup.")
 
     (defcustom leuven-elpa-ignored-packages
@@ -7027,6 +7080,10 @@ mouse-3: go to end") "]")))
 
   ;; Ignore case distinctions in the default `grep' command.
   (setq grep-command "grep -i -H -n -e ")
+
+  ;; (when (executable-find "ag")
+  ;;   (setq grep-program "ag")
+  ;;   (setq grep-command "ag --nogroup --line-numbers"))
 
   ;; Do not append `null-device' (`/dev/null' or `NUL') to `grep' commands.
   (setq grep-use-null-device nil)       ; Not necessary if the `grep' program
