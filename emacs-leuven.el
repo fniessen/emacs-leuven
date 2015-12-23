@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151222.0953
+;; Version: 20151223.0957
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151222.0953"
+(defconst leuven--emacs-version "20151223.0957"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2330,6 +2330,8 @@ These packages are neither built-in nor already installed nor ignored."
 
     (global-set-key (kbd "C-c h g") #'helm-google)
     (global-set-key (kbd "C-c h s") #'helm-google-suggest)
+
+    (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
 
   )
 

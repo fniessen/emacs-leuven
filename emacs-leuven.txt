@@ -4184,6 +4184,10 @@ make your life much easier with million Emacs keys.
 #+end_src
 
 #+begin_src emacs-lisp
+    (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
+#+end_src
+
+#+begin_src emacs-lisp
   )
 #+end_src
 
@@ -4308,6 +4312,10 @@ enter. All in once nice package.
 
 See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs][Sublime Text 2's "Goto Anything" (or instant search) for Emacs?]]
 + https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
+
+**** Grep
+
+Launchable from ~current-buffer~ or from ~helm-find-files~.
 
 **** Helm M-x (search for a command)
 
