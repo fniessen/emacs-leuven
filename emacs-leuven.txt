@@ -4317,6 +4317,8 @@ See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-
 
 Launchable from ~current-buffer~ or from ~helm-find-files~.
 
+See Helm-ag?
+
 **** Helm M-x (search for a command)
 
 There's no denying it: it's really difficult to remember all of these various
@@ -4584,11 +4586,12 @@ I guess your imagemagick support is ok.
 
 New commands since Emacs 24.4:
 
-- ~n~ (~image-next-file~) and
-- ~p~ (~image-previous-file~)
+- ~v~ in Dired works just as you request: it shows the image,
+- ~n~ shows the next image in the same directory (~image-next-file~),
+- ~p~ shows the previous image (~image-previous-file~), and
+- ~q~ quits.
 
-visit the next image file and the previous image file in the same directory,
-respectively.
+Get EXIF data with ~image-dired-get-exif-data~.
 
 #+begin_src emacs-lisp
   (leuven--section "Image mode")
@@ -11828,8 +11831,10 @@ Find files matching some regexp, and click on the hyperlinks to the files to
 locate your match.
 
 The commands
+
 - ~lgrep~ (local search, with ~grep-template~) and
 - ~rgrep~ (*recursive* search, with ~grep-find-template~)
+
 are somehow more user-friendly than the ~M-x grep~ command.
 
 The doc string of ~grep-use-null-device~ which explains that, with its default
@@ -11842,23 +11847,84 @@ thereafter.
 
   (leuven--section "27.4 (emacs)Grep Searching under Emacs")
 
-  ;; Ignore case distinctions in the default `grep' command.
-  (setq grep-command "grep -i -H -n -e ")
+  (with-eval-after-load "grep"
 
-  ;; (when (executable-find "ag")
-  ;;   (setq grep-program "ag")
-  ;;   (setq grep-command "ag --nogroup --line-numbers"))
+    ;; Ignore case distinctions in the default `grep' command.
+    (grep-apply-setting 'grep-command "grep -i -H -n -e ")
 
-  ;; Do not append `null-device' (`/dev/null' or `NUL') to `grep' commands.
-  (setq grep-use-null-device nil)       ; Not necessary if the `grep' program
+    ;; Do not append `null-device' (`/dev/null' or `NUL') to `grep' commands.
+    (grep-apply-setting 'grep-use-null-device nil)
+                                        ; Not necessary if the `grep' program
                                         ; used supports the `-H' option.
 
-  ;; ;; For Windows.
-  ;; (setq grep-find-command '("findstr /sn *" . 13))
+    ;; For Windows.
+    (when leuven--win32-p
+      ;; Default find command for `M-x grep-find'.
+      (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
+#+end_src
 
-  ;; Use `find -print0' and `xargs -0'.
-  (setq grep-find-use-xargs 'gnu)
+Ag output options:
 
+- ~--[no]color~ ::
+     Print *color* codes in results.
+
+- ~--column~ ::
+     Print *column numbers* in results.
+
+- ~--[no]heading~ ::
+
+- ~--[no]group~ ::
+     Same as ~--[no]break --[no]heading~.
+
+- ~--line-numbers~ (or ~--numbers~) ::
+     Print *line numbers* even for streams.
+
+Ag search options:
+
+- ~--depth~ ::
+     Search up to *~NUM~ directories deep* (Default: ~25~).
+
+- ~--ignore-case~ ::
+     Match *case insensitively*.
+
+- ~--all-text~ ::
+     Search *all text files* (doesn't include hidden files).
+
+#+begin_src emacs-lisp
+    (when (executable-find "ag")
+
+      ;; Default grep command for `M-x grep'.
+      ;; (grep-apply-setting 'grep-command "ag --nogroup --numbers ")
+
+      ;; Default command to run for `M-x lgrep'.
+      ;; (grep-apply-setting 'grep-template "ag --depth 0 <R> <F>")
+
+      ;; Default find command for `M-x grep-find'.
+      ;; (grep-apply-setting 'grep-find-command '("ag --noheading --column " . 25))
+
+      ;; Default command to run for `M-x rgrep' (`C-c 3').
+      (grep-apply-setting 'grep-find-template
+                          "ag --color --nogroup --line-numbers <R> ."))
+                                        ; `<D>' for the base directory.
+                                        ; `<X>' for the find options to restrict
+                                        ;       directory list.
+                                        ; `<F>' for the find options to limit
+                                        ;       the files matched.
+                                        ; ------------------------------------
+                                        ; `<C>' for the place to put `-i' if the
+                                        ;       search is case-insensitive.
+                                        ; `<R>' for the regular expression to
+                                        ;       search for.
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; (setq-default grep-first-column 1)
+
+    ;; Use `find -print0' and `xargs -0'.
+    (setq grep-find-use-xargs 'gnu))    ; with-eval-after-load "grep" ends here.
+#+end_src
+
+#+begin_src emacs-lisp
   ;; Run `grep' via `find', with user-friendly interface.
   (global-set-key (kbd "C-c 3") #'rgrep)
 #+end_src

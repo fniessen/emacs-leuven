@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151223.0958</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151226.1227</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151223.0958"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151226.1227"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -5850,6 +5850,10 @@ See <a href="http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-an
 <p>
 Launchable from <code>current-buffer</code> or from <code>helm-find-files</code>.
 </p>
+
+<p>
+See Helm-ag?
+</p>
 </div>
 </div>
 
@@ -6237,13 +6241,14 @@ New commands since Emacs 24.4:
 </p>
 
 <ul class="org-ul">
-<li><code>n</code> (<code>image-next-file</code>) and</li>
-<li><code>p</code> (<code>image-previous-file</code>)</li>
+<li><code>v</code> in Dired works just as you request: it shows the image,</li>
+<li><code>n</code> shows the next image in the same directory (<code>image-next-file</code>),</li>
+<li><code>p</code> shows the previous image (<code>image-previous-file</code>), and</li>
+<li><code>q</code> quits.</li>
 </ul>
 
 <p>
-visit the next image file and the previous image file in the same directory,
-respectively.
+Get EXIF data with <code>image-dired-get-exif-data</code>.
 </p>
 
 <div class="org-src-container">
@@ -15365,10 +15370,12 @@ locate your match.
 <p>
 The commands
 </p>
+
 <ul class="org-ul">
 <li><code>lgrep</code> (local search, with <code>grep-template</code>) and</li>
 <li><code>rgrep</code> (<b>recursive</b> search, with <code>grep-find-template</code>)</li>
 </ul>
+
 <p>
 are somehow more user-friendly than the <code>M-x grep</code> command.
 </p>
@@ -15386,24 +15393,93 @@ thereafter.
 
   (leuven--section <span class="org-string">"27.4 (emacs)Grep Searching under Emacs"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore case distinctions in the default `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' command.</span>
-  (<span class="org-keyword">setq</span> grep-command <span class="org-string">"grep -i -H -n -e "</span>)
+  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"grep"</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(when (executable-find "ag")</span>
-  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq grep-program "ag")</span>
-  <span class="org-comment-delimiter">;;   </span><span class="org-comment">(setq grep-command "ag --nogroup --line-numbers"))</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Ignore case distinctions in the default `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' command.</span>
+    (grep-apply-setting 'grep-command <span class="org-string">"grep -i -H -n -e "</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not append `</span><span class="org-constant"><span class="org-comment">null-device</span></span><span class="org-comment">' (`</span><span class="org-constant"><span class="org-comment">/dev/null</span></span><span class="org-comment">' or `</span><span class="org-constant"><span class="org-comment">NUL</span></span><span class="org-comment">') to `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' commands.</span>
-  (<span class="org-keyword">setq</span> grep-use-null-device nil)       <span class="org-comment-delimiter">; </span><span class="org-comment">Not necessary if the `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' program</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not append `</span><span class="org-constant"><span class="org-comment">null-device</span></span><span class="org-comment">' (`</span><span class="org-constant"><span class="org-comment">/dev/null</span></span><span class="org-comment">' or `</span><span class="org-constant"><span class="org-comment">NUL</span></span><span class="org-comment">') to `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' commands.</span>
+    (grep-apply-setting 'grep-use-null-device nil)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Not necessary if the `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' program</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">used supports the `</span><span class="org-constant"><span class="org-comment">-H</span></span><span class="org-comment">' option.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">;; For Windows.</span>
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq grep-find-command '("findstr /sn *" . 13))</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">For Windows.</span>
+    (<span class="org-keyword">when</span> leuven--win32-p
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default find command for `M-x grep-find'.</span>
+      (grep-apply-setting 'grep-find-command '(<span class="org-string">"findstr /sn *"</span> . 13)))
+</pre>
+</div>
+
+<p>
+Ag output options:
+</p>
+
+<dl class="org-dl">
+<dt><code>--[no]color</code></dt><dd>Print <b>color</b> codes in results.</dd>
+
+<dt><code>--column</code></dt><dd>Print <b>column numbers</b> in results.</dd>
+
+<dt><code>--[no]heading</code></dt><dd></dd>
+
+
+<dt><code>--[no]group</code></dt><dd>Same as <code>--[no]break --[no]heading</code>.</dd>
+
+<dt><code>--line-numbers</code> (or <code>--numbers</code>)</dt><dd>Print <b>line numbers</b> even for streams.</dd>
+</dl>
+
+<p>
+Ag search options:
+</p>
+
+<dl class="org-dl">
+<dt><code>--depth</code></dt><dd>Search up to <b><code>NUM</code> directories deep</b> (Default: <code>25</code>).</dd>
+
+<dt><code>--ignore-case</code></dt><dd>Match <b>case insensitively</b>.</dd>
+
+<dt><code>--all-text</code></dt><dd>Search <b>all text files</b> (doesn&rsquo;t include hidden files).</dd>
+</dl>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    (<span class="org-keyword">when</span> (executable-find <span class="org-string">"ag"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `find -print0' and `xargs -0'.</span>
-  (<span class="org-keyword">setq</span> grep-find-use-xargs 'gnu)
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default grep command for `M-x grep'.</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(grep-apply-setting 'grep-command "ag --nogroup --numbers ")</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Run `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' via `</span><span class="org-constant"><span class="org-comment">find</span></span><span class="org-comment">', with user-friendly interface.</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default command to run for `M-x lgrep'.</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(grep-apply-setting 'grep-template "ag --depth 0 &lt;R&gt; &lt;F&gt;")</span>
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default find command for `M-x grep-find'.</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(grep-apply-setting 'grep-find-command '("ag --noheading --column " . 25))</span>
+
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">Default command to run for `M-x rgrep' (`C-c 3').</span>
+      (grep-apply-setting 'grep-find-template
+                          <span class="org-string">"ag --color --nogroup --line-numbers &lt;R&gt; ."</span>))
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">&lt;D&gt;</span></span><span class="org-comment">' for the base directory.</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">&lt;X&gt;</span></span><span class="org-comment">' for the find options to restrict</span>
+                                        <span class="org-comment-delimiter">;       </span><span class="org-comment">directory list.</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">&lt;F&gt;</span></span><span class="org-comment">' for the find options to limit</span>
+                                        <span class="org-comment-delimiter">;       </span><span class="org-comment">the files matched.</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">------------------------------------</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">&lt;C&gt;</span></span><span class="org-comment">' for the place to put `</span><span class="org-constant"><span class="org-comment">-i</span></span><span class="org-comment">' if the</span>
+                                        <span class="org-comment-delimiter">;       </span><span class="org-comment">search is case-insensitive.</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">&lt;R&gt;</span></span><span class="org-comment">' for the regular expression to</span>
+                                        <span class="org-comment-delimiter">;       </span><span class="org-comment">search for.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq-default grep-first-column 1)</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Use `find -print0' and `xargs -0'.</span>
+    (<span class="org-keyword">setq</span> grep-find-use-xargs 'gnu))    <span class="org-comment-delimiter">; </span><span class="org-comment">with-eval-after-load "grep" ends here.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Run `</span><span class="org-constant"><span class="org-comment">grep</span></span><span class="org-comment">' via `</span><span class="org-constant"><span class="org-comment">find</span></span><span class="org-comment">', with user-friendly interface.</span>
   (global-set-key (kbd <span class="org-string">"C-c 3"</span>) #'rgrep)
 </pre>
 </div>

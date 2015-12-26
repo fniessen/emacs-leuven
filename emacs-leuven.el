@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151223.0957
+;; Version: 20151226.1226
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151223.0957"
+(defconst leuven--emacs-version "20151226.1226"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7080,22 +7080,50 @@ mouse-3: go to end") "]")))
 
   (leuven--section "27.4 (emacs)Grep Searching under Emacs")
 
-  ;; Ignore case distinctions in the default `grep' command.
-  (setq grep-command "grep -i -H -n -e ")
+  (with-eval-after-load "grep"
 
-  ;; (when (executable-find "ag")
-  ;;   (setq grep-program "ag")
-  ;;   (setq grep-command "ag --nogroup --line-numbers"))
+    ;; Ignore case distinctions in the default `grep' command.
+    (grep-apply-setting 'grep-command "grep -i -H -n -e ")
 
-  ;; Do not append `null-device' (`/dev/null' or `NUL') to `grep' commands.
-  (setq grep-use-null-device nil)       ; Not necessary if the `grep' program
+    ;; Do not append `null-device' (`/dev/null' or `NUL') to `grep' commands.
+    (grep-apply-setting 'grep-use-null-device nil)
+                                        ; Not necessary if the `grep' program
                                         ; used supports the `-H' option.
 
-  ;; ;; For Windows.
-  ;; (setq grep-find-command '("findstr /sn *" . 13))
+    ;; For Windows.
+    (when leuven--win32-p
+      ;; Default find command for `M-x grep-find'.
+      (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 
-  ;; Use `find -print0' and `xargs -0'.
-  (setq grep-find-use-xargs 'gnu)
+    (when (executable-find "ag")
+
+      ;; Default grep command for `M-x grep'.
+      ;; (grep-apply-setting 'grep-command "ag --nogroup --numbers ")
+
+      ;; Default command to run for `M-x lgrep'.
+      ;; (grep-apply-setting 'grep-template "ag --depth 0 <R> <F>")
+
+      ;; Default find command for `M-x grep-find'.
+      ;; (grep-apply-setting 'grep-find-command '("ag --noheading --column " . 25))
+
+      ;; Default command to run for `M-x rgrep' (`C-c 3').
+      (grep-apply-setting 'grep-find-template
+                          "ag --color --nogroup --line-numbers <R> ."))
+                                        ; `<D>' for the base directory.
+                                        ; `<X>' for the find options to restrict
+                                        ;       directory list.
+                                        ; `<F>' for the find options to limit
+                                        ;       the files matched.
+                                        ; ------------------------------------
+                                        ; `<C>' for the place to put `-i' if the
+                                        ;       search is case-insensitive.
+                                        ; `<R>' for the regular expression to
+                                        ;       search for.
+
+    ;; (setq-default grep-first-column 1)
+
+    ;; Use `find -print0' and `xargs -0'.
+    (setq grep-find-use-xargs 'gnu))    ; with-eval-after-load "grep" ends here.
 
   ;; Run `grep' via `find', with user-friendly interface.
   (global-set-key (kbd "C-c 3") #'rgrep)
