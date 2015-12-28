@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151226.1226
+;; Version: 20151228.1315
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151226.1226"
+(defconst leuven--emacs-version "20151228.1315"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2239,9 +2239,10 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "18.17 (emacs)File Conveniences")
 
   ;; Filenames excluded from the recent list.
-  (setq recentf-exclude                 ;! Has to be set before your require
-                                        ;! `recentf'.
+  (setq recentf-exclude                 ; Has to be set before you require
+                                        ; `recentf'!
         '(
+          ".recentf"
           "~$"                          ; Emacs (and others) backup.
           "\\.aux$" "\\.log$" "\\.toc$" ; LaTeX.
           "/tmp/"
@@ -2333,7 +2334,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
 
-  )
+  )                                     ; require 'helm-config ends here.
 
   (with-eval-after-load "helm"
 

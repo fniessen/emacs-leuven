@@ -3910,9 +3910,10 @@ email, including several trace information for analysis.
   (leuven--section "18.17 (emacs)File Conveniences")
 
   ;; Filenames excluded from the recent list.
-  (setq recentf-exclude                 ;! Has to be set before your require
-                                        ;! `recentf'.
+  (setq recentf-exclude                 ; Has to be set before you require
+                                        ; `recentf'!
         '(
+          ".recentf"
           "~$"                          ; Emacs (and others) backup.
           "\\.aux$" "\\.log$" "\\.toc$" ; LaTeX.
           "/tmp/"
@@ -4188,7 +4189,7 @@ make your life much easier with million Emacs keys.
 #+end_src
 
 #+begin_src emacs-lisp
-  )
+  )                                     ; require 'helm-config ends here.
 #+end_src
 
 #+begin_src emacs-lisp

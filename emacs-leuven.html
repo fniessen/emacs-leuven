@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151226.1227</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151228.1318</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151226.1227"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151228.1318"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -5294,9 +5294,10 @@ email, including several trace information for analysis.
   (leuven--section <span class="org-string">"18.17 (emacs)File Conveniences"</span>)
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Filenames excluded from the recent list.</span>
-  (<span class="org-keyword">setq</span> recentf-exclude                 <span class="org-comment-delimiter">;</span><span class="org-comment">! Has to be set before your require</span>
-                                        <span class="org-comment-delimiter">;</span><span class="org-comment">! `</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">'.</span>
+  (<span class="org-keyword">setq</span> recentf-exclude                 <span class="org-comment-delimiter">; </span><span class="org-comment">Has to be set before you require</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">recentf</span></span><span class="org-comment">'!</span>
         '(
+          <span class="org-string">".recentf"</span>
           <span class="org-string">"~$"</span>                          <span class="org-comment-delimiter">; </span><span class="org-comment">Emacs (and others) backup.</span>
           <span class="org-string">"\\.aux$"</span> <span class="org-string">"\\.log$"</span> <span class="org-string">"\\.toc$"</span> <span class="org-comment-delimiter">; </span><span class="org-comment">LaTeX.</span>
           <span class="org-string">"/tmp/"</span>
@@ -5692,7 +5693,7 @@ make your life much easier with million Emacs keys.
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  )
+<pre class="src src-emacs-lisp">  )                                     <span class="org-comment-delimiter">; </span><span class="org-comment">require 'helm-config ends here.</span>
 </pre>
 </div>
 
