@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151228.1315
+;; Version: 20151229.2155
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151228.1315"
+(defconst leuven--emacs-version "20151229.2155"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -967,19 +967,25 @@ These packages are neither built-in nor already installed nor ignored."
       (setq bmkp-auto-light-when-jump 'any-bookmark)
 
       ;; Don't propertize bookmark names to hold full bookmark data.
-      (setq bmkp-propertize-bookmark-names-flag nil)))
+      (setq bmkp-propertize-bookmark-names-flag nil)
                                         ; We will often be going back and forth
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
 
-    ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
+      ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
-;; ;; Restoring bookmarks when on file find.
-;; (add-hook 'find-file-hook #'bm-buffer-restore)
+      ;; ;; Restoring bookmarks when on file find.
+      ;; (add-hook 'find-file-hook #'bm-buffer-restore)
+      ))
 
-  ;; Quickly jump to a position in the current view.
   (with-eval-after-load "ace-jump-mode-autoloads"
-    (global-set-key (kbd "C-c SPC") #'ace-jump-mode))
+
+    ;; Quickly jump to a position in the current view.
+    (global-set-key (kbd "C-c SPC") #'ace-jump-mode)
+
+    ;; Pop up a postion from ‘ace-jump-mode-mark-ring’, and jump back to that
+    ;; position.
+    (global-set-key (kbd "C-c C-SPC") #'ace-jump-mode-pop-mark))
 
   ;; Quickly follow links using `ace-jump-mode'.
   (with-eval-after-load "ace-link-autoloads"
@@ -987,12 +993,15 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Setup the defualt shortcuts.
     (ace-link-setup-default "f"))
 
-  ;; Jump to things tree-style.
+  ;; Jump to things.
   (with-eval-after-load "avy"
 
     ;; Default keys for jumping.
     (setq avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
-                     ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z)))
+                     ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z))
+
+    ;; Ace-jump during Isearch to one of the current candidates.
+    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch))
 
 )                                       ; Chapter 13 ends here.
 
@@ -1092,6 +1101,16 @@ These packages are neither built-in nor already installed nor ignored."
        (font-lock-add-keywords nil      ; In the current buffer.
         `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
         ;; FIXME                      0                        t          t
+
+  (defun highlight-errors-in-logs ()
+    "Highlight certain lines in log files."
+    (interactive)
+    (when (equal "log" (file-name-extension (buffer-file-name)))
+          (hi-lock-mode 1)
+          (highlight-lines-matching-regexp "ERROR" 'hi-red-b
+          (highlight-lines-matching-regexp "WARN" 'hi-blue-b))))
+
+  (add-hook 'find-file-hook 'highlight-errors-in-logs)
 
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
@@ -1319,6 +1338,11 @@ These packages are neither built-in nor already installed nor ignored."
     "Face to fontify buffer position."
     :group 'powerline)
 
+  (defun powerline-simpler-vc-mode (s)
+    (if s
+        (replace-regexp-in-string "\\(Git\\|SVN\\)[-:]" "" s)
+      s))
+
   (defun powerline-leuven-theme ()
     "Setup the leuven mode-line."
     (interactive)
@@ -1359,13 +1383,13 @@ These packages are neither built-in nor already installed nor ignored."
                                 buffer-file-name
                                 vc-mode)
                        (if (eq (vc-state buffer-file-name) 'up-to-date)
-                           (powerline-vc 'powerline-normal-face 'r)
-                         (powerline-vc 'powerline-modified-face 'r)))
+                           (powerline-simpler-vc-mode (powerline-vc 'powerline-normal-face 'r))
+                         (powerline-simpler-vc-mode (powerline-vc 'powerline-modified-face 'r))))
 
                      (when (and (not (fboundp 'vc-switches))
                                 buffer-file-name
                                 vc-mode)
-                       (powerline-vc face1 'r))
+                       (powerline-simpler-vc-mode (powerline-vc face1 'r)))
 
                      (when (and buffer-file-name
                                 vc-mode)
@@ -2333,6 +2357,7 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "C-c h s") #'helm-google-suggest)
 
     (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
+                                        ; Or `C-c p s s' (Helm-projectile ag?)
 
   )                                     ; require 'helm-config ends here.
 
@@ -2526,51 +2551,49 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "19.2 (emacs)List Buffers")
 
-  ;; rebind `C-x C-b'
+  ;; Rebind `C-x C-b'.
   (global-set-key (kbd "C-x C-b") #'electric-buffer-list)
                                         ; `buffer-menu' moves point in the
                                         ; window which lists your buffers
                                         ; `electric-buffer-list' pops up
-                                        ; a buffer describing the set of buffers
+                                        ; a buffer describing the set of
+                                        ; buffers.
 
-  ;; operate on buffers like Dired
+  ;; Operate on buffers like Dired.
   (global-set-key (kbd "C-x C-b") #'ibuffer)
 
   (with-eval-after-load "ibuffer"
 
-    ;; completely replaces `list-buffer'
+    ;; Completely replaces `list-buffer'.
     (defalias 'ibuffer-list-buffers 'list-buffer)
 
-    ;; don't show the names of filter groups which are empty
+    ;; Don't show the names of filter groups which are empty.
     (setq ibuffer-show-empty-filter-groups nil)
 
-    ;; filtering groups
+    ;; Filtering groups.
     (setq ibuffer-saved-filter-groups
           '(("default"
              ("Chat"
               (mode . circe-mode))
              ("Org"
-              (or
-               (mode . diary-mode)
-               (mode . org-mode)
-               (mode . org-agenda-mode)))
+              (or (mode . diary-mode)
+                  (mode . org-mode)
+                  (mode . org-agenda-mode)))
              ("LaTeX"
-              (or
-               (mode . latex-mode)
-               (mode . LaTeX-mode)
-               (mode . bibtex-mode)
-               (mode . reftex-mode)))
+              (or (mode . latex-mode)
+                  (mode . LaTeX-mode)
+                  (mode . bibtex-mode)
+                  (mode . reftex-mode)))
              ("Gnus & News"
-              (or
-               (mode . message-mode)
-               (mode . bbdb-mode)
-               (mode . mail-mode)
-               (mode . gnus-group-mode)
-               (mode . gnus-summary-mode)
-               (mode . gnus-article-mode)
-               (name . "^\\(\\.bbdb\\|dot-bbdb\\)$")
-               (name . "^\\.newsrc-dribble$")
-               (mode . newsticker-mode)))
+              (or (mode . message-mode)
+                  (mode . bbdb-mode)
+                  (mode . mail-mode)
+                  (mode . gnus-group-mode)
+                  (mode . gnus-summary-mode)
+                  (mode . gnus-article-mode)
+                  (name . "^\\(\\.bbdb\\|dot-bbdb\\)$")
+                  (name . "^\\.newsrc-dribble$")
+                  (mode . newsticker-mode)))
              ("Files"
               (filename . ".*"))
              ("Dired"
@@ -2578,44 +2601,41 @@ These packages are neither built-in nor already installed nor ignored."
              ("Shell"
               (mode . shell-mode))
              ("Version Control"
-              (or
-               (mode . svn-status-mode)
-               (mode . svn-log-edit-mode)
-               (name . "^\\*svn-")
-               (name . "^\\*vc\\*$")
-               (name . "^\\*Annotate")
-               (name . "^\\*git-")
-               (name . "^\\*vc-")))
+              (or (mode . svn-status-mode)
+                  (mode . svn-log-edit-mode)
+                  (name . "^\\*svn-")
+                  (name . "^\\*vc\\*$")
+                  (name . "^\\*Annotate")
+                  (name . "^\\*git-")
+                  (name . "^\\*vc-")))
              ("Emacs"
-              (or
-               (name . "^\\*scratch\\*$")
-               (name . "^\\*Messages\\*$")
-               (name . "^TAGS\\(<[0-9]+>\\)?$")
-               (name . "^\\*Occur\\*$")
-               (name . "^\\*grep\\*$")
-               (name . "^\\*Compile-Log\\*$")
-               (name . "^\\*Backtrace\\*$")
-               (name . "^\\*Process List\\*$")
-               (name . "^\\*gud\\*$")
-               (name . "^\\*Kill Ring\\*$")
-               (name . "^\\*Completions\\*$")
-               (name . "^\\*tramp")
-               (name . "^\\*compilation\\*$")))
+              (or (name . "^\\*scratch\\*$")
+                  (name . "^\\*Messages\\*$")
+                  (name . "^TAGS\\(<[0-9]+>\\)?$")
+                  (name . "^\\*Occur\\*$")
+                  (name . "^\\*grep\\*$")
+                  (name . "^\\*Compile-Log\\*$")
+                  (name . "^\\*Backtrace\\*$")
+                  (name . "^\\*Process List\\*$")
+                  (name . "^\\*gud\\*$")
+                  (name . "^\\*Kill Ring\\*$")
+                  (name . "^\\*Completions\\*$")
+                  (name . "^\\*tramp")
+                  (name . "^\\*compilation\\*$")))
              ("Emacs Source"
               (mode . emacs-lisp-mode))
              ("Documentation"
-              (or
-               (mode . Info-mode)
-               (mode . apropos-mode)
-               (mode . woman-mode)
-               (mode . help-mode)
-               (mode . Man-mode))))))
+              (or (mode . Info-mode)
+                  (mode . apropos-mode)
+                  (mode . woman-mode)
+                  (mode . help-mode)
+                  (mode . Man-mode))))))
 
     (add-hook 'ibuffer-mode-hook
               (lambda ()
                 (ibuffer-switch-to-saved-filter-groups "default")))
 
-    ;; order the groups so the order is: [Default], [agenda], [emacs]
+    ;; Order the groups so the order is: [Default], [agenda], [emacs].
     (defadvice ibuffer-generate-filter-groups
       (after leuven-reverse-ibuffer-groups activate)
       (setq ad-return-value (nreverse ad-return-value))))
@@ -3256,7 +3276,7 @@ These packages are neither built-in nor already installed nor ignored."
      ((save-excursion
         (backward-char)
         ;; Skip symbol backwards.
-        (and (not (zerop (skip-syntax-backward "w_")))
+        (and (not (zerop (skip-syntax-backward "w_.")))
              (not (looking-back "`"))
              (or (insert-and-inherit "`") t))))
      (t
@@ -3264,7 +3284,7 @@ These packages are neither built-in nor already installed nor ignored."
       (delete-char -1)
       (unless (looking-back "`") (insert-and-inherit "`"))
       (save-excursion
-        (skip-syntax-forward "w_")
+        (skip-syntax-forward "w_.")
         (unless (looking-at "'") (insert-and-inherit "'"))))))
 
   (defun leuven-smart-punctuation-quotation-mark ()
@@ -3595,12 +3615,12 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "org"
     ;; Display the Org mode manual in Info mode.
-    (global-set-key (kbd "C-h o") #'org-info))
+    (global-set-key (kbd "C-h o") #'org-info)
                                         ; XXX Not autoloaded.
 
-  (with-eval-after-load "org"
-    ;; Unbind `C-j'.
-    (define-key org-mode-map (kbd "C-j") nil))
+    ;; Unbind `C-j' and `C-''.
+    (define-key org-mode-map (kbd "C-j") nil)
+    (define-key org-mode-map (kbd "C-'") nil)) ; `org-cycle-agenda-files'.
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -6198,7 +6218,7 @@ this with to-do items than with projects or headings."
      ((save-excursion
         (backward-char)
         ;; Skip symbol backwards.
-        (and (not (zerop (skip-syntax-backward "w_")))
+        (and (not (zerop (skip-syntax-backward "w_.")))
              (not (looking-back "="))
              (or (insert-and-inherit "=") t))))
      (t
@@ -6206,7 +6226,7 @@ this with to-do items than with projects or headings."
       (delete-char -1)
       (unless (looking-back "=") (insert-and-inherit "="))
       (save-excursion
-        (skip-syntax-forward "w_")
+        (skip-syntax-forward "w_.")
         (unless (looking-at "=") (insert-and-inherit "="))))))
 
   ;; Must be in eval-after-load "org"?

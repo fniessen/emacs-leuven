@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151228.1318</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151229.2156</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151228.1318"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151229.2156"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2592,15 +2592,16 @@ We bookmarks positions, not just lines!!
       (<span class="org-keyword">setq</span> bmkp-auto-light-when-jump 'any-bookmark)
 
       <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't propertize bookmark names to hold full bookmark data.</span>
-      (<span class="org-keyword">setq</span> bmkp-propertize-bookmark-names-flag nil)))
+      (<span class="org-keyword">setq</span> bmkp-propertize-bookmark-names-flag nil)
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">We will often be going back and forth</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">between using Bookmark+ and using</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">vanilla Emacs.</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq bmkp-last-as-first-bookmark-file bookmark-default-file)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq bmkp-last-as-first-bookmark-file bookmark-default-file)</span>
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">;; Restoring bookmarks when on file find.</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'find-file-hook #'bm-buffer-restore)</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Restoring bookmarks when on file find.</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">(add-hook 'find-file-hook #'bm-buffer-restore)</span>
+      ))
 </pre>
 </div>
 </div>
@@ -2611,9 +2612,14 @@ We bookmarks positions, not just lines!!
 <div class="outline-text-3" id="text-orgheadline46">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Quickly jump to a position in the current view.</span>
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ace-jump-mode-autoloads"</span>
-    (global-set-key (kbd <span class="org-string">"C-c SPC"</span>) #'ace-jump-mode))
+<pre class="src src-emacs-lisp">  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ace-jump-mode-autoloads"</span>
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Quickly jump to a position in the current view.</span>
+    (global-set-key (kbd <span class="org-string">"C-c SPC"</span>) #'ace-jump-mode)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Pop up a postion from ‘</span><span class="org-constant"><span class="org-comment">ace-jump-mode-mark-ring</span></span><span class="org-comment">’, and jump back to that</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">position.</span>
+    (global-set-key (kbd <span class="org-string">"C-c C-SPC"</span>) #'ace-jump-mode-pop-mark))
 </pre>
 </div>
 
@@ -2625,12 +2631,15 @@ We bookmarks positions, not just lines!!
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Setup the defualt shortcuts.</span>
     (ace-link-setup-default <span class="org-string">"f"</span>))
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">Jump to things tree-style.</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Jump to things.</span>
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"avy"</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Default keys for jumping.</span>
     (<span class="org-keyword">setq</span> avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
-                     ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z)))
+                     ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z))
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Ace-jump during Isearch to one of the current candidates.</span>
+    (define-key isearch-mode-map (kbd <span class="org-string">"C-'"</span>) 'avy-isearch))
 </pre>
 </div>
 
@@ -2828,6 +2837,25 @@ leuven-highlight-keywords, so that only one expression can be used for <b>all</b
 
 <p>
 See doc of <code>font-lock-keywords</code> and <code>font-lock-add-keywords</code>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  (<span class="org-keyword">defun</span> <span class="org-function-name">highlight-errors-in-logs</span> ()
+    <span class="org-doc">"Highlight certain lines in log files."</span>
+    (<span class="org-keyword">interactive</span>)
+    (<span class="org-keyword">when</span> (equal <span class="org-string">"log"</span> (file-name-extension (buffer-file-name)))
+          (hi-lock-mode 1)
+          (highlight-lines-matching-regexp <span class="org-string">"ERROR"</span> 'hi-red-b
+          (highlight-lines-matching-regexp <span class="org-string">"WARN"</span> 'hi-blue-b))))
+
+  (add-hook 'find-file-hook 'highlight-errors-in-logs)
+</pre>
+</div>
+
+<p>
+Check out <code>log4j-mode</code> instead?  And nice colors at
+<a href="https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html">https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html</a>.
 </p>
 
 <div class="org-src-container">
@@ -3338,6 +3366,11 @@ See <a href="https://github.com/bling/vim-airline">https://github.com/bling/vim-
     <span class="org-doc">"Face to fontify buffer position."</span>
     <span class="org-builtin">:group</span> 'powerline)
 
+  (<span class="org-keyword">defun</span> <span class="org-function-name">powerline-simpler-vc-mode</span> (s)
+    (<span class="org-keyword">if</span> s
+        (replace-regexp-in-string <span class="org-string">"</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">Git</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">SVN</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">[-:]"</span> <span class="org-string">""</span> s)
+      s))
+
   (<span class="org-keyword">defun</span> <span class="org-function-name">powerline-leuven-theme</span> ()
     <span class="org-doc">"Setup the leuven mode-line."</span>
     (<span class="org-keyword">interactive</span>)
@@ -3378,13 +3411,13 @@ See <a href="https://github.com/bling/vim-airline">https://github.com/bling/vim-
                                 buffer-file-name
                                 vc-mode)
                        (<span class="org-keyword">if</span> (eq (vc-state buffer-file-name) 'up-to-date)
-                           (powerline-vc 'powerline-normal-face 'r)
-                         (powerline-vc 'powerline-modified-face 'r)))
+                           (powerline-simpler-vc-mode (powerline-vc 'powerline-normal-face 'r))
+                         (powerline-simpler-vc-mode (powerline-vc 'powerline-modified-face 'r))))
 
                      (<span class="org-keyword">when</span> (<span class="org-keyword">and</span> (not (fboundp 'vc-switches))
                                 buffer-file-name
                                 vc-mode)
-                       (powerline-vc face1 'r))
+                       (powerline-simpler-vc-mode (powerline-vc face1 'r)))
 
                      (<span class="org-keyword">when</span> (<span class="org-keyword">and</span> buffer-file-name
                                 vc-mode)
@@ -5089,7 +5122,7 @@ probably do <code>sshfs</code>.
 </div>
 
 <div id="outline-container-orgheadline94" class="outline-5">
-<h5 id="orgheadline94">Configuring TRAMP for use</h5>
+<h5 id="orgheadline94"><span class="todo TODO">TODO</span> Configuring TRAMP for use</h5>
 <div class="outline-text-5" id="text-orgheadline94">
 </div><ul class="org-ul"><li><a id="orgheadline88"></a>Selecting a default method<br  /><div class="outline-text-6" id="text-orgheadline88">
 <div class="note">
@@ -5688,6 +5721,7 @@ make your life much easier with million Emacs keys.
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">    (global-set-key (kbd <span class="org-string">"M-g a"</span>) #'helm-do-grep-ag) <span class="org-comment-delimiter">; </span><span class="org-comment">Thierry Volpiatto</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Or `C-c p s s' (Helm-projectile ag?)</span>
 </pre>
 </div>
 
@@ -6298,51 +6332,49 @@ Get EXIF data with <code>image-dired-get-exif-data</code>.
 
   (leuven--section <span class="org-string">"19.2 (emacs)List Buffers"</span>)
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">rebind `C-x C-b'</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Rebind `C-x C-b'.</span>
   (global-set-key (kbd <span class="org-string">"C-x C-b"</span>) #'electric-buffer-list)
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">buffer-menu</span></span><span class="org-comment">' moves point in the</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">window which lists your buffers</span>
                                         <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">electric-buffer-list</span></span><span class="org-comment">' pops up</span>
-                                        <span class="org-comment-delimiter">; </span><span class="org-comment">a buffer describing the set of buffers</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">a buffer describing the set of</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">buffers.</span>
 
-  <span class="org-comment-delimiter">;; </span><span class="org-comment">operate on buffers like Dired</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">Operate on buffers like Dired.</span>
   (global-set-key (kbd <span class="org-string">"C-x C-b"</span>) #'ibuffer)
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"ibuffer"</span>
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">completely replaces `</span><span class="org-constant"><span class="org-comment">list-buffer</span></span><span class="org-comment">'</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Completely replaces `</span><span class="org-constant"><span class="org-comment">list-buffer</span></span><span class="org-comment">'.</span>
     (<span class="org-keyword">defalias</span> '<span class="org-function-name">ibuffer-list-buffers</span> 'list-buffer)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">don't show the names of filter groups which are empty</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Don't show the names of filter groups which are empty.</span>
     (<span class="org-keyword">setq</span> ibuffer-show-empty-filter-groups nil)
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">filtering groups</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Filtering groups.</span>
     (<span class="org-keyword">setq</span> ibuffer-saved-filter-groups
           '((<span class="org-string">"default"</span>
              (<span class="org-string">"Chat"</span>
               (mode . circe-mode))
              (<span class="org-string">"Org"</span>
-              (<span class="org-keyword">or</span>
-               (mode . diary-mode)
-               (mode . org-mode)
-               (mode . org-agenda-mode)))
+              (<span class="org-keyword">or</span> (mode . diary-mode)
+                  (mode . org-mode)
+                  (mode . org-agenda-mode)))
              (<span class="org-string">"LaTeX"</span>
-              (<span class="org-keyword">or</span>
-               (mode . latex-mode)
-               (mode . LaTeX-mode)
-               (mode . bibtex-mode)
-               (mode . reftex-mode)))
+              (<span class="org-keyword">or</span> (mode . latex-mode)
+                  (mode . LaTeX-mode)
+                  (mode . bibtex-mode)
+                  (mode . reftex-mode)))
              (<span class="org-string">"Gnus &amp; News"</span>
-              (<span class="org-keyword">or</span>
-               (mode . message-mode)
-               (mode . bbdb-mode)
-               (mode . mail-mode)
-               (mode . gnus-group-mode)
-               (mode . gnus-summary-mode)
-               (mode . gnus-article-mode)
-               (name . <span class="org-string">"^</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">\\.bbdb</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">dot-bbdb</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">$"</span>)
-               (name . <span class="org-string">"^\\.newsrc-dribble$"</span>)
-               (mode . newsticker-mode)))
+              (<span class="org-keyword">or</span> (mode . message-mode)
+                  (mode . bbdb-mode)
+                  (mode . mail-mode)
+                  (mode . gnus-group-mode)
+                  (mode . gnus-summary-mode)
+                  (mode . gnus-article-mode)
+                  (name . <span class="org-string">"^</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">\\.bbdb</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">dot-bbdb</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">$"</span>)
+                  (name . <span class="org-string">"^\\.newsrc-dribble$"</span>)
+                  (mode . newsticker-mode)))
              (<span class="org-string">"Files"</span>
               (filename . <span class="org-string">".*"</span>))
              (<span class="org-string">"Dired"</span>
@@ -6350,44 +6382,41 @@ Get EXIF data with <code>image-dired-get-exif-data</code>.
              (<span class="org-string">"Shell"</span>
               (mode . shell-mode))
              (<span class="org-string">"Version Control"</span>
-              (<span class="org-keyword">or</span>
-               (mode . svn-status-mode)
-               (mode . svn-log-edit-mode)
-               (name . <span class="org-string">"^\\*svn-"</span>)
-               (name . <span class="org-string">"^\\*vc\\*$"</span>)
-               (name . <span class="org-string">"^\\*Annotate"</span>)
-               (name . <span class="org-string">"^\\*git-"</span>)
-               (name . <span class="org-string">"^\\*vc-"</span>)))
+              (<span class="org-keyword">or</span> (mode . svn-status-mode)
+                  (mode . svn-log-edit-mode)
+                  (name . <span class="org-string">"^\\*svn-"</span>)
+                  (name . <span class="org-string">"^\\*vc\\*$"</span>)
+                  (name . <span class="org-string">"^\\*Annotate"</span>)
+                  (name . <span class="org-string">"^\\*git-"</span>)
+                  (name . <span class="org-string">"^\\*vc-"</span>)))
              (<span class="org-string">"Emacs"</span>
-              (<span class="org-keyword">or</span>
-               (name . <span class="org-string">"^\\*scratch\\*$"</span>)
-               (name . <span class="org-string">"^\\*Messages\\*$"</span>)
-               (name . <span class="org-string">"^TAGS</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">&lt;[0-9]+&gt;</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">?$"</span>)
-               (name . <span class="org-string">"^\\*Occur\\*$"</span>)
-               (name . <span class="org-string">"^\\*grep\\*$"</span>)
-               (name . <span class="org-string">"^\\*Compile-Log\\*$"</span>)
-               (name . <span class="org-string">"^\\*Backtrace\\*$"</span>)
-               (name . <span class="org-string">"^\\*Process List\\*$"</span>)
-               (name . <span class="org-string">"^\\*gud\\*$"</span>)
-               (name . <span class="org-string">"^\\*Kill Ring\\*$"</span>)
-               (name . <span class="org-string">"^\\*Completions\\*$"</span>)
-               (name . <span class="org-string">"^\\*tramp"</span>)
-               (name . <span class="org-string">"^\\*compilation\\*$"</span>)))
+              (<span class="org-keyword">or</span> (name . <span class="org-string">"^\\*scratch\\*$"</span>)
+                  (name . <span class="org-string">"^\\*Messages\\*$"</span>)
+                  (name . <span class="org-string">"^TAGS</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">&lt;[0-9]+&gt;</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">?$"</span>)
+                  (name . <span class="org-string">"^\\*Occur\\*$"</span>)
+                  (name . <span class="org-string">"^\\*grep\\*$"</span>)
+                  (name . <span class="org-string">"^\\*Compile-Log\\*$"</span>)
+                  (name . <span class="org-string">"^\\*Backtrace\\*$"</span>)
+                  (name . <span class="org-string">"^\\*Process List\\*$"</span>)
+                  (name . <span class="org-string">"^\\*gud\\*$"</span>)
+                  (name . <span class="org-string">"^\\*Kill Ring\\*$"</span>)
+                  (name . <span class="org-string">"^\\*Completions\\*$"</span>)
+                  (name . <span class="org-string">"^\\*tramp"</span>)
+                  (name . <span class="org-string">"^\\*compilation\\*$"</span>)))
              (<span class="org-string">"Emacs Source"</span>
               (mode . emacs-lisp-mode))
              (<span class="org-string">"Documentation"</span>
-              (<span class="org-keyword">or</span>
-               (mode . Info-mode)
-               (mode . apropos-mode)
-               (mode . woman-mode)
-               (mode . help-mode)
-               (mode . Man-mode))))))
+              (<span class="org-keyword">or</span> (mode . Info-mode)
+                  (mode . apropos-mode)
+                  (mode . woman-mode)
+                  (mode . help-mode)
+                  (mode . Man-mode))))))
 
     (add-hook 'ibuffer-mode-hook
               (<span class="org-keyword">lambda</span> ()
                 (ibuffer-switch-to-saved-filter-groups <span class="org-string">"default"</span>)))
 
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">order the groups so the order is: [Default], [agenda], [emacs]</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Order the groups so the order is: [Default], [agenda], [emacs].</span>
     (<span class="org-keyword">defadvice</span> <span class="org-function-name">ibuffer-generate-filter-groups</span>
       (after leuven-reverse-ibuffer-groups activate)
       (<span class="org-keyword">setq</span> ad-return-value (nreverse ad-return-value))))
@@ -7692,7 +7721,7 @@ a factor 2!?
      ((<span class="org-keyword">save-excursion</span>
         (backward-char)
         <span class="org-comment-delimiter">;; </span><span class="org-comment">Skip symbol backwards.</span>
-        (<span class="org-keyword">and</span> (not (zerop (skip-syntax-backward <span class="org-string">"w_"</span>)))
+        (<span class="org-keyword">and</span> (not (zerop (skip-syntax-backward <span class="org-string">"w_."</span>)))
              (not (looking-back <span class="org-string">"`"</span>))
              (<span class="org-keyword">or</span> (insert-and-inherit <span class="org-string">"`"</span>) t))))
      (t
@@ -7700,7 +7729,7 @@ a factor 2!?
       (delete-char -1)
       (<span class="org-keyword">unless</span> (looking-back <span class="org-string">"`"</span>) (insert-and-inherit <span class="org-string">"`"</span>))
       (<span class="org-keyword">save-excursion</span>
-        (skip-syntax-forward <span class="org-string">"w_"</span>)
+        (skip-syntax-forward <span class="org-string">"w_."</span>)
         (<span class="org-keyword">unless</span> (looking-at <span class="org-string">"'"</span>) (insert-and-inherit <span class="org-string">"'"</span>))))))
 
   (<span class="org-keyword">defun</span> <span class="org-function-name">leuven-smart-punctuation-quotation-mark</span> ()
@@ -8285,12 +8314,12 @@ work and tasks with Org mode.
 
   (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display the Org mode manual in Info mode.</span>
-    (global-set-key (kbd <span class="org-string">"C-h o"</span>) #'org-info))
+    (global-set-key (kbd <span class="org-string">"C-h o"</span>) #'org-info)
                                         <span class="org-comment-delimiter">; </span><span class="org-leuven-highlight"><span class="org-comment">XXX</span></span><span class="org-comment"> Not autoloaded.</span>
 
-  (<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">Unbind `</span><span class="org-constant"><span class="org-comment">C-j</span></span><span class="org-comment">'.</span>
-    (define-key org-mode-map (kbd <span class="org-string">"C-j"</span>) nil))
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Unbind `</span><span class="org-constant"><span class="org-comment">C-j</span></span><span class="org-comment">' and `</span><span class="org-constant"><span class="org-comment">C-</span></span><span class="org-comment">''.</span>
+    (define-key org-mode-map (kbd <span class="org-string">"C-j"</span>) nil)
+    (define-key org-mode-map (kbd <span class="org-string">"C-'"</span>) nil)) <span class="org-comment-delimiter">; </span><span class="org-comment">`</span><span class="org-constant"><span class="org-comment">org-cycle-agenda-files</span></span><span class="org-comment">'.</span>
 </pre>
 </div>
 
@@ -13255,7 +13284,7 @@ Promote ignoreheading. Works in ASCII backend too:
      ((<span class="org-keyword">save-excursion</span>
         (backward-char)
         <span class="org-comment-delimiter">;; </span><span class="org-comment">Skip symbol backwards.</span>
-        (<span class="org-keyword">and</span> (not (zerop (skip-syntax-backward <span class="org-string">"w_"</span>)))
+        (<span class="org-keyword">and</span> (not (zerop (skip-syntax-backward <span class="org-string">"w_."</span>)))
              (not (looking-back <span class="org-string">"="</span>))
              (<span class="org-keyword">or</span> (insert-and-inherit <span class="org-string">"="</span>) t))))
      (t
@@ -13263,7 +13292,7 @@ Promote ignoreheading. Works in ASCII backend too:
       (delete-char -1)
       (<span class="org-keyword">unless</span> (looking-back <span class="org-string">"="</span>) (insert-and-inherit <span class="org-string">"="</span>))
       (<span class="org-keyword">save-excursion</span>
-        (skip-syntax-forward <span class="org-string">"w_"</span>)
+        (skip-syntax-forward <span class="org-string">"w_."</span>)
         (<span class="org-keyword">unless</span> (looking-at <span class="org-string">"="</span>) (insert-and-inherit <span class="org-string">"="</span>))))))
 
   <span class="org-comment-delimiter">;; </span><span class="org-comment">Must be in eval-after-load "org"?</span>
@@ -15254,6 +15283,10 @@ You don&rsquo;t need a <code>Makefile</code> to perform simple tasks, because <c
 built in rules out of the box.  For example, to compile a <code>.c</code> source file <code>foo.c</code>
 into a program <code>foo</code>, all you need is say <code>make -k foo</code>, and <code>make</code> will do it even
 without a <code>Makefile</code>.
+</p>
+
+<p>
+XXX Compiling with <code>ant</code>?
 </p>
 
 <div class="org-src-container">
