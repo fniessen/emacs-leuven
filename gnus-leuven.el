@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20151111.2054
+;; Version: 20151229.2304
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -591,7 +591,7 @@
 ;;** 5.5 (info "(gnus)Archived Messages")
 
   ;; Group in which to save the messages you've written.
-  (setq gnus-message-archive-group "nnimap:INBOX.Sent")
+  (setq gnus-message-archive-group "nnimap:INBOX.Sent") ; Sent Items?
 
   ;; The Gcc Header specifies a local mail box that receives a copy of the sent
   ;; article.
@@ -907,6 +907,8 @@
     ;; Specify how to split mail.
     (setq nnmail-split-fancy
           '(|                           ; Split to the *first* match.
+
+              ;; (: nnmail-split-fancy-with-parent)
 
               ;; Mailing lists (in To: or Cc:).
               (to "foo@bar\\.com" "list.foo")

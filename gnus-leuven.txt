@@ -1194,7 +1194,7 @@ a message buffer is *created*.
 ;;** 5.5 (info "(gnus)Archived Messages")
 
   ;; Group in which to save the messages you've written.
-  (setq gnus-message-archive-group "nnimap:INBOX.Sent")
+  (setq gnus-message-archive-group "nnimap:INBOX.Sent") ; Sent Items?
 #+end_src
 
 The ~Gcc:~ header at the time of *sending* the message specifies where it is
@@ -1661,6 +1661,8 @@ Newsgroups in which I'm interested:
     ;; Specify how to split mail.
     (setq nnmail-split-fancy
           '(|                           ; Split to the *first* match.
+
+              ;; (: nnmail-split-fancy-with-parent)
 
               ;; Mailing lists (in To: or Cc:).
               (to "foo@bar\\.com" "list.foo")
