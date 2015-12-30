@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151229.2155
+;; Version: 20151231.0045
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151229.2155"
+(defconst leuven--emacs-version "20151231.0045"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -406,6 +406,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      fancy-narrow
                                      fill-column-indicator
                                      flycheck
+                                     flycheck-color-mode-line
                                      flycheck-ledger
                                      fuzzy
                                      git-commit
@@ -7204,7 +7205,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Functions to run after each syntax check.
     (add-hook 'flycheck-after-syntax-check-hook
-              #'leuven--adjust-flycheck-automatic-syntax-eagerness))
+              #'leuven--adjust-flycheck-automatic-syntax-eagerness)
+
+    ;; Change mode line color with Flycheck status.
+    (when (locate-library "flycheck-color-mode-line")
+      (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 
   (global-set-key (kbd "C-x C-S-e") #'elint-current-buffer)
 

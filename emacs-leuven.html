@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151229.2156</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151231.0046</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151229.2156"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151231.0046"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1180,6 +1180,7 @@ like this into your configuration file:
                                      fancy-narrow
                                      fill-column-indicator
                                      flycheck
+                                     flycheck-color-mode-line
                                      flycheck-ledger
                                      fuzzy
                                      git-commit
@@ -15615,7 +15616,11 @@ sorting order.</dd>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Functions to run after each syntax check.</span>
     (add-hook 'flycheck-after-syntax-check-hook
-              #'leuven--adjust-flycheck-automatic-syntax-eagerness))
+              #'leuven--adjust-flycheck-automatic-syntax-eagerness)
+
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">Change mode line color with Flycheck status.</span>
+    (<span class="org-keyword">when</span> (locate-library <span class="org-string">"flycheck-color-mode-line"</span>)
+      (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 </pre>
 </div>
 

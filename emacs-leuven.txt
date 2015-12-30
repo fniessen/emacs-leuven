@@ -705,6 +705,7 @@ like this into your configuration file:
                                      fancy-narrow
                                      fill-column-indicator
                                      flycheck
+                                     flycheck-color-mode-line
                                      flycheck-ledger
                                      fuzzy
                                      git-commit
@@ -12046,7 +12047,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Functions to run after each syntax check.
     (add-hook 'flycheck-after-syntax-check-hook
-              #'leuven--adjust-flycheck-automatic-syntax-eagerness))
+              #'leuven--adjust-flycheck-automatic-syntax-eagerness)
+
+    ;; Change mode line color with Flycheck status.
+    (when (locate-library "flycheck-color-mode-line")
+      (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 #+end_src
 
 #+begin_src emacs-lisp
