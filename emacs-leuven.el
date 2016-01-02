@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20151231.0045
+;; Version: 20160102.1533
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20151231.0045"
+(defconst leuven--emacs-version "20160102.1533"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -589,10 +589,11 @@ These packages are neither built-in nor already installed nor ignored."
     (setq undo-tree-visualizer-relative-timestamps t)
 
     ;; Display time-stamps by default in undo-tree visualizer.
-    (setq undo-tree-visualizer-timestamps t) ; Toggle time-stamps display using `t'.
+    (setq undo-tree-visualizer-timestamps t)
+                                        ; Toggle time-stamps display using `t'.
 
     ;; Display diff by default in undo-tree visualizer.
-    (setq undo-tree-visualizer-diff t) ; Toggle the diff display using `d'.
+    (setq undo-tree-visualizer-diff t)  ; Toggle the diff display using `d'.
 
     (define-key undo-tree-map (kbd "C-/") nil)
 

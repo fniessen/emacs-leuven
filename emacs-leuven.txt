@@ -954,10 +954,11 @@ Show line numbers temporarily -- just when you're going to a line number with
     (setq undo-tree-visualizer-relative-timestamps t)
 
     ;; Display time-stamps by default in undo-tree visualizer.
-    (setq undo-tree-visualizer-timestamps t) ; Toggle time-stamps display using `t'.
+    (setq undo-tree-visualizer-timestamps t)
+                                        ; Toggle time-stamps display using `t'.
 
     ;; Display diff by default in undo-tree visualizer.
-    (setq undo-tree-visualizer-diff t) ; Toggle the diff display using `d'.
+    (setq undo-tree-visualizer-diff t)  ; Toggle the diff display using `d'.
 
     (define-key undo-tree-map (kbd "C-/") nil)
 

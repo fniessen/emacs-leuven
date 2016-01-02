@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20151231.0046</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20160102.1534</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20151231.0046"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20160102.1534"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -1477,10 +1477,11 @@ Show line numbers temporarily &#x2013; just when you&rsquo;re going to a line nu
     (<span class="org-keyword">setq</span> undo-tree-visualizer-relative-timestamps t)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display time-stamps by default in undo-tree visualizer.</span>
-    (<span class="org-keyword">setq</span> undo-tree-visualizer-timestamps t) <span class="org-comment-delimiter">; </span><span class="org-comment">Toggle time-stamps display using `t'.</span>
+    (<span class="org-keyword">setq</span> undo-tree-visualizer-timestamps t)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Toggle time-stamps display using `t'.</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Display diff by default in undo-tree visualizer.</span>
-    (<span class="org-keyword">setq</span> undo-tree-visualizer-diff t) <span class="org-comment-delimiter">; </span><span class="org-comment">Toggle the diff display using `d'.</span>
+    (<span class="org-keyword">setq</span> undo-tree-visualizer-diff t)  <span class="org-comment-delimiter">; </span><span class="org-comment">Toggle the diff display using `d'.</span>
 
     (define-key undo-tree-map (kbd <span class="org-string">"C-/"</span>) nil)
 
