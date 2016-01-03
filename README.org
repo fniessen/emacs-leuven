@@ -395,7 +395,7 @@ beer and as in speech.
 
 * License
 
-Copyright (C) 1999-2015 Free Software Foundation, Inc.
+Copyright (C) 1999-2016 Free Software Foundation, Inc.
 
 Author: Fabrice Niessen \\
 Keywords: emacs configuration file
