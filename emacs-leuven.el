@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2015 Fabrice Niessen
+;; Copyright (C) 1999-2016 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160102.1533
+;; Version: 20160103.2330
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160102.1533"
+(defconst leuven--emacs-version "20160103.2330"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)

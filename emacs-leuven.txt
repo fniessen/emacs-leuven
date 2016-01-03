@@ -164,7 +164,7 @@ Citations:
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2015 Fabrice Niessen
+;; Copyright (C) 1999-2016 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -5718,6 +5718,9 @@ a factor 2!?
           (adaptive-fill-function nil))
       (fill-paragraph)))
 #+end_src
+
+*************** TODO Replace ' by `' in Emacs Lisp and by `` in other modes
+*************** END
 
 #+begin_src emacs-lisp
   (defun leuven-smart-punctuation-apostrophe ()
