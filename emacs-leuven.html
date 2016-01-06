@@ -534,7 +534,7 @@ mis-configured to ruin your whole day.&rdquo; <br  />
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20160103.2331</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20160106.1020</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, dotfile, config</span>
 
 <span class="org-comment-delimiter">;;</span>
@@ -603,7 +603,7 @@ Some things are &ldquo;activated&rdquo; by default in <code>lisp/loaddefs.el</co
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">This file is only provided as an example.  Customize it to your own taste!</span>
 
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20160103.2331"</span>
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">leuven--emacs-version</span> <span class="org-string">"20160106.1020"</span>
   <span class="org-doc">"Leuven Emacs Config version (date of the last change)."</span>)
 
 (message <span class="org-string">"* --[ Loading Leuven Emacs Config %s]--"</span> leuven--emacs-version)
@@ -2848,8 +2848,8 @@ See doc of <code>font-lock-keywords</code> and <code>font-lock-add-keywords</cod
     (<span class="org-keyword">interactive</span>)
     (<span class="org-keyword">when</span> (equal <span class="org-string">"log"</span> (file-name-extension (buffer-file-name)))
           (hi-lock-mode 1)
-          (highlight-lines-matching-regexp <span class="org-string">"ERROR"</span> 'hi-red-b
-          (highlight-lines-matching-regexp <span class="org-string">"WARN"</span> 'hi-blue-b))))
+          (highlight-lines-matching-regexp <span class="org-string">"ERROR"</span> 'hi-red-b)
+          (highlight-lines-matching-regexp <span class="org-string">"WARN"</span> 'hi-blue-b)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-logs)
 </pre>

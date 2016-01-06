@@ -1973,8 +1973,8 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
     (interactive)
     (when (equal "log" (file-name-extension (buffer-file-name)))
           (hi-lock-mode 1)
-          (highlight-lines-matching-regexp "ERROR" 'hi-red-b
-          (highlight-lines-matching-regexp "WARN" 'hi-blue-b))))
+          (highlight-lines-matching-regexp "ERROR" 'hi-red-b)
+          (highlight-lines-matching-regexp "WARN" 'hi-blue-b)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-logs)
 #+end_src

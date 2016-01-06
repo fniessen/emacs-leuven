@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160103.2330
+;; Version: 20160106.1020
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160103.2330"
+(defconst leuven--emacs-version "20160106.1020"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1109,8 +1109,8 @@ These packages are neither built-in nor already installed nor ignored."
     (interactive)
     (when (equal "log" (file-name-extension (buffer-file-name)))
           (hi-lock-mode 1)
-          (highlight-lines-matching-regexp "ERROR" 'hi-red-b
-          (highlight-lines-matching-regexp "WARN" 'hi-blue-b))))
+          (highlight-lines-matching-regexp "ERROR" 'hi-red-b)
+          (highlight-lines-matching-regexp "WARN" 'hi-blue-b)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-logs)
 
