@@ -3,11 +3,11 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Org customized views</title>
-<meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Fabrice Niessen" />
+<meta name="generator" content="Org-mode" />
+<meta name="author" content="Fabrice Niessen" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center;
@@ -741,9 +741,9 @@ a <code>SCHEDULED</code> date that is:
 
 <ul class="org-ul">
 <li>on or before today, or</li>
-<li>blank.</li>
-</ul>
-
+<li><p>
+blank.
+</p>
 
 <div class="inlinetask">
 <b><span class="todo TODO">TODO</span> Rajouter les SCHEDULED today dans la hotlist ?</b><br  />
@@ -757,7 +757,8 @@ Déjà le cas pour les tâches avec DEADLINE. Pas pour les autres.
 <p>
 We said &ldquo;get it out my way for now&rdquo;, nope?
 </p>
-</div>
+</div></li>
+</ul>
 
 <div class="org-src-container">
 
@@ -1176,15 +1177,19 @@ All <b>tasks</b>, grouped by <b>priority</b>:
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">  (add-to-list 'org-agenda-custom-commands
-               '(<span class="org-string">"rap"</span> <span class="org-string">"All Tasks (grouped by Priority)"</span>
+               '(<span class="org-string">"rap"</span> <span class="org-string">"All (Unscheduled) Tasks (grouped by Priority)"</span>
                  ((tags-todo <span class="org-string">"PRIORITY={A}"</span>
-                             ((org-agenda-overriding-header <span class="org-string">"HIGH"</span>)))
+                             ((org-agenda-overriding-header <span class="org-string">"HIGH"</span>)
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                   (tags-todo <span class="org-string">"PRIORITY={B}"</span>
-                             ((org-agenda-overriding-header <span class="org-string">"MEDIUM"</span>)))
+                             ((org-agenda-overriding-header <span class="org-string">"MEDIUM"</span>)
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                   (tags-todo <span class="org-string">"PRIORITY=\"\""</span>
-                             ((org-agenda-overriding-header <span class="org-string">"NONE"</span>))) <span class="org-comment-delimiter">; </span><span class="org-comment">= Medium.</span>
+                             ((org-agenda-overriding-header <span class="org-string">"NONE"</span>) <span class="org-comment-delimiter">; </span><span class="org-comment">= Medium.</span>
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                   (tags-todo <span class="org-string">"PRIORITY={C}"</span>
-                             ((org-agenda-overriding-header <span class="org-string">"LOW"</span>)))
+                             ((org-agenda-overriding-header <span class="org-string">"LOW"</span>)
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                   (todo <span class="org-string">"DONE|CANX"</span>
                         ((org-agenda-overriding-header <span class="org-string">"COMPLETED"</span>)
                          (org-agenda-sorting-strategy '(priority-down)))))) <span class="org-warning">t)</span>

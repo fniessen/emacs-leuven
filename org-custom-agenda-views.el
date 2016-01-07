@@ -337,15 +337,19 @@
                  "~/org___agenda-all-todo-entries.html") t)
 
   (add-to-list 'org-agenda-custom-commands
-               '("rap" "All Tasks (grouped by Priority)"
+               '("rap" "All (Unscheduled) Tasks (grouped by Priority)"
                  ((tags-todo "PRIORITY={A}"
-                             ((org-agenda-overriding-header "HIGH")))
+                             ((org-agenda-overriding-header "HIGH")
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                   (tags-todo "PRIORITY={B}"
-                             ((org-agenda-overriding-header "MEDIUM")))
+                             ((org-agenda-overriding-header "MEDIUM")
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                   (tags-todo "PRIORITY=\"\""
-                             ((org-agenda-overriding-header "NONE"))) ; = Medium.
+                             ((org-agenda-overriding-header "NONE") ; = Medium.
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                   (tags-todo "PRIORITY={C}"
-                             ((org-agenda-overriding-header "LOW")))
+                             ((org-agenda-overriding-header "LOW")
+                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                   (todo "DONE|CANX"
                         ((org-agenda-overriding-header "COMPLETED")
                          (org-agenda-sorting-strategy '(priority-down)))))) t)
