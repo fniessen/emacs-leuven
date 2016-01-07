@@ -1,6 +1,6 @@
 ;;;; org-test-fni.el --- Extra tests for Org mode
 
-;; Copyright (C) 2014-2015  Fabrice Niessen
+;; Copyright (C) 2014-2016 Fabrice Niessen
 
 ;; Author: Fabrice Niessen
 
@@ -26,6 +26,13 @@
 
 ;;; Code:
 
+;; Org mode (reverse order, so that the Org lisp directory will be found
+;; before the Org contrib lisp directory).
+(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")
+(add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp") ; htmlize
+(add-to-list 'load-path "~/Public/Repositories/org-mode/lisp")
+;; XXX This shoud be on the command-line!
+
 (require 'ert)
 (require 'ox)
 
@@ -37,10 +44,10 @@
   (let* ((html-file (concat (file-name-directory org-file)
                             (file-name-base org-file) ".html"))
          html-contents)
-    ;; Should have a .html file.
+    ;; Should have a `.html' file.
     (should
      (file-exists-p html-file))
-    ;; Should have the same .html exported file.
+    ;; Should have the same `.html' exported file.
     (should
      (equal
       ;; New export.
