@@ -1,10 +1,10 @@
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2015 Fabrice Niessen
+;; Copyright (C) 2004-2016 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20151229.2304
+;; Version: 20160106.2330
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:

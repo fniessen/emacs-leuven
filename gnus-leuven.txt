@@ -28,7 +28,7 @@ http://koldfront.dk/text/gnus-email-basic-usage.html
 #+begin_src emacs-lisp :noweb yes
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2015 Fabrice Niessen
+;; Copyright (C) 2004-2016 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
