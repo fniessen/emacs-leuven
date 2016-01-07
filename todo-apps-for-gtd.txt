@@ -479,6 +479,14 @@ Our solution Beesy addresses 6 main subject of concern for professionals:
 - Team management by assigning actions during notes.
 - Priority management by assigning notes to goals and projects.
 
+** Pivotal Tracker
+
+- Workspaces (= 1 répertoire ou 1 fichier ?)
+
+  Workspaces let you see multiple projects together.
+
+- Projects (= fichiers Org dans ce répertoire ou sous-arbres dans ce fichier ?)
+
 * Basic tools
 
 ** Firetask
