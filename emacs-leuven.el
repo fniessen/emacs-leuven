@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160106.1020
+;; Version: 20160108.0850
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160106.1020"
+(defconst leuven--emacs-version "20160108.0850"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -7118,7 +7118,7 @@ mouse-3: go to end") "]")))
       ;; Default find command for `M-x grep-find'.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 
-    (when (executable-find "ag")
+    (when (executable-find "agXXX") ; Need to fix base dir and file extensions
 
       ;; Default grep command for `M-x grep'.
       ;; (grep-apply-setting 'grep-command "ag --nogroup --numbers ")

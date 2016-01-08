@@ -11896,6 +11896,10 @@ thereafter.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 #+end_src
 
+Ag, the silver searcher:
+- https://github.com/howardabrams/dot-files/blob/master/emacs.org
+- https://www.reddit.com/r/emacs/comments/3fr4ro/how_do_you_grep/
+
 Ag output options:
 
 - ~--[no]color~ ::
@@ -11924,7 +11928,7 @@ Ag search options:
      Search *all text files* (doesn't include hidden files).
 
 #+begin_src emacs-lisp
-    (when (executable-find "ag")
+    (when (executable-find "agXXX") ; Need to fix base dir and file extensions
 
       ;; Default grep command for `M-x grep'.
       ;; (grep-apply-setting 'grep-command "ag --nogroup --numbers ")
