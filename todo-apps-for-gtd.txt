@@ -26,6 +26,10 @@ Other alternatives?  http://alternativeto.net/software/mission-control-hq/
 |---------+----------+---------+------+--------+-------|
 | Total   |          |         |      |        |       |
 
+** TODO Read Ultimate guide about productivity methods
+
+https://blog.todoist.com/2015/11/30/ultimate-guide-personal-productivity-methods/
+
 * Designed for personal use
 
 ** Basic tools
