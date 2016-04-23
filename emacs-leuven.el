@@ -1,10 +1,11 @@
+
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2016 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160108.0850
+;; Version: 20160423.1305
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160108.0850"
+(defconst leuven--emacs-version "20160423.1305"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -369,9 +370,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
     ;; Archives from which to fetch.
     (setq package-archives
-          (append '(("org"          . "http://orgmode.org/elpa/")
-                    ;; ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
-                    ("melpa"        . "http://melpa.milkbox.net/packages/"))
+          (append '(("org"   . "http://orgmode.org/elpa/")
+                    ("melpa" . "http://melpa.org/packages/"))
                   package-archives))
 
     ;; Load the latest version of all installed packages, and activate them.
@@ -813,8 +813,10 @@ These packages are neither built-in nor already installed nor ignored."
             org-end-of-line
             org-kill-line
             org-self-insert-command
+            org-shiftdown
             org-shiftleft
             org-shiftright
+            org-shiftup
             org-yank
             orgtbl-self-insert-command
             yas-expand)))
@@ -1044,7 +1046,7 @@ These packages are neither built-in nor already installed nor ignored."
   (setq scroll-conservatively 10000)    ; Or `most-positive-fixnum'.
 
   ;; Number of lines of margin at the top and bottom of a window.
-  (setq scroll-margin 1) ; or 3?        ; Also for `isearch-forward'.
+  (setq scroll-margin 4) ; or 1 or 3?   ; Also for `isearch-forward'.
 
   ;; Scrolling down looks much better.
   (setq auto-window-vscroll nil)
@@ -1110,6 +1112,9 @@ These packages are neither built-in nor already installed nor ignored."
     (when (equal "log" (file-name-extension (buffer-file-name)))
           (hi-lock-mode 1)
           (highlight-lines-matching-regexp "ERROR" 'hi-red-b)
+          (highlight-lines-matching-regexp "error" 'hi-red-b)
+          (highlight-lines-matching-regexp "Exception" 'hi-red-b)
+          (highlight-lines-matching-regexp "DbConnectionImpl" 'hi-blue-b)
           (highlight-lines-matching-regexp "WARN" 'hi-blue-b)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-logs)
@@ -3346,8 +3351,9 @@ These packages are neither built-in nor already installed nor ignored."
 
     (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
       (key-chord-define-global "jj" 'ace-jump-word-mode) ; Autoloaded.
-      (key-chord-define-global "jk" 'ace-jump-mode-pop-mark) ; Autoloaded.
-      (key-chord-define-global "jl" 'ace-jump-line-mode)) ; Autoloaded.
+      ;; (key-chord-define-global "jk" 'ace-jump-mode-pop-mark) ; Autoloaded. lijkt.
+      ;; (key-chord-define-global "jl" 'ace-jump-line-mode) ; Autoloaded. pijl.
+      )
 
     (with-eval-after-load "ace-window"
       (key-chord-define-global "jw" 'ace-window))
@@ -3653,9 +3659,11 @@ These packages are neither built-in nor already installed nor ignored."
   ;; (loaded when opening the first Org file).
   (setq org-modules nil)
 
-  ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
-  ;; needed.
-  (add-to-list 'org-modules 'org-checklist) ; From org-contrib.
+;; Check that org-checklist is found before adding it!
+;;
+;;   ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
+;;   ;; needed.
+;;   (add-to-list 'org-modules 'org-checklist) ; From org-contrib.
 
   ;; Globally unique ID for Org mode entries (see `org-store-link')
   ;; (takes care of automatically creating unique targets for internal
@@ -4916,6 +4924,7 @@ From %c"
   ;; 10.4.3 Sorting structure for the agenda items of a single day.
   (setq org-agenda-sorting-strategy   ; custom value
         '((agenda time-up category-up priority-down effort-down)
+          ;; (agenda priority-down time-up category-up effort-down)
           (todo category-up priority-down effort-down)
           (tags category-up priority-down effort-down)
           (search category-up)))
@@ -9480,7 +9489,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "49.5 The (emacs)Syntax Table")
 
-  ;; Now "-" is not considered a word-delimiter.
+  ;; Define "-" as part of a word.
   ;; (add-hook 'emacs-lisp-mode-hook
   ;;           (lambda ()
   ;;             (modify-syntax-entry ?- "w")))
@@ -9509,6 +9518,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (global-set-key (kbd "C-+") #'text-scale-increase)
   (global-set-key (kbd "C--") #'text-scale-decrease)
+
+  (global-set-key (kbd "<C-wheel-up>") #'text-scale-increase)
+  (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
 
 )
 
