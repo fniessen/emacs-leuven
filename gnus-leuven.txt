@@ -190,7 +190,7 @@ that it does not interfere with your own configuration...
       ;; Configure incoming mail.
       (setq gnus-select-method
             '(nnimap "work"
-                     (nnimap-address "frozen.nocdirect.com")
+                     (nnimap-address "pinecone.nocdirect.com")
                      (nnimap-server-port 993) ; imaps
                      (nnimap-stream ssl)
 
