@@ -1425,6 +1425,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
             just-one-space
             kill-region
             leuven-fill-paragraph
+            leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
             org-kill-line
