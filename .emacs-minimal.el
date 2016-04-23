@@ -92,8 +92,6 @@
 
 ;; Place your test code here.
 
-
-
 ;;* --[ Constant part ]-------------------------------------------------------
 
 (message "Loading Minimal Emacs... Done (in %.2f s)"
