@@ -10,8 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
-# #+SETUPFILE: ./bigblow-pirilampo.setup
-#+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg-local-abs.setup
+#+SETUPFILE: ~/.dotfiles/org/theme-readtheorg.setup
 
 * Tasks                                                               :noexport:
   :PROPERTIES:
@@ -640,7 +639,7 @@ hitting ~y~ (/Yes/) when asked.
 
 HTTP frontends for the Emacs repositories:
 - http://elpa.gnu.org/packages/
-- http://melpa.milkbox.net/
+- http://melpa.org/packages/
 
 In Marmalade, the developers themselves do the packaging.  In MELPA, packages
 are generated programmatically from upstream Git-based sources.
@@ -668,9 +667,8 @@ like this into your configuration file:
 
     ;; Archives from which to fetch.
     (setq package-archives
-          (append '(("org"          . "http://orgmode.org/elpa/")
-                    ;; ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
-                    ("melpa"        . "http://melpa.milkbox.net/packages/"))
+          (append '(("org"   . "http://orgmode.org/elpa/")
+                    ("melpa" . "http://melpa.org/packages/"))
                   package-archives))
 
     ;; Load the latest version of all installed packages, and activate them.
@@ -1431,8 +1429,10 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
             org-end-of-line
             org-kill-line
             org-self-insert-command
+            org-shiftdown
             org-shiftleft
             org-shiftright
+            org-shiftup
             org-yank
             orgtbl-self-insert-command
             yas-expand)))
@@ -1871,7 +1871,7 @@ We bookmarks positions, not just lines!!
   (setq scroll-conservatively 10000)    ; Or `most-positive-fixnum'.
 
   ;; Number of lines of margin at the top and bottom of a window.
-  (setq scroll-margin 1) ; or 3?        ; Also for `isearch-forward'.
+  (setq scroll-margin 4) ; or 1 or 3?   ; Also for `isearch-forward'.
 
   ;; Scrolling down looks much better.
   (setq auto-window-vscroll nil)
@@ -1974,6 +1974,9 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
     (when (equal "log" (file-name-extension (buffer-file-name)))
           (hi-lock-mode 1)
           (highlight-lines-matching-regexp "ERROR" 'hi-red-b)
+          (highlight-lines-matching-regexp "error" 'hi-red-b)
+          (highlight-lines-matching-regexp "Exception" 'hi-red-b)
+          (highlight-lines-matching-regexp "DbConnectionImpl" 'hi-blue-b)
           (highlight-lines-matching-regexp "WARN" 'hi-blue-b)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-logs)
@@ -2007,11 +2010,25 @@ throughout a buffer.
 - ~M-s h .~ ::
       *Highlight* each instance of the *symbol at point*.
 
-- ~M-s h r REGEXP RET~ ::
+- ~M-s h r REGEXP RET~ (~highlight-regexp~) ::
      Highlight text that *matches REGEXP*.
 
 - ~M-s h l REGEXP RET~ ::
      Highlight *entire lines* containing a match for REGEXP.
+
+- ~M-s h p~ (~highlight-phrase~) ::
+     When called interactively, replace whitespace in user-provided
+     regexp with arbitrary whitespace, and make initial lower-case
+     letters case-insensitive, before highlighting with ‘hi-lock-set-pattern’.
+
+     ~highlight-phrase~ is just a bit of sugar around ~highlight-regexp~ that
+     ignores case and translates a space in the regex to match arbitrary
+     whitespace. Handy.
+
+     Also, ~highlight-phrase~ is not fully case insensitive. Only initial
+     lower-case letters (of words) ae made case insensitive. (I suppose it was
+     intended to deal with fred vs Fred) .. eg it generates a regex like:
+     ~[Cc]at[ ]+[Dd]og~
 
 - ~M-s h u REGEXP RET~ ::
      *Unhighlight* REGEXP.
@@ -5803,8 +5820,9 @@ a factor 2!?
 
     (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
       (key-chord-define-global "jj" 'ace-jump-word-mode) ; Autoloaded.
-      (key-chord-define-global "jk" 'ace-jump-mode-pop-mark) ; Autoloaded.
-      (key-chord-define-global "jl" 'ace-jump-line-mode)) ; Autoloaded.
+      ;; (key-chord-define-global "jk" 'ace-jump-mode-pop-mark) ; Autoloaded. lijkt.
+      ;; (key-chord-define-global "jl" 'ace-jump-line-mode) ; Autoloaded. pijl.
+      )
 
     (with-eval-after-load "ace-window"
       (key-chord-define-global "jw" 'ace-window))
@@ -6296,9 +6314,11 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 ~org-id-locations-file~).
 
 #+begin_src emacs-lisp
-  ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
-  ;; needed.
-  (add-to-list 'org-modules 'org-checklist) ; From org-contrib.
+;; Check that org-checklist is found before adding it!
+;;
+;;   ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
+;;   ;; needed.
+;;   (add-to-list 'org-modules 'org-checklist) ; From org-contrib.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -6525,6 +6545,31 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
     ;; (setq org-latex-format-inlinetask-function
     ;;       'leuven--org-latex-format-inlinetask)
     )                                   ; with-eval-after-load "org-inlinetask" ends here.
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  (defun org-latex-format-inlinetask-default-function
+    (todo _todo-type priority title tags contents info)
+    "Default format function for a inlinetasks.
+  See `org-latex-format-inlinetask-function' for details."
+    (let ((full-title
+           (concat (when todo (format "\\textbf{\\textsf{\\textsc{%s}}} " todo))
+                   (when priority (format "\\framebox{\\#%c} " priority))
+                   title
+                   (when tags
+                     (format "\\hfill{}\\textsc{:%s:}"
+                             (mapconcat
+                              (lambda (tag) (org-latex-plain-text tag info))
+                              tags ":"))))))
+      (concat "\\begin{center}\n"
+              "\\fcolorbox{black}{yellow}{\n"
+              "\\begin{minipage}[c]{\\textwidth}\n"
+              full-title "\n\n"
+              (and (org-string-nw-p contents)
+                   (concat "\\rule[.8em]{\\textwidth}{2pt}\n\n" contents))
+              "\\end{minipage}\n"
+              "}\n"
+              "\\end{center}")))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -8197,6 +8242,7 @@ grouped by category)!
   ;; 10.4.3 Sorting structure for the agenda items of a single day.
   (setq org-agenda-sorting-strategy   ; custom value
         '((agenda time-up category-up priority-down effort-down)
+          ;; (agenda priority-down time-up category-up effort-down)
           (todo category-up priority-down effort-down)
           (tags category-up priority-down effort-down)
           (search category-up)))
@@ -16370,7 +16416,7 @@ considered part of the word (depending on the current major mode).
 
   (leuven--section "49.5 The (emacs)Syntax Table")
 
-  ;; Now "-" is not considered a word-delimiter.
+  ;; Define "-" as part of a word.
   ;; (add-hook 'emacs-lisp-mode-hook
   ;;           (lambda ()
   ;;             (modify-syntax-entry ?- "w")))
@@ -16495,6 +16541,13 @@ Those bindings are global and repeatable, e.g. ~C-x C-+ C-+ C-+~.
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-+") #'text-scale-increase)
   (global-set-key (kbd "C--") #'text-scale-decrease)
+#+end_src
+
+Zoom in/out with Ctrl + Scroll wheel on the mouse:
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "<C-wheel-up>") #'text-scale-increase)
+  (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
 #+end_src
 
 #+begin_src emacs-lisp
