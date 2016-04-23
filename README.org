@@ -7,15 +7,13 @@
 
 #+PROPERTY:  header-args :eval no
 
-#+begin_export html
-<a href="http://opensource.org/licenses/GPL-3.0">
-  <img src="http://img.shields.io/:license-gpl-blue.svg" alt=":license-gpl-blue.svg" />
-</a>
-
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">
-  <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="btn_donate_LG.gif" />
-</a>
-#+end_export
+#+html: <a href="http://opensource.org/licenses/GPL-3.0">
+#+html:   <img src="http://img.shields.io/:license-gpl-blue.svg" alt=":license-gpl-blue.svg" />
+#+html: </a>
+#+html:
+#+html: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">
+#+html:   <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="btn_donate_LG.gif" />
+#+html: </a>
 
 Looking for an Emacs *configuration file* with many packages already enabled and
 a more *pleasant set of defaults*?  Here's the place to find one!  That will save
