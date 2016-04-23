@@ -142,17 +142,6 @@ Here is such a minimal Emacs config file.
 #+begin_src emacs-lisp :tangle .emacs-minimal.el
 ;; Place your test code here.
 
-(setq ispell-program-name
-      (cond ((eq system-type 'cygwin)
-             "/cygdrive/c/Program Files (x86)/Aspell/bin/aspell.exe")
-            ((eq system-type 'windows-nt)
-             "c:/Program Files (x86)/Aspell/bin/aspell.exe")))
-
-;; Enable on-the-fly spell checking.
-(add-hook 'org-mode-hook 'flyspell-mode)
-
-(with-eval-after-load "helm-autoloads"
-  (global-set-key (kbd "M-y") 'helm-show-kill-ring))
 #+end_src
 
 *** Test if function is defined
@@ -278,6 +267,8 @@ You can *get backtraces* at each stopping point by Edebugging =foobar= and
 ** Footer
 
 #+begin_src emacs-lisp :tangle .emacs-minimal.el
+;;* --[ Constant part ]-------------------------------------------------------
+
 (message "Loading Minimal Emacs... Done (in %.2f s)"
          (- (float-time) em/emacs-load-time-start))
 

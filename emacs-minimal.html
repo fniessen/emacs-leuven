@@ -107,53 +107,53 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb6e6c6e">Example</a>
+<li><a href="#org14e4ae7">Example</a>
 <ul>
-<li><a href="#org6fff5ea">Header</a></li>
-<li><a href="#org6b5cad5">Constant part</a></li>
-<li><a href="#orgafd5495">Variable part</a>
+<li><a href="#org436731a">Header</a></li>
+<li><a href="#org95c7e29">Constant part</a></li>
+<li><a href="#orgd90426b">Variable part</a>
 <ul>
-<li><a href="#org4da89dc">Sandbox</a></li>
-<li><a href="#org67cfc12">Test if function is defined</a></li>
-<li><a href="#orgcfdbc6c">Eval-after-load eval&rsquo;ed twice</a>
+<li><a href="#org41f61e7">Sandbox</a></li>
+<li><a href="#org8a191f7">Test if function is defined</a></li>
+<li><a href="#org941e1ca">Eval-after-load eval&rsquo;ed twice</a>
 <ul>
-<li><a href="#orgf379275">Minimal display</a></li>
-<li><a href="#org4c7c585">Backtraces</a></li>
+<li><a href="#org989284e">Minimal display</a></li>
+<li><a href="#org64485da">Backtraces</a></li>
 </ul>
 </li>
-<li><a href="#orgb840427">Test export to HTML</a></li>
-<li><a href="#orgfb046f4">Org-test</a>
+<li><a href="#org8c1c39a">Test export to HTML</a></li>
+<li><a href="#org7a26429">Org-test</a>
 <ul>
-<li><a href="#org8559ee9">Create a new test case</a></li>
-<li><a href="#org5e3cf01">Run an existing test</a></li>
+<li><a href="#orgacbe2fa">Create a new test case</a></li>
+<li><a href="#org9597bd0">Run an existing test</a></li>
 </ul>
 </li>
-<li><a href="#orgc015cbd">ELP</a></li>
+<li><a href="#org78f2bca">ELP</a></li>
 </ul>
 </li>
-<li><a href="#org3199ce8">Footer</a></li>
+<li><a href="#orga2659c7">Footer</a></li>
 </ul>
 </li>
-<li><a href="#org163dba">One-liners</a>
+<li><a href="#org189284">One-liners</a>
 <ul>
-<li><a href="#orgfcc6593">ELP</a></li>
+<li><a href="#orgce80d3f">ELP</a></li>
 </ul>
 </li>
-<li><a href="#org398a786">Script</a>
+<li><a href="#org3ba2642">Script</a>
 <ul>
-<li><a href="#org2254fca">From the man page</a></li>
-<li><a href="#orgbc5c4c3">Ideal</a></li>
-<li><a href="#org358024b">emacs-helm.sh (from Thierry Volpiatto)</a></li>
-<li><a href="#org875c651">Code</a></li>
+<li><a href="#org4b9e061">From the man page</a></li>
+<li><a href="#org5dc603d">Ideal</a></li>
+<li><a href="#org299e173">emacs-helm.sh (from Thierry Volpiatto)</a></li>
+<li><a href="#org161f6ea">Code</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgb6e6c6e" class="outline-2">
-<h2 id="orgb6e6c6e">Example</h2>
-<div class="outline-text-2" id="text-orgb6e6c6e">
+<div id="outline-container-org14e4ae7" class="outline-2">
+<h2 id="org14e4ae7">Example</h2>
+<div class="outline-text-2" id="text-org14e4ae7">
 <p>
 The usual method to find a problem while avoiding to disturb a running Emacs
 instance is to run a separate Emacs in batch mode: that will avoid any
@@ -171,9 +171,9 @@ Here is such a minimal Emacs config file.
 </p>
 </div>
 
-<div id="outline-container-org6fff5ea" class="outline-3">
-<h3 id="org6fff5ea">Header</h3>
-<div class="outline-text-3" id="text-org6fff5ea">
+<div id="outline-container-org436731a" class="outline-3">
+<h3 id="org436731a">Header</h3>
+<div class="outline-text-3" id="text-org436731a">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;; </span><span class="org-comment">.emacs-minimal --- Minimal configuration file for Emacs</span>
@@ -190,9 +190,9 @@ Here is such a minimal Emacs config file.
 </div>
 </div>
 
-<div id="outline-container-org6b5cad5" class="outline-3">
-<h3 id="org6b5cad5">Constant part</h3>
-<div class="outline-text-3" id="text-org6b5cad5">
+<div id="outline-container-org95c7e29" class="outline-3">
+<h3 id="org95c7e29">Constant part</h3>
+<div class="outline-text-3" id="text-org95c7e29">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Constant part ]-------------------------------------------------------</span>
@@ -287,9 +287,9 @@ Here is such a minimal Emacs config file.
 </div>
 </div>
 
-<div id="outline-container-orgafd5495" class="outline-3">
-<h3 id="orgafd5495">Variable part</h3>
-<div class="outline-text-3" id="text-orgafd5495">
+<div id="outline-container-orgd90426b" class="outline-3">
+<h3 id="orgd90426b">Variable part</h3>
+<div class="outline-text-3" id="text-orgd90426b">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Variable part Under Test ]--------------------------------------------</span>
@@ -297,32 +297,20 @@ Here is such a minimal Emacs config file.
 </div>
 </div>
 
-<div id="outline-container-org4da89dc" class="outline-4">
-<h4 id="org4da89dc">Sandbox</h4>
-<div class="outline-text-4" id="text-org4da89dc">
+<div id="outline-container-org41f61e7" class="outline-4">
+<h4 id="org41f61e7">Sandbox</h4>
+<div class="outline-text-4" id="text-org41f61e7">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Place your test code here.</span>
-
-(<span class="org-keyword">setq</span> ispell-program-name
-      (<span class="org-keyword">cond</span> ((eq system-type 'cygwin)
-             <span class="org-string">"/cygdrive/c/Program Files (x86)/Aspell/bin/aspell.exe"</span>)
-            ((eq system-type 'windows-nt)
-             <span class="org-string">"c:/Program Files (x86)/Aspell/bin/aspell.exe"</span>)))
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Enable on-the-fly spell checking.</span>
-(add-hook 'org-mode-hook 'flyspell-mode)
-
-(<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-autoloads"</span>
-  (global-set-key (kbd <span class="org-string">"M-y"</span>) 'helm-show-kill-ring))
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org67cfc12" class="outline-4">
-<h4 id="org67cfc12">Test if function is defined</h4>
-<div class="outline-text-4" id="text-org67cfc12">
+<div id="outline-container-org8a191f7" class="outline-4">
+<h4 id="org8a191f7">Test if function is defined</h4>
+<div class="outline-text-4" id="text-org8a191f7">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(message <span class="org-string">"defined? %S"</span> (functionp (<span class="org-keyword">quote</span> org-babel-do-load-languages)))
@@ -331,12 +319,12 @@ Here is such a minimal Emacs config file.
 </div>
 </div>
 
-<div id="outline-container-orgcfdbc6c" class="outline-4">
-<h4 id="orgcfdbc6c">Eval-after-load eval&rsquo;ed twice</h4>
-<div class="outline-text-4" id="text-orgcfdbc6c">
-</div><div id="outline-container-orgf379275" class="outline-5">
-<h5 id="orgf379275">Minimal display</h5>
-<div class="outline-text-5" id="text-orgf379275">
+<div id="outline-container-org941e1ca" class="outline-4">
+<h4 id="org941e1ca">Eval-after-load eval&rsquo;ed twice</h4>
+<div class="outline-text-4" id="text-org941e1ca">
+</div><div id="outline-container-org989284e" class="outline-5">
+<h5 id="org989284e">Minimal display</h5>
+<div class="outline-text-5" id="text-org989284e">
 <p>
 You can see the problem by running the following code:
 </p>
@@ -352,9 +340,9 @@ You can see the problem by running the following code:
 </div>
 </div>
 
-<div id="outline-container-org4c7c585" class="outline-5">
-<h5 id="org4c7c585">Backtraces</h5>
-<div class="outline-text-5" id="text-org4c7c585">
+<div id="outline-container-org64485da" class="outline-5">
+<h5 id="org64485da">Backtraces</h5>
+<div class="outline-text-5" id="text-org64485da">
 <p>
 You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar</code> and
 <code>C-x C-f foo.org</code>:
@@ -374,9 +362,9 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 </div>
 </div>
 
-<div id="outline-container-orgb840427" class="outline-4">
-<h4 id="orgb840427">Test export to HTML</h4>
-<div class="outline-text-4" id="text-orgb840427">
+<div id="outline-container-org8c1c39a" class="outline-4">
+<h4 id="org8c1c39a">Test export to HTML</h4>
+<div class="outline-text-4" id="text-org8c1c39a">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(<span class="org-keyword">let</span> ((org-confirm-babel-evaluate nil)) <span class="org-comment-delimiter">; </span><span class="org-comment">Preference over the explicit setq.</span>
@@ -387,9 +375,9 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 </div>
 </div>
 
-<div id="outline-container-orgfb046f4" class="outline-4">
-<h4 id="orgfb046f4">Org-test</h4>
-<div class="outline-text-4" id="text-orgfb046f4">
+<div id="outline-container-org7a26429" class="outline-4">
+<h4 id="org7a26429">Org-test</h4>
+<div class="outline-text-4" id="text-org7a26429">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Change the pathname appropriately!</span>
@@ -399,9 +387,9 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 </div>
 </div>
 
-<div id="outline-container-org8559ee9" class="outline-5">
-<h5 id="org8559ee9">Create a new test case</h5>
-<div class="outline-text-5" id="text-org8559ee9">
+<div id="outline-container-orgacbe2fa" class="outline-5">
+<h5 id="orgacbe2fa">Create a new test case</h5>
+<div class="outline-text-5" id="text-orgacbe2fa">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(<span class="org-keyword">ert-deftest</span> <span class="org-function-name">test-org/end-of-line</span> ()
@@ -425,9 +413,9 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 </div>
 </div>
 
-<div id="outline-container-org5e3cf01" class="outline-5">
-<h5 id="org5e3cf01">Run an existing test</h5>
-<div class="outline-text-5" id="text-org5e3cf01">
+<div id="outline-container-org9597bd0" class="outline-5">
+<h5 id="org9597bd0">Run an existing test</h5>
+<div class="outline-text-5" id="text-org9597bd0">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Change the pathname appropriately!</span>
@@ -440,9 +428,9 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 </div>
 </div>
 
-<div id="outline-container-orgc015cbd" class="outline-4">
-<h4 id="orgc015cbd">ELP</h4>
-<div class="outline-text-4" id="text-orgc015cbd">
+<div id="outline-container-org78f2bca" class="outline-4">
+<h4 id="org78f2bca">ELP</h4>
+<div class="outline-text-4" id="text-org78f2bca">
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))</span>
@@ -487,12 +475,14 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 </div>
 </div>
 
-<div id="outline-container-org3199ce8" class="outline-3">
-<h3 id="org3199ce8">Footer</h3>
-<div class="outline-text-3" id="text-org3199ce8">
+<div id="outline-container-orga2659c7" class="outline-3">
+<h3 id="orga2659c7">Footer</h3>
+<div class="outline-text-3" id="text-orga2659c7">
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(message <span class="org-string">"Loading Minimal Emacs... Done (in %.2f s)"</span>
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Constant part ]-------------------------------------------------------</span>
+
+(message <span class="org-string">"Loading Minimal Emacs... Done (in %.2f s)"</span>
          (- (float-time) em/emacs-load-time-start))
 
 (<span class="org-keyword">provide</span> '<span class="org-constant">.emacs-minimal</span>)
@@ -504,12 +494,12 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 </div>
 </div>
 
-<div id="outline-container-org163dba" class="outline-2">
-<h2 id="org163dba">One-liners</h2>
-<div class="outline-text-2" id="text-org163dba">
-</div><div id="outline-container-orgfcc6593" class="outline-3">
-<h3 id="orgfcc6593">ELP</h3>
-<div class="outline-text-3" id="text-orgfcc6593">
+<div id="outline-container-org189284" class="outline-2">
+<h2 id="org189284">One-liners</h2>
+<div class="outline-text-2" id="text-org189284">
+</div><div id="outline-container-orgce80d3f" class="outline-3">
+<h3 id="orgce80d3f">ELP</h3>
+<div class="outline-text-3" id="text-orgce80d3f">
 <div class="org-src-container">
 
 <pre class="src src-shell">emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span class="org-sh-escaped-newline">\</span>
@@ -520,12 +510,12 @@ You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar<
 </div>
 </div>
 
-<div id="outline-container-org398a786" class="outline-2">
-<h2 id="org398a786">Script</h2>
-<div class="outline-text-2" id="text-org398a786">
-</div><div id="outline-container-org2254fca" class="outline-3">
-<h3 id="org2254fca">From the man page</h3>
-<div class="outline-text-3" id="text-org2254fca">
+<div id="outline-container-org3ba2642" class="outline-2">
+<h2 id="org3ba2642">Script</h2>
+<div class="outline-text-2" id="text-org3ba2642">
+</div><div id="outline-container-org4b9e061" class="outline-3">
+<h3 id="org4b9e061">From the man page</h3>
+<div class="outline-text-3" id="text-org4b9e061">
 <dl class="org-dl">
 <dt><code>-q</code>, <code>--no-init-file</code></dt><dd>Do not load an init file.</dd>
 
@@ -555,9 +545,9 @@ to call.
 </div>
 </div>
 
-<div id="outline-container-orgbc5c4c3" class="outline-3">
-<h3 id="orgbc5c4c3">Ideal</h3>
-<div class="outline-text-3" id="text-orgbc5c4c3">
+<div id="outline-container-org5dc603d" class="outline-3">
+<h3 id="org5dc603d">Ideal</h3>
+<div class="outline-text-3" id="text-org5dc603d">
 <p>
 <b>Some code must be used in the <code>.emacs</code> file (or libraries loaded FROM it).</b>
 </p>
@@ -592,9 +582,9 @@ changing <code>HOME</code> for Emacs is a very bad idea. WE DON&rsquo;T DO THAT!
 </div>
 </div>
 
-<div id="outline-container-org358024b" class="outline-3">
-<h3 id="org358024b">emacs-helm.sh (from Thierry Volpiatto)</h3>
-<div class="outline-text-3" id="text-org358024b">
+<div id="outline-container-org299e173" class="outline-3">
+<h3 id="org299e173">emacs-helm.sh (from Thierry Volpiatto)</h3>
+<div class="outline-text-3" id="text-org299e173">
 <p class="verse">
 &gt; I was too lazy to test with emacs -Q before.<br  />
 <br  />
@@ -608,9 +598,9 @@ use the <code>-P</code> option of <code>emacs-helm.sh</code> to use another Emac
 </div>
 </div>
 
-<div id="outline-container-org875c651" class="outline-3">
-<h3 id="org875c651">Code</h3>
-<div class="outline-text-3" id="text-org875c651">
+<div id="outline-container-org161f6ea" class="outline-3">
+<h3 id="org161f6ea">Code</h3>
+<div class="outline-text-3" id="text-org161f6ea">
 <p>
 <b>Call this script emacs-q?</b>
 </p>
