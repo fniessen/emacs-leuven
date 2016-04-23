@@ -402,7 +402,7 @@ then
     TESTEL="-l $TESTFILE"
 fi
 
-EMACS="/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"
+EMACS="emacs"
 
 # No init file.
 cmd="$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"
