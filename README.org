@@ -58,7 +58,7 @@ Using the Emacs Leuven library is very easy: you just need to...
 
 * Some better defaults
 
-- Unnecessary spaces at the end of the lines are indicated by red blocks.
+- Unnecessary spaces at the end of the lines are indicated by yellow blocks.
 
 * Packages
 
