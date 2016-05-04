@@ -775,7 +775,7 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; up-to-date.  Otherwise, new packages
                                         ; (not present in the cache of the ELPA
                                         ; contents) won't install.
-        (dolist (pkg missing-elpa-packages)
+        (dolist (pkg (reverse missing-elpa-packages))
           (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
               (ignore-errors
                 (package-install pkg))

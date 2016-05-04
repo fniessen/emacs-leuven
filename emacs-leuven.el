@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160504.2342
+;; Version: 20160504.2349
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160504.2342"
+(defconst leuven--emacs-version "20160504.2349"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -478,7 +478,7 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; up-to-date.  Otherwise, new packages
                                         ; (not present in the cache of the ELPA
                                         ; contents) won't install.
-        (dolist (pkg missing-elpa-packages)
+        (dolist (pkg (reverse missing-elpa-packages))
           (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
               (ignore-errors
                 (package-install pkg))
