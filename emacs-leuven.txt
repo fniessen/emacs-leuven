@@ -697,7 +697,7 @@ like this into your configuration file:
                                      diff-hl
                                      diminish
                                      dired+
-                                     emacs-eclim
+                                     ;; emacs-eclim
                                      ess
                                      expand-region
                                      fancy-narrow
@@ -4156,6 +4156,10 @@ XXX Look at helm-dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
+    (global-set-key (kbd "M-x") #'helm-M-x)
+#+end_src
+
+#+begin_src emacs-lisp
     ;; Speedy file opening.
     (global-set-key (kbd "<f3>") #'helm-for-files)
 
@@ -4375,10 +4379,6 @@ See Helm-ag?
 There's no denying it: it's really difficult to remember all of these various
 commands. Rather than falling back to using the mouse and menu selections,
 instead type ~M-x~.
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "M-x") #'helm-M-x)
-#+end_src
 
 This will bring up a Helm menu, where you can then search for your desired
 command.
