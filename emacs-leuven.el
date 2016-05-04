@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160423.1305
+;; Version: 20160504.2050
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160423.1305"
+(defconst leuven--emacs-version "20160504.2050"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -809,6 +809,7 @@ These packages are neither built-in nor already installed nor ignored."
             just-one-space
             kill-region
             leuven-fill-paragraph
+            leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
             org-kill-line
@@ -8038,7 +8039,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Skip invisible text (Org drawers, etc.).
     (setq company-dabbrev-ignore-invisible t))
 
-  (with-eval-after-load "company-quickhelp-autoloads"
+  (with-eval-after-load "company-quickhelp-autoloads-XXX"
 
     ;; Enable `company-quickhelp-mode'.
     (company-quickhelp-mode 1)

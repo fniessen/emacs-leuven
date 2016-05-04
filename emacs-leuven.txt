@@ -13849,7 +13849,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 **** Company-quickhelp
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "company-quickhelp-autoloads"
+  (with-eval-after-load "company-quickhelp-autoloads-XXX"
 
     ;; Enable `company-quickhelp-mode'.
     (company-quickhelp-mode 1)
