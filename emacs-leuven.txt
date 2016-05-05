@@ -8475,7 +8475,7 @@ Commands:
 
   (with-eval-after-load "org-agenda"
     (let ((leuven-org-agenda-views
-           "~/src/emacs-leuven/org-custom-agenda-views.el"))
+           (concat leuven--directory "org-custom-agenda-views.el")))
       (when (file-exists-p leuven-org-agenda-views)
         (load-file leuven-org-agenda-views))))
                                         ; with-eval-after-load "org-agenda" ends here.

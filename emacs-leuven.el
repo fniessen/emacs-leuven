@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160504.2349
+;; Version: 20160505.0951
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160504.2349"
+(defconst leuven--emacs-version "20160505.0951"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -5083,7 +5083,7 @@ From %c"
 
   (with-eval-after-load "org-agenda"
     (let ((leuven-org-agenda-views
-           "~/src/emacs-leuven/org-custom-agenda-views.el"))
+           (concat leuven--directory "org-custom-agenda-views.el")))
       (when (file-exists-p leuven-org-agenda-views)
         (load-file leuven-org-agenda-views))))
                                         ; with-eval-after-load "org-agenda" ends here.
