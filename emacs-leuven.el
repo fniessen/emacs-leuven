@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160505.0951
+;; Version: 20160505.1011
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160505.0951"
+(defconst leuven--emacs-version "20160505.1011"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3621,6 +3621,10 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Using links outside Org.
   (global-set-key (kbd "C-c L") #'org-insert-link-global)
   (global-set-key (kbd "C-c O") #'org-open-at-point-global)
+
+  (unless org-agenda-files
+    (message "WARN- Found no entries in `org-agenda-files'")
+    (sit-for 1.5))
 
   (with-eval-after-load "org"
     ;; Display the Org mode manual in Info mode.

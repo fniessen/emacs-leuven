@@ -17,6 +17,8 @@
   :header-args: :tangle no
   :END:
 
+** TODO Un-hardcode refile.org (and use org-default-notes-file)?
+
 ** TODO Improve writing of time-substract
 
 #+begin_src emacs-lisp
@@ -6234,6 +6236,10 @@ work and tasks with Org mode.
   ;; Using links outside Org.
   (global-set-key (kbd "C-c L") #'org-insert-link-global)
   (global-set-key (kbd "C-c O") #'org-open-at-point-global)
+
+  (unless org-agenda-files
+    (message "WARN- Found no entries in `org-agenda-files'")
+    (sit-for 1.5))
 
   (with-eval-after-load "org"
     ;; Display the Org mode manual in Info mode.
