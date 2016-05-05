@@ -185,7 +185,8 @@ that it does not interfere with your own configuration...
 #+begin_src emacs-lisp
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  (if (equal (downcase (system-name)) "mundaneum") ; Private config.
+  (if (member (downcase (system-name))
+              '("mundaneum" "xiphias.aremis.local")) ; Private config.
 
       ;; Configure incoming mail.
       (setq gnus-select-method

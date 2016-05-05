@@ -1,10 +1,11 @@
+
 ;;; gnus-leuven.el --- my Gnus config file
 
 ;; Copyright (C) 2004-2016 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20160209.1956
+;; Version: 20160505.0014
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -32,7 +33,8 @@
 
 ;;** 1.1 (info "(gnus)Finding the News")
 
-  (if (equal (downcase (system-name)) "mundaneum") ; Private config.
+  (if (member (downcase (system-name))
+              '("mundaneum" "xiphias.aremis.local")) ; Private config.
 
       ;; Configure incoming mail.
       (setq gnus-select-method
