@@ -6237,7 +6237,8 @@ work and tasks with Org mode.
   (global-set-key (kbd "C-c L") #'org-insert-link-global)
   (global-set-key (kbd "C-c O") #'org-open-at-point-global)
 
-  (unless org-agenda-files
+  (when (or (not (boundp 'org-agenda-files))
+            (null org-agenda-files))
     (message "WARN- Found no entries in `org-agenda-files'")
     (sit-for 1.5))
 
@@ -15145,6 +15146,8 @@ output going to that buffer.
 
     ;; Strip `^M' characters.
     (add-to-list 'process-coding-system-alist
+                 '("sh" . (undecided-dos . undecided-unix))) ; `es' process.
+    (add-to-list 'process-coding-system-alist
                  '("bash" . (undecided-dos . undecided-unix)))
     (add-to-list 'process-coding-system-alist
                  '("zsh" . (undecided-dos . undecided-unix)))
@@ -15496,7 +15499,7 @@ If you want the *backslashes* in the *Windows paths* returned by Everything to b
 interpreted correctly, you should use ~windows-path~.
 
 #+begin_src emacs-lisp
-  ;; Let Cygwin Emacs recognize Windows paths (e.g. C:/Program Files/).
+  ;; Let Cygwin Emacs recognize Windows paths (e.g. C:\Program Files\).
   (when leuven--cygwin-p
 
     (try-require 'windows-path)

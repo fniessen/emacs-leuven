@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160505.1011
+;; Version: 20160506.2236
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160505.1011"
+(defconst leuven--emacs-version "20160506.2236"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3622,7 +3622,8 @@ These packages are neither built-in nor already installed nor ignored."
   (global-set-key (kbd "C-c L") #'org-insert-link-global)
   (global-set-key (kbd "C-c O") #'org-open-at-point-global)
 
-  (unless org-agenda-files
+  (when (or (not (boundp 'org-agenda-files))
+            (null org-agenda-files))
     (message "WARN- Found no entries in `org-agenda-files'")
     (sit-for 1.5))
 
@@ -8765,6 +8766,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Strip `^M' characters.
     (add-to-list 'process-coding-system-alist
+                 '("sh" . (undecided-dos . undecided-unix))) ; `es' process.
+    (add-to-list 'process-coding-system-alist
                  '("bash" . (undecided-dos . undecided-unix)))
     (add-to-list 'process-coding-system-alist
                  '("zsh" . (undecided-dos . undecided-unix)))
@@ -8902,7 +8905,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; - Cygwin'ized Emacs
   ;; - MSYS (MinGW)
 
-  ;; Let Cygwin Emacs recognize Windows paths (e.g. C:/Program Files/).
+  ;; Let Cygwin Emacs recognize Windows paths (e.g. C:\Program Files\).
   (when leuven--cygwin-p
 
     (try-require 'windows-path)
