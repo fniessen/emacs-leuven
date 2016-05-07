@@ -1,3 +1,4 @@
+
 ;;; org-custom-agenda-views.el --- Org customized views
 
 ;;; Commentary:
@@ -38,7 +39,7 @@
   (add-to-list 'org-agenda-custom-commands
                `("cb" "CollectBox"
                  ((alltodo ""))
-                 ((org-agenda-files (list ,(concat org-directory "/refile.org"))))) t)
+                 ((org-agenda-files (list ,org-default-notes-file)))) t)
 
   (add-to-list 'org-agenda-custom-commands
                '("f" . "FOCUS...") t)
@@ -58,7 +59,7 @@
                   ;; Unscheduled new tasks (waiting to be prioritized and scheduled).
                   (tags-todo "LEVEL=2"
                         ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")
-                         (org-agenda-files (list ,(concat org-directory "/refile.org")))))
+                         (org-agenda-files (list ,org-default-notes-file))))
                   ;; List of all TODO entries with deadline today.
                   (tags-todo "DEADLINE=\"<+0d>\""
                              ((org-agenda-overriding-header "DUE TODAY")
