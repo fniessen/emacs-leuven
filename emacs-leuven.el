@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160506.2236
+;; Version: 20160507.1423
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160506.2236"
+(defconst leuven--emacs-version "20160507.1423"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -4495,7 +4495,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; 9.1.2 Default target for storing notes.
   (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
-        (concat org-directory "/notes.org"))
+        (concat org-directory "/refile.org"))
 
   ;; 9.1.2 templates for the creation of capture buffers
 
@@ -4506,7 +4506,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (add-to-list 'org-capture-templates
                  `("t" "Task" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Tasks")
+                   (file+headline ,org-default-notes-file "Tasks")
                    "* NEW %^{Task}%?
 
 %i"
@@ -4523,7 +4523,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (add-to-list 'org-capture-templates
                  `("a" "Appt" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Events")
+                   (file+headline ,org-default-notes-file "Events")
                    "* %^{Appointment}%?
 %^T
 
@@ -4549,7 +4549,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (add-to-list 'org-capture-templates
                  `("mT" "Create a TODO Action + edit" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Messages") ; #+FILETAGS: :mail:
+                   (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -4562,7 +4562,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Messages") ; #+FILETAGS: :mail:
+                   (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -4576,7 +4576,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("p" "Phone call" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Phone calls")
+                   (file+headline ,org-default-notes-file "Phone calls")
                    "* %?"
                    :clock-in t
                    :clock-resume t
@@ -4584,7 +4584,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("i" "interruption" entry
-                   (file ,(concat org-directory "/refile.org"))
+                   (file ,org-default-notes-file)
                    "A TEMPLATE HERE"
                    :clock-in t
                    :clock-resume t) t)
@@ -4601,7 +4601,7 @@ From %a"
     ;; Shopping list (stuff to buy).
     (add-to-list 'org-capture-templates
                  `("b" "Buy" checkitem
-                   (file+headline ,(concat org-directory "/refile.org") "Shopping")) t)
+                   (file+headline ,org-default-notes-file "Shopping")) t)
 
     ;; Add a note to the currently clocked task.
     (add-to-list 'org-capture-templates
@@ -4633,7 +4633,7 @@ From %a"
 %i%?") t)
 
     ;;          ("w" "org-protocol" entry
-    ;;           (file ,(concat org-directory "/refile.org"))
+    ;;           (file ,org-default-notes-file)
     ;;           "* TODO Review %c
     ;; %U"
     ;;           :clock-in t

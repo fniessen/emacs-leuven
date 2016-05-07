@@ -17,8 +17,6 @@
   :header-args: :tangle no
   :END:
 
-** TODO Un-hardcode refile.org (and use org-default-notes-file)?
-
 ** TODO Improve writing of time-substract
 
 #+begin_src emacs-lisp
@@ -3680,13 +3678,13 @@ On Windows, if you are trying to use ~gunzip~ to uncompress a file under Dired,
 you will probably encounter errors.
 
 The problem is due to that ~gunzip~ provided by Cygwin is not an executable
-file.  It is a *symbolic link to ~gzip~*; you can verify this by ~ls -l
-/usr/bin/gunzip~.
+file.  It is a *symbolic link to ~gzip~*; you can verify this by
+~ls -l /usr/bin/gunzip~.
 
 Since *GNU Emacs does not understand Cygwin's symbolic links*, it cannot execute
 ~gunzip~.  The solution is to replace ~gunzip~ with ~gzip -d~.
 
-#+begin_src shell :tangle ~/bin/gunzip :padline no
+#+begin_src shell :tangle ~/.dotfiles/winbin/gunzip :padline no
 #!/bin/sh
 # gunzip -- gunzip solution on Windows
 
@@ -7565,7 +7563,7 @@ Structure:
   ;; 9.1.2 Default target for storing notes.
   (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
-        (concat org-directory "/notes.org"))
+        (concat org-directory "/refile.org"))
 #+end_src
 
 ~%~-escapes:
@@ -7615,7 +7613,7 @@ Use ~:jump-to-captured~ to tell capture to jump to the note after storing it.
 
     (add-to-list 'org-capture-templates
                  `("t" "Task" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Tasks")
+                   (file+headline ,org-default-notes-file "Tasks")
                    "* NEW %^{Task}%?
 
 %i"
@@ -7632,7 +7630,7 @@ Use ~:jump-to-captured~ to tell capture to jump to the note after storing it.
 
     (add-to-list 'org-capture-templates
                  `("a" "Appt" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Events")
+                   (file+headline ,org-default-notes-file "Events")
                    "* %^{Appointment}%?
 %^T
 
@@ -7713,7 +7711,7 @@ Additional parameters can be included via the commands you use:
 
     (add-to-list 'org-capture-templates
                  `("mT" "Create a TODO Action + edit" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Messages") ; #+FILETAGS: :mail:
+                   (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -7726,7 +7724,7 @@ From %a"
 
     (add-to-list 'org-capture-templates
                  `("mt" "Create a TODO Action" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Messages") ; #+FILETAGS: :mail:
+                   (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
    %:date-timestamp-inactive
 
@@ -7748,7 +7746,7 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
 #+begin_src emacs-lisp
     (add-to-list 'org-capture-templates
                  `("p" "Phone call" entry
-                   (file+headline ,(concat org-directory "/refile.org") "Phone calls")
+                   (file+headline ,org-default-notes-file "Phone calls")
                    "* %?"
                    :clock-in t
                    :clock-resume t
@@ -7756,7 +7754,7 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
 
     (add-to-list 'org-capture-templates
                  `("i" "interruption" entry
-                   (file ,(concat org-directory "/refile.org"))
+                   (file ,org-default-notes-file)
                    "A TEMPLATE HERE"
                    :clock-in t
                    :clock-resume t) t)
@@ -7775,7 +7773,7 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
     ;; Shopping list (stuff to buy).
     (add-to-list 'org-capture-templates
                  `("b" "Buy" checkitem
-                   (file+headline ,(concat org-directory "/refile.org") "Shopping")) t)
+                   (file+headline ,org-default-notes-file "Shopping")) t)
 
     ;; Add a note to the currently clocked task.
     (add-to-list 'org-capture-templates
@@ -7809,7 +7807,7 @@ From %a"
 
 #+begin_src emacs-lisp
     ;;          ("w" "org-protocol" entry
-    ;;           (file ,(concat org-directory "/refile.org"))
+    ;;           (file ,org-default-notes-file)
     ;;           "* TODO Review %c
     ;; %U"
     ;;           :clock-in t
