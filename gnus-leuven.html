@@ -88,6 +88,16 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/bigblow.css"/>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/hideshow.css"/>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery-ui-1.10.2.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.localscroll-min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.zclip.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/bigblow.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/hideshow.js"></script>
 </head>
 <body>
 <div id="content">
@@ -250,7 +260,7 @@ This covers the basics of Gnus:
 
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Fabrice Niessen &lt;(concat "fniessen" at-sign "pirilampo.org")&gt;</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/fniessen/emacs-leuven-theme</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20160505.0014</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 20160511.2209</span>
 <span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: emacs, gnus, dotfile, config</span>
 </pre>
 </div>
@@ -1809,10 +1819,6 @@ automatically end up in the group I wrote from.
 <div id="outline-container-sec-10-4" class="outline-3">
 <h3 id="sec-10-4">Posting Styles</h3>
 <div class="outline-text-3" id="text-10-4">
-<p>
-Concept of &ldquo;roles&rdquo; in mutt.
-</p>
-
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">** 5.6 (info "(gnus)Posting Styles")</span>
@@ -1833,42 +1839,42 @@ Concept of &ldquo;roles&rdquo; in mutt.
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">set up my identities</span>
     (setq gnus-alias-identity-alist
-          '((<span class="org-string">"John-Doe-ID"</span>
-             <span class="org-string">""</span>
-             <span class="org-string">"John Doe <a href="mailto:johndoe%40example.com">&lt;johndoe@example.com&gt;</a>"</span>
-             <span class="org-string">"John Doe"</span>
-             ((<span class="org-string">"X-Url"</span> . <span class="org-string">"http://www.example.com/~john"</span>))
-             <span class="org-string">"\nJohn\n"</span>
-             <span class="org-string">"John Doe"</span>)
+          '((<span class="org-string">"Work-ID"</span>
+             nil                        <span class="org-comment-delimiter">; </span><span class="org-comment">Does not refer to any other identity.</span>
+             <span class="org-string">"John Doe <a href="mailto:j.doe%40example.com">&lt;j.doe@example.com&gt;</a>"</span> <span class="org-comment-delimiter">; </span><span class="org-comment">Sender address.</span>
+             <span class="org-string">"Example Corp."</span>            <span class="org-comment-delimiter">; </span><span class="org-comment">Organization header.</span>
+             ((<span class="org-string">"X-Url"</span> . <span class="org-string">"http://www.example.com/~john"</span>)) <span class="org-comment-delimiter">; </span><span class="org-comment">Extra headers.</span>
+             nil                        <span class="org-comment-delimiter">; </span><span class="org-comment">No extra body text.</span>
+             <span class="org-string">"John Doe"</span>)                <span class="org-comment-delimiter">; </span><span class="org-comment">Signature.</span>
 
-            (<span class="org-string">"Jane-Doe-ID"</span>
+            (<span class="org-string">"Home-ID"</span>
              <span class="org-string">""</span>
-             <span class="org-string">"Jane Doe <a href="mailto:janedoe%40example.com">&lt;janedoe@example.com&gt;</a>"</span>
+             <span class="org-string">"Jane Doe <a href="mailto:john.doe%40example.net">&lt;john.doe@example.net&gt;</a>"</span>
              <span class="org-string">"Jane Doe"</span>
              ((<span class="org-string">"X-Url"</span> . <span class="org-string">"Under construction..."</span>))
-             <span class="org-string">"\nBest regards,\n  Jane\n"</span>
-             <span class="org-string">"Jane Doe"</span>)))
+             <span class="org-string">"\nBest regards,\n  John\n"</span>
+             <span class="org-string">"John"</span>)))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Automatically choose an identity given the message context.</span>
     (setq gnus-alias-identity-rules
           '((<span class="org-string">"Newsgroups-Rule"</span>
              (<span class="org-string">"newsgroups"</span> <span class="org-string">".*"</span> current)
-             <span class="org-string">"John-Doe-ID"</span>)
+             <span class="org-string">"Work-ID"</span>)
 
-            (<span class="org-string">"John-Doe-Rule"</span>
-             (<span class="org-string">"any"</span> <span class="org-string">"johndoe@example.com"</span> both)
-             <span class="org-string">"John-Doe-ID"</span>)
+            (<span class="org-string">"Work-Rule"</span>
+             (<span class="org-string">"any"</span> <span class="org-string">"j.doe@example.com"</span> both)
+             <span class="org-string">"Work-ID"</span>)
 
-            (<span class="org-string">"Jane-Doe-Rule"</span>
-             (<span class="org-string">"any"</span> <span class="org-string">"janedoe@example.com"</span> both)
-             <span class="org-string">"Jane-Doe-ID"</span>)))
+            (<span class="org-string">"Home-Rule"</span>
+             (<span class="org-string">"any"</span> <span class="org-string">"john.doe@example.net"</span> both)
+             <span class="org-string">"Home-ID"</span>)))
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Identity to use when gnus-alias finds an unknown identity.</span>
     (setq gnus-alias-unknown-identity-rule 'error)
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; Default identity (when it isn't able to determine which identity to</span>
     <span class="org-comment-delimiter">;; </span><span class="org-comment">;; use).</span>
-    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq gnus-alias-default-identity "John-Doe-ID")</span>
+    <span class="org-comment-delimiter">;; </span><span class="org-comment">(setq gnus-alias-default-identity "Work-ID")</span>
 
     <span class="org-comment-delimiter">;; </span><span class="org-comment">Old identity is completely removed before the new one is added.</span>
     (setq gnus-alias-overlay-identities nil)

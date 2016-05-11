@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20160505.0014
+;; Version: 20160511.2209
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -642,42 +642,42 @@
 
     ;; set up my identities
     (setq gnus-alias-identity-alist
-          '(("John-Doe-ID"
-             ""
-             "John Doe <johndoe@example.com>"
-             "John Doe"
-             (("X-Url" . "http://www.example.com/~john"))
-             "\nJohn\n"
-             "John Doe")
+          '(("Work-ID"
+             nil                        ; Does not refer to any other identity.
+             "John Doe <j.doe@example.com>" ; Sender address.
+             "Example Corp."            ; Organization header.
+             (("X-Url" . "http://www.example.com/~john")) ; Extra headers.
+             nil                        ; No extra body text.
+             "John Doe")                ; Signature.
 
-            ("Jane-Doe-ID"
+            ("Home-ID"
              ""
-             "Jane Doe <janedoe@example.com>"
+             "Jane Doe <john.doe@example.net>"
              "Jane Doe"
              (("X-Url" . "Under construction..."))
-             "\nBest regards,\n  Jane\n"
-             "Jane Doe")))
+             "\nBest regards,\n  John\n"
+             "John")))
 
     ;; Automatically choose an identity given the message context.
     (setq gnus-alias-identity-rules
           '(("Newsgroups-Rule"
              ("newsgroups" ".*" current)
-             "John-Doe-ID")
+             "Work-ID")
 
-            ("John-Doe-Rule"
-             ("any" "johndoe@example.com" both)
-             "John-Doe-ID")
+            ("Work-Rule"
+             ("any" "j.doe@example.com" both)
+             "Work-ID")
 
-            ("Jane-Doe-Rule"
-             ("any" "janedoe@example.com" both)
-             "Jane-Doe-ID")))
+            ("Home-Rule"
+             ("any" "john.doe@example.net" both)
+             "Home-ID")))
 
     ;; Identity to use when gnus-alias finds an unknown identity.
     (setq gnus-alias-unknown-identity-rule 'error)
 
     ;; ;; Default identity (when it isn't able to determine which identity to
     ;; ;; use).
-    ;; (setq gnus-alias-default-identity "John-Doe-ID")
+    ;; (setq gnus-alias-default-identity "Work-ID")
 
     ;; Old identity is completely removed before the new one is added.
     (setq gnus-alias-overlay-identities nil)
