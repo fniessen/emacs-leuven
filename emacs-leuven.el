@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160507.1423
+;; Version: 20160514.1648
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160507.1423"
+(defconst leuven--emacs-version "20160514.1648"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3379,10 +3379,11 @@ These packages are neither built-in nor already installed nor ignored."
 
     (key-chord-define-global ";s" 'set-mark-command)
 
-    (with-eval-after-load "org-loaddefs" ; Autoloads file?
+    ;; (with-eval-after-load "org-loaddefs" ; Autoloads file?
       ;; (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
                                         ; 2015-02-18 Crash Gnus `C-u a'
-      (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
+      ;; (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
+                                        ; "Donc," is problematic...
 
     (with-eval-after-load "org"         ; Package.
       (key-chord-define org-mode-map ",u" 'outline-up-heading)

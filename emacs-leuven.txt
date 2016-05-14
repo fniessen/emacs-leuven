@@ -4374,6 +4374,8 @@ Launchable from ~current-buffer~ or from ~helm-find-files~.
 
 See Helm-ag?
 
+See https://github.com/dingmingxin/dotfiles/blob/master/config_emacs/config/custom-init-helm.el
+
 **** Helm M-x (search for a command)
 
 There's no denying it: it's really difficult to remember all of these various
@@ -5848,10 +5850,11 @@ a factor 2!?
 
     (key-chord-define-global ";s" 'set-mark-command)
 
-    (with-eval-after-load "org-loaddefs" ; Autoloads file?
+    ;; (with-eval-after-load "org-loaddefs" ; Autoloads file?
       ;; (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
                                         ; 2015-02-18 Crash Gnus `C-u a'
-      (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
+      ;; (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
+                                        ; "Donc," is problematic...
 
     (with-eval-after-load "org"         ; Package.
       (key-chord-define org-mode-map ",u" 'outline-up-heading)
