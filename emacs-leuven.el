@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160514.1648
+;; Version: 20160601.1109
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160514.1648"
+(defconst leuven--emacs-version "20160601.1109"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -416,7 +416,6 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      google-translate
                                      goto-chg
                                      graphviz-dot-mode
-                                     guide-key
                                      helm
                                      helm-descbinds
                                      helm-ls-git
@@ -448,6 +447,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      tidy
                                      unbound
                                      undo-tree
+                                     which-key
                                      ws-butler
                                      yasnippet)
       "A list of packages to ensure are installed at Emacs startup.")
@@ -1112,11 +1112,8 @@ These packages are neither built-in nor already installed nor ignored."
     (interactive)
     (when (equal "log" (file-name-extension (buffer-file-name)))
           (hi-lock-mode 1)
-          (highlight-lines-matching-regexp "ERROR" 'hi-red-b)
-          (highlight-lines-matching-regexp "error" 'hi-red-b)
-          (highlight-lines-matching-regexp "Exception" 'hi-red-b)
-          (highlight-lines-matching-regexp "DbConnectionImpl" 'hi-blue-b)
-          (highlight-lines-matching-regexp "WARN" 'hi-blue-b)))
+          (highlight-lines-matching-regexp "ERROR" 'hi-pink)
+          (highlight-lines-matching-regexp "WARN" 'hi-yellow)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-logs)
 
@@ -3335,82 +3332,85 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "key-chord"
 
     (with-eval-after-load "hideshow"    ; Package.
-      (key-chord-define hs-minor-mode-map "--" 'hs-hide-block) ; Not autoloaded.
-      (key-chord-define hs-minor-mode-map "++" 'hs-show-block) ; Not autoloaded.
-      (key-chord-define hs-minor-mode-map "//" 'hs-hide-all) ; Not autoloaded.
-      (key-chord-define hs-minor-mode-map "**" 'hs-show-all)) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "--" #'hs-hide-block) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "++" #'hs-show-block) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "//" #'hs-hide-all) ; Not autoloaded.
+      (key-chord-define hs-minor-mode-map "**" #'hs-show-all)) ; Not autoloaded.
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
 
-    (key-chord-define-global "hb" 'describe-bindings)
-    (key-chord-define-global "hf" 'describe-function)
-    (key-chord-define-global "hv" 'describe-variable)
+    (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
+    (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk)
+
+    (key-chord-define-global "hb" #'describe-bindings)
+    (key-chord-define-global "hf" #'describe-function)
+    (key-chord-define-global "hv" #'describe-variable)
 
     (with-eval-after-load "expand-region-autoloads" ; Autoloads file.
-      (key-chord-define-global "hh" 'er/expand-region)) ; Autoloaded.
+      (key-chord-define-global "hh" #'er/expand-region)) ; Autoloaded.
 
     (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
-      (key-chord-define-global "jj" 'ace-jump-word-mode) ; Autoloaded.
-      ;; (key-chord-define-global "jk" 'ace-jump-mode-pop-mark) ; Autoloaded. lijkt.
-      ;; (key-chord-define-global "jl" 'ace-jump-line-mode) ; Autoloaded. pijl.
+      (key-chord-define-global "jj" #'ace-jump-word-mode) ; Autoloaded.
+      ;; (key-chord-define-global "jk" #'ace-jump-mode-pop-mark) ; Autoloaded. lijkt.
+      ;; (key-chord-define-global "jl" #'ace-jump-line-mode) ; Autoloaded. pijl.
       )
 
     (with-eval-after-load "ace-window"
-      (key-chord-define-global "jw" 'ace-window))
+      (key-chord-define-global "jw" #'ace-window))
 
     (with-eval-after-load "dired-x"
-      (key-chord-define-global "xj" 'dired-jump)) ; Autoloaded?
+      (key-chord-define-global "xj" #'dired-jump)) ; Autoloaded?
 
-    (key-chord-define-global "vb" 'eval-buffer)
-    ;; (key-chord-define-global "vg" 'eval-region)
+    (key-chord-define-global "vb" #'eval-buffer)
+    ;; (key-chord-define-global "vg" #'eval-region)
                                         ; 2015-02-17 Crash Gnus `C-u g'
 
-    ;; (key-chord-define-global "x0" 'delete-window)
+    ;; (key-chord-define-global "x0" #'delete-window)
                                         ; 2015-02-09 Crash Gnus `C-u 3'
-    ;; (key-chord-define-global "x1" 'delete-other-windows)
+    ;; (key-chord-define-global "x1" #'delete-other-windows)
                                         ; 2015-02-05 Crash Gnus `C-u 1'
-    (key-chord-define-global "xh" 'mark-whole-buffer)
-    (key-chord-define-global "xk" 'kill-buffer) ; leuven-kill-this-buffer-without-query?
-    (key-chord-define-global "xo" 'other-window)
+    (key-chord-define-global "xh" #'mark-whole-buffer)
+    (key-chord-define-global "xk" #'kill-buffer) ; leuven-kill-this-buffer-without-query?
+    (key-chord-define-global "xo" #'other-window)
 
-    (key-chord-define-global "yy" 'browse-kill-ring)
-    (key-chord-define-global "zk" 'zap-to-char)
+    (key-chord-define-global "yy" #'browse-kill-ring)
+    (key-chord-define-global "zk" #'zap-to-char)
 
-    (key-chord-define-global ";s" 'set-mark-command)
+    (key-chord-define-global ";s" #'set-mark-command)
 
     ;; (with-eval-after-load "org-loaddefs" ; Autoloads file?
-      ;; (key-chord-define-global ",a" 'org-agenda) ; Autoloaded.
+      ;; (key-chord-define-global ",a" #'org-agenda) ; Autoloaded.
                                         ; 2015-02-18 Crash Gnus `C-u a'
-      ;; (key-chord-define-global ",c" 'org-capture)) ; Autoloaded.
+      ;; (key-chord-define-global ",c" #'org-capture)) ; Autoloaded.
                                         ; "Donc," is problematic...
 
     (with-eval-after-load "org"         ; Package.
-      (key-chord-define org-mode-map ",u" 'outline-up-heading)
-      (key-chord-define org-mode-map ",w" 'org-refile) ; Not autoloaded.
-      ;; (key-chord-define org-mode-map ",," 'org-mark-ring-goto)           ;; Return to previous location before link.
-      ;; (key-chord-define org-mode-map ",." 'org-time-stamp)               ;; Create new timestamp.
-      ;; (key-chord-define org-mode-map ",b" 'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
-      ;; (key-chord-define org-mode-map ",d" 'org-todo)                     ;; Toggle todo for headline.
-      ;; (key-chord-define org-mode-map ",e" 'org-insert-link)              ;; Edit current link.
-      ;; (key-chord-define org-mode-map ",f" 'org-footnote-action)          ;; Create new footnote link.
-      ;; (key-chord-define org-mode-map ",g" 'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
-      ;; (key-chord-define org-mode-map ",h" 'org-toggle-heading)           ;; Toggle heading for current line/list item.
-      ;; (key-chord-define org-mode-map ",k" 'org-cut-subtree)              ;; Kill subtree.
-      ;; (key-chord-define org-mode-map ",n" 'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
-      ;; (key-chord-define org-mode-map ",o" 'org-open-at-point)            ;; Open link at point.
-      ;; (key-chord-define org-mode-map ",p" 'org-priority)                 ;; Toggle priority.
-      ;; (key-chord-define org-mode-map ",t" 'org-set-tags-command)         ;; Choose tags.
-      ;; (key-chord-define org-mode-map ",v" 'org-paste-subtree)            ;; Paste subtree.
-      ;; (key-chord-define org-mode-map ",w" 'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
-      ;; (key-chord-define org-mode-map ",y" 'org-copy-subtree)             ;; Copy subtree.
-      ;; (key-chord-define org-mode-map "<H" 'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.
+      (key-chord-define org-mode-map ",u" #'outline-up-heading)
+      (key-chord-define org-mode-map ",w" #'org-refile) ; Not autoloaded.
+      ;; (key-chord-define org-mode-map ",," #'org-mark-ring-goto)           ;; Return to previous location before link.
+      ;; (key-chord-define org-mode-map ",." #'org-time-stamp)               ;; Create new timestamp.
+      ;; (key-chord-define org-mode-map ",b" #'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
+      ;; (key-chord-define org-mode-map ",d" #'org-todo)                     ;; Toggle todo for headline.
+      ;; (key-chord-define org-mode-map ",e" #'org-insert-link)              ;; Edit current link.
+      ;; (key-chord-define org-mode-map ",f" #'org-footnote-action)          ;; Create new footnote link.
+      ;; (key-chord-define org-mode-map ",g" #'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
+      ;; (key-chord-define org-mode-map ",h" #'org-toggle-heading)           ;; Toggle heading for current line/list item.
+      ;; (key-chord-define org-mode-map ",k" #'org-cut-subtree)              ;; Kill subtree.
+      ;; (key-chord-define org-mode-map ",n" #'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
+      ;; (key-chord-define org-mode-map ",o" #'org-open-at-point)            ;; Open link at point.
+      ;; (key-chord-define org-mode-map ",p" #'org-priority)                 ;; Toggle priority.
+      ;; (key-chord-define org-mode-map ",t" #'org-set-tags-command)         ;; Choose tags.
+      ;; (key-chord-define org-mode-map ",v" #'org-paste-subtree)            ;; Paste subtree.
+      ;; (key-chord-define org-mode-map ",w" #'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
+      ;; (key-chord-define org-mode-map ",y" #'org-copy-subtree)             ;; Copy subtree.
+      ;; (key-chord-define org-mode-map "<H" #'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.
       )
 
-    ;; (key-chord-define-global "ac" 'align-current)
-    ;; (key-chord-define-global "fc" 'flycheck-mode)
+    ;; (key-chord-define-global "ac" #'align-current)
+    ;; (key-chord-define-global "fc" #'flycheck-mode)
     ;; (key-chord-define-global "fv" (lambda () (interactive) (kill-buffer (buffer-name))))
-    ;; (key-chord-define-global "sv" 'save-buffer)
+    ;; (key-chord-define-global "sv" #'save-buffer)
     ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
     ;; (global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))
     ;; (global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))
@@ -3418,12 +3418,12 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; (key-chord-define-global "''" "`'\C-b")
     ;; (key-chord-define-global "dq" "\"\"\C-b")
-    ;; (key-chord-define-global ";d" 'dired-jump-other-window)
-    ;; (key-chord-define-global "jk" 'dabbrev-expand)
-    ;; (key-chord-define-global "JJ" 'find-tag)
+    ;; (key-chord-define-global ";d" #'dired-jump-other-window)
+    ;; (key-chord-define-global "jk" #'dabbrev-expand)
+    ;; (key-chord-define-global "JJ" #'find-tag)
     ;; (key-chord-define-global ",." "<>\C-b")
     ;; (key-chord-define-global "''" "`'\C-b")
-    ;; (key-chord-define-global ",," 'indent-for-comment)
+    ;; (key-chord-define-global ",," #'indent-for-comment)
     )
 
 ;;** 25.6 (info "(emacs)Case") Conversion Commands
@@ -4413,8 +4413,8 @@ These packages are neither built-in nor already installed nor ignored."
 
     (global-set-key (kbd "C-c C-x C-q") #'leuven-org-clock-in-interrupted-task)
 
-    ;; 8.4.3 Resolve open clocks if the user is idle more than 120 minutes.
-    (setq org-clock-idle-time 120)
+    ;; 8.4.3 Resolve open clocks if the user is idle more than X minutes.
+    (setq org-clock-idle-time 240)
 
     (defun leuven--org-switch-to-started (kwd)
       "Switch task state to STRT.
@@ -4938,6 +4938,17 @@ From %c"
 
   ;; Show agenda in the current window, keeping all other windows.
   (setq org-agenda-window-setup 'current-window)
+
+  (defun my-org-agenda-change-sorting-strategy (strategy)
+    "Change the sorting strategy."
+    (interactive (list
+                  (completing-read "Choose a strategy: "
+                                   (mapcar 'cdr (cdr org-sorting-choice))
+                                   nil t)))
+    ;; adjust the following types as needed - e.g., add 'agenda, etc.
+    (org-agenda-check-type t 'todo 'tags 'search)
+    (let ((org-agenda-sorting-strategy (list (intern strategy))))
+  (org-agenda-redo)))
 
 ;;** 10.5 (info "(org)Agenda commands")
 
@@ -5825,6 +5836,11 @@ this with to-do items than with projects or headings."
   ;; Prevent auto-filling in src blocks.
   (setq org-src-prevent-auto-filling t)
 
+  ;; ;; with-eval-after-load...
+  ;; (add-hook 'org-src-mode-hook
+  ;;           (lambda ()
+  ;;             (define-key org-src-mode-map (kbd "<f2>") #'org-edit-src-save)))
+
   (defvar only-code-overlays nil
     "Overlays hiding non-code blocks.")
   (make-variable-buffer-local 'only-code-overlays)
@@ -6647,6 +6663,9 @@ this with to-do items than with projects or headings."
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode)))
 
   (with-eval-after-load "nxml-mode"
+
+    ;; Indent 4 spaces (for the children of an element relative to the start-tag).
+    (setq nxml-child-indent 4)
 
     ;; Remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used by
     ;; Org timeclocking commands.
@@ -9457,42 +9476,22 @@ a clean buffer we're an order of magnitude laxer about checking."
     (setq truncate-lines t))
 
   ;; Guide the following key bindings automatically and dynamically.
-  (with-eval-after-load "guide-key-autoloads"
-    (idle-require 'guide-key))
+  (with-eval-after-load "which-key-autoloads"
+    (idle-require 'which-key))
 
-  (with-eval-after-load "guide-key"
+  (with-eval-after-load "which-key"
 
-    (setq guide-key/guide-key-sequence
-          '("C-c"
-            "C-h"
-            "C-x 4"                     ; Other window. OK.
-            "C-x 5"                     ; Other frame.
-            "C-x 8"                     ; Unicode. OK.
-            "C-x RET"                   ; Coding system.
-            "C-x a"                     ; Abbrev.
-            "C-x c"                     ; Helm.
-            "C-x n"                     ; Narrow.
-            "C-x p"                     ; Bmkp.
-            "C-x r"                     ; Register + rectangle. OK.
-            "C-x v"                     ; VC. OK.
-            "C-x w"                     ; Hi-lock.
-            "M-g"                       ; Goto + error.
-            "M-s"                       ; Occur + highlight.
-            (org-mode "C-c C-x"
-                      "C-c C-v")
-            (outline-minor-mode "C-c @")))
+    (which-key-mode)
 
-    ;; (setq guide-key/idle-delay 0.3)
+    (which-key-setup-side-window-right-bottom)
 
-    (setq guide-key/recursive-key-sequence-flag t)
+    (setq which-key-idle-delay 0.4)
 
-    (setq guide-key/popup-window-position 'bottom)
+    (setq which-key-sort-order 'which-key-local-then-key-order)
 
-    ;; Enable guide-key-mode.
-    (guide-key-mode 1)
-
-    (with-eval-after-load "diminish-autoloads"
-      (diminish 'guide-key-mode " Gk")))
+    ;; Set the maximum length (in characters) for key descriptions (commands or
+    ;; prefixes).
+    (setq which-key-max-description-length 33))
 
 ;;** 49.5 The (info "(emacs)Syntax") Table
 
