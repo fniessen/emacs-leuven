@@ -17,6 +17,14 @@
   :header-args: :tangle no
   :END:
 
+** TODO Publish doc of Emacs Leuven
+
+Use my Org html theme!
+
+Others did already:
+- http://coldnew.github.io/coldnew-emacs/
+- spacemacs
+
 ** TODO Improve writing of time-substract
 
 #+begin_src emacs-lisp
@@ -131,6 +139,10 @@ time emacs -Q -f kill-emacs 2>&1
 
 Note that your first test is going to be dramatically slower than subsequent
 tests.
+
+#+begin_note
+You can use ESUP - Emacs Start Up Profiler
+#+end_note
 
 * Description
 
@@ -720,6 +732,7 @@ like this into your configuration file:
                                      helm-swoop
                                      hideshowvis
                                      highlight-symbol
+                                     howdoi
                                      htmlize
                                      indent-guide
                                      ;; jabber
@@ -3153,6 +3166,9 @@ What is working for you?
 
 (leuven--chapter leuven-load-chapter-17-keyboard-macros "17 Keyboard Macros"
 #+end_src
+
+Shows keyboard macros or latest interactive commands as Emacs Lisp:
+https://github.com/Silex/elmacro.
 
 ** Basic Use
 
@@ -11078,6 +11094,8 @@ This lets you send HTML, CSS, and Javascript fragments to Google Chrome. You may
 need to start Chrome with ~chrome --allow-running-insecure-content~, if you're
 using the user script with HTTPS sites.
 
+** JS2-mode + JS2-refactor
+
 #+begin_src emacs-lisp
 )                                       ; Chapter 25 ends here.
 #+end_src
@@ -12234,6 +12252,17 @@ than fixing a bug in a scripting language like Perl.
 
   (leuven--section "27.8 (emacs)Lisp Libraries")
 
+  ;; Remove *.elc when save.
+  (defun remove-elc-on-save ()
+    "If you're saving an elisp file, likely the .elc is no longer valid."
+    (make-local-variable 'after-save-hook)
+    (add-hook 'after-save-hook
+              (lambda ()
+                (if (file-exists-p (concat buffer-file-name "c"))
+                    (delete-file (concat buffer-file-name "c"))))))
+
+  (add-hook 'emacs-lisp-mode-hook #'remove-elc-on-save)
+
   ;; Force load of `.el' files when they are newer than the `.elc' files.
   (setq load-prefer-newer t)            ; From Emacs 24.4.
 #+end_src
@@ -12435,6 +12464,9 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
 
   (leuven--section "28.1.7 VC Change Log")
 #+end_src
+
+- ~C-x v l~ ::
+     Display the change history for the current fileset (~vc-print-log~).
 
 - ~C-x v L~ ::
      Open the *log buffer* for the current *repository* (List the change log for the
@@ -16174,6 +16206,18 @@ bind it to a key:
 
   (global-set-key (kbd "C-c g G") #'leuven-google-search-active-region-or-word-at-point)
   (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
+#+end_src
+
+** How do I?
+
+Instant coding answers via Emacs.
+
+#+begin_src emacs-lisp
+  ;; A set of functions and bindings to Google under point.
+  (with-eval-after-load "howdoi-autoloads"
+
+    (global-set-key (kbd "C-c h n") #'howdoi-query)
+    (global-set-key (kbd "C-c h d") #'howdoi-query-insert-code-snippet-at-point))
 #+end_src
 
 ** Babel translator

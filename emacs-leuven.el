@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160601.1806
+;; Version: 20160601.2204
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160601.1806"
+(defconst leuven--emacs-version "20160601.2204"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -423,6 +423,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      helm-swoop
                                      hideshowvis
                                      highlight-symbol
+                                     howdoi
                                      htmlize
                                      indent-guide
                                      ;; jabber
@@ -7297,6 +7298,17 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "27.8 (emacs)Lisp Libraries")
 
+  ;; Remove *.elc when save.
+  (defun remove-elc-on-save ()
+    "If you're saving an elisp file, likely the .elc is no longer valid."
+    (make-local-variable 'after-save-hook)
+    (add-hook 'after-save-hook
+              (lambda ()
+                (if (file-exists-p (concat buffer-file-name "c"))
+                    (delete-file (concat buffer-file-name "c"))))))
+
+  (add-hook 'emacs-lisp-mode-hook #'remove-elc-on-save)
+
   ;; Force load of `.el' files when they are newer than the `.elc' files.
   (setq load-prefer-newer t)            ; From Emacs 24.4.
 
@@ -9312,6 +9324,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (global-set-key (kbd "C-c g G") #'leuven-google-search-active-region-or-word-at-point)
   (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
+
+  ;; A set of functions and bindings to Google under point.
+  (with-eval-after-load "howdoi-autoloads"
+
+    (global-set-key (kbd "C-c h n") #'howdoi-query)
+    (global-set-key (kbd "C-c h d") #'howdoi-query-insert-code-snippet-at-point))
 
 ;;** Babel
 
