@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160601.2204
+;; Version: 20160601.2314
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160601.2204"
+(defconst leuven--emacs-version "20160601.2314"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -449,6 +449,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      tidy
                                      unbound
                                      undo-tree
+                                     web-mode
                                      which-key
                                      ws-butler
                                      yasnippet)
@@ -6663,11 +6664,12 @@ this with to-do items than with projects or headings."
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
                                         ; Alias for `nxml-mode'.
 
-  (add-to-list 'auto-mode-alist '("\\.axvw\\'" . xml-mode)) ; ARCHIBUS view
+  ;; (add-to-list 'auto-mode-alist '("\\.axvw\\'" . xml-mode)) ; ARCHIBUS view
 
   (with-eval-after-load "web-mode-autoloads"
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode)))
+    (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
 
   (with-eval-after-load "nxml-mode"
 

@@ -758,6 +758,7 @@ like this into your configuration file:
                                      tidy
                                      unbound
                                      undo-tree
+                                     web-mode
                                      which-key
                                      ws-butler
                                      yasnippet)
@@ -10975,7 +10976,7 @@ tags around a region you've specified.
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
                                         ; Alias for `nxml-mode'.
 
-  (add-to-list 'auto-mode-alist '("\\.axvw\\'" . xml-mode)) ; ARCHIBUS view
+  ;; (add-to-list 'auto-mode-alist '("\\.axvw\\'" . xml-mode)) ; ARCHIBUS view
 #+end_src
 
 Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode.  It adds a lot
@@ -10998,7 +10999,8 @@ CSS/JS and blocks (client/server side).
 #+begin_src emacs-lisp
   (with-eval-after-load "web-mode-autoloads"
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode)))
+    (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
 #+end_src
 
 ** XML
