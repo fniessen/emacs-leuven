@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160601.1114
+;; Version: 20160601.1806
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160601.1114"
+(defconst leuven--emacs-version "20160601.1806"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -417,6 +417,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      goto-chg
                                      graphviz-dot-mode
                                      helm
+                                     helm-ag
                                      helm-descbinds
                                      helm-ls-git
                                      helm-swoop
@@ -2311,6 +2312,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Better version of `occur'.
     (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
+    (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
 
     (global-set-key (kbd "M-x") #'helm-M-x)
 
@@ -2350,15 +2352,15 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; (global-set-key (kbd "M-5") #'helm-etags-select)
 
-    (global-set-key (kbd "C-h a") #'helm-apropos) ; OK.
+    (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
 
-    (global-set-key (kbd "C-h i") #'helm-info-emacs)
+    (global-set-key (kbd "C-h i") #'helm-info-emacs) ; OK.
     ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
     ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
 
     ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 
-    (global-set-key (kbd "C-h b") #'helm-descbinds)
+    (global-set-key (kbd "C-h b") #'helm-descbinds) ; OK.
 
     (global-set-key (kbd "C-c h g") #'helm-google)
     (global-set-key (kbd "C-c h s") #'helm-google-suggest)
@@ -2442,6 +2444,15 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Set the warning threshold to 500 MB, which will get ride of "File abc.mp4 is
   ;; large (330.2M), really open? (y or n)" annoying message.
   (setq large-file-warning-threshold 500000000)
+
+  ;; the_silver_searcher.
+  (when (executable-find "ag")
+
+    ;; The silver searcher with Helm interface.
+    (with-eval-after-load "helm-ag-autoloads"
+
+      (global-set-key (kbd "C-c s") #'helm-ag)
+      (global-set-key (kbd "M-s s") #'helm-ag)))
 
   (with-eval-after-load "helm-command"
 
@@ -2556,16 +2567,10 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "19.2 (emacs)List Buffers")
 
-  ;; Rebind `C-x C-b'.
-  (global-set-key (kbd "C-x C-b") #'electric-buffer-list)
-                                        ; `buffer-menu' moves point in the
-                                        ; window which lists your buffers
-                                        ; `electric-buffer-list' pops up
-                                        ; a buffer describing the set of
-                                        ; buffers.
+  (unless (locate-library "helm-autoloads")
 
-  ;; Operate on buffers like Dired.
-  (global-set-key (kbd "C-x C-b") #'ibuffer)
+    ;; Operate on buffers like Dired.
+    (global-set-key (kbd "C-x C-b") #'ibuffer))
 
   (with-eval-after-load "ibuffer"
 
