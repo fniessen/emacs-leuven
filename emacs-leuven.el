@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160601.1109
+;; Version: 20160601.1114
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160601.1109"
+(defconst leuven--emacs-version "20160601.1114"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -3340,8 +3340,9 @@ These packages are neither built-in nor already installed nor ignored."
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
 
-    (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
-    (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk)
+    (with-eval-after-load "diff-hl"    ; Package.
+      (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
+      (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk))
 
     (key-chord-define-global "hb" #'describe-bindings)
     (key-chord-define-global "hf" #'describe-function)

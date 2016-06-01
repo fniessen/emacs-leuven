@@ -5811,8 +5811,9 @@ a factor 2!?
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
 
-    (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
-    (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk)
+    (with-eval-after-load "diff-hl"    ; Package.
+      (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
+      (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk))
 
     (key-chord-define-global "hb" #'describe-bindings)
     (key-chord-define-global "hf" #'describe-function)
