@@ -4163,6 +4163,25 @@ XXX Look at helm-dictionary.
                                         ; CAUTION for recursive loads...
 
     (global-unset-key (kbd "C-x c"))
+
+    (global-set-key (kbd "C-M-z") #'helm-resume)
+
+    (define-key helm-map (kbd "C-M-n") #'helm-next-source)
+    (define-key helm-map (kbd "C-M-p") #'helm-previous-source))
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; Via: http://www.reddit.com/r/emacs/comments/3asbyn/new_and_very_useful_helm_feature_enter_search/
+    (setq helm-echo-input-in-header-line t)
+    ;; (defun helm-hide-minibuffer-maybe ()
+    ;;   (when (with-helm-buffer helm-echo-input-in-header-line)
+    ;;     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+    ;;       (overlay-put ov 'window (selected-window))
+    ;;       (overlay-put ov 'face (let ((bg-color (face-background 'default nil)))
+    ;;                               `(:background ,bg-color :foreground ,bg-color)))
+    ;;       (setq-local cursor-type nil))))
+    ;;
+    ;; (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4216,11 +4235,14 @@ XXX Look at helm-dictionary.
 
     (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
                                         ; And `C-c =' (like in RefTeX)?
+
+    (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings)
 #+end_src
 
 #+begin_src emacs-lisp
     (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
     ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+    (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4248,15 +4270,7 @@ make your life much easier with million Emacs keys.
     (global-set-key (kbd "C-h b") #'helm-descbinds) ; OK.
 #+end_src
 
-#+begin_src emacs-lisp
-    (global-set-key (kbd "C-c h g") #'helm-google)
-    (global-set-key (kbd "C-c h s") #'helm-google-suggest)
-#+end_src
-
-#+begin_src emacs-lisp
-    (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
-                                        ; Or `C-c p s s' (Helm-projectile ag?)
-#+end_src
+See helm-flycheck!
 
 #+begin_src emacs-lisp
   )                                     ; require 'helm-config ends here.
@@ -4396,7 +4410,30 @@ Launchable from ~current-buffer~ or from ~helm-find-files~.
     (with-eval-after-load "helm-ag-autoloads"
 
       (global-set-key (kbd "C-c s") #'helm-ag)
-      (global-set-key (kbd "M-s s") #'helm-ag)))
+      (global-set-key (kbd "M-s s") #'helm-ag)
+
+      (global-set-key (kbd "C-M-s") #'helm-ag-this-file)
+      (global-set-key (kbd "C-M-s") #'helm-do-ag-project-root)
+
+      (global-set-key (kbd "M-g >") #'helm-ag-this-file)
+      (global-set-key (kbd "M-g ,") #'helm-ag-pop-stack)
+
+      (global-set-key (kbd "M-g ,") #'helm-do-grep)
+
+      (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
+                                        ; Or `C-c p s s' (Helm-projectile ag?)
+      ))
+
+  (with-eval-after-load "helm-ag"
+
+    ;; Base command of `ag'.
+    (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+
+    ;; Command line option of `ag'
+    (setq helm-ag-command-option "--all-text")
+
+    ;; Insert thing at point as search pattern.
+    (setq helm-ag-insert-at-point 'symbol))
 #+end_src
 
 See https://github.com/dingmingxin/dotfiles/blob/master/config_emacs/config/custom-init-helm.el
@@ -4503,8 +4540,10 @@ you were.
   ;; List Git files.
   (with-eval-after-load "helm-ls-git-autoloads"
 
-    (global-set-key (kbd "C-c C-f") 'helm-ls-git-ls)
-    (global-set-key (kbd "M-+") 'helm-ls-git-ls))
+    ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
+    (global-set-key (kbd "M-+") #'helm-ls-git-ls)
+
+    (global-set-key (kbd "C-x C-d") #'helm-browse-project))
 #+end_src
 
 See http://edvorg.com/edvorg/emacs-configs/blob/master/init.d/init-helm.el for
@@ -4529,7 +4568,11 @@ You can easily add actions for other sites you usually search for info on.
 #+end_note
 
 #+begin_src emacs-lisp
-  ;; ;; Emacs Helm Interface for quick Google searches
+  ;; Emacs Helm Interface for quick Google searches
+  (with-eval-after-load "helm-google-autoloads"
+    (global-set-key (kbd "C-c h g") #'helm-google)
+    (global-set-key (kbd "C-c h s") #'helm-google-suggest))
+
   ;; (with-eval-after-load "helm-google"
   ;;
   ;;   ;; (when (executable-find "curl")
@@ -11784,7 +11827,7 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
 
 #+begin_src emacs-lisp
   ;; An interface to the Eclipse IDE.
-  (with-eval-after-load "emacs-eclim-autoloads"
+  (with-eval-after-load "emacs-eclim-autoloads-XXX"
 
     ;; Enable Eclim mode in Java.
     (add-hook 'java-mode-hook #'eclim-mode))

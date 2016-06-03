@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160601.2314
+;; Version: 20160603.2302
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160601.2314"
+(defconst leuven--emacs-version "20160603.2302"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2312,6 +2312,23 @@ These packages are neither built-in nor already installed nor ignored."
 
     (global-unset-key (kbd "C-x c"))
 
+    (global-set-key (kbd "C-M-z") #'helm-resume)
+
+    (define-key helm-map (kbd "C-M-n") #'helm-next-source)
+    (define-key helm-map (kbd "C-M-p") #'helm-previous-source))
+
+    ;; Via: http://www.reddit.com/r/emacs/comments/3asbyn/new_and_very_useful_helm_feature_enter_search/
+    (setq helm-echo-input-in-header-line t)
+    ;; (defun helm-hide-minibuffer-maybe ()
+    ;;   (when (with-helm-buffer helm-echo-input-in-header-line)
+    ;;     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+    ;;       (overlay-put ov 'window (selected-window))
+    ;;       (overlay-put ov 'face (let ((bg-color (face-background 'default nil)))
+    ;;                               `(:background ,bg-color :foreground ,bg-color)))
+    ;;       (setq-local cursor-type nil))))
+    ;;
+    ;; (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
+
     ;; Better version of `occur'.
     (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
     (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
@@ -2349,8 +2366,11 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
                                         ; And `C-c =' (like in RefTeX)?
 
+    (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings)
+
     (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
     ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+    (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
 
     ;; (global-set-key (kbd "M-5") #'helm-etags-select)
 
@@ -2363,12 +2383,6 @@ These packages are neither built-in nor already installed nor ignored."
     ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 
     (global-set-key (kbd "C-h b") #'helm-descbinds) ; OK.
-
-    (global-set-key (kbd "C-c h g") #'helm-google)
-    (global-set-key (kbd "C-c h s") #'helm-google-suggest)
-
-    (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
-                                        ; Or `C-c p s s' (Helm-projectile ag?)
 
   )                                     ; require 'helm-config ends here.
 
@@ -2454,7 +2468,30 @@ These packages are neither built-in nor already installed nor ignored."
     (with-eval-after-load "helm-ag-autoloads"
 
       (global-set-key (kbd "C-c s") #'helm-ag)
-      (global-set-key (kbd "M-s s") #'helm-ag)))
+      (global-set-key (kbd "M-s s") #'helm-ag)
+
+      (global-set-key (kbd "C-M-s") #'helm-ag-this-file)
+      (global-set-key (kbd "C-M-s") #'helm-do-ag-project-root)
+
+      (global-set-key (kbd "M-g >") #'helm-ag-this-file)
+      (global-set-key (kbd "M-g ,") #'helm-ag-pop-stack)
+
+      (global-set-key (kbd "M-g ,") #'helm-do-grep)
+
+      (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
+                                        ; Or `C-c p s s' (Helm-projectile ag?)
+      ))
+
+  (with-eval-after-load "helm-ag"
+
+    ;; Base command of `ag'.
+    (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+
+    ;; Command line option of `ag'
+    (setq helm-ag-command-option "--all-text")
+
+    ;; Insert thing at point as search pattern.
+    (setq helm-ag-insert-at-point 'symbol))
 
   (with-eval-after-load "helm-command"
 
@@ -2497,10 +2534,16 @@ These packages are neither built-in nor already installed nor ignored."
   ;; List Git files.
   (with-eval-after-load "helm-ls-git-autoloads"
 
-    (global-set-key (kbd "C-c C-f") 'helm-ls-git-ls)
-    (global-set-key (kbd "M-+") 'helm-ls-git-ls))
+    ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
+    (global-set-key (kbd "M-+") #'helm-ls-git-ls)
 
-  ;; ;; Emacs Helm Interface for quick Google searches
+    (global-set-key (kbd "C-x C-d") #'helm-browse-project))
+
+  ;; Emacs Helm Interface for quick Google searches
+  (with-eval-after-load "helm-google-autoloads"
+    (global-set-key (kbd "C-c h g") #'helm-google)
+    (global-set-key (kbd "C-c h s") #'helm-google-suggest))
+
   ;; (with-eval-after-load "helm-google"
   ;;
   ;;   ;; (when (executable-find "curl")
@@ -7012,7 +7055,7 @@ mouse-3: go to end") "]")))
     (setq glasses-separate-parentheses-p nil))
 
   ;; An interface to the Eclipse IDE.
-  (with-eval-after-load "emacs-eclim-autoloads"
+  (with-eval-after-load "emacs-eclim-autoloads-XXX"
 
     ;; Enable Eclim mode in Java.
     (add-hook 'java-mode-hook #'eclim-mode))
