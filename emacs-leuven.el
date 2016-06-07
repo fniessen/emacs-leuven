@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160603.2302
+;; Version: 20160607.2232
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160603.2302"
+(defconst leuven--emacs-version "20160607.2232"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -2314,9 +2314,6 @@ These packages are neither built-in nor already installed nor ignored."
 
     (global-set-key (kbd "C-M-z") #'helm-resume)
 
-    (define-key helm-map (kbd "C-M-n") #'helm-next-source)
-    (define-key helm-map (kbd "C-M-p") #'helm-previous-source))
-
     ;; Via: http://www.reddit.com/r/emacs/comments/3asbyn/new_and_very_useful_helm_feature_enter_search/
     (setq helm-echo-input-in-header-line t)
     ;; (defun helm-hide-minibuffer-maybe ()
@@ -2348,7 +2345,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
 
-    (global-set-key (kbd "C-x r l") #'helm-bookmarks)
+    (global-set-key (kbd "C-x r l") #'helm-bookmarks) ; Instead of `bookmark-jump'.
     (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks) ; XXX?
 
     ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
@@ -2387,6 +2384,19 @@ These packages are neither built-in nor already installed nor ignored."
   )                                     ; require 'helm-config ends here.
 
   (with-eval-after-load "helm"
+
+    ;; Rebind TAB to do persistent action.
+    (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+    (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
+                                        ; Make TAB works in terminal.
+    ;; List actions using C-z.
+    (define-key helm-map (kbd "C-z") #'helm-select-action)
+
+    (define-key helm-map (kbd "C-M-n") #'helm-next-source)
+    (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
+
+    ;; Ace-Jump to a candidate line in Helm window.
+    (define-key helm-map (kbd "@") 'ace-jump-helm-line)
 
     ;; Various functions for Helm (Shell history, etc.).
     (require 'helm-misc)
@@ -2435,11 +2445,6 @@ These packages are neither built-in nor already installed nor ignored."
     ;; (helm-mode 1)
     )
 
-  (with-eval-after-load "helm"
-
-    ;; Ace-Jump to a candidate line in Helm window.
-    (define-key helm-map (kbd "@") 'ace-jump-helm-line))
-
   (with-eval-after-load "helm-files"
 
     ;; Don't show only basename of candidates in `helm-find-files'.
@@ -2461,6 +2466,21 @@ These packages are neither built-in nor already installed nor ignored."
   ;; large (330.2M), really open? (y or n)" annoying message.
   (setq large-file-warning-threshold 500000000)
 
+  ;; A convenient `describe-bindings' with `helm'.
+  (with-eval-after-load "helm-descbinds"
+
+    ;; Window splitting style.
+    (setq helm-descbinds-window-style 'split-window))
+
+  ;;
+  (with-eval-after-load "helm-grep-autoloads"
+
+      (global-set-key (kbd "M-g ,") #'helm-do-grep)
+
+      (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
+                                        ; Or `C-c p s s' (Helm-projectile ag?)
+      )
+
   ;; the_silver_searcher.
   (when (executable-find "ag")
 
@@ -2470,22 +2490,26 @@ These packages are neither built-in nor already installed nor ignored."
       (global-set-key (kbd "C-c s") #'helm-ag)
       (global-set-key (kbd "M-s s") #'helm-ag)
 
-      (global-set-key (kbd "C-M-s") #'helm-ag-this-file)
-      (global-set-key (kbd "C-M-s") #'helm-do-ag-project-root)
+      ;; Search with Ag from project root.
+      (global-set-key (kbd "C-S-r") #'helm-do-ag-project-root)
 
+      ;; Search with Ag.  Ask for directory first.
+      (global-set-key (kbd "C-S-d") 'helm-do-ag)
+
+      ;; Search with Ag this file (like Swoop).
+      (global-set-key (kbd "C-S-f") #'helm-ag-this-file)
       (global-set-key (kbd "M-g >") #'helm-ag-this-file)
+
+      ;; Search with Ag in current projectile project.
+      (global-set-key (kbd "C-S-a") 'helm-projectile-ag)
+
       (global-set-key (kbd "M-g ,") #'helm-ag-pop-stack)
-
-      (global-set-key (kbd "M-g ,") #'helm-do-grep)
-
-      (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
-                                        ; Or `C-c p s s' (Helm-projectile ag?)
       ))
 
   (with-eval-after-load "helm-ag"
 
     ;; Base command of `ag'.
-    (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+    (setq helm-ag-base-command (concat helm-ag-base-command " --ignore-case"))
 
     ;; Command line option of `ag'
     (setq helm-ag-command-option "--all-text")
@@ -2495,8 +2519,11 @@ These packages are neither built-in nor already installed nor ignored."
 
   (with-eval-after-load "helm-command"
 
-    ;; Save command even when it fails.
+    ;; Save command even when it fails (on errors).
     (setq helm-M-x-always-save-history t))
+
+  ;; (with-eval-after-load "helm-autoloads"
+  ;;   (global-set-key [remap locate] #'helm-locate))
 
   (with-eval-after-load "helm-locate"
 
@@ -3382,9 +3409,9 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "key-chord"
 
     (with-eval-after-load "hideshow"    ; Package.
-      (key-chord-define hs-minor-mode-map "--" #'hs-hide-block) ; Not autoloaded.
+      ;; (key-chord-define hs-minor-mode-map "--" #'hs-hide-block) ; Not autoloaded. That's SQL comment marker!
       (key-chord-define hs-minor-mode-map "++" #'hs-show-block) ; Not autoloaded.
-      (key-chord-define hs-minor-mode-map "//" #'hs-hide-all) ; Not autoloaded.
+      ;; (key-chord-define hs-minor-mode-map "//" #'hs-hide-all) ; Not autoloaded. That's Java comment marker!
       (key-chord-define hs-minor-mode-map "**" #'hs-show-all)) ; Not autoloaded.
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
@@ -4405,6 +4432,17 @@ These packages are neither built-in nor already installed nor ignored."
   (global-set-key (kbd "C-c C-x C-i") #'org-clock-in)
   (global-set-key (kbd "C-c C-x C-j") #'org-clock-goto)
   (global-set-key (kbd "C-c C-x C-o") #'org-clock-out)
+
+  (defun leuven-helm-org-clock-in (marker)
+    "Clock into the item at MARKER"
+    (with-current-buffer (marker-buffer marker)
+      (goto-char (marker-position marker))
+      (org-clock-in)))
+
+  ;; Add action "Clock into task" directly from helm-org session
+  (with-eval-after-load 'helm-org
+    (nconc helm-org-headings-actions
+           (list (cons "Clock into task" #'leuven-helm-org-clock-in))))
 
   ;; The time clocking code for Org mode.
   ;; (require 'org-clock)               ;! needed for trying to automatically
@@ -5972,9 +6010,9 @@ this with to-do items than with projects or headings."
     (org-babel-do-load-languages        ; Loads org, gnus-sum, etc...
      'org-babel-load-languages org-babel-load-languages)
 
-    ;; Don't use getline for command-line editing and assert interactive use.
-    (setq org-babel-R-command
-          (concat org-babel-R-command " --ess"))
+    ;; ;; Don't use getline for command-line editing and assert interactive use.
+    ;; (setq org-babel-R-command
+    ;;       (concat org-babel-R-command " --ess"))
 
     ;; Accented characters on graphics.
     (setq org-babel-R-command
@@ -6714,6 +6752,14 @@ this with to-do items than with projects or headings."
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
 
+  (with-eval-after-load "web-mode"
+
+    ;; Enable block face (useful for setting background of <style>).
+    (setq web-mode-enable-block-face t)
+
+    ;; Enable part face (useful for setting background of <script>).
+    (setq web-mode-enable-part-face t))
+
   (with-eval-after-load "nxml-mode"
 
     ;; Indent 4 spaces (for the children of an element relative to the start-tag).
@@ -6749,7 +6795,10 @@ this with to-do items than with projects or headings."
                 ;; When `html-mode-hook' is called from `html-helper-mode'.
                 (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
 
-    (add-hook 'nxml-mode-hook #'hl-tags-mode))
+    (add-hook 'nxml-mode-hook #'hl-tags-mode)
+
+    (add-hook 'web-mode-hook #'hl-tags-mode)
+)
 
 ;; TODO: Handle media queries
 ;; TODO: Handle wrapped lines
@@ -6848,6 +6897,16 @@ this with to-do items than with projects or headings."
                              help-echo "mouse-1: go to beginning\n\
 mouse-2: toggle rest visibility\n\
 mouse-3: go to end") "]")))
+
+  (with-eval-after-load "helm-imenu-autoloads"
+
+    ;; Keybinding to quickly jump to a symbol in buffer.
+    (global-set-key [remap imenu] #'helm-imenu))
+
+  (with-eval-after-load "helm-imenu"
+
+    ;; Do not directly jump to the definition even if there is just on candidate.
+    (setq helm-imenu-execute-action-at-once-if-one nil))
 
   ;; Helm Imenu tag selection across all buffers with the same mode.
   (with-eval-after-load "imenu-anywhere-autoloads"
@@ -8028,7 +8087,12 @@ a clean buffer we're an order of magnitude laxer about checking."
     (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
-    (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test. Or helm-c-yas-complete?
+    (global-set-key (kbd "C-/") #'helm-company) ;; ?
+
+    (global-set-key (kbd "C-c y") #'company-yasnippet)
+                                        ; Better than `helm-yas-complete' as
+                                        ; `company-yasnippet' shows both the key
+                                        ; and the replacement.
     )
 
   (with-eval-after-load "company"
@@ -8915,7 +8979,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio.
 
     (when (featurep 'helm-misc)
-      ;; Provide completion of `comint' history.
+      ;; Use Helm to search `comint' history.
       (define-key comint-mode-map
         (kbd "C-c C-l") #'helm-comint-input-ring)))
 

@@ -25,6 +25,12 @@ Others did already:
 - http://coldnew.github.io/coldnew-emacs/
 - spacemacs
 
+** TODO Use the bug hunter
+
+The Bug Hunter https://travis-ci.org/Malabarba/elisp-bug-hunter.svg?branch=master
+
+Automatically debug and bisect your init (.emacs) file!
+
 ** TODO Improve writing of time-substract
 
 #+begin_src emacs-lisp
@@ -4075,20 +4081,13 @@ you chose not to happen.  Now look for substitute for ~TAB~.
 Something not ~TAB~ can be ~C-z~, ~C-TAB~, and ~SPC~.
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-find-files-map (kbd "<tab>") #'helm-execute-persistent-action)
 (define-key helm-find-files-map (kbd "<C-tab>") #'helm-select-action)
-(define-key helm-find-files-map (kbd "C-z") #'helm-select-action)
 (define-key helm-find-files-map (kbd "<SPC>") #'helm-select-action)
 (define-key helm-find-files-map (kbd "<RET>") #'helm-confirm-and-exit-minibuffer)
 (define-key helm-find-files-map (kbd "^") #'helm-find-files-up-one-level)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action) ; Rebind TAB to do persistent action.
-(define-key helm-map (kbd "C-i") #'helm-execute-persistent-action) ; Make TAB works in terminal.
-
-(define-key helm-map (kbd "C-z") #'helm-select-action) ; List actions using C-z.
-
 (define-key helm-grep-mode-map (kbd "<RET>") #'helm-grep-mode-jump-other-window)
 (define-key helm-grep-mode-map (kbd "n") #'helm-grep-mode-jump-other-window-forward)
 (define-key helm-grep-mode-map (kbd "p") #'helm-grep-mode-jump-other-window-backward)
@@ -4165,9 +4164,6 @@ XXX Look at helm-dictionary.
     (global-unset-key (kbd "C-x c"))
 
     (global-set-key (kbd "C-M-z") #'helm-resume)
-
-    (define-key helm-map (kbd "C-M-n") #'helm-next-source)
-    (define-key helm-map (kbd "C-M-p") #'helm-previous-source))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4214,7 +4210,7 @@ XXX Look at helm-dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-x r l") #'helm-bookmarks)
+    (global-set-key (kbd "C-x r l") #'helm-bookmarks) ; Instead of `bookmark-jump'.
     (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks) ; XXX?
 #+end_src
 
@@ -4263,9 +4259,6 @@ XXX Look at helm-dictionary.
     ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 #+end_src
 
-Use the separate Helm Descbinds to get a quick *key bindings* overview.  It will
-make your life much easier with million Emacs keys.
-
 #+begin_src emacs-lisp
     (global-set-key (kbd "C-h b") #'helm-descbinds) ; OK.
 #+end_src
@@ -4278,6 +4271,19 @@ See helm-flycheck!
 
 #+begin_src emacs-lisp
   (with-eval-after-load "helm"
+
+    ;; Rebind TAB to do persistent action.
+    (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+    (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
+                                        ; Make TAB works in terminal.
+    ;; List actions using C-z.
+    (define-key helm-map (kbd "C-z") #'helm-select-action)
+
+    (define-key helm-map (kbd "C-M-n") #'helm-next-source)
+    (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
+
+    ;; Ace-Jump to a candidate line in Helm window.
+    (define-key helm-map (kbd "@") 'ace-jump-helm-line)
 
     ;; Various functions for Helm (Shell history, etc.).
     (require 'helm-misc)
@@ -4325,13 +4331,6 @@ See helm-flycheck!
     ;; ;; `completing-read' or `read-file-name' and friends).
     ;; (helm-mode 1)
     )
-#+end_src
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "helm"
-
-    ;; Ace-Jump to a candidate line in Helm window.
-    (define-key helm-map (kbd "@") 'ace-jump-helm-line))
 #+end_src
 
 **** Helm find files
@@ -4398,9 +4397,33 @@ enter. All in once nice package.
 See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs][Sublime Text 2's "Goto Anything" (or instant search) for Emacs?]]
 + https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
 
+**** Descbinds
+
+Use the separate Helm Descbinds to get a quick *key bindings* overview.  It will
+make your life much easier with million Emacs keys.
+
+#+begin_src emacs-lisp
+  ;; A convenient `describe-bindings' with `helm'.
+  (with-eval-after-load "helm-descbinds"
+
+    ;; Window splitting style.
+    (setq helm-descbinds-window-style 'split-window))
+#+end_src
+
 **** Grep
 
 Launchable from ~current-buffer~ or from ~helm-find-files~.
+
+#+begin_src emacs-lisp
+  ;;
+  (with-eval-after-load "helm-grep-autoloads"
+
+      (global-set-key (kbd "M-g ,") #'helm-do-grep)
+
+      (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
+                                        ; Or `C-c p s s' (Helm-projectile ag?)
+      )
+#+end_src
 
 #+begin_src emacs-lisp
   ;; the_silver_searcher.
@@ -4412,22 +4435,26 @@ Launchable from ~current-buffer~ or from ~helm-find-files~.
       (global-set-key (kbd "C-c s") #'helm-ag)
       (global-set-key (kbd "M-s s") #'helm-ag)
 
-      (global-set-key (kbd "C-M-s") #'helm-ag-this-file)
-      (global-set-key (kbd "C-M-s") #'helm-do-ag-project-root)
+      ;; Search with Ag from project root.
+      (global-set-key (kbd "C-S-r") #'helm-do-ag-project-root)
 
+      ;; Search with Ag.  Ask for directory first.
+      (global-set-key (kbd "C-S-d") 'helm-do-ag)
+
+      ;; Search with Ag this file (like Swoop).
+      (global-set-key (kbd "C-S-f") #'helm-ag-this-file)
       (global-set-key (kbd "M-g >") #'helm-ag-this-file)
+
+      ;; Search with Ag in current projectile project.
+      (global-set-key (kbd "C-S-a") 'helm-projectile-ag)
+
       (global-set-key (kbd "M-g ,") #'helm-ag-pop-stack)
-
-      (global-set-key (kbd "M-g ,") #'helm-do-grep)
-
-      (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
-                                        ; Or `C-c p s s' (Helm-projectile ag?)
       ))
 
   (with-eval-after-load "helm-ag"
 
     ;; Base command of `ag'.
-    (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+    (setq helm-ag-base-command (concat helm-ag-base-command " --ignore-case"))
 
     ;; Command line option of `ag'
     (setq helm-ag-command-option "--all-text")
@@ -4460,7 +4487,7 @@ pressing ~RET~.
 #+begin_src emacs-lisp
   (with-eval-after-load "helm-command"
 
-    ;; Save command even when it fails.
+    ;; Save command even when it fails (on errors).
     (setq helm-M-x-always-save-history t))
 #+end_src
 
@@ -4474,6 +4501,9 @@ interface ~es.exe~.
 #+end_note
 
 #+begin_src emacs-lisp
+  ;; (with-eval-after-load "helm-autoloads"
+  ;;   (global-set-key [remap locate] #'helm-locate))
+
   (with-eval-after-load "helm-locate"
 
     (when (and (or leuven--win32-p leuven--cygwin-p)
@@ -4616,6 +4646,11 @@ A few demos:
 
 - You can invoke `helm-do-grep` on any project directory when using
   a `helm-projectile` command.
+
+#+begin_src emacs-lisp :tangle no
+;; Always ignore .class files.
+(add-to-list 'projectile-globally-ignored-file-suffixes ".class")
+#+end_src
 
 **** Lisp completion
 
@@ -5868,9 +5903,9 @@ a factor 2!?
   (with-eval-after-load "key-chord"
 
     (with-eval-after-load "hideshow"    ; Package.
-      (key-chord-define hs-minor-mode-map "--" #'hs-hide-block) ; Not autoloaded.
+      ;; (key-chord-define hs-minor-mode-map "--" #'hs-hide-block) ; Not autoloaded. That's SQL comment marker!
       (key-chord-define hs-minor-mode-map "++" #'hs-show-block) ; Not autoloaded.
-      (key-chord-define hs-minor-mode-map "//" #'hs-hide-all) ; Not autoloaded.
+      ;; (key-chord-define hs-minor-mode-map "//" #'hs-hide-all) ; Not autoloaded. That's Java comment marker!
       (key-chord-define hs-minor-mode-map "**" #'hs-show-all)) ; Not autoloaded.
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
@@ -7459,6 +7494,17 @@ Alternative to requiring org-clock in every Emacs session.
   (global-set-key (kbd "C-c C-x C-i") #'org-clock-in)
   (global-set-key (kbd "C-c C-x C-j") #'org-clock-goto)
   (global-set-key (kbd "C-c C-x C-o") #'org-clock-out)
+
+  (defun leuven-helm-org-clock-in (marker)
+    "Clock into the item at MARKER"
+    (with-current-buffer (marker-buffer marker)
+      (goto-char (marker-position marker))
+      (org-clock-in)))
+
+  ;; Add action "Clock into task" directly from helm-org session
+  (with-eval-after-load 'helm-org
+    (nconc helm-org-headings-actions
+           (list (cons "Clock into task" #'leuven-helm-org-clock-in))))
 
   ;; The time clocking code for Org mode.
   ;; (require 'org-clock)               ;! needed for trying to automatically
@@ -9780,9 +9826,9 @@ languages which can be evaluated in Org mode buffers.
     (org-babel-do-load-languages        ; Loads org, gnus-sum, etc...
      'org-babel-load-languages org-babel-load-languages)
 
-    ;; Don't use getline for command-line editing and assert interactive use.
-    (setq org-babel-R-command
-          (concat org-babel-R-command " --ess"))
+    ;; ;; Don't use getline for command-line editing and assert interactive use.
+    ;; (setq org-babel-R-command
+    ;;       (concat org-babel-R-command " --ess"))
 
     ;; Accented characters on graphics.
     (setq org-babel-R-command
@@ -11044,6 +11090,14 @@ CSS/JS and blocks (client/server side).
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
+
+  (with-eval-after-load "web-mode"
+
+    ;; Enable block face (useful for setting background of <style>).
+    (setq web-mode-enable-block-face t)
+
+    ;; Enable part face (useful for setting background of <script>).
+    (setq web-mode-enable-part-face t))
 #+end_src
 
 ** XML
@@ -11114,7 +11168,10 @@ Some key bindings:
                 ;; When `html-mode-hook' is called from `html-helper-mode'.
                 (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
 
-    (add-hook 'nxml-mode-hook #'hl-tags-mode))
+    (add-hook 'nxml-mode-hook #'hl-tags-mode)
+
+    (add-hook 'web-mode-hook #'hl-tags-mode)
+)
 #+end_src
 
 ** CSS
@@ -11283,6 +11340,18 @@ In a sense, it is similar to ~etag~ selection, but works only for the /open/
 buffers -- you don't get thousands of symbols from ~etags~ to deal with.  And this
 is often more convenient as you don't have to explicitly build the ~etags~ table.
 #+end_note
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "helm-imenu-autoloads"
+
+    ;; Keybinding to quickly jump to a symbol in buffer.
+    (global-set-key [remap imenu] #'helm-imenu))
+
+  (with-eval-after-load "helm-imenu"
+
+    ;; Do not directly jump to the definition even if there is just on candidate.
+    (setq helm-imenu-execute-action-at-once-if-one nil))
+#+end_src
 
 #+begin_src emacs-lisp
   ;; Helm Imenu tag selection across all buffers with the same mode.
@@ -12044,7 +12113,7 @@ thereafter.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 #+end_src
 
-Ag, the silver searcher:
+Ag, the silver searcher (in Cygwin!):
 - https://github.com/howardabrams/dot-files/blob/master/emacs.org
 - https://www.reddit.com/r/emacs/comments/3fr4ro/how_do_you_grep/
 
@@ -12074,6 +12143,10 @@ Ag search options:
 
 - ~--all-text~ ::
      Search *all text files* (doesn't include hidden files).
+
+#+begin_src shell :tangle no
+ag %s -l --nocolor --hidden -g ""
+#+end_src
 
 #+begin_src emacs-lisp
     (when (executable-find "agXXX") ; Need to fix base dir and file extensions
@@ -13781,7 +13854,12 @@ available completions and filter as well.
     (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
-    (global-set-key (kbd "C-c y") #'company-yasnippet) ; Test. Or helm-c-yas-complete?
+    (global-set-key (kbd "C-/") #'helm-company) ;; ?
+
+    (global-set-key (kbd "C-c y") #'company-yasnippet)
+                                        ; Better than `helm-yas-complete' as
+                                        ; `company-yasnippet' shows both the key
+                                        ; and the replacement.
     )
 
   (with-eval-after-load "company"
@@ -15357,7 +15435,7 @@ bufffer from Emacs.
       (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio.
 
     (when (featurep 'helm-misc)
-      ;; Provide completion of `comint' history.
+      ;; Use Helm to search `comint' history.
       (define-key comint-mode-map
         (kbd "C-c C-l") #'helm-comint-input-ring)))
 #+end_src
