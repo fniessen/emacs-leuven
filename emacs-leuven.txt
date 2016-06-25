@@ -25,6 +25,10 @@ Others did already:
 - http://coldnew.github.io/coldnew-emacs/
 - spacemacs
 
+Or put in on RTD:
+- http://emacs.readthedocs.io/en/latest/completion_and_selection.html (via =docs=
+  subdirectory)
+
 ** TODO Use the bug hunter
 
 The Bug Hunter https://travis-ci.org/Malabarba/elisp-bug-hunter.svg?branch=master
@@ -698,6 +702,7 @@ like this into your configuration file:
                                      ace-link
                                      ace-window
                                      ;; aggressive-indent
+                                     ant
                                      anzu
                                      auctex
                                      auto-complete
@@ -708,6 +713,7 @@ like this into your configuration file:
                                      circe
                                      color-identifiers-mode
                                      company
+                                     company-tern
                                      company-quickhelp
                                      csv-mode
                                      cygwin-mount
@@ -742,10 +748,10 @@ like this into your configuration file:
                                      htmlize
                                      indent-guide
                                      ;; jabber
+                                     js2-mode
                                      key-chord
                                      litable
                                      idle-require
-                                     imenu-anywhere
                                      info+
                                      interaction-log
                                      ledger-mode
@@ -759,8 +765,10 @@ like this into your configuration file:
                                      ;; paredit
                                      pdf-tools
                                      powerline
+                                     rainbow-delimiters
                                      rainbow-mode
                                      ;; redshank
+                                     tern
                                      tidy
                                      unbound
                                      undo-tree
@@ -1395,12 +1403,10 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
     ;; Add a cursor and region at the next part of the buffer forwards that
     ;; matches the current region.
     (global-set-key (kbd "C->") #'mc/mark-next-like-this) ;!
-    ;; (global-set-key (kbd "C-c >") #'mc/mark-next-like-this)
 
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
     (global-set-key (kbd "C-<") #'mc/mark-previous-like-this) ;!
-    ;; (global-set-key (kbd "C-c <") #'mc/mark-previous-like-this)
 
     (global-set-key (kbd "C-M->") #'mc/skip-to-next-like-this)
     (global-set-key (kbd "C-M-<") #'mc/skip-to-previous-like-this)
@@ -1414,6 +1420,7 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 
 #+begin_src emacs-lisp
     (global-set-key (kbd "C-;") #'mc/mark-all-like-this-dwim) ;! Like Iedit.
+    ;; (global-set-key (kbd "C-c C-w") #'mc/mark-all-like-this-dwim)
     ;; (global-set-key (kbd "C-x C-;") #'mc/mark-all-like-this-dwim)
 
     ;; Mark all parts of the buffer that matches the current region.
@@ -1572,6 +1579,14 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
                (and (not current-prefix-arg)
                     (derived-mode-p 'prog-mode)
                     (indent-region (region-beginning) (region-end) nil))))))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Save clipboard strings into kill ring before replacing them.
+  (setq save-interprogram-paste-before-kill t)
+
+  ;; ;; Rotating the kill ring changes the window system selection.
+  ;; (setq yank-pop-change-selection t)
 #+end_src
 
 *** Yanking Earlier Kills
@@ -1768,6 +1783,30 @@ Annotating bookmarks.
 #+begin_warning
 We bookmarks positions, not just lines!!
 #+end_warning
+
+(setq bm-marker 'bm-marker-right
+      bm-repository-file (concat emacs-persistence-directory "bm-repository")
+      bm-recenter t
+      bm-highlight-style 'bm-highlight-only-fringe)
+
+(global-set-key (kbd "C-c m m") 'bm-toggle)
+(global-set-key (kbd "<right-fringe> <mouse-5>") 'bm-next-mouse)
+(global-set-key (kbd "<right-fringe> <mouse-4>") 'bm-previous-mouse)
+(global-set-key (kbd "<right-fringe> <mouse-1>") 'bm-toggle-mouse)
+
+(with-eval-after-load "bm"
+  (defvar bm-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "m") 'bm-toggle)
+      (define-key map (kbd "n") (make-repeatable-command 'bm-next))
+      (define-key map (kbd "p") (make-repeatable-command 'bm-previous))
+      (define-key map (kbd "L") 'bm-show-all)
+      (define-key map (kbd "l") 'bm-show)
+      (define-key map (kbd "s") 'bm-save)
+      (define-key map (kbd "r") 'bm-load-and-restore)
+      map)
+    "Keymap for `bm.el'.")
+  (global-set-key (kbd "C-c m") bm-mode-map))
 
 #+begin_src emacs-lisp
     ;; Extensions to standard library `bookmark.el'.
@@ -2020,6 +2059,30 @@ https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html.
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; Highlight-Changes mode.
+  (with-eval-after-load "hilit-chg"
+    (defvar highlight-fringe-mark 'filled-rectangle
+      "The fringe bitmap name marked at changed line.
+Should be selected from `fringe-bitmaps'.")
+
+    (defadvice hilit-chg-make-ov (after hilit-chg-add-fringe activate)
+      (mapc (lambda (ov)
+              (if (overlay-get ov 'hilit-chg)
+                  (let ((fringe-anchor (make-string 1 ?x)))
+                    (put-text-property 0 1 'display
+                                       (list 'left-fringe highlight-fringe-mark)
+                                       fringe-anchor)
+                    (overlay-put ov 'before-string fringe-anchor))))
+            (overlays-at (ad-get-arg 1)))))
+
+  ;; Enable Global-Highlight-Changes mode.
+  (global-highlight-changes-mode 1)
+
+  ;; ;; Changes are initially NOT visible in Highlight Changes mode.
+  ;; (setq highlight-changes-visibility-initial-state nil)
+#+end_src
+
 You can use *Hi Lock* (part of Emacs) to highlight a regexp (identical tokens)
 throughout a buffer.
 
@@ -2104,11 +2167,14 @@ point, the highlighting goes away.
 Toggle Auto-Highlight-Symbol using key chord ~**~.
 
 #+begin_src emacs-lisp
-  ;; Automatic highlighting current symbol.
+  ;; Automatic highlighting occurrences of the current symbol under cursor.
   (when (try-require 'auto-highlight-symbol)
 
     ;; Add R.
     (add-to-list 'ahs-modes 'ess-mode t)
+
+    ;; Add js2-mode.
+    (add-to-list 'ahs-modes 'js2-mode t)
 
     ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
     ;; (global-auto-highlight-symbol-mode t)
@@ -2144,7 +2210,7 @@ changes.
   ;; Indicate changes in the fringe.
   (with-eval-after-load "diff-hl"
 
-    (global-diff-hl-mode)
+    (global-diff-hl-mode 1)
 #+end_src
 
 If you're using some package other than ~vc~ to commit changes, it might not run
@@ -2161,6 +2227,7 @@ Jump between changes:
 #+begin_src emacs-lisp
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd "@") #'diff-hl-next-hunk)
 
     ;; Jump to previous hunk (also on `C-x v [').
     (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
@@ -2241,6 +2308,9 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
   (with-eval-after-load "ws-butler"
     (diminish 'ws-butler-mode))
 #+end_src
+
+XXX Check whether explicitly inserted tabs (at beginning of lines) are deleted
+because of this.
 
 #+begin_src emacs-lisp
   ;; Visually indicate empty lines after the buffer end in the fringe.
@@ -3374,6 +3444,8 @@ Update time stamps (and copyright notice) automatically.
     ;; Remove less important overlays
     (dolist (o (overlays-in (window-start) (window-end)))
       (when (or (equal (overlay-get o 'face) 'recover-this-file)
+                (equal (overlay-get o 'face) 'highlight-changes)
+                (equal (overlay-get o 'face) 'highlight-changes-delete)
                 (equal (overlay-get o 'face) 'org-block-executing))
         (delete-overlay o)))            ; Useful when our advice of function
                                         ; `org-babel-execute-src-block' fails to
@@ -4220,14 +4292,14 @@ XXX Look at helm-dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
-    (defun leuven-helm-org-prog-menu ()
+    (defun leuven-helm-org-prog-menu (arg)
       "Jump to a place in the buffer using an Index menu.
     For Org mode buffers, show Org headlines.
     For programming mode buffers, show functions, variables, etc."
-      (interactive)
+      (interactive "P")
       (cond ((derived-mode-p 'org-mode) (helm-org-in-buffer-headings))
             ((derived-mode-p 'tex-mode) (helm-imenu))
-            (t (helm-semantic-or-imenu)))) ; More generic than `helm-imenu'.
+            (t (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
     (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
                                         ; And `C-c =' (like in RefTeX)?
@@ -4425,6 +4497,21 @@ Launchable from ~current-buffer~ or from ~helm-find-files~.
       )
 #+end_src
 
+Keymap:
+
+~helm-ag-map~ and ~helm-do-ag-map~ are inherited by ~helm-map~.
+
+| Key           | Action                                                                     |
+|---------------+----------------------------------------------------------------------------|
+| C-c o         | Open other window                                                          |
+| C-l           | Search in parent directory                                                 |
+| C-c C-e       | Switch to edit mode                                                        |
+| C-x C-s       | Save ag results to buffer(Ask save buffer name if prefix key is specified) |
+| C-c C-f       | Enable helm-follow-mode                                                    |
+| C-c > , right | Move to next file                                                          |
+| C-c < , left  | Move to previous file                                                      |
+| C-c ?         | Show help message                                                          |
+
 #+begin_src emacs-lisp
   ;; the_silver_searcher.
   (when (executable-find "ag")
@@ -4572,7 +4659,9 @@ you were.
 
     ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
     (global-set-key (kbd "M-+") #'helm-ls-git-ls)
+    (global-set-key (kbd "<S-f3>") #'helm-ls-git-ls)
 
+    ;; Browse files and see status of project with its VCS.
     (global-set-key (kbd "C-x C-d") #'helm-browse-project))
 #+end_src
 
@@ -5676,7 +5765,7 @@ file) is beginning at column 0.
 
 ** Tabs vs. Spaces
 
-Don't tabify.  Instead, _reindent_ everything, e.g. with C-M-\.
+Don't tabify.  Instead, _reindent_ everything, e.g. with ~C-M-\~.
 
 #+begin_src emacs-lisp
 ;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
@@ -5935,16 +6024,14 @@ a factor 2!?
       (key-chord-define-global "xj" #'dired-jump)) ; Autoloaded?
 
     (key-chord-define-global "vb" #'eval-buffer)
-    ;; (key-chord-define-global "vg" #'eval-region)
-                                        ; 2015-02-17 Crash Gnus `C-u g'
+    ;; (key-chord-define-global "vg" #'eval-region) ; 2015-02-17 Crash Gnus `C-u g'
 
-    ;; (key-chord-define-global "x0" #'delete-window)
-                                        ; 2015-02-09 Crash Gnus `C-u 3'
-    ;; (key-chord-define-global "x1" #'delete-other-windows)
-                                        ; 2015-02-05 Crash Gnus `C-u 1'
+    ;; (key-chord-define-global "x0" #'delete-window) ; 2015-02-09 Crash Gnus `C-u 3'
+    ;; (key-chord-define-global "x1" #'delete-other-windows) ; 2015-02-05 Crash Gnus `C-u 1'
     (key-chord-define-global "xh" #'mark-whole-buffer)
-    (key-chord-define-global "xk" #'kill-buffer) ; leuven-kill-this-buffer-without-query?
+    (key-chord-define-global "xk" #'kill-buffer)
     (key-chord-define-global "xo" #'other-window)
+    (key-chord-define-global "xs" #'save-buffer)
 
     (key-chord-define-global "yy" #'browse-kill-ring)
     (key-chord-define-global "zk" #'zap-to-char)
@@ -5952,10 +6039,8 @@ a factor 2!?
     (key-chord-define-global ";s" #'set-mark-command)
 
     ;; (with-eval-after-load "org-loaddefs" ; Autoloads file?
-      ;; (key-chord-define-global ",a" #'org-agenda) ; Autoloaded.
-                                        ; 2015-02-18 Crash Gnus `C-u a'
-      ;; (key-chord-define-global ",c" #'org-capture)) ; Autoloaded.
-                                        ; "Donc," is problematic...
+      ;; (key-chord-define-global ",a" #'org-agenda) ; Autoloaded. ; 2015-02-18 Crash Gnus `C-u a'
+      ;; (key-chord-define-global ",c" #'org-capture)) ; Autoloaded. ; "Donc," is problematic...
 
     (with-eval-after-load "org"         ; Package.
       (key-chord-define org-mode-map ",u" #'outline-up-heading)
@@ -5981,8 +6066,6 @@ a factor 2!?
 
     ;; (key-chord-define-global "ac" #'align-current)
     ;; (key-chord-define-global "fc" #'flycheck-mode)
-    ;; (key-chord-define-global "fv" (lambda () (interactive) (kill-buffer (buffer-name))))
-    ;; (key-chord-define-global "sv" #'save-buffer)
     ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
     ;; (global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))
     ;; (global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))
@@ -6042,6 +6125,8 @@ buffer just the definition of a function instead of the whole body).
 See also the library [[id:a36b1dbd-1d05-4ff2-b19a-167e50c4f1f7][hs-minor-mode]].
 
 You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
+
+See https://github.com/zk-phi/dotfiles/blob/master/emacs/init.el.
 
 #+begin_src emacs-lisp
   ;; Outline mode commands for Emacs.
@@ -6133,10 +6218,11 @@ For Emacs Lisp, Stefan Monnier additionally uses:
                   (hide-sublevels 1000))))
 #+end_src
 
-which starts outline-minor-mode by hiding all the bodies of functions.  He also
-uses ~reveal-mode~ which automatically unhides the bodies when you try to move
-the cursor into them (so you don't need to remember the key sequences to use
-for opening/closing elements).
+which starts outline-minor-mode by hiding all the bodies of functions.
+
+He also uses ~reveal-mode~ which automatically unhides the bodies when you try to
+move the cursor into them (so you don't need to remember the key sequences to
+use for opening/closing elements).
 
 *** org-global-cycle + outline-magic
 
@@ -8611,7 +8697,7 @@ Commands:
 
   (with-eval-after-load "org-agenda"
     (let ((leuven-org-agenda-views
-           (concat leuven--directory "org-custom-agenda-views.el")))
+           (concat leuven--directory "org-leuven-agenda-views.el")))
       (when (file-exists-p leuven-org-agenda-views)
         (load-file leuven-org-agenda-views))))
                                         ; with-eval-after-load "org-agenda" ends here.
@@ -10058,6 +10144,8 @@ Check out for valid dictionaries:
 
 *** Easy templates
 
+Lower-case in ~BEGIN_SRC~ and other keywords: do not stand out!
+
 #+begin_src emacs-lisp
 ;;** 15.2 (info "(org)Easy Templates")
 
@@ -11093,6 +11181,10 @@ CSS/JS and blocks (client/server side).
 
   (with-eval-after-load "web-mode"
 
+    (setq web-mode-enable-current-element-highlight t)
+
+    (setq web-mode-enable-auto-pairing t)
+
     ;; Enable block face (useful for setting background of <style>).
     (setq web-mode-enable-block-face t)
 
@@ -11177,17 +11269,17 @@ Some key bindings:
 ** CSS
 
 #+begin_src emacs-lisp
-;; TODO: Handle media queries
-;; TODO: Handle wrapped lines
-;; TODO: Ignore vendor prefixes
-(defun sort-css-properties ()
-  "Sort CSS properties alphabetically."
-  (interactive)
-  (let ((start (search-forward "{"))
-        (end (search-forward "}")))
-    (when (and start end)
-      (sort-lines nil start end)
-      (sort-declarations))))
+  ;; TODO: Handle media queries
+  ;; TODO: Handle wrapped lines
+  ;; TODO: Ignore vendor prefixes
+  (defun sort-css-properties ()
+    "Sort CSS properties alphabetically."
+    (interactive)
+    (let ((start (search-forward "{"))
+          (end (search-forward "}")))
+      (when (and start end)
+        (sort-lines nil start end)
+        (sort-declarations))))
 #+end_src
 
 ** Skewer: live web development with Emacs
@@ -11197,6 +11289,73 @@ need to start Chrome with ~chrome --allow-running-insecure-content~, if you're
 using the user script with HTTPS sites.
 
 ** JS2-mode + JS2-refactor
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "js2-mode-autoloads"
+
+    (add-to-list 'auto-mode-alist '("\\.js\\'\\|\\.json\\'" . js2-mode)))
+
+  (with-eval-after-load "js2-mode"
+
+    (add-hook 'js2-mode-hook #'tern-mode)
+
+    (define-key js2-mode-map (kbd "C-x C-e") 'js-send-last-sexp)
+    (define-key js2-mode-map (kbd "C-M-x") 'js-send-last-sexp-and-go)
+    (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
+    (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
+    (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
+
+    (js2-imenu-extras-setup)
+
+    ;; Add highlighting of many ECMA built-in functions.
+    (setq js2-highlight-level 3))
+#+end_src
+
+#+begin_src emacs-lisp
+(defvar my/debug-counter 1)
+(defun my/insert-or-flush-debug (&optional reset beg end)
+  (interactive "pr")
+  (cond
+   ((= reset 4)
+    (save-excursion
+      (flush-lines "console.log('DEBUG: [0-9]+" (point-min) (point-max))
+      (setq my/debug-counter 1)))
+   ((region-active-p)
+    (save-excursion
+      (goto-char end)
+      (insert ");\n")
+      (goto-char beg)
+      (insert (format "console.log('DEBUG: %d', " my/debug-counter))
+      (setq my/debug-counter (1+ my/debug-counter))
+      (js2-indent-line)))
+   (t
+    ;; Wrap the region in the debug
+    (insert (format "console.log('DEBUG: %d');\n" my/debug-counter))
+    (setq my/debug-counter (1+ my/debug-counter))
+    (backward-char 3)
+    (js2-indent-line))))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun js2-imenu-record-object-clone-extend ()
+  (let* ((node (js2-node-at-point (1- (point)))))
+  (when (js2-call-node-p node)
+    (let* ((args (js2-call-node-args node))
+           (methods (second args))
+           (super-class (first args))
+           (parent (js2-node-parent node)))
+      (when (js2-object-node-p methods)
+        (let ((subject (cond ((js2-var-init-node-p parent)
+                              (js2-var-init-node-target parent))
+                             ((js2-assign-node-p parent)
+                              (js2-assign-node-left parent)))))
+          (when subject
+            (js2-record-object-literal methods
+                                       (js2-compute-nested-prop-get subject)
+                                       (js2-node-abs-pos methods)))))))))
+#+end_src
+
+http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
 
 #+begin_src emacs-lisp
 )                                       ; Chapter 25 ends here.
@@ -11291,7 +11450,12 @@ XXX Autoloaded?
 ;;** 26.2 Top-Level Definitions, or (info "(emacs)Defuns")
 
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
+#+end_src
 
+~font-lock-mode-hook~ is run after entering a major mode. You can make use of this
+to add an Imenu index to the menu bar in any mode that supports Imenu.
+
+#+begin_src emacs-lisp
   ;; Making buffer indexes as menus.
   (try-require 'imenu)                  ; Awesome!
   (with-eval-after-load "imenu"
@@ -11299,13 +11463,15 @@ XXX Autoloaded?
     ;; Add Imenu to the menu bar in any mode that supports it.
     (defun try-to-add-imenu ()
       (condition-case nil
-          (imenu-add-to-menubar "Imenu")
+          (imenu-add-to-menubar "Outline") ;; Imenu index.
         (error nil)))
     (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
     ;; Bind Imenu from the mouse.
     (global-set-key [S-mouse-3] #'imenu)
+#+end_src
 
+#+begin_src emacs-lisp
     ;; String to display in the mode line when current function is unknown.
     (setq which-func-unknown "(Top Level)")
 
@@ -11319,7 +11485,7 @@ Truncate the current function name (for the mode line):
     (defun my-which-func-current ()
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
-            (truncate-string-to-width current 20 nil nil "...")
+            (truncate-string-to-width current 30 nil nil "...")
           which-func-unknown)))
 
     (setq which-func-format
@@ -11332,7 +11498,7 @@ mouse-2: toggle rest visibility\n\
 mouse-3: go to end") "]")))
 #+end_src
 
-~helm-imenu-anywhere~ command pops an Helm interface with all the *Imenu tags*
+~helm-imenu-in-all-buffers~ command pops an Helm interface with all the *Imenu tags*
 *across all buffers with the same mode as the current one*.
 
 #+begin_note
@@ -11342,25 +11508,18 @@ is often more convenient as you don't have to explicitly build the ~etags~ table
 #+end_note
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "helm-imenu-autoloads"
+  (with-eval-after-load "helm-autoloads"
 
     ;; Keybinding to quickly jump to a symbol in buffer.
-    (global-set-key [remap imenu] #'helm-imenu))
+    (global-set-key [remap imenu] #'helm-imenu)
+
+    ;; Helm Imenu tag selection across all buffers (with the same mode).
+    (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers))
 
   (with-eval-after-load "helm-imenu"
 
     ;; Do not directly jump to the definition even if there is just on candidate.
     (setq helm-imenu-execute-action-at-once-if-one nil))
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; Helm Imenu tag selection across all buffers with the same mode.
-  (with-eval-after-load "imenu-anywhere-autoloads"
-
-    ;; `helm' source for `imenu-anywhere'.
-    (global-set-key (kbd "C-.") #'helm-imenu-anywhere))
-                                        ; XXX Conflict with
-                                        ; `flyspell-auto-correct-word'
 #+end_src
 
 ** Indentation for Programs
@@ -12043,6 +12202,39 @@ XXX Compiling with ~ant~?
 You're debugging Bash code?  I normally use =mode-compile.el= for this.
 Basically, it runs Bash with lots of debug output.
 
+*** Java
+
+Compile within Emacs using ~ant~.
+
+#+begin_src emacs-lisp
+  (defvar leuven--ant-command-history nil
+    "Ant command history variable")
+
+  (defun leuven-ant(&optional args)
+    "Runs ant in the current project. Starting at the directory
+     where the file being visited resides, a search is made for
+     build.xml recursively. A maven command is made from the first
+     directory where the build.xml file is found is then displayed in
+     the minibuffer. The command can be edited as needed and then
+     executed. Errors are navigate to as in any other compile mode"
+    (interactive)
+    (let ((fn (buffer-file-name)))
+      (let ((dir (file-name-directory fn)))
+        (while (and (not (file-exists-p (concat dir "/build.xml")))
+                    (not (equal dir (file-truename (concat dir "/..")))))
+          (setf dir (file-truename (concat dir "/.."))))
+        (if (not (file-exists-p (concat dir "/build.xml")))
+            (message "No build.xml found")
+          (compile (read-from-minibuffer "Command: "
+                                         (concat "ant -emacs -f "
+                                         dir "/build.xml compile") nil
+                                         nil
+                                         'leuven--ant-command-history))))))
+
+  (add-hook 'java-mode-hook
+            (lambda () (local-set-key "<f9>" 'leuven-ant)))
+#+end_src
+
 ** Compilation Mode
 
 When Emacs visits the locus of an error message, it momentarily highlights the
@@ -12555,14 +12747,9 @@ it into the commit buffer. So there is no need to "write the same thing twice".
                 (toggle-save-place 0))))
 #+end_src
 
-#+begin_src emacs-lisp
-  (with-eval-after-load "magit-autoloads"
-
-    (setq magit-auto-revert-mode nil)   ; Avoid any data loss.
-    )
-#+end_src
-
 See http://whattheemacsd.com/setup-magit.el-01.html.
+
+Or use Tig?  See http://blogs.atlassian.com/2013/05/git-tig/.
 
 *** Examining And Comparing Old Revisions
 
@@ -12584,7 +12771,7 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
 #+end_src
 
 - ~C-x v l~ ::
-     Display the change history for the current fileset (~vc-print-log~).
+     Display the change history for the current *file* (~vc-print-log~).
 
 - ~C-x v L~ ::
      Open the *log buffer* for the current *repository* (List the change log for the
@@ -12594,9 +12781,13 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
      - ~C-m~ to read the commit message,
      - ~d~ to see the corresponding diff.
 
-We have at least two pairs of commands (~C-x v l~ vs ~C-x v L~ /and/ ~C-x v =~ vs
-~C-x v D~), of which one operates on the current *file* /and/ the other on the
-*repository* as a whole.
+We have at least two pairs of commands:
+
+- ~C-x v l~ vs ~C-x v L~ /and/
+- ~C-x v =~ vs ~C-x v D~,
+
+of which one operates on the current *file* vs \\
+the other on the *repository* as a whole (entire project).
 
 - ~C-x v l~ to view the file's history.
 - ~n~ and ~p~ to move between commits.
@@ -12814,8 +13005,8 @@ would like to use [[id:ea687cd8-fff0-461f-999e-c9fbc84b5901][Imenu]] because:
 - And finally, Imenu operates on what you work on -- open files -- you don't get
   thousands of symbols from ~etags~ to deal with.
 
-Using ~imenu-anywhere~ offers a much better, more uniform and more consistent
-experience than anything else.
+Using ~helm-imenu-in-all-buffers~ offers a much better, more uniform and more
+consistent experience than anything else.
 #+end_note
 
 Always run ~make TAGS~ right after you build some project.
@@ -13620,6 +13811,13 @@ Would we want to bind ~hippie-expand~ on TAB, we should have to write a ~smart-t
 command which would look if the major mode is Org and then act differently...
 #+end_note
 
+# (use-package hippie
+#   :load-path "vendor"
+#   :bind (("C-." . hippie-expand-no-case-fold)
+#          ("C-," . hippie-expand-lines))
+#   :config
+#   (require 'hippie))
+
 #+begin_src emacs-lisp
   (with-eval-after-load "hippie-exp"
 
@@ -13861,7 +14059,29 @@ available completions and filter as well.
                                         ; `company-yasnippet' shows both the key
                                         ; and the replacement.
     )
+#+end_src
 
+- https://github.com/proofit404/company-tern
+- http://stackoverflow.com/questions/18102833/could-not-start-tern-server-in-emacs?rq=1
+- https://github.com/syl20bnr/spacemacs/issues/5733
+- https://github.com/ternjs/tern/issues/256
+- https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE
+- https://github.com/angelozerr/tern.java/wiki/Getting-Started
+- http://emmet.io/blog/sublime-tern/
+- http://emacs.stackexchange.com/questions/3093/how-to-navigate-a-javascript-project
+- https://truongtx.me/2014/04/20/emacs-javascript-completion-and-refactoring
+
+Installing https://github.com/angelozerr/tern.java/wiki/Installation-Update-Site.
+
+https://nodejs.org/download/release/latest/win-x64/
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "company-tern-autoloads"
+
+    (add-to-list 'company-backends 'company-tern))
+#+end_src
+
+#+begin_src emacs-lisp
   (with-eval-after-load "company"
 
     (global-set-key (kbd "C-/") #'company-complete-common)
@@ -13880,6 +14100,8 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 #+begin_src emacs-lisp
     ;; Sort candidates according to their occurrences.
     (setq company-transformers '(company-sort-by-occurrence))
+    (setq company-transformers '(;; company-sort-by-statistics ;; unknown
+                                 company-sort-by-backend-importance))
 
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 2)
@@ -13889,6 +14111,9 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 
     ;; Show quick-access numbers for the first ten candidates.
     (setq company-show-numbers t)
+
+    ;; Selecting item before first or after last wraps around.
+    (setq company-selection-wrap-around t)
 
     ;; Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
@@ -13901,21 +14126,20 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 
     ;; Completion by TAB.
     (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
-                                        ; `company-complete'?
+                                        ; XXX `company-complete'???
 
     ;; Temporarily show the documentation buffer for the selection.
     (define-key company-active-map (kbd "<f1>") #'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-?") #'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "M-?") #'company-show-doc-buffer)
+
+    ;;! Temporarily display a buffer showing the selected candidate in context.
+    (define-key company-active-map (kbd "M-.") #'company-show-location)
 
     ;; Abort.
     (define-key company-active-map (kbd "C-g") #'company-abort)
     (define-key company-active-map (kbd "<left>") #'company-abort)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-    (setq company-idle-delay nil)
-    (global-set-key (kbd "<tab>") #'company-complete-selection)
 #+end_src
 
 #+begin_src emacs-lisp

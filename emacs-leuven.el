@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160607.2232
+;; Version: 20160625.1141
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160607.2232"
+(defconst leuven--emacs-version "20160625.1141"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -383,6 +383,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      ace-link
                                      ace-window
                                      ;; aggressive-indent
+                                     ant
                                      anzu
                                      auctex
                                      auto-complete
@@ -393,6 +394,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      circe
                                      color-identifiers-mode
                                      company
+                                     company-tern
                                      company-quickhelp
                                      csv-mode
                                      cygwin-mount
@@ -427,10 +429,10 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      htmlize
                                      indent-guide
                                      ;; jabber
+                                     js2-mode
                                      key-chord
                                      litable
                                      idle-require
-                                     imenu-anywhere
                                      info+
                                      interaction-log
                                      ledger-mode
@@ -444,8 +446,10 @@ Last time is saved in global variable `leuven--before-section-time'."
                                      ;; paredit
                                      pdf-tools
                                      powerline
+                                     rainbow-delimiters
                                      rainbow-mode
                                      ;; redshank
+                                     tern
                                      tidy
                                      unbound
                                      undo-tree
@@ -777,12 +781,10 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Add a cursor and region at the next part of the buffer forwards that
     ;; matches the current region.
     (global-set-key (kbd "C->") #'mc/mark-next-like-this) ;!
-    ;; (global-set-key (kbd "C-c >") #'mc/mark-next-like-this)
 
     ;; Add a cursor and region at the next part of the buffer backwards that
     ;; matches the current region.
     (global-set-key (kbd "C-<") #'mc/mark-previous-like-this) ;!
-    ;; (global-set-key (kbd "C-c <") #'mc/mark-previous-like-this)
 
     (global-set-key (kbd "C-M->") #'mc/skip-to-next-like-this)
     (global-set-key (kbd "C-M-<") #'mc/skip-to-previous-like-this)
@@ -790,6 +792,7 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "C-S-<mouse-1>") #'mc/add-cursor-on-click)
 
     (global-set-key (kbd "C-;") #'mc/mark-all-like-this-dwim) ;! Like Iedit.
+    ;; (global-set-key (kbd "C-c C-w") #'mc/mark-all-like-this-dwim)
     ;; (global-set-key (kbd "C-x C-;") #'mc/mark-all-like-this-dwim)
 
     ;; Mark all parts of the buffer that matches the current region.
@@ -917,6 +920,12 @@ These packages are neither built-in nor already installed nor ignored."
                (and (not current-prefix-arg)
                     (derived-mode-p 'prog-mode)
                     (indent-region (region-beginning) (region-end) nil))))))
+
+  ;; Save clipboard strings into kill ring before replacing them.
+  (setq save-interprogram-paste-before-kill t)
+
+  ;; ;; Rotating the kill ring changes the window system selection.
+  ;; (setq yank-pop-change-selection t)
 
 ;;** 12.3 (info "(emacs)Cut and Paste")
 
@@ -1130,6 +1139,28 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 
+  ;; Highlight-Changes mode.
+  (with-eval-after-load "hilit-chg"
+    (defvar highlight-fringe-mark 'filled-rectangle
+      "The fringe bitmap name marked at changed line.
+Should be selected from `fringe-bitmaps'.")
+
+    (defadvice hilit-chg-make-ov (after hilit-chg-add-fringe activate)
+      (mapc (lambda (ov)
+              (if (overlay-get ov 'hilit-chg)
+                  (let ((fringe-anchor (make-string 1 ?x)))
+                    (put-text-property 0 1 'display
+                                       (list 'left-fringe highlight-fringe-mark)
+                                       fringe-anchor)
+                    (overlay-put ov 'before-string fringe-anchor))))
+            (overlays-at (ad-get-arg 1)))))
+
+  ;; Enable Global-Highlight-Changes mode.
+  (global-highlight-changes-mode 1)
+
+  ;; ;; Changes are initially NOT visible in Highlight Changes mode.
+  ;; (setq highlight-changes-visibility-initial-state nil)
+
   ;; Do not prompt for the face to use. Instead, cycle through them.
   (setq hi-lock-auto-select-face t)
 
@@ -1157,11 +1188,14 @@ These packages are neither built-in nor already installed nor ignored."
     ;; family of functions.
     (setq highlight-symbol-on-navigation-p t))
 
-  ;; Automatic highlighting current symbol.
+  ;; Automatic highlighting occurrences of the current symbol under cursor.
   (when (try-require 'auto-highlight-symbol)
 
     ;; Add R.
     (add-to-list 'ahs-modes 'ess-mode t)
+
+    ;; Add js2-mode.
+    (add-to-list 'ahs-modes 'js2-mode t)
 
     ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
     ;; (global-auto-highlight-symbol-mode t)
@@ -1181,10 +1215,11 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Indicate changes in the fringe.
   (with-eval-after-load "diff-hl"
 
-    (global-diff-hl-mode)
+    (global-diff-hl-mode 1)
 
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd "@") #'diff-hl-next-hunk)
 
     ;; Jump to previous hunk (also on `C-x v [').
     (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
@@ -1965,6 +2000,8 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Remove less important overlays
     (dolist (o (overlays-in (window-start) (window-end)))
       (when (or (equal (overlay-get o 'face) 'recover-this-file)
+                (equal (overlay-get o 'face) 'highlight-changes)
+                (equal (overlay-get o 'face) 'highlight-changes-delete)
                 (equal (overlay-get o 'face) 'org-block-executing))
         (delete-overlay o)))            ; Useful when our advice of function
                                         ; `org-babel-execute-src-block' fails to
@@ -2351,14 +2388,14 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
     (global-set-key (kbd "C-x r b") #'helm-bookmark-ext)
 
-    (defun leuven-helm-org-prog-menu ()
+    (defun leuven-helm-org-prog-menu (arg)
       "Jump to a place in the buffer using an Index menu.
     For Org mode buffers, show Org headlines.
     For programming mode buffers, show functions, variables, etc."
-      (interactive)
+      (interactive "P")
       (cond ((derived-mode-p 'org-mode) (helm-org-in-buffer-headings))
             ((derived-mode-p 'tex-mode) (helm-imenu))
-            (t (helm-semantic-or-imenu)))) ; More generic than `helm-imenu'.
+            (t (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
     (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
                                         ; And `C-c =' (like in RefTeX)?
@@ -2563,7 +2600,9 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
     (global-set-key (kbd "M-+") #'helm-ls-git-ls)
+    (global-set-key (kbd "<S-f3>") #'helm-ls-git-ls)
 
+    ;; Browse files and see status of project with its VCS.
     (global-set-key (kbd "C-x C-d") #'helm-browse-project))
 
   ;; Emacs Helm Interface for quick Google searches
@@ -3441,16 +3480,14 @@ These packages are neither built-in nor already installed nor ignored."
       (key-chord-define-global "xj" #'dired-jump)) ; Autoloaded?
 
     (key-chord-define-global "vb" #'eval-buffer)
-    ;; (key-chord-define-global "vg" #'eval-region)
-                                        ; 2015-02-17 Crash Gnus `C-u g'
+    ;; (key-chord-define-global "vg" #'eval-region) ; 2015-02-17 Crash Gnus `C-u g'
 
-    ;; (key-chord-define-global "x0" #'delete-window)
-                                        ; 2015-02-09 Crash Gnus `C-u 3'
-    ;; (key-chord-define-global "x1" #'delete-other-windows)
-                                        ; 2015-02-05 Crash Gnus `C-u 1'
+    ;; (key-chord-define-global "x0" #'delete-window) ; 2015-02-09 Crash Gnus `C-u 3'
+    ;; (key-chord-define-global "x1" #'delete-other-windows) ; 2015-02-05 Crash Gnus `C-u 1'
     (key-chord-define-global "xh" #'mark-whole-buffer)
-    (key-chord-define-global "xk" #'kill-buffer) ; leuven-kill-this-buffer-without-query?
+    (key-chord-define-global "xk" #'kill-buffer)
     (key-chord-define-global "xo" #'other-window)
+    (key-chord-define-global "xs" #'save-buffer)
 
     (key-chord-define-global "yy" #'browse-kill-ring)
     (key-chord-define-global "zk" #'zap-to-char)
@@ -3458,10 +3495,8 @@ These packages are neither built-in nor already installed nor ignored."
     (key-chord-define-global ";s" #'set-mark-command)
 
     ;; (with-eval-after-load "org-loaddefs" ; Autoloads file?
-      ;; (key-chord-define-global ",a" #'org-agenda) ; Autoloaded.
-                                        ; 2015-02-18 Crash Gnus `C-u a'
-      ;; (key-chord-define-global ",c" #'org-capture)) ; Autoloaded.
-                                        ; "Donc," is problematic...
+      ;; (key-chord-define-global ",a" #'org-agenda) ; Autoloaded. ; 2015-02-18 Crash Gnus `C-u a'
+      ;; (key-chord-define-global ",c" #'org-capture)) ; Autoloaded. ; "Donc," is problematic...
 
     (with-eval-after-load "org"         ; Package.
       (key-chord-define org-mode-map ",u" #'outline-up-heading)
@@ -3487,8 +3522,6 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; (key-chord-define-global "ac" #'align-current)
     ;; (key-chord-define-global "fc" #'flycheck-mode)
-    ;; (key-chord-define-global "fv" (lambda () (interactive) (kill-buffer (buffer-name))))
-    ;; (key-chord-define-global "sv" #'save-buffer)
     ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
     ;; (global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))
     ;; (global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))
@@ -5189,7 +5222,7 @@ From %c"
 
   (with-eval-after-load "org-agenda"
     (let ((leuven-org-agenda-views
-           (concat leuven--directory "org-custom-agenda-views.el")))
+           (concat leuven--directory "org-leuven-agenda-views.el")))
       (when (file-exists-p leuven-org-agenda-views)
         (load-file leuven-org-agenda-views))))
                                         ; with-eval-after-load "org-agenda" ends here.
@@ -6754,6 +6787,10 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "web-mode"
 
+    (setq web-mode-enable-current-element-highlight t)
+
+    (setq web-mode-enable-auto-pairing t)
+
     ;; Enable block face (useful for setting background of <style>).
     (setq web-mode-enable-block-face t)
 
@@ -6800,17 +6837,76 @@ this with to-do items than with projects or headings."
     (add-hook 'web-mode-hook #'hl-tags-mode)
 )
 
-;; TODO: Handle media queries
-;; TODO: Handle wrapped lines
-;; TODO: Ignore vendor prefixes
-(defun sort-css-properties ()
-  "Sort CSS properties alphabetically."
-  (interactive)
-  (let ((start (search-forward "{"))
-        (end (search-forward "}")))
-    (when (and start end)
-      (sort-lines nil start end)
-      (sort-declarations))))
+  ;; TODO: Handle media queries
+  ;; TODO: Handle wrapped lines
+  ;; TODO: Ignore vendor prefixes
+  (defun sort-css-properties ()
+    "Sort CSS properties alphabetically."
+    (interactive)
+    (let ((start (search-forward "{"))
+          (end (search-forward "}")))
+      (when (and start end)
+        (sort-lines nil start end)
+        (sort-declarations))))
+
+  (with-eval-after-load "js2-mode-autoloads"
+
+    (add-to-list 'auto-mode-alist '("\\.js\\'\\|\\.json\\'" . js2-mode)))
+
+  (with-eval-after-load "js2-mode"
+
+    (add-hook 'js2-mode-hook #'tern-mode)
+
+    (define-key js2-mode-map (kbd "C-x C-e") 'js-send-last-sexp)
+    (define-key js2-mode-map (kbd "C-M-x") 'js-send-last-sexp-and-go)
+    (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
+    (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
+    (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
+
+    (js2-imenu-extras-setup)
+
+    ;; Add highlighting of many ECMA built-in functions.
+    (setq js2-highlight-level 3))
+
+(defvar my/debug-counter 1)
+(defun my/insert-or-flush-debug (&optional reset beg end)
+  (interactive "pr")
+  (cond
+   ((= reset 4)
+    (save-excursion
+      (flush-lines "console.log('DEBUG: [0-9]+" (point-min) (point-max))
+      (setq my/debug-counter 1)))
+   ((region-active-p)
+    (save-excursion
+      (goto-char end)
+      (insert ");\n")
+      (goto-char beg)
+      (insert (format "console.log('DEBUG: %d', " my/debug-counter))
+      (setq my/debug-counter (1+ my/debug-counter))
+      (js2-indent-line)))
+   (t
+    ;; Wrap the region in the debug
+    (insert (format "console.log('DEBUG: %d');\n" my/debug-counter))
+    (setq my/debug-counter (1+ my/debug-counter))
+    (backward-char 3)
+    (js2-indent-line))))
+
+(defun js2-imenu-record-object-clone-extend ()
+  (let* ((node (js2-node-at-point (1- (point)))))
+  (when (js2-call-node-p node)
+    (let* ((args (js2-call-node-args node))
+           (methods (second args))
+           (super-class (first args))
+           (parent (js2-node-parent node)))
+      (when (js2-object-node-p methods)
+        (let ((subject (cond ((js2-var-init-node-p parent)
+                              (js2-var-init-node-target parent))
+                             ((js2-assign-node-p parent)
+                              (js2-assign-node-left parent)))))
+          (when subject
+            (js2-record-object-literal methods
+                                       (js2-compute-nested-prop-get subject)
+                                       (js2-node-abs-pos methods)))))))))
 
 )                                       ; Chapter 25 ends here.
 
@@ -6870,7 +6966,7 @@ this with to-do items than with projects or headings."
     ;; Add Imenu to the menu bar in any mode that supports it.
     (defun try-to-add-imenu ()
       (condition-case nil
-          (imenu-add-to-menubar "Imenu")
+          (imenu-add-to-menubar "Outline") ;; Imenu index.
         (error nil)))
     (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
@@ -6886,7 +6982,7 @@ this with to-do items than with projects or headings."
     (defun my-which-func-current ()
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
-            (truncate-string-to-width current 20 nil nil "...")
+            (truncate-string-to-width current 30 nil nil "...")
           which-func-unknown)))
 
     (setq which-func-format
@@ -6898,23 +6994,18 @@ this with to-do items than with projects or headings."
 mouse-2: toggle rest visibility\n\
 mouse-3: go to end") "]")))
 
-  (with-eval-after-load "helm-imenu-autoloads"
+  (with-eval-after-load "helm-autoloads"
 
     ;; Keybinding to quickly jump to a symbol in buffer.
-    (global-set-key [remap imenu] #'helm-imenu))
+    (global-set-key [remap imenu] #'helm-imenu)
+
+    ;; Helm Imenu tag selection across all buffers (with the same mode).
+    (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers))
 
   (with-eval-after-load "helm-imenu"
 
     ;; Do not directly jump to the definition even if there is just on candidate.
     (setq helm-imenu-execute-action-at-once-if-one nil))
-
-  ;; Helm Imenu tag selection across all buffers with the same mode.
-  (with-eval-after-load "imenu-anywhere-autoloads"
-
-    ;; `helm' source for `imenu-anywhere'.
-    (global-set-key (kbd "C-.") #'helm-imenu-anywhere))
-                                        ; XXX Conflict with
-                                        ; `flyspell-auto-correct-word'
 
 ;;** 26.3 (info "(emacs)Program Indent")ation
 
@@ -7221,6 +7312,33 @@ mouse-3: go to end") "]")))
 
   (global-set-key (kbd "<S-f9>") #'make-clean)
 
+  (defvar leuven--ant-command-history nil
+    "Ant command history variable")
+
+  (defun leuven-ant(&optional args)
+    "Runs ant in the current project. Starting at the directory
+     where the file being visited resides, a search is made for
+     build.xml recursively. A maven command is made from the first
+     directory where the build.xml file is found is then displayed in
+     the minibuffer. The command can be edited as needed and then
+     executed. Errors are navigate to as in any other compile mode"
+    (interactive)
+    (let ((fn (buffer-file-name)))
+      (let ((dir (file-name-directory fn)))
+        (while (and (not (file-exists-p (concat dir "/build.xml")))
+                    (not (equal dir (file-truename (concat dir "/..")))))
+          (setf dir (file-truename (concat dir "/.."))))
+        (if (not (file-exists-p (concat dir "/build.xml")))
+            (message "No build.xml found")
+          (compile (read-from-minibuffer "Command: "
+                                         (concat "ant -emacs -f "
+                                         dir "/build.xml compile") nil
+                                         nil
+                                         'leuven--ant-command-history))))))
+
+  (add-hook 'java-mode-hook
+            (lambda () (local-set-key "<f9>" 'leuven-ant)))
+
 ;;** 27.2 (info "(emacs)Compilation Mode")
 
   (leuven--section "27.2 (emacs)Compilation Mode")
@@ -7495,11 +7613,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     (add-hook 'git-commit-setup-hook
               (lambda ()
                 (toggle-save-place 0))))
-
-  (with-eval-after-load "magit-autoloads"
-
-    (setq magit-auto-revert-mode nil)   ; Avoid any data loss.
-    )
 
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
 
@@ -8095,6 +8208,10 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; and the replacement.
     )
 
+  (with-eval-after-load "company-tern-autoloads"
+
+    (add-to-list 'company-backends 'company-tern))
+
   (with-eval-after-load "company"
 
     (global-set-key (kbd "C-/") #'company-complete-common)
@@ -8108,6 +8225,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Sort candidates according to their occurrences.
     (setq company-transformers '(company-sort-by-occurrence))
+    (setq company-transformers '(;; company-sort-by-statistics ;; unknown
+                                 company-sort-by-backend-importance))
 
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 2)
@@ -8117,6 +8236,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Show quick-access numbers for the first ten candidates.
     (setq company-show-numbers t)
+
+    ;; Selecting item before first or after last wraps around.
+    (setq company-selection-wrap-around t)
 
     ;; Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
@@ -8129,12 +8251,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Completion by TAB.
     (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
-                                        ; `company-complete'?
+                                        ; XXX `company-complete'???
 
     ;; Temporarily show the documentation buffer for the selection.
     (define-key company-active-map (kbd "<f1>") #'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-?") #'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "M-?") #'company-show-doc-buffer)
+
+    ;;! Temporarily display a buffer showing the selected candidate in context.
+    (define-key company-active-map (kbd "M-.") #'company-show-location)
 
     ;; Abort.
     (define-key company-active-map (kbd "C-g") #'company-abort)
