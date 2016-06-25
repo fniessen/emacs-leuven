@@ -1,5 +1,5 @@
 # Hey Emacs, this is a -*- org -*- file ...
-#+TITLE:     Leuven Emacs Config
+#+TITLE:     Emacs Leuven
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DESCRIPTION:
