@@ -6,7 +6,7 @@
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
-#+PROPERTY:  header-args :tangle org-custom-agenda-views.el :padline yes :eval no
+#+PROPERTY:  header-args :tangle org-leuven-agenda-views.el :padline yes :eval no
 
 #+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg.setup
 
@@ -69,7 +69,7 @@ https://dzone.com/articles/scrum-kanban-scrumban.
 * Key bindings
 
 #+begin_src emacs-lisp
-;;; org-custom-agenda-views.el --- Org customized views
+;;; org-leuven-agenda-views.el --- Org customized views
 
 ;;; Commentary:
 
@@ -1982,9 +1982,9 @@ devraient être considérés comme erronés...
 * Footer
 
 #+begin_src emacs-lisp
-(provide 'org-custom-agenda-views)
+(provide 'org-leuven-agenda-views)
 
-;;; org-custom-agenda-views.el ends here
+;;; org-leuven-agenda-views.el ends here
 #+end_src
 
 * COMMENT Notes

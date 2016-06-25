@@ -1,5 +1,5 @@
 
-;;; org-custom-agenda-views.el --- Org customized views
+;;; org-leuven-agenda-views.el --- Org customized views
 
 ;;; Commentary:
 
@@ -638,6 +638,6 @@
                '("1" "Task markers (in current buffer)"
                  ((occur-tree "\\<TODO\\|FIXME\\|XXX\\>"))) t)
 
-(provide 'org-custom-agenda-views)
+(provide 'org-leuven-agenda-views)
 
-;;; org-custom-agenda-views.el ends here
+;;; org-leuven-agenda-views.el ends here
