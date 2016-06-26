@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160626.2202
+;; Version: 20160626.2234
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; line before requiring Leuven Emacs Config.
 ;;
 ;;     ;; do not (try to) install extra Emacs packages
-;;     (setq leuven-elpa-packages nil)
+;;     (setq package-selected-packages nil)
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
 
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160626.2202"
+(defconst leuven--emacs-version "20160626.2234"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -374,126 +374,130 @@ Last time is saved in global variable `leuven--before-section-time'."
                     ("melpa" . "http://melpa.org/packages/"))
                   package-archives))
 
+    (setq package-selected-packages '(ace-jump-helm-line
+                                      ace-jump-mode
+                                      ace-link
+                                      ace-window
+                                      ;; aggressive-indent
+                                      ant
+                                      anzu
+                                      auctex
+                                      auto-complete
+                                      bbdb
+                                      bookmark+
+                                      boxquote
+                                      ;; calfw
+                                      circe
+                                      color-identifiers-mode
+                                      company
+                                      company-tern
+                                      company-quickhelp
+                                      csv-mode
+                                      cygwin-mount
+                                      dictionary
+                                      diff-hl
+                                      diminish
+                                      dired+
+                                      ;; emacs-eclim
+                                      ess
+                                      expand-region
+                                      fancy-narrow
+                                      fill-column-indicator
+                                      flycheck
+                                      flycheck-color-mode-line
+                                      flycheck-ledger
+                                      fuzzy
+                                      git-commit
+                                      git-messenger
+                                      git-timemachine
+                                      google-this
+                                      google-translate
+                                      goto-chg
+                                      graphviz-dot-mode
+                                      helm
+                                      helm-ag
+                                      helm-descbinds
+                                      helm-ls-git
+                                      helm-swoop
+                                      hideshowvis
+                                      highlight-symbol
+                                      howdoi
+                                      htmlize
+                                      indent-guide
+                                      ;; jabber
+                                      js2-mode
+                                      key-chord
+                                      litable
+                                      idle-require
+                                      info+
+                                      interaction-log
+                                      ledger-mode
+                                      leuven-theme
+                                      ;; magit
+                                      markdown-mode
+                                      multi-term
+                                      multiple-cursors
+                                      ;; multi-term
+                                      pager
+                                      ;; paredit
+                                      pdf-tools
+                                      powerline
+                                      rainbow-delimiters
+                                      rainbow-mode
+                                      ;; redshank
+                                      tern
+                                      tidy
+                                      unbound
+                                      undo-tree
+                                      web-mode
+                                      which-key
+                                      ws-butler
+                                      yasnippet))
+
     ;; Load the latest version of all installed packages, and activate them.
     (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'.
 
-    (defconst leuven-elpa-packages '(ace-jump-helm-line
-                                     ace-jump-mode
-                                     ace-link
-                                     ace-window
-                                     ;; aggressive-indent
-                                     ant
-                                     anzu
-                                     auctex
-                                     auto-complete
-                                     bbdb
-                                     bookmark+
-                                     boxquote
-                                     ;; calfw
-                                     circe
-                                     color-identifiers-mode
-                                     company
-                                     company-tern
-                                     company-quickhelp
-                                     csv-mode
-                                     cygwin-mount
-                                     dictionary
-                                     diff-hl
-                                     diminish
-                                     dired+
-                                     ;; emacs-eclim
-                                     ess
-                                     expand-region
-                                     fancy-narrow
-                                     fill-column-indicator
-                                     flycheck
-                                     flycheck-color-mode-line
-                                     flycheck-ledger
-                                     fuzzy
-                                     git-commit
-                                     git-messenger
-                                     git-timemachine
-                                     google-this
-                                     google-translate
-                                     goto-chg
-                                     graphviz-dot-mode
-                                     helm
-                                     helm-ag
-                                     helm-descbinds
-                                     helm-ls-git
-                                     helm-swoop
-                                     hideshowvis
-                                     highlight-symbol
-                                     howdoi
-                                     htmlize
-                                     indent-guide
-                                     ;; jabber
-                                     js2-mode
-                                     key-chord
-                                     litable
-                                     idle-require
-                                     info+
-                                     interaction-log
-                                     ledger-mode
-                                     leuven-theme
-                                     ;; magit
-                                     markdown-mode
-                                     multi-term
-                                     multiple-cursors
-                                     ;; multi-term
-                                     pager
-                                     ;; paredit
-                                     pdf-tools
-                                     powerline
-                                     rainbow-delimiters
-                                     rainbow-mode
-                                     ;; redshank
-                                     tern
-                                     tidy
-                                     unbound
-                                     undo-tree
-                                     web-mode
-                                     which-key
-                                     ws-butler
-                                     yasnippet)
-      "A list of packages to ensure are installed at Emacs startup.")
+    (when (fboundp 'package-install-selected-packages) ; Emacs-v25
+      (package-install-selected-packages))
 
-    (defcustom leuven-elpa-ignored-packages
-      nil
-      "List of packages that should be ignored by Leuven Emacs Config."
-      :group 'emacs-leuven
-      :type '(repeat (string)))
+;;     (defcustom leuven-elpa-ignored-packages
+;;       nil
+;;       "List of packages that should be ignored by Leuven Emacs Config."
+;;       :group 'emacs-leuven
+;;       :type '(repeat (string)))
+;;
+;;     (defun leuven--missing-elpa-packages ()
+;;       "List packages to install for a full blown Leuven installation.
+;; These packages are neither built-in nor already installed nor ignored."
+;;       (let (missing-elpa-packages)
+;;         (dolist (pkg package-selected-packages)
+;;           (unless (or (package-installed-p pkg)
+;;                       (locate-library (symbol-name pkg))
+;;                       (member pkg leuven-elpa-ignored-packages))
+;;             (push pkg missing-elpa-packages)))
+;;         missing-elpa-packages))
+;;
+;;     ;; Propose to install all the packages specified in `package-selected-packages'.
+;;     ;; which are missing and which shouldn't be ignored.
+;;     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
+;;       (when missing-elpa-packages
+;;         ;; Download once the ELPA archive description.
+;;         (package-refresh-contents)      ; Ensure that the list of packages is
+;;                                         ; up-to-date.  Otherwise, new packages
+;;                                         ; (not present in the cache of the ELPA
+;;                                         ; contents) won't install.
+;;         (dolist (pkg (reverse missing-elpa-packages))
+;;           (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
+;;               (ignore-errors
+;;                 (package-install pkg))
+;;                                         ; Must be run after initializing
+;;                                         ; `package-initialize'.
+;;             (message (concat "Customize Emacs Leuven to ignore "
+;;                              "the `%s' package next times...") pkg)
+;;             (sit-for 1.5)))))
 
-    (defun leuven--missing-elpa-packages ()
-      "List packages to install for a full blown Leuven installation.
-These packages are neither built-in nor already installed nor ignored."
-      (let (missing-elpa-packages)
-        (dolist (pkg leuven-elpa-packages)
-          (unless (or (package-installed-p pkg)
-                      (locate-library (symbol-name pkg))
-                      (member pkg leuven-elpa-ignored-packages))
-            (push pkg missing-elpa-packages)))
-        missing-elpa-packages))
-
-    ;; Propose to install all the packages specified in `leuven-elpa-packages'.
-    ;; which are missing and which shouldn't be ignored.
-    (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
-      (when missing-elpa-packages
-        ;; Download once the ELPA archive description.
-        (package-refresh-contents)      ; Ensure that the list of packages is
-                                        ; up-to-date.  Otherwise, new packages
-                                        ; (not present in the cache of the ELPA
-                                        ; contents) won't install.
-        (dolist (pkg (reverse missing-elpa-packages))
-          (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
-              (ignore-errors
-                (package-install pkg))
-                                        ; Must be run after initializing
-                                        ; `package-initialize'.
-            (message (concat "Customize Emacs Leuven to ignore "
-                             "the `%s' package next times...") pkg)
-            (sit-for 1.5))))))
+    )
 
 )                                       ; Chapter 48 ends here.
 
