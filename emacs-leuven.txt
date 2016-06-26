@@ -2076,8 +2076,8 @@ Should be selected from `fringe-bitmaps'.")
                     (overlay-put ov 'before-string fringe-anchor))))
             (overlays-at (ad-get-arg 1)))))
 
-  ;; Enable Global-Highlight-Changes mode.
-  (global-highlight-changes-mode 1)
+  ;; ;; Enable Global-Highlight-Changes mode.
+  ;; (global-highlight-changes-mode 1)
 
   ;; ;; Changes are initially NOT visible in Highlight Changes mode.
   ;; (setq highlight-changes-visibility-initial-state nil)
@@ -2227,7 +2227,6 @@ Jump between changes:
 #+begin_src emacs-lisp
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
-    (define-key diff-hl-mode-map (kbd "@") #'diff-hl-next-hunk)
 
     ;; Jump to previous hunk (also on `C-x v [').
     (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)

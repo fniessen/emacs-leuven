@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160625.1141
+;; Version: 20160626.2202
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160625.1141"
+(defconst leuven--emacs-version "20160626.2202"
   "Leuven Emacs Config version (date of the last change).")
 
 (message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
@@ -1155,8 +1155,8 @@ Should be selected from `fringe-bitmaps'.")
                     (overlay-put ov 'before-string fringe-anchor))))
             (overlays-at (ad-get-arg 1)))))
 
-  ;; Enable Global-Highlight-Changes mode.
-  (global-highlight-changes-mode 1)
+  ;; ;; Enable Global-Highlight-Changes mode.
+  ;; (global-highlight-changes-mode 1)
 
   ;; ;; Changes are initially NOT visible in Highlight Changes mode.
   ;; (setq highlight-changes-visibility-initial-state nil)
@@ -1219,7 +1219,6 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
-    (define-key diff-hl-mode-map (kbd "@") #'diff-hl-next-hunk)
 
     ;; Jump to previous hunk (also on `C-x v [').
     (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
