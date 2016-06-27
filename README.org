@@ -132,8 +132,9 @@ To list packages which should NOT be installed by Emacs Leuven (neither proposed
 for installation), add something like this into your configuration file:
 
 #+begin_src emacs-lisp
-(setq leuven-elpa-ignored-packages
-      '(useless-package other-annoying-package))
+(setq leuven-excluded-packages
+      '(useless-package
+        other-annoying-package))
 #+end_src
 
 * Keyboard shortcuts

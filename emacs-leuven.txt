@@ -227,14 +227,14 @@ Citations:
 ;;     (require 'emacs-leuven)
 ;;
 ;; To get more debug info about the packages getting loaded, add the following
-;; line before requiring Leuven Emacs Config.
+;; line before requiring Emacs-Leuven.
 ;;
-;;     ;; show messages describing progress of loading Leuven Emacs Config
+;;     ;; show messages describing progress of loading Emacs-Leuven
 ;;     (setq leuven-load-verbose t)
 ;;
 ;; To avoid be questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
-;; line before requiring Leuven Emacs Config.
+;; line before requiring Emacs-Leuven.
 ;;
 ;;     ;; do not (try to) install extra Emacs packages
 ;;     (setq package-selected-packages nil)
@@ -253,15 +253,15 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 (defconst leuven--emacs-version "<<current-time()>>"
-  "Leuven Emacs Config version (date of the last change).")
+  "Emacs-Leuven version (date of the last change).")
 
-(message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
+(message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
 
 (defconst leuven--before-time (float-time)
-  "Value of `float-time' before loading the Leuven Emacs Config library.")
+  "Value of `float-time' before loading the Emacs-Leuven library.")
 #+end_src
 
 #+begin_src emacs-lisp
@@ -282,7 +282,7 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
   :group 'text)
 
 (defcustom leuven-load-verbose nil
-  "If non-nil, means show messages describing progress of loading Leuven Emacs Config."
+  "If non-nil, means show messages describing progress of loading Emacs-Leuven."
   :group 'emacs-leuven
   :type 'integer)
 #+end_src
@@ -433,7 +433,7 @@ need to load a single file that define autoloaded functions.
   ;; Remember this directory.
   (defconst leuven--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Leuven Emacs Config installation.")
+    "Directory path of Emacs-Leuven installation.")
 
   (leuven--add-to-load-path
    (concat leuven--directory "site-lisp"))
@@ -675,7 +675,7 @@ To list packages which should /not/ be installed by Emacs Leuven, add something
 like this into your configuration file:
 
 #+begin_example
-(setq leuven-elpa-ignored-packages '(ess))
+(setq leuven-excluded-packages '(ess flycheck-ledger))
 #+end_example
 
 #+begin_src emacs-lisp
@@ -744,6 +744,7 @@ like this into your configuration file:
                                       htmlize
                                       indent-guide
                                       ;; jabber
+                                      jquery-doc
                                       js2-mode
                                       key-chord
                                       litable
@@ -766,6 +767,7 @@ like this into your configuration file:
                                       ;; redshank
                                       tern
                                       tidy
+                                      smart-comment
                                       unbound
                                       undo-tree
                                       web-mode
@@ -777,44 +779,44 @@ like this into your configuration file:
     (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'.
 
-    (when (fboundp 'package-install-selected-packages) ; Emacs-v25
-      (package-install-selected-packages))
+    ;; (when (fboundp 'package-install-selected-packages) ; Emacs-v25
+    ;;   (package-install-selected-packages))
 
-;;     (defcustom leuven-elpa-ignored-packages
-;;       nil
-;;       "List of packages that should be ignored by Leuven Emacs Config."
-;;       :group 'emacs-leuven
-;;       :type '(repeat (string)))
-;;
-;;     (defun leuven--missing-elpa-packages ()
-;;       "List packages to install for a full blown Leuven installation.
-;; These packages are neither built-in nor already installed nor ignored."
-;;       (let (missing-elpa-packages)
-;;         (dolist (pkg package-selected-packages)
-;;           (unless (or (package-installed-p pkg)
-;;                       (locate-library (symbol-name pkg))
-;;                       (member pkg leuven-elpa-ignored-packages))
-;;             (push pkg missing-elpa-packages)))
-;;         missing-elpa-packages))
-;;
-;;     ;; Propose to install all the packages specified in `package-selected-packages'.
-;;     ;; which are missing and which shouldn't be ignored.
-;;     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
-;;       (when missing-elpa-packages
-;;         ;; Download once the ELPA archive description.
-;;         (package-refresh-contents)      ; Ensure that the list of packages is
-;;                                         ; up-to-date.  Otherwise, new packages
-;;                                         ; (not present in the cache of the ELPA
-;;                                         ; contents) won't install.
-;;         (dolist (pkg (reverse missing-elpa-packages))
-;;           (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
-;;               (ignore-errors
-;;                 (package-install pkg))
-;;                                         ; Must be run after initializing
-;;                                         ; `package-initialize'.
-;;             (message (concat "Customize Emacs Leuven to ignore "
-;;                              "the `%s' package next times...") pkg)
-;;             (sit-for 1.5)))))
+    (defcustom leuven-excluded-packages
+      nil
+      "List of packages that should be ignored by Emacs-Leuven."
+      :group 'emacs-leuven
+      :type '(repeat (string)))
+
+    (defun leuven--missing-elpa-packages ()
+      "List packages to install for a full blown Leuven installation.
+These packages are neither built-in nor already installed nor ignored."
+      (let (missing-elpa-packages)
+        (dolist (pkg package-selected-packages)
+          (unless (or (package-installed-p pkg)
+                      (locate-library (symbol-name pkg))
+                      (member pkg leuven-excluded-packages))
+            (push pkg missing-elpa-packages)))
+        missing-elpa-packages))
+
+    ;; Propose to install all the packages specified in `package-selected-packages'.
+    ;; which are missing and which shouldn't be ignored.
+    (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
+      (when missing-elpa-packages
+        ;; Download once the ELPA archive description.
+        (package-refresh-contents)      ; Ensure that the list of packages is
+                                        ; up-to-date.  Otherwise, new packages
+                                        ; (not present in the cache of the ELPA
+                                        ; contents) won't install.
+        (dolist (pkg (reverse missing-elpa-packages))
+          (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
+              (ignore-errors
+                (package-install pkg))
+                                        ; Must be run after initializing
+                                        ; `package-initialize'.
+            (message (concat "Customize Emacs Leuven to ignore "
+                             "the `%s' package next times...") pkg)
+            (sit-for 1.5)))))
 
     )
 #+end_src
@@ -1067,11 +1069,11 @@ functions and documentation.
 - ~describe-function~ (~C-h f~) ::
      Used with TAB completion to show documentation of functions.
 
-- ~elisp-index-search~ (~C-h E~ in Leuven Emacs Config) ::
+- ~elisp-index-search~ (~C-h E~ in Emacs-Leuven) ::
      Look up documentation on broad Emacs Lisp topics (in the indices of the
      Emacs Lisp Reference Manual).
 
-- ~info-lookup-symbol~ (~C-h S~, or ~C-f1~ in Leuven Emacs Config) ::
+- ~info-lookup-symbol~ (~C-h S~, or ~C-f1~ in Emacs-Leuven) ::
      *Bring the relevant section from the manual, which describes the topic in
      more detail.*
 
@@ -1837,6 +1839,8 @@ We bookmarks positions, not just lines!!
 #+begin_src emacs-lisp
   (with-eval-after-load "ace-jump-mode-autoloads"
 
+    ;; (add-hook 'ace-jump-mode-end-hook 'recenter)
+
     ;; Quickly jump to a position in the current view.
     (global-set-key (kbd "C-c SPC") #'ace-jump-mode)
 
@@ -1849,7 +1853,7 @@ We bookmarks positions, not just lines!!
   ;; Quickly follow links using `ace-jump-mode'.
   (with-eval-after-load "ace-link-autoloads"
 
-    ;; Setup the defualt shortcuts.
+    ;; Setup the default shortcuts.
     (ace-link-setup-default "f"))
 
   ;; Jump to things.
@@ -2016,15 +2020,20 @@ leuven-highlight-keywords, so that only one expression can be used for *all* mod
 See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
 
 #+begin_src emacs-lisp
-  (defun highlight-errors-in-logs ()
-    "Highlight certain lines in log files."
+  (defun highlight-errors-in-archibus-log ()
+    "Highlight certain lines in archibus.log."
     (interactive)
     (when (equal "log" (file-name-extension (buffer-file-name)))
           (hi-lock-mode 1)
-          (highlight-lines-matching-regexp "ERROR" 'hi-pink)
-          (highlight-lines-matching-regexp "WARN" 'hi-yellow)))
+          (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
+          (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
+          (highlight-lines-matching-regexp "DbConnectionImpl" 'default)
+          (highlight-regexp "SELECT\\|FROM\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
+          (highlight-regexp "UPDATE\\|SET" 'ahs-plugin-bod-face)
+          (highlight-regexp "DELETE FROM" 'ahs-edit-mode-face)
+          (highlight-regexp "INSERT INTO\\|VALUES" 'ahs-plugin-whole-buffer-face)))
 
-  (add-hook 'find-file-hook 'highlight-errors-in-logs)
+  (add-hook 'find-file-hook 'highlight-errors-in-archibus-log)
 #+end_src
 
 Check out ~log4j-mode~ instead?  And nice colors at
@@ -11344,6 +11353,15 @@ using the user script with HTTPS sites.
 http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
 
 #+begin_src emacs-lisp
+;;   (setup "jquery-doc"
+;;     (setup-hook 'js-mode-hook 'jquery-doc-setup)
+;;     (setup-after "popwin"
+;;       (push '("^\\*jQuery doc" :regexp t) popwin:special-display-config))
+;;     (setup-keybinds js-mode-map
+;;       "<f1> s" 'jquery-doc)))
+#+end_src
+
+#+begin_src emacs-lisp
 )                                       ; Chapter 25 ends here.
 #+end_src
 
@@ -11445,6 +11463,9 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
   ;; Making buffer indexes as menus.
   (try-require 'imenu)                  ; Awesome!
   (with-eval-after-load "imenu"
+
+    ;; Imenu should always rescan the buffers.
+    (setq imenu-auto-rescan t)
 
     ;; Add Imenu to the menu bar in any mode that supports it.
     (defun try-to-add-imenu ()
@@ -11757,7 +11778,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
   (setq comment-empty-lines t)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (defadvice comment-dwim (around leuven-comment activate)
     "When called interactively with no active region, comment a single line instead."
     (if (or (use-region-p) (not (called-interactively-p 'any)))
@@ -11765,6 +11786,12 @@ Balanced editing: inserting two matching parentheses at once, etc.
       (comment-or-uncomment-region (line-beginning-position)
                                    (line-end-position))
       (message "Commented line")))
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "smart-comment-autoloads"
+
+    (global-set-key (kbd "M-;") 'smart-comment))
 #+end_src
 
 ** Documentation Lookup
@@ -12220,6 +12247,8 @@ Compile within Emacs using ~ant~.
   (add-hook 'java-mode-hook
             (lambda () (local-set-key "<f9>" 'leuven-ant)))
 #+end_src
+
+See smart-compile.el!
 
 ** Compilation Mode
 
@@ -15379,7 +15408,7 @@ See https://www.gnu.org/software/emacs/manual/html_node/eww/index.html.
      Open the Web page in an *external browser* (when JavaScript is needed or the
      "design" is just too bad).
 
-*************** TODO See package ~eww-lnum~ (or ~ace-link~?)
+*************** TODO See package ~eww-lnum~ (or ~ace-link-eww~?)
 (define-key eww-mode-map (kbd "f") #'eww-lnum-follow)
 (define-key eww-mode-map (kbd "F") #'eww-lnum-universal)
 *************** END
@@ -17340,7 +17369,7 @@ functions implemented in Emacs Lisp.
 
 #+begin_src emacs-lisp
   (defun leuven-update ()
-    "Update Leuven Emacs Config to its latest version."
+    "Update Emacs-Leuven to its latest version."
     (interactive)
     (leuven-emacs-version)
     (message "Updating Leuven...")
@@ -17353,7 +17382,7 @@ functions implemented in Emacs Lisp.
         (message "Configuration updated. Restart Emacs to complete the process."))))
 
   (defun leuven-show-latest-commits ()
-    "List latest changes in Leuven Emacs Config."
+    "List latest changes in Emacs-Leuven."
     (interactive)
     (leuven-emacs-version)
     (message "Fetching last changes in Leuven...")
@@ -17370,7 +17399,7 @@ functions implemented in Emacs Lisp.
 
   (defun leuven-emacs-version ()
     (interactive)
-    (message "Leuven Emacs Config version %s" leuven--emacs-version))
+    (message "Emacs-Leuven version %s" leuven--emacs-version))
 #+end_src
 
 # See spacemacs/check-for-new-version.
@@ -17379,7 +17408,7 @@ Please address particular issues or suggestions *specifically*, using ~M-x
 leuven-send-bug-report~.
 
 #+begin_src emacs-lisp
-(message "* --[ Loaded Leuven Emacs Config %s]--" leuven--emacs-version)
+(message "* --[ Loaded Emacs-Leuven %s]--" leuven--emacs-version)
 #+end_src
 
 ** Feature

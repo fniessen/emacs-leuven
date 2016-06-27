@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160626.2234
+;; Version: 20160627.1615
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -43,14 +43,14 @@
 ;;     (require 'emacs-leuven)
 ;;
 ;; To get more debug info about the packages getting loaded, add the following
-;; line before requiring Leuven Emacs Config.
+;; line before requiring Emacs-Leuven.
 ;;
-;;     ;; show messages describing progress of loading Leuven Emacs Config
+;;     ;; show messages describing progress of loading Emacs-Leuven
 ;;     (setq leuven-load-verbose t)
 ;;
 ;; To avoid be questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
-;; line before requiring Leuven Emacs Config.
+;; line before requiring Emacs-Leuven.
 ;;
 ;;     ;; do not (try to) install extra Emacs packages
 ;;     (setq package-selected-packages nil)
@@ -61,16 +61,16 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160626.2234"
-  "Leuven Emacs Config version (date of the last change).")
+(defconst leuven--emacs-version "20160627.1615"
+  "Emacs-Leuven version (date of the last change).")
 
-(message "* --[ Loading Leuven Emacs Config %s]--" leuven--emacs-version)
+(message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
 
 (defconst leuven--before-time (float-time)
-  "Value of `float-time' before loading the Leuven Emacs Config library.")
+  "Value of `float-time' before loading the Emacs-Leuven library.")
 
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
@@ -87,7 +87,7 @@
   :group 'text)
 
 (defcustom leuven-load-verbose nil
-  "If non-nil, means show messages describing progress of loading Leuven Emacs Config."
+  "If non-nil, means show messages describing progress of loading Emacs-Leuven."
   :group 'emacs-leuven
   :type 'integer)
 
@@ -208,7 +208,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Remember this directory.
   (defconst leuven--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
-    "Directory path of Leuven Emacs Config installation.")
+    "Directory path of Emacs-Leuven installation.")
 
   (leuven--add-to-load-path
    (concat leuven--directory "site-lisp"))
@@ -425,6 +425,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       htmlize
                                       indent-guide
                                       ;; jabber
+                                      jquery-doc
                                       js2-mode
                                       key-chord
                                       litable
@@ -447,6 +448,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       ;; redshank
                                       tern
                                       tidy
+                                      smart-comment
                                       unbound
                                       undo-tree
                                       web-mode
@@ -458,44 +460,44 @@ Last time is saved in global variable `leuven--before-section-time'."
     (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
                                         ; and load `<pkg>-autoloads.el'.
 
-    (when (fboundp 'package-install-selected-packages) ; Emacs-v25
-      (package-install-selected-packages))
+    ;; (when (fboundp 'package-install-selected-packages) ; Emacs-v25
+    ;;   (package-install-selected-packages))
 
-;;     (defcustom leuven-elpa-ignored-packages
-;;       nil
-;;       "List of packages that should be ignored by Leuven Emacs Config."
-;;       :group 'emacs-leuven
-;;       :type '(repeat (string)))
-;;
-;;     (defun leuven--missing-elpa-packages ()
-;;       "List packages to install for a full blown Leuven installation.
-;; These packages are neither built-in nor already installed nor ignored."
-;;       (let (missing-elpa-packages)
-;;         (dolist (pkg package-selected-packages)
-;;           (unless (or (package-installed-p pkg)
-;;                       (locate-library (symbol-name pkg))
-;;                       (member pkg leuven-elpa-ignored-packages))
-;;             (push pkg missing-elpa-packages)))
-;;         missing-elpa-packages))
-;;
-;;     ;; Propose to install all the packages specified in `package-selected-packages'.
-;;     ;; which are missing and which shouldn't be ignored.
-;;     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
-;;       (when missing-elpa-packages
-;;         ;; Download once the ELPA archive description.
-;;         (package-refresh-contents)      ; Ensure that the list of packages is
-;;                                         ; up-to-date.  Otherwise, new packages
-;;                                         ; (not present in the cache of the ELPA
-;;                                         ; contents) won't install.
-;;         (dolist (pkg (reverse missing-elpa-packages))
-;;           (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
-;;               (ignore-errors
-;;                 (package-install pkg))
-;;                                         ; Must be run after initializing
-;;                                         ; `package-initialize'.
-;;             (message (concat "Customize Emacs Leuven to ignore "
-;;                              "the `%s' package next times...") pkg)
-;;             (sit-for 1.5)))))
+    (defcustom leuven-excluded-packages
+      nil
+      "List of packages that should be ignored by Emacs-Leuven."
+      :group 'emacs-leuven
+      :type '(repeat (string)))
+
+    (defun leuven--missing-elpa-packages ()
+      "List packages to install for a full blown Leuven installation.
+These packages are neither built-in nor already installed nor ignored."
+      (let (missing-elpa-packages)
+        (dolist (pkg package-selected-packages)
+          (unless (or (package-installed-p pkg)
+                      (locate-library (symbol-name pkg))
+                      (member pkg leuven-excluded-packages))
+            (push pkg missing-elpa-packages)))
+        missing-elpa-packages))
+
+    ;; Propose to install all the packages specified in `package-selected-packages'.
+    ;; which are missing and which shouldn't be ignored.
+    (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
+      (when missing-elpa-packages
+        ;; Download once the ELPA archive description.
+        (package-refresh-contents)      ; Ensure that the list of packages is
+                                        ; up-to-date.  Otherwise, new packages
+                                        ; (not present in the cache of the ELPA
+                                        ; contents) won't install.
+        (dolist (pkg (reverse missing-elpa-packages))
+          (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
+              (ignore-errors
+                (package-install pkg))
+                                        ; Must be run after initializing
+                                        ; `package-initialize'.
+            (message (concat "Customize Emacs Leuven to ignore "
+                             "the `%s' package next times...") pkg)
+            (sit-for 1.5)))))
 
     )
 
@@ -1001,6 +1003,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (with-eval-after-load "ace-jump-mode-autoloads"
 
+    ;; (add-hook 'ace-jump-mode-end-hook 'recenter)
+
     ;; Quickly jump to a position in the current view.
     (global-set-key (kbd "C-c SPC") #'ace-jump-mode)
 
@@ -1011,7 +1015,7 @@ Last time is saved in global variable `leuven--before-section-time'."
   ;; Quickly follow links using `ace-jump-mode'.
   (with-eval-after-load "ace-link-autoloads"
 
-    ;; Setup the defualt shortcuts.
+    ;; Setup the default shortcuts.
     (ace-link-setup-default "f"))
 
   ;; Jump to things.
@@ -1123,15 +1127,20 @@ Last time is saved in global variable `leuven--before-section-time'."
         `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
         ;; FIXME                      0                        t          t
 
-  (defun highlight-errors-in-logs ()
-    "Highlight certain lines in log files."
+  (defun highlight-errors-in-archibus-log ()
+    "Highlight certain lines in archibus.log."
     (interactive)
     (when (equal "log" (file-name-extension (buffer-file-name)))
           (hi-lock-mode 1)
-          (highlight-lines-matching-regexp "ERROR" 'hi-pink)
-          (highlight-lines-matching-regexp "WARN" 'hi-yellow)))
+          (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
+          (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
+          (highlight-lines-matching-regexp "DbConnectionImpl" 'default)
+          (highlight-regexp "SELECT\\|FROM\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
+          (highlight-regexp "UPDATE\\|SET" 'ahs-plugin-bod-face)
+          (highlight-regexp "DELETE FROM" 'ahs-edit-mode-face)
+          (highlight-regexp "INSERT INTO\\|VALUES" 'ahs-plugin-whole-buffer-face)))
 
-  (add-hook 'find-file-hook 'highlight-errors-in-logs)
+  (add-hook 'find-file-hook 'highlight-errors-in-archibus-log)
 
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
@@ -6911,6 +6920,13 @@ this with to-do items than with projects or headings."
                                        (js2-compute-nested-prop-get subject)
                                        (js2-node-abs-pos methods)))))))))
 
+;;   (setup "jquery-doc"
+;;     (setup-hook 'js-mode-hook 'jquery-doc-setup)
+;;     (setup-after "popwin"
+;;       (push '("^\\*jQuery doc" :regexp t) popwin:special-display-config))
+;;     (setup-keybinds js-mode-map
+;;       "<f1> s" 'jquery-doc)))
+
 )                                       ; Chapter 25 ends here.
 
 ;;* 26 Editing (info "(emacs)Programs")
@@ -6965,6 +6981,9 @@ this with to-do items than with projects or headings."
   ;; Making buffer indexes as menus.
   (try-require 'imenu)                  ; Awesome!
   (with-eval-after-load "imenu"
+
+    ;; Imenu should always rescan the buffers.
+    (setq imenu-auto-rescan t)
 
     ;; Add Imenu to the menu bar in any mode that supports it.
     (defun try-to-add-imenu ()
@@ -7103,13 +7122,9 @@ mouse-3: go to end") "]")))
   ;; Always comments out empty lines.
   (setq comment-empty-lines t)
 
-  (defadvice comment-dwim (around leuven-comment activate)
-    "When called interactively with no active region, comment a single line instead."
-    (if (or (use-region-p) (not (called-interactively-p 'any)))
-        ad-do-it
-      (comment-or-uncomment-region (line-beginning-position)
-                                   (line-end-position))
-      (message "Commented line")))
+  (with-eval-after-load "smart-comment-autoloads"
+
+    (global-set-key (kbd "M-;") 'smart-comment))
 
 ;;** 26.6 (info "(emacs)Documentation") Lookup
 
@@ -9860,7 +9875,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;; (message "Emacs startup time: %s" (emacs-init-time))
 
   (defun leuven-update ()
-    "Update Leuven Emacs Config to its latest version."
+    "Update Emacs-Leuven to its latest version."
     (interactive)
     (leuven-emacs-version)
     (message "Updating Leuven...")
@@ -9873,7 +9888,7 @@ a clean buffer we're an order of magnitude laxer about checking."
         (message "Configuration updated. Restart Emacs to complete the process."))))
 
   (defun leuven-show-latest-commits ()
-    "List latest changes in Leuven Emacs Config."
+    "List latest changes in Emacs-Leuven."
     (interactive)
     (leuven-emacs-version)
     (message "Fetching last changes in Leuven...")
@@ -9890,9 +9905,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (defun leuven-emacs-version ()
     (interactive)
-    (message "Leuven Emacs Config version %s" leuven--emacs-version))
+    (message "Emacs-Leuven version %s" leuven--emacs-version))
 
-(message "* --[ Loaded Leuven Emacs Config %s]--" leuven--emacs-version)
+(message "* --[ Loaded Emacs-Leuven %s]--" leuven--emacs-version)
 
 (provide 'emacs-leuven)
 
