@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160627.1615
+;; Version: 20160627.2251
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160627.1615"
+(defconst leuven--emacs-version "20160627.2251"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -492,10 +492,9 @@ These packages are neither built-in nor already installed nor ignored."
         (dolist (pkg (reverse missing-elpa-packages))
           (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
               (ignore-errors
-                (package-install pkg))
-                                        ; Must be run after initializing
+                (package-install pkg))  ; Must be run after initializing
                                         ; `package-initialize'.
-            (message (concat "Customize Emacs Leuven to ignore "
+            (message (concat "Customize Emacs-Leuven to ignore "
                              "the `%s' package next times...") pkg)
             (sit-for 1.5)))))
 
@@ -996,10 +995,11 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; vanilla Emacs.
 
       ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
-
-      ;; ;; Restoring bookmarks when on file find.
-      ;; (add-hook 'find-file-hook #'bm-buffer-restore)
       ))
+
+    (with-eval-after-load "helm-autoloads"
+      (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks))
+                                        ; Instead of `bookmark-jump'.
 
   (with-eval-after-load "ace-jump-mode-autoloads"
 
@@ -2393,12 +2393,6 @@ Should be selected from `fringe-bitmaps'.")
     (global-set-key (kbd "C-x C-b") #'helm-buffers-list) ; OK.
 
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
-
-    (global-set-key (kbd "C-x r l") #'helm-bookmarks) ; Instead of `bookmark-jump'.
-    (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks) ; XXX?
-
-    ;; Install from https://github.com/thierryvolpiatto/emacs-bmk-ext.
-    (global-set-key (kbd "C-x r b") #'helm-bookmark-ext)
 
     (defun leuven-helm-org-prog-menu (arg)
       "Jump to a place in the buffer using an Index menu.
@@ -7122,6 +7116,16 @@ mouse-3: go to end") "]")))
   ;; Always comments out empty lines.
   (setq comment-empty-lines t)
 
+  (unless (locate-library "smart-comment-autoloads")
+
+    (defadvice comment-dwim (around leuven-comment activate)
+      "When called interactively with no active region, comment a single line instead."
+      (if (or (use-region-p) (not (called-interactively-p 'any)))
+          ad-do-it
+        (comment-or-uncomment-region (line-beginning-position)
+                                     (line-end-position))
+        (message "Commented line"))))
+
   (with-eval-after-load "smart-comment-autoloads"
 
     (global-set-key (kbd "M-;") 'smart-comment))
@@ -9122,7 +9126,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key comint-mode-map
       (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio.
 
-    (when (featurep 'helm-misc)
+    (with-eval-after-load "helm-autoloads"
       ;; Use Helm to search `comint' history.
       (define-key comint-mode-map
         (kbd "C-c C-l") #'helm-comint-input-ring)))
