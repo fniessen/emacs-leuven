@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160627.2251
+;; Version: 20160628.1524
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -46,7 +46,7 @@
 ;; line before requiring Emacs-Leuven.
 ;;
 ;;     ;; show messages describing progress of loading Emacs-Leuven
-;;     (setq leuven-load-verbose t)
+;;     (setq leuven-verbose-loading t)
 ;;
 ;; To avoid be questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160627.2251"
+(defconst leuven--emacs-version "20160628.1524"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -86,13 +86,13 @@
   :group 'convenience
   :group 'text)
 
-(defcustom leuven-load-verbose nil
+(defcustom leuven-verbose-loading nil
   "If non-nil, means show messages describing progress of loading Emacs-Leuven."
   :group 'emacs-leuven
   :type 'integer)
 
 (when (and (string-match "GNU Emacs" (version))
-           leuven-load-verbose)
+           leuven-verbose-loading)
   (defadvice message (before leuven-when-was-that activate)
     "Add time stamps to `message' output."
     (ad-set-arg 0 (concat (format-time-string "[%Y-%m-%d %T.")
@@ -157,7 +157,7 @@ Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
            this-chapter-time)
-       (when leuven-load-verbose
+       (when leuven-verbose-loading
          (message "** %s" ,chaptername))
        (setq before-chapter-time (float-time))
        (setq leuven--before-section-time (float-time)) ; Init section time.
@@ -178,7 +178,7 @@ Save execution times in the global list `leuven--load-times-list'."
 Last time is saved in global variable `leuven--before-section-time'."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
-    (when leuven-load-verbose
+    (when leuven-verbose-loading
       (when (not (equal this-section-time 0.000))
         (message "    Section time: %.3f s" this-section-time))
       (unless end-of-chapter (message "*** %s" sectionname)))
@@ -202,7 +202,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         ;; TODO `RCS' and `CVS' directories should also be excluded.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
-          (when leuven-load-verbose
+          (when leuven-verbose-loading
             (message "INFO- Added `%s' to `load-path'" this-directory))))))
 
   ;; Remember this directory.
@@ -383,6 +383,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       anzu
                                       auctex
                                       auto-complete
+                                      auto-highlight-symbol
                                       bbdb
                                       bookmark+
                                       boxquote
@@ -1135,10 +1136,11 @@ These packages are neither built-in nor already installed nor ignored."
           (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
           (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
           (highlight-lines-matching-regexp "DbConnectionImpl" 'default)
-          (highlight-regexp "SELECT\\|FROM\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
-          (highlight-regexp "UPDATE\\|SET" 'ahs-plugin-bod-face)
-          (highlight-regexp "DELETE FROM" 'ahs-edit-mode-face)
-          (highlight-regexp "INSERT INTO\\|VALUES" 'ahs-plugin-whole-buffer-face)))
+          (highlight-regexp "SELECT\\|FROM [^ ]*\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
+          (highlight-regexp "UPDATE [^ ]* \\|SET" 'ahs-plugin-bod-face)
+          (highlight-regexp "DELETE FROM [^ ]*" 'ahs-edit-mode-face)
+          (highlight-regexp "INSERT INTO [a-zA-Z_]*\\|VALUES" 'ahs-plugin-whole-buffer-face)
+          (highlight-regexp "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]" 'font-lock-type-face)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-archibus-log)
 
@@ -8648,10 +8650,10 @@ a clean buffer we're an order of magnitude laxer about checking."
                (sit-for 1)))))
 
     ;; Turn appointment checking on (enable reminders).
-    (when leuven-load-verbose
+    (when leuven-verbose-loading
       (message "INFO- Enable appointment reminders..."))
     (appt-activate 1)
-    (when leuven-load-verbose
+    (when leuven-verbose-loading
       (message "INFO- Enable appointment reminders... Done"))
 
     ;; Enable appointment notification, several minutes beforehand.
@@ -9858,11 +9860,11 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq debug-on-entry 'user-error))
 
 (when (and (string-match "GNU Emacs" (version))
-           leuven-load-verbose)
+           leuven-verbose-loading)
   (ad-disable-advice 'message 'before 'leuven-when-was-that)
   (ad-update 'message))
 
-(when leuven-load-verbose
+(when leuven-verbose-loading
   (message "| Chapter | Time |")
   (message "|---------+------|")
   (mapcar (lambda (el)                  ; FIXME Use `mapc' or `dolist'.

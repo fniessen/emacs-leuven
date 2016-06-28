@@ -230,7 +230,7 @@ Citations:
 ;; line before requiring Emacs-Leuven.
 ;;
 ;;     ;; show messages describing progress of loading Emacs-Leuven
-;;     (setq leuven-load-verbose t)
+;;     (setq leuven-verbose-loading t)
 ;;
 ;; To avoid be questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
@@ -281,7 +281,7 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
   :group 'convenience
   :group 'text)
 
-(defcustom leuven-load-verbose nil
+(defcustom leuven-verbose-loading nil
   "If non-nil, means show messages describing progress of loading Emacs-Leuven."
   :group 'emacs-leuven
   :type 'integer)
@@ -289,7 +289,7 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 
 #+begin_src emacs-lisp
 (when (and (string-match "GNU Emacs" (version))
-           leuven-load-verbose)
+           leuven-verbose-loading)
   (defadvice message (before leuven-when-was-that activate)
     "Add time stamps to `message' output."
     (ad-set-arg 0 (concat (format-time-string "[%Y-%m-%d %T.")
@@ -358,7 +358,7 @@ Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
            this-chapter-time)
-       (when leuven-load-verbose
+       (when leuven-verbose-loading
          (message "** %s" ,chaptername))
        (setq before-chapter-time (float-time))
        (setq leuven--before-section-time (float-time)) ; Init section time.
@@ -379,7 +379,7 @@ Save execution times in the global list `leuven--load-times-list'."
 Last time is saved in global variable `leuven--before-section-time'."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
-    (when leuven-load-verbose
+    (when leuven-verbose-loading
       (when (not (equal this-section-time 0.000))
         (message "    Section time: %.3f s" this-section-time))
       (unless end-of-chapter (message "*** %s" sectionname)))
@@ -425,7 +425,7 @@ need to load a single file that define autoloaded functions.
         ;; TODO `RCS' and `CVS' directories should also be excluded.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
-          (when leuven-load-verbose
+          (when leuven-verbose-loading
             (message "INFO- Added `%s' to `load-path'" this-directory))))))
 #+end_src
 
@@ -702,6 +702,7 @@ like this into your configuration file:
                                       anzu
                                       auctex
                                       auto-complete
+                                      auto-highlight-symbol
                                       bbdb
                                       bookmark+
                                       boxquote
@@ -2008,10 +2009,11 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
           (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
           (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
           (highlight-lines-matching-regexp "DbConnectionImpl" 'default)
-          (highlight-regexp "SELECT\\|FROM\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
-          (highlight-regexp "UPDATE\\|SET" 'ahs-plugin-bod-face)
-          (highlight-regexp "DELETE FROM" 'ahs-edit-mode-face)
-          (highlight-regexp "INSERT INTO\\|VALUES" 'ahs-plugin-whole-buffer-face)))
+          (highlight-regexp "SELECT\\|FROM [^ ]*\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
+          (highlight-regexp "UPDATE [^ ]* \\|SET" 'ahs-plugin-bod-face)
+          (highlight-regexp "DELETE FROM [^ ]*" 'ahs-edit-mode-face)
+          (highlight-regexp "INSERT INTO [a-zA-Z_]*\\|VALUES" 'ahs-plugin-whole-buffer-face)
+          (highlight-regexp "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]" 'font-lock-type-face)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-archibus-log)
 #+end_src
@@ -2600,7 +2602,11 @@ See http://www.elliotglaysher.org/emacs/
 ;;** 14.20 The (info "(emacs)Cursor Display")
 
   (leuven--section "14.20 (emacs)The Cursor Display")
+#+end_src
 
+Colorize cursor according to state.
+
+#+begin_src emacs-lisp
   ;; Use cursor color and type to indicate some modes (read-only, overwrite
   ;; and normal insert modes).
   (defun leuven--set-cursor-according-to-mode ()
@@ -11658,7 +11664,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
   silly but hard-to-spot mistakes on lines ending with and avalanche of ))))).
 
   If you are less into bondage&submission, ~smartparens.el~ is another option, it
-  *helps* to have balanced brackets w/o breaking your will ;-)
+  *helps* to have balanced brackets without breaking your will ;-)
 
   It is more about ease-of-coding them B&D.
 
@@ -14905,10 +14911,10 @@ It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 
 #+begin_src emacs-lisp
     ;; Turn appointment checking on (enable reminders).
-    (when leuven-load-verbose
+    (when leuven-verbose-loading
       (message "INFO- Enable appointment reminders..."))
     (appt-activate 1)
-    (when leuven-load-verbose
+    (when leuven-verbose-loading
       (message "INFO- Enable appointment reminders... Done"))
 #+end_src
 
@@ -17286,13 +17292,13 @@ calls to message), set the variable ~debug-on-message~.
 
 #+begin_src emacs-lisp
 (when (and (string-match "GNU Emacs" (version))
-           leuven-load-verbose)
+           leuven-verbose-loading)
   (ad-disable-advice 'message 'before 'leuven-when-was-that)
   (ad-update 'message))
 #+end_src
 
 #+begin_src emacs-lisp
-(when leuven-load-verbose
+(when leuven-verbose-loading
   (message "| Chapter | Time |")
   (message "|---------+------|")
   (mapcar (lambda (el)                  ; FIXME Use `mapc' or `dolist'.
