@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160628.1524
+;; Version: 20160629.0749
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160628.1524"
+(defconst leuven--emacs-version "20160629.0749"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7118,7 +7118,7 @@ mouse-3: go to end") "]")))
   ;; Always comments out empty lines.
   (setq comment-empty-lines t)
 
-  (unless (locate-library "smart-comment-autoloads")
+  (unless (locate-library "smart-comment-autoloads-XXX")
 
     (defadvice comment-dwim (around leuven-comment activate)
       "When called interactively with no active region, comment a single line instead."
@@ -7128,7 +7128,7 @@ mouse-3: go to end") "]")))
                                      (line-end-position))
         (message "Commented line"))))
 
-  (with-eval-after-load "smart-comment-autoloads"
+  (with-eval-after-load "smart-comment-autoloads-XXX"
 
     (global-set-key (kbd "M-;") 'smart-comment))
 

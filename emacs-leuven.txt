@@ -11764,7 +11764,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
   ;; Always comments out empty lines.
   (setq comment-empty-lines t)
 
-  (unless (locate-library "smart-comment-autoloads")
+  (unless (locate-library "smart-comment-autoloads-XXX")
 
     (defadvice comment-dwim (around leuven-comment activate)
       "When called interactively with no active region, comment a single line instead."
@@ -11774,7 +11774,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
                                      (line-end-position))
         (message "Commented line"))))
 
-  (with-eval-after-load "smart-comment-autoloads"
+  (with-eval-after-load "smart-comment-autoloads-XXX"
 
     (global-set-key (kbd "M-;") 'smart-comment))
 #+end_src
