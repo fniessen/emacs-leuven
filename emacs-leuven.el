@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160629.0749
+;; Version: 20160716.2304
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160629.0749"
+(defconst leuven--emacs-version "20160716.2304"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -304,7 +304,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (cond (leuven--win32-p
            (file-name-as-directory (getenv "ProgramFiles(x86)")))
           (leuven--cygwin-p
-           "/cygdrive/c/Program Files (x86)/")
+           "/cygdrive/c/Program Files/")
           (t
            "/usr/local/bin/"))
     "Default Windows Program Files folder.")
@@ -450,6 +450,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       tern
                                       tidy
                                       smart-comment
+                                      smartparens
                                       unbound
                                       undo-tree
                                       web-mode
@@ -815,7 +816,9 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Commands to run for all cursors in multiple-cursors-mode.
     (setq mc/cmds-to-run-for-all
-          '(cycle-spacing
+          '(
+            c-electric-slash
+            cycle-spacing
             isearch-abort
             isearch-printing-char
             just-one-space
@@ -832,7 +835,12 @@ These packages are neither built-in nor already installed nor ignored."
             org-shiftup
             org-yank
             orgtbl-self-insert-command
-            yas-expand)))
+            yas-expand
+            ))
+
+    (setq mc/cmds-to-run-once
+          '(
+            )))
 
 )                                       ; Chapter 11 ends here.
 
@@ -981,7 +989,7 @@ These packages are neither built-in nor already installed nor ignored."
       (setq bmkp-light-style-autonamed 'line+lfringe)
 
       ;; Default highlight style for non-autonamed bookmarks.
-      (setq bmkp-light-style-non-autonamed 'lfringe)
+      (setq bmkp-light-style-non-autonamed 'line+lfringe)
 
       ;; Automatically highlight bookmarks when set.
       (setq bmkp-auto-light-when-set 'any-bookmark)
@@ -4620,13 +4628,16 @@ Should be selected from `fringe-bitmaps'.")
   ;; 9.1.2 Directory with Org files.
   (setq org-directory
         (directory-file-name            ; This function removes the final slash.
-         (cond ((file-directory-p "~/org/") "~/org/")
+         (cond ((file-directory-p "~/4-Admin/") "~/4-Admin/")
+               ((file-directory-p "~/org/") "~/org/")
                (t "~/"))))
 
   ;; 9.1.2 Default target for storing notes.
   (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
-        (concat org-directory "/refile.org"))
+        (if (file-exists-p (concat org-directory "/0-refile.org"))
+            (concat org-directory "/0-refile.org")
+          (concat org-directory "/refile.org")))
 
   ;; 9.1.2 templates for the creation of capture buffers
 
@@ -4745,21 +4756,8 @@ From %a"
 %i") t)
 
     (add-to-list 'org-capture-templates
-                 `("j" "Journal" entry
-                   (file+datetree ,(concat org-directory "/journal.org"))
-                   "* %T %?
-
-  %U
-
-%i
-
-From %a"
-                   ;; "* %^{Title}\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"
-                   :empty-lines 1) t)
-
-    (add-to-list 'org-capture-templates
                  `("S" "secure" entry
-                   (file+datetree+prompt "~/org/notes/secure.org.gpg")
+                   (file+datetree+prompt "~/.dotfiles/.hide/safe.gpg")
                    "* %(format-time-string \"%H:%M\") %^{Entry} %^G
 %i%?") t)
 
@@ -4774,19 +4772,6 @@ From %a"
     ;; ("web-clippings" ?w
     ;;  "* %^{Title} %^g \n  :PROPERTIES:\n  :date: %^t\n  :link: %^{link}\n  :END:\n\n %x %?"
     ;;  "~/org/data.org" "Web Clippings")
-
-    (add-to-list 'org-capture-templates
-                 `("w" "Default template" entry
-                   ;; `org-protocol-default-template-key'
-                   (file+headline ,(concat org-directory "/capture.org") "Notes")
-                   "* %^{Title}%?
-  %u
-
-%i
-
-From %c"
-                   :empty-lines 1
-                   :immediate-finish t) t)
 
     ;; Default `org-capture-templates' key to use.
     (setq org-protocol-default-template-key "w")
@@ -6863,7 +6848,8 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "js2-mode"
 
-    (add-hook 'js2-mode-hook #'tern-mode)
+    (when (executable-find "tern")
+      (add-hook 'js2-mode-hook #'tern-mode))
 
     (define-key js2-mode-map (kbd "C-x C-e") 'js-send-last-sexp)
     (define-key js2-mode-map (kbd "C-M-x") 'js-send-last-sexp-and-go)
@@ -7110,6 +7096,38 @@ mouse-3: go to end") "]")))
   )
 
   (add-hook 'org-mode-hook #'leuven--org-add-electric-pairs)
+
+  ;; Automatic insertion, wrapping and paredit-like navigation with user defined
+  ;; pairs.
+  (with-eval-after-load "smartparens-autoloads"
+
+    ;; Default configuration for smartparens package.
+    (require 'smartparens-config)       ; Keybinding management, markdown-mode,
+                                        ; org-mode, (la)tex-mode, lisp modes,
+                                        ; C++, PHP.
+    (global-set-key "\M-R" #'sp-splice-sexp-killing-around) ; `sp-raise-sexp'.
+
+    ;; Toggle Smartparens mode in all buffers.
+    (smartparens-global-mode 1)
+
+    ;; Toggle Show-Smartparens mode in all buffers.
+    (show-smartparens-global-mode 1)
+
+    ;; Remove local pairs in Text mode.
+    (sp-local-pair 'text-mode "'" nil :actions nil)
+    (sp-local-pair 'text-mode "\"" nil :actions nil)
+
+    (push 'latex-mode sp-ignore-modes-list)
+
+    (defun leuven-sp-kill-maybe (arg)
+      (interactive "P")
+      (if (consp arg)
+          (sp-kill-sexp)
+        (kill-line arg)))
+
+    (global-set-key [remap kill-line] #'leuven-sp-kill-maybe)
+
+    )
 
 ;;** 26.5 (info "(emacs)Comments")
 
@@ -7438,18 +7456,6 @@ mouse-3: go to end") "]")))
 
   ;; Run `grep' via `find', with user-friendly interface.
   (global-set-key (kbd "C-c 3") #'rgrep)
-
-  ;; 10.3.5 Org keyword search
-  (defun leuven-grep-org-files (regexp &optional context)
-    "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
-  Prefix argument determines number of lines of output context."
-    (interactive "sSearch regexp: \nP")
-    (let ((grep-find-ignored-files '("#*" ".#*"))
-          (grep-template (concat "grep <X> -i -nH "
-                                 (when context
-                                   (concat "-C" (number-to-string context)))
-                                 " -e <R> <F>")))
-      (rgrep regexp "*.org" org-directory)))
 
 ;;** 27.5 (info "(emacs)Flymake")
 
@@ -8232,9 +8238,11 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; and the replacement.
     )
 
-  (with-eval-after-load "company-tern-autoloads"
+  (when (executable-find "tern")
 
-    (add-to-list 'company-backends 'company-tern))
+    (with-eval-after-load "company-tern-autoloads"
+
+      (add-to-list 'company-backends 'company-tern)))
 
   (with-eval-after-load "company"
 

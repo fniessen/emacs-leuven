@@ -17,6 +17,10 @@
   :header-args: :tangle no
   :END:
 
+** TODO Port old advices
+
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices
+
 ** TODO Publish doc of Emacs-Leuven
 
 Use my Org html theme!
@@ -33,7 +37,78 @@ Or put in on RTD:
 
 The Bug Hunter https://travis-ci.org/Malabarba/elisp-bug-hunter.svg?branch=master
 
-Automatically debug and bisect your init (.emacs) file!
+Automatically debug and bisect your init (=.emacs=) file!
+
+#+begin_src emacs-lisp
+(progn (find-file "~/test.java")
+       (require 'helm-imenu)
+       (helm-imenu)
+       nil)
+#+end_src
+
+** TODO Re: Goto last edit location -- explanation provided!!! (from l. david andersson)
+   [2015-06-24 Wed 18:53]
+
+#+begin_verse
+> In fact, there is an easy solution, provided by Kevin Rodgers himself,
+> to whom I wrote after you, as I got the same problem with his package.
+>
+> His solution was to add *one* line in my function that's run before
+> saving the buffer:
+>
+> --8<---------------cut here---------------start------------->8---
+>   (defun leuven-org-update-buffer ()
+>     "Update all dynamic blocks and all tables in the buffer."
+>     (interactive)
+>     (when (derived-mode-p 'org-mode)
+>       (let ((buffer-undo-list buffer-undo-list)) ; For goto-chg <<<<<<<<<
+>         (org-update-all-dblocks)
+>         (org-table-iterate-buffer-tables))))
+>
+>   ;; Make sure that all dynamic blocks and all tables are always
+> up-to-date.
+>   (add-hook 'before-save-hook 'leuven-org-update-buffer)
+> --8<---------------cut here---------------end--------------->8---
+>
+> And that works perfectly!  Simple (not for me!?) and effective...
+
+Sorry, I think that is wrong. It is more important that code is pretty
+than that it works. This only *appears* to work, most of the time.
+
+What it does is, it *forgets* the edits done by the org package when a
+file is saved. The info in the buffer-undo-list may not be in sync with
+the content of the buffer before a certain time point. The time point is
+*not* the save operation and the edits it may do, but the specific edits
+before the save, that the save operation restores. I.e. (assuming the save
+removes spaces at end of line) the edit by you (or another package) that
+inserts the spaces. Undoing beyond those inserts may go wrong.
+
+I have not tried this, but you might want to:
+
+- Make a temporary copy of an .org file, that you don't mind being corrupt.
+- Open it in emacs.
+- Make a small edit in one line, say type "foo" in line 10.
+- Add space at end of line in some line above, say line 5.
+- Save the file. (I assume the space at the end of a line will be removed)
+- Make a small edit in one line, say type "bar" in line 11.
+- Undo (this will undo the edit in line 11)
+- Undo again (this will undo the edit in line 10, but in the wrong position)
+
+Did it misbehave as I expect, or did it work perfectly?
+
+Disclaimer
+
+I do not see "delete-trailing-whitespace" in the current clip. Earlier it
+was in the save hook and it was that function that did the edits during
+the save operation. In my test case I assume it is still present. If it is
+no longer present (and the org functions in the hook does not edit
+anything) it may work perfectly! (But then, you should have no problem
+with goto-chg even without Kevin Rodgers' patch.)
+
+/David Andersson
+#+end_verse
+
+From [[gnus:INBOX#57408.213.114.113.54.1435164814.squirrel@alexander.fl-net.se][Email from l. david andersson: Re: Goto last edit location --]]
 
 ** TODO Improve writing of time-substract
 
@@ -558,7 +633,7 @@ distro) without impacting on stuff you have added by hand.
     (cond (leuven--win32-p
            (file-name-as-directory (getenv "ProgramFiles(x86)")))
           (leuven--cygwin-p
-           "/cygdrive/c/Program Files (x86)/")
+           "/cygdrive/c/Program Files/")
           (t
            "/usr/local/bin/"))
     "Default Windows Program Files folder.")
@@ -769,6 +844,7 @@ like this into your configuration file:
                                       tern
                                       tidy
                                       smart-comment
+                                      smartparens
                                       unbound
                                       undo-tree
                                       web-mode
@@ -1436,7 +1512,9 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
 
     ;; Commands to run for all cursors in multiple-cursors-mode.
     (setq mc/cmds-to-run-for-all
-          '(cycle-spacing
+          '(
+            c-electric-slash
+            cycle-spacing
             isearch-abort
             isearch-printing-char
             just-one-space
@@ -1453,7 +1531,12 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
             org-shiftup
             org-yank
             orgtbl-self-insert-command
-            yas-expand)))
+            yas-expand
+            ))
+
+    (setq mc/cmds-to-run-once
+          '(
+            )))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1688,12 +1771,8 @@ Setup registers for files I commonly edit.
   (set-register ?a '(file . "/sudo::/etc/apt/sources.list"))
   (set-register ?b '(file . "~/.bashrc"))
   (set-register ?e `(file . ,(concat leuven--directory "emacs-leuven.txt")))
-  (when (file-exists-p "~/org/personal/Personal.org")
-    (set-register ?p '(file . "~/org/personal/Personal.org")))
-  (when (file-exists-p "~/org/refile.org")
-    (set-register ?r '(file . "~/org/refile.org")))
-  (when (file-exists-p "~/org/work/Work.org")
-    (set-register ?w '(file . "~/org/work/Work.org")))
+  (when (file-exists-p "~/4-Admin/0-refile.org")
+    (set-register ?r '(file . "~/4-Admin/0-refile.org"))) ; Open my CollectBox.
   (set-register ?z '(file . "~/.zshrc"))
 #+end_src
 
@@ -1791,7 +1870,7 @@ We bookmarks positions, not just lines!!
       (setq bmkp-light-style-autonamed 'line+lfringe)
 
       ;; Default highlight style for non-autonamed bookmarks.
-      (setq bmkp-light-style-non-autonamed 'lfringe)
+      (setq bmkp-light-style-non-autonamed 'line+lfringe)
 
       ;; Automatically highlight bookmarks when set.
       (setq bmkp-auto-light-when-set 'any-bookmark)
@@ -2690,6 +2769,11 @@ screencasts.
     ;; Hotkey for showing the log buffer.
     (global-set-key (kbd "C-h C-l") #'leuven-display-interaction-log))
 #+end_src
+
+#+begin_note
+View-lossage is much improved in Emacs 25, showing directly which commands were
+run by each keypress.
+#+end_note
 
 #+begin_src emacs-lisp
 )                                       ; Chapter 14 ends here.
@@ -4493,6 +4577,12 @@ Keymap:
 | C-c > , right | Move to next file                                                          |
 | C-c < , left  | Move to previous file                                                      |
 | C-c ?         | Show help message                                                          |
+
+If you are using ~ag~, you can place an ~.agignore~ file in the project root with
+the *files* (or extensions) you would want to *ignore*.
+
+If you use ~helm-ag~ command, you can specify option like ~-G\.js$~ search_pattern,
+or if you use ~helm-do-ag~, you can use ~C-u~ prefix for specifying extension.
 
 #+begin_src emacs-lisp
   ;; the_silver_searcher.
@@ -7740,42 +7830,45 @@ Structure:
   ;; 9.1.2 Directory with Org files.
   (setq org-directory
         (directory-file-name            ; This function removes the final slash.
-         (cond ((file-directory-p "~/org/") "~/org/")
+         (cond ((file-directory-p "~/4-Admin/") "~/4-Admin/")
+               ((file-directory-p "~/org/") "~/org/")
                (t "~/"))))
 
   ;; 9.1.2 Default target for storing notes.
   (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
-        (concat org-directory "/refile.org"))
+        (if (file-exists-p (concat org-directory "/0-refile.org"))
+            (concat org-directory "/0-refile.org")
+          (concat org-directory "/refile.org")))
 #+end_src
 
 ~%~-escapes:
 
-- %a ::
+- ~%a~ ::
      Annotation (*link*).
 
-- %i ::
+- ~%i~ ::
      Initial content (*selected text*).
 
-- %? ::
+- ~%?~ ::
      Cursor position.
 
-- %^T ::
+- ~%^T~ ::
      Prompt for a date and time.
 
-- %^G ::
+- ~%^G~ ::
      Prompt for tags with completion on tags in all agenda files.
 
-- %t ::
+- ~%t~ ::
      Time stamp (date only).
 
-- %^{prompt} ::
+- ~%^{prompt}~ ::
      Prompt the user for a string.
 
-- %[file] ::
+- ~%[file]~ ::
      Insert the contents of the file.
 
-- %U ::
+- ~%U~ ::
      Inactive time stamp with date and time.
 
 Looking at the info manual I found the documentation for "immediate-finish", but
@@ -7969,21 +8062,8 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
 %i") t)
 
     (add-to-list 'org-capture-templates
-                 `("j" "Journal" entry
-                   (file+datetree ,(concat org-directory "/journal.org"))
-                   "* %T %?
-
-  %U
-
-%i
-
-From %a"
-                   ;; "* %^{Title}\n  :PROPERTIES:\n  :on: %T\n  :END:\n  %?\n  %x"
-                   :empty-lines 1) t)
-
-    (add-to-list 'org-capture-templates
                  `("S" "secure" entry
-                   (file+datetree+prompt "~/org/notes/secure.org.gpg")
+                   (file+datetree+prompt "~/.dotfiles/.hide/safe.gpg")
                    "* %(format-time-string \"%H:%M\") %^{Entry} %^G
 %i%?") t)
 #+end_src
@@ -8000,21 +8080,6 @@ From %a"
     ;; ("web-clippings" ?w
     ;;  "* %^{Title} %^g \n  :PROPERTIES:\n  :date: %^t\n  :link: %^{link}\n  :END:\n\n %x %?"
     ;;  "~/org/data.org" "Web Clippings")
-#+end_src
-
-#+begin_src emacs-lisp
-    (add-to-list 'org-capture-templates
-                 `("w" "Default template" entry
-                   ;; `org-protocol-default-template-key'
-                   (file+headline ,(concat org-directory "/capture.org") "Notes")
-                   "* %^{Title}%?
-  %u
-
-%i
-
-From %c"
-                   :empty-lines 1
-                   :immediate-finish t) t)
 
     ;; Default `org-capture-templates' key to use.
     (setq org-protocol-default-template-key "w")
@@ -8408,7 +8473,7 @@ question, so that other sorting parameters will not be outranked by ~time-up~ fo
 the rest of the entries.
 
 #+begin_note
-The file =refile.org= should come first.  My current workaround is to add
+The file =0-refile.org= should come first.  My current workaround is to add
 ~:CATEGORY: @refile~ in its subtrees, as the ~@~ symbol is alphabetically before the
 letters.
 #+end_note
@@ -11279,7 +11344,8 @@ using the user script with HTTPS sites.
 
   (with-eval-after-load "js2-mode"
 
-    (add-hook 'js2-mode-hook #'tern-mode)
+    (when (executable-find "tern")
+      (add-hook 'js2-mode-hook #'tern-mode))
 
     (define-key js2-mode-map (kbd "C-x C-e") 'js-send-last-sexp)
     (define-key js2-mode-map (kbd "C-M-x") 'js-send-last-sexp-and-go)
@@ -11666,26 +11732,44 @@ Balanced editing: inserting two matching parentheses at once, etc.
   If you are less into bondage&submission, ~smartparens.el~ is another option, it
   *helps* to have balanced brackets without breaking your will ;-)
 
-  It is more about ease-of-coding them B&D.
+  It is more about ease-of-coding than B&D.
 
   #+begin_note
   If we believe Xiao Hanyu, smartparens is the future, it is the ultimate
   solution for paren pairs management in Emacs world. It is flexible, uniform
   and highly customizable. It is also bundled with a comprehensive
-  documentation, besides the aforementioned wiki, you can also M-x
-  sp-cheat-sheet to get live examples, which, I think, is really a innovative
-  feature.
+  documentation, besides a Wiki, you can also ~M-x sp-cheat-sheet~ to get live
+  examples, which, I think, is really a innovative feature.
   #+end_note
 
   *Bug 18785: Emacs hangs with Org mode when point is in LOGBOOK.*
 
-#+begin_src emacs-lisp :tangle no
+  - ~C-M-e~ (~sp-up-sexp~) ::
+       Move forward out of one level of parentheses.
+
+  - ~C-M-u~ (~sp-backward-up-sexp~) ::
+       Move backward out of one level of parentheses.
+
+  - ~C-M-<backspace>~ (~sp-splice-sexp-killing-backward~) ::
+       Unwrap the current list and kill all the expressions between start of
+       this list and the point.
+
+       This one's surpisingly useful for writing prose.
+
+  - ~C-s-<backspace>~ (~sp-splice-sexp-killing-around~) ::
+       Unwrap the current list and kill everything inside except next
+       expression.
+
+#+begin_src emacs-lisp
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
   ;; pairs.
-  (with-eval-after-load "smartparens-autoloads-XXX"
+  (with-eval-after-load "smartparens-autoloads"
 
     ;; Default configuration for smartparens package.
-    (require 'smartparens-config)
+    (require 'smartparens-config)       ; Keybinding management, markdown-mode,
+                                        ; org-mode, (la)tex-mode, lisp modes,
+                                        ; C++, PHP.
+    (global-set-key "\M-R" #'sp-splice-sexp-killing-around) ; `sp-raise-sexp'.
 
     ;; Toggle Smartparens mode in all buffers.
     (smartparens-global-mode 1)
@@ -11693,20 +11777,24 @@ Balanced editing: inserting two matching parentheses at once, etc.
     ;; Toggle Show-Smartparens mode in all buffers.
     (show-smartparens-global-mode 1)
 
-    ;; Add local pairs in Org mode.
-    (sp-with-modes 'org-mode
-      ;; (sp-local-pair "'" nil :actions nil)
-      (sp-local-tag "*" "*" "*" :actions '(wrap)) ; Bold.
-      (sp-local-tag "/" "/" "/" :actions '(wrap)) ; Italic.
-      (sp-local-tag "_" "_" "_" :actions '(wrap)) ; Underline.
-      (sp-local-tag "=" "=" "=" :actions '(wrap)) ; Verbatim.
-      (sp-local-tag "~" "~" "~" :actions '(wrap))) ; Code.
-
     ;; Remove local pairs in Text mode.
     (sp-local-pair 'text-mode "'" nil :actions nil)
     (sp-local-pair 'text-mode "\"" nil :actions nil)
 
     (push 'latex-mode sp-ignore-modes-list)
+#+end_src
+
+  Combining the regular ~kill-line~ with ~sp-kill-sexp~: ~kill-line~ everywhere, and
+  ~sp-kill-sexp~ with a prefix.
+
+#+begin_src emacs-lisp
+    (defun leuven-sp-kill-maybe (arg)
+      (interactive "P")
+      (if (consp arg)
+          (sp-kill-sexp)
+        (kill-line arg)))
+
+    (global-set-key [remap kill-line] #'leuven-sp-kill-maybe)
 #+end_src
 
   =turn-on-smartparens-strict-mode= add years to one's life to allow for more
@@ -11718,6 +11806,9 @@ Balanced editing: inserting two matching parentheses at once, etc.
     ;;         (add-hook (intern (format "%s-hook" (symbol-name mode)))
     ;;                   #'smartparens-strict-mode))
     ;;       sp--lisp-modes)
+#+end_src
+
+#+begin_src emacs-lisp
     )
 #+end_src
 
@@ -12377,20 +12468,6 @@ ag %s -l --nocolor --hidden -g ""
 #+begin_src emacs-lisp
   ;; Run `grep' via `find', with user-friendly interface.
   (global-set-key (kbd "C-c 3") #'rgrep)
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; 10.3.5 Org keyword search
-  (defun leuven-grep-org-files (regexp &optional context)
-    "Recursively search for REGEXP in Org files in directory tree rooted at `org-directory'.
-  Prefix argument determines number of lines of output context."
-    (interactive "sSearch regexp: \nP")
-    (let ((grep-find-ignored-files '("#*" ".#*"))
-          (grep-template (concat "grep <X> -i -nH "
-                                 (when context
-                                   (concat "-C" (number-to-string context)))
-                                 " -e <R> <F>")))
-      (rgrep regexp "*.org" org-directory)))
 #+end_src
 
 ** Finding Syntax Errors On The Fly
@@ -14076,9 +14153,11 @@ Installing https://github.com/angelozerr/tern.java/wiki/Installation-Update-Site
 https://nodejs.org/download/release/latest/win-x64/
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "company-tern-autoloads"
+  (when (executable-find "tern")
 
-    (add-to-list 'company-backends 'company-tern))
+    (with-eval-after-load "company-tern-autoloads"
+
+      (add-to-list 'company-backends 'company-tern)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -16227,6 +16306,17 @@ http://blog.jr0cket.co.uk/2012/10/using-emacs-24-server-on-mac-osx-for.html
 for ideas about having the right ~emacsclient~ used to connect to the Emacs
 server.
 *************** END
+
+#+begin_note
+You can use ~emacsclient~ with a different Emacs daemon. For example, you can
+start your Git checkout Emacs binary and the local installation with:
+
+: /path/to/git/checkout/src/emacs --daemon=git
+: emacs --daemon=local
+
+and use ~emacsclient -s git~ or ~emacsclient -s local~ to connect to the daemon you
+want to use.
+#+end_note
 
 * Printing Hard Copies
 
