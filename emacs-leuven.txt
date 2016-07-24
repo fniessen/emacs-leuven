@@ -4425,7 +4425,7 @@ See helm-flycheck!
     (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
 
     ;; Ace-Jump to a candidate line in Helm window.
-    (define-key helm-map (kbd "@") 'ace-jump-helm-line)
+    (define-key helm-map (kbd "@") 'ace-jump-helm-line) ; C-'.
 
     ;; Various functions for Helm (Shell history, etc.).
     (require 'helm-misc)

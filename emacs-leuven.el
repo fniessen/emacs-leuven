@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160723.0035
+;; Version: 20160724.1611
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160723.0035"
+(defconst leuven--emacs-version "20160724.1611"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2453,7 +2453,7 @@ Should be selected from `fringe-bitmaps'.")
     (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
 
     ;; Ace-Jump to a candidate line in Helm window.
-    (define-key helm-map (kbd "@") 'ace-jump-helm-line)
+    (define-key helm-map (kbd "@") 'ace-jump-helm-line) ; C-'.
 
     ;; Various functions for Helm (Shell history, etc.).
     (require 'helm-misc)
