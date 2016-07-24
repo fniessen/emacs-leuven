@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160716.2304
+;; Version: 20160723.0035
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160716.2304"
+(defconst leuven--emacs-version "20160723.0035"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -427,7 +427,9 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       indent-guide
                                       ;; jabber
                                       jquery-doc
+                                      js-doc
                                       js2-mode
+                                      js2-refactor-mode
                                       key-chord
                                       litable
                                       idle-require
@@ -447,6 +449,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       rainbow-delimiters
                                       rainbow-mode
                                       ;; redshank
+                                      skewer
                                       tern
                                       tidy
                                       smart-comment
@@ -1143,6 +1146,7 @@ These packages are neither built-in nor already installed nor ignored."
           (hi-lock-mode 1)
           (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
           (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
+          (highlight-lines-matching-regexp "PmWorkOrderGenerator" 'font-lock-constant-face)
           (highlight-lines-matching-regexp "DbConnectionImpl" 'default)
           (highlight-regexp "SELECT\\|FROM [^ ]*\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
           (highlight-regexp "UPDATE [^ ]* \\|SET" 'ahs-plugin-bod-face)
@@ -6788,7 +6792,10 @@ this with to-do items than with projects or headings."
     (setq web-mode-enable-block-face t)
 
     ;; Enable part face (useful for setting background of <script>).
-    (setq web-mode-enable-part-face t))
+    (setq web-mode-enable-part-face t)
+
+    ;; (flycheck-add-mode 'html-tidy 'web-mode)
+    )
 
   (with-eval-after-load "nxml-mode"
 
@@ -6848,59 +6855,77 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "js2-mode"
 
+    ;; Add highlighting of many ECMA built-in functions.
+    (setq js2-highlight-level 3)
+
+    ;; (setq js2-strict-trailing-comma-warning ni)
+    ;; (setq js2-strict-missing-semi-warning ni)
+    ;; (setq js2-missing-semi-one-line-override )
+    ;; (setq js2-allow-rhino-new-expr-initializer ni)
+    ;; (setq js2-include-node-externs t)
+    (setq js2-warn-about-unused-function-arguments t)
+
+    ;; Color defined variables.
+    (when (locate-library "color-identifiers-mode")
+      (add-hook 'js2-mode-hook 'color-identifiers-mode))
+
+    ;; Imenu support for additional constructs.
+    (js2-imenu-extras-setup)
+
+    ;; JS-comint.
+    ;; (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
+    ;; (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
+
+    ;; (add-hook 'js2-mode-hook
+    ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
+
     (when (executable-find "tern")
       (add-hook 'js2-mode-hook #'tern-mode))
 
-    (define-key js2-mode-map (kbd "C-x C-e") 'js-send-last-sexp)
-    (define-key js2-mode-map (kbd "C-M-x") 'js-send-last-sexp-and-go)
-    (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
-    (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
-    (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
+    (try-require 'js-doc)
+    )
 
-    (js2-imenu-extras-setup)
+    (defun js2-imenu-record-object-clone-extend ()
+      (let* ((node (js2-node-at-point (1- (point)))))
+      (when (js2-call-node-p node)
+        (let* ((args (js2-call-node-args node))
+               (methods (second args))
+               (super-class (first args))
+               (parent (js2-node-parent node)))
+          (when (js2-object-node-p methods)
+            (let ((subject (cond ((js2-var-init-node-p parent)
+                                  (js2-var-init-node-target parent))
+                                 ((js2-assign-node-p parent)
+                                  (js2-assign-node-left parent)))))
+              (when subject
+                (js2-record-object-literal methods
+                                           (js2-compute-nested-prop-get subject)
+                                           (js2-node-abs-pos methods)))))))))
 
-    ;; Add highlighting of many ECMA built-in functions.
-    (setq js2-highlight-level 3))
+    ;; (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
 
-(defvar my/debug-counter 1)
-(defun my/insert-or-flush-debug (&optional reset beg end)
-  (interactive "pr")
-  (cond
-   ((= reset 4)
-    (save-excursion
-      (flush-lines "console.log('DEBUG: [0-9]+" (point-min) (point-max))
-      (setq my/debug-counter 1)))
-   ((region-active-p)
-    (save-excursion
-      (goto-char end)
-      (insert ");\n")
-      (goto-char beg)
-      (insert (format "console.log('DEBUG: %d', " my/debug-counter))
-      (setq my/debug-counter (1+ my/debug-counter))
-      (js2-indent-line)))
-   (t
-    ;; Wrap the region in the debug
-    (insert (format "console.log('DEBUG: %d');\n" my/debug-counter))
-    (setq my/debug-counter (1+ my/debug-counter))
-    (backward-char 3)
-    (js2-indent-line))))
-
-(defun js2-imenu-record-object-clone-extend ()
-  (let* ((node (js2-node-at-point (1- (point)))))
-  (when (js2-call-node-p node)
-    (let* ((args (js2-call-node-args node))
-           (methods (second args))
-           (super-class (first args))
-           (parent (js2-node-parent node)))
-      (when (js2-object-node-p methods)
-        (let ((subject (cond ((js2-var-init-node-p parent)
-                              (js2-var-init-node-target parent))
-                             ((js2-assign-node-p parent)
-                              (js2-assign-node-left parent)))))
-          (when subject
-            (js2-record-object-literal methods
-                                       (js2-compute-nested-prop-get subject)
-                                       (js2-node-abs-pos methods)))))))))
+    (defvar my/debug-counter 1)
+    (defun my/insert-or-flush-debug (&optional reset beg end)
+      (interactive "pr")
+      (cond
+       ((= reset 4)
+        (save-excursion
+          (flush-lines "console.log('DEBUG: [0-9]+" (point-min) (point-max))
+          (setq my/debug-counter 1)))
+       ((region-active-p)
+        (save-excursion
+          (goto-char end)
+          (insert ");\n")
+          (goto-char beg)
+          (insert (format "console.log('DEBUG: %d', " my/debug-counter))
+          (setq my/debug-counter (1+ my/debug-counter))
+          (js2-indent-line)))
+       (t
+        ;; Wrap the region in the debug.
+        (insert (format "console.log('DEBUG: %d');\n" my/debug-counter))
+        (setq my/debug-counter (1+ my/debug-counter))
+        (backward-char 3)
+        (js2-indent-line))))
 
 ;;   (setup "jquery-doc"
 ;;     (setup-hook 'js-mode-hook 'jquery-doc-setup)
@@ -6908,6 +6933,15 @@ this with to-do items than with projects or headings."
 ;;       (push '("^\\*jQuery doc" :regexp t) popwin:special-display-config))
 ;;     (setup-keybinds js-mode-map
 ;;       "<f1> s" 'jquery-doc)))
+
+  (when (locate-library "skewer-mode")
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode))
+
+  (when (locate-library "js2-refactor-mode")
+    (add-hook 'js2-mode-hook #'js2-refactor-mode)
+    (js2r-add-keybindings-with-prefix "C-c r"))
 
 )                                       ; Chapter 25 ends here.
 

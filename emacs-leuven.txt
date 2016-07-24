@@ -821,7 +821,9 @@ like this into your configuration file:
                                       indent-guide
                                       ;; jabber
                                       jquery-doc
+                                      js-doc
                                       js2-mode
+                                      js2-refactor-mode
                                       key-chord
                                       litable
                                       idle-require
@@ -841,6 +843,7 @@ like this into your configuration file:
                                       rainbow-delimiters
                                       rainbow-mode
                                       ;; redshank
+                                      skewer
                                       tern
                                       tidy
                                       smart-comment
@@ -2087,6 +2090,7 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
           (hi-lock-mode 1)
           (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
           (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
+          (highlight-lines-matching-regexp "PmWorkOrderGenerator" 'font-lock-constant-face)
           (highlight-lines-matching-regexp "DbConnectionImpl" 'default)
           (highlight-regexp "SELECT\\|FROM [^ ]*\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
           (highlight-regexp "UPDATE [^ ]* \\|SET" 'ahs-plugin-bod-face)
@@ -11236,7 +11240,10 @@ CSS/JS and blocks (client/server side).
     (setq web-mode-enable-block-face t)
 
     ;; Enable part face (useful for setting background of <script>).
-    (setq web-mode-enable-part-face t))
+    (setq web-mode-enable-part-face t)
+
+    ;; (flycheck-add-mode 'html-tidy 'web-mode)
+    )
 #+end_src
 
 ** XML
@@ -11329,13 +11336,7 @@ Some key bindings:
         (sort-declarations))))
 #+end_src
 
-** Skewer: live web development with Emacs
-
-This lets you send HTML, CSS, and Javascript fragments to Google Chrome. You may
-need to start Chrome with ~chrome --allow-running-insecure-content~, if you're
-using the user script with HTTPS sites.
-
-** JS2-mode + JS2-refactor
+** JS2-mode
 
 #+begin_src emacs-lisp
   (with-eval-after-load "js2-mode-autoloads"
@@ -11344,66 +11345,108 @@ using the user script with HTTPS sites.
 
   (with-eval-after-load "js2-mode"
 
-    (when (executable-find "tern")
-      (add-hook 'js2-mode-hook #'tern-mode))
+    ;; Add highlighting of many ECMA built-in functions.
+    (setq js2-highlight-level 3)
 
-    (define-key js2-mode-map (kbd "C-x C-e") 'js-send-last-sexp)
-    (define-key js2-mode-map (kbd "C-M-x") 'js-send-last-sexp-and-go)
-    (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
-    (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
-    (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
+    ;; (setq js2-strict-trailing-comma-warning ni)
+    ;; (setq js2-strict-missing-semi-warning ni)
+    ;; (setq js2-missing-semi-one-line-override )
+    ;; (setq js2-allow-rhino-new-expr-initializer ni)
+    ;; (setq js2-include-node-externs t)
+    (setq js2-warn-about-unused-function-arguments t)
 
+    ;; Color defined variables.
+    (when (locate-library "color-identifiers-mode")
+      (add-hook 'js2-mode-hook 'color-identifiers-mode))
+
+    ;; Imenu support for additional constructs.
     (js2-imenu-extras-setup)
 
-    ;; Add highlighting of many ECMA built-in functions.
-    (setq js2-highlight-level 3))
+    ;; JS-comint.
+    ;; (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
+    ;; (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
+#+end_src
+
+We prefer ~eslint~ over ~jshint~:
+
+#+begin_src emacs-lisp
+    ;; (add-hook 'js2-mode-hook
+    ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
 #+end_src
 
 #+begin_src emacs-lisp
-(defvar my/debug-counter 1)
-(defun my/insert-or-flush-debug (&optional reset beg end)
-  (interactive "pr")
-  (cond
-   ((= reset 4)
-    (save-excursion
-      (flush-lines "console.log('DEBUG: [0-9]+" (point-min) (point-max))
-      (setq my/debug-counter 1)))
-   ((region-active-p)
-    (save-excursion
-      (goto-char end)
-      (insert ");\n")
-      (goto-char beg)
-      (insert (format "console.log('DEBUG: %d', " my/debug-counter))
-      (setq my/debug-counter (1+ my/debug-counter))
-      (js2-indent-line)))
-   (t
-    ;; Wrap the region in the debug
-    (insert (format "console.log('DEBUG: %d');\n" my/debug-counter))
-    (setq my/debug-counter (1+ my/debug-counter))
-    (backward-char 3)
-    (js2-indent-line))))
+    (when (executable-find "tern")
+      (add-hook 'js2-mode-hook #'tern-mode))
+#+end_src
+
+1. insert function document by pressing Ctrl + c, i
+2. insert @tag easily by pressing @ in the JsDoc style comment
+
+(setq js-doc-mail-address "your email address"
+      js-doc-author (format "your name <%s>" js-doc-mail-address)
+      js-doc-url "url of your website"
+      js-doc-license "license name")
+
+(add-hook 'js2-mode-hook
+          #'(lambda ()
+              (define-key js2-mode-map "\C-ci" 'js-doc-insert-function-doc)
+              (define-key js2-mode-map "@" 'js-doc-insert-tag)))
+
+If you want to see the tag description, just input the next command
+  M-x js-doc-describe-tag
+
+#+begin_src emacs-lisp
+    (try-require 'js-doc)
+    )
 #+end_src
 
 #+begin_src emacs-lisp
-(defun js2-imenu-record-object-clone-extend ()
-  (let* ((node (js2-node-at-point (1- (point)))))
-  (when (js2-call-node-p node)
-    (let* ((args (js2-call-node-args node))
-           (methods (second args))
-           (super-class (first args))
-           (parent (js2-node-parent node)))
-      (when (js2-object-node-p methods)
-        (let ((subject (cond ((js2-var-init-node-p parent)
-                              (js2-var-init-node-target parent))
-                             ((js2-assign-node-p parent)
-                              (js2-assign-node-left parent)))))
-          (when subject
-            (js2-record-object-literal methods
-                                       (js2-compute-nested-prop-get subject)
-                                       (js2-node-abs-pos methods)))))))))
+    (defun js2-imenu-record-object-clone-extend ()
+      (let* ((node (js2-node-at-point (1- (point)))))
+      (when (js2-call-node-p node)
+        (let* ((args (js2-call-node-args node))
+               (methods (second args))
+               (super-class (first args))
+               (parent (js2-node-parent node)))
+          (when (js2-object-node-p methods)
+            (let ((subject (cond ((js2-var-init-node-p parent)
+                                  (js2-var-init-node-target parent))
+                                 ((js2-assign-node-p parent)
+                                  (js2-assign-node-left parent)))))
+              (when subject
+                (js2-record-object-literal methods
+                                           (js2-compute-nested-prop-get subject)
+                                           (js2-node-abs-pos methods)))))))))
 #+end_src
 
 http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
+
+#+begin_src emacs-lisp
+    ;; (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
+
+    (defvar my/debug-counter 1)
+    (defun my/insert-or-flush-debug (&optional reset beg end)
+      (interactive "pr")
+      (cond
+       ((= reset 4)
+        (save-excursion
+          (flush-lines "console.log('DEBUG: [0-9]+" (point-min) (point-max))
+          (setq my/debug-counter 1)))
+       ((region-active-p)
+        (save-excursion
+          (goto-char end)
+          (insert ");\n")
+          (goto-char beg)
+          (insert (format "console.log('DEBUG: %d', " my/debug-counter))
+          (setq my/debug-counter (1+ my/debug-counter))
+          (js2-indent-line)))
+       (t
+        ;; Wrap the region in the debug.
+        (insert (format "console.log('DEBUG: %d');\n" my/debug-counter))
+        (setq my/debug-counter (1+ my/debug-counter))
+        (backward-char 3)
+        (js2-indent-line))))
+#+end_src
 
 #+begin_src emacs-lisp
 ;;   (setup "jquery-doc"
@@ -11413,6 +11456,133 @@ http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functio
 ;;     (setup-keybinds js-mode-map
 ;;       "<f1> s" 'jquery-doc)))
 #+end_src
+
+** Skewer: live web development with Emacs
+
+Skewer lets you send HTML, CSS, and Javascript fragments to a browser.
+
+#+begin_tip
+You may need to start Chrome with ~chrome --allow-running-insecure-content~, if
+you're using the user script with HTTPS sites.
+#+end_tip
+
+Kick things off with ~run-skewer~, and then:
+
+- ~C-x C-e~ (~skewer-eval-last-expression~) ::
+     *Evaluate the form before the point* and display the result in the
+     minibuffer.  If given a prefix argument, insert the result into the current
+     buffer.
+
+- ~C-M-x~ (~skewer-eval-defun~) ::
+     *Evaluate the top-level form around the point*.
+
+- ~C-c C-k~ (~skewer-load-buffer~) ::
+     *Load the current buffer.*
+
+- ~C-c C-z~ (~skewer-repl~) ::
+     *Select the REPL buffer*.
+
+#+begin_src emacs-lisp
+  (when (locate-library "skewer-mode")
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode))
+#+end_src
+
+To ensure that everything is working correctly:
+
+1. Open a new buffer with the name =myskewer.js=.
+2. Enable ~JS2-mode~ (a dependency of skewer).
+3. Enable ~skewer-mode~.
+4. ~M-x run-skewer~ (a browser opens, go back to =myskewer.js=).
+5. Type ~alert("hello");~ and hit ~C-x C-e~ at the end of that line.
+6. Go back to the browser.
+
+You should see an alert box on the page.
+
+To tell Skewer to load the HTML (as shown in the demo), place your downloaded
+files into =~/public_html= then follow the instructions for [[https://github.com/skeeto/skewer-mode#manual-version][Manual version]]. Once
+that is done, visit ~localhost:8080~ in your browser.
+
+** JS2-refactor
+
+#+begin_src emacs-lisp
+  (when (locate-library "js2-refactor-mode")
+    (add-hook 'js2-mode-hook #'js2-refactor-mode)
+    (js2r-add-keybindings-with-prefix "C-c r"))
+#+end_src
+
+The ~js2-refactor~ mode should start with ~C-c r~ and then a two-letter mnemonic
+shortcut.
+
+- ~ef~ (~extract-function~) ::
+     Extracts the marked expressions out into a new named function.
+
+- ~em~ (~extract-method~) ::
+     Extracts the marked expressions out into a new named method in an object
+     literal.
+
+- ~ip~ (~introduce-parameter~) ::
+     Changes the marked expression to a parameter in a local function.
+
+- ~lp~ (~localize-parameter~) ::
+     Changes a parameter to a local var in a local function.
+
+- ~eo~ (~expand-object~) ::
+     Converts a one line object literal to multiline.
+
+- ~co~ (~contract-object~) ::
+     Converts a multiline object literal to one line.
+
+- ~eu~ (~expand-function~) ::
+     Converts a one line function to multiline (expecting semicolons as
+     statement delimiters).
+
+- ~cu~ (~contract-function~) ::
+     Converts a multiline function to one line (expecting semicolons as
+     statement delimiters).
+
+- ~ea~ (~expand-array~) ::
+     Converts a one line array to multiline.
+
+- ~ca~ (~contract-array~) ::
+     Converts a multiline array to one line.
+
+- ~wi~ (~wrap-buffer-in-iife~) ::
+     Wraps the entire buffer in an immediately invoked function expression.
+
+- ~ig~ (~inject-global-in-iife~) ::
+     Creates a shortcut for a marked global by injecting it in the wrapping
+     immediately invoked function expression.
+
+- ~ag~ (~add-to-globals-annotation~) ::
+     Creates a ~/*global */~ annotation if it is missing, and adds the var at
+     point to it.
+
+- ~ev~ (~extract-var~) ::
+     Takes a marked expression and replaces it with a var.
+
+- ~iv~ (~inline-var~) ::
+     Replaces all instances of a variable with its initial value.
+
+- ~rv~ (~rename-var~) ::
+     Renames the variable on point and all occurrences in its lexical scope.
+
+- ~vt~ (~var-to-this~) ::
+     Changes local ~var a~ to be ~this.a~ instead.
+
+- ~ao~ (~arguments-to-object~) ::
+     Replaces arguments to a function call with an object literal of named
+     arguments.  Requires YASnippets.
+
+- ~3i~ (~ternary-to-if~) ::
+     Converts ternary operator to if-statement.
+
+- ~sv~ (~split-var-declaration~) ::
+     Splits a ~var~ with multiple vars declared, into several ~var~ statements.
+
+- ~uw~ (~unwrap~) ::
+     Replaces the parent statement with the selected region.
 
 #+begin_src emacs-lisp
 )                                       ; Chapter 25 ends here.
