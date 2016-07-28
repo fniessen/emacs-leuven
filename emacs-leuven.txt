@@ -823,7 +823,7 @@ like this into your configuration file:
                                       jquery-doc
                                       js-doc
                                       js2-mode
-                                      js2-refactor-mode
+                                      js2-refactor
                                       key-chord
                                       litable
                                       idle-require
@@ -843,7 +843,7 @@ like this into your configuration file:
                                       rainbow-delimiters
                                       rainbow-mode
                                       ;; redshank
-                                      skewer
+                                      skewer-mode
                                       tern
                                       tidy
                                       smart-comment
@@ -2096,7 +2096,11 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
           (highlight-regexp "UPDATE [^ ]* \\|SET" 'ahs-plugin-bod-face)
           (highlight-regexp "DELETE FROM [^ ]*" 'ahs-edit-mode-face)
           (highlight-regexp "INSERT INTO [a-zA-Z_]*\\|VALUES" 'ahs-plugin-whole-buffer-face)
-          (highlight-regexp "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]" 'font-lock-type-face)))
+          (highlight-regexp "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]" 'font-lock-type-face)
+          (highlight-regexp "Unable to execute statement:" 'compilation-error)
+          (highlight-regexp "Caused by: java.sql.SQLException:" 'compilation-error)
+          (highlight-regexp "Rule=\\[.*\\]" 'compilation-error)
+          (highlight-regexp "ruleId=\\[.*\\]" 'compilation-error)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-archibus-log)
 #+end_src
@@ -7087,23 +7091,10 @@ has the equal signs escaped, unless you have:
 PDF viewer?  See ~org-file-apps~.  Just change to your favorite viewer.  And make
 sure that you're calling ~org-return~ to open (it's bound to ~C-m~).
 
-#+begin_src emacs-lisp :tangle no
-  ;; PDFs visited in Org mode are opened in Evince (and not in the default choice).
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (delete '("\\.pdf\\'" . default) org-file-apps)
-              (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (delete '("\\.x?html?\\'" . default) org-file-apps)
-              (add-to-list 'org-file-apps '("\\.x?html?\\'" . system))))
-
-  ;; (setcdr (assq 'org-file-apps (assoc "\\.x?html?\\'" org-file-apps))
-  ;;         'system)
-#+end_src
+#+begin_warning
+There is no more "sexp" case in ~org-file-apps~ in development version (9.0).  You
+can use a function instead.
+#+end_warning
 
 If I inline an image in an Org file, I can toggle its display with ~C-c C-x C-v~
 and resize it to a specific width.
@@ -11926,9 +11917,16 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
        This one's surpisingly useful for writing prose.
 
-  - ~C-s-<backspace>~ (~sp-splice-sexp-killing-around~) ::
+  - ~C-S-<backspace>~ (~sp-splice-sexp-killing-around~) ::
        Unwrap the current list and kill everything inside except next
        expression.
+
+  - ~C-<right>~ (~sp-forward-slurp-sexp~) ::
+       Add sexp following the current list in it by moving the closing
+       delimiter.
+
+  - ~C-<left>~ (~sp-forward-barf-sexp~) ::
+       Remove the last sexp in the current list by moving the closing delimiter.
 
 #+begin_src emacs-lisp
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
@@ -11967,7 +11965,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
     (global-set-key [remap kill-line] #'leuven-sp-kill-maybe)
 #+end_src
 
-  =turn-on-smartparens-strict-mode= add years to one's life to allow for more
+  =turn-on-smartparens-strict-mode= adds years to one's life to allow for more
   hacking.  Seriously.
 
 #+begin_src emacs-lisp :tangle no
@@ -12002,6 +12000,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
   Use it in ELisp; use smartparens in other modes (NOT globally!)
 
   Keep looking at the [[http://www.emacswiki.org/emacs/PareditCheatsheet][cheatsheet]] until you've got the hang of it.
+
+  [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][The Animated Guide to Paredit]]
 
 - autopair
 

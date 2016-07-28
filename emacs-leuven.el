@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160724.1611
+;; Version: 20160728.0754
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160724.1611"
+(defconst leuven--emacs-version "20160728.0754"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -429,7 +429,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       jquery-doc
                                       js-doc
                                       js2-mode
-                                      js2-refactor-mode
+                                      js2-refactor
                                       key-chord
                                       litable
                                       idle-require
@@ -449,7 +449,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       rainbow-delimiters
                                       rainbow-mode
                                       ;; redshank
-                                      skewer
+                                      skewer-mode
                                       tern
                                       tidy
                                       smart-comment
@@ -1152,7 +1152,11 @@ These packages are neither built-in nor already installed nor ignored."
           (highlight-regexp "UPDATE [^ ]* \\|SET" 'ahs-plugin-bod-face)
           (highlight-regexp "DELETE FROM [^ ]*" 'ahs-edit-mode-face)
           (highlight-regexp "INSERT INTO [a-zA-Z_]*\\|VALUES" 'ahs-plugin-whole-buffer-face)
-          (highlight-regexp "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]" 'font-lock-type-face)))
+          (highlight-regexp "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]" 'font-lock-type-face)
+          (highlight-regexp "Unable to execute statement:" 'compilation-error)
+          (highlight-regexp "Caused by: java.sql.SQLException:" 'compilation-error)
+          (highlight-regexp "Rule=\\[.*\\]" 'compilation-error)
+          (highlight-regexp "ruleId=\\[.*\\]" 'compilation-error)))
 
   (add-hook 'find-file-hook 'highlight-errors-in-archibus-log)
 
