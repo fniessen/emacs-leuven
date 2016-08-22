@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160728.0754
+;; Version: 20160822.1356
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160728.0754"
+(defconst leuven--emacs-version "20160822.1356"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1142,7 +1142,8 @@ These packages are neither built-in nor already installed nor ignored."
   (defun highlight-errors-in-archibus-log ()
     "Highlight certain lines in archibus.log."
     (interactive)
-    (when (equal "log" (file-name-extension (buffer-file-name)))
+    (when (and (buffer-file-name)       ; nil?
+               (equal "log" (file-name-extension (buffer-file-name))))
           (hi-lock-mode 1)
           (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
           (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
@@ -3990,7 +3991,7 @@ Should be selected from `fringe-bitmaps'.")
                                         ; 2 characters and 0 s delay)
 
   ;; Inhibit startup when preparing agenda buffers -- agenda optimization.
-  (setq org-agenda-inhibit-startup t)
+  (setq org-agenda-inhibit-startup t)   ; XXX
 
   (setq w32-pass-apps-to-system nil)
   (setq w32-apps-modifier 'hyper)       ; Apps key.
@@ -4668,7 +4669,7 @@ Should be selected from `fringe-bitmaps'.")
                     (buffer-file-name (org-capture-get :original-buffer))
                     "Tasks")
                    "* TODO %?
-  %U %a %n"
+%U %a %n"
                    :prepend t) t)
 
     (add-to-list 'org-capture-templates
@@ -4701,7 +4702,7 @@ Should be selected from `fringe-bitmaps'.")
                  `("mT" "Create a TODO Action + edit" entry
                    (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
-   %:date-timestamp-inactive
+%:date-timestamp-inactive
 
 #+begin_verse
 %i
@@ -4714,7 +4715,7 @@ From %a"
                  `("mt" "Create a TODO Action" entry
                    (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
-   %:date-timestamp-inactive
+%:date-timestamp-inactive
 
 #+begin_verse
 %i
@@ -4758,7 +4759,7 @@ From %a"
                  `("c" "Clock sibling" entry
                    (clock)
                    "* %^{Title}
-  %U
+%U
 %a
 
 %i") t)
@@ -5712,6 +5713,8 @@ this with to-do items than with projects or headings."
 
     ;; Format string for links with unknown path type.
     (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
+
+    ;; (setq org-latex-create-formula-image-program 'imagemagick)
 
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
@@ -8336,13 +8339,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key company-active-map (kbd "C-g") #'company-abort)
     (define-key company-active-map (kbd "<left>") #'company-abort)
 
-    ;; Add support for keypad events (`<kp-numbers>' without the modifier).
-    (eval-after-load 'company
-      '(dotimes (i 10)
-         (define-key company-active-map
-           (read-kbd-macro (format "<kp-%d>" i))
-           #'company-complete-number)))
-
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
     (advice-add
@@ -9523,7 +9519,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "saveplace"
 
     ;; Automatically save place in each file.
-    (setq-default save-place t))        ; default value for all buffers
+    (setq-default save-place t))        ; Default value for all buffers.
 
     ;; Name of the file that records `save-place-alist' value.
     (setq save-place-file "~/.emacs.d/.places")

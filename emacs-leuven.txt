@@ -2086,7 +2086,8 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
   (defun highlight-errors-in-archibus-log ()
     "Highlight certain lines in archibus.log."
     (interactive)
-    (when (equal "log" (file-name-extension (buffer-file-name)))
+    (when (and (buffer-file-name)       ; nil?
+               (equal "log" (file-name-extension (buffer-file-name))))
           (hi-lock-mode 1)
           (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
           (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
@@ -6881,7 +6882,7 @@ options.
                                         ; 2 characters and 0 s delay)
 
   ;; Inhibit startup when preparing agenda buffers -- agenda optimization.
-  (setq org-agenda-inhibit-startup t)
+  (setq org-agenda-inhibit-startup t)   ; XXX
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7896,7 +7897,7 @@ Use ~:jump-to-captured~ to tell capture to jump to the note after storing it.
                     (buffer-file-name (org-capture-get :original-buffer))
                     "Tasks")
                    "* TODO %?
-  %U %a %n"
+%U %a %n"
                    :prepend t) t)
 
     (add-to-list 'org-capture-templates
@@ -7984,7 +7985,7 @@ Additional parameters can be included via the commands you use:
                  `("mT" "Create a TODO Action + edit" entry
                    (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %^{Creating action}%? (from %:fromname)
-   %:date-timestamp-inactive
+%:date-timestamp-inactive
 
 ,#+begin_verse
 %i
@@ -7997,7 +7998,7 @@ From %a"
                  `("mt" "Create a TODO Action" entry
                    (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
-   %:date-timestamp-inactive
+%:date-timestamp-inactive
 
 ,#+begin_verse
 %i
@@ -8051,7 +8052,7 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
                  `("c" "Clock sibling" entry
                    (clock)
                    "* %^{Title}
-  %U
+%U
 %a
 
 %i") t)
@@ -9407,6 +9408,10 @@ capabilities.
 
     ;; Format string for links with unknown path type.
     (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; (setq org-latex-create-formula-image-program 'imagemagick)
 #+end_src
 
 Look at the variable ~org-latex-remove-logfiles~, which controls whether some
@@ -14392,13 +14397,6 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Add support for keypad events (`<kp-numbers>' without the modifier).
-    (eval-after-load 'company
-      '(dotimes (i 10)
-         (define-key company-active-map
-           (read-kbd-macro (format "<kp-%d>" i))
-           #'company-complete-number)))
-
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
     (advice-add
@@ -16654,7 +16652,7 @@ printing on Windows.
   (with-eval-after-load "saveplace"
 
     ;; Automatically save place in each file.
-    (setq-default save-place t))        ; default value for all buffers
+    (setq-default save-place t))        ; Default value for all buffers.
 
     ;; Name of the file that records `save-place-alist' value.
     (setq save-place-file "~/.emacs.d/.places")
