@@ -3521,6 +3521,9 @@ Update time stamps (and copyright notice) automatically.
 
   (leuven--section "18.4 (emacs)Reverting a Buffer")
 
+  ;; Time between Auto-Revert Mode file checks.
+  (setq auto-revert-interval 1)         ; [Default: 5]
+
   ;; Replace current buffer text with the text of the visited file on disk.
   (defun leuven-revert-buffer-without-query ()
     "Unconditionally revert current buffer."
@@ -5737,21 +5740,21 @@ Instead of superseding the binding in ~auto-mode-alist~, you can replace it
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; major mode for editing comma-separated value files
+  ;; Major mode for editing comma-separated value files.
   (with-eval-after-load "csv-mode-autoloads"
 
     (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode)))
 
   (with-eval-after-load "csv-mode"
 
-    ;; field separators: a list of *single-character* strings
+    ;; Field separators: a list of *single-character* strings.
     (setq csv-separators '("," ";")))
 #+end_src
 
 *** Choice based on the interpreter name
 
 #+begin_src emacs-lisp
-  ;; list of interpreters specified in the first line (starts with `#!')
+  ;; List of interpreters specified in the first line (starts with `#!').
   (push '("expect" . tcl-mode) interpreter-mode-alist)
 #+end_src
 
@@ -5760,7 +5763,7 @@ Instead of superseding the binding in ~auto-mode-alist~, you can replace it
 For a list of buffer beginnings, see ~magic-mode-alist~.
 
 #+begin_src emacs-lisp
-  ;; ;; load generic modes which support e.g. batch files
+  ;; ;; Load generic modes which support e.g. batch files.
   ;; (try-require 'generic-x)
 #+end_src
 
@@ -6170,10 +6173,12 @@ a factor 2!?
 
   (leuven--section "25.6 (emacs)Case Conversion Commands")
 
-  ;; Enable the use of the commands `downcase-region' and `upcase-region'
-  ;; without confirmation.
-  (put 'downcase-region 'disabled nil)
-  (put 'upcase-region 'disabled nil)
+  ;; Enable the use of some commands without confirmation.
+  (mapc (lambda (command)
+          (put command 'disabled nil))
+        ;; Disabled commands.
+        '(downcase-region
+          upcase-region))
 #+end_src
 
 ** Outline Mode
@@ -9714,6 +9719,20 @@ add it to ~org-export-backends~.
 With the amazing ~ox-pandoc~, you can *export to ~.docx~ directly*.  No need to go
 through LaTeX!
 #+end_tip
+
+*** Markdown
+
+#+begin_src emacs-lisp
+  ;; major mode for editing Markdown-formatted text.
+  (with-eval-after-load "markdown-mode-autoloads"
+    (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
+#+end_src
+
+See https://gist.github.com/fredRos/0e3a845de95ec654538f to setup emacs to
+render a README.md very similarly to how github will do it; except it also works
+offline.
+
+Have Firefox reload the page on demand using the [[https://addons.mozilla.org/en-US/firefox/addon/auto-reload/][Auto Reload]] extension.
 
 ** Publishing
 

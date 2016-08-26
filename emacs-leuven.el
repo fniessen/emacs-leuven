@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160822.1356
+;; Version: 20160826.2326
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160822.1356"
+(defconst leuven--emacs-version "20160826.2326"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2023,6 +2023,9 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "18.4 (emacs)Reverting a Buffer")
 
+  ;; Time between Auto-Revert Mode file checks.
+  (setq auto-revert-interval 1)         ; [Default: 5]
+
   ;; Replace current buffer text with the text of the visited file on disk.
   (defun leuven-revert-buffer-without-query ()
     "Unconditionally revert current buffer."
@@ -3250,20 +3253,20 @@ Should be selected from `fringe-bitmaps'.")
     ;; Flycheck integration for ledger files.
     (try-require 'flycheck-ledger))
 
-  ;; major mode for editing comma-separated value files
+  ;; Major mode for editing comma-separated value files.
   (with-eval-after-load "csv-mode-autoloads"
 
     (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode)))
 
   (with-eval-after-load "csv-mode"
 
-    ;; field separators: a list of *single-character* strings
+    ;; Field separators: a list of *single-character* strings.
     (setq csv-separators '("," ";")))
 
-  ;; list of interpreters specified in the first line (starts with `#!')
+  ;; List of interpreters specified in the first line (starts with `#!').
   (push '("expect" . tcl-mode) interpreter-mode-alist)
 
-  ;; ;; load generic modes which support e.g. batch files
+  ;; ;; Load generic modes which support e.g. batch files.
   ;; (try-require 'generic-x)
 
 )                                       ; Chapter 23 ends here.
@@ -3566,10 +3569,12 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "25.6 (emacs)Case Conversion Commands")
 
-  ;; Enable the use of the commands `downcase-region' and `upcase-region'
-  ;; without confirmation.
-  (put 'downcase-region 'disabled nil)
-  (put 'upcase-region 'disabled nil)
+  ;; Enable the use of some commands without confirmation.
+  (mapc (lambda (command)
+          (put command 'disabled nil))
+        ;; Disabled commands.
+        '(downcase-region
+          upcase-region))
 
 ;;** 25.8 (info "(emacs)Outline Mode")
 
@@ -5877,6 +5882,10 @@ this with to-do items than with projects or headings."
     (when leuven--cygwin-p
       (setcdr (assoc "LibreOffice" org-odt-convert-processes)
               "soffice --headless --convert-to %f%x --outdir \"$(cygpath -m %d)\" \"$(cygpath -m %i)\"")))
+
+  ;; major mode for editing Markdown-formatted text.
+  (with-eval-after-load "markdown-mode-autoloads"
+    (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
 
 ;;* 13 (info "(org)Publishing")
 
