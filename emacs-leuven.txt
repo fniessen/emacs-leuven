@@ -731,6 +731,9 @@ hitting ~y~ (/Yes/) when asked.
 
 ** Package Installation
 
+The first time you start emacs, it will install some additional packages that
+are best handled by the package manager.
+
 - User's Emacs Lisp packages in ~package-user-dir~ (=~/.emacs.d/elpa=)
 - System-wide Emacs Lisp packages in ~package-directory-list~
 
@@ -2376,7 +2379,9 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
 
 #+begin_src emacs-lisp
   ;; Unobtrusively remove trailing whitespace.
-  (with-eval-after-load "ws-butler-autoloads"
+  (with-eval-after-load "ws-butler-autoloads-XXX" ; Temporarily disabled because
+                                                  ; of indentation replaced by
+                                                  ; spaces.
 
     (add-hook 'text-mode-hook #'ws-butler-mode)
     (add-hook 'prog-mode-hook #'ws-butler-mode))
@@ -2385,8 +2390,10 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
     (diminish 'ws-butler-mode))
 #+end_src
 
-XXX Check whether explicitly inserted tabs (at beginning of lines) are deleted
-because of this.
+#+begin_warning
+If ~indent-tabs-mode~ is nil, then *tabs in indentation is replaced by spaces* (only
+for lines modified by you).
+#+end_warning
 
 #+begin_src emacs-lisp
   ;; Visually indicate empty lines after the buffer end in the fringe.

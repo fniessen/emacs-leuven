@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160826.2326
+;; Version: 20160901.1119
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160826.2326"
+(defconst leuven--emacs-version "20160901.1119"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1276,7 +1276,9 @@ Should be selected from `fringe-bitmaps'.")
   ;; (setq-default show-trailing-whitespace t)
 
   ;; Unobtrusively remove trailing whitespace.
-  (with-eval-after-load "ws-butler-autoloads"
+  (with-eval-after-load "ws-butler-autoloads-XXX" ; Temporarily disabled because
+                                                  ; of indentation replaced by
+                                                  ; spaces.
 
     (add-hook 'text-mode-hook #'ws-butler-mode)
     (add-hook 'prog-mode-hook #'ws-butler-mode))
