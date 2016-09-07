@@ -841,7 +841,7 @@ like this into your configuration file:
                                       ;; multi-term
                                       pager
                                       ;; paredit
-                                      pdf-tools
+                                      ;; pdf-tools
                                       powerline
                                       rainbow-delimiters
                                       rainbow-mode
@@ -2707,7 +2707,7 @@ Colorize cursor according to state.
   (defun leuven--set-cursor-according-to-mode ()
     "Change cursor color according to some minor modes."
     (let ((color (cond (buffer-read-only "purple1")
-                       (overwrite-mode   "red")
+                       (overwrite-mode   "#7F7F7F")
                        (t                "black"))) ; #21BDFF is less visible.
           (type (if (null overwrite-mode)
                     'bar
@@ -12527,6 +12527,13 @@ Compile within Emacs using ~ant~.
 
 See smart-compile.el!
 
+See jdc.el
+
+#+begin_src emacs-lisp
+  ;; Use Java for class files decompiled with Jad.
+  (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
+#+end_src
+
 ** Compilation Mode
 
 When Emacs visits the locus of an error message, it momentarily highlights the
@@ -12775,6 +12782,13 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Enable Gdb-Many-Windows mode.
     (setq gdb-many-windows t))          ; The only important parameter for GDB.
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(define-key jde-mode-map [f8]   'jdibug-step-over)
+(define-key jde-mode-map [M-f8] 'jdibug-step-into)
+(define-key jde-mode-map [f7]   'jdibug-step-out)
+(define-key jde-mode-map [M-f7] 'jdibug-resume)
 #+end_src
 
 ** Debugging Lisp programs
@@ -13078,10 +13092,10 @@ You call ~M-x git-timemachine RET~ from a buffer visiting a tracked file, then y
 can use the following keys to navigate historic versions of the file:
 
 - ~p~ ::
-     Visit previous historic version.
+     Visit *previous* historic version.
 
 - ~n~ ::
-     Visit next historic version.
+     Visit *next* historic version.
 
 - ~w~ ::
      Copy the abbreviated hash of the current historic version.
@@ -15623,12 +15637,11 @@ It offers many features:
 
 It's the best PDF viewer on GNU/Linux (including the ones not running in Emacs).
 
-#+begin_src emacs-lisp
-  (when (and leuven--linux-p
-             ;; (executable-find "epdfinfo")
-             )
-    (with-eval-after-load "pdf-tools-autoloads"
-      (pdf-tools-install)))
+#+begin_src emacs-lisp :tangle no
+  ;; (when (and leuven--linux-p
+  ;;            (executable-find "epdfinfo"))
+  ;;   (with-eval-after-load "pdf-tools-autoloads"
+  ;;     (pdf-tools-install)))
 #+end_src
 
 ** Navigation

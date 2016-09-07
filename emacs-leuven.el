@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160901.1119
+;; Version: 20160907.2325
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160901.1119"
+(defconst leuven--emacs-version "20160907.2325"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -444,7 +444,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       ;; multi-term
                                       pager
                                       ;; paredit
-                                      pdf-tools
+                                      ;; pdf-tools
                                       powerline
                                       rainbow-delimiters
                                       rainbow-mode
@@ -1539,7 +1539,7 @@ Should be selected from `fringe-bitmaps'.")
   (defun leuven--set-cursor-according-to-mode ()
     "Change cursor color according to some minor modes."
     (let ((color (cond (buffer-read-only "purple1")
-                       (overwrite-mode   "red")
+                       (overwrite-mode   "#7F7F7F")
                        (t                "black"))) ; #21BDFF is less visible.
           (type (if (null overwrite-mode)
                     'bar
@@ -7433,6 +7433,9 @@ mouse-3: go to end") "]")))
   (add-hook 'java-mode-hook
             (lambda () (local-set-key "<f9>" 'leuven-ant)))
 
+  ;; Use Java for class files decompiled with Jad.
+  (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
+
 ;;** 27.2 (info "(emacs)Compilation Mode")
 
   (leuven--section "27.2 (emacs)Compilation Mode")
@@ -9023,12 +9026,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 (leuven--chapter leuven-load-chapter-36-document-view "36 Document Viewing"
 
   ;; View PDF/PostScript/DVI files in Emacs.
-
-  (when (and leuven--linux-p
-             ;; (executable-find "epdfinfo")
-             )
-    (with-eval-after-load "pdf-tools-autoloads"
-      (pdf-tools-install)))
 
 )                                       ; Chapter 36 ends here.
 
