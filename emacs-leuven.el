@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160909.2206
+;; Version: 20160910.0055
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160909.2206"
+(defconst leuven--emacs-version "20160910.0055"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -980,8 +980,13 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Extensions to standard library `bookmark.el'.
     (when (try-require 'bookmark+)
+
+      ;; Toggle an ANONYMOUS bookmark on the current line.
       (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
+
       (global-set-key (kbd "<S-f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
+
+      ;; Delete all ANONYMOUS bookmarks in a buffer.
       (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
 
     (with-eval-after-load "bookmark+"
@@ -989,10 +994,10 @@ These packages are neither built-in nor already installed nor ignored."
       (setq bmkp-light-left-fringe-bitmap 'filled-square)
       (setq bmkp-light-right-fringe-bitmap 'filled-square)
 
-      ;; Default highlight style for autonamed (= default) bookmarks.
+      ;; Default highlight style for ANONYMOUS (= default) bookmarks.
       (setq bmkp-light-style-autonamed 'line+lfringe)
 
-      ;; Default highlight style for non-autonamed bookmarks.
+      ;; Default highlight style for bookmarks WITH MNEMONICS.
       (setq bmkp-light-style-non-autonamed 'line+lfringe)
 
       ;; Automatically highlight bookmarks when set.
@@ -6964,7 +6969,8 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "js2-refactor-autoloads"
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
 
-    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract function with `C-c C-m ef`.
+    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
+                                                 ; `C-c C-m ev`.
     )
 
 )                                       ; Chapter 25 ends here.
@@ -8353,7 +8359,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key company-active-map (kbd "M-?") #'company-show-doc-buffer)
 
     ;;! Temporarily display a buffer showing the selected candidate in context.
-    (define-key company-active-map (kbd "M-.") #'company-show-location)
+    (define-key company-active-map (kbd "M-.") #'company-show-location) ; XXX
 
     ;; Abort.
     (define-key company-active-map (kbd "C-g") #'company-abort)
