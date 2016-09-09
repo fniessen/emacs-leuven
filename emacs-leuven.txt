@@ -797,6 +797,7 @@ like this into your configuration file:
                                       diminish
                                       dired+
                                       ;; emacs-eclim
+                                      emr
                                       ess
                                       expand-region
                                       fancy-narrow
@@ -11505,6 +11506,11 @@ Kick things off with ~run-skewer~, and then:
      *Select the REPL buffer*.
 
 #+begin_src emacs-lisp
+;; (require 'css-mode)
+;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
+#+end_src
+
+#+begin_src emacs-lisp
   (when (locate-library "skewer-mode")
     (add-hook 'js2-mode-hook 'skewer-mode)
     (add-hook 'css-mode-hook 'skewer-css-mode)
@@ -11529,23 +11535,31 @@ that is done, visit ~localhost:8080~ in your browser.
 ** JS2-refactor
 
 #+begin_src emacs-lisp
-  (when (locate-library "js2-refactor-mode")
+  (with-eval-after-load "js2-refactor-autoloads"
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
-    (js2r-add-keybindings-with-prefix "C-c r"))
+
+    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract function with `C-c C-m ef`.
+    )
 #+end_src
 
-The ~js2-refactor~ mode should start with ~C-c r~ and then a two-letter mnemonic
+The ~js2-refactor~ mode should start with ~C-c C-m~ and then a two-letter mnemonic
 shortcut.
 
-- ~ef~ (~extract-function~) ::
-     Extracts the marked expressions out into a new named function.
-
-- ~em~ (~extract-method~) ::
-     Extracts the marked expressions out into a new named method in an object
-     literal.
+- ~ev~ (~extract-var~) ::
+     Takes a *marked expression* and replaces it with a *var*.
 
 - ~ip~ (~introduce-parameter~) ::
-     Changes the marked expression to a parameter in a local function.
+     Changes the *marked expression* to a *parameter* in a local function.
+
+- ~ef~ (~extract-function~) ::
+     *Extracts* the marked expressions out into a new named *function*.
+
+- ~em~ (~extract-method~) ::
+     *Extracts* the marked expressions out into a new named *method* in an object
+     literal.
+
+- ~vt~ (~var-to-this~) ::
+     Changes *local ~var* a~ to be ~this.a~ (*instance variable*) instead.
 
 - ~lp~ (~localize-parameter~) ::
      Changes a parameter to a local var in a local function.
@@ -11581,17 +11595,11 @@ shortcut.
      Creates a ~/*global */~ annotation if it is missing, and adds the var at
      point to it.
 
-- ~ev~ (~extract-var~) ::
-     Takes a marked expression and replaces it with a var.
-
 - ~iv~ (~inline-var~) ::
      Replaces all instances of a variable with its initial value.
 
 - ~rv~ (~rename-var~) ::
      Renames the variable on point and all occurrences in its lexical scope.
-
-- ~vt~ (~var-to-this~) ::
-     Changes local ~var a~ to be ~this.a~ instead.
 
 - ~ao~ (~arguments-to-object~) ::
      Replaces arguments to a function call with an object literal of named
@@ -13771,12 +13779,9 @@ really like this.
 *** Refactoring
 
 #+begin_src emacs-lisp :tangle no
-(req-package emr
-  :config
-  (progn (emr-initialize)
-                 (define-key emacs-lisp-mode-map
-                   (kbd "M-RET")
-                   #'emr-show-refactor-menu)))
+  (with-eval-after-load "emr-autoloads"
+    (add-hook 'prog-mode-hook #'emr-initialize)
+    (define-key prog-mode-map (kbd "M-RET") #'emr-show-refactor-menu))
 #+end_src
 
 * Abbrevs
@@ -15638,10 +15643,10 @@ It offers many features:
 It's the best PDF viewer on GNU/Linux (including the ones not running in Emacs).
 
 #+begin_src emacs-lisp :tangle no
-  ;; (when (and leuven--linux-p
-  ;;            (executable-find "epdfinfo"))
-  ;;   (with-eval-after-load "pdf-tools-autoloads"
-  ;;     (pdf-tools-install)))
+  (when (and leuven--linux-p
+             (not (executable-find "epdfinfo")))
+    (with-eval-after-load "pdf-tools-autoloads"
+      (pdf-tools-install)))
 #+end_src
 
 ** Navigation

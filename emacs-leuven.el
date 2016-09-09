@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160907.2325
+;; Version: 20160909.2206
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160907.2325"
+(defconst leuven--emacs-version "20160909.2206"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -400,6 +400,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       diminish
                                       dired+
                                       ;; emacs-eclim
+                                      emr
                                       ess
                                       expand-region
                                       fancy-narrow
@@ -6952,14 +6953,19 @@ this with to-do items than with projects or headings."
 ;;     (setup-keybinds js-mode-map
 ;;       "<f1> s" 'jquery-doc)))
 
+;; (require 'css-mode)
+;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
+
   (when (locate-library "skewer-mode")
     (add-hook 'js2-mode-hook 'skewer-mode)
     (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode))
 
-  (when (locate-library "js2-refactor-mode")
+  (with-eval-after-load "js2-refactor-autoloads"
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
-    (js2r-add-keybindings-with-prefix "C-c r"))
+
+    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract function with `C-c C-m ef`.
+    )
 
 )                                       ; Chapter 25 ends here.
 
