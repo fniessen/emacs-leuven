@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160910.0055
+;; Version: 20160910.2117
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160910.0055"
+(defconst leuven--emacs-version "20160910.2117"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -819,12 +819,13 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "multiple-cursors-core"
 
     ;; Commands to run for all cursors in multiple-cursors-mode.
-    (setq mc/cmds-to-run-for-all
-          '(
-            c-electric-slash
+    (setq mc/cmds-to-run-for-all        ; See .mc-lists.el.
+          '(c-electric-slash
             cycle-spacing
+            emr-show-refactor-menu
             isearch-abort
             isearch-printing-char
+            js2-mode-show-node
             just-one-space
             kill-region
             leuven-fill-paragraph
@@ -839,12 +840,11 @@ These packages are neither built-in nor already installed nor ignored."
             org-shiftup
             org-yank
             orgtbl-self-insert-command
-            yas-expand
-            ))
+            yas-expand))
 
+    ;; Commands to run only once in multiple-cursors-mode.
     (setq mc/cmds-to-run-once
-          '(
-            )))
+          '()))
 
 )                                       ; Chapter 11 ends here.
 
@@ -1001,10 +1001,10 @@ These packages are neither built-in nor already installed nor ignored."
       (setq bmkp-light-style-non-autonamed 'line+lfringe)
 
       ;; Automatically highlight bookmarks when set.
-      (setq bmkp-auto-light-when-set 'any-bookmark)
+      (setq bmkp-auto-light-when-set 'all-in-buffer)
 
       ;; Automatically highlight bookmarks when jumped to.
-      (setq bmkp-auto-light-when-jump 'any-bookmark)
+      (setq bmkp-auto-light-when-jump 'all-in-buffer)
 
       ;; Don't propertize bookmark names to hold full bookmark data.
       (setq bmkp-propertize-bookmark-names-flag nil)
