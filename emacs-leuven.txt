@@ -1890,6 +1890,11 @@ Annotating bookmarks.
 
     (with-eval-after-load "bookmark+"
 
+      ;; Priorities of bookmark highlighting overlay types.
+      (setq bmkp-light-priorities '((bmkp-autonamed-overlays     . 150)
+                                    (bmkp-non-autonamed-overlays . 160))
+
+      ;; Symbols for the fringe bitmaps to use to highlight a bookmark.
       (setq bmkp-light-left-fringe-bitmap 'filled-square)
       (setq bmkp-light-right-fringe-bitmap 'filled-square)
 
@@ -1912,6 +1917,16 @@ Annotating bookmarks.
                                         ; vanilla Emacs.
 
       ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
+
+      ;; Name ANONYMOUS bookmarks with buffer name and line number.
+      (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
+
+      (setq bmkp-autoname-bookmark-function #'leuven-bmkp-autoname-line)
+
+      (defun leuven-bmkp-autoname-line (position)
+        "Name autonamed bookmark at POSITION using line number."
+        (let ((line  (line-number-at-pos position)))
+          (format "%s:%d (%s)" (buffer-name) line (buffer-file-name))))
       ))
 #+end_src
 
@@ -12743,6 +12758,8 @@ In the error list window the following keybindings are available:
 - ~S~ ::
      Sort the error list by the column at point. Press repeatedly to inverse the
      sorting order.
+
+XXX Display errors in the right fringe
 
 #+begin_src emacs-lisp
 ;;** 27.5 (info "(emacs)Flymake")

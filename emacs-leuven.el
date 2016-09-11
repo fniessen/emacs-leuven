@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160910.2117
+;; Version: 20160911.2312
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160910.2117"
+(defconst leuven--emacs-version "20160911.2312"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -991,6 +991,11 @@ These packages are neither built-in nor already installed nor ignored."
 
     (with-eval-after-load "bookmark+"
 
+      ;; Priorities of bookmark highlighting overlay types.
+      (setq bmkp-light-priorities '((bmkp-autonamed-overlays     . 150)
+                                    (bmkp-non-autonamed-overlays . 160))
+
+      ;; Symbols for the fringe bitmaps to use to highlight a bookmark.
       (setq bmkp-light-left-fringe-bitmap 'filled-square)
       (setq bmkp-light-right-fringe-bitmap 'filled-square)
 
@@ -1013,6 +1018,16 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; vanilla Emacs.
 
       ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
+
+      ;; Name ANONYMOUS bookmarks with buffer name and line number.
+      (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
+
+      (setq bmkp-autoname-bookmark-function #'leuven-bmkp-autoname-line)
+
+      (defun leuven-bmkp-autoname-line (position)
+        "Name autonamed bookmark at POSITION using line number."
+        (let ((line  (line-number-at-pos position)))
+          (format "%s:%d (%s)" (buffer-name) line (buffer-file-name))))
       ))
 
     (with-eval-after-load "helm-autoloads"
