@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160911.2312
+;; Version: 20160912.0954
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160911.2312"
+(defconst leuven--emacs-version "20160912.0954"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -993,7 +993,7 @@ These packages are neither built-in nor already installed nor ignored."
 
       ;; Priorities of bookmark highlighting overlay types.
       (setq bmkp-light-priorities '((bmkp-autonamed-overlays     . 150)
-                                    (bmkp-non-autonamed-overlays . 160))
+                                    (bmkp-non-autonamed-overlays . 160)))
 
       ;; Symbols for the fringe bitmaps to use to highlight a bookmark.
       (setq bmkp-light-left-fringe-bitmap 'filled-square)

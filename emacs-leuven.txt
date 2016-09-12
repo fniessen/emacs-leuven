@@ -1892,7 +1892,7 @@ Annotating bookmarks.
 
       ;; Priorities of bookmark highlighting overlay types.
       (setq bmkp-light-priorities '((bmkp-autonamed-overlays     . 150)
-                                    (bmkp-non-autonamed-overlays . 160))
+                                    (bmkp-non-autonamed-overlays . 160)))
 
       ;; Symbols for the fringe bitmaps to use to highlight a bookmark.
       (setq bmkp-light-left-fringe-bitmap 'filled-square)
