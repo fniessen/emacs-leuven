@@ -854,6 +854,7 @@ like this into your configuration file:
                                       smartparens
                                       unbound
                                       undo-tree
+                                      volatile-highlights
                                       web-mode
                                       which-key
                                       ws-butler
@@ -1032,7 +1033,9 @@ Show line numbers temporarily -- just when you're going to a line number with
   (global-set-key (kbd "<f11>") #'undo)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+visual feedback on some operations (~undo~, ~yank~, etc.).
+
+#+begin_src emacs-lisp
   (with-eval-after-load "volatile-highlights-autoloads"
     (volatile-highlights-mode 1))
 #+end_src
@@ -1579,8 +1582,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
 #+begin_src emacs-lisp
 ;; old ([2012-09-07 Fri] remove "compile" after "activate")
 
-  ;; Add the ability to copy the current line without marking it (no
-  ;; selection).
+  ;; Add the ability to copy the current line without marking it (no selection).
   (defadvice kill-ring-save (before leuven-slick-copy activate)
     "When called with no active region, copy the current line instead."
     (interactive
@@ -1589,8 +1591,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
        (list (line-beginning-position)
              (line-beginning-position 2)))))
 
-  ;; Add the ability to cut the current line without marking it (no
-  ;; selection).
+  ;; Add the ability to cut the current line without marking it (no selection).
   (defadvice kill-region (before leuven-slick-cut activate)
     "When called with no active region, kill the current line instead."
     (interactive
@@ -1890,6 +1891,8 @@ Annotating bookmarks.
 
     (with-eval-after-load "bookmark+"
 
+      (add-hook 'find-file-hook #'bmkp-light-this-buffer)
+
       ;; Priorities of bookmark highlighting overlay types.
       (setq bmkp-light-priorities '((bmkp-autonamed-overlays     . 150)
                                     (bmkp-non-autonamed-overlays . 160)))
@@ -1919,15 +1922,21 @@ Annotating bookmarks.
       ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
       ;; Name ANONYMOUS bookmarks with buffer name and line number.
-      (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
+      ;; (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
+      (setq bmkp-autoname-format "^%B:[0-9]+: %s")
 
       (setq bmkp-autoname-bookmark-function #'leuven-bmkp-autoname-line)
 
       (defun leuven-bmkp-autoname-line (position)
         "Name autonamed bookmark at POSITION using line number."
         (let ((line  (line-number-at-pos position)))
-          (format "%s:%d (%s)" (buffer-name) line (buffer-file-name))))
-      ))
+          ;; (format "%s:%d (%s)" (buffer-name) line (buffer-file-name))
+          (format "%s:%d: %s"
+                  (buffer-name)
+                  line
+                  (buffer-substring-no-properties
+                   (line-beginning-position)
+                   (1- (line-beginning-position 2))))))))
 #+end_src
 
 XXX They should always be in color when opening a buffer... not only when
@@ -2261,7 +2270,8 @@ to follow some key variables through a block of code.
     ;; Number of seconds of idle time before highlighting the current symbol.
     (setq highlight-symbol-idle-delay 0.5)
 
-    (setq highlight-symbol-colors '("#FFCDFF" "#CCCCFF" "#FFB6C6" "#84CFFF"))
+    (setq highlight-symbol-colors '("#A67CEB" "#70BE53" "#3CA9D3"))
+    (setq highlight-symbol-foreground-color "black")
 
     ;; Temporarily highlight the symbol when using `highlight-symbol-jump'
     ;; family of functions.
@@ -2537,7 +2547,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
                                         ; backend in the mode-line.
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
-    (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC"))
+    ;; (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
     (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
@@ -2762,6 +2772,8 @@ Colorize cursor according to state.
   ;; Cursor blinks forever.
   (setq blink-cursor-blinks 0)
 #+end_src
+
+Highlight the current line:
 
 #+begin_src emacs-lisp
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
@@ -3143,6 +3155,13 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
     ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
     ;; ;; is if there is no local dictionary to use in the buffer).
     ;; (setq ispell-dictionary "american") ; see `sentence-end-double-space'
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; Comments in programs should always be in English.
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (setq ispell-dictionary "american")))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12759,7 +12778,14 @@ In the error list window the following keybindings are available:
      Sort the error list by the column at point. Press repeatedly to inverse the
      sorting order.
 
+Of particular note is ~C-c ! v~ as a diagnostic tool. When you run the command
+Flycheck will display diagnostic information about the active checker in your
+current buffer. Useful if you have ~$PATH~ issues or are missing the checker
+entirely on your system.
+
 XXX Display errors in the right fringe
+
+[[http://www.flycheck.org/en/latest/user/error-reports.html][!FlyC: See errors in buffers]]
 
 #+begin_src emacs-lisp
 ;;** 27.5 (info "(emacs)Flymake")
@@ -12770,7 +12796,9 @@ XXX Display errors in the right fringe
   (with-eval-after-load "flycheck-autoloads"
 
     ;; Enable Flycheck mode in all programming modes.
-    (add-hook 'prog-mode-hook #'flycheck-mode))
+    (add-hook 'prog-mode-hook #'flycheck-mode)
+
+    (global-set-key (kbd "M-g l") 'flycheck-list-errors))
 
   (with-eval-after-load "flycheck"
 
@@ -14819,6 +14847,7 @@ Just ask a WWW browser to display the current file.
 #+begin_src emacs-lisp
     ;; In Dired, ask a WWW browser to display the file named on this line.
     (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?
+
 #+end_src
 
 It works for files as well as for directories.
@@ -14856,6 +14885,18 @@ For those under Windows:
 
       ;; Bind it to `E' in Dired mode.
       (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
+#+end_src
+
+**** ARCHIBUS
+
+#+begin_src emacs-lisp
+    (with-eval-after-load "dired"
+      (define-key dired-mode-map (kbd "C-c v")
+         (lambda ()
+      "Ask a WWW browser to load ARCHIBUS View file."
+           (interactive)
+           (let ((archibus-prefix "http://localhost:8080/archibus/"))
+             (browse-url (concat archibus-prefix (dired-get-filename 'no-dir t)))))))
 #+end_src
 
 *** Open file with ~eww~

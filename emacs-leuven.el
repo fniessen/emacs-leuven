@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160912.0954
+;; Version: 20160914.2215
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160912.0954"
+(defconst leuven--emacs-version "20160914.2215"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -457,6 +457,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       smartparens
                                       unbound
                                       undo-tree
+                                      volatile-highlights
                                       web-mode
                                       which-key
                                       ws-butler
@@ -591,6 +592,9 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Undo some previous changes.
   (global-set-key (kbd "C-z") #'undo)
   (global-set-key (kbd "<f11>") #'undo)
+
+  (with-eval-after-load "volatile-highlights-autoloads"
+    (volatile-highlights-mode 1))
 
   ;; Treat undo history as a tree.
   (with-eval-after-load "undo-tree-autoloads"
@@ -861,8 +865,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 ;; old ([2012-09-07 Fri] remove "compile" after "activate")
 
-  ;; Add the ability to copy the current line without marking it (no
-  ;; selection).
+  ;; Add the ability to copy the current line without marking it (no selection).
   (defadvice kill-ring-save (before leuven-slick-copy activate)
     "When called with no active region, copy the current line instead."
     (interactive
@@ -871,8 +874,7 @@ These packages are neither built-in nor already installed nor ignored."
        (list (line-beginning-position)
              (line-beginning-position 2)))))
 
-  ;; Add the ability to cut the current line without marking it (no
-  ;; selection).
+  ;; Add the ability to cut the current line without marking it (no selection).
   (defadvice kill-region (before leuven-slick-cut activate)
     "When called with no active region, kill the current line instead."
     (interactive
@@ -991,6 +993,8 @@ These packages are neither built-in nor already installed nor ignored."
 
     (with-eval-after-load "bookmark+"
 
+      (add-hook 'find-file-hook #'bmkp-light-this-buffer)
+
       ;; Priorities of bookmark highlighting overlay types.
       (setq bmkp-light-priorities '((bmkp-autonamed-overlays     . 150)
                                     (bmkp-non-autonamed-overlays . 160)))
@@ -1020,15 +1024,20 @@ These packages are neither built-in nor already installed nor ignored."
       ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
       ;; Name ANONYMOUS bookmarks with buffer name and line number.
-      (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
+      (setq bmkp-autoname-format "^%B:[0-9]+: %s")
 
       (setq bmkp-autoname-bookmark-function #'leuven-bmkp-autoname-line)
 
       (defun leuven-bmkp-autoname-line (position)
         "Name autonamed bookmark at POSITION using line number."
         (let ((line  (line-number-at-pos position)))
-          (format "%s:%d (%s)" (buffer-name) line (buffer-file-name))))
-      ))
+          ;; (format "%s:%d (%s)" (buffer-name) line (buffer-file-name))
+          (format "%s:%d: %s"
+                  (buffer-name)
+                  line
+                  (buffer-substring-no-properties
+                   (line-beginning-position)
+                   (1- (line-beginning-position 2))))))))
 
     (with-eval-after-load "helm-autoloads"
       (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks))
@@ -1235,7 +1244,8 @@ Should be selected from `fringe-bitmaps'.")
     ;; Number of seconds of idle time before highlighting the current symbol.
     (setq highlight-symbol-idle-delay 0.5)
 
-    (setq highlight-symbol-colors '("#FFCDFF" "#CCCCFF" "#FFB6C6" "#84CFFF"))
+    (setq highlight-symbol-colors '("#A67CEB" "#70BE53" "#3CA9D3"))
+    (setq highlight-symbol-foreground-color "black")
 
     ;; Temporarily highlight the symbol when using `highlight-symbol-jump'
     ;; family of functions.
@@ -1371,7 +1381,7 @@ Should be selected from `fringe-bitmaps'.")
                                         ; backend in the mode-line.
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
-    (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC"))
+    ;; (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
     (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
@@ -1799,6 +1809,11 @@ Should be selected from `fringe-bitmaps'.")
     ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
     ;; ;; is if there is no local dictionary to use in the buffer).
     ;; (setq ispell-dictionary "american") ; see `sentence-end-double-space'
+
+    ;; Comments in programs should always be in English.
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (setq ispell-dictionary "american")))
 
     ;; Enable on-the-fly spell checking.
     (add-hook 'org-mode-hook
@@ -7547,7 +7562,9 @@ mouse-3: go to end") "]")))
   (with-eval-after-load "flycheck-autoloads"
 
     ;; Enable Flycheck mode in all programming modes.
-    (add-hook 'prog-mode-hook #'flycheck-mode))
+    (add-hook 'prog-mode-hook #'flycheck-mode)
+
+    (global-set-key (kbd "M-g l") 'flycheck-list-errors))
 
   (with-eval-after-load "flycheck"
 
@@ -8524,6 +8541,14 @@ a clean buffer we're an order of magnitude laxer about checking."
 
       ;; Bind it to `E' in Dired mode.
       (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
+
+    (with-eval-after-load "dired"
+      (define-key dired-mode-map (kbd "C-c v")
+         (lambda ()
+      "Ask a WWW browser to load ARCHIBUS View file."
+           (interactive)
+           (let ((archibus-prefix "http://localhost:8080/archibus/"))
+             (browse-url (concat archibus-prefix (dired-get-filename 'no-dir t)))))))
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()
