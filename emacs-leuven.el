@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160914.2215
+;; Version: 20160915.1952
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160914.2215"
+(defconst leuven--emacs-version "20160915.1952"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1024,6 +1024,7 @@ These packages are neither built-in nor already installed nor ignored."
       ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
 
       ;; Name ANONYMOUS bookmarks with buffer name and line number.
+      ;; (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
       (setq bmkp-autoname-format "^%B:[0-9]+: %s")
 
       (setq bmkp-autoname-bookmark-function #'leuven-bmkp-autoname-line)
@@ -1560,6 +1561,13 @@ Should be selected from `fringe-bitmaps'.")
 
   (with-eval-after-load "powerline-autoloads"
     (add-hook 'after-init-hook #'powerline-leuven-theme))
+
+;;** 14.19 The (info "(emacs)")
+
+  (leuven--section "14.19 (emacs)")
+
+  ;; Display width of a TAB character.
+  (setq-default tab-width 4)
 
 ;;** 14.20 The (info "(emacs)Cursor Display")
 
@@ -3410,26 +3418,28 @@ Should be selected from `fringe-bitmaps'.")
   (with-eval-after-load "fill-column-indicator"
 
     ;; Color used to draw the fill-column rule.
-    (setq fci-rule-color "#FFE0E0")
+    (setq fci-rule-color "#E0E0E0")
 
-    ;; Show the fill-column rule as dashes.
-    (setq fci-rule-use-dashes t)
+    ;; Show the fill-column rule as a solid line.
+    (setq fci-rule-use-dashes nil)
 
     ;; Ratio of dash length to line height.
     (setq fci-dash-pattern 0.5)
 
     ;; Enable fci-mode in programming, message and Org modes.
-    (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
+    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
     (add-hook 'message-mode-hook #'fci-mode)
     (add-hook 'org-mode-hook #'fci-mode)
 
     ;; Avoid `fci-mode' and `auto-complete' popups.
     (defvar sanityinc/fci-mode-suppressed nil)
+
     (defadvice popup-create (before suppress-fci-mode activate)
       "Suspend fci-mode while popups are visible"
       (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
       (when fci-mode
         (turn-off-fci-mode)))
+
     (defadvice popup-delete (after restore-fci-mode activate)
       "Restore fci-mode when all popups have closed"
       (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
@@ -7571,6 +7581,7 @@ mouse-3: go to end") "]")))
     ;; Delay in seconds before displaying errors at point.
     (setq flycheck-display-errors-delay 0.3)
 
+    (setq flycheck-indication-mode 'left-fringe) ; See init.el.
     ;; ;; Indicate errors and warnings via icons in the right fringe.
     ;; (setq flycheck-indication-mode 'right-fringe)
 
@@ -7604,6 +7615,10 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Change mode line color with Flycheck status.
     (when (locate-library "flycheck-color-mode-line")
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
+
+  ;; Provide an error display function to show errors in a tooltip.
+  (with-eval-after-load 'flycheck
+    (flycheck-pos-tip-mode))
 
   (global-set-key (kbd "C-x C-S-e") #'elint-current-buffer)
 
@@ -9957,7 +9972,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq debug-on-error nil)             ; Was set to `t' at beginning of file.
 
   ;; Hit `C-g' while it's frozen to get an Emacs Lisp backtrace.
-  (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
+  ;; (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
 
   (setq debug-on-entry 'user-error))
 

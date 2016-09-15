@@ -1870,6 +1870,9 @@ Key bindings:
 - C-x p , ::
      *Show all bookmarks* for the current file/buffer.
 
+- C-x p DEL ::
+     *Delete bookmark* (*ANONYMOUS* or *WITH MNEMONICS*) *at point*.
+
 - ~C-S-F2~ (in Emacs-Leuven) ::
      *Delete all ANONYMOUS bookmarks* for the current file/buffer.
 
@@ -2738,6 +2741,17 @@ See http://www.elliotglaysher.org/emacs/
 
   (with-eval-after-load "powerline-autoloads"
     (add-hook 'after-init-hook #'powerline-leuven-theme))
+#+end_src
+
+** How Text Is Displayed
+
+#+begin_src emacs-lisp
+;;** 14.19 The (info "(emacs)")
+
+  (leuven--section "14.19 (emacs)")
+
+  ;; Display width of a TAB character.
+  (setq-default tab-width 4)
 #+end_src
 
 ** Displaying the Cursor
@@ -6013,22 +6027,24 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   (add-hook 'text-mode-hook #'auto-fill-mode)
 #+end_src
 
+Show column guideline (right margin):
+
 #+begin_src emacs-lisp
   ;; Graphically indicate the fill column.
   (try-require 'fill-column-indicator)
   (with-eval-after-load "fill-column-indicator"
 
     ;; Color used to draw the fill-column rule.
-    (setq fci-rule-color "#FFE0E0")
+    (setq fci-rule-color "#E0E0E0")
 
-    ;; Show the fill-column rule as dashes.
-    (setq fci-rule-use-dashes t)
+    ;; Show the fill-column rule as a solid line.
+    (setq fci-rule-use-dashes nil)
 
     ;; Ratio of dash length to line height.
     (setq fci-dash-pattern 0.5)
 
     ;; Enable fci-mode in programming, message and Org modes.
-    (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
+    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
     (add-hook 'message-mode-hook #'fci-mode)
     (add-hook 'org-mode-hook #'fci-mode)
 #+end_src
@@ -6041,11 +6057,13 @@ a factor 2!?
 #+begin_src emacs-lisp
     ;; Avoid `fci-mode' and `auto-complete' popups.
     (defvar sanityinc/fci-mode-suppressed nil)
+
     (defadvice popup-create (before suppress-fci-mode activate)
       "Suspend fci-mode while popups are visible"
       (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
       (when fci-mode
         (turn-off-fci-mode)))
+
     (defadvice popup-delete (after restore-fci-mode activate)
       "Restore fci-mode when all popups have closed"
       (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
@@ -11418,6 +11436,18 @@ Some key bindings:
 
 ** JS2-mode
 
+The default *indentation* style for ~switch case~ is preferred and quite popular
+among JS developers.
+
+- Crockford's style also goes with this.
+  http://javascript.crockford.com/code.html
+
+- JavaScript
+  https://github.com/bengourley/js-style-guide (so it's not only Crockford)
+
+- Java
+  http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#468
+
 #+begin_src emacs-lisp
   (with-eval-after-load "js2-mode-autoloads"
 
@@ -12785,6 +12815,10 @@ entirely on your system.
 
 XXX Display errors in the right fringe
 
+Navigate:
+- Next Highlighted Error (F2)
+- Previous Highlighted Error (Shift+F2).
+
 [[http://www.flycheck.org/en/latest/user/error-reports.html][!FlyC: See errors in buffers]]
 
 #+begin_src emacs-lisp
@@ -12805,6 +12839,7 @@ XXX Display errors in the right fringe
     ;; Delay in seconds before displaying errors at point.
     (setq flycheck-display-errors-delay 0.3)
 
+    (setq flycheck-indication-mode 'left-fringe) ; See init.el.
     ;; ;; Indicate errors and warnings via icons in the right fringe.
     ;; (setq flycheck-indication-mode 'right-fringe)
 
@@ -12838,6 +12873,12 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Change mode line color with Flycheck status.
     (when (locate-library "flycheck-color-mode-line")
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Provide an error display function to show errors in a tooltip.
+  (with-eval-after-load 'flycheck
+    (flycheck-pos-tip-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -17675,7 +17716,7 @@ calls to message), set the variable ~debug-on-message~.
   (setq debug-on-error nil)             ; Was set to `t' at beginning of file.
 
   ;; Hit `C-g' while it's frozen to get an Emacs Lisp backtrace.
-  (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
+  ;; (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
 
   (setq debug-on-entry 'user-error))
 #+end_src
