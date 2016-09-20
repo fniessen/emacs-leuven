@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160915.1952
+;; Version: 20160920.1121
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160915.1952"
+(defconst leuven--emacs-version "20160920.1121"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -428,7 +428,6 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       indent-guide
                                       ;; jabber
                                       jquery-doc
-                                      js-doc
                                       js2-mode
                                       js2-refactor
                                       key-chord
@@ -4284,8 +4283,8 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Org non-standard faces.
     (defface leuven-org-created-kwd
-      '((t (:weight normal :box (:line-width 1 :color "#EEE9C3")
-            :foreground "#1A1A1A" :background "#FDFCD8")))
+      '((t (:weight normal :box (:line-width 1 :color "#EEE962")
+            :foreground "#1F8DD6" :background "#FDFCD8")))
       "Face used to display state NEW.")
     (defface leuven-org-in-progress-kwd
       '((t (:weight bold :box (:line-width 1 :color "#D9D14A")
@@ -6944,10 +6943,7 @@ this with to-do items than with projects or headings."
     ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
 
     (when (executable-find "tern")
-      (add-hook 'js2-mode-hook #'tern-mode))
-
-    (try-require 'js-doc)
-    )
+      (add-hook 'js2-mode-hook #'tern-mode)))
 
     (defun js2-imenu-record-object-clone-extend ()
       (let* ((node (js2-node-at-point (1- (point)))))
@@ -7315,7 +7311,11 @@ mouse-3: go to end") "]")))
       (when (eq 'code (overlay-get ov 'hs))
         (overlay-put ov 'display (propertize "..." 'face 'hs-face))))
 
-    (setq hs-set-up-overlay 'hs-display-code-line-counts))
+    (setq hs-set-up-overlay 'hs-display-code-line-counts)
+
+    ;; Hide all top level blocks.
+    (add-hook 'find-file-hook #'hs-hide-all)
+)
 
 ;;** 26.8 (info "(emacs)Symbol Completion")
 
@@ -7530,6 +7530,19 @@ mouse-3: go to end") "]")))
     (when leuven--win32-p
       ;; Default find command for `M-x grep-find'.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
+
+  (with-eval-after-load "grep"
+    (add-to-list 'grep-find-ignored-files "*-min.js")
+    (add-to-list 'grep-find-ignored-files "*.min.js")
+
+    ;; Files to ignore for ARCHIBUS.
+    (add-to-list 'grep-find-ignored-files "app.js")
+    (add-to-list 'grep-find-ignored-files "app.css")
+    (add-to-list 'grep-find-ignored-files "sencha-touch.css")
+
+    ;; Directories to ignore for ARCHIBUS.
+    (add-to-list 'grep-find-ignored-directories "ab-core")
+    (add-to-list 'grep-find-ignored-directories "ckeditor"))
 
     (when (executable-find "agXXX") ; Need to fix base dir and file extensions
 

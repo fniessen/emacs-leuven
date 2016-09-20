@@ -825,7 +825,6 @@ like this into your configuration file:
                                       indent-guide
                                       ;; jabber
                                       jquery-doc
-                                      js-doc
                                       js2-mode
                                       js2-refactor
                                       key-chord
@@ -7381,8 +7380,8 @@ Extra status for invoices:
 
     ;; Org non-standard faces.
     (defface leuven-org-created-kwd
-      '((t (:weight normal :box (:line-width 1 :color "#EEE9C3")
-            :foreground "#1A1A1A" :background "#FDFCD8")))
+      '((t (:weight normal :box (:line-width 1 :color "#EEE962")
+            :foreground "#1F8DD6" :background "#FDFCD8")))
       "Face used to display state NEW.")
     (defface leuven-org-in-progress-kwd
       '((t (:weight bold :box (:line-width 1 :color "#D9D14A")
@@ -11486,28 +11485,7 @@ We prefer ~eslint~ over ~jshint~:
 
 #+begin_src emacs-lisp
     (when (executable-find "tern")
-      (add-hook 'js2-mode-hook #'tern-mode))
-#+end_src
-
-1. insert function document by pressing Ctrl + c, i
-2. insert @tag easily by pressing @ in the JsDoc style comment
-
-(setq js-doc-mail-address "your email address"
-      js-doc-author (format "your name <%s>" js-doc-mail-address)
-      js-doc-url "url of your website"
-      js-doc-license "license name")
-
-(add-hook 'js2-mode-hook
-          #'(lambda ()
-              (define-key js2-mode-map "\C-ci" 'js-doc-insert-function-doc)
-              (define-key js2-mode-map "@" 'js-doc-insert-tag)))
-
-If you want to see the tag description, just input the next command
-  M-x js-doc-describe-tag
-
-#+begin_src emacs-lisp
-    (try-require 'js-doc)
-    )
+      (add-hook 'js2-mode-hook #'tern-mode)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12250,7 +12228,11 @@ many programming modes.
       (when (eq 'code (overlay-get ov 'hs))
         (overlay-put ov 'display (propertize "..." 'face 'hs-face))))
 
-    (setq hs-set-up-overlay 'hs-display-code-line-counts))
+    (setq hs-set-up-overlay 'hs-display-code-line-counts)
+
+    ;; Hide all top level blocks.
+    (add-hook 'find-file-hook #'hs-hide-all)
+)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -12703,6 +12685,29 @@ thereafter.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 #+end_src
 
+To exclude files from ~rgrep~ results, if you use it instead of ~grep-find~, you can
+set up ignored files/dirs in advance:
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "grep"
+    (add-to-list 'grep-find-ignored-files "*-min.js")
+    (add-to-list 'grep-find-ignored-files "*.min.js")
+
+    ;; Files to ignore for ARCHIBUS.
+    (add-to-list 'grep-find-ignored-files "app.js")
+    (add-to-list 'grep-find-ignored-files "app.css")
+    (add-to-list 'grep-find-ignored-files "sencha-touch.css")
+
+    ;; Directories to ignore for ARCHIBUS.
+    (add-to-list 'grep-find-ignored-directories "ab-core")
+    (add-to-list 'grep-find-ignored-directories "ckeditor"))
+#+end_src
+
+#+begin_note
+Also useful for ~helm-ag~, which also uses the settings of the ~grep-find-ignored-*~
+variables.
+#+end_note
+
 Ag, the silver searcher (in Cygwin!):
 - https://github.com/howardabrams/dot-files/blob/master/emacs.org
 - https://www.reddit.com/r/emacs/comments/3fr4ro/how_do_you_grep/
@@ -12814,6 +12819,11 @@ current buffer. Useful if you have ~$PATH~ issues or are missing the checker
 entirely on your system.
 
 XXX Display errors in the right fringe
+
+#+begin_tip
+~FlyC-~, in the mode line, either means that there is *no checker* or that it got
+interrupted. See ~flycheck-mode-line-status-text~ for more information.
+#+end_tip
 
 Navigate:
 - Next Highlighted Error (F2)
