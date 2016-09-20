@@ -10,6 +10,14 @@
 
 #+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg.setup
 
+* Tasks
+
+** TODO Look at Podio for nice colors for the agenda buffer
+
+** TODO [#C] Organize your tasks, your team and your files
+
+http://manageitapp.com/ (nice look for Web site as well)
+
 * Private Notes                                                       :noexport:
 
 At the beginning, we've put way to many tasks either as scheduled or deadline
@@ -2014,5 +2022,3 @@ So, for example: to hide TODO keywords from the agenda:
       '(("a" agenda ""
          ((org-agenda-todo-keyword-format "")))))
 #+end_src
-
-** Look at Podio for nice colors for the agenda buffer
