@@ -7380,8 +7380,8 @@ Extra status for invoices:
 
     ;; Org non-standard faces.
     (defface leuven-org-created-kwd
-      '((t (:weight normal :box (:line-width 1 :color "#EEE962")
-            :foreground "#1F8DD6" :background "#FDFCD8")))
+      '((t (:weight bold :box (:line-width 1 :color "#1F8DD6")
+            :foreground "#1F8DD6" :background "#FFEE62")))
       "Face used to display state NEW.")
     (defface leuven-org-in-progress-kwd
       '((t (:weight bold :box (:line-width 1 :color "#D9D14A")

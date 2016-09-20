@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160920.1121
+;; Version: 20160920.1822
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160920.1121"
+(defconst leuven--emacs-version "20160920.1822"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -4283,8 +4283,8 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Org non-standard faces.
     (defface leuven-org-created-kwd
-      '((t (:weight normal :box (:line-width 1 :color "#EEE962")
-            :foreground "#1F8DD6" :background "#FDFCD8")))
+      '((t (:weight bold :box (:line-width 1 :color "#1F8DD6")
+            :foreground "#1F8DD6" :background "#FFEE62")))
       "Face used to display state NEW.")
     (defface leuven-org-in-progress-kwd
       '((t (:weight bold :box (:line-width 1 :color "#D9D14A")
