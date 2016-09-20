@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160920.1822
+;; Version: 20160920.2341
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160920.1822"
+(defconst leuven--emacs-version "20160920.2341"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1169,28 +1169,6 @@ These packages are neither built-in nor already installed nor ignored."
         `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
         ;; FIXME                      0                        t          t
 
-  (defun highlight-errors-in-archibus-log ()
-    "Highlight certain lines in archibus.log."
-    (interactive)
-    (when (and (buffer-file-name)       ; nil?
-               (equal "log" (file-name-extension (buffer-file-name))))
-          (hi-lock-mode 1)
-          (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
-          (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
-          (highlight-lines-matching-regexp "PmWorkOrderGenerator" 'font-lock-constant-face)
-          (highlight-lines-matching-regexp "DbConnectionImpl" 'default)
-          (highlight-regexp "SELECT\\|FROM [^ ]*\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
-          (highlight-regexp "UPDATE [^ ]* \\|SET" 'ahs-plugin-bod-face)
-          (highlight-regexp "DELETE FROM [^ ]*" 'ahs-edit-mode-face)
-          (highlight-regexp "INSERT INTO [a-zA-Z_]*\\|VALUES" 'ahs-plugin-whole-buffer-face)
-          (highlight-regexp "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]" 'font-lock-type-face)
-          (highlight-regexp "Unable to execute statement:" 'compilation-error)
-          (highlight-regexp "Caused by: java.sql.SQLException:" 'compilation-error)
-          (highlight-regexp "Rule=\\[.*\\]" 'compilation-error)
-          (highlight-regexp "ruleId=\\[.*\\]" 'compilation-error)))
-
-  (add-hook 'find-file-hook 'highlight-errors-in-archibus-log)
-
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
 
@@ -1263,8 +1241,8 @@ Should be selected from `fringe-bitmaps'.")
     ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
     ;; (global-auto-highlight-symbol-mode t)
 
-    ;; ;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.
-    ;; (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
+    ;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.
+    (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
     )
 
 ;; XXX Impact on Org's HTML export?

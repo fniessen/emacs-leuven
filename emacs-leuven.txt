@@ -17,6 +17,24 @@
   :header-args: :tangle no
   :END:
 
+** TODO Emacs hl-line derrière C-*
+
+** TODO Check out features of IntelliJ IDEA
+
+https://www.jetbrains.com/help/idea/2016.1/intellij-idea-editor.html (bookmarks,
+breakpoints, syntax highlighting, code completion, zooming, folding code blocks,
+macros, highlighted TODO items, code analysis, intention actions, intelligent
+and fast navigation, etc.)
+
+- https://dzone.com/articles/why-idea-better-eclipse
+  Auto-complete, debugging, refactoring, how to...
+
+- https://www.catalysts.cc/wissenswertes/intellij-idea-and-eclipse-shortcuts/
+
+** TODO How does package-autoremove decide which packages to remove?
+
+http://emacs.stackexchange.com/questions/18253/how-does-package-autoremove-decide-which-packages-to-remove
+
 ** TODO Port old advices
 
 https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices
@@ -109,6 +127,12 @@ with goto-chg even without Kevin Rodgers' patch.)
 #+end_verse
 
 From [[gnus:INBOX#57408.213.114.113.54.1435164814.squirrel@alexander.fl-net.se][Email from l. david andersson: Re: Goto last edit location --]]
+
+** TODO Error in post-command-hook (hl-tags-update): (void-function sgml-get-context)
+
+Ouvrir
+d:/Dev/Tools/Tomcat/tomcat-8.0.35-WC21_3-MMMEPO/webapps/archibus/schema/epo-products/bldgops/common/build/classes/epo-bldgops-cost-report.axvw
+au démarrage d'Emacs...
 
 ** TODO Improve writing of time-substract
 
@@ -2135,30 +2159,6 @@ leuven-highlight-keywords, so that only one expression can be used for *all* mod
 
 See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
 
-#+begin_src emacs-lisp
-  (defun highlight-errors-in-archibus-log ()
-    "Highlight certain lines in archibus.log."
-    (interactive)
-    (when (and (buffer-file-name)       ; nil?
-               (equal "log" (file-name-extension (buffer-file-name))))
-          (hi-lock-mode 1)
-          (highlight-lines-matching-regexp ".*" 'diredp-file-suffix)
-          (highlight-lines-matching-regexp "PmScheduleGenerator" 'font-lock-constant-face)
-          (highlight-lines-matching-regexp "PmWorkOrderGenerator" 'font-lock-constant-face)
-          (highlight-lines-matching-regexp "DbConnectionImpl" 'default)
-          (highlight-regexp "SELECT\\|FROM [^ ]*\\|LEFT\\|OUTER\\|JOIN\\|ON\\|WHERE" 'flycheck-error-list-warning)
-          (highlight-regexp "UPDATE [^ ]* \\|SET" 'ahs-plugin-bod-face)
-          (highlight-regexp "DELETE FROM [^ ]*" 'ahs-edit-mode-face)
-          (highlight-regexp "INSERT INTO [a-zA-Z_]*\\|VALUES" 'ahs-plugin-whole-buffer-face)
-          (highlight-regexp "[0-9][0-9]:[0-9][0-9]:[0-9][0-9]" 'font-lock-type-face)
-          (highlight-regexp "Unable to execute statement:" 'compilation-error)
-          (highlight-regexp "Caused by: java.sql.SQLException:" 'compilation-error)
-          (highlight-regexp "Rule=\\[.*\\]" 'compilation-error)
-          (highlight-regexp "ruleId=\\[.*\\]" 'compilation-error)))
-
-  (add-hook 'find-file-hook 'highlight-errors-in-archibus-log)
-#+end_src
-
 Check out ~log4j-mode~ instead?  And nice colors at
 https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html.
 
@@ -2310,8 +2310,8 @@ Toggle Auto-Highlight-Symbol using key chord ~**~.
     ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
     ;; (global-auto-highlight-symbol-mode t)
 
-    ;; ;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.
-    ;; (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
+    ;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.
+    (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
     )
 #+end_src
 
