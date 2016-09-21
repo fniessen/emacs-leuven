@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160920.2341
+;; Version: 20160921.1458
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160920.2341"
+(defconst leuven--emacs-version "20160921.1458"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -9963,7 +9963,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq debug-on-error nil)             ; Was set to `t' at beginning of file.
 
   ;; Hit `C-g' while it's frozen to get an Emacs Lisp backtrace.
-  ;; (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
+  (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
 
   (setq debug-on-entry 'user-error))
 

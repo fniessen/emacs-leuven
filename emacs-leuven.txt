@@ -17726,7 +17726,7 @@ calls to message), set the variable ~debug-on-message~.
   (setq debug-on-error nil)             ; Was set to `t' at beginning of file.
 
   ;; Hit `C-g' while it's frozen to get an Emacs Lisp backtrace.
-  ;; (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
+  (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
 
   (setq debug-on-entry 'user-error))
 #+end_src
