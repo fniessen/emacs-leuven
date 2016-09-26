@@ -1,0 +1,725 @@
+# Hey Emacs, this is a -*- org -*- file ...
+#+TITLE:     SQL YASnippets
+#+AUTHOR:    Fabrice Niessen
+#+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
+#+DESCRIPTION:
+#+KEYWORDS:  emacs, yasnippet, snippets, code templates
+#+LANGUAGE:  en
+#+OPTIONS:   H:4 num:nil toc:2
+#+EXCLUDE_TAGS: noexport
+
+#+PROPERTY:  header-args :eval never :padline yes :tangle yes
+
+#+SETUPFILE: ~/.dotfiles/org/theme-readtheorg.setup
+
+* Overview
+
+A *SQL snippet* is a frequently used *code template* which can be inserted into
+a code you are typing by pressing the TAB key.
+
+* Function
+
+** Create Inline Table Function
+
+Creates an inline table function.
+
+#+begin_src sql :tangle citf
+# name: Create inline table-va...
+# --
+CREATE FUNCTION ${1:[schema].[function_name]}
+    (@parameter_name AS INT)
+RETURNS TABLE
+--WITH ENCRYPTION|SCHEMABINDING, ...
+AS
+RETURN ( $0 )
+GO
+#+end_src
+
+** Create Multi-Statement Table Function
+
+Creates a multi-statement table function.
+
+#+begin_src sql :tangle ctf
+# name: Create multi-stateme...
+# --
+CREATE FUNCTION ${1:[schema].[function_name]}
+    (@parameter_name AS INT)
+RETURNS @return_variable TABLE (/* table type definition */)
+--WITH ENCRYPTION|SCHEMABINDING, ...
+AS
+BEGIN
+    RETURN $0
+END
+GO
+#+end_src
+
+** Create Scalar Function
+
+Creates a scalar function.
+
+#+begin_src sql :tangle csf
+# name: Create scalar function
+# --
+CREATE FUNCTION ${1:[schema].[function_name]}
+    (@parameter_name AS INT)
+RETURNS INT
+--WITH ENCRYPTION|SCHEMABINDING, ...
+AS
+BEGIN
+    RETURN $0
+END
+GO
+#+end_src
+
+* Index
+
+#+begin_src sql :tangle cci
+# name: Create non-unique cl...
+# --
+CREATE CLUSTERED INDEX ${3:index_name}
+ON ${1:[schema].[owner_name]} ( ${2:column} )
+--WITH PAD_INDEX
+--    | FILLFACTOR = fillfactor
+--    | IGNORE_DUP_KEY
+--    | DROP_EXISTING
+--    | STATISTICS_NORECOMPUTE
+--    | SORT_IN_TEMPDB, .. as required
+-- ON filegroup
+GO
+$0
+#+end_src
+
+#+begin_src sql :tangle cni
+# name: Create non-unique n...
+# --
+CREATE NONCLUSTERED INDEX ${3:index_name}
+ON ${1:[schema].[owner_name]} ( ${2:column_name} )
+--WITH PAD_INDEX
+--    | FILLFACTOR = fillfactor
+--    | IGNORE_DUP_KEY
+--    | DROP_EXISTING
+--    | STATISTICS_NORECOMPUTE
+--    | SORT_IN_TEMPDB, .. as required
+-- ON filegroup
+GO
+$0
+#+end_src
+
+#+begin_src sql :tangle cuci
+# name: Create unique cluster...
+# --
+CREATE UNIQUE CLUSTERED INDEX ${3:index_name}
+ON ${1:[schema].[owner_name]} ( ${2:column} )
+--WITH PAD_INDEX
+--    | FILLFACTOR = fillfactor
+--    | IGNORE_DUP_KEY
+--    | DROP_EXISTING
+--    | STATISTICS_NORECOMPUTE
+--    | SORT_IN_TEMPDB, .. as required
+-- ON filegroup
+GO
+$0
+#+end_src
+
+** Create Unique Non-Clustered Index
+
+Creates a unique, non-clustered index.
+
+#+begin_src sql :tangle cuni
+# name: Create unique nonclu...
+# --
+CREATE UNIQUE NONCLUSTERED INDEX ${3:index_name}
+ON ${1:[schema].[index_name]} ( ${2:column} )
+--WITH PAD_INDEX
+--    | FILLFACTOR = fillfactor
+--    | IGNORE_DUP_KEY
+--    | DROP_EXISTING
+--    | STATISTICS_NORECOMPUTE
+--    | SORT_IN_TEMPDB, .. as required
+-- ON filegroup
+GO
+$0
+#+end_src
+
+* Login
+
+** Create SQL Authentication Login
+
+Creates a SQL Server Authentication login.
+
+#+begin_src sql :tangle cl
+# name: CREATE SQL Server l...
+# --
+CREATE LOGIN $0 /* Add WITH or FROM (below) as appropriate */
+--WITH
+--  PASSWORD = 'password' /* HASHED */ /* MUST CHANGE */
+--  SID = sid
+--  DEFAULT_DATABASE = database
+--  DEFAULT_LANGUAGE = language
+--  CHECK_EXPIRATION = ON | OFF
+--  CHECK_POLICY = ON | OFF
+--  CREDENTIAL = credential_name
+--FROM
+--  WINDOWS
+--    WITH
+--      DEFAULT_DATABASE = database
+--      DEFAULT_LANGUAGE = language
+--  CERTIFICATE certificate_name
+--  ASYMMETRIC KEY key_name
+GO
+#+end_src
+
+* Role
+
+* Schema
+
+* Stored Procedure
+
+** 
+
+#+begin_src sql :tangle cp
+# name: Create stored proced...
+# --
+--SET QUOTED_IDENTIFIER ON|OFF
+--SET ANSI_NULLS ON|OFF
+--GO
+CREATE PROCEDURE ${1:[schema].[procedure_name]}
+    @parameter_name AS INT
+-- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'
+AS
+    $0
+GO
+--SET QUOTED_IDENTIFIER ON|OFF
+--SET ANSI_NULLS ON|OFF
+--GO
+#+end_src
+
+** 
+
+#+begin_src sql :tangle clrp
+# name: Create CLR stored pr...
+# --
+--SET QUOTED_IDENTIFIER ON|OFF
+--SET ANSI_NULLS ON|OFF
+--GO
+
+CREATE PROCEDURE [schema].[procedure_name]
+(
+    @parameter_name AS INT
+)
+-- WITH EXECUTE AS CALLER|SELF|OWNER| 'user_name'
+AS EXTERNAL NAME [assembly].[class].[method]
+GO
+
+--SET QUOTED_IDENTIFIER ON|OFF
+--SET ANSI_NULLS ON|OFF
+--GO$0
+#+end_src
+
+* Synonym
+
+* Table
+
+** Create Table
+
+Creates a table.
+
+#+begin_src sql :tangle ct
+# name: Create table
+# --
+CREATE TABLE ${1:[schema].[table_name]}
+(
+    -- column_1 int NOT NULL,
+    -- column_2 int NULL
+    $0
+)
+#+end_src
+
+* Trigger
+
+** Create Trigger
+
+Creates a trigger.
+
+#+begin_src sql :tangle no
+# name: Create trigger
+# --
+CREATE TRIGGER TriggerName
+    ON [schema].[TableName]
+    FOR DELETE, INSERT, UPDATE
+    AS
+    BEGIN
+    SET NOCOUNT ON
+    END
+$0
+#+end_src
+
+#+begin_src sql :tangle atdt
+# name: Disable trigger
+# --
+ALTER TABLE ${1:[schema].[table_name]} DISABLE TRIGGER $0
+#+end_src
+
+#+begin_src sql :tangle atdta
+# name: Disable all triggers on...
+# --
+ALTER TABLE ${1:[schema].[table_name]}$0 DISABLE TRIGGER ALL
+#+end_src
+
+#+begin_src sql :tangle atet
+# name: Enable trigger
+# --
+ALTER TABLE ${1:[schema].[table_name]} ENABLE TRIGGER $0
+#+end_src
+
+#+begin_src sql :tangle ateta
+# name: Enable all triggers on...
+# --
+ALTER TABLE ${1:[schema].[table_name]}$0 ENABLE TRIGGER ALL
+#+end_src
+
+* User
+
+** Create User
+
+Creates a database user.
+
+#+begin_src sql :tangle cu
+# name: Create database user
+# --
+CREATE USER ${1:UserName}$0
+FOR /* FROM */ LOGIN /* login_name */
+--	CERTIFICATE certificate_name
+--	ASYMMETRIC KEY key_name
+--	WITHOUT LOGIN
+--	WITH DEFAULT_SCHEMA = schema_name
+GO
+#+end_src
+
+* User Defined Data Type
+
+* User Defined Table Type
+
+* User Defined Type
+
+* View
+
+** Create View
+
+Creates a view.
+
+#+begin_src sql :tangle cv
+# name: Create view
+# --
+CREATE VIEW ${1:[schema].[view_name]}
+--WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA
+AS
+    -- SELECT * FROM dbo.Sample_Table
+    $0
+-- WITH CHECK OPTION
+GO
+#+end_src
+
+* ---------------------------------------------------------
+
+* A
+
+#+begin_src sql :tangle af
+# name: ALTER FUNCTION fr...
+# --    
+ALTER FUNCTION $0
+#+end_src
+
+#+begin_src sql :tangle ap
+# name: ALTER PROCEDURE
+# --    
+ALTER PROCEDURE $0
+#+end_src
+
+#+begin_src sql :tangle at
+# name: ALTER TABLE fragm...
+# --    
+ALTER TABLE $0
+#+end_src
+
+#+begin_src sql :tangle ata
+# name: Add column
+# --
+ALTER TABLE ${1:[schema].[table_name]} ADD [${2:column_name}] INT$0
+#+end_src
+
+#+begin_src sql :tangle atac
+# name: Modify column
+# --
+ALTER TABLE ${1:[schema].[table_name]} ALTER COLUMN $0
+#+end_src
+
+#+begin_src sql :tangle atd
+# name: Drop column
+# --    
+ALTER TABLE ${1:[schema].[table_name]} DROP COLUMN $0
+#+end_src
+
+#+begin_src sql :tangle atdc
+# name: Drop constraint
+# --
+ALTER TABLE ${1:[schema].[table_name]} DROP CONSTRAINT $0
+#+end_src
+
+* B
+
+#+begin_src sql :tangle be
+# name: BEGIN...END block
+# --
+BEGIN
+    $0
+END
+#+end_src
+
+#+begin_src sql :tangle bt
+# name: Begin transaction
+# --
+BEGIN TRANSACTION $0
+#+end_src
+
+* C
+
+#+begin_src sql :tangle cdb
+# name: Create database
+# --
+CREATE DATABASE ${1:database_name}
+ON
+PRIMARY ( -- or use FILEGROUP filegroup_name
+  NAME = $1_data,
+  FILENAME = '$1.mdf'
+) --, and repeat as required
+LOG ON
+(
+  NAME = $1_log,
+  FILENAME = '$1.ldf'
+) --, and repeat as required
+--COLLATE collation_name
+--WITH
+--  DB_CHAINING ON/OFF
+--  TRUSTWORTHY ON/OFF
+--FOR LOAD
+--FOR ATTACH
+--WITH
+--  ENABLE_BROKER
+--  NEW_BROKER
+--  ERROR_BROKER_CONVERSATIONS
+--FOR ATTACH_REBUILD_LOG
+GO
+#+end_src
+
+#+begin_src sql :tangle cdbsnap
+# name: Create database sna...
+# --
+CREATE DATABASE ${2:database_name} 
+ON 
+    (
+    NAME = $2_data,
+    FILENAME = '$2.ss'
+    )
+AS SNAPSHOT OF ${1:source_database}
+GO$0
+#+end_src
+
+#+begin_src sql :tangle cj
+# name: CROSS JOIN fragment
+# --
+CROSS JOIN $0
+#+end_src
+
+#+begin_src sql :tangle cte
+# name: WITH cte fragment
+# --
+
+        WITH ${1:cte_name} AS
+(
+
+)
+SELECT $0
+FROM $1
+#+end_src
+
+#+begin_src sql :tangle ctr
+# name: Commit transaction
+# --
+COMMIT TRANSACTION $0
+#+end_src
+
+#+begin_src sql :tangle curff
+# name: Fast-forward read-on...
+# --
+/* declare variables */
+DECLARE @variable INT
+
+DECLARE ${1:cursor_name} CURSOR FAST_FORWARD READ_ONLY FOR ${2:select_statement}
+
+OPEN $1
+
+FETCH NEXT FROM $1 INTO @variable
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    $0
+
+    FETCH NEXT FROM $1 INTO @variable
+END
+
+CLOSE $1
+DEALLOCATE $1
+#+end_src
+
+* D
+
+#+begin_src sql :tangle dd
+# name: Drop database
+# --
+DROP DATABASE $0
+#+end_src
+
+#+begin_src sql :tangle df
+# name: DELETE FROM frag...
+# --
+DELETE FROM ${1:[schema].[table_name]} WHERE $0
+#+end_src
+
+#+begin_src sql :tangle dfn
+# name: Drop function
+# --
+DROP FUNCTION $0
+#+end_src
+
+#+begin_src sql :tangle 
+# name: Drop index
+# --
+DROP INDEX $0
+#+end_src
+
+#+begin_src sql :tangle dl
+# name: Drop login
+# --
+DROP LOGIN $0
+#+end_src
+
+#+begin_src sql :tangle dp
+# name: Drop stored procedure
+# --
+DROP PROCEDURE $0
+#+end_src
+
+#+begin_src sql :tangle dt
+# name: Drop table
+# --
+DROP TABLE $0
+#+end_src
+
+#+begin_src sql :tangle du
+# name: Drop user
+# --
+DROP USER $0
+#+end_src
+
+#+begin_src sql :tangle dv
+# name: Drop view
+# --
+DROP VIEW $0
+#+end_src
+
+* E
+
+#+begin_src sql :tangle err
+# name: @@ERROR function ...
+# --
+@@ERROR$0
+#+end_src
+
+* F
+
+#+begin_src sql :tangle fj
+# name: FULL JOIN fragment
+# --
+FULL JOIN $0
+#+end_src
+
+#+begin_src sql :tangle foj
+# name: FULL OUTER JOIN fr...
+# --
+FULL OUTER JOIN $0
+#+end_src
+
+* G
+
+#+begin_src sql :tangle gb
+# name: GROUP BY fragment
+# --
+GROUP BY $0
+#+end_src
+
+* I
+
+#+begin_src sql :tangle ifs
+# name: IF fragment
+# --
+IF 1 = 1
+BEGIN
+    $0
+END
+#+end_src
+
+#+begin_src sql :tangle ii
+# name: INSERT INTO fragment
+# --
+INSERT INTO $0
+#+end_src
+
+#+begin_src sql :tangle ij
+# name: INNER JOIN fragment
+# --
+INNER JOIN $0
+#+end_src
+
+#+begin_src sql :tangle is
+# name: INFORMATION_SCH...
+# --
+INFORMATION_SCHEMA$0
+#+end_src
+
+* J
+
+#+begin_src sql :tangle j
+# name: JOIN fragment
+# --
+JOIN $0
+#+end_src
+
+* L
+
+#+begin_src sql :tangle lj
+# name: LEFT JOIN fragment
+# --
+LEFT JOIN $0
+#+end_src
+
+#+begin_src sql :tangle loj
+# name: LEFT OUTER JOIN fr...
+# --
+LEFT OUTER JOIN $0
+#+end_src
+
+* M
+
+#+begin_src sql :tangle mro
+# name: Retrieve 20 most rec...
+# --
+SELECT TOP 20 [name], [type], crdate
+FROM sysobjects
+ORDER BY crdate DESC
+#+end_src
+
+* O
+
+#+begin_src sql :tangle ob
+# name: ORDER BY fragment
+# --
+ORDER BY $0
+#+end_src
+
+* R
+
+#+begin_src sql :tangle rj
+# name: RIGHT JOIN fragment
+# --
+RIGHT JOIN $0
+#+end_src
+
+#+begin_src sql :tangle roj
+# name: RIGHT OUTER JOIN f...
+# --
+RIGHT OUTER JOIN $0
+#+end_src
+
+#+begin_src sql :tangle rt
+# name: Rollback transaction
+# --
+ROLLBACK TRANSACTION $0
+#+end_src
+
+* S
+
+#+begin_src sql :tangle san
+# name: Change the current A...
+# --
+SET ANSI_NULLS ON$0
+#+end_src
+
+#+begin_src sql :tangle scf
+# name: Count number of rec...
+# --
+SELECT COUNT(*) FROM $0
+#+end_src
+
+#+begin_src sql :tangle sph
+# name: Execute sp_help
+# --
+EXEC sp_help$0
+#+end_src
+
+#+begin_src sql :tangle spt
+# name: Execute sp_helptext
+# --
+EXEC sp_helptext$0
+#+end_src
+
+#+begin_src sql :tangle sqi
+# name: Change the current ...
+# --
+SET QUOTED_IDENTIFIER ON$0
+#+end_src
+
+#+begin_src sql :tangle ssf
+# name: SELECT * FROM frag...
+# --
+SELECT * FROM $0
+#+end_src
+
+#+begin_src sql :tangle st100
+# name: SELECT top 100 rows
+# --
+SELECT TOP 100 * FROM $0
+#+end_src
+
+#+begin_src sql :tangle sxa
+# name: Change  the current X...
+# --
+SET XACT_ABORT OFF
+#+end_src
+
+* T
+
+#+begin_src sql :tangle tc
+# name: TRY ... CATCH fragm...
+# --
+BEGIN TRY
+    
+END TRY
+BEGIN CATCH
+    $0
+END CATCH
+#+end_src
+
+#+begin_src sql :tangle w2
+# name: Execute sp_who2$0
+# --
+	EXEC sp_who2$0
+#+end_src
+
+* X
+
+#+begin_src sql :tangle xpfd
+# name: Retrieve free space o...
+# --
+EXEC master..xp_fixeddrives
+#+end_src
