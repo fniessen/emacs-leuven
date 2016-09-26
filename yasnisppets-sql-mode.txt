@@ -19,11 +19,11 @@ a code you are typing by pressing the TAB key.
 
 * Function
 
-** Create Inline Table Function
+** [ctif] Create Inline Table Function
 
 Creates an inline table function.
 
-#+begin_src sql :tangle citf
+#+begin_src sql :tangle citf.yasnippet
 # name: Create inline table-va...
 # --
 CREATE FUNCTION ${1:[schema].[function_name]}
@@ -35,11 +35,11 @@ RETURN ( $0 )
 GO
 #+end_src
 
-** Create Multi-Statement Table Function
+** [ctf] Create Multi-Statement Table Function
 
 Creates a multi-statement table function.
 
-#+begin_src sql :tangle ctf
+#+begin_src sql :tangle ctf.yasnippet
 # name: Create multi-stateme...
 # --
 CREATE FUNCTION ${1:[schema].[function_name]}
@@ -53,11 +53,11 @@ END
 GO
 #+end_src
 
-** Create Scalar Function
+** [csf] Create Scalar Function
 
 Creates a scalar function.
 
-#+begin_src sql :tangle csf
+#+begin_src sql :tangle csf.yasnippet
 # name: Create scalar function
 # --
 CREATE FUNCTION ${1:[schema].[function_name]}
@@ -73,7 +73,7 @@ GO
 
 * Index
 
-#+begin_src sql :tangle cci
+#+begin_src sql :tangle cci.yasnippet
 # name: Create non-unique cl...
 # --
 CREATE CLUSTERED INDEX ${3:index_name}
@@ -89,7 +89,7 @@ GO
 $0
 #+end_src
 
-#+begin_src sql :tangle cni
+#+begin_src sql :tangle cni.yasnippet
 # name: Create non-unique n...
 # --
 CREATE NONCLUSTERED INDEX ${3:index_name}
@@ -105,7 +105,7 @@ GO
 $0
 #+end_src
 
-#+begin_src sql :tangle cuci
+#+begin_src sql :tangle cuci.yasnippet
 # name: Create unique cluster...
 # --
 CREATE UNIQUE CLUSTERED INDEX ${3:index_name}
@@ -121,11 +121,11 @@ GO
 $0
 #+end_src
 
-** Create Unique Non-Clustered Index
+** [cuni] Create Unique Non-Clustered Index
 
 Creates a unique, non-clustered index.
 
-#+begin_src sql :tangle cuni
+#+begin_src sql :tangle cuni.yasnippet
 # name: Create unique nonclu...
 # --
 CREATE UNIQUE NONCLUSTERED INDEX ${3:index_name}
@@ -143,11 +143,11 @@ $0
 
 * Login
 
-** Create SQL Authentication Login
+** [cl] Create SQL Authentication Login
 
 Creates a SQL Server Authentication login.
 
-#+begin_src sql :tangle cl
+#+begin_src sql :tangle cl.yasnippet
 # name: CREATE SQL Server l...
 # --
 CREATE LOGIN $0 /* Add WITH or FROM (below) as appropriate */
@@ -175,9 +175,9 @@ GO
 
 * Stored Procedure
 
-** 
+** [cp]
 
-#+begin_src sql :tangle cp
+#+begin_src sql :tangle cp.yasnippet
 # name: Create stored proced...
 # --
 --SET QUOTED_IDENTIFIER ON|OFF
@@ -194,9 +194,9 @@ GO
 --GO
 #+end_src
 
-** 
+** [crlp]
 
-#+begin_src sql :tangle clrp
+#+begin_src sql :tangle clrp.yasnippet
 # name: Create CLR stored pr...
 # --
 --SET QUOTED_IDENTIFIER ON|OFF
@@ -220,11 +220,11 @@ GO
 
 * Table
 
-** Create Table
+** [ct] Create Table
 
 Creates a table.
 
-#+begin_src sql :tangle ct
+#+begin_src sql :tangle ct.yasnippet
 # name: Create table
 # --
 CREATE TABLE ${1:[schema].[table_name]}
@@ -241,7 +241,7 @@ CREATE TABLE ${1:[schema].[table_name]}
 
 Creates a trigger.
 
-#+begin_src sql :tangle no
+#+begin_src sql :tangle no.yasnippet
 # name: Create trigger
 # --
 CREATE TRIGGER TriggerName
@@ -254,25 +254,25 @@ CREATE TRIGGER TriggerName
 $0
 #+end_src
 
-#+begin_src sql :tangle atdt
+#+begin_src sql :tangle atdt.yasnippet
 # name: Disable trigger
 # --
 ALTER TABLE ${1:[schema].[table_name]} DISABLE TRIGGER $0
 #+end_src
 
-#+begin_src sql :tangle atdta
+#+begin_src sql :tangle atdta.yasnippet
 # name: Disable all triggers on...
 # --
 ALTER TABLE ${1:[schema].[table_name]}$0 DISABLE TRIGGER ALL
 #+end_src
 
-#+begin_src sql :tangle atet
+#+begin_src sql :tangle atet.yasnippet
 # name: Enable trigger
 # --
 ALTER TABLE ${1:[schema].[table_name]} ENABLE TRIGGER $0
 #+end_src
 
-#+begin_src sql :tangle ateta
+#+begin_src sql :tangle ateta.yasnippet
 # name: Enable all triggers on...
 # --
 ALTER TABLE ${1:[schema].[table_name]}$0 ENABLE TRIGGER ALL
@@ -280,11 +280,11 @@ ALTER TABLE ${1:[schema].[table_name]}$0 ENABLE TRIGGER ALL
 
 * User
 
-** Create User
+** [cu] Create User
 
 Creates a database user.
 
-#+begin_src sql :tangle cu
+#+begin_src sql :tangle cu.yasnippet
 # name: Create database user
 # --
 CREATE USER ${1:UserName}$0
@@ -304,11 +304,11 @@ GO
 
 * View
 
-** Create View
+** [cv] Create View
 
 Creates a view.
 
-#+begin_src sql :tangle cv
+#+begin_src sql :tangle cv.yasnippet
 # name: Create view
 # --
 CREATE VIEW ${1:[schema].[view_name]}
@@ -324,43 +324,43 @@ GO
 
 * A
 
-#+begin_src sql :tangle af
+#+begin_src sql :tangle af.yasnippet
 # name: ALTER FUNCTION fr...
 # --    
 ALTER FUNCTION $0
 #+end_src
 
-#+begin_src sql :tangle ap
+#+begin_src sql :tangle ap.yasnippet
 # name: ALTER PROCEDURE
 # --    
 ALTER PROCEDURE $0
 #+end_src
 
-#+begin_src sql :tangle at
+#+begin_src sql :tangle at.yasnippet
 # name: ALTER TABLE fragm...
 # --    
 ALTER TABLE $0
 #+end_src
 
-#+begin_src sql :tangle ata
+#+begin_src sql :tangle ata.yasnippet
 # name: Add column
 # --
 ALTER TABLE ${1:[schema].[table_name]} ADD [${2:column_name}] INT$0
 #+end_src
 
-#+begin_src sql :tangle atac
+#+begin_src sql :tangle atac.yasnippet
 # name: Modify column
 # --
 ALTER TABLE ${1:[schema].[table_name]} ALTER COLUMN $0
 #+end_src
 
-#+begin_src sql :tangle atd
+#+begin_src sql :tangle atd.yasnippet
 # name: Drop column
 # --    
 ALTER TABLE ${1:[schema].[table_name]} DROP COLUMN $0
 #+end_src
 
-#+begin_src sql :tangle atdc
+#+begin_src sql :tangle atdc.yasnippet
 # name: Drop constraint
 # --
 ALTER TABLE ${1:[schema].[table_name]} DROP CONSTRAINT $0
@@ -368,7 +368,7 @@ ALTER TABLE ${1:[schema].[table_name]} DROP CONSTRAINT $0
 
 * B
 
-#+begin_src sql :tangle be
+#+begin_src sql :tangle be.yasnippet
 # name: BEGIN...END block
 # --
 BEGIN
@@ -376,7 +376,7 @@ BEGIN
 END
 #+end_src
 
-#+begin_src sql :tangle bt
+#+begin_src sql :tangle bt.yasnippet
 # name: Begin transaction
 # --
 BEGIN TRANSACTION $0
@@ -384,7 +384,7 @@ BEGIN TRANSACTION $0
 
 * C
 
-#+begin_src sql :tangle cdb
+#+begin_src sql :tangle cdb.yasnippet
 # name: Create database
 # --
 CREATE DATABASE ${1:database_name}
@@ -412,7 +412,7 @@ LOG ON
 GO
 #+end_src
 
-#+begin_src sql :tangle cdbsnap
+#+begin_src sql :tangle cdbsnap.yasnippet
 # name: Create database sna...
 # --
 CREATE DATABASE ${2:database_name} 
@@ -425,13 +425,13 @@ AS SNAPSHOT OF ${1:source_database}
 GO$0
 #+end_src
 
-#+begin_src sql :tangle cj
+#+begin_src sql :tangle cj.yasnippet
 # name: CROSS JOIN fragment
 # --
 CROSS JOIN $0
 #+end_src
 
-#+begin_src sql :tangle cte
+#+begin_src sql :tangle cte.yasnippet
 # name: WITH cte fragment
 # --
 
@@ -443,13 +443,13 @@ SELECT $0
 FROM $1
 #+end_src
 
-#+begin_src sql :tangle ctr
+#+begin_src sql :tangle ctr.yasnippet
 # name: Commit transaction
 # --
 COMMIT TRANSACTION $0
 #+end_src
 
-#+begin_src sql :tangle curff
+#+begin_src sql :tangle curff.yasnippet
 # name: Fast-forward read-on...
 # --
 /* declare variables */
@@ -474,55 +474,55 @@ DEALLOCATE $1
 
 * D
 
-#+begin_src sql :tangle dd
+#+begin_src sql :tangle dd.yasnippet
 # name: Drop database
 # --
 DROP DATABASE $0
 #+end_src
 
-#+begin_src sql :tangle df
+#+begin_src sql :tangle df.yasnippet
 # name: DELETE FROM frag...
 # --
 DELETE FROM ${1:[schema].[table_name]} WHERE $0
 #+end_src
 
-#+begin_src sql :tangle dfn
+#+begin_src sql :tangle dfn.yasnippet
 # name: Drop function
 # --
 DROP FUNCTION $0
 #+end_src
 
-#+begin_src sql :tangle 
+#+begin_src sql :tangle .yasnippet
 # name: Drop index
 # --
 DROP INDEX $0
 #+end_src
 
-#+begin_src sql :tangle dl
+#+begin_src sql :tangle dl.yasnippet
 # name: Drop login
 # --
 DROP LOGIN $0
 #+end_src
 
-#+begin_src sql :tangle dp
+#+begin_src sql :tangle dp.yasnippet
 # name: Drop stored procedure
 # --
 DROP PROCEDURE $0
 #+end_src
 
-#+begin_src sql :tangle dt
+#+begin_src sql :tangle dt.yasnippet
 # name: Drop table
 # --
 DROP TABLE $0
 #+end_src
 
-#+begin_src sql :tangle du
+#+begin_src sql :tangle du.yasnippet
 # name: Drop user
 # --
 DROP USER $0
 #+end_src
 
-#+begin_src sql :tangle dv
+#+begin_src sql :tangle dv.yasnippet
 # name: Drop view
 # --
 DROP VIEW $0
@@ -530,7 +530,7 @@ DROP VIEW $0
 
 * E
 
-#+begin_src sql :tangle err
+#+begin_src sql :tangle err.yasnippet
 # name: @@ERROR function ...
 # --
 @@ERROR$0
@@ -538,13 +538,13 @@ DROP VIEW $0
 
 * F
 
-#+begin_src sql :tangle fj
+#+begin_src sql :tangle fj.yasnippet
 # name: FULL JOIN fragment
 # --
 FULL JOIN $0
 #+end_src
 
-#+begin_src sql :tangle foj
+#+begin_src sql :tangle foj.yasnippet
 # name: FULL OUTER JOIN fr...
 # --
 FULL OUTER JOIN $0
@@ -552,7 +552,7 @@ FULL OUTER JOIN $0
 
 * G
 
-#+begin_src sql :tangle gb
+#+begin_src sql :tangle gb.yasnippet
 # name: GROUP BY fragment
 # --
 GROUP BY $0
@@ -560,7 +560,7 @@ GROUP BY $0
 
 * I
 
-#+begin_src sql :tangle ifs
+#+begin_src sql :tangle ifs.yasnippet
 # name: IF fragment
 # --
 IF 1 = 1
@@ -569,19 +569,19 @@ BEGIN
 END
 #+end_src
 
-#+begin_src sql :tangle ii
+#+begin_src sql :tangle ii.yasnippet
 # name: INSERT INTO fragment
 # --
 INSERT INTO $0
 #+end_src
 
-#+begin_src sql :tangle ij
+#+begin_src sql :tangle ij.yasnippet
 # name: INNER JOIN fragment
 # --
 INNER JOIN $0
 #+end_src
 
-#+begin_src sql :tangle is
+#+begin_src sql :tangle is.yasnippet
 # name: INFORMATION_SCH...
 # --
 INFORMATION_SCHEMA$0
@@ -589,7 +589,7 @@ INFORMATION_SCHEMA$0
 
 * J
 
-#+begin_src sql :tangle j
+#+begin_src sql :tangle j.yasnippet
 # name: JOIN fragment
 # --
 JOIN $0
@@ -597,13 +597,13 @@ JOIN $0
 
 * L
 
-#+begin_src sql :tangle lj
+#+begin_src sql :tangle lj.yasnippet
 # name: LEFT JOIN fragment
 # --
 LEFT JOIN $0
 #+end_src
 
-#+begin_src sql :tangle loj
+#+begin_src sql :tangle loj.yasnippet
 # name: LEFT OUTER JOIN fr...
 # --
 LEFT OUTER JOIN $0
@@ -611,7 +611,7 @@ LEFT OUTER JOIN $0
 
 * M
 
-#+begin_src sql :tangle mro
+#+begin_src sql :tangle mro.yasnippet
 # name: Retrieve 20 most rec...
 # --
 SELECT TOP 20 [name], [type], crdate
@@ -621,7 +621,7 @@ ORDER BY crdate DESC
 
 * O
 
-#+begin_src sql :tangle ob
+#+begin_src sql :tangle ob.yasnippet
 # name: ORDER BY fragment
 # --
 ORDER BY $0
@@ -629,19 +629,19 @@ ORDER BY $0
 
 * R
 
-#+begin_src sql :tangle rj
+#+begin_src sql :tangle rj.yasnippet
 # name: RIGHT JOIN fragment
 # --
 RIGHT JOIN $0
 #+end_src
 
-#+begin_src sql :tangle roj
+#+begin_src sql :tangle roj.yasnippet
 # name: RIGHT OUTER JOIN f...
 # --
 RIGHT OUTER JOIN $0
 #+end_src
 
-#+begin_src sql :tangle rt
+#+begin_src sql :tangle rt.yasnippet
 # name: Rollback transaction
 # --
 ROLLBACK TRANSACTION $0
@@ -649,49 +649,49 @@ ROLLBACK TRANSACTION $0
 
 * S
 
-#+begin_src sql :tangle san
+#+begin_src sql :tangle san.yasnippet
 # name: Change the current A...
 # --
 SET ANSI_NULLS ON$0
 #+end_src
 
-#+begin_src sql :tangle scf
+#+begin_src sql :tangle scf.yasnippet
 # name: Count number of rec...
 # --
 SELECT COUNT(*) FROM $0
 #+end_src
 
-#+begin_src sql :tangle sph
+#+begin_src sql :tangle sph.yasnippet
 # name: Execute sp_help
 # --
 EXEC sp_help$0
 #+end_src
 
-#+begin_src sql :tangle spt
+#+begin_src sql :tangle spt.yasnippet
 # name: Execute sp_helptext
 # --
 EXEC sp_helptext$0
 #+end_src
 
-#+begin_src sql :tangle sqi
+#+begin_src sql :tangle sqi.yasnippet
 # name: Change the current ...
 # --
 SET QUOTED_IDENTIFIER ON$0
 #+end_src
 
-#+begin_src sql :tangle ssf
+#+begin_src sql :tangle ssf.yasnippet
 # name: SELECT * FROM frag...
 # --
 SELECT * FROM $0
 #+end_src
 
-#+begin_src sql :tangle st100
+#+begin_src sql :tangle st100.yasnippet
 # name: SELECT top 100 rows
 # --
 SELECT TOP 100 * FROM $0
 #+end_src
 
-#+begin_src sql :tangle sxa
+#+begin_src sql :tangle sxa.yasnippet
 # name: Change  the current X...
 # --
 SET XACT_ABORT OFF
@@ -699,7 +699,7 @@ SET XACT_ABORT OFF
 
 * T
 
-#+begin_src sql :tangle tc
+#+begin_src sql :tangle tc.yasnippet
 # name: TRY ... CATCH fragm...
 # --
 BEGIN TRY
@@ -710,7 +710,7 @@ BEGIN CATCH
 END CATCH
 #+end_src
 
-#+begin_src sql :tangle w2
+#+begin_src sql :tangle w2.yasnippet
 # name: Execute sp_who2$0
 # --
 	EXEC sp_who2$0
@@ -718,7 +718,7 @@ END CATCH
 
 * X
 
-#+begin_src sql :tangle xpfd
+#+begin_src sql :tangle xpfd.yasnippet
 # name: Retrieve free space o...
 # --
 EXEC master..xp_fixeddrives
