@@ -875,6 +875,7 @@ like this into your configuration file:
                                       tidy
                                       smart-comment
                                       smartparens
+                                      sql-indent
                                       unbound
                                       undo-tree
                                       volatile-highlights
@@ -13920,7 +13921,7 @@ into a specified *expansion*.
   ;; See (info "(autotype)") as well
 #+end_src
 
-** Controlling Abbrev Expansion
+** Controlling Abbrev Expansion (Code templates)
 
 Inspired by [[http://macromates.com/][TextMate]].  In fact, many editors support snippets: Eclipse,
 Notepad++, etc.
@@ -14010,12 +14011,16 @@ Load additional snippets.
 - ~C-c & C-s~ ::
      Insert snippet at point.
 
-#+begin_src emacs-lisp
-    ;; Bind `yas-expand' to SPC.
-    (define-key yas-minor-mode-map (kbd "<tab>") nil)
-    (define-key yas-minor-mode-map (kbd "TAB") nil)
-    (define-key yas-minor-mode-map (kbd "SPC") #'yas-expand)
+Insert *code templates* (/snippets/) by pressing ~TAB~.
 
+#+begin_src emacs-lisp :tangle no
+    ;; ;; Bind `yas-expand' to SPC.
+    ;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
+    ;; (define-key yas-minor-mode-map (kbd "TAB") nil)
+    ;; (define-key yas-minor-mode-map (kbd "SPC") #'yas-expand)
+#+end_src
+
+#+begin_src emacs-lisp
     ;; Don't expand when you are typing in a string or comment.
     (add-hook 'prog-mode-hook
               (lambda ()
@@ -14075,29 +14080,26 @@ Emacs-Leuven):
 See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet.
 
 #+begin_src emacs-lisp
-    (defvar lawlist-context-menu-map
-      (let ((map (make-sparse-keymap "Context Menu")))
+    (defvar leuven-contextual-menu-map
+      (let ((map (make-sparse-keymap "Contextual menu")))
         (define-key map [help-for-help] (cons "Help" 'help-for-help))
         (define-key map [seperator-two] '(menu-item "--"))
-        (define-key map [my-menu] (cons "LAWLIST" (make-sparse-keymap "My Menu")))
-        (define-key map [my-menu 01] (cons "Next Line" 'next-line))
-        (define-key map [my-menu 02] (cons "Previous Line" 'previous-line))
-        (define-key map [seperator-one] '(menu-item "--"))
-      map) "Keymap for the LAWLIST context menu.")
+        map)
+      "Keymap for the contextual menu.")
 
-    (defun lawlist-popup-context-menu  (event &optional prefix)
+    (defun leuven-popup-contextual-menu  (event &optional prefix)
       "Popup a context menu."
       (interactive "@e \nP")
-        (define-key lawlist-context-menu-map [lawlist-major-mode-menu]
+        (define-key leuven-contextual-menu-map [lawlist-major-mode-menu]
           `(menu-item ,(symbol-name major-mode)
             ,(mouse-menu-major-mode-map) :visible t))
-        (define-key lawlist-context-menu-map (vector major-mode)
-          `(menu-item ,(concat "YAS " (symbol-name major-mode))
+        (define-key leuven-contextual-menu-map (vector major-mode)
+          `(menu-item ,(concat "Insert " (symbol-name major-mode) " snippet")
             ,(gethash major-mode yas--menu-table)
               :visible (yas--show-menu-p ',major-mode)))
-        (popup-menu lawlist-context-menu-map event prefix))
+        (popup-menu leuven-contextual-menu-map event prefix))
 
-    (global-set-key [mouse-3] #'lawlist-popup-context-menu)
+    (global-set-key [mouse-3] #'leuven-popup-contextual-menu)
 #+end_src
 
 *** Frequently Asked Questions
@@ -14200,6 +14202,23 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
   ;;   ;; Preserve case when expanding the abbreviation.
   ;;   (setq dabbrev-case-replace nil))
 #+end_src
+
+For capitalizing reserved SQL words (see general well-known [[http://stackoverflow.com/questions/522356/what-sql-coding-standard-do-you-follow][coding standards]] and
+styles for SQL), I have some ~abbrev~ definitions.
+
+Here is a short example just to show you (not including all reserved SQL words):
+
+#+begin_src emacs-lisp :tangle no
+(define-abbrev-table 'sql-mode abbrev-table
+  (mapcar #'(lambda (v) (list v (upcase v) nil 1))
+          '("absolute" "action" "add" "after" "all" "allocate" "alter" "and" "any" "are" "array" "as" "asc" "asensitive")))
+#+end_src
+
+http://emacs.stackexchange.com/questions/13214/automatically-formatting-sql-code
+Emacs does not come anything useful for sql indenting. 
+The best thing out there is sql-indent.el
+Which doesn't do auto-indenting only on command indentation.
+I have found it pretty useful at times
 
 ** Code Completion
 
@@ -14434,36 +14453,50 @@ XXX Test the following.
       (setq ac-disable-faces nil)
 #+end_src
 
-*** Company mode ("Complete anything")
+Integration of YASnipets:
+https://github.com/joaotavora/yasnippet/issues/526
+
+*** Company ("COMPlete ANYthing")
 
 The best alternative to Auto-Complete seems to be Company mode.
 
 Besides that the maintainer of company-mode is incredibly competent and
 friendly,
 
-- company-mode is super easy to extend (whereas you often have to write 3-4
+- Company mode is super easy to extend (whereas you often have to write 3-4
   times as much code to get the equivalent functionality out of AC backend);
 
-- company "just works", most of the time.  It's incredibly simple to use.
+- Company "just works", most of the time.  It's incredibly simple to use.
 
 See https://github.com/company-mode/company-mode/issues/68 for a *feature
 comparison* between both.
 
-Completion will start automatically after you type a few letters. Use ~M-n~ and
-~M-p~ to select, ~RET~ to complete or ~TAB~ to complete the common
-part. *Search through the completions* with ~C-s~, ~C-r~ and ~C-o~. Press ~M-(digit)~ to
-quickly complete with one of the first 10 candidates.
+Completion will start automatically after you type a few letters.
+
+- Use ~M-n~ and ~M-p~ to select,
+- ~RET~ or ~TAB~ to complete with the current selection
+  (~company-complete-selection~).
+- *Search through the completions* with ~C-s~, ~C-r~ and ~C-o~.
+- Press ~M-(digit)~ to quickly complete with one of the first 10 candidates.
+
+#+begin_note
+- ~company-complete-common~ inserts the common part of all candidates.
+- ~company-complete~ inserts the common part of all candidates or the current
+  selection.
+- ~company-complete-selection~ inserts the selected candidate.
+#+end_note
 
 Type ~M-x company-complete~ to initiate completion manually. Bind this command to
 a key combination of your choice.
 
-When the completion candidates are shown, press ~<f1>~ to *display the full
-documentation* for the selected symbol, or ~C-w~ to *show its definition*. Not all
-back-ends support this.
+When the completion candidates are shown, press
+- ~<f1>~ to *display the full documentation* for the selected symbol, or
+- ~C-w~ to *show its definition*.
+Not all back-ends support this.
 
-company-mode has a unique take on auto-completion where it will reject
-keystrokes if it doesn't match any possibilities. It can also search
-available completions and filter as well.
+Company mode has a unique take on auto-completion where it will reject
+keystrokes if it doesn't match any possibilities.  It can also search available
+completions and filter as well.
 
 #+begin_src emacs-lisp
   ;; Modular text completion framework.
@@ -14475,7 +14508,8 @@ available completions and filter as well.
     (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
-    (global-set-key (kbd "C-/") #'helm-company) ;; ?
+    (global-set-key (kbd "C-/") #'company-complete-common)
+    (global-set-key (kbd "C-/") #'helm-company) ; ?
 
     (global-set-key (kbd "C-c y") #'company-yasnippet)
                                         ; Better than `helm-yas-complete' as
@@ -14484,32 +14518,10 @@ available completions and filter as well.
     )
 #+end_src
 
-- https://github.com/proofit404/company-tern
-- http://stackoverflow.com/questions/18102833/could-not-start-tern-server-in-emacs?rq=1
-- https://github.com/syl20bnr/spacemacs/issues/5733
-- https://github.com/ternjs/tern/issues/256
-- https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE
-- https://github.com/angelozerr/tern.java/wiki/Getting-Started
-- http://emmet.io/blog/sublime-tern/
-- http://emacs.stackexchange.com/questions/3093/how-to-navigate-a-javascript-project
-- https://truongtx.me/2014/04/20/emacs-javascript-completion-and-refactoring
-
-Installing https://github.com/angelozerr/tern.java/wiki/Installation-Update-Site.
-
-https://nodejs.org/download/release/latest/win-x64/
-
-#+begin_src emacs-lisp
-  (when (executable-find "tern")
-
-    (with-eval-after-load "company-tern-autoloads"
-
-      (add-to-list 'company-backends 'company-tern)))
-#+end_src
+**** Common
 
 #+begin_src emacs-lisp
   (with-eval-after-load "company"
-
-    (global-set-key (kbd "C-/") #'company-complete-common)
 
     ;; ... Except in some modes.
     (setq company-global-modes
@@ -14523,11 +14535,13 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 (or we) chooses to sort them in a different way.
 
 #+begin_src emacs-lisp
-    ;; Sort candidates according to their occurrences.
-    (setq company-transformers '(company-sort-by-occurrence))
-    (setq company-transformers '(;; company-sort-by-statistics ;; unknown
-                                 company-sort-by-backend-importance))
+    ;; ;; Sort candidates according to their occurrences.
+    ;; (setq company-transformers '(company-sort-by-occurrence))
+    ;; (setq company-transformers '(;; company-sort-by-statistics ;; unknown
+    ;;                              company-sort-by-backend-importance))
+#+end_src
 
+#+begin_src emacs-lisp
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 2)
 
@@ -14549,9 +14563,8 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
 
-    ;; Completion by TAB.
-    (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
-                                        ; XXX `company-complete'???
+    ;; Completion by TAB (insert the selected candidate).
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
 
     ;; Temporarily show the documentation buffer for the selection.
     (define-key company-active-map (kbd "<f1>") #'company-show-doc-buffer)
@@ -14587,7 +14600,7 @@ If you press ~<right>~ when the menu is displayed, it will cancel completion.
 *First* run the *indent* function, then try *completion* only if it didn't change
 anything.
 
-XXX The following does not work in Org files (TAB does not expand nodes anymore)!
+XXX The following does not work in Org files (~TAB~ does not expand nodes anymore)!
 
 #+begin_src emacs-lisp :tangle no
     ;; See `tab-always-indent'.
@@ -14627,7 +14640,7 @@ From https://github.com/company-mode/company-mode/issues/87.
 See also https://github.com/company-mode/company-mode/issues/123.
 
 #+begin_src emacs-lisp
-    )
+    )                                   ; with-eval-after-load "company".
 #+end_src
 
 With the following text (where "|" stands for the cursor):
@@ -14640,12 +14653,14 @@ good|
 - the prefix "good" will match no word (no completion to "goodBYE"!) while
 - the prefix "GOOD" will match "GOODBYE" only.
 
+**** Prog modes
+
 In "code" modes (see ~company-dabbrev-code-modes~) and their derivatives, Company
 will -- by default -- complete only symbols, not text in comments or strings.
 
 #+begin_src emacs-lisp
   ;; Dabbrev-like company-mode back-end for code.
-  (with-eval-after-load "company-dabbrev-code"
+  (with-eval-after-load "company-dabbrev-code-XXX"
 
     ;; ;; Search all other buffers
     ;; (setq company-dabbrev-code-other-buffers 'all)
@@ -14658,6 +14673,76 @@ will -- by default -- complete only symbols, not text in comments or strings.
     )
 #+end_src
 
+Problem:
+Company: backend (company-dabbrev-code company-gtags company-etags
+company-keywords) user-error: File /cygdrive/d/Users/fni/TAGS does not exist
+
+Use command ~company-diag~ in bug reports.
+
+#+begin_warning
+The ~company-yasnippet~ backend should be used with care, because as long as there
+are snippets defined for the current major mode, this backend will always shadow
+backends that come after it.
+#+end_warning
+
+#+begin_src emacs-lisp
+  (add-hook 'js2-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends)
+                   '((company-dabbrev-code company-yasnippet)))))
+#+end_src
+
+#+begin_note
+~company-backends~ is a variable defined in ~company.el~.
+
+Documentation: The list of active back-ends (completion engines).
+
+*Only one back-end is used at a time.* The choice depends on the order of the
+items in this list, and on the values they return in response to the 'prefix'
+command (see below). *But a back-end can also be a "grouped" one (see below).*
+
+Grouped back-ends:
+
+An element of ~company-backends~ can also itself be a list of back-ends, then it's
+considered to be a "grouped" back-end.
+
+When possible, commands taking a candidate as an argument are dispatched to the
+back-end it came from. In other cases, the first non-nil value among all the
+back-ends is returned.
+
+The latter is the case for the ~prefix~ command. But if the group contains the
+keyword ~:with~, the back-ends after it are ignored for this command.
+
+The completions from back-ends in a group are merged (but only from those that
+return the same ~prefix~).
+#+end_note
+
+**** Tern
+
+- https://github.com/proofit404/company-tern
+- http://stackoverflow.com/questions/18102833/could-not-start-tern-server-in-emacs?rq=1
+- https://github.com/syl20bnr/spacemacs/issues/5733
+- https://github.com/ternjs/tern/issues/256
+- https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE
+- https://github.com/angelozerr/tern.java/wiki/Getting-Started
+- http://emmet.io/blog/sublime-tern/
+- http://emacs.stackexchange.com/questions/3093/how-to-navigate-a-javascript-project
+- https://truongtx.me/2014/04/20/emacs-javascript-completion-and-refactoring
+
+Installing https://github.com/angelozerr/tern.java/wiki/Installation-Update-Site.
+
+https://nodejs.org/download/release/latest/win-x64/
+
+#+begin_src emacs-lisp
+  (when (executable-find "tern")
+
+    (with-eval-after-load "company-tern-autoloads"
+
+      (add-to-list 'company-backends 'company-tern)))
+#+end_src
+
+**** Text modes
+
 In the other modes, Company will pass control to other back-ends
 (e.g. ~company-dabbrev~).
 
@@ -14667,7 +14752,7 @@ In the other modes, Company will pass control to other back-ends
 
     ;; Only search in the current buffer
     (setq company-dabbrev-other-buffers nil) ; Prevent Company completing
-                                             ; numbers coming from other files
+                                             ; numbers coming from other files.
 
     ;; Don't ignore case when collecting completion candidates.
     (setq company-dabbrev-ignore-case nil)
@@ -14684,7 +14769,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 **** Company-quickhelp
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "company-quickhelp-autoloads-XXX"
+  (with-eval-after-load "company-quickhelp-autoloads"
 
     ;; Enable `company-quickhelp-mode'.
     (company-quickhelp-mode 1)
@@ -14694,7 +14779,9 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 
     ;; Maximum number of lines to show in the popup.
     (setq company-quickhelp-max-lines 10))
+#+end_src
 
+#+begin_src emacs-lisp
 )                                       ; Chapter 29 ends here.
 #+end_src
 

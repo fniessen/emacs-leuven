@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160921.1458
+;; Version: 20160926.2031
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160921.1458"
+(defconst leuven--emacs-version "20160926.2031"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -454,6 +454,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       tidy
                                       smart-comment
                                       smartparens
+                                      sql-indent
                                       unbound
                                       undo-tree
                                       volatile-highlights
@@ -8134,11 +8135,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Use Snippet mode for files with a `yasnippet' extension.
     (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
-    ;; Bind `yas-expand' to SPC.
-    (define-key yas-minor-mode-map (kbd "<tab>") nil)
-    (define-key yas-minor-mode-map (kbd "TAB") nil)
-    (define-key yas-minor-mode-map (kbd "SPC") #'yas-expand)
-
     ;; Don't expand when you are typing in a string or comment.
     (add-hook 'prog-mode-hook
               (lambda ()
@@ -8165,29 +8161,26 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (global-set-key (kbd "C-c & C-l") #'yas-describe-tables)
 
-    (defvar lawlist-context-menu-map
-      (let ((map (make-sparse-keymap "Context Menu")))
+    (defvar leuven-contextual-menu-map
+      (let ((map (make-sparse-keymap "Contextual menu")))
         (define-key map [help-for-help] (cons "Help" 'help-for-help))
         (define-key map [seperator-two] '(menu-item "--"))
-        (define-key map [my-menu] (cons "LAWLIST" (make-sparse-keymap "My Menu")))
-        (define-key map [my-menu 01] (cons "Next Line" 'next-line))
-        (define-key map [my-menu 02] (cons "Previous Line" 'previous-line))
-        (define-key map [seperator-one] '(menu-item "--"))
-      map) "Keymap for the LAWLIST context menu.")
+        map)
+      "Keymap for the contextual menu.")
 
-    (defun lawlist-popup-context-menu  (event &optional prefix)
+    (defun leuven-popup-contextual-menu  (event &optional prefix)
       "Popup a context menu."
       (interactive "@e \nP")
-        (define-key lawlist-context-menu-map [lawlist-major-mode-menu]
+        (define-key leuven-contextual-menu-map [lawlist-major-mode-menu]
           `(menu-item ,(symbol-name major-mode)
             ,(mouse-menu-major-mode-map) :visible t))
-        (define-key lawlist-context-menu-map (vector major-mode)
-          `(menu-item ,(concat "YAS " (symbol-name major-mode))
+        (define-key leuven-contextual-menu-map (vector major-mode)
+          `(menu-item ,(concat "Insert " (symbol-name major-mode) " snippet")
             ,(gethash major-mode yas--menu-table)
               :visible (yas--show-menu-p ',major-mode)))
-        (popup-menu lawlist-context-menu-map event prefix))
+        (popup-menu leuven-contextual-menu-map event prefix))
 
-    (global-set-key [mouse-3] #'lawlist-popup-context-menu)
+    (global-set-key [mouse-3] #'leuven-popup-contextual-menu)
 
     (add-hook 'snippet-mode-hook
               (lambda ()
@@ -8335,7 +8328,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
 
-    (global-set-key (kbd "C-/") #'helm-company) ;; ?
+    (global-set-key (kbd "C-/") #'company-complete-common)
+    (global-set-key (kbd "C-/") #'helm-company) ; ?
 
     (global-set-key (kbd "C-c y") #'company-yasnippet)
                                         ; Better than `helm-yas-complete' as
@@ -8343,15 +8337,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; and the replacement.
     )
 
-  (when (executable-find "tern")
-
-    (with-eval-after-load "company-tern-autoloads"
-
-      (add-to-list 'company-backends 'company-tern)))
-
   (with-eval-after-load "company"
-
-    (global-set-key (kbd "C-/") #'company-complete-common)
 
     ;; ... Except in some modes.
     (setq company-global-modes
@@ -8360,10 +8346,10 @@ a clean buffer we're an order of magnitude laxer about checking."
                 magit-status-mode
                 help-mode))
 
-    ;; Sort candidates according to their occurrences.
-    (setq company-transformers '(company-sort-by-occurrence))
-    (setq company-transformers '(;; company-sort-by-statistics ;; unknown
-                                 company-sort-by-backend-importance))
+    ;; ;; Sort candidates according to their occurrences.
+    ;; (setq company-transformers '(company-sort-by-occurrence))
+    ;; (setq company-transformers '(;; company-sort-by-statistics ;; unknown
+    ;;                              company-sort-by-backend-importance))
 
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 2)
@@ -8386,9 +8372,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
 
-    ;; Completion by TAB.
-    (define-key company-active-map (kbd "<tab>") #'company-complete-selection) ; Complete with the selected candidate
-                                        ; XXX `company-complete'???
+    ;; Completion by TAB (insert the selected candidate).
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
 
     ;; Temporarily show the documentation buffer for the selection.
     (define-key company-active-map (kbd "<f1>") #'company-show-doc-buffer)
@@ -8416,10 +8401,10 @@ a clean buffer we're an order of magnitude laxer about checking."
            (funcall fun n))))
      '((name . "Don't complete numbers")))
 
-    )
+    )                                   ; with-eval-after-load "company".
 
   ;; Dabbrev-like company-mode back-end for code.
-  (with-eval-after-load "company-dabbrev-code"
+  (with-eval-after-load "company-dabbrev-code-XXX"
 
     ;; ;; Search all other buffers
     ;; (setq company-dabbrev-code-other-buffers 'all)
@@ -8431,12 +8416,23 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; (setq company-dabbrev-code-ignore-case t)
     )
 
+  (add-hook 'js2-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends)
+                   '((company-dabbrev-code company-yasnippet)))))
+
+  (when (executable-find "tern")
+
+    (with-eval-after-load "company-tern-autoloads"
+
+      (add-to-list 'company-backends 'company-tern)))
+
   ;; Dabbrev-like company-mode completion back-end.
   (with-eval-after-load "company-dabbrev"
 
     ;; Only search in the current buffer
     (setq company-dabbrev-other-buffers nil) ; Prevent Company completing
-                                             ; numbers coming from other files
+                                             ; numbers coming from other files.
 
     ;; Don't ignore case when collecting completion candidates.
     (setq company-dabbrev-ignore-case nil)
@@ -8447,7 +8443,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Skip invisible text (Org drawers, etc.).
     (setq company-dabbrev-ignore-invisible t))
 
-  (with-eval-after-load "company-quickhelp-autoloads-XXX"
+  (with-eval-after-load "company-quickhelp-autoloads"
 
     ;; Enable `company-quickhelp-mode'.
     (company-quickhelp-mode 1)
