@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160926.2031
+;; Version: 20160927.0021
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160926.2031"
+(defconst leuven--emacs-version "20160927.0021"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3737,7 +3737,12 @@ Should be selected from `fringe-bitmaps'.")
   ;; (try-require 'fold-dwim-org)
 
   ;; 25.8.2
-  (global-set-key (kbd "<M-f6>") #'visible-mode)
+  (global-set-key (kbd "<M-f6>")
+                  (lambda (&optional arg)
+                    (interactive (list (or current-prefix-arg 'toggle)))
+                    (if (derived-mode-p 'prog-mode)
+                        (hs-show-all)
+                      (visible-mode arg))))
 
 ;;** (info "(emacs-goodies-el)boxquote")
 
@@ -6826,8 +6831,10 @@ this with to-do items than with projects or headings."
 
   (with-eval-after-load "web-mode"
 
-    (setq web-mode-enable-current-element-highlight t)
+    ;; ;; Enable element highlight.
+    ;; (setq web-mode-enable-current-element-highlight t) ; web-mode-current-element-highlight-face.
 
+    ;; Auto-pairing.
     (setq web-mode-enable-auto-pairing t)
 
     ;; Enable block face (useful for setting background of <style>).
@@ -6864,7 +6871,7 @@ this with to-do items than with projects or headings."
 
     (add-hook 'nxml-mode-hook 'hs-minor-mode))
 
-  ;; Highlight the current SGML tag context.
+  ;; Highlight the current SGML tag context (`hl-tags-face').
   (try-require 'hl-tags-mode)
   (with-eval-after-load "hl-tags-mode"
 
@@ -6876,7 +6883,7 @@ this with to-do items than with projects or headings."
 
     (add-hook 'nxml-mode-hook #'hl-tags-mode)
 
-    (add-hook 'web-mode-hook #'hl-tags-mode)
+    ;; (add-hook 'web-mode-hook #'hl-tags-mode)
 )
 
   ;; TODO: Handle media queries
@@ -8168,8 +8175,8 @@ a clean buffer we're an order of magnitude laxer about checking."
         map)
       "Keymap for the contextual menu.")
 
-    (defun leuven-popup-contextual-menu  (event &optional prefix)
-      "Popup a context menu."
+    (defun leuven-popup-contextual-menu (event &optional prefix)
+      "Popup a contextual menu."
       (interactive "@e \nP")
         (define-key leuven-contextual-menu-map [lawlist-major-mode-menu]
           `(menu-item ,(symbol-name major-mode)

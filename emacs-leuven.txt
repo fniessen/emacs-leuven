@@ -6499,7 +6499,12 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 #+begin_src emacs-lisp
   ;; 25.8.2
-  (global-set-key (kbd "<M-f6>") #'visible-mode)
+  (global-set-key (kbd "<M-f6>")
+                  (lambda (&optional arg)
+                    (interactive (list (or current-prefix-arg 'toggle)))
+                    (if (derived-mode-p 'prog-mode)
+                        (hs-show-all)
+                      (visible-mode arg))))
 #+end_src
 
 ** Boxquote
@@ -11330,8 +11335,10 @@ CSS/JS and blocks (client/server side).
 
   (with-eval-after-load "web-mode"
 
-    (setq web-mode-enable-current-element-highlight t)
+    ;; ;; Enable element highlight.
+    ;; (setq web-mode-enable-current-element-highlight t) ; web-mode-current-element-highlight-face.
 
+    ;; Auto-pairing.
     (setq web-mode-enable-auto-pairing t)
 
     ;; Enable block face (useful for setting background of <style>).
@@ -11399,10 +11406,10 @@ Some key bindings:
     (add-hook 'nxml-mode-hook 'hs-minor-mode))
 #+end_src
 
-** Highlight the closing tag
+** Highlight the closing tag (Pair highlighting)
 
 #+begin_src emacs-lisp
-  ;; Highlight the current SGML tag context.
+  ;; Highlight the current SGML tag context (`hl-tags-face').
   (try-require 'hl-tags-mode)
   (with-eval-after-load "hl-tags-mode"
 
@@ -11414,7 +11421,7 @@ Some key bindings:
 
     (add-hook 'nxml-mode-hook #'hl-tags-mode)
 
-    (add-hook 'web-mode-hook #'hl-tags-mode)
+    ;; (add-hook 'web-mode-hook #'hl-tags-mode)
 )
 #+end_src
 
@@ -14034,6 +14041,9 @@ Insert *code templates* (/snippets/) by pressing ~TAB~.
     (setq yas-prompt-functions '(yas-dropdown-prompt))
 #+end_src
 
+YASnippet allows navigating through the data input fields, where you can specify
+your own data.  Use the ~TAB~ key to go forward and the ~Shift+TAB~ keys to go back.
+
 *** Writing snippets
 
 See http://cupfullofcode.com/snippet-expansion-with-yasnippet/.
@@ -14087,8 +14097,8 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
         map)
       "Keymap for the contextual menu.")
 
-    (defun leuven-popup-contextual-menu  (event &optional prefix)
-      "Popup a context menu."
+    (defun leuven-popup-contextual-menu (event &optional prefix)
+      "Popup a contextual menu."
       (interactive "@e \nP")
         (define-key leuven-contextual-menu-map [lawlist-major-mode-menu]
           `(menu-item ,(symbol-name major-mode)
