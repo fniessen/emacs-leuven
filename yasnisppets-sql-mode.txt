@@ -25,7 +25,7 @@ a code you are typing by pressing the TAB key.
 
 Creates an inline table function.
 
-#+begin_src sql :tangle citf.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/citf.yasnippet
 # name: Create inline table-va...
 # --
 CREATE FUNCTION ${1:[schema].[function_name]}
@@ -41,7 +41,7 @@ GO
 
 Creates a multi-statement table function.
 
-#+begin_src sql :tangle ctf.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ctf.yasnippet
 # name: Create multi-stateme...
 # --
 CREATE FUNCTION ${1:[schema].[function_name]}
@@ -59,7 +59,7 @@ GO
 
 Creates a scalar function.
 
-#+begin_src sql :tangle csf.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/csf.yasnippet
 # name: Create scalar function
 # --
 CREATE FUNCTION ${1:[schema].[function_name]}
@@ -75,7 +75,7 @@ GO
 
 ** Index
 
-#+begin_src sql :tangle cci.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cci.yasnippet
 # name: Create non-unique cl...
 # --
 CREATE CLUSTERED INDEX ${3:index_name}
@@ -91,7 +91,7 @@ GO
 $0
 #+end_src
 
-#+begin_src sql :tangle cni.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cni.yasnippet
 # name: Create non-unique n...
 # --
 CREATE NONCLUSTERED INDEX ${3:index_name}
@@ -107,7 +107,7 @@ GO
 $0
 #+end_src
 
-#+begin_src sql :tangle cuci.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cuci.yasnippet
 # name: Create unique cluster...
 # --
 CREATE UNIQUE CLUSTERED INDEX ${3:index_name}
@@ -127,7 +127,7 @@ $0
 
 Creates a unique, non-clustered index.
 
-#+begin_src sql :tangle cuni.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cuni.yasnippet
 # name: Create unique nonclu...
 # --
 CREATE UNIQUE NONCLUSTERED INDEX ${3:index_name}
@@ -149,7 +149,7 @@ $0
 
 Creates a SQL Server Authentication login.
 
-#+begin_src sql :tangle cl.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cl.yasnippet
 # name: CREATE SQL Server l...
 # --
 CREATE LOGIN $0 /* Add WITH or FROM (below) as appropriate */
@@ -179,7 +179,7 @@ GO
 
 *** [cp]
 
-#+begin_src sql :tangle cp.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cp.yasnippet
 # name: Create stored proced...
 # --
 --SET QUOTED_IDENTIFIER ON|OFF
@@ -198,7 +198,7 @@ GO
 
 *** [crlp]
 
-#+begin_src sql :tangle clrp.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/clrp.yasnippet
 # name: Create CLR stored pr...
 # --
 --SET QUOTED_IDENTIFIER ON|OFF
@@ -226,7 +226,7 @@ GO
 
 Creates a table.
 
-#+begin_src sql :tangle ct.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ct.yasnippet
 # name: Create table
 # --
 CREATE TABLE ${1:[schema].[table_name]}
@@ -243,7 +243,7 @@ CREATE TABLE ${1:[schema].[table_name]}
 
 Creates a trigger.
 
-#+begin_src sql :tangle no.yasnippet
+#+begin_src sql :tangle no
 # name: Create trigger
 # --
 CREATE TRIGGER TriggerName
@@ -256,25 +256,25 @@ CREATE TRIGGER TriggerName
 $0
 #+end_src
 
-#+begin_src sql :tangle atdt.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/atdt.yasnippet
 # name: Disable trigger
 # --
 ALTER TABLE ${1:[schema].[table_name]} DISABLE TRIGGER $0
 #+end_src
 
-#+begin_src sql :tangle atdta.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/atdta.yasnippet
 # name: Disable all triggers on...
 # --
 ALTER TABLE ${1:[schema].[table_name]}$0 DISABLE TRIGGER ALL
 #+end_src
 
-#+begin_src sql :tangle atet.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/atet.yasnippet
 # name: Enable trigger
 # --
 ALTER TABLE ${1:[schema].[table_name]} ENABLE TRIGGER $0
 #+end_src
 
-#+begin_src sql :tangle ateta.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ateta.yasnippet
 # name: Enable all triggers on...
 # --
 ALTER TABLE ${1:[schema].[table_name]}$0 ENABLE TRIGGER ALL
@@ -286,7 +286,7 @@ ALTER TABLE ${1:[schema].[table_name]}$0 ENABLE TRIGGER ALL
 
 Creates a database user.
 
-#+begin_src sql :tangle cu.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cu.yasnippet
 # name: Create database user
 # --
 CREATE USER ${1:UserName}$0
@@ -310,7 +310,7 @@ GO
 
 Creates a view.
 
-#+begin_src sql :tangle cv.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cv.yasnippet
 # name: Create view
 # --
 CREATE VIEW ${1:[schema].[view_name]}
@@ -326,43 +326,43 @@ GO
 
 ** A
 
-#+begin_src sql :tangle af.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/af.yasnippet
 # name: ALTER FUNCTION fr...
 # --    
 ALTER FUNCTION $0
 #+end_src
 
-#+begin_src sql :tangle ap.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ap.yasnippet
 # name: ALTER PROCEDURE
 # --    
 ALTER PROCEDURE $0
 #+end_src
 
-#+begin_src sql :tangle at.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/at.yasnippet
 # name: ALTER TABLE fragm...
 # --    
 ALTER TABLE $0
 #+end_src
 
-#+begin_src sql :tangle ata.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ata.yasnippet
 # name: Add column
 # --
 ALTER TABLE ${1:[schema].[table_name]} ADD [${2:column_name}] INT$0
 #+end_src
 
-#+begin_src sql :tangle atac.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/atac.yasnippet
 # name: Modify column
 # --
 ALTER TABLE ${1:[schema].[table_name]} ALTER COLUMN $0
 #+end_src
 
-#+begin_src sql :tangle atd.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/atd.yasnippet
 # name: Drop column
 # --    
 ALTER TABLE ${1:[schema].[table_name]} DROP COLUMN $0
 #+end_src
 
-#+begin_src sql :tangle atdc.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/atdc.yasnippet
 # name: Drop constraint
 # --
 ALTER TABLE ${1:[schema].[table_name]} DROP CONSTRAINT $0
@@ -370,7 +370,7 @@ ALTER TABLE ${1:[schema].[table_name]} DROP CONSTRAINT $0
 
 ** B
 
-#+begin_src sql :tangle be.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/be.yasnippet
 # name: BEGIN...END block
 # --
 BEGIN
@@ -378,7 +378,7 @@ BEGIN
 END
 #+end_src
 
-#+begin_src sql :tangle bt.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/bt.yasnippet
 # name: Begin transaction
 # --
 BEGIN TRANSACTION $0
@@ -386,7 +386,7 @@ BEGIN TRANSACTION $0
 
 ** C
 
-#+begin_src sql :tangle cdb.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cdb.yasnippet
 # name: Create database
 # --
 CREATE DATABASE ${1:database_name}
@@ -414,7 +414,7 @@ LOG ON
 GO
 #+end_src
 
-#+begin_src sql :tangle cdbsnap.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cdbsnap.yasnippet
 # name: Create database sna...
 # --
 CREATE DATABASE ${2:database_name} 
@@ -427,13 +427,13 @@ AS SNAPSHOT OF ${1:source_database}
 GO$0
 #+end_src
 
-#+begin_src sql :tangle cj.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cj.yasnippet
 # name: CROSS JOIN fragment
 # --
 CROSS JOIN $0
 #+end_src
 
-#+begin_src sql :tangle cte.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/cte.yasnippet
 # name: WITH cte fragment
 # --
 
@@ -445,13 +445,13 @@ SELECT $0
 FROM $1
 #+end_src
 
-#+begin_src sql :tangle ctr.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ctr.yasnippet
 # name: Commit transaction
 # --
 COMMIT TRANSACTION $0
 #+end_src
 
-#+begin_src sql :tangle curff.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/curff.yasnippet
 # name: Fast-forward read-on...
 # --
 /* declare variables */
@@ -476,55 +476,55 @@ DEALLOCATE $1
 
 ** D
 
-#+begin_src sql :tangle dd.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/dd.yasnippet
 # name: Drop database
 # --
 DROP DATABASE $0
 #+end_src
 
-#+begin_src sql :tangle df.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/df.yasnippet
 # name: DELETE FROM frag...
 # --
 DELETE FROM ${1:[schema].[table_name]} WHERE $0
 #+end_src
 
-#+begin_src sql :tangle dfn.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/dfn.yasnippet
 # name: Drop function
 # --
 DROP FUNCTION $0
 #+end_src
 
-#+begin_src sql :tangle .yasnippet
+#+begin_src sql :tangle snippets/sql-mode/di.yasnippet
 # name: Drop index
 # --
 DROP INDEX $0
 #+end_src
 
-#+begin_src sql :tangle dl.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/dl.yasnippet
 # name: Drop login
 # --
 DROP LOGIN $0
 #+end_src
 
-#+begin_src sql :tangle dp.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/dp.yasnippet
 # name: Drop stored procedure
 # --
 DROP PROCEDURE $0
 #+end_src
 
-#+begin_src sql :tangle dt.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/dt.yasnippet
 # name: Drop table
 # --
 DROP TABLE $0
 #+end_src
 
-#+begin_src sql :tangle du.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/du.yasnippet
 # name: Drop user
 # --
 DROP USER $0
 #+end_src
 
-#+begin_src sql :tangle dv.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/dv.yasnippet
 # name: Drop view
 # --
 DROP VIEW $0
@@ -532,7 +532,7 @@ DROP VIEW $0
 
 ** E
 
-#+begin_src sql :tangle err.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/err.yasnippet
 # name: @@ERROR function ...
 # --
 @@ERROR$0
@@ -540,13 +540,13 @@ DROP VIEW $0
 
 ** F
 
-#+begin_src sql :tangle fj.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/fj.yasnippet
 # name: FULL JOIN fragment
 # --
 FULL JOIN $0
 #+end_src
 
-#+begin_src sql :tangle foj.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/foj.yasnippet
 # name: FULL OUTER JOIN fr...
 # --
 FULL OUTER JOIN $0
@@ -554,7 +554,7 @@ FULL OUTER JOIN $0
 
 ** G
 
-#+begin_src sql :tangle gb.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/gb.yasnippet
 # name: GROUP BY fragment
 # --
 GROUP BY $0
@@ -562,7 +562,7 @@ GROUP BY $0
 
 ** I
 
-#+begin_src sql :tangle ifs.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ifs.yasnippet
 # name: IF fragment
 # --
 IF 1 = 1
@@ -571,19 +571,19 @@ BEGIN
 END
 #+end_src
 
-#+begin_src sql :tangle ii.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ii.yasnippet
 # name: INSERT INTO fragment
 # --
 INSERT INTO $0
 #+end_src
 
-#+begin_src sql :tangle ij.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ij.yasnippet
 # name: INNER JOIN fragment
 # --
 INNER JOIN $0
 #+end_src
 
-#+begin_src sql :tangle is.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/is.yasnippet
 # name: INFORMATION_SCH...
 # --
 INFORMATION_SCHEMA$0
@@ -591,7 +591,7 @@ INFORMATION_SCHEMA$0
 
 ** J
 
-#+begin_src sql :tangle j.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/j.yasnippet
 # name: JOIN fragment
 # --
 JOIN $0
@@ -599,13 +599,13 @@ JOIN $0
 
 ** L
 
-#+begin_src sql :tangle lj.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/lj.yasnippet
 # name: LEFT JOIN fragment
 # --
 LEFT JOIN $0
 #+end_src
 
-#+begin_src sql :tangle loj.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/loj.yasnippet
 # name: LEFT OUTER JOIN fr...
 # --
 LEFT OUTER JOIN $0
@@ -613,7 +613,7 @@ LEFT OUTER JOIN $0
 
 ** M
 
-#+begin_src sql :tangle mro.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/mro.yasnippet
 # name: Retrieve 20 most rec...
 # --
 SELECT TOP 20 [name], [type], crdate
@@ -623,7 +623,7 @@ ORDER BY crdate DESC
 
 ** O
 
-#+begin_src sql :tangle ob.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ob.yasnippet
 # name: ORDER BY fragment
 # --
 ORDER BY $0
@@ -631,19 +631,19 @@ ORDER BY $0
 
 ** R
 
-#+begin_src sql :tangle rj.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/rj.yasnippet
 # name: RIGHT JOIN fragment
 # --
 RIGHT JOIN $0
 #+end_src
 
-#+begin_src sql :tangle roj.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/roj.yasnippet
 # name: RIGHT OUTER JOIN f...
 # --
 RIGHT OUTER JOIN $0
 #+end_src
 
-#+begin_src sql :tangle rt.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/rt.yasnippet
 # name: Rollback transaction
 # --
 ROLLBACK TRANSACTION $0
@@ -651,49 +651,49 @@ ROLLBACK TRANSACTION $0
 
 ** S
 
-#+begin_src sql :tangle san.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/san.yasnippet
 # name: Change the current A...
 # --
 SET ANSI_NULLS ON$0
 #+end_src
 
-#+begin_src sql :tangle scf.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/scf.yasnippet
 # name: Count number of rec...
 # --
 SELECT COUNT(*) FROM $0
 #+end_src
 
-#+begin_src sql :tangle sph.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/sph.yasnippet
 # name: Execute sp_help
 # --
 EXEC sp_help$0
 #+end_src
 
-#+begin_src sql :tangle spt.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/spt.yasnippet
 # name: Execute sp_helptext
 # --
 EXEC sp_helptext$0
 #+end_src
 
-#+begin_src sql :tangle sqi.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/sqi.yasnippet
 # name: Change the current ...
 # --
 SET QUOTED_IDENTIFIER ON$0
 #+end_src
 
-#+begin_src sql :tangle ssf.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/ssf.yasnippet
 # name: SELECT * FROM frag...
 # --
 SELECT * FROM $0
 #+end_src
 
-#+begin_src sql :tangle st100.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/st100.yasnippet
 # name: SELECT top 100 rows
 # --
 SELECT TOP 100 * FROM $0
 #+end_src
 
-#+begin_src sql :tangle sxa.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/sxa.yasnippet
 # name: Change the current X...
 # --
 SET XACT_ABORT OFF
@@ -701,7 +701,7 @@ SET XACT_ABORT OFF
 
 ** T
 
-#+begin_src sql :tangle tc.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/tc.yasnippet
 # name: TRY ... CATCH fragm...
 # --
 BEGIN TRY
@@ -712,7 +712,7 @@ BEGIN CATCH
 END CATCH
 #+end_src
 
-#+begin_src sql :tangle w2.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/w2.yasnippet
 # name: Execute sp_who2$0
 # --
 	EXEC sp_who2$0
@@ -720,7 +720,7 @@ END CATCH
 
 ** X
 
-#+begin_src sql :tangle xpfd.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/xpfd.yasnippet
 # name: Retrieve free space o...
 # --
 EXEC master..xp_fixeddrives
@@ -728,34 +728,38 @@ EXEC master..xp_fixeddrives
 
 * Surround With...
 
-** Code Snippet for BEGIN...END block
+** [begin] Code Snippet for BEGIN...END block
 
-#+begin_src sql :tangle begin.yasnippet
-# name: begin
+#+begin_src sql :tangle snippets/sql-mode/begin.yasnippet
+# name: Surround with BEGIN...
 # --
 BEGIN
-`yas/selected-text`
+`yas-selected-text`
 END
 #+end_src
 
-** Code Snippet for IF construct
+** [if] Code Snippet for IF construct
 
-#+begin_src sql :tangle if.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/if.yasnippet
+# name: Surround with IF...
+# --
 IF( ${1:Condition} )
 BEGIN
 
-`yas/selected-text`
+`yas-selected-text`
 
 END
  #+end_src
 
-** Code Snippet for WHILE loop
+** [while] Code Snippet for WHILE loop
 
-#+begin_src sql :tangle while.yasnippet
+#+begin_src sql :tangle snippets/sql-mode/while.yasnippet
+# name: Surround with WHILE...
+# --
 WHILE( ${1:Condition} )
 BEGIN
 
-`yas/selected-text`
+`yas-selected-text`
 
 END
  #+end_src
