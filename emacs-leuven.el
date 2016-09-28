@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160927.0021
+;; Version: 20160928.1559
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160927.0021"
+(defconst leuven--emacs-version "20160928.1559"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1232,6 +1232,9 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
   (when (try-require 'auto-highlight-symbol)
+
+    ;; Number of seconds to wait before highlighting symbol.
+    (setq ahs-idle-interval 0.2) ; 0.35.
 
     ;; Add R.
     (add-to-list 'ahs-modes 'ess-mode t)
@@ -8119,10 +8122,14 @@ a clean buffer we're an order of magnitude laxer about checking."
     (with-eval-after-load "diminish-autoloads"
       (diminish 'yas-minor-mode " y"))
 
+    ;; ;; No need to be so verbose.
     ;; (setq yas-verbosity 1)
 
     ;; Load the snippet tables.
     (yas-reload-all)
+
+    ;; Wrap around region.
+    (setq yas/wrap-around-region t)
 
     ;; Add root directories that store the snippets.
     (let ((leuven-snippets              ; Additional YASnippets.
