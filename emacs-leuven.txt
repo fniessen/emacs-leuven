@@ -805,6 +805,7 @@ like this into your configuration file:
                                       auctex
                                       auto-complete
                                       auto-highlight-symbol
+                                      back-button
                                       bbdb
                                       bookmark+
                                       boxquote
@@ -1418,15 +1419,36 @@ Instead of setting the *mark* in order to operate on a region, you can also type
      repeatedly to *navigate* through the entire *mark ring*.
 
 #+begin_tip
-Some commands (especially ones which are liable to move you an an unknown or
-arbitrary distance from your original location) will automatically push to the
-mark ring so that you can use ~C-u C-SPC~ to return afterwards. This includes
-~Isearch~, so after using ~C-s~ to go somewhere, you can easily jump back again.
+Many commands (especially ones which are liable to move you an an unknown or
+arbitrary distance from your original location, like ~isearch-forward~,
+~beginning-of-buffer~, ~ace-jump-mode~) automatically save the previous position in
+the mark ring -- you don't have to use ~C-SPC C-SPC~ before, but only ~C-u C-SPC~ to
+return afterwards.
+
+So, after using ~C-s~ to go somewhere, you can easily jump back again.
 #+end_tip
 
-*************** TODO Look at `back-button'
 Visual navigation through mark rings.
-*************** END
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "back-button-autoloads"
+    (back-button-mode 1))
+#+end_src
+
+- C-x C-<left> ::
+     Go back in ~global-mark-ring~.
+
+- C-x C-<right> ::
+     Go forward in ~global-mark-ring~.
+
+- C-x <left> ::
+     Go back in (buffer-local) ~mark-ring~.
+
+- C-x <right> ::
+     Go forward in (buffer-local) ~mark-ring~.
+
+When the ~smartrep~ package is installed, the ~C-x~ prefix need not be used for
+consecutive ~back-button~ commands.
 
 *Go to* the *place* where you *last changed* something:
 
@@ -1914,7 +1936,10 @@ Annotating bookmarks.
       (global-set-key (kbd "<S-f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
 
       ;; Delete all ANONYMOUS bookmarks in a buffer.
-      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
+      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer)
+
+      ;; Show the bookmark list just for bookmarks for the current file/buffer.
+      (global-set-key (kbd "<M-f2>") #'bmkp-this-file/buffer-bmenu-list))
 
     (with-eval-after-load "bookmark+"
 
@@ -2026,9 +2051,6 @@ jumping onto them...
 ;;** 14.1 (info "(emacs)Scrolling")
 
   (leuven--section "14.1 (emacs)Scrolling")
-
-  ;; Always keep screen position of point when scrolling.
-  (setq scroll-preserve-screen-position 1)
 
   ;; Scroll window up/down by one line.
   (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
@@ -2305,17 +2327,20 @@ Toggle Auto-Highlight-Symbol using key chord ~**~.
     ;; Number of seconds to wait before highlighting symbol.
     (setq ahs-idle-interval 0.2) ; 0.35.
 
-    ;; Add R.
-    (add-to-list 'ahs-modes 'ess-mode t)
-
-    ;; Add js2-mode.
-    (add-to-list 'ahs-modes 'js2-mode t)
+    ;; Add major modes Auto-Highlight-Symbol can run on.
+    (mapc (lambda (mode)
+            (add-to-list 'ahs-modes mode t))
+          '(js2-mode
+            ess-mode))                  ; R.
 
     ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
     ;; (global-auto-highlight-symbol-mode t)
 
-    ;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.
+    ;; Enable Auto-Highlight-Symbol mode in all programming mode buffers.
     (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
+
+    ;; Enable Auto-Highlight-Symbol mode in LaTeX mode.
+    (add-hook 'latex-mode-hook #'auto-highlight-symbol-mode)
     )
 #+end_src
 
@@ -5883,6 +5908,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 #+end_src
 
 #+begin_src emacs-lisp
+  ;; Align your code in a pretty way.
   (global-set-key (kbd "C-x \\") #'align-regexp)
 #+end_src
 
@@ -14643,6 +14669,22 @@ By default, the list of candidates is sorted alphabetically, unless the backend
                (self-insert-command 1))
            (funcall fun n))))
      '((name . "Don't complete numbers")))
+#+end_src
+
+#+begin_src emacs-lisp
+    (defvar-local company-fci-mode-on-p nil)
+
+    (defun company-turn-off-fci (&rest ignore)
+      (when (boundp 'fci-mode)
+        (setq company-fci-mode-on-p fci-mode)
+        (when fci-mode (fci-mode -1))))
+
+    (defun company-maybe-turn-on-fci (&rest ignore)
+      (when company-fci-mode-on-p (fci-mode 1)))
+
+    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
+    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+    (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
 #+end_src
 
 If you press ~<right>~ when the menu is displayed, it will cancel completion.

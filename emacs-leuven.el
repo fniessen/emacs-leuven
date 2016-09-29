@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160928.1608
+;; Version: 20160929.1636
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160928.1608"
+(defconst leuven--emacs-version "20160929.1636"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -384,6 +384,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       auctex
                                       auto-complete
                                       auto-highlight-symbol
+                                      back-button
                                       bbdb
                                       bookmark+
                                       boxquote
@@ -773,6 +774,9 @@ These packages are neither built-in nor already installed nor ignored."
 
 (leuven--chapter leuven-load-chapter-11-mark "11 The Mark and the Region"
 
+  (with-eval-after-load "back-button-autoloads"
+    (back-button-mode 1))
+
   ;; Goto last change.
   (with-eval-after-load "goto-chg-autoloads"
     (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
@@ -989,7 +993,10 @@ These packages are neither built-in nor already installed nor ignored."
       (global-set-key (kbd "<S-f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
 
       ;; Delete all ANONYMOUS bookmarks in a buffer.
-      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
+      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer)
+
+      ;; Show the bookmark list just for bookmarks for the current file/buffer.
+      (global-set-key (kbd "<M-f2>") #'bmkp-this-file/buffer-bmenu-list))
 
     (with-eval-after-load "bookmark+"
 
@@ -1080,9 +1087,6 @@ These packages are neither built-in nor already installed nor ignored."
 ;;** 14.1 (info "(emacs)Scrolling")
 
   (leuven--section "14.1 (emacs)Scrolling")
-
-  ;; Always keep screen position of point when scrolling.
-  (setq scroll-preserve-screen-position 1)
 
   ;; Scroll window up/down by one line.
   (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
@@ -1236,17 +1240,20 @@ Should be selected from `fringe-bitmaps'.")
     ;; Number of seconds to wait before highlighting symbol.
     (setq ahs-idle-interval 0.2) ; 0.35.
 
-    ;; Add R.
-    (add-to-list 'ahs-modes 'ess-mode t)
-
-    ;; Add js2-mode.
-    (add-to-list 'ahs-modes 'js2-mode t)
+    ;; Add major modes Auto-Highlight-Symbol can run on.
+    (mapc (lambda (mode)
+            (add-to-list 'ahs-modes mode t))
+          '(js2-mode
+            ess-mode))                  ; R.
 
     ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
     ;; (global-auto-highlight-symbol-mode t)
 
-    ;; Toggle Auto-Highlight-Symbol mode in all programming mode buffers.
+    ;; Enable Auto-Highlight-Symbol mode in all programming mode buffers.
     (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
+
+    ;; Enable Auto-Highlight-Symbol mode in LaTeX mode.
+    (add-hook 'latex-mode-hook #'auto-highlight-symbol-mode)
     )
 
 ;; XXX Impact on Org's HTML export?
@@ -3312,6 +3319,7 @@ Should be selected from `fringe-bitmaps'.")
     (save-excursion
       (indent-region (point-min) (point-max) nil)))
 
+  ;; Align your code in a pretty way.
   (global-set-key (kbd "C-x \\") #'align-regexp)
 
   (defun leuven-align-to-equals (begin end)
@@ -8414,6 +8422,20 @@ a clean buffer we're an order of magnitude laxer about checking."
                (self-insert-command 1))
            (funcall fun n))))
      '((name . "Don't complete numbers")))
+
+    (defvar-local company-fci-mode-on-p nil)
+
+    (defun company-turn-off-fci (&rest ignore)
+      (when (boundp 'fci-mode)
+        (setq company-fci-mode-on-p fci-mode)
+        (when fci-mode (fci-mode -1))))
+
+    (defun company-maybe-turn-on-fci (&rest ignore)
+      (when company-fci-mode-on-p (fci-mode 1)))
+
+    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
+    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+    (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
 
     )                                   ; with-eval-after-load "company".
 
