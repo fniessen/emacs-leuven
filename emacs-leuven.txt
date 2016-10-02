@@ -17080,14 +17080,19 @@ printing on Windows.
 
 (leuven--chapter leuven-load-chapter-44-saving-emacs-sessions "44 Saving Emacs Sessions"
 
-  (try-require 'saveplace)
-  (with-eval-after-load "saveplace"
+  ;; Remember cursor position.
+  (if (version< emacs-version "25.0")
 
-    ;; Automatically save place in each file.
-    (setq-default save-place t))        ; Default value for all buffers.
+      (progn
+        (require 'saveplace)
 
-    ;; Name of the file that records `save-place-alist' value.
-    (setq save-place-file "~/.emacs.d/.places")
+        ;; Automatically save place in each file.
+        (setq-default save-place t)     ; Default value for all buffers.
+
+        ;; Name of the file that records `save-place-alist' value.
+        (setq save-place-file "~/.emacs.d/.places"))
+
+    (save-place-mode 1))
 
 )                                       ; Chapter 44 ends here.
 #+end_src

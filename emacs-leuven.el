@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161002.2205
+;; Version: 20161002.2300
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161002.2205"
+(defconst leuven--emacs-version "20161002.2300"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -9639,14 +9639,19 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (leuven--chapter leuven-load-chapter-44-saving-emacs-sessions "44 Saving Emacs Sessions"
 
-  (try-require 'saveplace)
-  (with-eval-after-load "saveplace"
+  ;; Remember cursor position.
+  (if (version< emacs-version "25.0")
 
-    ;; Automatically save place in each file.
-    (setq-default save-place t))        ; Default value for all buffers.
+      (progn
+        (require 'saveplace)
 
-    ;; Name of the file that records `save-place-alist' value.
-    (setq save-place-file "~/.emacs.d/.places")
+        ;; Automatically save place in each file.
+        (setq-default save-place t)     ; Default value for all buffers.
+
+        ;; Name of the file that records `save-place-alist' value.
+        (setq save-place-file "~/.emacs.d/.places"))
+
+    (save-place-mode 1))
 
 )                                       ; Chapter 44 ends here.
 
