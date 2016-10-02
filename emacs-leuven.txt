@@ -1542,6 +1542,7 @@ Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
 *Add all occurrences of the current word to the selection.*
 
 #+begin_src emacs-lisp
+    ;; Tries to guess what you want to mark all of.
     (global-set-key (kbd "C-;") #'mc/mark-all-like-this-dwim) ;! Like Iedit.
     ;; (global-set-key (kbd "C-c C-w") #'mc/mark-all-like-this-dwim)
     ;; (global-set-key (kbd "C-x C-;") #'mc/mark-all-like-this-dwim)
@@ -6075,30 +6076,13 @@ Show column guideline (right margin):
     ;; Enable fci-mode in programming, message and Org modes.
     ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
     (add-hook 'message-mode-hook #'fci-mode)
-    (add-hook 'org-mode-hook #'fci-mode)
+    (add-hook 'org-mode-hook #'fci-mode))
 #+end_src
 
 #+begin_warning
 Enabling ~fci-mode~ as a global minor mode slows down the tangling of this file by
 a factor 2!?
 #+end_warning
-
-#+begin_src emacs-lisp
-    ;; Avoid `fci-mode' and `auto-complete' popups.
-    (defvar sanityinc/fci-mode-suppressed nil)
-
-    (defadvice popup-create (before suppress-fci-mode activate)
-      "Suspend fci-mode while popups are visible"
-      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
-      (when fci-mode
-        (turn-off-fci-mode)))
-
-    (defadvice popup-delete (after restore-fci-mode activate)
-      "Restore fci-mode when all popups have closed"
-      (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
-        (setq sanityinc/fci-mode-suppressed nil)
-        (turn-on-fci-mode))))
-#+end_src
 
 #+begin_src emacs-lisp
   (defun leuven-replace-nbsp-by-spc ()
@@ -11781,19 +11765,19 @@ Balanced editing: inserting two matching parentheses at once, etc.
   Pair can be simple as parentheses or brackets, or can be programming tokens
   such as ~if~ ... ~fi~ or ~if~ ... ~end~ in many languages.
 
-  If you get into any serious lisp coding, check out ~paredit~ – it forces you to
+  If you get into any serious lisp coding, check out ~paredit~ -- it forces you to
   always have balanced brackets in the file, thus avoiding a whole class of
-  silly but hard-to-spot mistakes on lines ending with and avalanche of ))))).
+  silly but hard-to-spot mistakes on lines ending with and avalanche of ~)))))~.
 
-  If you are less into bondage&submission, ~smartparens.el~ is another option, it
-  *helps* to have balanced brackets without breaking your will ;-)
+  If you are less into bondage & submission, ~smartparens.el~ is another option,
+  it *helps* to have balanced brackets without breaking your will ;-)
 
   It is more about ease-of-coding than B&D.
 
   #+begin_note
   If we believe Xiao Hanyu, smartparens is the future, it is the ultimate
-  solution for paren pairs management in Emacs world. It is flexible, uniform
-  and highly customizable. It is also bundled with a comprehensive
+  solution for paren pairs management in Emacs world.  It is flexible, uniform
+  and highly customizable.  It is also bundled with a comprehensive
   documentation, besides a Wiki, you can also ~M-x sp-cheat-sheet~ to get live
   examples, which, I think, is really a innovative feature.
   #+end_note
@@ -12312,20 +12296,53 @@ Config examples:
     ;; Add highlighting of many ECMA built-in functions.
     (setq js2-highlight-level 3)
 
-    ;; (setq js2-strict-trailing-comma-warning ni)
-    ;; (setq js2-strict-missing-semi-warning ni)
-    ;; (setq js2-missing-semi-one-line-override )
-    ;; (setq js2-allow-rhino-new-expr-initializer ni)
-    ;; (setq js2-include-node-externs t)
-    (setq js2-warn-about-unused-function-arguments t)
+    ;; `js2-line-break' in mid-string will make it a string concatenation.
+    ;; The '+' will be inserted at the end of the line.
+    (setq js2-concat-multiline-strings 'eol)
 
+    ;; List of any extern names you'd like to consider always declared.
+    (setq js2-global-externs
+          '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout"
+            "clearTimeout" "setInterval" "clearInterval" "location" "__dirname"
+            "console" "JSON"))
+
+    ;; Treat unused function arguments like declared-but-unused variables.
+    (setq js2-warn-about-unused-function-arguments t)
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; Imenu support for additional constructs.
+    (js2-imenu-extras-setup)
+#+end_src
+
+#+begin_src emacs-lisp
+    (defun js2-imenu-record-object-clone-extend ()
+      (let* ((node (js2-node-at-point (1- (point)))))
+      (when (js2-call-node-p node)
+        (let* ((args (js2-call-node-args node))
+               (methods (second args))
+               (super-class (first args))
+               (parent (js2-node-parent node)))
+          (when (js2-object-node-p methods)
+            (let ((subject (cond ((js2-var-init-node-p parent)
+                                  (js2-var-init-node-target parent))
+                                 ((js2-assign-node-p parent)
+                                  (js2-assign-node-left parent)))))
+              (when subject
+                (js2-record-object-literal methods
+                                           (js2-compute-nested-prop-get subject)
+                                           (js2-node-abs-pos methods)))))))))
+#+end_src
+
+http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
+
+#+begin_src emacs-lisp
     ;; Color defined variables.
     (when (locate-library "color-identifiers-mode")
       (add-hook 'js2-mode-hook 'color-identifiers-mode))
+#+end_src
 
-    ;; Imenu support for additional constructs.
-    (js2-imenu-extras-setup)
-
+#+begin_src emacs-lisp
     ;; JS-comint.
     ;; (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
     ;; (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
@@ -12350,32 +12367,6 @@ We prefer ~eslint~ over ~jshint~:
     ;; (add-hook 'js2-mode-hook
     ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
 #+end_src
-
-#+begin_src emacs-lisp
-    (when (executable-find "tern")
-      (add-hook 'js2-mode-hook #'tern-mode)))
-#+end_src
-
-#+begin_src emacs-lisp
-    (defun js2-imenu-record-object-clone-extend ()
-      (let* ((node (js2-node-at-point (1- (point)))))
-      (when (js2-call-node-p node)
-        (let* ((args (js2-call-node-args node))
-               (methods (second args))
-               (super-class (first args))
-               (parent (js2-node-parent node)))
-          (when (js2-object-node-p methods)
-            (let ((subject (cond ((js2-var-init-node-p parent)
-                                  (js2-var-init-node-target parent))
-                                 ((js2-assign-node-p parent)
-                                  (js2-assign-node-left parent)))))
-              (when subject
-                (js2-record-object-literal methods
-                                           (js2-compute-nested-prop-get subject)
-                                           (js2-node-abs-pos methods)))))))))
-#+end_src
-
-http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
 
 #+begin_src emacs-lisp
     ;; (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
@@ -12413,57 +12404,41 @@ http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functio
 ;;       "<f1> s" 'jquery-doc)))
 #+end_src
 
-*** Skewer: live web development with Emacs
+*** Tern
 
-Skewer lets you send HTML, CSS, and Javascript fragments to a browser.
+Tern is a stand-alone *code analyzer* for JavaScript.  Features provided are:
 
-#+begin_tip
-You may need to start Chrome with ~chrome --allow-running-insecure-content~, if
-you're using the user script with HTTPS sites.
-#+end_tip
+- *Auto-completion* on variables and properties.
+- When the point is in a *function argument* list, show *argument names and types*
+  at the bottom of the screen.
+- *Find type* of an expression.
+- *Jump to definition* of something.
+- Automatic *refactoring* (*rename variable*).
 
-Kick things off with ~run-skewer~, and then:
+The following additional keys are bound:
 
-- ~C-x C-e~ (~skewer-eval-last-expression~) ::
-     *Evaluate the form before the point* and display the result in the
-     minibuffer.  If given a prefix argument, insert the result into the current
-     buffer.
+- M-. ::
+     Jump to the definition of the thing under the cursor.
 
-- ~C-M-x~ (~skewer-eval-defun~) ::
-     *Evaluate the top-level form around the point*.
+- M-, ::
+     Brings you back to last place you were when you pressed ~M-.~.
 
-- ~C-c C-k~ (~skewer-load-buffer~) ::
-     *Load the current buffer.*
+- C-c C-r ::
+     Rename the variable under the cursor.
 
-- ~C-c C-z~ (~skewer-repl~) ::
-     *Select the REPL buffer*.
+- C-c C-c ::
+     Find the type of the thing under the cursor.
+
+- C-c C-d ::
+     Find docs of the thing under the cursor.  Press again to open the
+     associated URL (if any).
 
 #+begin_src emacs-lisp
-;; (require 'css-mode)
-;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
+    (when (executable-find "tern")
+      (add-hook 'js-mode-hook #'tern-mode)
+      (add-hook 'js2-mode-hook #'tern-mode)
+      (add-hook 'web-mode-hook #'tern-mode))
 #+end_src
-
-#+begin_src emacs-lisp
-  (when (locate-library "skewer-mode")
-    (add-hook 'js2-mode-hook 'skewer-mode)
-    (add-hook 'css-mode-hook 'skewer-css-mode)
-    (add-hook 'html-mode-hook 'skewer-html-mode))
-#+end_src
-
-To ensure that everything is working correctly:
-
-1. Open a new buffer with the name =myskewer.js=.
-2. Enable ~JS2-mode~ (a dependency of skewer).
-3. Enable ~skewer-mode~.
-4. ~M-x run-skewer~ (a browser opens, go back to =myskewer.js=).
-5. Type ~alert("hello");~ and hit ~C-x C-e~ at the end of that line.
-6. Go back to the browser.
-
-You should see an alert box on the page.
-
-To tell Skewer to load the HTML (as shown in the demo), place your downloaded
-files into =~/public_html= then follow the instructions for [[https://github.com/skeeto/skewer-mode#manual-version][Manual version]]. Once
-that is done, visit ~localhost:8080~ in your browser.
 
 *** JS2-refactor
 
@@ -12548,7 +12523,60 @@ List of available *refactorings*:
     (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
                                                  ; `C-c C-m ev`.
     )
+)
 #+end_src
+
+*** Skewer: live web development with Emacs
+
+Skewer lets you send HTML, CSS, and Javascript fragments to a browser.
+
+#+begin_tip
+You may need to start Chrome with ~chrome --allow-running-insecure-content~, if
+you're using the user script with HTTPS sites.
+#+end_tip
+
+Kick things off with ~run-skewer~, and then:
+
+- ~C-x C-e~ (~skewer-eval-last-expression~) ::
+     *Evaluate the form before the point* and display the result in the
+     minibuffer.  If given a prefix argument, insert the result into the current
+     buffer.
+
+- ~C-M-x~ (~skewer-eval-defun~) ::
+     *Evaluate the top-level form around the point*.
+
+- ~C-c C-k~ (~skewer-load-buffer~) ::
+     *Load the current buffer.*
+
+- ~C-c C-z~ (~skewer-repl~) ::
+     *Select the REPL buffer*.
+
+#+begin_src emacs-lisp
+;; (require 'css-mode)
+;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
+#+end_src
+
+#+begin_src emacs-lisp
+  (when (locate-library "skewer-mode")
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode))
+#+end_src
+
+To ensure that everything is working correctly:
+
+1. Open a new buffer with the name =myskewer.js=.
+2. Enable ~JS2-mode~ (a dependency of skewer).
+3. Enable ~skewer-mode~.
+4. ~M-x run-skewer~ (a browser opens, go back to =myskewer.js=).
+5. Type ~alert("hello");~ and hit ~C-x C-e~ at the end of that line.
+6. Go back to the browser.
+
+You should see an alert box on the page.
+
+To tell Skewer to load the HTML (as shown in the demo), place your downloaded
+files into =~/public_html= then follow the instructions for [[https://github.com/skeeto/skewer-mode#manual-version][Manual version]]. Once
+that is done, visit ~localhost:8080~ in your browser.
 
 ** SQL
 
@@ -14492,6 +14520,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
 
     ;; 8.1 Delay to completions will be available.
     (setq ac-delay 0)                   ; Faster than default 0.1.
+    ;; Eclipse uses 500ms?
 
     ;; 8.2 Completion menu will be automatically shown.
     (setq ac-auto-show-menu 0.2)        ; [Default: 0.8].
@@ -14519,14 +14548,31 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     (define-key ac-completing-map (kbd "<left>") #'ac-stop)
 
     ;; 11.1 Avoid Flyspell processes when auto completion is being started.
-    (ac-flyspell-workaround))
+    (ac-flyspell-workaround)
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; Avoid `fci-mode' and `auto-complete' popups.
+    (defvar sanityinc/fci-mode-suppressed nil)
+
+    (defadvice popup-create (before suppress-fci-mode activate)
+      "Suspend fci-mode while popups are visible"
+      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
+      (when fci-mode
+        (turn-off-fci-mode)))
+
+    (defadvice popup-delete (after restore-fci-mode activate)
+      "Restore fci-mode when all popups have closed"
+      (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
+        (setq sanityinc/fci-mode-suppressed nil)
+        (turn-on-fci-mode))))
 #+end_src
 
 XXX Test the following.
 
 #+begin_src emacs-lisp :tangle no
-      ;; Enable the drop down auto complete inside comment lines.
-      (setq ac-disable-faces nil)
+    ;; Enable the drop down auto complete inside comment lines.
+    (setq ac-disable-faces nil)
 #+end_src
 
 Integration of YASnipets:
@@ -14535,6 +14581,20 @@ https://github.com/joaotavora/yasnippet/issues/526
 *** Company ("COMPlete ANYthing")
 
 The best alternative to Auto-Complete seems to be Company mode.
+
+#+begin_src emacs-lisp
+(defun toggle-auto-complete-company-modes ()
+"Toggle beteen AC and Company modes."
+  (interactive)
+  (if auto-complete-mode
+      (progn
+        (auto-complete-mode -1)
+        (company-mode 1))
+    (auto-complete-mode 1)
+    (company-mode -1)))
+
+(global-set-key (kbd "<M-f1>") #'toggle-auto-complete-company-modes)
+#+end_src
 
 Besides that the maintainer of company-mode is incredibly competent and
 friendly,
@@ -14656,6 +14716,8 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     (define-key company-active-map (kbd "<left>") #'company-abort)
 #+end_src
 
+tes
+
 #+begin_src emacs-lisp
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
@@ -14672,15 +14734,18 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 #+end_src
 
 #+begin_src emacs-lisp
+    ;; Avoid `fci-mode' and `company' popups.
     (defvar-local company-fci-mode-on-p nil)
 
     (defun company-turn-off-fci (&rest ignore)
       (when (boundp 'fci-mode)
         (setq company-fci-mode-on-p fci-mode)
-        (when fci-mode (fci-mode -1))))
+        (when fci-mode
+          (turn-off-fci-mode))))
 
     (defun company-maybe-turn-on-fci (&rest ignore)
-      (when company-fci-mode-on-p (fci-mode 1)))
+      (when company-fci-mode-on-p
+        (turn-on-fci-mode)))
 
     (add-hook 'company-completion-started-hook 'company-turn-off-fci)
     (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)

@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20160929.1636
+;; Version: 20161002.2205
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20160929.1636"
+(defconst leuven--emacs-version "20161002.2205"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -810,6 +810,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     (global-set-key (kbd "C-S-<mouse-1>") #'mc/add-cursor-on-click)
 
+    ;; Tries to guess what you want to mark all of.
     (global-set-key (kbd "C-;") #'mc/mark-all-like-this-dwim) ;! Like Iedit.
     ;; (global-set-key (kbd "C-c C-w") #'mc/mark-all-like-this-dwim)
     ;; (global-set-key (kbd "C-x C-;") #'mc/mark-all-like-this-dwim)
@@ -3418,22 +3419,7 @@ Should be selected from `fringe-bitmaps'.")
     ;; Enable fci-mode in programming, message and Org modes.
     ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
     (add-hook 'message-mode-hook #'fci-mode)
-    (add-hook 'org-mode-hook #'fci-mode)
-
-    ;; Avoid `fci-mode' and `auto-complete' popups.
-    (defvar sanityinc/fci-mode-suppressed nil)
-
-    (defadvice popup-create (before suppress-fci-mode activate)
-      "Suspend fci-mode while popups are visible"
-      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
-      (when fci-mode
-        (turn-off-fci-mode)))
-
-    (defadvice popup-delete (after restore-fci-mode activate)
-      "Restore fci-mode when all popups have closed"
-      (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
-        (setq sanityinc/fci-mode-suppressed nil)
-        (turn-on-fci-mode))))
+    (add-hook 'org-mode-hook #'fci-mode))
 
   (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
@@ -7307,29 +7293,21 @@ mouse-3: go to end") "]")))
     ;; Add highlighting of many ECMA built-in functions.
     (setq js2-highlight-level 3)
 
-    ;; (setq js2-strict-trailing-comma-warning ni)
-    ;; (setq js2-strict-missing-semi-warning ni)
-    ;; (setq js2-missing-semi-one-line-override )
-    ;; (setq js2-allow-rhino-new-expr-initializer ni)
-    ;; (setq js2-include-node-externs t)
-    (setq js2-warn-about-unused-function-arguments t)
+    ;; `js2-line-break' in mid-string will make it a string concatenation.
+    ;; The '+' will be inserted at the end of the line.
+    (setq js2-concat-multiline-strings 'eol)
 
-    ;; Color defined variables.
-    (when (locate-library "color-identifiers-mode")
-      (add-hook 'js2-mode-hook 'color-identifiers-mode))
+    ;; List of any extern names you'd like to consider always declared.
+    (setq js2-global-externs
+          '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout"
+            "clearTimeout" "setInterval" "clearInterval" "location" "__dirname"
+            "console" "JSON"))
+
+    ;; Treat unused function arguments like declared-but-unused variables.
+    (setq js2-warn-about-unused-function-arguments t)
 
     ;; Imenu support for additional constructs.
     (js2-imenu-extras-setup)
-
-    ;; JS-comint.
-    ;; (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
-    ;; (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
-
-    ;; (add-hook 'js2-mode-hook
-    ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
-
-    (when (executable-find "tern")
-      (add-hook 'js2-mode-hook #'tern-mode)))
 
     (defun js2-imenu-record-object-clone-extend ()
       (let* ((node (js2-node-at-point (1- (point)))))
@@ -7347,6 +7325,17 @@ mouse-3: go to end") "]")))
                 (js2-record-object-literal methods
                                            (js2-compute-nested-prop-get subject)
                                            (js2-node-abs-pos methods)))))))))
+
+    ;; Color defined variables.
+    (when (locate-library "color-identifiers-mode")
+      (add-hook 'js2-mode-hook 'color-identifiers-mode))
+
+    ;; JS-comint.
+    ;; (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
+    ;; (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
+
+    ;; (add-hook 'js2-mode-hook
+    ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
 
     ;; (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
 
@@ -7380,13 +7369,10 @@ mouse-3: go to end") "]")))
 ;;     (setup-keybinds js-mode-map
 ;;       "<f1> s" 'jquery-doc)))
 
-;; (require 'css-mode)
-;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
-
-  (when (locate-library "skewer-mode")
-    (add-hook 'js2-mode-hook 'skewer-mode)
-    (add-hook 'css-mode-hook 'skewer-css-mode)
-    (add-hook 'html-mode-hook 'skewer-html-mode))
+    (when (executable-find "tern")
+      (add-hook 'js-mode-hook #'tern-mode)
+      (add-hook 'js2-mode-hook #'tern-mode)
+      (add-hook 'web-mode-hook #'tern-mode))
 
   (with-eval-after-load "js2-refactor-autoloads"
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
@@ -7394,6 +7380,15 @@ mouse-3: go to end") "]")))
     (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
                                                  ; `C-c C-m ev`.
     )
+)
+
+;; (require 'css-mode)
+;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
+
+  (when (locate-library "skewer-mode")
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode))
 
 )                                       ; Chapter 26 ends here.
 
@@ -8312,6 +8307,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; 8.1 Delay to completions will be available.
     (setq ac-delay 0)                   ; Faster than default 0.1.
+    ;; Eclipse uses 500ms?
 
     ;; 8.2 Completion menu will be automatically shown.
     (setq ac-auto-show-menu 0.2)        ; [Default: 0.8].
@@ -8339,7 +8335,34 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key ac-completing-map (kbd "<left>") #'ac-stop)
 
     ;; 11.1 Avoid Flyspell processes when auto completion is being started.
-    (ac-flyspell-workaround))
+    (ac-flyspell-workaround)
+
+    ;; Avoid `fci-mode' and `auto-complete' popups.
+    (defvar sanityinc/fci-mode-suppressed nil)
+
+    (defadvice popup-create (before suppress-fci-mode activate)
+      "Suspend fci-mode while popups are visible"
+      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
+      (when fci-mode
+        (turn-off-fci-mode)))
+
+    (defadvice popup-delete (after restore-fci-mode activate)
+      "Restore fci-mode when all popups have closed"
+      (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
+        (setq sanityinc/fci-mode-suppressed nil)
+        (turn-on-fci-mode))))
+
+(defun toggle-auto-complete-company-modes ()
+"Toggle beteen AC and Company modes."
+  (interactive)
+  (if auto-complete-mode
+      (progn
+        (auto-complete-mode -1)
+        (company-mode 1))
+    (auto-complete-mode 1)
+    (company-mode -1)))
+
+(global-set-key (kbd "<M-f1>") #'toggle-auto-complete-company-modes)
 
   ;; Modular text completion framework.
   (with-eval-after-load "company-autoloads"
@@ -8423,15 +8446,18 @@ a clean buffer we're an order of magnitude laxer about checking."
            (funcall fun n))))
      '((name . "Don't complete numbers")))
 
+    ;; Avoid `fci-mode' and `company' popups.
     (defvar-local company-fci-mode-on-p nil)
 
     (defun company-turn-off-fci (&rest ignore)
       (when (boundp 'fci-mode)
         (setq company-fci-mode-on-p fci-mode)
-        (when fci-mode (fci-mode -1))))
+        (when fci-mode
+          (turn-off-fci-mode))))
 
     (defun company-maybe-turn-on-fci (&rest ignore)
-      (when company-fci-mode-on-p (fci-mode 1)))
+      (when company-fci-mode-on-p
+        (turn-on-fci-mode)))
 
     (add-hook 'company-completion-started-hook 'company-turn-off-fci)
     (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
