@@ -826,7 +826,7 @@ CLOSE $1
 DEALLOCATE $1
 #+end_src
 
-** Help
+** Stored Procedure
 
 *** [sph] sp_help
 
@@ -842,6 +842,48 @@ EXEC sp_help$0
 # name: Execute sp_helptext
 # --
 EXEC sp_helptext$0
+#+end_src
+
+*** [xpfd] xp_fixeddrives
+
+#+begin_src sql :tangle snippets/sql-mode/xpfd.yasnippet
+# name: Retrieve free space o...
+# --
+EXEC master..xp_fixeddrives
+#+end_src
+
+*** [w2] Who2
+
+#+begin_src sql :tangle snippets/sql-mode/w2.yasnippet
+# name: Execute sp_who2$0
+# --
+EXEC sp_who2$0
+#+end_src
+
+** Set
+
+*** [sqi] Set QUOTED_IDENTIFIER
+
+#+begin_src sql :tangle snippets/sql-mode/sqi.yasnippet
+# name: Change the current ...
+# --
+SET QUOTED_IDENTIFIER ON$0
+#+end_src
+
+*** [sxa] Set XACT_ABORT
+
+#+begin_src sql :tangle snippets/sql-mode/sxa.yasnippet
+# name: Change the current X...
+# --
+SET XACT_ABORT OFF
+#+end_src
+
+*** [san] Set ANSI_NULLS
+
+#+begin_src sql :tangle snippets/sql-mode/san.yasnippet
+# name: Change the current A...
+# --
+SET ANSI_NULLS ON$0
 #+end_src
 
 ** Other Fragments
@@ -867,7 +909,7 @@ BEGIN
 END
 #+end_src
 
-*** [cte] CTE
+*** [cte] Common Table Expression
 
 #+begin_src sql :tangle snippets/sql-mode/cte.yasnippet
 # name: WITH cte fragment
@@ -889,7 +931,7 @@ FROM $1
 INFORMATION_SCHEMA$0
 #+end_src
 
-*** [tc] Try Catch
+*** [tc] Try ... Catch
 
 #+begin_src sql :tangle snippets/sql-mode/tc.yasnippet
 # name: TRY ... CATCH fragm...
@@ -902,52 +944,12 @@ BEGIN CATCH
 END CATCH
 #+end_src
 
-*** [sqi] Set QUOTED_IDENTIFIER
-
-#+begin_src sql :tangle snippets/sql-mode/sqi.yasnippet
-# name: Change the current ...
-# --
-SET QUOTED_IDENTIFIER ON$0
-#+end_src
-
-*** [sxa] Set XACT_ABORT
-
-#+begin_src sql :tangle snippets/sql-mode/sxa.yasnippet
-# name: Change the current X...
-# --
-SET XACT_ABORT OFF
-#+end_src
-
-*** [w2]
-
-#+begin_src sql :tangle snippets/sql-mode/w2.yasnippet
-# name: Execute sp_who2$0
-# --
-	EXEC sp_who2$0
-#+end_src
-
-*** [xpfd]
-
-#+begin_src sql :tangle snippets/sql-mode/xpfd.yasnippet
-# name: Retrieve free space o...
-# --
-EXEC master..xp_fixeddrives
-#+end_src
-
 *** [err] @@ERROR
 
 #+begin_src sql :tangle snippets/sql-mode/err.yasnippet
 # name: @@ERROR function ...
 # --
 @@ERROR$0
-#+end_src
-
-*** [san] 
-
-#+begin_src sql :tangle snippets/sql-mode/san.yasnippet
-# name: Change the current A...
-# --
-SET ANSI_NULLS ON$0
 #+end_src
 
 * Surround With...
@@ -967,7 +969,7 @@ END
 #+begin_src sql :tangle snippets/sql-mode/if.yasnippet
 # name: Surround with IF...
 # --
-IF( ${1:Condition} )
+IF (${1:Condition})
 BEGIN
 
 `yas-selected-text`
@@ -980,7 +982,7 @@ END
 #+begin_src sql :tangle snippets/sql-mode/while.yasnippet
 # name: Surround with WHILE...
 # --
-WHILE( ${1:Condition} )
+WHILE (${1:Condition})
 BEGIN
 
 `yas-selected-text`
