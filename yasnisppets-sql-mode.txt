@@ -19,6 +19,202 @@ a code you are typing by pressing the TAB key.
 
 * Insert Snippet...
 
+** Cursor
+
+*** [curff] Cursor Fast-Forward
+
+#+begin_src sql :tangle snippets/sql-mode/curff.yasnippet
+# name: Fast-forward read-on...
+# --
+/* declare variables */
+DECLARE @variable INT
+
+DECLARE ${1:cursor_name} CURSOR FAST_FORWARD READ_ONLY FOR ${2:select_statement}
+
+OPEN $1
+
+FETCH NEXT FROM $1 INTO @variable
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    $0
+
+    FETCH NEXT FROM $1 INTO @variable
+END
+
+CLOSE $1
+DEALLOCATE $1
+#+end_src
+
+** Database
+
+*** [cdb] Create DataBase
+
+#+begin_src sql :tangle snippets/sql-mode/cdb.yasnippet
+# name: Create database
+# --
+CREATE DATABASE ${1:database_name}
+ON
+PRIMARY ( -- or use FILEGROUP filegroup_name
+  NAME = $1_data,
+  FILENAME = '$1.mdf'
+) --, and repeat as required
+LOG ON
+(
+  NAME = $1_log,
+  FILENAME = '$1.ldf'
+) --, and repeat as required
+--COLLATE collation_name
+--WITH
+--  DB_CHAINING ON/OFF
+--  TRUSTWORTHY ON/OFF
+--FOR LOAD
+--FOR ATTACH
+--WITH
+--  ENABLE_BROKER
+--  NEW_BROKER
+--  ERROR_BROKER_CONVERSATIONS
+--FOR ATTACH_REBUILD_LOG
+GO
+#+end_src
+
+*** [cdbsnap] Create DataBase Snapshot
+
+#+begin_src sql :tangle snippets/sql-mode/cdbsnap.yasnippet
+# name: Create database sna...
+# --
+CREATE DATABASE ${2:database_name} 
+ON 
+    (
+    NAME = $2_data,
+    FILENAME = '$2.ss'
+    )
+AS SNAPSHOT OF ${1:source_database}
+GO$0
+#+end_src
+
+*** [dd] Drop Database
+
+#+begin_src sql :tangle snippets/sql-mode/dd.yasnippet
+# name: Drop database
+# --
+DROP DATABASE $0
+#+end_src
+
+** Fragment
+
+*** [ii] Insert Into
+
+#+begin_src sql :tangle snippets/sql-mode/ii.yasnippet
+# name: INSERT INTO fragment
+# --
+INSERT INTO $0
+#+end_src
+
+*** [ssf] Select Star From
+
+#+begin_src sql :tangle snippets/sql-mode/ssf.yasnippet
+# name: SELECT * FROM frag...
+# --
+SELECT * FROM $0
+#+end_src
+
+*** [st100] Select Top 100
+
+#+begin_src sql :tangle snippets/sql-mode/st100.yasnippet
+# name: SELECT top 100 rows
+# --
+SELECT TOP 100 * FROM $0
+#+end_src
+
+*** [scf] Select Count From
+
+#+begin_src sql :tangle snippets/sql-mode/scf.yasnippet
+# name: Count number of rec...
+# --
+SELECT COUNT(*) FROM $0
+#+end_src
+
+*** [is] INFORMATION_SCHEMA
+
+#+begin_src sql :tangle snippets/sql-mode/is.yasnippet
+# name: INFORMATION_SCH...
+# --
+INFORMATION_SCHEMA$0
+#+end_src
+
+*** [gb] Group By
+
+#+begin_src sql :tangle snippets/sql-mode/gb.yasnippet
+# name: GROUP BY fragment
+# --
+GROUP BY $0
+#+end_src
+
+*** [ob] Order By
+
+#+begin_src sql :tangle snippets/sql-mode/ob.yasnippet
+# name: ORDER BY fragment
+# --
+ORDER BY $0
+#+end_src
+
+*** [df] Delete From
+
+#+begin_src sql :tangle snippets/sql-mode/df.yasnippet
+# name: DELETE FROM frag...
+# --
+DELETE FROM ${1:[schema].[table_name]} WHERE $0
+#+end_src
+
+*** [be] Begin...End
+
+#+begin_src sql :tangle snippets/sql-mode/be.yasnippet
+# name: BEGIN...END block
+# --
+BEGIN
+    $0
+END
+#+end_src
+
+*** [tc] Try ... Catch
+
+#+begin_src sql :tangle snippets/sql-mode/tc.yasnippet
+# name: TRY ... CATCH fragm...
+# --
+BEGIN TRY
+    
+END TRY
+BEGIN CATCH
+    $0
+END CATCH
+#+end_src
+
+*** [ifs] If
+
+#+begin_src sql :tangle snippets/sql-mode/ifs.yasnippet
+# name: IF fragment
+# --
+IF 1 = 1
+BEGIN
+    $0
+END
+#+end_src
+
+*** [cte] Common Table Expression
+
+#+begin_src sql :tangle snippets/sql-mode/cte.yasnippet
+# name: WITH cte fragment
+# --
+
+        WITH ${1:cte_name} AS
+(
+
+)
+SELECT $0
+FROM $1
+#+end_src
+
 ** Function
 
 *** [ctif] Create Inline Table Function
@@ -211,6 +407,80 @@ $0
 DROP INDEX $0
 #+end_src
 
+** Join fragment
+
+*** [cj] Cross Join
+
+#+begin_src sql :tangle snippets/sql-mode/cj.yasnippet
+# name: CROSS JOIN fragment
+# --
+CROSS JOIN $0
+#+end_src
+
+*** [fj] Full Join
+
+#+begin_src sql :tangle snippets/sql-mode/fj.yasnippet
+# name: FULL JOIN fragment
+# --
+FULL JOIN $0
+#+end_src
+
+*** [foj] Full Outer Join
+
+#+begin_src sql :tangle snippets/sql-mode/foj.yasnippet
+# name: FULL OUTER JOIN fr...
+# --
+FULL OUTER JOIN $0
+#+end_src
+
+*** [ij] Inner Join
+
+#+begin_src sql :tangle snippets/sql-mode/ij.yasnippet
+# name: INNER JOIN fragment
+# --
+INNER JOIN $0
+#+end_src
+
+*** [j] Join
+
+#+begin_src sql :tangle snippets/sql-mode/j.yasnippet
+# name: JOIN fragment
+# --
+JOIN $0
+#+end_src
+
+*** [lj] Left Join
+
+#+begin_src sql :tangle snippets/sql-mode/lj.yasnippet
+# name: LEFT JOIN fragment
+# --
+LEFT JOIN $0
+#+end_src
+
+*** [loj] Left Outer Join
+
+#+begin_src sql :tangle snippets/sql-mode/loj.yasnippet
+# name: LEFT OUTER JOIN fr...
+# --
+LEFT OUTER JOIN $0
+#+end_src
+
+*** [rj] Right Join
+
+#+begin_src sql :tangle snippets/sql-mode/rj.yasnippet
+# name: RIGHT JOIN fragment
+# --
+RIGHT JOIN $0
+#+end_src
+
+*** [roj] Right Outer Join
+
+#+begin_src sql :tangle snippets/sql-mode/roj.yasnippet
+# name: RIGHT OUTER JOIN f...
+# --
+RIGHT OUTER JOIN $0
+#+end_src
+
 ** Login
 
 *** [cl] Create SQL Authentication Login
@@ -258,6 +528,8 @@ DROP LOGIN $0
 
 ** Role
 
+*** Create Role
+
 Create Database Role.
 
 #+begin_src sql
@@ -266,10 +538,38 @@ CREATE ROLE ${1:RoleName}$0
 
 ** Schema
 
+*** Create Schema
+
 Create a database schema.
 
 #+begin_src sql
 CREATE SCHEMA ${1:schema}$0
+#+end_src
+
+** Set options
+
+*** [san] Set ANSI_NULLS
+
+#+begin_src sql :tangle snippets/sql-mode/san.yasnippet
+# name: Change the current A...
+# --
+SET ANSI_NULLS ON$0
+#+end_src
+
+*** [sqi] Set QUOTED_IDENTIFIER
+
+#+begin_src sql :tangle snippets/sql-mode/sqi.yasnippet
+# name: Change the current ...
+# --
+SET QUOTED_IDENTIFIER ON$0
+#+end_src
+
+*** [sxa] Set XACT_ABORT
+
+#+begin_src sql :tangle snippets/sql-mode/sxa.yasnippet
+# name: Change the current X...
+# --
+SET XACT_ABORT OFF$0
 #+end_src
 
 ** Stored Procedure
@@ -418,6 +718,32 @@ GO
 # name: Drop table
 # --
 DROP TABLE $0
+#+end_src
+
+** Transaction
+
+*** [bt] Begin Transaction
+
+#+begin_src sql :tangle snippets/sql-mode/bt.yasnippet
+# name: Begin transaction
+# --
+BEGIN TRANSACTION $0
+#+end_src
+
+*** [ctr] Commit Transaction
+
+#+begin_src sql :tangle snippets/sql-mode/ctr.yasnippet
+# name: Commit transaction
+# --
+COMMIT TRANSACTION $0
+#+end_src
+
+*** [rt] Rollback Transaction
+
+#+begin_src sql :tangle snippets/sql-mode/rt.yasnippet
+# name: Rollback transaction
+# --
+ROLLBACK TRANSACTION $0
 #+end_src
 
 ** Trigger
@@ -570,263 +896,7 @@ GO
 DROP VIEW $0
 #+end_src
 
-** ---------------------------------------------------------
-
-** Database
-
-*** [cdb] Create DataBase
-
-#+begin_src sql :tangle snippets/sql-mode/cdb.yasnippet
-# name: Create database
-# --
-CREATE DATABASE ${1:database_name}
-ON
-PRIMARY ( -- or use FILEGROUP filegroup_name
-  NAME = $1_data,
-  FILENAME = '$1.mdf'
-) --, and repeat as required
-LOG ON
-(
-  NAME = $1_log,
-  FILENAME = '$1.ldf'
-) --, and repeat as required
---COLLATE collation_name
---WITH
---  DB_CHAINING ON/OFF
---  TRUSTWORTHY ON/OFF
---FOR LOAD
---FOR ATTACH
---WITH
---  ENABLE_BROKER
---  NEW_BROKER
---  ERROR_BROKER_CONVERSATIONS
---FOR ATTACH_REBUILD_LOG
-GO
-#+end_src
-
-*** [cdbsnap] Create DataBase Snapshot
-
-#+begin_src sql :tangle snippets/sql-mode/cdbsnap.yasnippet
-# name: Create database sna...
-# --
-CREATE DATABASE ${2:database_name} 
-ON 
-    (
-    NAME = $2_data,
-    FILENAME = '$2.ss'
-    )
-AS SNAPSHOT OF ${1:source_database}
-GO$0
-#+end_src
-
-*** [dd] Drop Database
-
-#+begin_src sql :tangle snippets/sql-mode/dd.yasnippet
-# name: Drop database
-# --
-DROP DATABASE $0
-#+end_src
-
-** Insert
-
-*** [ii] Insert Into
-
-#+begin_src sql :tangle snippets/sql-mode/ii.yasnippet
-# name: INSERT INTO fragment
-# --
-INSERT INTO $0
-#+end_src
-
-** Select
-
-*** [ssf] Select Star From
-
-#+begin_src sql :tangle snippets/sql-mode/ssf.yasnippet
-# name: SELECT * FROM frag...
-# --
-SELECT * FROM $0
-#+end_src
-
-*** [st100] Select Top 100
-
-#+begin_src sql :tangle snippets/sql-mode/st100.yasnippet
-# name: SELECT top 100 rows
-# --
-SELECT TOP 100 * FROM $0
-#+end_src
-
-*** [scf] Select Count From
-
-#+begin_src sql :tangle snippets/sql-mode/scf.yasnippet
-# name: Count number of rec...
-# --
-SELECT COUNT(*) FROM $0
-#+end_src
-
-*** [mro] Most Recent Objects
-
-#+begin_src sql :tangle snippets/sql-mode/mro.yasnippet
-# name: Retrieve 20 most rec...
-# --
-SELECT TOP 20 [name], [type], crdate
-FROM sysobjects
-ORDER BY crdate DESC
-#+end_src
-
-*** [gb] Group By
-
-#+begin_src sql :tangle snippets/sql-mode/gb.yasnippet
-# name: GROUP BY fragment
-# --
-GROUP BY $0
-#+end_src
-
-*** [ob] Order By
-
-#+begin_src sql :tangle snippets/sql-mode/ob.yasnippet
-# name: ORDER BY fragment
-# --
-ORDER BY $0
-#+end_src
-
-** Join Fragments
-
-*** [cj] Cross Join
-
-#+begin_src sql :tangle snippets/sql-mode/cj.yasnippet
-# name: CROSS JOIN fragment
-# --
-CROSS JOIN $0
-#+end_src
-
-*** [fj] Full Join
-
-#+begin_src sql :tangle snippets/sql-mode/fj.yasnippet
-# name: FULL JOIN fragment
-# --
-FULL JOIN $0
-#+end_src
-
-*** [foj] Full Outer Join
-
-#+begin_src sql :tangle snippets/sql-mode/foj.yasnippet
-# name: FULL OUTER JOIN fr...
-# --
-FULL OUTER JOIN $0
-#+end_src
-
-*** [ij] Inner Join
-
-#+begin_src sql :tangle snippets/sql-mode/ij.yasnippet
-# name: INNER JOIN fragment
-# --
-INNER JOIN $0
-#+end_src
-
-*** [j] Join
-
-#+begin_src sql :tangle snippets/sql-mode/j.yasnippet
-# name: JOIN fragment
-# --
-JOIN $0
-#+end_src
-
-*** [lj] Left Join
-
-#+begin_src sql :tangle snippets/sql-mode/lj.yasnippet
-# name: LEFT JOIN fragment
-# --
-LEFT JOIN $0
-#+end_src
-
-*** [loj] Left Outer Join
-
-#+begin_src sql :tangle snippets/sql-mode/loj.yasnippet
-# name: LEFT OUTER JOIN fr...
-# --
-LEFT OUTER JOIN $0
-#+end_src
-
-*** [rj] Right Join
-
-#+begin_src sql :tangle snippets/sql-mode/rj.yasnippet
-# name: RIGHT JOIN fragment
-# --
-RIGHT JOIN $0
-#+end_src
-
-*** [roj] Right Outer Join
-
-#+begin_src sql :tangle snippets/sql-mode/roj.yasnippet
-# name: RIGHT OUTER JOIN f...
-# --
-RIGHT OUTER JOIN $0
-#+end_src
-
-** Transaction
-
-*** [bt] Begin Transaction
-
-#+begin_src sql :tangle snippets/sql-mode/bt.yasnippet
-# name: Begin transaction
-# --
-BEGIN TRANSACTION $0
-#+end_src
-
-*** [ctr] Commit TRansaction
-
-#+begin_src sql :tangle snippets/sql-mode/ctr.yasnippet
-# name: Commit transaction
-# --
-COMMIT TRANSACTION $0
-#+end_src
-
-*** [rt] Rollback Transaction
-
-#+begin_src sql :tangle snippets/sql-mode/rt.yasnippet
-# name: Rollback transaction
-# --
-ROLLBACK TRANSACTION $0
-#+end_src
-
-** Delete
-
-*** [df] Delete From
-
-#+begin_src sql :tangle snippets/sql-mode/df.yasnippet
-# name: DELETE FROM frag...
-# --
-DELETE FROM ${1:[schema].[table_name]} WHERE $0
-#+end_src
-
-** Cursor
-
-*** [curff] CURsor Fast-Forward
-
-#+begin_src sql :tangle snippets/sql-mode/curff.yasnippet
-# name: Fast-forward read-on...
-# --
-/* declare variables */
-DECLARE @variable INT
-
-DECLARE ${1:cursor_name} CURSOR FAST_FORWARD READ_ONLY FOR ${2:select_statement}
-
-OPEN $1
-
-FETCH NEXT FROM $1 INTO @variable
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-    $0
-
-    FETCH NEXT FROM $1 INTO @variable
-END
-
-CLOSE $1
-DEALLOCATE $1
-#+end_src
-
-** Stored Procedure
+** --- Miscellaneous ---
 
 *** [sph] sp_help
 
@@ -860,96 +930,22 @@ EXEC master..xp_fixeddrives
 EXEC sp_who2$0
 #+end_src
 
-** Set
-
-*** [sqi] Set QUOTED_IDENTIFIER
-
-#+begin_src sql :tangle snippets/sql-mode/sqi.yasnippet
-# name: Change the current ...
-# --
-SET QUOTED_IDENTIFIER ON$0
-#+end_src
-
-*** [sxa] Set XACT_ABORT
-
-#+begin_src sql :tangle snippets/sql-mode/sxa.yasnippet
-# name: Change the current X...
-# --
-SET XACT_ABORT OFF
-#+end_src
-
-*** [san] Set ANSI_NULLS
-
-#+begin_src sql :tangle snippets/sql-mode/san.yasnippet
-# name: Change the current A...
-# --
-SET ANSI_NULLS ON$0
-#+end_src
-
-** Other Fragments
-
-*** [be] Begin...End
-
-#+begin_src sql :tangle snippets/sql-mode/be.yasnippet
-# name: BEGIN...END block
-# --
-BEGIN
-    $0
-END
-#+end_src
-
-*** [ifs] If
-
-#+begin_src sql :tangle snippets/sql-mode/ifs.yasnippet
-# name: IF fragment
-# --
-IF 1 = 1
-BEGIN
-    $0
-END
-#+end_src
-
-*** [cte] Common Table Expression
-
-#+begin_src sql :tangle snippets/sql-mode/cte.yasnippet
-# name: WITH cte fragment
-# --
-
-        WITH ${1:cte_name} AS
-(
-
-)
-SELECT $0
-FROM $1
-#+end_src
-
-*** [is] INFORMATION_SCHEMA
-
-#+begin_src sql :tangle snippets/sql-mode/is.yasnippet
-# name: INFORMATION_SCH...
-# --
-INFORMATION_SCHEMA$0
-#+end_src
-
-*** [tc] Try ... Catch
-
-#+begin_src sql :tangle snippets/sql-mode/tc.yasnippet
-# name: TRY ... CATCH fragm...
-# --
-BEGIN TRY
-    
-END TRY
-BEGIN CATCH
-    $0
-END CATCH
-#+end_src
-
 *** [err] @@ERROR
 
 #+begin_src sql :tangle snippets/sql-mode/err.yasnippet
 # name: @@ERROR function ...
 # --
 @@ERROR$0
+#+end_src
+
+*** [mro] Most Recent Objects
+
+#+begin_src sql :tangle snippets/sql-mode/mro.yasnippet
+# name: Retrieve 20 most rec...
+# --
+SELECT TOP 20 [name], [type], crdate
+FROM sysobjects
+ORDER BY crdate DESC
 #+end_src
 
 * Surround With...
