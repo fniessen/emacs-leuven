@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161002.2300
+;; Version: 20161003.0028
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161002.2300"
+(defconst leuven--emacs-version "20161003.0028"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2544,6 +2544,29 @@ Should be selected from `fringe-bitmaps'.")
     ;; ;; `completing-read' or `read-file-name' and friends).
     ;; (helm-mode 1)
     )
+
+(eval-after-load 'helm
+  '(progn
+     (set-face-attribute 'helm-source-header nil :height 1.0 :background nil)
+     (helm-autoresize-mode)
+     (defvar helm-source-header-default-background (face-attribute 'helm-source-header :background))
+     (defvar helm-source-header-default-foreground (face-attribute 'helm-source-header :foreground))
+     (defvar helm-source-header-default-box (face-attribute 'helm-source-header :box))
+     (defun helm-toggle-header-line ()
+       (if (> (length helm-sources) 1)
+           (set-face-attribute 'helm-source-header
+                               nil
+                               :foreground helm-source-header-default-foreground
+                               :background helm-source-header-default-background
+                               :box helm-source-header-default-box
+                               :height 1.0)
+         (set-face-attribute 'helm-source-header
+                             nil
+                             :foreground (face-attribute 'helm-selection :background)
+                             :background (face-attribute 'helm-selection :background)
+                             :box nil
+                             :height 0.1)))
+     (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)))
 
   (with-eval-after-load "helm-files"
 
@@ -7033,9 +7056,15 @@ mouse-3: go to end") "]")))
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
+  ;; Check for unbalanced parentheses in the current buffer.
+  (dolist (mode '(emacs-lisp clojure js2 js))
+    (add-hook (intern (format "%s-mode-hook" mode))
+              (lambda ()
+                (add-hook 'after-save-hook 'check-parens nil t))))
+
   ;; Move cursor to offscreen open-paren when close-paren is inserted.
   (setq blink-matching-paren 'jump-offscreen) ; Doesn't work when
-                                              ; ‘show-paren-mode’ is enabled.
+                                              ; `show-paren-mode' is enabled.
 
   ;; Highlight matching paren.
   (show-paren-mode 1)
@@ -7427,13 +7456,26 @@ mouse-3: go to end") "]")))
   ;;           (run-at-time 0.5 nil 'delete-windows-on buf)
   ;;           (message "NO COMPILATION ERRORS!"))))
 
-  (defun cc-goto-first-error( buffer exit-condition )
-    (with-current-buffer buffer
-      (goto-char (point-min))
-      (compilation-next-error 1)
-      (beep)))
+  ;; (defun cc-goto-first-error (buffer exit-condition)
+  ;;   (with-current-buffer buffer
+  ;;     (goto-char (point-min))
+  ;;     (compilation-next-error 1)
+  ;;     (beep)))
+  ;; 
+  ;; (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
 
-  (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
+  (defun compile-scroll-eob (buffer _status)
+    (let ((win (get-buffer-window buffer))
+          (current (selected-window)))
+      (when win
+        (select-window win)
+        (with-current-buffer buffer
+          (when (> (line-number-at-pos (point-max)) (window-height))
+            (goto-char (point-max))
+            (recenter (window-height))))
+        (select-window current))))
+
+  (add-to-list 'compilation-finish-functions 'compile-scroll-eob)
 
   (defvar make-clean-command "make clean all"
     "*Command used by the `make-clean' function.")
@@ -8235,18 +8277,18 @@ a clean buffer we're an order of magnitude laxer about checking."
           '(;; Searching the current buffer.
             try-expand-dabbrev
 
+            ;; Emacs Lisp symbol, as many characters as unique.
+            try-complete-lisp-symbol-partially
+
+            ;; Emacs Lisp symbol.
+            try-complete-lisp-symbol
+
             ;; Searching visible window parts.
             try-expand-dabbrev-visible
 
             ;; ;; Searching (almost) all other buffers (see
             ;; ;; `hippie-expand-ignore-buffers').
             ;; try-expand-dabbrev-all-buffers
-
-            ;; Emacs Lisp symbol, as many characters as unique.
-            try-complete-lisp-symbol-partially
-
-            ;; Emacs Lisp symbol.
-            try-complete-lisp-symbol
 
             ;; File name, as many characters as unique.
             try-complete-file-name-partially
@@ -8372,9 +8414,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
-
-    (global-set-key (kbd "C-/") #'company-complete-common)
-    (global-set-key (kbd "C-/") #'helm-company) ; ?
+    ;; (global-set-key (kbd "C-/") #'helm-company) ; ?
 
     (global-set-key (kbd "C-c y") #'company-yasnippet)
                                         ; Better than `helm-yas-complete' as

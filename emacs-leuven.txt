@@ -4591,6 +4591,31 @@ See helm-flycheck!
     )
 #+end_src
 
+#+begin_src emacs-lisp
+(eval-after-load 'helm
+  '(progn
+     (set-face-attribute 'helm-source-header nil :height 1.0 :background nil)
+     (helm-autoresize-mode)
+     (defvar helm-source-header-default-background (face-attribute 'helm-source-header :background))
+     (defvar helm-source-header-default-foreground (face-attribute 'helm-source-header :foreground))
+     (defvar helm-source-header-default-box (face-attribute 'helm-source-header :box))
+     (defun helm-toggle-header-line ()
+       (if (> (length helm-sources) 1)
+           (set-face-attribute 'helm-source-header
+                               nil
+                               :foreground helm-source-header-default-foreground
+                               :background helm-source-header-default-background
+                               :box helm-source-header-default-box
+                               :height 1.0)
+         (set-face-attribute 'helm-source-header
+                             nil
+                             :foreground (face-attribute 'helm-selection :background)
+                             :background (face-attribute 'helm-selection :background)
+                             :box nil
+                             :height 0.1)))
+     (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)))
+#+end_src
+
 **** Helm find files
 
 ~helm-find-files~ is powerful because:
@@ -4929,8 +4954,13 @@ A few demos:
   a `helm-projectile` command.
 
 #+begin_src emacs-lisp :tangle no
-;; Always ignore .class files.
-(add-to-list 'projectile-globally-ignored-file-suffixes ".class")
+  ;; (global-set-key (kbd "C-;") #'helm-projectile)
+
+  (with-eval-after-load "projectile"
+    (define-key projectile-mode-map (kbd "C-c C-j") 'projectile-find-file))
+
+  ;; Always ignore .class files.
+  (add-to-list 'projectile-globally-ignored-file-suffixes ".class")
 #+end_src
 
 **** Lisp completion
@@ -11670,9 +11700,15 @@ things.
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
+  ;; Check for unbalanced parentheses in the current buffer.
+  (dolist (mode '(emacs-lisp clojure js2 js))
+    (add-hook (intern (format "%s-mode-hook" mode))
+              (lambda ()
+                (add-hook 'after-save-hook 'check-parens nil t))))
+
   ;; Move cursor to offscreen open-paren when close-paren is inserted.
   (setq blink-matching-paren 'jump-offscreen) ; Doesn't work when
-                                              ; ‘show-paren-mode’ is enabled.
+                                              ; `show-paren-mode' is enabled.
 
   ;; Highlight matching paren.
   (show-paren-mode 1)
@@ -12659,13 +12695,26 @@ XXX Compiling with ~ant~?
   ;;           (run-at-time 0.5 nil 'delete-windows-on buf)
   ;;           (message "NO COMPILATION ERRORS!"))))
 
-  (defun cc-goto-first-error( buffer exit-condition )
-    (with-current-buffer buffer
-      (goto-char (point-min))
-      (compilation-next-error 1)
-      (beep)))
+  ;; (defun cc-goto-first-error (buffer exit-condition)
+  ;;   (with-current-buffer buffer
+  ;;     (goto-char (point-min))
+  ;;     (compilation-next-error 1)
+  ;;     (beep)))
+  ;; 
+  ;; (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
 
-  (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
+  (defun compile-scroll-eob (buffer _status)
+    (let ((win (get-buffer-window buffer))
+          (current (selected-window)))
+      (when win
+        (select-window win)
+        (with-current-buffer buffer
+          (when (> (line-number-at-pos (point-max)) (window-height))
+            (goto-char (point-max))
+            (recenter (window-height))))
+        (select-window current))))
+
+  (add-to-list 'compilation-finish-functions 'compile-scroll-eob)
 
   (defvar make-clean-command "make clean all"
     "*Command used by the `make-clean' function.")
@@ -14352,10 +14401,10 @@ binding of ~M-/~) providing one of the expansion possibilities.
   (global-set-key (kbd "M-/") #'hippie-expand) ; Built-in.
 #+end_src
 
-#+begin_note
+#+begin_tip
 Would we want to bind ~hippie-expand~ on TAB, we should have to write a ~smart-tab~
 command which would look if the major mode is Org and then act differently...
-#+end_note
+#+end_tip
 
 # (use-package hippie
 #   :load-path "vendor"
@@ -14373,6 +14422,12 @@ command which would look if the major mode is Org and then act differently...
           '(;; Searching the current buffer.
             try-expand-dabbrev
 
+            ;; Emacs Lisp symbol, as many characters as unique.
+            try-complete-lisp-symbol-partially
+
+            ;; Emacs Lisp symbol.
+            try-complete-lisp-symbol
+
             ;; Searching visible window parts.
             try-expand-dabbrev-visible
 
@@ -14380,18 +14435,15 @@ command which would look if the major mode is Org and then act differently...
             ;; ;; `hippie-expand-ignore-buffers').
             ;; try-expand-dabbrev-all-buffers
 
-            ;; Emacs Lisp symbol, as many characters as unique.
-            try-complete-lisp-symbol-partially
-
-            ;; Emacs Lisp symbol.
-            try-complete-lisp-symbol
-
             ;; File name, as many characters as unique.
             try-complete-file-name-partially
 
             ;; File name.
             try-complete-file-name))
 #+end_src
+
+See https://github.com/dgutov/dot-emacs/blob/master/site-lisp/hippie.el for
+a local var version of ~hippie-expand-try-functions-list~ for Emacs Lisp.
 
 Configure Hippie-expand to also expand YASnippets (on the key used by
 ~hippie-expand~, then).
@@ -14643,9 +14695,7 @@ completions and filter as well.
 
     (global-set-key (kbd "<C-tab>") #'company-complete)
     (global-set-key (kbd "C-/") #'company-complete)
-
-    (global-set-key (kbd "C-/") #'company-complete-common)
-    (global-set-key (kbd "C-/") #'helm-company) ; ?
+    ;; (global-set-key (kbd "C-/") #'helm-company) ; ?
 
     (global-set-key (kbd "C-c y") #'company-yasnippet)
                                         ; Better than `helm-yas-complete' as
