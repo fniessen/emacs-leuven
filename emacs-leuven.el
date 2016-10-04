@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161003.2354
+;; Version: 20161004.2137
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161003.2354"
+(defconst leuven--emacs-version "20161004.2137"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7199,17 +7199,13 @@ mouse-3: go to end") "]")))
   (with-eval-after-load "hideshow"
 
     ;; Change those really awkward key bindings with `@' in the middle.
-    (define-key hs-minor-mode-map (kbd "H--") #'hs-hide-block)
-    (define-key hs-minor-mode-map (kbd "<H-left>") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>") #'hs-hide-block)
                                         ; `C-c @ C-h' (collapse current fold)
-    (define-key hs-minor-mode-map (kbd "H-+") #'hs-show-block)
-    (define-key hs-minor-mode-map (kbd "<H-right>") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "<C-kp-add>") #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold)
-    (define-key hs-minor-mode-map (kbd "H-/") #'hs-hide-all)
-    (define-key hs-minor-mode-map (kbd "<H-up>") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
                                         ; `C-c @ C-M-h' (collapse all folds)
-    (define-key hs-minor-mode-map (kbd "H-*") #'hs-show-all)
-    (define-key hs-minor-mode-map (kbd "<H-down>") #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>") #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds)
 
     (defcustom hs-face 'hs-face
