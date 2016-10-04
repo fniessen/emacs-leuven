@@ -2136,34 +2136,34 @@ Prior to running their own mode hooks,
 - all programming language modes run ~prog-mode-hook~.
 
 XXX Try to get Org TODO overriding the TODO defined in
-leuven-highlight-keywords, so that only one expression can be used for *all* modes!
+leuven-highlight-todo-items, so that only one expression can be used for *all* modes!
 
 #+begin_src emacs-lisp
   ;; Highlight FIXME notes.
-  (defvar leuven-highlight-keywords
-    "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"
-    "Patterns to highlight.")
+  (defvar leuven-highlight-todo-items
+    "\\(TODO\\|FIXME\\|XXX\\)"
+    "TODO patterns to highlight.")
 
-  (defvar leuven-highlight-keywords-in-org
-    "\\(FIXME\\|XXX\\|BUG\\)"
-    "Patterns to highlight (for Org mode only).
+  (defvar leuven-highlight-todo-items-in-org
+    "\\(FIXME\\|XXX\\)"
+    "TODO patterns to highlight (for Org mode only).
   The goal is to ensure no conflict with the Org mode TODO keyword.")
 
-  (defface leuven-highlight-face
-    '((t (:foreground "#CC0000" :background "#FFFF88")))
-    "Face for making FIXME and other warnings stand out.")
+  (defface leuven-highlight-todo-items-face
+    '((t (:weight bold :foreground "#FF3125" :background "#FFFF88")))
+    "Face for making TODO items stand out.")
 
   ;; Add highlighting keywords for selected major modes only.
   (dolist (mode '(fundamental-mode
                   text-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+     `((,leuven-highlight-todo-items 1 'leuven-highlight-todo-items-face prepend))
      'end))
 
   ;; Add highlighting keywords for Org mode only.
   (dolist (mode '(org-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))
+     `((,leuven-highlight-todo-items-in-org 1 'leuven-highlight-todo-items-face prepend))
      'end))
 
   ;; Add highlighting keywords for selected major modes *and* all major modes
@@ -2177,7 +2177,7 @@ leuven-highlight-keywords, so that only one expression can be used for *all* mod
     (add-hook hook
      (lambda ()
        (font-lock-add-keywords nil      ; In the current buffer.
-        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
+        `((,leuven-highlight-todo-items 1 'leuven-highlight-todo-items-face prepend)) 'end))))
         ;; FIXME                      0                        t          t
 #+end_src
 
@@ -12094,6 +12094,17 @@ many programming modes.
 It's more or less a convention that each language mode binds its symbol
 completion command (~completion-at-point~) to ~<M-tab>~.
 
+#+begin_note
+If Semantic mode is enabled, it tries to use the *Semantic parser data* for
+completion.
+
+If Semantic mode is not enabled or fails at performing completion, it tries to
+complete using the *selected tags table*.
+
+If in Emacs Lisp mode, it performs completion using the function, variable, or
+property names defined in the current Emacs session.
+#+end_note
+
 Note that ~<M-tab>~ is used by many window managers themselves (typically for
 switching between windows) and is not passed to applications.
 
@@ -12454,7 +12465,7 @@ Tern is a stand-alone *code analyzer* for JavaScript.  Features provided are:
 The following additional keys are bound:
 
 - M-. ::
-     Jump to the definition of the thing under the cursor.
+     *Jump to* the *definition* of the thing under the cursor.
 
 - M-, ::
      Brings you back to last place you were when you pressed ~M-.~.
@@ -12624,10 +12635,10 @@ The best thing out there is sql-indent.el
 Which doesn't do auto-indenting only on command indentation.
 I have found it pretty useful at times.
 
-*** SQL Capitalize
+*** Word case
 
-For capitalizing reserved SQL words (see general well-known [[http://stackoverflow.com/questions/522356/what-sql-coding-standard-do-you-follow][coding standards]] and
-styles for SQL), I have some ~abbrev~ definitions.
+For automatically converting SQL *keywords to* the *upper case* (see general
+well-known [[http://stackoverflow.com/questions/522356/what-sql-coding-standard-do-you-follow][coding standards]] and styles for SQL), I have some ~abbrev~ definitions.
 
 Here is a short example just to show you (not including all reserved SQL words):
 
@@ -14105,6 +14116,11 @@ XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-con
   (leuven--section "29.3 Controlling Expanding Abbrevs")
 #+end_src
 
+Predefined YASnippet variables:
+- ~$0~ indicates the position of the cursor after the template is expanded.
+- ~`yas-selected-text`~ is used in *surround templates* and stands for the code
+  fragment to be wrapped.
+
 *** Installation
 
 #+begin_src emacs-lisp
@@ -14542,9 +14558,9 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
   (with-eval-after-load "auto-complete"
                                         ; Required by ESS.
 
-    ;; ;; 5.4 Completion will be started automatically by inserting 2 characters.
-    ;; (setq ac-auto-start 2)              ; Also applies on arguments after opening
-    ;;                                     ; parenthesis in ESS.
+    ;; 5.4 Completion will be started automatically by inserting 2 characters.
+    (setq ac-auto-start 1)              ; Also applies on arguments after
+                                        ; opening parenthesis in ESS.
 
     ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
@@ -14729,7 +14745,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 
 #+begin_src emacs-lisp
     ;; Minimum prefix length for idle completion.
-    (setq company-minimum-prefix-length 2)
+    (setq company-minimum-prefix-length 1)
 
     ;; Start completion immediately.
     (setq company-idle-delay 0)

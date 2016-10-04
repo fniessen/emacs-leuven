@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161003.0028
+;; Version: 20161003.2354
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161003.0028"
+(defconst leuven--emacs-version "20161003.2354"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1135,30 +1135,30 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "14.12 (emacs)Font Lock")
 
   ;; Highlight FIXME notes.
-  (defvar leuven-highlight-keywords
-    "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"
-    "Patterns to highlight.")
+  (defvar leuven-highlight-todo-items
+    "\\(TODO\\|FIXME\\|XXX\\)"
+    "TODO patterns to highlight.")
 
-  (defvar leuven-highlight-keywords-in-org
-    "\\(FIXME\\|XXX\\|BUG\\)"
-    "Patterns to highlight (for Org mode only).
+  (defvar leuven-highlight-todo-items-in-org
+    "\\(FIXME\\|XXX\\)"
+    "TODO patterns to highlight (for Org mode only).
   The goal is to ensure no conflict with the Org mode TODO keyword.")
 
-  (defface leuven-highlight-face
-    '((t (:foreground "#CC0000" :background "#FFFF88")))
-    "Face for making FIXME and other warnings stand out.")
+  (defface leuven-highlight-todo-items-face
+    '((t (:weight bold :foreground "#FF3125" :background "#FFFF88")))
+    "Face for making TODO items stand out.")
 
   ;; Add highlighting keywords for selected major modes only.
   (dolist (mode '(fundamental-mode
                   text-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend))
+     `((,leuven-highlight-todo-items 1 'leuven-highlight-todo-items-face prepend))
      'end))
 
   ;; Add highlighting keywords for Org mode only.
   (dolist (mode '(org-mode))
     (font-lock-add-keywords mode
-     `((,leuven-highlight-keywords-in-org 1 'leuven-highlight-face prepend))
+     `((,leuven-highlight-todo-items-in-org 1 'leuven-highlight-todo-items-face prepend))
      'end))
 
   ;; Add highlighting keywords for selected major modes *and* all major modes
@@ -1172,7 +1172,7 @@ These packages are neither built-in nor already installed nor ignored."
     (add-hook hook
      (lambda ()
        (font-lock-add-keywords nil      ; In the current buffer.
-        `((,leuven-highlight-keywords 1 'leuven-highlight-face prepend)) 'end))))
+        `((,leuven-highlight-todo-items 1 'leuven-highlight-todo-items-face prepend)) 'end))))
         ;; FIXME                      0                        t          t
 
   ;; Just-in-time fontification.
@@ -8319,9 +8319,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "auto-complete"
                                         ; Required by ESS.
 
-    ;; ;; 5.4 Completion will be started automatically by inserting 2 characters.
-    ;; (setq ac-auto-start 2)              ; Also applies on arguments after opening
-    ;;                                     ; parenthesis in ESS.
+    ;; 5.4 Completion will be started automatically by inserting 2 characters.
+    (setq ac-auto-start 1)              ; Also applies on arguments after
+                                        ; opening parenthesis in ESS.
 
     ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
@@ -8437,7 +8437,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;;                              company-sort-by-backend-importance))
 
     ;; Minimum prefix length for idle completion.
-    (setq company-minimum-prefix-length 2)
+    (setq company-minimum-prefix-length 1)
 
     ;; Start completion immediately.
     (setq company-idle-delay 0)
