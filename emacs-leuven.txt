@@ -872,6 +872,7 @@ like this into your configuration file:
                                       rainbow-mode
                                       ;; redshank
                                       skewer-mode
+                                      sqlup-mode
                                       tern
                                       tidy
                                       smart-comment
@@ -2460,14 +2461,27 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
 
 #+begin_src emacs-lisp
   ;; Unobtrusively remove trailing whitespace.
-  (with-eval-after-load "ws-butler-autoloads-XXX" ; Temporarily disabled because
-                                                  ; of indentation replaced by
-                                                  ; spaces.
-
+  (with-eval-after-load "ws-butler-autoloads"
     (add-hook 'text-mode-hook #'ws-butler-mode)
     (add-hook 'prog-mode-hook #'ws-butler-mode))
 
   (with-eval-after-load "ws-butler"
+
+    ;; Remove all tab/space indent conversion.
+    (defun ws-butler-clean-region (beg end)
+      "Delete trailing blanks in region BEG END."
+      (interactive "*r")
+      (ws-butler-with-save
+       (narrow-to-region beg end)
+       ;;  _much slower would be:       (replace-regexp "[ \t]+$" "")
+       (goto-char (point-min))
+       (while (not (eobp))
+         (end-of-line)
+         (delete-horizontal-space)
+         (forward-line 1)))
+      ;; clean return code for hooks
+      nil)
+
     (diminish 'ws-butler-mode))
 #+end_src
 
@@ -6200,12 +6214,6 @@ a factor 2!?
 
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
-
-    (with-eval-after-load "hideshow"    ; Package.
-      ;; (key-chord-define hs-minor-mode-map "--" #'hs-hide-block) ; Not autoloaded. That's SQL comment marker!
-      (key-chord-define hs-minor-mode-map "++" #'hs-show-block) ; Not autoloaded.
-      ;; (key-chord-define hs-minor-mode-map "//" #'hs-hide-all) ; Not autoloaded. That's Java comment marker!
-      (key-chord-define hs-minor-mode-map "**" #'hs-show-all)) ; Not autoloaded.
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
@@ -11799,7 +11807,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
 - *smartparens*
 
   Pair can be simple as parentheses or brackets, or can be programming tokens
-  such as ~if~ ... ~fi~ or ~if~ ... ~end~ in many languages.
+  such as ~if~ ... ~fi~ or ~if~ ... ~end~ in many languages (see face
+  ~sp-show-pair-match-face~).
 
   If you get into any serious lisp coding, check out ~paredit~ -- it forces you to
   always have balanced brackets in the file, thus avoiding a whole class of
@@ -12631,18 +12640,17 @@ The best thing out there is sql-indent.el
 Which doesn't do auto-indenting only on command indentation.
 I have found it pretty useful at times.
 
+*** https://www.emacswiki.org/emacs/SqlBeautify
+
 *** Word case
 
-For automatically converting SQL *keywords to* the *upper case* (see general
-well-known [[http://stackoverflow.com/questions/522356/what-sql-coding-standard-do-you-follow][coding standards]] and styles for SQL), I have some ~abbrev~ definitions.
+Automatically convert SQL *keywords to* the *upper case* (see general well-known
+[[http://stackoverflow.com/questions/522356/what-sql-coding-standard-do-you-follow][coding standards]] and styles for SQL).
 
-Here is a short example just to show you (not including all reserved SQL words):
-
-#+begin_src emacs-lisp :tangle no
-  (define-abbrev-table 'sql-mode abbrev-table
-  (mapcar #'(lambda (v) (list v (upcase v) nil 1))
-          '("absolute" "action" "add" "after" "all" "allocate" "alter" "and"
-            "any" "are" "array" "as" "asc" "asensitive")))
+#+begin_src emacs-lisp
+  (with-eval-after-load "sqlup-mode-autoloads"
+    (add-hook 'sql-mode-hook 'sqlup-mode)
+    (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
 #+end_src
 
 *** SQL Remove Square Brackets

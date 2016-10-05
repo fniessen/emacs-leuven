@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161004.2137
+;; Version: 20161005.2335
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161004.2137"
+(defconst leuven--emacs-version "20161005.2335"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -451,6 +451,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                                       rainbow-mode
                                       ;; redshank
                                       skewer-mode
+                                      sqlup-mode
                                       tern
                                       tidy
                                       smart-comment
@@ -1297,14 +1298,27 @@ Should be selected from `fringe-bitmaps'.")
   ;; (setq-default show-trailing-whitespace t)
 
   ;; Unobtrusively remove trailing whitespace.
-  (with-eval-after-load "ws-butler-autoloads-XXX" ; Temporarily disabled because
-                                                  ; of indentation replaced by
-                                                  ; spaces.
-
+  (with-eval-after-load "ws-butler-autoloads"
     (add-hook 'text-mode-hook #'ws-butler-mode)
     (add-hook 'prog-mode-hook #'ws-butler-mode))
 
   (with-eval-after-load "ws-butler"
+
+    ;; Remove all tab/space indent conversion.
+    (defun ws-butler-clean-region (beg end)
+      "Delete trailing blanks in region BEG END."
+      (interactive "*r")
+      (ws-butler-with-save
+       (narrow-to-region beg end)
+       ;;  _much slower would be:       (replace-regexp "[ \t]+$" "")
+       (goto-char (point-min))
+       (while (not (eobp))
+         (end-of-line)
+         (delete-horizontal-space)
+         (forward-line 1)))
+      ;; clean return code for hooks
+      nil)
+
     (diminish 'ws-butler-mode))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
@@ -3520,12 +3534,6 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
-
-    (with-eval-after-load "hideshow"    ; Package.
-      ;; (key-chord-define hs-minor-mode-map "--" #'hs-hide-block) ; Not autoloaded. That's SQL comment marker!
-      (key-chord-define hs-minor-mode-map "++" #'hs-show-block) ; Not autoloaded.
-      ;; (key-chord-define hs-minor-mode-map "//" #'hs-hide-all) ; Not autoloaded. That's Java comment marker!
-      (key-chord-define hs-minor-mode-map "**" #'hs-show-all)) ; Not autoloaded.
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
@@ -7414,6 +7422,10 @@ mouse-3: go to end") "]")))
     (add-hook 'js2-mode-hook 'skewer-mode)
     (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode))
+
+  (with-eval-after-load "sqlup-mode-autoloads"
+    (add-hook 'sql-mode-hook 'sqlup-mode)
+    (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
 
 )                                       ; Chapter 26 ends here.
 
