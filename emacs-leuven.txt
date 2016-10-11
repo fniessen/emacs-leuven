@@ -142,6 +142,36 @@ au démarrage d'Emacs...
   (format "%ss" (time-to-seconds (time-subtract (current-time) time))))
 #+end_src
 
+** TODO Profile code performance
+
+In case this helps anyone, I've found this code makes profiling a lot
+easier.  It automatically instruments the desired functions, runs the
+code you want to test, removes the instrumentation, and presents the
+results.
+
+#+BEGIN_SRC elisp
+  (defmacro profile-org (times &rest body)
+    `(let (output)
+       (dolist (p '("org-"))  ; symbol prefixes to instrument
+         (elp-instrument-package p))
+       (dotimes (x ,times)
+         ,@body)
+       (elp-results)
+       (elp-restore-all)
+       (point-min)
+       (forward-line 20)
+       (delete-region (point) (point-max))
+       (setq output (buffer-substring-no-properties (point-min) (point-max)))
+       (kill-buffer)
+       (delete-window)
+       output))
+
+  ;; Used like this:
+  (profile-org 10
+    (org-table-next-field)
+    (org-table-align))
+#+END_SRC
+
 ** TODO Update setcdr assoc constructs
 
 : (setcdr (assoc value alist) new-value)
@@ -11554,7 +11584,7 @@ See an example in SQL Server Management Studio
 ** Major Modes for Programming Languages
 
 Have a look at:
-- [[http://cedet.sourceforge.net][CEDET]] for development in AWK, C/C++, C#, Calc, Erlang, Java, Javascript, Make,
+- [[http://cedet.sourceforge.net][CEDET]] for development in AWK, C/C++, C#, Calc, Erlang, Java, JavaScript, Make,
   PHP, Python, Ruby and Scheme,
 - [[http://common-lisp.net/project/slime][SLIME]] for Common Lisp development,
 - JDEE for Java programs.
@@ -12390,7 +12420,7 @@ http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functio
 
 #+begin_src emacs-lisp
     ;; Color defined variables.
-    (when (locate-library "color-identifiers-mode")
+    (with-eval-after-load "color-identifiers-mode-autoloads"
       (add-hook 'js2-mode-hook 'color-identifiers-mode))
 #+end_src
 
@@ -12580,7 +12610,7 @@ List of available *refactorings*:
 
 *** Skewer: live web development with Emacs
 
-Skewer lets you send HTML, CSS, and Javascript fragments to a browser.
+Skewer lets you send HTML, CSS, and JavaScript fragments to a browser.
 
 #+begin_tip
 You may need to start Chrome with ~chrome --allow-running-insecure-content~, if
@@ -12609,7 +12639,7 @@ Kick things off with ~run-skewer~, and then:
 #+end_src
 
 #+begin_src emacs-lisp
-  (when (locate-library "skewer-mode")
+  (with-eval-after-load "skewer-mode-autoloads-XXX" ; Not using it yet.
     (add-hook 'js2-mode-hook 'skewer-mode)
     (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode))
@@ -13058,7 +13088,7 @@ a clean buffer we're an order of magnitude laxer about checking."
               #'leuven--adjust-flycheck-automatic-syntax-eagerness)
 
     ;; Change mode line color with Flycheck status.
-    (when (locate-library "flycheck-color-mode-line")
+    (with-eval-after-load "flycheck-color-mode-line"
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 #+end_src
 
@@ -14084,7 +14114,7 @@ really like this.
     (define-key prog-mode-map (kbd "M-RET") #'emr-show-refactor-menu))
 #+end_src
 
-* Abbrevs
+* Abbrevs (Auto Replacements)
 
 An "abbrev" is a *word* which has been defined (in a fixed list) to "expand"
 into a specified *expansion*.

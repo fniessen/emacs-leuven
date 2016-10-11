@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161005.2335
+;; Version: 20161011.1257
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161005.2335"
+(defconst leuven--emacs-version "20161011.1257"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7360,7 +7360,7 @@ mouse-3: go to end") "]")))
                                            (js2-node-abs-pos methods)))))))))
 
     ;; Color defined variables.
-    (when (locate-library "color-identifiers-mode")
+    (with-eval-after-load "color-identifiers-mode-autoloads"
       (add-hook 'js2-mode-hook 'color-identifiers-mode))
 
     ;; JS-comint.
@@ -7418,7 +7418,7 @@ mouse-3: go to end") "]")))
 ;; (require 'css-mode)
 ;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
 
-  (when (locate-library "skewer-mode")
+  (with-eval-after-load "skewer-mode-autoloads-XXX" ; Not using it yet.
     (add-hook 'js2-mode-hook 'skewer-mode)
     (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode))
@@ -7668,7 +7668,7 @@ a clean buffer we're an order of magnitude laxer about checking."
               #'leuven--adjust-flycheck-automatic-syntax-eagerness)
 
     ;; Change mode line color with Flycheck status.
-    (when (locate-library "flycheck-color-mode-line")
+    (with-eval-after-load "flycheck-color-mode-line"
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 
   ;; Provide an error display function to show errors in a tooltip.
