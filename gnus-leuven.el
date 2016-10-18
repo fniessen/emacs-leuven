@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20160511.2209
+;; Version: 20161018.2025
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -34,13 +34,13 @@
 ;;** 1.1 (info "(gnus)Finding the News")
 
   (if (member (downcase (system-name))
-              '("mundaneum" "xiphias.aremis.local")) ; Private config.
+              '("mundaneum" "xiphias")) ; Private config.
 
       ;; Configure incoming mail.
       (setq gnus-select-method
             '(nnimap "work"
                      (nnimap-address "pinecone.nocdirect.com")
-                     (nnimap-server-port 993) ; imaps
+                     (nnimap-server-port "imaps") ; 993
                      (nnimap-stream ssl)
 
                      ;; Necessary HERE for fancy splitting in Emacs 25.0!
@@ -49,6 +49,9 @@
                                         ; XXX when (try-require 'bbdb-gnus)...
                      ))
 
+    (message "WARN- SMTP Server NOT configured!")
+    ;; Sleep 1.5 s so that you can see the warning.
+    (sit-for 1.5)
     (setq gnus-select-method '(nnnil "")))
 
   ;; Using Gnus for news.
@@ -438,51 +441,51 @@
           mm-file-name-collapse-whitespace
           mm-file-name-replace-whitespace))
 
-   ;; The color of the stripes is obtained by dimming the frame background color.
-   (defvar stripe-intensity 12
-     "*Intensity of the shade. Used to compute the color of the stripes.
-  0 means no shading of the background color, nil means gray80")
+  ;; The color of the stripes is obtained by dimming the frame background color.
+  (defvar stripe-intensity 12
+    "*Intensity of the shade. Used to compute the color of the stripes.
+0 means no shading of the background color, nil means gray80")
 
-   ;; A command that computes the rgb code of the shaded background color.
-   (defun shade-color (intensity)
-     "print the #rgb color of the background, dimmed according to intensity"
-     (interactive "nIntensity of the shade : ")
-     (apply 'format "#%02x%02x%02x"
-            (mapcar (lambda (x)
-                      (if (> (lsh x -8) intensity)
-                          (- (lsh x -8) intensity)
-                        0))
-                    (color-values
-                     (cdr (assoc 'background-color (frame-parameters)))))))
+  ;; A command that computes the rgb code of the shaded background color.
+  (defun shade-color (intensity)
+    "print the #rgb color of the background, dimmed according to intensity"
+    (interactive "nIntensity of the shade : ")
+    (apply 'format "#%02x%02x%02x"
+           (mapcar (lambda (x)
+                     (if (> (lsh x -8) intensity)
+                         (- (lsh x -8) intensity)
+                       0))
+                   (color-values
+                    (cdr (assoc 'background-color (frame-parameters)))))))
 
-   ;; The command that actually puts the stripes in the current buffer.
-   (defun stripe-alternate ()
-     "stripes all down the current buffer"
-     (interactive)
-     ;; Compute the color of the stripes from the value of stripe-intensity.
-     (if stripe-intensity
-         (setq stripe-overlay-face (shade-color stripe-intensity))
-       (setq stripe-overlay-face "gray80"))
-     ;; Put the overlay in the current buffer.
-     (save-excursion
-       (goto-char (point-min))
-       (let (stripe-overlay)
-         (while (not (eobp))
-           (forward-line)
-           (setq stripe-overlay
-                 (make-overlay (line-beginning-position)
-                               (line-beginning-position 2)))
-           (overlay-put stripe-overlay 'face
-                        (list :background stripe-overlay-face))
-           (overlay-put stripe-overlay 'priority -1)
-           (forward-line)))))
+  ;; The command that actually puts the stripes in the current buffer.
+  (defun stripe-alternate ()
+    "stripes all down the current buffer"
+    (interactive)
+    ;; Compute the color of the stripes from the value of stripe-intensity.
+    (if stripe-intensity
+        (setq stripe-overlay-face (shade-color stripe-intensity))
+      (setq stripe-overlay-face "gray80"))
+    ;; Put the overlay in the current buffer.
+    (save-excursion
+      (goto-char (point-min))
+      (let (stripe-overlay)
+        (while (not (eobp))
+          (forward-line)
+          (setq stripe-overlay
+                (make-overlay (line-beginning-position)
+                              (line-beginning-position 2)))
+          (overlay-put stripe-overlay 'face
+                       (list :background stripe-overlay-face))
+          (overlay-put stripe-overlay 'priority -1)
+          (forward-line)))))
 
-   ;; Activate the stripes for the mail buffers only.
-   (add-hook 'gnus-summary-prepare-hook
-             (lambda ()
-               (with-current-buffer gnus-summary-buffer
-                 ;; (unless (gnus-news-group-p gnus-newsgroup-name)
-                 (stripe-alternate))))
+  ;; Activate the stripes for the mail buffers only.
+  (add-hook 'gnus-summary-prepare-hook
+            (lambda ()
+              (with-current-buffer gnus-summary-buffer
+                ;; (unless (gnus-news-group-p gnus-newsgroup-name)
+                (stripe-alternate))))
 
   (message "3 Summary Buffer... Done")
 
@@ -522,10 +525,7 @@
     (add-to-list 'mm-discouraged-alternatives "multipart/related")
 
     ;; All images fit in the buffer.
-    (setq mm-inline-large-images t)
-
-    ;; Allow retrieving images in HTML contents with the <img> tags.
-    (setq mm-inline-text-html-with-images t))
+    (setq mm-inline-large-images t))
 
 ;;*** 1.6 (info "(emacs-mime)Files and Directories")
 
