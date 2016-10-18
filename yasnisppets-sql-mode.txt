@@ -8,14 +8,29 @@
 #+OPTIONS:   H:4 num:nil toc:2
 #+EXCLUDE_TAGS: noexport
 
-#+PROPERTY:  header-args :eval never :padline yes :tangle yes
+#+PROPERTY:  header-args :eval never :padline no :tangle yes
 
 #+SETUPFILE: ~/.dotfiles/org/theme-readtheorg.setup
+
+* Tasks                                                               :noexport:
+
+** TODO Watch video of SQL Prompt
+
+http://www.red-gate.com/products/sql-development/sql-prompt/
 
 * Overview
 
 A *SQL snippet* is a frequently used *code template* which can be inserted into
 a code you are typing by pressing the TAB key.
+
+Snippets are categorized into 2 types:
+
+- *Insert Snippets (or Expansion Snippets)*: These are code templates for various
+  SQL commands you can quickly insert into your SQL code when creating tables,
+  stored procedures, triggers and so on.
+
+- *Surround Snippets:* These are code templates that help you implement code
+  constructs such as ~BEGIN...END~, ~IF~, ~WHILE~ and so on.
 
 * Insert Snippet...
 
@@ -169,6 +184,8 @@ DELETE FROM ${1:[schema].[table_name]} WHERE $0
 
 *** [be] Begin...End
 
+Insert ~BEGIN...END~ block.
+
 #+begin_src sql :tangle snippets/sql-mode/be.yasnippet
 # name: BEGIN...END block
 # --
@@ -179,14 +196,24 @@ END
 
 *** [tc] Try ... Catch
 
+Insert ~TRY...CATCH~ block.
+
 #+begin_src sql :tangle snippets/sql-mode/tc.yasnippet
 # name: TRY ... CATCH fragm...
 # --
 BEGIN TRY
-    
+    $0
 END TRY
 BEGIN CATCH
-    $0
+    /*
+        SELECT
+            ERROR_NUMBER() AS ErrorNumber,
+            ERROR_SEVERITY() AS ErrorSeverity,
+            ERROR_STATE() AS ErrorState,
+            ERROR_PROCEDURE() AS ErrorProcedure,
+            ERROR_LINE() AS ErrorLine,
+            ERROR_MESSAGE() AS ErrorMessage
+    */
 END CATCH
 #+end_src
 
@@ -201,13 +228,24 @@ BEGIN
 END
 #+end_src
 
+*** Case
+
+#+begin_src sql :tangle no
+CASE /*expression*/
+    WHEN /*expression*/ THEN /*result_expression*/
+    WHEN /*expression*/ THEN /*result_expression*/
+    ELSE /*result_expression*/
+END
+#+end_src
+
 *** [cte] Common Table Expression
+
+Temporary inline view.
 
 #+begin_src sql :tangle snippets/sql-mode/cte.yasnippet
 # name: WITH cte fragment
 # --
-
-        WITH ${1:cte_name} AS
+WITH ${1:cte_name} AS
 (
 
 )
@@ -216,6 +254,8 @@ FROM $1
 #+end_src
 
 ** Function
+
+Naming convention: functions are prefixed with ~ufn~.
 
 *** [ctif] Create Inline Table Function
 
@@ -282,9 +322,10 @@ CREATE FUNCTION $1 (@{2:parameter_name} ${3:parameter_data_type})
 RETURNS ${4:data_type}
 --WITH ENCRYPTION|SCHEMABINDING, ...
 AS
+-- Returns ...
 BEGIN
     /* function body */
-    RETURN $2$0 /* scalar expression */
+    RETURN @$2$0 /* scalar expression */
 END;
 GO
 #+end_src
@@ -532,7 +573,7 @@ DROP LOGIN $0
 
 Create Database Role.
 
-#+begin_src sql
+#+begin_src sql :tangle no
 CREATE ROLE ${1:RoleName}$0
 #+end_src
 
@@ -542,7 +583,7 @@ CREATE ROLE ${1:RoleName}$0
 
 Create a database schema.
 
-#+begin_src sql
+#+begin_src sql :tangle no
 CREATE SCHEMA ${1:schema}$0
 #+end_src
 
@@ -573,6 +614,8 @@ SET XACT_ABORT OFF$0
 #+end_src
 
 ** Stored Procedure
+
+Naming convention: stored procedures are prefixed with ~usp~.
 
 *** [cp] Create Procedure Basic Template
 
@@ -661,10 +704,14 @@ Creates a table.
 #+begin_src sql :tangle snippets/sql-mode/ct.yasnippet
 # name: Create table
 # --
-CREATE TABLE ${1:[schema].[table_name]}
+IF OBJECT_ID ('${1:[schema].[table_name]}', 'U') IS NOT NULL
+    DROP TABLE $1;
+go
+
+CREATE TABLE $1
 (
-    ${2:column_1} ${3:data_type_1} ${4:nullability_1},
-    ${5:column_2} ${6:data_type_2} ${5:nullability_2}$0
+    ${2:column_1} ${3:data_type_1} ${4:column_nullability_1},
+    ${5:column_2} ${6:data_type_2} ${5:column_nullability_2}$0
 );
 #+end_src
 
@@ -681,7 +728,7 @@ ALTER TABLE $0
 #+begin_src sql :tangle snippets/sql-mode/ata.yasnippet
 # name: Add column
 # --
-ALTER TABLE ${1:[schema].[table_name]} ADD [${2:column_name}] ${3:data_type} ${4:nullability};
+ALTER TABLE ${1:[schema].[table_name]} ADD [${2:column_name}] ${3:data_type} ${4:column_nullability};
 GO$0
 #+end_src
 
@@ -835,7 +882,7 @@ Creates a user-defined data type.
 
 #+begin_src sql :tangle no
 CREATE TYPE ${1:[schema].[my_data_type]}
-FROM ${2:data_type} ${3:nullability}
+FROM ${2:data_type} ${3:column_nullability}
 #+end_src
 
 ** User Defined Table Type
@@ -946,6 +993,16 @@ EXEC sp_who2$0
 SELECT TOP 20 [name], [type], crdate
 FROM sysobjects
 ORDER BY crdate DESC
+#+end_src
+
+*** Comment
+
+A comment block.
+
+#+begin_src sql :tangle no
+/*
+ * $0
+ */
 #+end_src
 
 * Surround With...
