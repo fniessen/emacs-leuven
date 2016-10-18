@@ -1,0 +1,1685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>SQL YASnippets</title>
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Fabrice Niessen" />
+<meta  name="keywords" content="emacs, yasnippet, snippets, code templates" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">SQL YASnippets</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Overview</a></li>
+<li><a href="#sec-2">Insert Snippet&#x2026;</a>
+<ul>
+<li><a href="#sec-2-1">Cursor</a></li>
+<li><a href="#sec-2-2">Database</a></li>
+<li><a href="#sec-2-3">Fragment</a></li>
+<li><a href="#sec-2-4">Function</a></li>
+<li><a href="#sec-2-5">Index</a></li>
+<li><a href="#sec-2-6">Join fragment</a></li>
+<li><a href="#sec-2-7">Login</a></li>
+<li><a href="#sec-2-8">Role</a></li>
+<li><a href="#sec-2-9">Schema</a></li>
+<li><a href="#sec-2-10">Set options</a></li>
+<li><a href="#sec-2-11">Stored Procedure</a></li>
+<li><a href="#sec-2-12">Synonym</a></li>
+<li><a href="#sec-2-13">Table</a></li>
+<li><a href="#sec-2-14">Transaction</a></li>
+<li><a href="#sec-2-15">Trigger</a></li>
+<li><a href="#sec-2-16">User</a></li>
+<li><a href="#sec-2-17">User Defined Data Type</a></li>
+<li><a href="#sec-2-18">User Defined Table Type</a></li>
+<li><a href="#sec-2-19">User Defined Type</a></li>
+<li><a href="#sec-2-20">View</a></li>
+<li><a href="#sec-2-21">&#x2014; Miscellaneous ---</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">Surround With&#x2026;</a>
+<ul>
+<li><a href="#sec-3-1">[begin] Code Snippet for BEGIN&#x2026;END block</a></li>
+<li><a href="#sec-3-2">[if] Code Snippet for IF construct</a></li>
+<li><a href="#sec-3-3">[while] Code Snippet for WHILE loop</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+A <b>SQL snippet</b> is a frequently used <b>code template</b> which can be inserted into
+a code you are typing by pressing the TAB key.
+</p>
+
+<p>
+Snippets are categorized into 2 types:
+</p>
+
+<ul class="org-ul">
+<li><b>Insert Snippets (or Expansion Snippets)</b>: These are code templates for various
+SQL commands you can quickly insert into your SQL code when creating tables,
+stored procedures, triggers and so on.
+</li>
+
+<li><b>Surround Snippets:</b> These are code templates that help you implement code
+constructs such as <code>BEGIN...END</code>, <code>IF</code>, <code>WHILE</code> and so on.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Insert Snippet&#x2026;</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">Cursor</h3>
+<div class="outline-text-3" id="text-2-1">
+</div><div id="outline-container-sec-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1">[curff] Cursor Fast-Forward</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Fast-forward <span class="org-keyword">read</span>-<span class="org-keyword">on</span>...
+# <span class="org-comment">--</span>
+<span class="org-comment-delimiter">/* </span><span class="org-comment">declare variables */</span>
+<span class="org-keyword">DECLARE</span> @<span class="org-keyword">variable</span> <span class="org-type">INT</span>
+
+<span class="org-keyword">DECLARE</span> ${1:<span class="org-keyword">cursor_name</span>} <span class="org-keyword">CURSOR</span> FAST_FORWARD READ_ONLY <span class="org-keyword">FOR</span> ${2:select_statement}
+
+<span class="org-keyword">OPEN</span> $1
+
+<span class="org-keyword">FETCH</span> <span class="org-keyword">NEXT</span> <span class="org-keyword">FROM</span> $1 <span class="org-keyword">INTO</span> @<span class="org-keyword">variable</span>
+
+WHILE @@FETCH_STATUS = 0
+<span class="org-keyword">BEGIN</span>
+    $0
+
+    <span class="org-keyword">FETCH</span> <span class="org-keyword">NEXT</span> <span class="org-keyword">FROM</span> $1 <span class="org-keyword">INTO</span> @<span class="org-keyword">variable</span>
+<span class="org-keyword">END</span>
+
+<span class="org-keyword">CLOSE</span> $1
+<span class="org-keyword">DEALLOCATE</span> $1
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">Database</h3>
+<div class="outline-text-3" id="text-2-2">
+</div><div id="outline-container-sec-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1">[cdb] Create DataBase</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> database
+# <span class="org-comment">--</span>
+<span class="org-keyword">CREATE</span> DATABASE ${1:database_name}
+<span class="org-keyword">ON</span>
+<span class="org-keyword">PRIMARY</span> ( <span class="org-comment">-- or use FILEGROUP filegroup_name</span>
+  <span class="org-keyword">NAME</span> = $1_data,
+  FILENAME = <span class="org-string">'$1.mdf'</span>
+) <span class="org-comment">--, and repeat as required</span>
+LOG <span class="org-keyword">ON</span>
+(
+  <span class="org-keyword">NAME</span> = $1_log,
+  FILENAME = <span class="org-string">'$1.ldf'</span>
+) <span class="org-comment">--, and repeat as required</span>
+<span class="org-comment">--COLLATE collation_name</span>
+<span class="org-comment">--WITH</span>
+<span class="org-comment">--  DB_CHAINING ON/OFF</span>
+<span class="org-comment">--  TRUSTWORTHY ON/OFF</span>
+<span class="org-comment">--FOR LOAD</span>
+<span class="org-comment">--FOR ATTACH</span>
+<span class="org-comment">--WITH</span>
+<span class="org-comment">--  ENABLE_BROKER</span>
+<span class="org-comment">--  NEW_BROKER</span>
+<span class="org-comment">--  ERROR_BROKER_CONVERSATIONS</span>
+<span class="org-comment">--FOR ATTACH_REBUILD_LOG</span>
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2">[cdbsnap] Create DataBase Snapshot</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> database sna...
+# <span class="org-comment">--</span>
+<span class="org-keyword">CREATE</span> DATABASE ${2:database_name}<span class="org-whitespace-trailing"> </span>
+<span class="org-keyword">ON</span><span class="org-whitespace-trailing"> </span>
+    (
+    <span class="org-keyword">NAME</span> = $2_data,
+    FILENAME = <span class="org-string">'$2.ss'</span>
+    )
+<span class="org-keyword">AS</span> SNAPSHOT <span class="org-keyword">OF</span> ${1:source_database}
+<span class="org-keyword">GO</span>$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-3" class="outline-4">
+<h4 id="sec-2-2-3">[dd] Drop Database</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> database
+# <span class="org-comment">--</span>
+<span class="org-keyword">DROP</span> DATABASE $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3">Fragment</h3>
+<div class="outline-text-3" id="text-2-3">
+</div><div id="outline-container-sec-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1">[ii] Insert Into</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2">[ssf] Select Star From</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span> frag...
+# <span class="org-comment">--</span>
+<span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-3" class="outline-4">
+<h4 id="sec-2-3-3">[st100] Select Top 100</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">SELECT</span> top 100 <span class="org-keyword">rows</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">SELECT</span> TOP 100 * <span class="org-keyword">FROM</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-4" class="outline-4">
+<h4 id="sec-2-3-4">[scf] Select Count From</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-builtin">Count</span> <span class="org-keyword">number</span> <span class="org-keyword">of</span> rec...
+# <span class="org-comment">--</span>
+<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-5" class="outline-4">
+<h4 id="sec-2-3-5">[is] INFORMATION_SCHEMA</h4>
+<div class="outline-text-4" id="text-2-3-5">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: INFORMATION_SCH...
+# <span class="org-comment">--</span>
+INFORMATION_SCHEMA$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-6" class="outline-4">
+<h4 id="sec-2-3-6">[gb] Group By</h4>
+<div class="outline-text-4" id="text-2-3-6">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">GROUP</span> <span class="org-keyword">BY</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">GROUP</span> <span class="org-keyword">BY</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-7" class="outline-4">
+<h4 id="sec-2-3-7">[ob] Order By</h4>
+<div class="outline-text-4" id="text-2-3-7">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-8" class="outline-4">
+<h4 id="sec-2-3-8">[df] Delete From</h4>
+<div class="outline-text-4" id="text-2-3-8">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">DELETE</span> <span class="org-keyword">FROM</span> frag...
+# <span class="org-comment">--</span>
+<span class="org-keyword">DELETE</span> <span class="org-keyword">FROM</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">WHERE</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-9" class="outline-4">
+<h4 id="sec-2-3-9">[be] Begin&#x2026;End</h4>
+<div class="outline-text-4" id="text-2-3-9">
+<p>
+Insert <code>BEGIN...END</code> block.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">BEGIN</span>...<span class="org-keyword">END</span> block
+# <span class="org-comment">--</span>
+<span class="org-keyword">BEGIN</span>
+    $0
+<span class="org-keyword">END</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-10" class="outline-4">
+<h4 id="sec-2-3-10">[tc] Try &#x2026; Catch</h4>
+<div class="outline-text-4" id="text-2-3-10">
+<p>
+Insert <code>TRY...CATCH</code> block.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: TRY ... CATCH fragm...
+# <span class="org-comment">--</span>
+<span class="org-keyword">BEGIN</span> TRY
+    $0
+<span class="org-keyword">END</span> TRY
+<span class="org-keyword">BEGIN</span> CATCH
+    <span class="org-comment-delimiter">/*</span>
+<span class="org-comment">        SELECT</span>
+<span class="org-comment">            ERROR_NUMBER() AS ErrorNumber,</span>
+<span class="org-comment">            ERROR_SEVERITY() AS ErrorSeverity,</span>
+<span class="org-comment">            ERROR_STATE() AS ErrorState,</span>
+<span class="org-comment">            ERROR_PROCEDURE() AS ErrorProcedure,</span>
+<span class="org-comment">            ERROR_LINE() AS ErrorLine,</span>
+<span class="org-comment">            ERROR_MESSAGE() AS ErrorMessage</span>
+<span class="org-comment">    */</span>
+<span class="org-keyword">END</span> CATCH
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-11" class="outline-4">
+<h4 id="sec-2-3-11">[ifs] If</h4>
+<div class="outline-text-4" id="text-2-3-11">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: IF fragment
+# <span class="org-comment">--</span>
+IF 1 = 1
+<span class="org-keyword">BEGIN</span>
+    $0
+<span class="org-keyword">END</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-12" class="outline-4">
+<h4 id="sec-2-3-12">Case</h4>
+<div class="outline-text-4" id="text-2-3-12">
+<div class="org-src-container">
+
+<pre class="src src-sql"><span class="org-keyword">CASE</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">expression*/</span>
+    <span class="org-keyword">WHEN</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">expression*/</span> <span class="org-keyword">THEN</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">result_expression*/</span>
+    <span class="org-keyword">WHEN</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">expression*/</span> <span class="org-keyword">THEN</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">result_expression*/</span>
+    <span class="org-keyword">ELSE</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">result_expression*/</span>
+<span class="org-keyword">END</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-13" class="outline-4">
+<h4 id="sec-2-3-13">[cte] Common Table Expression</h4>
+<div class="outline-text-4" id="text-2-3-13">
+<p>
+Temporary inline view.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">WITH</span> cte fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">WITH</span> ${1:cte_name} <span class="org-keyword">AS</span>
+(
+
+)
+<span class="org-keyword">SELECT</span> $0
+<span class="org-keyword">FROM</span> $1
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4">Function</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Naming convention: functions are prefixed with <code>ufn</code>.
+</p>
+</div>
+
+<div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1">[ctif] Create Inline Table Function</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+Creates an inline table function.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> inline <span class="org-keyword">table</span>-va...
+# <span class="org-comment">--</span>
+IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, N<span class="org-string">'IF'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">  </span>
+    <span class="org-keyword">DROP</span> <span class="org-keyword">FUNCTION</span> $1;<span class="org-whitespace-trailing">  </span>
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">FUNCTION</span> $1 (@${2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type})
+<span class="org-keyword">RETURNS</span> <span class="org-keyword">TABLE</span>
+<span class="org-comment">--WITH ENCRYPTION|SCHEMABINDING, ...</span>
+<span class="org-keyword">AS</span>
+<span class="org-keyword">RETURN</span>
+(
+    <span class="org-comment">-- SELECT @$2 AS c1</span>
+    $0
+);
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2">[ctf] Create Multi-Statement Table Function</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+Creates a multi-statement table function.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> multi-stateme...
+# <span class="org-comment">--</span>
+IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, N<span class="org-string">'TF'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">  </span>
+    <span class="org-keyword">DROP</span> <span class="org-keyword">FUNCTION</span> $1;<span class="org-whitespace-trailing">  </span>
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">FUNCTION</span> $1 (@{2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type})
+<span class="org-keyword">RETURNS</span> @${4:return_variable} <span class="org-keyword">TABLE</span>
+(
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">table type definition */</span>
+    <span class="org-comment">-- [$2] c1</span>
+)
+<span class="org-comment">--WITH ENCRYPTION|SCHEMABINDING, ...</span>
+<span class="org-keyword">AS</span>
+<span class="org-keyword">BEGIN</span>
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">function body */</span>
+    $0
+    <span class="org-keyword">RETURN</span>
+<span class="org-keyword">END</span>;
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4-3" class="outline-4">
+<h4 id="sec-2-4-3">[csf] Create Scalar Function</h4>
+<div class="outline-text-4" id="text-2-4-3">
+<p>
+Creates a scalar function.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> scalar <span class="org-keyword">function</span>
+# <span class="org-comment">--</span>
+IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, N<span class="org-string">'FN'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">  </span>
+    <span class="org-keyword">DROP</span> <span class="org-keyword">FUNCTION</span> $1;<span class="org-whitespace-trailing">  </span>
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">FUNCTION</span> $1 (@{2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type})
+<span class="org-keyword">RETURNS</span> ${4:data_type}
+<span class="org-comment">--WITH ENCRYPTION|SCHEMABINDING, ...</span>
+<span class="org-keyword">AS</span>
+<span class="org-comment">-- Returns ...</span>
+<span class="org-keyword">BEGIN</span>
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">function body */</span>
+    <span class="org-keyword">RETURN</span> @$2$0 <span class="org-comment-delimiter">/* </span><span class="org-comment">scalar expression */</span>
+<span class="org-keyword">END</span>;
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4-4" class="outline-4">
+<h4 id="sec-2-4-4">[af] Alter Function</h4>
+<div class="outline-text-4" id="text-2-4-4">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">ALTER</span> <span class="org-keyword">FUNCTION</span> fr...
+# <span class="org-comment">--</span><span class="org-whitespace-trailing">    </span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">FUNCTION</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4-5" class="outline-4">
+<h4 id="sec-2-4-5">[dfn] Drop Function</h4>
+<div class="outline-text-4" id="text-2-4-5">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">function</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">DROP</span> <span class="org-keyword">FUNCTION</span> $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5">Index</h3>
+<div class="outline-text-3" id="text-2-5">
+</div><div id="outline-container-sec-2-5-1" class="outline-4">
+<h4 id="sec-2-5-1">[cni] Create Non-Clustered Index</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<p>
+Creates a simple (basic), non-clustered index.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> non-<span class="org-keyword">unique</span> n...
+# <span class="org-comment">--</span>
+IF <span class="org-keyword">EXISTS</span> (<span class="org-keyword">SELECT</span> <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> sys.indexes <span class="org-keyword">WHERE</span> <span class="org-keyword">name</span> = N<span class="org-string">'${3:index_name}'</span>)<span class="org-whitespace-trailing">  </span>
+    <span class="org-keyword">DROP</span> INDEX $3 <span class="org-keyword">ON</span> ${1:[<span class="org-keyword">schema</span>].[owner_name]};
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> NONCLUSTERED INDEX $3
+<span class="org-keyword">ON</span> $1 (${2:<span class="org-keyword">column</span>})
+<span class="org-comment">--WITH PAD_INDEX</span>
+<span class="org-comment">--    | FILLFACTOR = fillfactor</span>
+<span class="org-comment">--    | IGNORE_DUP_KEY</span>
+<span class="org-comment">--    | DROP_EXISTING</span>
+<span class="org-comment">--    | STATISTICS_NORECOMPUTE</span>
+<span class="org-comment">--    | SORT_IN_TEMPDB, .. as required</span>
+<span class="org-comment">-- ON filegroup</span>
+<span class="org-keyword">GO</span>
+$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5-2" class="outline-4">
+<h4 id="sec-2-5-2">[cuni] Create Unique Non-Clustered Index</h4>
+<div class="outline-text-4" id="text-2-5-2">
+<p>
+Creates a unique, non-clustered index.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">unique</span> nonclu...
+# <span class="org-comment">--</span>
+IF <span class="org-keyword">EXISTS</span> (<span class="org-keyword">SELECT</span> <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> sys.indexes <span class="org-keyword">WHERE</span> <span class="org-keyword">name</span> = N<span class="org-string">'${3:index_name}'</span>)<span class="org-whitespace-trailing">  </span>
+    <span class="org-keyword">DROP</span> INDEX $3 <span class="org-keyword">ON</span> ${1:[<span class="org-keyword">schema</span>].[owner_name]};
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">UNIQUE</span> NONCLUSTERED INDEX $3
+<span class="org-keyword">ON</span> $1 (${2:<span class="org-keyword">column</span>})
+<span class="org-comment">--WITH PAD_INDEX</span>
+<span class="org-comment">--    | FILLFACTOR = fillfactor</span>
+<span class="org-comment">--    | IGNORE_DUP_KEY</span>
+<span class="org-comment">--    | DROP_EXISTING</span>
+<span class="org-comment">--    | STATISTICS_NORECOMPUTE</span>
+<span class="org-comment">--    | SORT_IN_TEMPDB, .. as required</span>
+<span class="org-comment">-- ON filegroup</span>
+<span class="org-keyword">GO</span>
+$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5-3" class="outline-4">
+<h4 id="sec-2-5-3">[cci] Create Clustered Index</h4>
+<div class="outline-text-4" id="text-2-5-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> non-<span class="org-keyword">unique</span> cl...
+# <span class="org-comment">--</span>
+IF <span class="org-keyword">EXISTS</span> (<span class="org-keyword">SELECT</span> <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> sys.indexes <span class="org-keyword">WHERE</span> <span class="org-keyword">name</span> = N<span class="org-string">'${3:index_name}'</span>)<span class="org-whitespace-trailing">  </span>
+    <span class="org-keyword">DROP</span> INDEX $3 <span class="org-keyword">ON</span> ${1:[<span class="org-keyword">schema</span>].[owner_name]};
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> CLUSTERED INDEX $3
+<span class="org-keyword">ON</span> $1 (${2:<span class="org-keyword">column</span>})
+<span class="org-comment">--WITH PAD_INDEX</span>
+<span class="org-comment">--    | FILLFACTOR = fillfactor</span>
+<span class="org-comment">--    | IGNORE_DUP_KEY</span>
+<span class="org-comment">--    | DROP_EXISTING</span>
+<span class="org-comment">--    | STATISTICS_NORECOMPUTE</span>
+<span class="org-comment">--    | SORT_IN_TEMPDB, .. as required</span>
+<span class="org-comment">-- ON filegroup</span>
+<span class="org-keyword">GO</span>
+$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5-4" class="outline-4">
+<h4 id="sec-2-5-4">[cuci] Create Unique Clustered Index</h4>
+<div class="outline-text-4" id="text-2-5-4">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">unique</span> cluster...
+# <span class="org-comment">--</span>
+IF <span class="org-keyword">EXISTS</span> (<span class="org-keyword">SELECT</span> <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> sys.indexes <span class="org-keyword">WHERE</span> <span class="org-keyword">name</span> = N<span class="org-string">'${3:index_name}'</span>)<span class="org-whitespace-trailing">  </span>
+    <span class="org-keyword">DROP</span> INDEX $3 <span class="org-keyword">ON</span> ${1:[<span class="org-keyword">schema</span>].[owner_name]};
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">UNIQUE</span> CLUSTERED INDEX $3
+<span class="org-keyword">ON</span> $1 (${2:<span class="org-keyword">column</span>})
+<span class="org-comment">--WITH PAD_INDEX</span>
+<span class="org-comment">--    | FILLFACTOR = fillfactor</span>
+<span class="org-comment">--    | IGNORE_DUP_KEY</span>
+<span class="org-comment">--    | DROP_EXISTING</span>
+<span class="org-comment">--    | STATISTICS_NORECOMPUTE</span>
+<span class="org-comment">--    | SORT_IN_TEMPDB, .. as required</span>
+<span class="org-comment">-- ON filegroup</span>
+<span class="org-keyword">GO</span>
+$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5-5" class="outline-4">
+<h4 id="sec-2-5-5">[di] Drop Index</h4>
+<div class="outline-text-4" id="text-2-5-5">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> index
+# <span class="org-comment">--</span>
+<span class="org-keyword">DROP</span> INDEX $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6">Join fragment</h3>
+<div class="outline-text-3" id="text-2-6">
+</div><div id="outline-container-sec-2-6-1" class="outline-4">
+<h4 id="sec-2-6-1">[cj] Cross Join</h4>
+<div class="outline-text-4" id="text-2-6-1">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">CROSS</span> <span class="org-keyword">JOIN</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">CROSS</span> <span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6-2" class="outline-4">
+<h4 id="sec-2-6-2">[fj] Full Join</h4>
+<div class="outline-text-4" id="text-2-6-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">FULL</span> <span class="org-keyword">JOIN</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">FULL</span> <span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6-3" class="outline-4">
+<h4 id="sec-2-6-3">[foj] Full Outer Join</h4>
+<div class="outline-text-4" id="text-2-6-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">FULL</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> fr...
+# <span class="org-comment">--</span>
+<span class="org-keyword">FULL</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6-4" class="outline-4">
+<h4 id="sec-2-6-4">[ij] Inner Join</h4>
+<div class="outline-text-4" id="text-2-6-4">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">INNER</span> <span class="org-keyword">JOIN</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">INNER</span> <span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6-5" class="outline-4">
+<h4 id="sec-2-6-5">[j] Join</h4>
+<div class="outline-text-4" id="text-2-6-5">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">JOIN</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6-6" class="outline-4">
+<h4 id="sec-2-6-6">[lj] Left Join</h4>
+<div class="outline-text-4" id="text-2-6-6">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">LEFT</span> <span class="org-keyword">JOIN</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">LEFT</span> <span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6-7" class="outline-4">
+<h4 id="sec-2-6-7">[loj] Left Outer Join</h4>
+<div class="outline-text-4" id="text-2-6-7">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">LEFT</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> fr...
+# <span class="org-comment">--</span>
+<span class="org-keyword">LEFT</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6-8" class="outline-4">
+<h4 id="sec-2-6-8">[rj] Right Join</h4>
+<div class="outline-text-4" id="text-2-6-8">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">RIGHT</span> <span class="org-keyword">JOIN</span> fragment
+# <span class="org-comment">--</span>
+<span class="org-keyword">RIGHT</span> <span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6-9" class="outline-4">
+<h4 id="sec-2-6-9">[roj] Right Outer Join</h4>
+<div class="outline-text-4" id="text-2-6-9">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">RIGHT</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> f...
+# <span class="org-comment">--</span>
+<span class="org-keyword">RIGHT</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-7" class="outline-3">
+<h3 id="sec-2-7">Login</h3>
+<div class="outline-text-3" id="text-2-7">
+</div><div id="outline-container-sec-2-7-1" class="outline-4">
+<h4 id="sec-2-7-1">[cl] Create SQL Authentication Login</h4>
+<div class="outline-text-4" id="text-2-7-1">
+<p>
+Creates a SQL Server Authentication login.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">CREATE</span> <span class="org-keyword">SQL</span> Server l...
+# <span class="org-comment">--</span>
+<span class="org-keyword">CREATE</span> LOGIN ${1:LoginName}
+<span class="org-keyword">WITH</span> PASSWORD = N<span class="org-string">'${2:StrongP@ssword}'</span>$0 <span class="org-comment-delimiter">/* </span><span class="org-comment">HASHED */</span> <span class="org-comment-delimiter">/* </span><span class="org-comment">MUST CHANGE */</span>
+<span class="org-comment">--  SID = sid</span>
+<span class="org-comment">--  DEFAULT_DATABASE = database</span>
+<span class="org-comment">--  DEFAULT_LANGUAGE = language</span>
+<span class="org-comment">--  CHECK_EXPIRATION = ON | OFF</span>
+<span class="org-comment">--  CHECK_POLICY = ON | OFF</span>
+<span class="org-comment">--  CREDENTIAL = credential_name</span>
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-7-2" class="outline-4">
+<h4 id="sec-2-7-2">Create Windows Authentication Login</h4>
+<div class="outline-text-4" id="text-2-7-2">
+<p>
+Creates a Windows Authentication login.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">CREATE</span> Windows l...
+# <span class="org-comment">--</span>
+<span class="org-keyword">CREATE</span> LOGIN ${1:[DomainName\UserName]}
+<span class="org-keyword">FROM</span> WINDOWS$0
+<span class="org-comment">--    WITH</span>
+<span class="org-comment">--      DEFAULT_DATABASE = database</span>
+<span class="org-comment">--      DEFAULT_LANGUAGE = language</span>
+<span class="org-comment">--  CERTIFICATE certificate_name</span>
+<span class="org-comment">--  ASYMMETRIC KEY key_name</span>
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-7-3" class="outline-4">
+<h4 id="sec-2-7-3">[dl] Drop Login</h4>
+<div class="outline-text-4" id="text-2-7-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> login
+# <span class="org-comment">--</span>
+<span class="org-keyword">DROP</span> LOGIN $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-8" class="outline-3">
+<h3 id="sec-2-8">Role</h3>
+<div class="outline-text-3" id="text-2-8">
+</div><div id="outline-container-sec-2-8-1" class="outline-4">
+<h4 id="sec-2-8-1">Create Role</h4>
+<div class="outline-text-4" id="text-2-8-1">
+<p>
+Create Database Role.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">ROLE</span> ${1:RoleName}$0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-9" class="outline-3">
+<h3 id="sec-2-9">Schema</h3>
+<div class="outline-text-3" id="text-2-9">
+</div><div id="outline-container-sec-2-9-1" class="outline-4">
+<h4 id="sec-2-9-1">Create Schema</h4>
+<div class="outline-text-4" id="text-2-9-1">
+<p>
+Create a database schema.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">SCHEMA</span> ${1:<span class="org-keyword">schema</span>}$0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-10" class="outline-3">
+<h3 id="sec-2-10">Set options</h3>
+<div class="outline-text-3" id="text-2-10">
+</div><div id="outline-container-sec-2-10-1" class="outline-4">
+<h4 id="sec-2-10-1">[san] Set ANSI_NULLS</h4>
+<div class="outline-text-4" id="text-2-10-1">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Change the <span class="org-keyword">current</span> A...
+# <span class="org-comment">--</span>
+<span class="org-keyword">SET</span> ANSI_NULLS <span class="org-keyword">ON</span>$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-10-2" class="outline-4">
+<h4 id="sec-2-10-2">[sqi] Set QUOTED_IDENTIFIER</h4>
+<div class="outline-text-4" id="text-2-10-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Change the <span class="org-keyword">current</span> ...
+# <span class="org-comment">--</span>
+<span class="org-keyword">SET</span> QUOTED_IDENTIFIER <span class="org-keyword">ON</span>$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-10-3" class="outline-4">
+<h4 id="sec-2-10-3">[sxa] Set XACT_ABORT</h4>
+<div class="outline-text-4" id="text-2-10-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Change the <span class="org-keyword">current</span> X...
+# <span class="org-comment">--</span>
+<span class="org-keyword">SET</span> XACT_ABORT <span class="org-keyword">OFF</span>$0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-11" class="outline-3">
+<h3 id="sec-2-11">Stored Procedure</h3>
+<div class="outline-text-3" id="text-2-11">
+<p>
+Naming convention: stored procedures are prefixed with <code>usp</code>.
+</p>
+</div>
+
+<div id="outline-container-sec-2-11-1" class="outline-4">
+<h4 id="sec-2-11-1">[cp] Create Procedure Basic Template</h4>
+<div class="outline-text-4" id="text-2-11-1">
+<p>
+Create a simple stored procedure.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> stored proced...
+# <span class="org-comment">--</span>
+IF OBJECT_ID (<span class="org-string">'${1:[schema].[procedure_name]}'</span>, <span class="org-string">'P'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">   </span>
+    <span class="org-keyword">DROP</span> <span class="org-keyword">PROCEDURE</span> $1;<span class="org-whitespace-trailing">  </span>
+<span class="org-keyword">GO</span>
+
+<span class="org-comment">--SET QUOTED_IDENTIFIER ON|OFF</span>
+<span class="org-comment">--SET ANSI_NULLS ON|OFF</span>
+<span class="org-comment">--GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">PROCEDURE</span> $1
+    @${2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type} = ${4:<span class="org-keyword">default</span>}
+<span class="org-comment">-- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'</span>
+<span class="org-keyword">AS</span>
+    <span class="org-comment">-- SELECT @$2</span>
+    $0;
+<span class="org-keyword">GO</span>
+
+<span class="org-comment">--SET QUOTED_IDENTIFIER ON|OFF</span>
+<span class="org-comment">--SET ANSI_NULLS ON|OFF</span>
+<span class="org-comment">--GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-11-2" class="outline-4">
+<h4 id="sec-2-11-2">[crlp] Create CLR Procedure</h4>
+<div class="outline-text-4" id="text-2-11-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> CLR stored pr...
+# <span class="org-comment">--</span>
+<span class="org-comment">--SET QUOTED_IDENTIFIER ON|OFF</span>
+<span class="org-comment">--SET ANSI_NULLS ON|OFF</span>
+<span class="org-comment">--GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">PROCEDURE</span> ${1:[<span class="org-keyword">schema</span>].[procedure_name]}
+(
+    @${2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type}
+)
+<span class="org-comment">-- WITH EXECUTE AS CALLER|SELF|OWNER| 'user_name'</span>
+<span class="org-keyword">AS</span> <span class="org-keyword">EXTERNAL</span> <span class="org-keyword">NAME</span> ${4:[assembly].[<span class="org-keyword">class</span>].[<span class="org-keyword">method</span>]};
+<span class="org-keyword">GO</span>
+
+<span class="org-comment">--SET QUOTED_IDENTIFIER ON|OFF</span>
+<span class="org-comment">--SET ANSI_NULLS ON|OFF</span>
+<span class="org-comment">--GO$0</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-11-3" class="outline-4">
+<h4 id="sec-2-11-3">[ap] Alter Procedure</h4>
+<div class="outline-text-4" id="text-2-11-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">ALTER</span> <span class="org-keyword">PROCEDURE</span>
+# <span class="org-comment">--</span><span class="org-whitespace-trailing">    </span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">PROCEDURE</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-11-4" class="outline-4">
+<h4 id="sec-2-11-4">[dp] Drop Procedure</h4>
+<div class="outline-text-4" id="text-2-11-4">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> stored <span class="org-keyword">procedure</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">DROP</span> <span class="org-keyword">PROCEDURE</span> $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-12" class="outline-3">
+<h3 id="sec-2-12">Synonym</h3>
+<div class="outline-text-3" id="text-2-12">
+</div><div id="outline-container-sec-2-12-1" class="outline-4">
+<h4 id="sec-2-12-1">Create Synonym</h4>
+<div class="outline-text-4" id="text-2-12-1">
+<p>
+Creates a synonym.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"><span class="org-keyword">CREATE</span> SYNONYM ${1:[<span class="org-keyword">schema</span>].[synonym_name]}
+<span class="org-keyword">FOR</span> ${2:[<span class="org-keyword">schema</span>].[object_name]};
+<span class="org-keyword">GO</span>$0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-13" class="outline-3">
+<h3 id="sec-2-13">Table</h3>
+<div class="outline-text-3" id="text-2-13">
+</div><div id="outline-container-sec-2-13-1" class="outline-4">
+<h4 id="sec-2-13-1">[ct] Create Table</h4>
+<div class="outline-text-4" id="text-2-13-1">
+<p>
+Creates a table.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">table</span>
+# <span class="org-comment">--</span>
+IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <span class="org-string">'U'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span>
+    <span class="org-keyword">DROP</span> <span class="org-keyword">TABLE</span> $1;
+<span class="org-keyword">go</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> $1
+(
+    ${2:column_1} ${3:data_type_1} ${4:column_nullability_1},
+    ${5:column_2} ${6:data_type_2} ${5:column_nullability_2}$0
+);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-13-2" class="outline-4">
+<h4 id="sec-2-13-2">[at] Alter Table fragment</h4>
+<div class="outline-text-4" id="text-2-13-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> fragm...
+# <span class="org-comment">--</span><span class="org-whitespace-trailing">    </span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-13-3" class="outline-4">
+<h4 id="sec-2-13-3">[ata] Add Column</h4>
+<div class="outline-text-4" id="text-2-13-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Add</span> <span class="org-keyword">column</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">ADD</span> [${2:<span class="org-keyword">column_name</span>}] ${3:data_type} ${4:column_nullability};
+<span class="org-keyword">GO</span>$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-13-4" class="outline-4">
+<h4 id="sec-2-13-4">[atac] modify Column</h4>
+<div class="outline-text-4" id="text-2-13-4">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Modify</span> <span class="org-keyword">column</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">ALTER</span> <span class="org-keyword">COLUMN</span> $0;
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-13-5" class="outline-4">
+<h4 id="sec-2-13-5">[atd] Drop column</h4>
+<div class="outline-text-4" id="text-2-13-5">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">column</span>
+# <span class="org-comment">--</span><span class="org-whitespace-trailing">    </span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">DROP</span> <span class="org-keyword">COLUMN</span> $0;
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-13-6" class="outline-4">
+<h4 id="sec-2-13-6">[atdc] Drop Constraint</h4>
+<div class="outline-text-4" id="text-2-13-6">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">constraint</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">DROP</span> <span class="org-keyword">CONSTRAINT</span> $0;
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-13-7" class="outline-4">
+<h4 id="sec-2-13-7">[dt] Drop Table</h4>
+<div class="outline-text-4" id="text-2-13-7">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">table</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">DROP</span> <span class="org-keyword">TABLE</span> $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-14" class="outline-3">
+<h3 id="sec-2-14">Transaction</h3>
+<div class="outline-text-3" id="text-2-14">
+</div><div id="outline-container-sec-2-14-1" class="outline-4">
+<h4 id="sec-2-14-1">[bt] Begin Transaction</h4>
+<div class="outline-text-4" id="text-2-14-1">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Begin</span> <span class="org-keyword">transaction</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">BEGIN</span> <span class="org-keyword">TRANSACTION</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-14-2" class="outline-4">
+<h4 id="sec-2-14-2">[ctr] Commit Transaction</h4>
+<div class="outline-text-4" id="text-2-14-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Commit</span> <span class="org-keyword">transaction</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">COMMIT</span> <span class="org-keyword">TRANSACTION</span> $0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-14-3" class="outline-4">
+<h4 id="sec-2-14-3">[rt] Rollback Transaction</h4>
+<div class="outline-text-4" id="text-2-14-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Rollback</span> <span class="org-keyword">transaction</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">ROLLBACK</span> <span class="org-keyword">TRANSACTION</span> $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-15" class="outline-3">
+<h3 id="sec-2-15">Trigger</h3>
+<div class="outline-text-3" id="text-2-15">
+</div><div id="outline-container-sec-2-15-1" class="outline-4">
+<h4 id="sec-2-15-1">Create Trigger</h4>
+<div class="outline-text-4" id="text-2-15-1">
+<p>
+Creates a trigger.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">trigger</span>
+# <span class="org-comment">--</span>
+IF OBJECT_ID (<span class="org-string">'${1:TriggerName}'</span>, <span class="org-string">'TR'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span>
+    <span class="org-keyword">DROP</span> <span class="org-keyword">TRIGGER</span> $1;
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">TRIGGER</span> $1
+<span class="org-keyword">ON</span> ${2:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]}
+<span class="org-keyword">FOR</span> <span class="org-keyword">INSERT</span>, <span class="org-keyword">UPDATE</span>, <span class="org-keyword">DELETE</span>
+<span class="org-keyword">AS</span>
+    <span class="org-keyword">BEGIN</span>
+        <span class="org-keyword">SET</span> NOCOUNT <span class="org-keyword">ON</span>
+    <span class="org-keyword">END</span>;
+<span class="org-keyword">GO</span>$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-15-2" class="outline-4">
+<h4 id="sec-2-15-2">Enable Trigger</h4>
+<div class="outline-text-4" id="text-2-15-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Enable <span class="org-keyword">trigger</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} ENABLE <span class="org-keyword">TRIGGER</span> $0;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-15-3" class="outline-4">
+<h4 id="sec-2-15-3">Enable All Triggers</h4>
+<div class="outline-text-4" id="text-2-15-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Enable <span class="org-keyword">all</span> triggers <span class="org-keyword">on</span>...
+# <span class="org-comment">--</span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]}$0 ENABLE <span class="org-keyword">TRIGGER</span> <span class="org-keyword">ALL</span>;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-15-4" class="outline-4">
+<h4 id="sec-2-15-4">Disable Trigger</h4>
+<div class="outline-text-4" id="text-2-15-4">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Disable <span class="org-keyword">trigger</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} DISABLE <span class="org-keyword">TRIGGER</span> $0;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-15-5" class="outline-4">
+<h4 id="sec-2-15-5">Disable All Triggers</h4>
+<div class="outline-text-4" id="text-2-15-5">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Disable <span class="org-keyword">all</span> triggers <span class="org-keyword">on</span>...
+# <span class="org-comment">--</span>
+<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]}$0 DISABLE <span class="org-keyword">TRIGGER</span> <span class="org-keyword">ALL</span>;
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-16" class="outline-3">
+<h3 id="sec-2-16">User</h3>
+<div class="outline-text-3" id="text-2-16">
+</div><div id="outline-container-sec-2-16-1" class="outline-4">
+<h4 id="sec-2-16-1">[cu] Create User</h4>
+<div class="outline-text-4" id="text-2-16-1">
+<p>
+Creates a database user.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> database <span class="org-builtin">user</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">CREATE</span> <span class="org-builtin">USER</span> ${1:UserName}$0
+<span class="org-keyword">FOR</span> <span class="org-comment-delimiter">/* </span><span class="org-comment">FROM */</span> LOGIN <span class="org-comment-delimiter">/* </span><span class="org-comment">login_name */</span>
+<span class="org-comment">--</span><span class="org-whitespace-tab">  </span><span class="org-comment">CERTIFICATE certificate_name</span>
+<span class="org-comment">--</span><span class="org-whitespace-tab">  </span><span class="org-comment">ASYMMETRIC KEY key_name</span>
+<span class="org-comment">--</span><span class="org-whitespace-tab">  </span><span class="org-comment">WITHOUT LOGIN</span>
+<span class="org-comment">--</span><span class="org-whitespace-tab">  </span><span class="org-comment">WITH DEFAULT_SCHEMA = schema_name</span>
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-16-2" class="outline-4">
+<h4 id="sec-2-16-2">[du] Drop User</h4>
+<div class="outline-text-4" id="text-2-16-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-builtin">user</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">DROP</span> <span class="org-builtin">USER</span> ${1:UserName}$0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-17" class="outline-3">
+<h3 id="sec-2-17">User Defined Data Type</h3>
+<div class="outline-text-3" id="text-2-17">
+</div><div id="outline-container-sec-2-17-1" class="outline-4">
+<h4 id="sec-2-17-1">Create User-Defined Data Type</h4>
+<div class="outline-text-4" id="text-2-17-1">
+<p>
+Creates a user-defined data type.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">TYPE</span> ${1:[<span class="org-keyword">schema</span>].[my_data_type]}
+<span class="org-keyword">FROM</span> ${2:data_type} ${3:column_nullability}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-18" class="outline-3">
+<h3 id="sec-2-18">User Defined Table Type</h3>
+<div class="outline-text-3" id="text-2-18">
+</div><div id="outline-container-sec-2-18-1" class="outline-4">
+<h4 id="sec-2-18-1">Create User-Defined Table Type</h4>
+<div class="outline-text-4" id="text-2-18-1">
+<p>
+Creates a user-defined table type.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">TYPE</span> ${1:[<span class="org-keyword">schema</span>].[my_table_type]} <span class="org-keyword">AS</span> <span class="org-keyword">TABLE</span>
+(
+    ${2:column_1} ${3:data_type_1},
+    ${4:column_2} ${5:data_type_2}
+);
+<span class="org-keyword">GO</span>$0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-19" class="outline-3">
+<h3 id="sec-2-19">User Defined Type</h3>
+<div class="outline-text-3" id="text-2-19">
+</div><div id="outline-container-sec-2-19-1" class="outline-4">
+<h4 id="sec-2-19-1">Create User-Defined Type</h4>
+<div class="outline-text-4" id="text-2-19-1">
+<p>
+Creates a CLR integration user-defined type.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">TYPE</span> ${1:Utf8String}
+<span class="org-keyword">EXTERNAL</span> <span class="org-keyword">NAME</span> ${2:utf8string}.${3:[Microsoft.Samples.SqlServer.utf8string]};
+<span class="org-keyword">GO</span>$0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-20" class="outline-3">
+<h3 id="sec-2-20">View</h3>
+<div class="outline-text-3" id="text-2-20">
+</div><div id="outline-container-sec-2-20-1" class="outline-4">
+<h4 id="sec-2-20-1">[cv] Create View</h4>
+<div class="outline-text-4" id="text-2-20-1">
+<p>
+Creates a view.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">view</span>
+# <span class="org-comment">--</span>
+IF OBJECT_ID (<span class="org-string">'${1:[schema].[view_name]}'</span>, <span class="org-string">'V'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">  </span>
+    <span class="org-keyword">DROP</span> <span class="org-keyword">VIEW</span> $1;<span class="org-whitespace-trailing">  </span>
+<span class="org-keyword">GO</span>
+
+<span class="org-keyword">CREATE</span> <span class="org-keyword">VIEW</span> $1
+<span class="org-comment">--WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA</span>
+<span class="org-keyword">AS</span>
+    <span class="org-keyword">SELECT</span> *
+    <span class="org-keyword">FROM</span> ${2:[<span class="org-keyword">schema</span>].[sample_table]}
+    $0
+<span class="org-comment">-- WITH CHECK OPTION</span>
+<span class="org-keyword">GO</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-20-2" class="outline-4">
+<h4 id="sec-2-20-2">[dv] Drop View</h4>
+<div class="outline-text-4" id="text-2-20-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">view</span>
+# <span class="org-comment">--</span>
+<span class="org-keyword">DROP</span> <span class="org-keyword">VIEW</span> $0
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-21" class="outline-3">
+<h3 id="sec-2-21">&#x2014; Miscellaneous ---</h3>
+<div class="outline-text-3" id="text-2-21">
+</div><div id="outline-container-sec-2-21-1" class="outline-4">
+<h4 id="sec-2-21-1">[sph] sp_help</h4>
+<div class="outline-text-4" id="text-2-21-1">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Execute</span> sp_help
+# <span class="org-comment">--</span>
+<span class="org-keyword">EXEC</span> sp_help$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-21-2" class="outline-4">
+<h4 id="sec-2-21-2">[spt] sp_helptext</h4>
+<div class="outline-text-4" id="text-2-21-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Execute</span> sp_helptext
+# <span class="org-comment">--</span>
+<span class="org-keyword">EXEC</span> sp_helptext$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-21-3" class="outline-4">
+<h4 id="sec-2-21-3">[xpfd] xp_fixeddrives</h4>
+<div class="outline-text-4" id="text-2-21-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Retrieve <span class="org-keyword">free</span> <span class="org-keyword">space</span> o...
+# <span class="org-comment">--</span>
+<span class="org-keyword">EXEC</span> master..xp_fixeddrives
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-21-4" class="outline-4">
+<h4 id="sec-2-21-4">[w2] Who2</h4>
+<div class="outline-text-4" id="text-2-21-4">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Execute</span> sp_who2$0
+# <span class="org-comment">--</span>
+<span class="org-keyword">EXEC</span> sp_who2$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-21-5" class="outline-4">
+<h4 id="sec-2-21-5">[err] @@ERROR</h4>
+<div class="outline-text-4" id="text-2-21-5">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: @@ERROR <span class="org-keyword">function</span> ...
+# <span class="org-comment">--</span>
+@@ERROR$0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-21-6" class="outline-4">
+<h4 id="sec-2-21-6">[mro] Most Recent Objects</h4>
+<div class="outline-text-4" id="text-2-21-6">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Retrieve 20 most rec...
+# <span class="org-comment">--</span>
+<span class="org-keyword">SELECT</span> TOP 20 [<span class="org-keyword">name</span>], [<span class="org-keyword">type</span>], crdate
+<span class="org-keyword">FROM</span> sysobjects
+<span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> crdate <span class="org-keyword">DESC</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-21-7" class="outline-4">
+<h4 id="sec-2-21-7">Comment</h4>
+<div class="outline-text-4" id="text-2-21-7">
+<p>
+A comment block.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"><span class="org-comment-delimiter">/*</span>
+<span class="org-comment"> * $0</span>
+<span class="org-comment"> */</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Surround With&#x2026;</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1">[begin] Code Snippet for BEGIN&#x2026;END block</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Surround <span class="org-keyword">with</span> <span class="org-keyword">BEGIN</span>...
+# <span class="org-comment">--</span>
+<span class="org-keyword">BEGIN</span>
+`yas-selected-text`
+<span class="org-keyword">END</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2">[if] Code Snippet for IF construct</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Surround <span class="org-keyword">with</span> IF...
+# <span class="org-comment">--</span>
+IF (${1:Condition})
+<span class="org-keyword">BEGIN</span>
+
+`yas-selected-text`
+
+<span class="org-keyword">END</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3">[while] Code Snippet for WHILE loop</h3>
+<div class="outline-text-3" id="text-3-3">
+<div class="org-src-container">
+
+<pre class="src src-sql"># <span class="org-keyword">name</span>: Surround <span class="org-keyword">with</span> WHILE...
+# <span class="org-comment">--</span>
+WHILE (${1:Condition})
+<span class="org-keyword">BEGIN</span>
+
+`yas-selected-text`
+
+<span class="org-keyword">END</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Fabrice Niessen</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
