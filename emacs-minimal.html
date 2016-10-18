@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="viewport" content="width=device-width, initial-scale=1" />
+<title>Minimal .emacs</title>
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Fabrice Niessen" />
+<link rel="stylesheet" type="text/css" href="d:/Users/fni/src/org-html-themes/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="d:/Users/fni/src/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="d:/Users/fni/src/org-html-themes/styles/lib/js/jquery.stickytableheaders.js"></script>
+<script type="text/javascript" src="d:/Users/fni/src/org-html-themes/styles/readtheorg/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Minimal .emacs</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">Example</a>
+<ul>
+<li><a href="#orgheadline2">Header</a></li>
+<li><a href="#orgheadline3">Constant part</a></li>
+<li><a href="#orgheadline4">Variable part</a>
+<ul>
+<li><a href="#orgheadline5">Sandbox</a></li>
+<li><a href="#orgheadline6">Test if function is defined</a></li>
+<li><a href="#orgheadline9">Eval-after-load eval&rsquo;ed twice</a>
+<ul>
+<li><a href="#orgheadline7">Minimal display</a></li>
+<li><a href="#orgheadline8">Backtraces</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline10">Test export to HTML</a></li>
+<li><a href="#orgheadline11">Org-test</a>
+<ul>
+<li><a href="#orgheadline12">Create a new test case</a></li>
+<li><a href="#orgheadline13">Run an existing test</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline14">ELP</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline15">Footer</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline17">One-liners</a>
+<ul>
+<li><a href="#orgheadline16">ELP</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline22">Script</a>
+<ul>
+<li><a href="#orgheadline18">From the man page</a></li>
+<li><a href="#orgheadline19">Ideal</a></li>
+<li><a href="#orgheadline20">emacs-helm.sh (from Thierry Volpiatto)</a></li>
+<li><a href="#orgheadline21">Code</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">Example</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+The usual method to find a problem while avoiding to disturb a running Emacs
+instance is to run a separate Emacs in batch mode: that will avoid any
+conflicts with the running instance.
+</p>
+
+<p>
+But <code>batch</code> implies <code>-q</code>, so you will have to provide a minimal <code>.emacs</code> file that
+sets up enough structure to enable you to do what you want, <b>without any of
+your customizations</b>.
+</p>
+
+<p>
+Here is such a minimal Emacs config file.
+</p>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2">Header</h3>
+<div class="outline-text-3" id="text-orgheadline2">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;; </span><span class="org-comment">.emacs-minimal --- Minimal configuration file for Emacs</span>
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">Commentary:</span>
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">Code:</span>
+
+(message <span class="org-string">"Loading Minimal Emacs..."</span>)
+
+(<span class="org-keyword">defconst</span> <span class="org-variable-name">em/emacs-load-time-start</span> (float-time))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">Constant part</h3>
+<div class="outline-text-3" id="text-orgheadline3">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Constant part ]-------------------------------------------------------</span>
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Activate debugging.</span>
+(setq debug-on-error t)
+(setq debug-on-quit t)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Default values for frame creation.</span>
+(setq default-frame-alist '((tool-bar-lines . 0)))
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Title bar display of visible frames.</span>
+(setq frame-title-format
+      (format <span class="org-string">"Minimal %s Emacs %s%s of %s - PID: %d"</span>
+              (capitalize (symbol-name system-type))
+              emacs-version
+              (<span class="org-keyword">if</span> (and (boundp 'emacs-repository-version)
+                       emacs-repository-version)
+                  (concat <span class="org-string">" (r"</span>
+                          (replace-regexp-in-string <span class="org-string">" .*"</span> <span class="org-string">""</span>
+                                                    emacs-repository-version)
+                          <span class="org-string">")"</span>)
+                <span class="org-string">""</span>)
+              (format-time-string <span class="org-string">"%Y-%m-%d"</span> emacs-build-time)
+              (emacs-pid)))
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Allow input of accented characters (for terminals that use 8-bit charsets).</span>
+(set-input-mode nil nil 1)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Enable visualization of matching parens.</span>
+(<span class="org-keyword">require</span> '<span class="org-constant">paren</span>)
+(show-paren-mode 1)
+(setq show-paren-style 'mixed)
+(setq show-paren-ring-bell-on-mismatch t)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">No limit when printing values.</span>
+(setq eval-expression-print-length nil)
+(setq eval-expression-print-level nil)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Don't display the "Welcome to GNU Emacs" buffer on startup.</span>
+(setq inhibit-startup-screen t)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Initial message displayed in *scratch* buffer at startup.</span>
+(setq initial-scratch-message
+      <span class="org-string">";;----------------------------------------------------------------------</span>
+<span class="org-string">;; This is Emacs running with a minimal configuration file.</span>
+<span class="org-string">;;----------------------------------------------------------------------</span>
+
+<span class="org-string">"</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">try-require</span> (feature)
+  <span class="org-doc">"Attempt to load a FEATURE (or library).</span>
+<span class="org-doc">    Return true if the library given as argument is successfully loaded.  If</span>
+<span class="org-doc">    not, just print a message."</span>
+  (<span class="org-keyword">condition-case</span> err
+      (<span class="org-keyword">progn</span>
+        (<span class="org-keyword">if</span> (stringp feature)
+            (load-library feature)
+          (<span class="org-keyword">require</span> <span class="org-constant">feature</span>))
+        t)                              <span class="org-comment-delimiter">; </span><span class="org-comment">Necessary for correct behavior in</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">conditional expressions.</span>
+    (file-error
+     (message <span class="org-string">"Requiring `</span><span class="org-constant"><span class="org-string">%s</span></span><span class="org-string">'... missing"</span> feature)
+     nil)))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Org-mode (reverse order, so that the Org lisp directory will be found</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">before the Org contrib lisp directory).</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp") ; htmlize</span>
+(add-to-list 'load-path <span class="org-string">"~/Public/Repositories/org-mode/lisp"</span>)
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">Modify the paths to suit your</span>
+                                        <span class="org-comment-delimiter">; </span><span class="org-comment">environment!</span>
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Getting started.</span>
+(add-to-list 'auto-mode-alist '(<span class="org-string">"\\.</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">(</span></span><span class="org-string">org</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">org_archive</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">|</span></span><span class="org-string">txt</span><span class="org-regexp-grouping-backslash"><span class="org-string">\\</span></span><span class="org-regexp-grouping-construct"><span class="org-string">)</span></span><span class="org-string">\\'"</span> . org-mode))
+(<span class="org-keyword">when</span> (locate-library <span class="org-string">"org-loaddefs"</span>)
+  (<span class="org-keyword">require</span> '<span class="org-constant">org-loaddefs</span>))
+
+(global-set-key (kbd <span class="org-string">"C-c l"</span>) 'org-store-link)
+(global-set-key (kbd <span class="org-string">"C-c a"</span>) 'org-agenda)
+(global-set-key (kbd <span class="org-string">"C-c c"</span>) 'org-capture)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">Variable part</h3>
+<div class="outline-text-3" id="text-orgheadline4">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">* --[ Variable part Under Test ]--------------------------------------------</span>
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-4">
+<h4 id="orgheadline5">Sandbox</h4>
+<div class="outline-text-4" id="text-orgheadline5">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Place your test code here.</span>
+
+(setq ispell-program-name
+      (<span class="org-keyword">cond</span> ((eq system-type 'cygwin)
+             <span class="org-string">"/cygdrive/c/Program Files (x86)/Aspell/bin/aspell.exe"</span>)
+            ((eq system-type 'windows-nt)
+             <span class="org-string">"c:/Program Files (x86)/Aspell/bin/aspell.exe"</span>)))
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Enable on-the-fly spell checking.</span>
+(add-hook 'org-mode-hook 'flyspell-mode)
+
+(<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"helm-autoloads"</span>
+  (global-set-key (kbd <span class="org-string">"M-y"</span>) 'helm-show-kill-ring))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline6" class="outline-4">
+<h4 id="orgheadline6">Test if function is defined</h4>
+<div class="outline-text-4" id="text-orgheadline6">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(message <span class="org-string">"defined? %S"</span> (functionp (quote org-babel-do-load-languages)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline9" class="outline-4">
+<h4 id="orgheadline9">Eval-after-load eval&rsquo;ed twice</h4>
+<div class="outline-text-4" id="text-orgheadline9">
+</div><div id="outline-container-orgheadline7" class="outline-5">
+<h5 id="orgheadline7">Minimal display</h5>
+<div class="outline-text-5" id="text-orgheadline7">
+<p>
+You can see the problem by running the following code:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span class="org-keyword">with-eval-after-load</span> <span class="org-string">"org"</span>
+  (message <span class="org-string">"LOADED org.el"</span>)
+  (sit-for 3)
+  (message <span class="org-string">""</span>))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-5">
+<h5 id="orgheadline8">Backtraces</h5>
+<div class="outline-text-5" id="text-orgheadline8">
+<p>
+You can <b>get backtraces</b> at each stopping point by Edebugging <code>foobar</code> and
+<code>C-x C-f foo.org</code>:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">foobar</span> ()
+  (message <span class="org-string">"LOADED org.el"</span>)
+  (sit-for 3)
+  (message <span class="org-string">""</span>))
+
+(setq org-load-hook (function foobar))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline10" class="outline-4">
+<h4 id="orgheadline10">Test export to HTML</h4>
+<div class="outline-text-4" id="text-orgheadline10">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span class="org-keyword">let</span> ((org-confirm-babel-evaluate nil)) <span class="org-comment-delimiter">; </span><span class="org-comment">Preference over the explicit setq.</span>
+  (find-file <span class="org-string">"file-to-export.org"</span>)
+  (org-export-as-html 3))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline11" class="outline-4">
+<h4 id="orgheadline11">Org-test</h4>
+<div class="outline-text-4" id="text-orgheadline11">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Change the pathname appropriately!</span>
+(add-to-list 'load-path (expand-file-name <span class="org-string">"~/Public/Repositories/org-mode/testing"</span>))
+(load-library <span class="org-string">"org-test"</span>)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline12" class="outline-5">
+<h5 id="orgheadline12">Create a new test case</h5>
+<div class="outline-text-5" id="text-orgheadline12">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(ert-deftest test-org/end-of-line ()
+  <span class="org-string">"Test `</span><span class="org-constant"><span class="org-string">org-end-of-line</span></span><span class="org-string">' specifications."</span>
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">At an headline without special movement.</span>
+  (should
+   (org-test-with-temp-text <span class="org-string">"* Headline2 :tag:\n"</span>
+     (<span class="org-keyword">let</span> ((org-special-ctrl-a/e nil))
+       (and (<span class="org-keyword">progn</span>
+              (message <span class="org-string">"FOO"</span>)
+              (org-end-of-line)
+              (message (format <span class="org-string">"%d"</span> (point)))
+              (eolp))
+            (<span class="org-keyword">progn</span>
+              (org-end-of-line)
+              (eolp)))))))
+
+(ert 'test-org/end-of-line)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline13" class="outline-5">
+<h5 id="orgheadline13">Run an existing test</h5>
+<div class="outline-text-5" id="text-orgheadline13">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Change the pathname appropriately!</span>
+(add-to-list 'load-path (expand-file-name <span class="org-string">"~/Public/Repositories/org-mode/testing/lisp"</span>))
+(load-library <span class="org-string">"test-org"</span>)
+(ert-run-tests-batch-and-exit 'test-org/end-of-line)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline14" class="outline-4">
+<h4 id="orgheadline14">ELP</h4>
+<div class="outline-text-4" id="text-orgheadline14">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-babel-load-languages '((emacs-lisp . t) (latex . t)))</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(setq org-confirm-babel-evaluate nil)</span>
+
+(<span class="org-keyword">require</span> '<span class="org-constant">org</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">org-agenda</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">outline</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">font-lock</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">flyspell</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">ispell</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">calendar</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">cal-iso</span>)
+(<span class="org-keyword">require</span> '<span class="org-constant">diary-lib</span>)
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Profile some times... CAUTION: require the packages first (to get results)!</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(elp-instrument-list '(org-agenda-next-line next-line line-move))</span>
+(<span class="org-keyword">when</span> (<span class="org-keyword">require</span> '<span class="org-constant">elp</span>)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">The most important ones.</span>
+  (elp-instrument-package <span class="org-string">"org"</span>)
+  (elp-instrument-package <span class="org-string">"org-agenda"</span>)
+  (elp-instrument-package <span class="org-string">"outline"</span>)
+  (elp-instrument-package <span class="org-string">"font-lock"</span>)
+  (elp-instrument-package <span class="org-string">"flyspell"</span>)
+  (elp-instrument-package <span class="org-string">"ispell"</span>)
+  (elp-instrument-package <span class="org-string">"emacs-leuven"</span>)
+  (elp-instrument-package <span class="org-string">"calendar"</span>)
+  (elp-instrument-package <span class="org-string">"cal-iso"</span>)
+  (elp-instrument-package <span class="org-string">"diary-lib"</span>)
+
+  (global-set-key (kbd <span class="org-string">"C-c e"</span>) 'elp-results))
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">Improve readability of profile results, give milliseconds.</span>
+(<span class="org-keyword">defun</span> <span class="org-function-name">elp-pack-number</span> (number width)
+  (format (concat <span class="org-string">"%"</span> (number-to-string (- width 3)) <span class="org-string">".2f"</span>)
+          (* 100 (string-to-number number))))
+
+(setq org-agenda-files '(<span class="org-string">"~/org/tests/org-test.txt"</span>))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline15" class="outline-3">
+<h3 id="orgheadline15">Footer</h3>
+<div class="outline-text-3" id="text-orgheadline15">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(message <span class="org-string">"Loading Minimal Emacs... Done (in %.2f s)"</span>
+         (- (float-time) em/emacs-load-time-start))
+
+(<span class="org-keyword">provide</span> '<span class="org-constant">.emacs-minimal</span>)
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">.emacs-minimal.el ends here</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline17" class="outline-2">
+<h2 id="orgheadline17">One-liners</h2>
+<div class="outline-text-2" id="text-orgheadline17">
+</div><div id="outline-container-orgheadline16" class="outline-3">
+<h3 id="orgheadline16">ELP</h3>
+<div class="outline-text-3" id="text-orgheadline16">
+<div class="org-src-container">
+
+<pre class="src src-shell">emacs -Q --batch -L ~/Public/Repositories/org-mode/lisp <span class="org-sh-escaped-newline">\</span>
+    --eval <span class="org-string">'(elp-instrument-package "org")'</span> 400.org --eval <span class="org-string">'(elp-results)'</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline22" class="outline-2">
+<h2 id="orgheadline22">Script</h2>
+<div class="outline-text-2" id="text-orgheadline22">
+</div><div id="outline-container-orgheadline18" class="outline-3">
+<h3 id="orgheadline18">From the man page</h3>
+<div class="outline-text-3" id="text-orgheadline18">
+<dl class="org-dl">
+<dt><code>-q</code>, <code>--no-init-file</code></dt><dd>Do not load an init file.</dd>
+
+<dt><code>--no-site-file</code></dt><dd>Do not load the site-wide startup file.</dd>
+
+<dt><code>-Q</code>, <code>--quick</code></dt><dd><p>
+     Similar to <code>-q --no-site-file --no-splash</code>.
+</p>
+
+<p>
+<b>Ignore any configuration</b> ensuring a vanilla Emacs instance is used.
+</p></dd>
+
+<dt><code>--batch</code></dt><dd><p>
+     Run Emacs in &ldquo;batch&rdquo; mode with <b>no GUI</b> and <b>termination after execution</b>.
+</p>
+
+<p>
+The editor will send messages to stderr.
+</p>
+
+<p>
+You must use <code>-l</code> and <code>-f</code> options to specify files to execute and functions
+to call.
+</p></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgheadline19" class="outline-3">
+<h3 id="orgheadline19">Ideal</h3>
+<div class="outline-text-3" id="text-orgheadline19">
+<p>
+<b>Some code must be used in the <code>.emacs</code> file (or libraries loaded FROM it).</b>
+</p>
+
+<p>
+For example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">  <span class="org-comment-delimiter">;; </span><span class="org-comment">Major mode command symbol to use for the initial `</span><span class="org-constant"><span class="org-comment">*scratch*</span></span><span class="org-comment">' buffer.</span>
+  (setq initial-major-mode 'fundamental-mode)
+</pre>
+</div>
+
+<p>
+Otherwise, <code>*scratch*</code> will already have been created, in the default major
+mode.
+</p>
+
+<p>
+So, ideally, when testing a minimal Emacs configuration file, we should
+replace the <code>.emacs</code> file.
+</p>
+
+<p>
+What we <b>could</b> do, is set <code>HOME</code> to a different value just for Emacs, but that&rsquo;s
+not recommended, because it could mess up external programs that Emacs calls.
+And <span class="underline">because</span> Emacs relies so much on external programs, notably the shell,
+changing <code>HOME</code> for Emacs is a very bad idea. WE DON&rsquo;T DO THAT!!
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline20" class="outline-3">
+<h3 id="orgheadline20">emacs-helm.sh (from Thierry Volpiatto)</h3>
+<div class="outline-text-3" id="text-orgheadline20">
+<p class="verse">
+&gt; I was too lazy to test with emacs -Q before.<br  />
+<br  />
+<code>emacs-helm.sh</code> is for that, I am too lazy too to use emacs -Q ;-)<br  />
+</p>
+
+<p>
+If <code>emacs</code> is pointing to an Emacs executable which is not fully working, you can
+use the <code>-P</code> option of <code>emacs-helm.sh</code> to use another Emacs executable file.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline21" class="outline-3">
+<h3 id="orgheadline21">Code</h3>
+<div class="outline-text-3" id="text-orgheadline21">
+<p>
+<b>Call this script emacs-q?</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-shell"><span class="org-variable-name">TESTEL</span>=
+<span class="org-variable-name">TESTFILE</span>=~/test.el
+<span class="org-keyword">if</span> test -e $<span class="org-variable-name">TESTFILE</span> <span class="org-comment-delimiter"># </span><span class="org-comment">file exists</span>
+<span class="org-keyword">then</span>
+    <span class="org-variable-name">TESTEL</span>=<span class="org-string">"-l $TESTFILE"</span>
+<span class="org-keyword">fi</span>
+
+<span class="org-variable-name">EMACS</span>=<span class="org-string">"/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">No init file.</span>
+<span class="org-variable-name">cmd</span>=<span class="org-string">"$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"</span>
+
+<span class="org-builtin">echo</span> <span class="org-string">"Launching '$cmd'..."</span>
+<span class="org-builtin">eval</span> <span class="org-string">"$cmd"</span>
+
+<span class="org-builtin">echo</span> <span class="org-string">"Exit status: $?"</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-shell"><span class="org-builtin">alias</span> <span class="org-variable-name">em</span>=emacs-minimal
+</pre>
+</div>
+
+<p>
+Install it, by symlinking the file.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-shell">ln -f -s $<span class="org-variable-name">workingDir</span>/emacs-minimal ~/bin/emacs-minimal
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Fabrice Niessen</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
