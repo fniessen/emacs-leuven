@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20161018.2025
+;; Version: 20161105.2129
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -34,7 +34,7 @@
 ;;** 1.1 (info "(gnus)Finding the News")
 
   (if (member (downcase (system-name))
-              '("mundaneum" "xiphias")) ; Private config.
+              '("mundaneum" "xiphias" "osboxes")) ; Private config.
 
       ;; Configure incoming mail.
       (setq gnus-select-method

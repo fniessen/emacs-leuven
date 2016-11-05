@@ -185,7 +185,7 @@ that it does not interfere with your own configuration...
 ;;** 1.1 (info "(gnus)Finding the News")
 
   (if (member (downcase (system-name))
-              '("mundaneum" "xiphias")) ; Private config.
+              '("mundaneum" "xiphias" "osboxes")) ; Private config.
 
       ;; Configure incoming mail.
       (setq gnus-select-method
