@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161105.2349
+;; Version: 20161107.1402
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161105.2349"
+(defconst leuven--emacs-version "20161107.1402"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7849,7 +7849,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "vc-git"
 
     ;; Major mode for editing git commit messages.
-    (try-require 'git-commit))
+    (idle-require 'git-commit))
 
   (with-eval-after-load "git-commit"
 

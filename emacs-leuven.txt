@@ -13486,7 +13486,7 @@ it into the commit buffer. So there is no need to "write the same thing twice".
   (with-eval-after-load "vc-git"
 
     ;; Major mode for editing git commit messages.
-    (try-require 'git-commit))
+    (idle-require 'git-commit))
 
   (with-eval-after-load "git-commit"
 
