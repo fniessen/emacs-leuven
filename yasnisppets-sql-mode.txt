@@ -18,6 +18,10 @@
 
 http://www.red-gate.com/products/sql-development/sql-prompt/
 
+** TODO Look at RedGate snippets
+
+/cygdrive/c/Users/f.niessen/AppData/Local/Red Gate/SQL Prompt 7/Snippets/
+
 * Overview
 
 A *SQL snippet* is a frequently used *code template* which can be inserted into
@@ -44,31 +48,48 @@ Snippets are categorized into 2 types:
 /* declare variables */
 DECLARE @variable INT
 
-DECLARE ${1:cursor_name} CURSOR FAST_FORWARD READ_ONLY FOR ${2:select_statement}
+DECLARE ${1:cursor_name} CURSOR
+FAST_FORWARD READ_ONLY
+FOR ${2:select_statement}
 
 OPEN $1
 
-FETCH NEXT FROM $1 INTO @variable
+FETCH NEXT FROM $1
+INTO @variable
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
     $0
 
-    FETCH NEXT FROM $1 INTO @variable
+    FETCH NEXT FROM $1
+    INTO @variable
 END
 
 CLOSE $1
 DEALLOCATE $1
+GO
 #+end_src
 
 ** Database
 
 *** [cdb] Create DataBase
 
+Create database.
+
 #+begin_src sql :tangle snippets/sql-mode/cdb.yasnippet
 # name: Create database
 # --
-CREATE DATABASE ${1:database_name}
+USE master
+GO
+
+-- Drop the database if it already exists
+IF EXISTS (SELECT name
+        FROM sys.databases
+        WHERE name = N'${1:database_name}')
+    DROP DATABASE $1
+GO
+
+CREATE DATABASE $1
 ON
 PRIMARY ( -- or use FILEGROUP filegroup_name
   NAME = $1_data,
@@ -95,16 +116,26 @@ GO
 
 *** [cdbsnap] Create DataBase Snapshot
 
+Create snapshot.
+
 #+begin_src sql :tangle snippets/sql-mode/cdbsnap.yasnippet
 # name: Create database sna...
 # --
-CREATE DATABASE ${2:database_name} 
-ON 
-    (
-    NAME = $2_data,
-    FILENAME = '$2.ss'
-    )
-AS SNAPSHOT OF ${1:source_database}
+USE master
+GO
+
+-- Drop snapshot database if it already exists
+IF EXISTS (SELECT name
+        FROM sys.databases
+        WHERE name = N'${1:source_database}_${2:snapshot_id}')
+    DROP DATABASE $1_$2
+GO
+
+-- Create the snapshot database
+CREATE DATABASE $1_$2 ON
+( NAME = $1_$2_data,
+  FILENAME = '$1_$2.ss')
+AS SNAPSHOT OF $1;
 GO$0
 #+end_src
 
@@ -113,7 +144,53 @@ GO$0
 #+begin_src sql :tangle snippets/sql-mode/dd.yasnippet
 # name: Drop database
 # --
-DROP DATABASE $0
+USE master
+GO
+
+-- Drop the database if it already exists
+IF EXISTS (SELECT name
+        FROM sys.databases
+        WHERE name = N'${1:database_name}')
+    DROP DATABASE $1
+GO
+#+end_src
+
+*** Database Backup
+
+Backup database.
+
+#+begin_src sql :tangle no
+# name: Backup database
+# --
+BACKUP DATABASE ${1:database_name}
+    TO DISK = N'Backup_Path/$1.bak'
+WITH
+    NOFORMAT,
+    NOINIT,
+    NAME = N'$1-Full Database Backup',
+    SKIP,
+    STATS = 10;
+GO
+#+end_src
+
+*** Database Restore
+
+Restore database.
+
+#+begin_src sql :tangle no
+# name: Restore database
+# --
+USE master
+GO
+
+RESTORE DATABASE ${1:database_name}
+    FROM DISK = N'Backup_Path/$1.bak'
+WITH
+    FILE = 1,
+    NOUNLOAD,
+    REPLACE,
+    STATS = 10
+GO
 #+end_src
 
 ** Fragment
@@ -136,13 +213,18 @@ SELECT * FROM $0
 
 *** [st100] Select Top 100
 
+Select top 100 rows.
+
 #+begin_src sql :tangle snippets/sql-mode/st100.yasnippet
 # name: SELECT top 100 rows
 # --
-SELECT TOP 100 * FROM $0
+SELECT TOP 100 *
+FROM $0
 #+end_src
 
 *** [scf] Select Count From
+
+Count number of records returned by query.
 
 #+begin_src sql :tangle snippets/sql-mode/scf.yasnippet
 # name: Count number of rec...
@@ -176,10 +258,13 @@ ORDER BY $0
 
 *** [df] Delete From
 
+Delete statement.
+
 #+begin_src sql :tangle snippets/sql-mode/df.yasnippet
 # name: DELETE FROM frag...
 # --
-DELETE FROM ${1:[schema].[table_name]} WHERE $0
+DELETE FROM ${1:[schema].[table_name]}
+WHERE $0
 #+end_src
 
 *** [be] Begin...End
@@ -228,6 +313,21 @@ BEGIN
 END
 #+end_src
 
+*** If Exists
+
+Perform an operation if a selected object exists.
+
+#+begin_src sql :tangle no
+# name: ...
+# --
+IF EXISTS(
+ SELECT
+ FROM ${1:object})
+ BEGIN
+    $0
+ END
+#+end_src
+
 *** Case
 
 #+begin_src sql :tangle no
@@ -247,10 +347,14 @@ Temporary inline view.
 # --
 WITH ${1:cte_name} AS
 (
-
+    -- SELECT
+    -- FROM
+    -- GROUP BY
 )
+-- Statement that executes the common table expression
 SELECT $0
-FROM $1
+FROM $1;
+GO
 #+end_src
 
 ** Function
@@ -264,19 +368,38 @@ Creates an inline table function.
 #+begin_src sql :tangle snippets/sql-mode/citf.yasnippet
 # name: Create inline table-va...
 # --
-IF OBJECT_ID (N'${1:[schema].[function_name]}', N'IF') IS NOT NULL  
+IF OBJECT_ID (N'${1:[schema].[inline_function_name]}', N'IF') IS NOT NULL
     DROP FUNCTION $1;  
 GO
 
+-- ================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
 CREATE FUNCTION $1 (@${2:parameter_name} ${3:parameter_data_type})
 RETURNS TABLE
 --WITH ENCRYPTION|SCHEMABINDING, ...
 AS
 RETURN
 (
-    -- SELECT @$2 AS c1
+    -- Add the SELECT statement with parameter references here
+    SELECT @$2 AS c1
     $0
 );
+GO
+
+-- =============================================
+-- Example to execute function
+-- =============================================
+SELECT *
+FROM $1 /* owner.inline_function_name */
+    (/* value_for_@parameter_name */)
 GO
 #+end_src
 
@@ -287,23 +410,31 @@ Creates a multi-statement table function.
 #+begin_src sql :tangle snippets/sql-mode/ctf.yasnippet
 # name: Create multi-stateme...
 # --
-IF OBJECT_ID (N'${1:[schema].[function_name]}', N'TF') IS NOT NULL  
+IF OBJECT_ID (N'${1:[schema].[table_function_name]}', N'TF') IS NOT NULL
     DROP FUNCTION $1;  
 GO
 
 CREATE FUNCTION $1 (@{2:parameter_name} ${3:parameter_data_type})
-RETURNS @${4:return_variable} TABLE
+RETURNS @${4:return_variable_name} TABLE
 (
     /* table type definition */
-    -- [$2] c1
+    $2 $3
 )
 --WITH ENCRYPTION|SCHEMABINDING, ...
 AS
 BEGIN
     /* function body */
-    $0
+    INSERT @$4
+    SELECT 1
     RETURN
 END;
+GO
+
+-- =============================================
+-- Example to execute function
+-- =============================================
+SELECT * FROM $1 /* owner.table_function_name */
+    (/* value_for_@parameter_name */)
 GO
 #+end_src
 
@@ -314,19 +445,39 @@ Creates a scalar function.
 #+begin_src sql :tangle snippets/sql-mode/csf.yasnippet
 # name: Create scalar function
 # --
-IF OBJECT_ID (N'${1:[schema].[function_name]}', N'FN') IS NOT NULL  
+IF OBJECT_ID (N'${1:[schema].[scalar_function_name]}', N'FN') IS NOT NULL
     DROP FUNCTION $1;  
 GO
 
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
 CREATE FUNCTION $1 (@{2:parameter_name} ${3:parameter_data_type})
-RETURNS ${4:data_type}
+RETURNS ${4:function_data_type}
 --WITH ENCRYPTION|SCHEMABINDING, ...
 AS
 -- Returns ...
 BEGIN
     /* function body */
-    RETURN @$2$0 /* scalar expression */
+--  eg.
+--  DECLARE @v_ret $4
+--  SELECT @v_ret = /* scalar expression */
+--  RETURN @v_ret$0
 END;
+GO
+
+-- =============================================
+-- Example to execute function
+-- =============================================
+SELECT $1 /* owner.scalar_function_name */
+    (/* value_for_@parameter_name */)
 GO
 #+end_src
 
@@ -350,7 +501,7 @@ DROP FUNCTION $0
 
 *** [cni] Create Non-Clustered Index
 
-Creates a simple (basic), non-clustered index.
+Creates a basic, non-clustered index.
 
 #+begin_src sql :tangle snippets/sql-mode/cni.yasnippet
 # name: Create non-unique n...
@@ -385,13 +536,14 @@ GO
 
 CREATE UNIQUE NONCLUSTERED INDEX $3
 ON $1 (${2:column})
---WITH PAD_INDEX
---    | FILLFACTOR = fillfactor
---    | IGNORE_DUP_KEY
---    | DROP_EXISTING
---    | STATISTICS_NORECOMPUTE
---    | SORT_IN_TEMPDB, .. as required
--- ON filegroup
+--WITH
+--    PAD_INDEX,
+--    FILLFACTOR = fillfactor,
+--    IGNORE_DUP_KEY,
+--    DROP_EXISTING = OFF,
+--    STATISTICS_NORECOMPUTE,
+--    SORT_IN_TEMPDB = OFF, .. as required
+ON ${3:filegroup_name}
 GO
 $0
 #+end_src
@@ -420,6 +572,8 @@ $0
 
 *** [cuci] Create Unique Clustered Index
 
+Create index full syntax.
+
 #+begin_src sql :tangle snippets/sql-mode/cuci.yasnippet
 # name: Create unique cluster...
 # --
@@ -429,13 +583,14 @@ GO
 
 CREATE UNIQUE CLUSTERED INDEX $3
 ON $1 (${2:column})
---WITH PAD_INDEX
---    | FILLFACTOR = fillfactor
---    | IGNORE_DUP_KEY
---    | DROP_EXISTING
---    | STATISTICS_NORECOMPUTE
+WITH
+PAD_INDEX,
+FILLFACTOR = ${3:fillfactor_value},
+IGNORE_DUP_KEY,
+DROP_EXISTING,
+STATISTICS_NORECOMPUTE
 --    | SORT_IN_TEMPDB, .. as required
--- ON filegroup
+ON ${4:filegroup_name}
 GO
 $0
 #+end_src
@@ -531,13 +686,13 @@ Creates a SQL Server Authentication login.
 #+begin_src sql :tangle snippets/sql-mode/cl.yasnippet
 # name: CREATE SQL Server l...
 # --
-CREATE LOGIN ${1:LoginName}
-WITH PASSWORD = N'${2:StrongP@ssword}'$0 /* HASHED */ /* MUST CHANGE */
---  SID = sid
+CREATE LOGIN ${1:SQL_login_name}
+WITH PASSWORD = N'${2:Strong_P@ssword}'$0 /* HASHED */ /* MUST_CHANGE */
 --  DEFAULT_DATABASE = database
 --  DEFAULT_LANGUAGE = language
---  CHECK_EXPIRATION = ON | OFF
 --  CHECK_POLICY = ON | OFF
+--  SID = sid
+--  CHECK_EXPIRATION = ON | OFF
 --  CREDENTIAL = credential_name
 GO
 #+end_src
@@ -549,11 +704,11 @@ Creates a Windows Authentication login.
 #+begin_src sql :tangle no
 # name: CREATE Windows l...
 # --
-CREATE LOGIN ${1:[DomainName\UserName]}
+CREATE LOGIN ${1:[domain_name\user_name]}
 FROM WINDOWS$0
---    WITH
---      DEFAULT_DATABASE = database
---      DEFAULT_LANGUAGE = language
+WITH
+DEFAULT_DATABASE = ${2:default_database}
+--  DEFAULT_LANGUAGE = language
 --  CERTIFICATE certificate_name
 --  ASYMMETRIC KEY key_name
 GO
@@ -561,10 +716,13 @@ GO
 
 *** [dl] Drop Login
 
+Drop login.
+
 #+begin_src sql :tangle snippets/sql-mode/dl.yasnippet
 # name: Drop login
 # --
-DROP LOGIN $0
+DROP LOGIN ${1:SQL_login_name}
+GO
 #+end_src
 
 ** Role
@@ -574,7 +732,11 @@ DROP LOGIN $0
 Create Database Role.
 
 #+begin_src sql :tangle no
-CREATE ROLE ${1:RoleName}$0
+USE ${1:database_name}
+GO
+
+CREATE ROLE ${2:role_name}$0
+GO
 #+end_src
 
 ** Schema
@@ -619,30 +781,55 @@ Naming convention: stored procedures are prefixed with ~usp~.
 
 *** [cp] Create Procedure Basic Template
 
-Create a simple stored procedure.
+Create a simple stored procedure with output parameter.
 
 #+begin_src sql :tangle snippets/sql-mode/cp.yasnippet
 # name: Create stored proced...
 # --
+-- Drop stored procedure if it already exists
 IF OBJECT_ID ('${1:[schema].[procedure_name]}', 'P') IS NOT NULL   
     DROP PROCEDURE $1;  
 GO
 
---SET QUOTED_IDENTIFIER ON|OFF
---SET ANSI_NULLS ON|OFF
---GO
-
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
 CREATE PROCEDURE $1
-    @${2:parameter_name} ${3:parameter_data_type} = ${4:default}
+    -- Add the parameters for the function here
+    @${2:parameter_name_1} ${3:parameter_data_type_1} = ${4:default_value_for_parameter_1}
+    @${5:parameter_name_2} ${6:parameter_data_type_2} OUTPUT
 -- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'
 AS
-    -- SELECT @$2
-    $0;
+BEGIN
+    -- SET NOCOUNT ON added to prevent extra result sets from
+    -- interfering with SELECT statements.
+    SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+    SELECT @$2$0
+END
 GO
 
 --SET QUOTED_IDENTIFIER ON|OFF
 --SET ANSI_NULLS ON|OFF
 --GO
+
+-- =============================================
+-- Example to execute the stored procedure
+-- =============================================
+DECLARE @${7:variable_for_output_parameter} $6
+
+EXECUTE $1 /* value_for_parameter_1 */, $7 OUTPUT
+
+SELECT $7
+GO
 #+end_src
 
 *** [crlp] Create CLR Procedure
@@ -699,20 +886,22 @@ GO$0
 
 *** [ct] Create Table
 
-Creates a table.
+Creates a table (and drop previous one with the same name).
 
 #+begin_src sql :tangle snippets/sql-mode/ct.yasnippet
 # name: Create table
 # --
 IF OBJECT_ID ('${1:[schema].[table_name]}', 'U') IS NOT NULL
     DROP TABLE $1;
-go
+GO
 
 CREATE TABLE $1
 (
     ${2:column_1} ${3:data_type_1} ${4:column_nullability_1},
-    ${5:column_2} ${6:data_type_2} ${5:column_nullability_2}$0
+    ${5:column_2} ${6:data_type_2} ${5:column_nullability_2},$0
+    CONSTRAINT /* contraint_name */ PRIMARY KEY (/* columns_in_primary_key */)
 );
+GO
 #+end_src
 
 *** [at] Alter Table fragment
@@ -750,12 +939,23 @@ ALTER TABLE ${1:[schema].[table_name]} DROP COLUMN $0;
 GO
 #+end_src
 
+*** Add Constraint
+
+#+begin_src sql :tangle no
+# name: Add constraint
+# --
+ALTER TABLE ${1:[schema].[table_name]}
+ADD CONSTRAINT ${2:constraint_name};
+GO
+#+end_src
+
 *** [atdc] Drop Constraint
 
 #+begin_src sql :tangle snippets/sql-mode/atdc.yasnippet
 # name: Drop constraint
 # --
-ALTER TABLE ${1:[schema].[table_name]} DROP CONSTRAINT $0;
+ALTER TABLE ${1:[schema].[table_name]}
+DROP CONSTRAINT ${2:constraint_name};
 GO
 #+end_src
 
@@ -764,7 +964,15 @@ GO
 #+begin_src sql :tangle snippets/sql-mode/dt.yasnippet
 # name: Drop table
 # --
-DROP TABLE $0
+
+IF EXISTS (SELECT *
+             FROM sys.tables
+             JOIN sys.schemas
+               ON sys.tables.schema_id = sys.schemas.schema_id
+            WHERE sys.schemas.name = N'${1:schema}'
+              AND sys.tables.name = N'${2:table}')
+    DROP TABLE $1.$2
+GO
 #+end_src
 
 ** Transaction
@@ -802,18 +1010,34 @@ Creates a trigger.
 #+begin_src sql :tangle no
 # name: Create trigger
 # --
-IF OBJECT_ID ('${1:TriggerName}', 'TR') IS NOT NULL
+IF OBJECT_ID ('${1:trigger_name}', 'TR') IS NOT NULL
     DROP TRIGGER $1;
 GO
 
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
 CREATE TRIGGER $1
 ON ${2:[schema].[table_name]}
 FOR INSERT, UPDATE, DELETE
 AS
-    BEGIN
-        SET NOCOUNT ON
-    END;
-GO$0
+BEGIN
+    -- SET NOCOUNT ON added to prevent extra result sets from
+    -- interfering with SELECT statements.
+    SET NOCOUNT ON;
+
+    -- Insert statements for trigger here
+    RAISERROR (50009, 16, 10)
+    $0
+END;
+GO
 #+end_src
 
 *** Enable Trigger
@@ -826,10 +1050,13 @@ ALTER TABLE ${1:[schema].[table_name]} ENABLE TRIGGER $0;
 
 *** Enable All Triggers
 
+Enable all triggers on table.
+
 #+begin_src sql :tangle snippets/sql-mode/ateta.yasnippet
 # name: Enable all triggers on...
 # --
 ALTER TABLE ${1:[schema].[table_name]}$0 ENABLE TRIGGER ALL;
+GO
 #+end_src
 
 *** Disable Trigger
@@ -842,10 +1069,13 @@ ALTER TABLE ${1:[schema].[table_name]} DISABLE TRIGGER $0;
 
 *** Disable All Triggers
 
+Disable all triggers on table.
+
 #+begin_src sql :tangle snippets/sql-mode/atdta.yasnippet
 # name: Disable all triggers on...
 # --
 ALTER TABLE ${1:[schema].[table_name]}$0 DISABLE TRIGGER ALL;
+GO
 #+end_src
 
 ** User
@@ -871,7 +1101,8 @@ GO
 #+begin_src sql :tangle snippets/sql-mode/du.yasnippet
 # name: Drop user
 # --
-DROP USER ${1:UserName}$0
+DROP USER ${1:user_name}
+GO
 #+end_src
 
 ** User Defined Data Type
@@ -963,6 +1194,8 @@ EXEC sp_helptext$0
 
 *** [xpfd] xp_fixeddrives
 
+Retrieve free space on all fixed drives.
+
 #+begin_src sql :tangle snippets/sql-mode/xpfd.yasnippet
 # name: Retrieve free space o...
 # --
@@ -987,6 +1220,8 @@ EXEC sp_who2$0
 
 *** [mro] Most Recent Objects
 
+Retrieve 20 most recently created objects.
+
 #+begin_src sql :tangle snippets/sql-mode/mro.yasnippet
 # name: Retrieve 20 most rec...
 # --
@@ -1003,6 +1238,16 @@ A comment block.
 /*
  * $0
  */
+#+end_src
+
+*** Comment
+
+A multiline comment block.
+
+#+begin_src sql :tangle no
+/*******************************************
+ * $0
+ *******************************************/
 #+end_src
 
 * Surround With...
