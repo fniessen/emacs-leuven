@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161011.1257
+;; Version: 20161105.2349
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161011.1257"
+(defconst leuven--emacs-version "20161105.2349"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -197,7 +197,7 @@ Last time is saved in global variable `leuven--before-section-time'."
       ;; TODO Add warning if directory does not exist.
       (let* ((this-directory (expand-file-name this-directory)))
 
-        ;; directories containing a `.nosearch' file (such as
+        ;; Directories containing a `.nosearch' file (such as
         ;; `auctex-11.88.6\style') should not made part of `load-path'.
         ;; TODO `RCS' and `CVS' directories should also be excluded.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
@@ -231,8 +231,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (unless (fboundp 'try-require)
     (defun try-require (feature)
       "Attempt to load a FEATURE (or library).
-    Return true if the library given as argument is successfully loaded.  If
-    not, just print a message."
+Return true if the library given as argument is successfully
+loaded.  If not, just print a message."
       (condition-case err
           (progn
             (if (stringp feature)
@@ -302,7 +302,8 @@ Last time is saved in global variable `leuven--before-section-time'."
 
   (defconst leuven--windows-program-files-dir ; sys-path.
     (cond (leuven--win32-p
-           (file-name-as-directory (getenv "ProgramFiles(x86)")))
+           (file-name-as-directory (or (getenv "ProgramFiles(x86)")
+                                       (getenv "ProgramFiles"))))
           (leuven--cygwin-p
            "/cygdrive/c/Program Files/")
           (t
@@ -374,6 +375,8 @@ Last time is saved in global variable `leuven--before-section-time'."
                     ("melpa" . "http://melpa.org/packages/"))
                   package-archives))
 
+    ;; Packages which were installed by the user (as opposed to installed as
+    ;; dependencies).
     (setq package-selected-packages '(ace-jump-helm-line
                                       ace-jump-mode
                                       ace-link
@@ -785,8 +788,8 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
 
-    (global-set-key (kbd "C-+") #'er/expand-region)
-    (global-set-key (kbd "C--") #'er/contract-region))
+    (global-set-key (kbd "C-+") #'er/expand-region) ; See key-chord `hh'.
+    (global-set-key (kbd "C--") #'er/contract-region)) ; See key-chord `HH'.
 
   ;; Inserting text while the mark is active causes the text in the region to be
   ;; deleted first.
@@ -1060,7 +1063,7 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Quickly jump to a position in the current view.
     (global-set-key (kbd "C-c SPC") #'ace-jump-mode)
 
-    ;; Pop up a postion from ‘ace-jump-mode-mark-ring’, and jump back to that
+    ;; Pop up a postion from `ace-jump-mode-mark-ring', and jump back to that
     ;; position.
     (global-set-key (kbd "C-c C-SPC") #'ace-jump-mode-pop-mark))
 
@@ -1078,7 +1081,8 @@ These packages are neither built-in nor already installed nor ignored."
                      ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z))
 
     ;; Ace-jump during Isearch to one of the current candidates.
-    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch))
+    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
+    (define-key isearch-mode-map (kbd "@") 'avy-isearch))
 
 )                                       ; Chapter 13 ends here.
 
@@ -1515,7 +1519,7 @@ Should be selected from `fringe-bitmaps'.")
 
                      (powerline-raw mode-line-mule-info nil 'l)
 
-                     (powerline-buffer-id nil 'l)
+                     (powerline-buffer-id 'mode-line-buffer-id 'l)
 
                      (when (and (boundp 'which-func-mode) which-func-mode)
                        (powerline-raw which-func-format nil 'l))
@@ -1671,6 +1675,9 @@ Should be selected from `fringe-bitmaps'.")
   ;; Scrolling commands are allowed during incremental search (without
   ;; canceling Isearch mode).
   (setq isearch-allow-scroll t)
+
+(setq isearch-regexp-lax-whitespace t)
+(setq search-whitespace-regexp "[ \t\r\n]+")
 
   ;; Fuzzy matching utilities (a must-have).
   (with-eval-after-load "fuzzy-autoloads"
@@ -2096,10 +2103,10 @@ Should be selected from `fringe-bitmaps'.")
 
   (when leuven--cygwin-p                ; Cygwin Emacs uses gfilenotify (based
                                         ; on GLib) and there are performance
-                                        ; problems... Emacs bug #20927
+                                        ; problems... Emacs bug 20927
 
     ;; Don't use file notification functions.
-    (setq auto-revert-use-notify nil))
+    (setq auto-revert-use-notify nil))  ; XXX
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
   (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
@@ -2173,8 +2180,8 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "18.9 (emacs)Comparing Files")
 
-  ;; Default to unified diffs.
-  (setq diff-switches "-u")
+  ;; ;; Default to unified diffs.
+  ;; (setq diff-switches "-u")             ; Default in Emacs 25.
 
   ;; Compare text in current window with text in next window.
   (global-set-key (kbd "C-=") #'compare-windows)
@@ -2542,14 +2549,9 @@ Should be selected from `fringe-bitmaps'.")
     ;; Suppress displaying sources which are out of screen at first.
     (setq helm-quick-update t)
 
-    ;; ;; Time that the user has to be idle for, before candidates from
-    ;; ;; DELAYED sources are collected.
-    ;; (setq helm-idle-delay 0.01)
-
     ;; Time that the user has to be idle for, before ALL candidates are
-    ;; collected (>= `helm-idle-delay') -- also effective for NON-DELAYED
-    ;; sources.
-    (setq helm-input-idle-delay 0.1)    ; 0.06 OK
+    ;; collected.
+    (setq helm-input-idle-delay 0.75)    ; 0.06 OK // 0.70 NOK
 
     ;; ;; Enable adaptive sorting in all sources.
     ;; (helm-adaptive-mode 1)
@@ -2683,7 +2685,7 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; (with-eval-after-load "helm-adaptive"
   ;;
-  ;;   ;; don't save history information to file
+  ;;   ;; Don't save history information to file.
   ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
 
   ;; kill-ring, mark-ring, and register browsers for Helm.
@@ -2865,34 +2867,34 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "19.4 (emacs)Kill Buffer")
 
-  ;; kill this buffer without confirmation (if not modified)
+  ;; Kill this buffer without confirmation (if not modified).
   (defun leuven-kill-this-buffer-without-query ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
     (kill-buffer nil))
 
-  ;; key binding
+  ;; Key binding.
   (global-set-key (kbd "<S-f12>") #'leuven-kill-this-buffer-without-query)
 
 ;;** 19.5 (info "(emacs)Several Buffers")
 
   (leuven--section "19.5 (emacs)Several Buffers")
 
-  ;; put the current buffer at the end of the list of all buffers
+  ;; Put the current buffer at the end of the list of all buffers.
   (global-set-key (kbd "<f12>") #'bury-buffer)
-                                        ; conflict when GDB'ing Emacs under
-                                        ; Win32
+                                        ; Conflict when GDB'ing Emacs under
+                                        ; Win32.
 
 ;;** 19.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
 
   (leuven--section "19.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
 
-  ;; unique buffer names dependent on file name
+  ;; Unique buffer names dependent on file name.
   (try-require 'uniquify)
 
   (with-eval-after-load "uniquify"
 
-    ;; distinguish directories by adding extra separator
+    ;; Distinguish directories by adding extra separator.
     (setq uniquify-trailing-separator-p t))
 
 )                                       ; Chapter 19 ends here.
@@ -3148,7 +3150,7 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Speedbar in the current frame (vs in a new frame).
     (when (and (not (locate-library "helm-config"))
-                                        ; helm is better than speedbar!
+                                        ; Helm is better than speedbar!
                (locate-library "sr-speedbar"))
 
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
@@ -3542,12 +3544,13 @@ Should be selected from `fringe-bitmaps'.")
       (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
       (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk))
 
-    (key-chord-define-global "hb" #'describe-bindings)
+    ;; (key-chord-define-global "hb" #'describe-bindings) ; dashboard.
     (key-chord-define-global "hf" #'describe-function)
     (key-chord-define-global "hv" #'describe-variable)
 
     (with-eval-after-load "expand-region-autoloads" ; Autoloads file.
-      (key-chord-define-global "hh" #'er/expand-region)) ; Autoloaded.
+      (key-chord-define-global "hh" #'er/expand-region) ; Autoloaded.
+      (key-chord-define-global "HH" #'er/contract-region)) ; Autoloaded.
 
     (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
       (key-chord-define-global "jj" #'ace-jump-word-mode) ; Autoloaded.
@@ -3829,13 +3832,16 @@ Should be selected from `fringe-bitmaps'.")
     (sit-for 1.5))
 
   (with-eval-after-load "org"
-    ;; Display the Org mode manual in Info mode.
-    (global-set-key (kbd "C-h o") #'org-info)
-                                        ; XXX Not autoloaded.
+    ;; ;; Display the Org mode manual in Info mode.
+    ;; (global-set-key (kbd "C-h o") #'org-info) ; In Emacs 25: describe-symbol.
+    ;;                                     ; XXX Not autoloaded.
 
     ;; Unbind `C-j' and `C-''.
     (define-key org-mode-map (kbd "C-j") nil)
-    (define-key org-mode-map (kbd "C-'") nil)) ; `org-cycle-agenda-files'.
+    (define-key org-mode-map (kbd "C-'") nil) ; `org-cycle-agenda-files'.
+
+    ;; Double-clicking on the fringe cycles the corresponding subtree.
+    (define-key org-mode-map (kbd "<left-fringe> <double-mouse-1>") 'org-cycle))
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -4779,6 +4785,20 @@ From %a"
                  `("mt" "Create a TODO Action" entry
                    (file+headline ,org-default-notes-file "Messages") ; #+FILETAGS: :mail:
                    "* TODO %:subject%? (from %:fromname)
+%:date-timestamp-inactive
+
+#+begin_verse
+%i
+#+end_verse
+
+From %a"
+                   :empty-lines 1
+                   :immediate-finish t) t)
+
+    (add-to-list 'org-capture-templates
+                 `("mn" "Create a note" entry
+                   (file+headline ,org-default-notes-file "Notes") ; #+FILETAGS: :mail:
+                   "* %:subject%? (from %:fromname)
 %:date-timestamp-inactive
 
 #+begin_verse
@@ -5783,46 +5803,48 @@ this with to-do items than with projects or headings."
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
 
-      (let* ((org-latex-pdf-engine-full-path
-              (cond ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-                     (or (executable-find "xelatex")
-                         (error "Please install XeLaTeX.")))
-                    (t
-                     (or (executable-find "pdflatex")
-                         (error "Please install PDFLaTeX.")))))
+      (when (equal org-export-current-backend "latex")
 
-             (org-latex-pdf-command
-              (cond ((executable-find "latexmk")
-                     "latexmk")
-                    (t
-                     (file-name-base org-latex-pdf-engine-full-path))))
-                                        ; "xelatex" or "pdflatex".
+        (let* ((org-latex-pdf-engine-full-path
+                (cond ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
+                       (or (executable-find "xelatex")
+                           (error "Please install XeLaTeX.")))
+                      (t
+                       (or (executable-find "pdflatex")
+                           (error "Please install PDFLaTeX.")))))
 
-             (latex-file
-              (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
-                     "$(cygpath -m %f)")
-                    (t
-                     "%f"))))
+               (org-latex-pdf-command
+                (cond ((executable-find "latexmk")
+                       "latexmk")
+                      (t
+                       (file-name-base org-latex-pdf-engine-full-path))))
+                                          ; "xelatex" or "pdflatex".
 
-        (message "INFO- LaTeX engine: %s" org-latex-pdf-engine-full-path)
-        (message "INFO- LaTeX command: %s" org-latex-pdf-command)
+               (latex-file
+                (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
+                       "$(cygpath -m %f)")
+                      (t
+                       "%f"))))
 
-        (setq org-latex-pdf-process
-              (cond ((equal org-latex-pdf-command "latexmk")
-                     `(;; "echo f = %f" "echo quotedf = '%f'" "echo cygpath = $(cygpath %f)"
-                       "latexmk --version"
-                       ,(concat "latexmk -cd -f -pdf -pdflatex=" (file-name-base org-latex-pdf-engine-full-path) " " latex-file
-                                " && latexmk -c"))) ; Clean up all nonessential files.
-                    ((equal org-latex-pdf-command "xelatex")
-                     `(,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)))
-                    (t
-                     `(,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)))))
-        ;; (message "Export command: %S" org-latex-pdf-process)
-        ))
+          (message "INFO- LaTeX engine: %s" org-latex-pdf-engine-full-path)
+          (message "INFO- LaTeX command: %s" org-latex-pdf-command)
+
+          (setq org-latex-pdf-process
+                (cond ((equal org-latex-pdf-command "latexmk")
+                       `(;; "echo f = %f" "echo quotedf = '%f'" "echo cygpath = $(cygpath %f)"
+                         "latexmk --version"
+                         ,(concat "latexmk -cd -f -pdf -pdflatex=" (file-name-base org-latex-pdf-engine-full-path) " " latex-file
+                                  " && latexmk -c"))) ; Clean up all nonessential files.
+                      ((equal org-latex-pdf-command "xelatex")
+                       `(,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
+                         ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
+                         ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)))
+                      (t
+                       `(,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
+                         ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
+                         ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)))))
+          ;; (message "Export command: %S" org-latex-pdf-process)
+          )))
 
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
@@ -6060,6 +6082,25 @@ this with to-do items than with projects or headings."
     "Show non-code-block content of the current Org mode buffer."
     (interactive)
     (mapc 'delete-overlay only-code-overlays))
+
+  (with-eval-after-load "org"
+    (defun org-kill-ring-save-code-block ()
+      "Save the current code block as if killed, but don't kill it."
+      (interactive)
+      (save-excursion
+        (let (beg end)
+          (search-backward "begin_src")
+          (beginning-of-line)
+          (forward-line 1)
+          (setq beg (point))
+          (search-forward "end_src")
+          (beginning-of-line)
+          (setq end (point))
+          (copy-region-as-kill beg end)
+          (message "Copied the current code block"))))
+
+    ;; Copy current code block.
+    (define-key org-mode-map (kbd "H-w") #'org-kill-ring-save-code-block))
 
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
@@ -6665,8 +6706,9 @@ this with to-do items than with projects or headings."
                  '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
 
     (defun leuven--LaTeX-mode-hook ()
+
       ;; Default command to run in the LaTeX buffer.
-      (setq TeX-command-default
+      (setq TeX-command-default         ; TeX-engine?
             (save-excursion
               (save-restriction
                 (widen)
@@ -6677,7 +6719,10 @@ this with to-do items than with projects or headings."
                   (save-match-data
                     (if (re-search-forward re 3000 t)
                         "XeLaTeX"
-                      "LaTeX")))))))
+                      "LaTeX"))))))
+
+      ;; Minor mode for hiding and revealing macros and environments.
+      (TeX-fold-mode t))
 
     (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
 
@@ -7079,6 +7124,9 @@ mouse-3: go to end") "]")))
   (setq show-paren-style 'mixed)
   (setq show-paren-ring-bell-on-mismatch t)
 
+(setq show-paren-when-point-inside-paren t)
+(setq show-paren-when-point-in-periphery t)
+
   ;; Highlight (nearest) surrounding parentheses (abd brackets).
   (with-eval-after-load "highlight-parentheses"
 
@@ -7115,8 +7163,7 @@ mouse-3: go to end") "]")))
 
   (defun leuven--org-add-electric-pairs ()
     (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
-    ;; (setq-local electric-pair-text-pairs electric-pair-pairs) ; In comments.
-  )
+    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
 
   (add-hook 'org-mode-hook #'leuven--org-add-electric-pairs)
 
@@ -7126,7 +7173,7 @@ mouse-3: go to end") "]")))
 
     ;; Default configuration for smartparens package.
     (require 'smartparens-config)       ; Keybinding management, markdown-mode,
-                                        ; org-mode, (la)tex-mode, lisp modes,
+                                        ; org-mode, (la)tex-mode, Lisp modes,
                                         ; C++, PHP.
     (global-set-key "\M-R" #'sp-splice-sexp-killing-around) ; `sp-raise-sexp'.
 
@@ -7183,19 +7230,8 @@ mouse-3: go to end") "]")))
   ;; Resize echo area to fit documentation.
   (setq eldoc-echo-area-use-multiline-p t)
 
-  ;; Show the function arglist or the variable docstring in the echo area.
-  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
-  (add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
-  (add-hook 'ielm-mode-hook #'eldoc-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode)
+  ;; ;; Show the function arglist or the variable docstring in the echo area.
   ;; (global-eldoc-mode)                 ; In Emacs 25.
-
-  ;; Highlight the arguments in `font-lock-variable-name-face'.
-  (defun leuven--frob-eldoc-argument-list (string)
-    "Upcase and fontify STRING for use with `eldoc-mode'."
-    (propertize (upcase string)
-                'face 'font-lock-variable-name-face))
-  (setq eldoc-argument-case 'leuven--frob-eldoc-argument-list)
 
 ;;** 26.7 (info "(emacs)Hideshow") minor mode
 
@@ -7206,14 +7242,29 @@ mouse-3: go to end") "]")))
 
   (with-eval-after-load "hideshow"
 
+    ;; Unhide both code and comment hidden blocks when doing incremental search.
+    (setq hs-isearch-open t)
+
+    (defadvice goto-line (after expand-after-goto-line activate compile)
+      (save-excursion (hs-show-block)))
+
+    (defadvice find-tag (after expand-after-find-tag activate compile)
+      (save-excursion (hs-show-block)))
+
     ;; Change those really awkward key bindings with `@' in the middle.
     (define-key hs-minor-mode-map (kbd "<C-kp-subtract>") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C-c <left>") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C--") #'hs-hide-block)
                                         ; `C-c @ C-h' (collapse current fold)
     (define-key hs-minor-mode-map (kbd "<C-kp-add>") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-c <right>") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-+") #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold)
     (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "C-c <up>") #'hs-hide-all)
                                         ; `C-c @ C-M-h' (collapse all folds)
     (define-key hs-minor-mode-map (kbd "<C-S-kp-add>") #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "C-c <down>") #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds)
 
     (defcustom hs-face 'hs-face
@@ -7423,9 +7474,8 @@ mouse-3: go to end") "]")))
     (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode))
 
-  (with-eval-after-load "sqlup-mode-autoloads"
-    (add-hook 'sql-mode-hook 'sqlup-mode)
-    (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
+  (with-eval-after-load "sql-indent"
+    (add-hook 'sql-mode-hook 'sqlind-setup))
 
 )                                       ; Chapter 26 ends here.
 
@@ -7469,7 +7519,7 @@ mouse-3: go to end") "]")))
   ;;     (goto-char (point-min))
   ;;     (compilation-next-error 1)
   ;;     (beep)))
-  ;; 
+  ;;
   ;; (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
 
   (defun compile-scroll-eob (buffer _status)
@@ -7671,10 +7721,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     (with-eval-after-load "flycheck-color-mode-line"
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 
-  ;; Provide an error display function to show errors in a tooltip.
-  (with-eval-after-load 'flycheck
-    (flycheck-pos-tip-mode))
-
   (global-set-key (kbd "C-x C-S-e") #'elint-current-buffer)
 
   (with-eval-after-load "elint"
@@ -7779,6 +7825,8 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Major mode command symbol to use for the initial `*scratch*' buffer.
   (setq initial-major-mode 'fundamental-mode)
 
+  (setq switch-to-buffer-in-dedicated-window 'prompt)
+
 )                                       ; Chapter 27 ends here.
 
 ;;* 28 (info "(emacs)Maintaining") Programs
@@ -7823,6 +7871,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;;*** 28.1.7 (info "(emacs)VC Change Log")
 
   (leuven--section "28.1.7 VC Change Log")
+
+  (global-set-key (kbd "C-x v H") #'vc-region-history)
 
   ;; Walk through Git revisions of a file.
   (with-eval-after-load "git-timemachine-autoloads"
@@ -8169,21 +8219,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "yasnippet"
 
-    ;; Enable YASnippet in all buffers.
-    (yas-global-mode 1)
-
-    (with-eval-after-load "diminish-autoloads"
-      (diminish 'yas-minor-mode " y"))
-
-    ;; ;; No need to be so verbose.
-    ;; (setq yas-verbosity 1)
-
-    ;; Load the snippet tables.
-    (yas-reload-all)
-
-    ;; Wrap around region.
-    (setq yas/wrap-around-region t)
-
     ;; Add root directories that store the snippets.
     (let ((leuven-snippets              ; Additional YASnippets.
            (concat leuven--directory "snippets"))
@@ -8201,6 +8236,21 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Use Snippet mode for files with a `yasnippet' extension.
     (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
+
+    ;; Enable YASnippet in all buffers.
+    (yas-global-mode 1)
+
+    (with-eval-after-load "diminish-autoloads"
+      (diminish 'yas-minor-mode " y"))
+
+    ;; ;; No need to be so verbose.
+    ;; (setq yas-verbosity 1)
+
+    ;; Load the snippet tables.
+    (yas-reload-all)
+
+    ;; Wrap around region.
+    (setq yas/wrap-around-region t)
 
     ;; Don't expand when you are typing in a string or comment.
     (add-hook 'prog-mode-hook
@@ -8264,6 +8314,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Log level for `yas--message'.
     (setq yas-verbosity 2)              ; Warning.
+
+  (with-eval-after-load "auto-yasnippet-autoloads"
+      ;; (global-set-key (kbd "H-w") #'aya-create)
+      (global-set-key (kbd "H-y") #'aya-open-line))
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 
@@ -8353,7 +8407,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                     text-mode)))
 
     ;; 7.9 Just ignore case.
-    (setq ac-ignore-case t)
+    (setq ac-ignore-case t)             ; ???
 
     ;; 8.1 Delay to completions will be available.
     (setq ac-delay 0)                   ; Faster than default 0.1.
@@ -9803,12 +9857,6 @@ a clean buffer we're an order of magnitude laxer about checking."
   (global-set-key (kbd "C-c g G") #'leuven-google-search-active-region-or-word-at-point)
   (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
 
-  ;; A set of functions and bindings to Google under point.
-  (with-eval-after-load "howdoi-autoloads"
-
-    (global-set-key (kbd "C-c h n") #'howdoi-query)
-    (global-set-key (kbd "C-c h d") #'howdoi-query-insert-code-snippet-at-point))
-
 ;;** Babel
 
   (leuven--section "Babel")
@@ -10025,9 +10073,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; allow any scalable font
   (setq scalable-fonts-allowed t)
-
-  (global-set-key (kbd "C-+") #'text-scale-increase)
-  (global-set-key (kbd "C--") #'text-scale-decrease)
 
   (global-set-key (kbd "<C-wheel-up>") #'text-scale-increase)
   (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)

@@ -152,7 +152,7 @@ results.
 #+BEGIN_SRC elisp
   (defmacro profile-org (times &rest body)
     `(let (output)
-       (dolist (p '("org-"))  ; symbol prefixes to instrument
+       (dolist (p '("org-"))            ; Symbol prefixes to instrument.
          (elp-instrument-package p))
        (dotimes (x ,times)
          ,@body)
@@ -549,7 +549,7 @@ need to load a single file that define autoloaded functions.
       ;; TODO Add warning if directory does not exist.
       (let* ((this-directory (expand-file-name this-directory)))
 
-        ;; directories containing a `.nosearch' file (such as
+        ;; Directories containing a `.nosearch' file (such as
         ;; `auctex-11.88.6\style') should not made part of `load-path'.
         ;; TODO `RCS' and `CVS' directories should also be excluded.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
@@ -602,8 +602,8 @@ distro) without impacting on stuff you have added by hand.
   (unless (fboundp 'try-require)
     (defun try-require (feature)
       "Attempt to load a FEATURE (or library).
-    Return true if the library given as argument is successfully loaded.  If
-    not, just print a message."
+Return true if the library given as argument is successfully
+loaded.  If not, just print a message."
       (condition-case err
           (progn
             (if (stringp feature)
@@ -685,7 +685,8 @@ distro) without impacting on stuff you have added by hand.
 
   (defconst leuven--windows-program-files-dir ; sys-path.
     (cond (leuven--win32-p
-           (file-name-as-directory (getenv "ProgramFiles(x86)")))
+           (file-name-as-directory (or (getenv "ProgramFiles(x86)")
+                                       (getenv "ProgramFiles"))))
           (leuven--cygwin-p
            "/cygdrive/c/Program Files/")
           (t
@@ -825,6 +826,8 @@ like this into your configuration file:
                     ("melpa" . "http://melpa.org/packages/"))
                   package-archives))
 
+    ;; Packages which were installed by the user (as opposed to installed as
+    ;; dependencies).
     (setq package-selected-packages '(ace-jump-helm-line
                                       ace-jump-mode
                                       ace-link
@@ -1504,11 +1507,11 @@ It moves point through ~buffer-undo-list~ positions.
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
 
-    (global-set-key (kbd "C-+") #'er/expand-region)
-    (global-set-key (kbd "C--") #'er/contract-region))
+    (global-set-key (kbd "C-+") #'er/expand-region) ; See key-chord `hh'.
+    (global-set-key (kbd "C--") #'er/contract-region)) ; See key-chord `HH'.
 #+end_src
 
-*************** TODO Those key bindings are overridden by ~text-scale-increase~
+*************** TODO Those key bindings are overridden by ~hs-hide/show-all~
 *************** END
 
 ** Operating on the Region
@@ -2042,7 +2045,7 @@ jumping onto them...
     ;; Quickly jump to a position in the current view.
     (global-set-key (kbd "C-c SPC") #'ace-jump-mode)
 
-    ;; Pop up a postion from ‘ace-jump-mode-mark-ring’, and jump back to that
+    ;; Pop up a postion from `ace-jump-mode-mark-ring', and jump back to that
     ;; position.
     (global-set-key (kbd "C-c C-SPC") #'ace-jump-mode-pop-mark))
 #+end_src
@@ -2062,7 +2065,8 @@ jumping onto them...
                      ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z))
 
     ;; Ace-jump during Isearch to one of the current candidates.
-    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch))
+    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
+    (define-key isearch-mode-map (kbd "@") 'avy-isearch))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2435,12 +2439,17 @@ Act on changes:
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  (defadvice magit-refresh (after diff-hl-refresh-after-magit-refresh activate)
-    (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when diff-hl-mode
-          (diff-hl-update)))))
+    (defadvice magit-refresh (after diff-hl-refresh-after-magit-refresh activate)
+      (dolist (buffer (buffer-list))
+        (with-current-buffer buffer
+          (when diff-hl-mode
+            (diff-hl-update)))))
 #+end_src
+
+#+begin_tip
+Is It Possible To Replace Fringe Bitmaps With Text in Emacs?
+http://stackoverflow.com/questions/16114700/is-it-possible-to-replace-fringe-bitmaps-with-text-in-emacs
+#+end_tip
 
 ** Displaying Boundaries
 
@@ -2759,7 +2768,7 @@ See https://github.com/bling/vim-airline for the original author.
 
                      (powerline-raw mode-line-mule-info nil 'l)
 
-                     (powerline-buffer-id nil 'l)
+                     (powerline-buffer-id 'mode-line-buffer-id 'l)
 
                      (when (and (boundp 'which-func-mode) which-func-mode)
                        (powerline-raw which-func-format nil 'l))
@@ -2982,6 +2991,14 @@ Since Emacs 24.3:
   (setq isearch-allow-scroll t)
 #+end_src
 
+Search for string ignoring new lines: incremental search will see any number of
+white spaces, tab spaces, and line breaks as a simple white space.
+
+#+begin_src emacs-lisp
+(setq isearch-regexp-lax-whitespace t)
+(setq search-whitespace-regexp "[ \t\r\n]+")
+#+end_src
+
 #+begin_note
 When ~search-invisible~ is ~t~, ~perform-replace~ can replace matches in any invisible
 text, but does not display it when prompting the user for confirmation.
@@ -3117,22 +3134,33 @@ ELISP> (save-excursion (set-buffer "BUFFER")
 ;;** 15.9 (info "(emacs)Search Case")
 
   (leuven--section "15.9 (emacs)Search Case")
+#+end_src
 
+*Case folding* folds together "a" and "A".
+
+#+begin_src emacs-lisp
   ;; Searches should ignore case by default (in all buffers that do not
   ;; override this).
   (setq-default case-fold-search t)
 #+end_src
 
-*Case folding* folds together "a" and "A".
-
 *Char folding* allows simple ASCII characters to match their complex Unicode
 counterparts.  For instance, if you search for "a", you will also match "á" and
 "ã"; that is, char folding folds together "a", "á" and "ã".
+
+#+begin_src emacs-lisp :tangle no
+  (setq search-default-mode 'char-fold-to-regexp)
+#+end_src
+
+You can also *toggle character folding* in the middle of a search by typing ~M-s '~.
 
 ** Replacement Commands
 
 Pass the string or the regexp directly to ~query-replace~, so you can't mangle it
 on the way, by pressing ~M-%~ while at the ~I-search:~ prompt.
+
+~query-replace~ honors *character folding* if the new variable ~replace-char-fold~ is
+customized to a non-nil value.
 
 ** Other Search-and-Loop Commands
 
@@ -3701,10 +3729,10 @@ Turn on auto-revert mode globally.
 #+begin_src emacs-lisp
   (when leuven--cygwin-p                ; Cygwin Emacs uses gfilenotify (based
                                         ; on GLib) and there are performance
-                                        ; problems... Emacs bug #20927
+                                        ; problems... Emacs bug 20927
 
     ;; Don't use file notification functions.
-    (setq auto-revert-use-notify nil))
+    (setq auto-revert-use-notify nil))  ; XXX
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
   (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
@@ -3814,8 +3842,8 @@ Make the message "/FILENAME has auto save data/" unmissable:
 
   (leuven--section "18.9 (emacs)Comparing Files")
 
-  ;; Default to unified diffs.
-  (setq diff-switches "-u")
+  ;; ;; Default to unified diffs.
+  ;; (setq diff-switches "-u")             ; Default in Emacs 25.
 
   ;; Compare text in current window with text in next window.
   (global-set-key (kbd "C-=") #'compare-windows)
@@ -3988,22 +4016,11 @@ files in the other directory.
 - Display the *contents* of the archive
 - *View or edit* the actual files contained withing the archive
 
-Using the Emacs Dired utility, you can compress or uncompress marked files
-(using ~gzip~) by pressing ~Z~.
+Using the Emacs Dired utility, you can compress (individually) or uncompress
+marked files (using ~gzip~) by pressing ~Z~.
 
-If you want to create one *archive* file from marked files, you can use:
-
-#+begin_example
-! tar -cf out.tar *
-#+end_example
-
-And if you actually want to *compress* the resulting archive, use one of the two
-commands:
-
-#+begin_example
-! tar -cZf out.tar.Z
-! tar -czf out.tar.gz
-#+end_example
+If you want to create *a single archive* file from many marked files, you can use
+~dired-do-compress-to~, bound to ~c~.
 
 *** On Windows                                                        :noexport:
 
@@ -4617,14 +4634,9 @@ See helm-flycheck!
     ;; Suppress displaying sources which are out of screen at first.
     (setq helm-quick-update t)
 
-    ;; ;; Time that the user has to be idle for, before candidates from
-    ;; ;; DELAYED sources are collected.
-    ;; (setq helm-idle-delay 0.01)
-
     ;; Time that the user has to be idle for, before ALL candidates are
-    ;; collected (>= `helm-idle-delay') -- also effective for NON-DELAYED
-    ;; sources.
-    (setq helm-input-idle-delay 0.1)    ; 0.06 OK
+    ;; collected.
+    (setq helm-input-idle-delay 0.75)    ; 0.06 OK // 0.70 NOK
 
     ;; ;; Enable adaptive sorting in all sources.
     ;; (helm-adaptive-mode 1)
@@ -4885,7 +4897,7 @@ You can also use the ~@~ prefix to *search buffer contents*.
 #+begin_src emacs-lisp
   ;; (with-eval-after-load "helm-adaptive"
   ;;
-  ;;   ;; don't save history information to file
+  ;;   ;; Don't save history information to file.
   ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
 #+end_src
 
@@ -5225,13 +5237,13 @@ Get EXIF data with ~image-dired-get-exif-data~.
 
   (leuven--section "19.4 (emacs)Kill Buffer")
 
-  ;; kill this buffer without confirmation (if not modified)
+  ;; Kill this buffer without confirmation (if not modified).
   (defun leuven-kill-this-buffer-without-query ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
     (kill-buffer nil))
 
-  ;; key binding
+  ;; Key binding.
   (global-set-key (kbd "<S-f12>") #'leuven-kill-this-buffer-without-query)
 #+end_src
 
@@ -5242,10 +5254,10 @@ Get EXIF data with ~image-dired-get-exif-data~.
 
   (leuven--section "19.5 (emacs)Several Buffers")
 
-  ;; put the current buffer at the end of the list of all buffers
+  ;; Put the current buffer at the end of the list of all buffers.
   (global-set-key (kbd "<f12>") #'bury-buffer)
-                                        ; conflict when GDB'ing Emacs under
-                                        ; Win32
+                                        ; Conflict when GDB'ing Emacs under
+                                        ; Win32.
 #+end_src
 
 ** Convenience Features and Customization of Buffer Handling
@@ -5255,12 +5267,12 @@ Get EXIF data with ~image-dired-get-exif-data~.
 
   (leuven--section "19.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
 
-  ;; unique buffer names dependent on file name
+  ;; Unique buffer names dependent on file name.
   (try-require 'uniquify)
 
   (with-eval-after-load "uniquify"
 
-    ;; distinguish directories by adding extra separator
+    ;; Distinguish directories by adding extra separator.
     (setq uniquify-trailing-separator-p t))
 #+end_src
 
@@ -5616,12 +5628,14 @@ one.
 
     ;; Speedbar in the current frame (vs in a new frame).
     (when (and (not (locate-library "helm-config"))
-                                        ; helm is better than speedbar!
+                                        ; Helm is better than speedbar!
                (locate-library "sr-speedbar"))
 
       (autoload 'sr-speedbar-toggle "sr-speedbar" nil t)
       (global-set-key (kbd "<f4>") #'sr-speedbar-toggle)))
 #+end_src
+
+See NeoTree as well.
 
 ** Scroll Bars
 
@@ -6252,12 +6266,13 @@ a factor 2!?
       (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
       (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk))
 
-    (key-chord-define-global "hb" #'describe-bindings)
+    ;; (key-chord-define-global "hb" #'describe-bindings) ; dashboard.
     (key-chord-define-global "hf" #'describe-function)
     (key-chord-define-global "hv" #'describe-variable)
 
     (with-eval-after-load "expand-region-autoloads" ; Autoloads file.
-      (key-chord-define-global "hh" #'er/expand-region)) ; Autoloaded.
+      (key-chord-define-global "hh" #'er/expand-region) ; Autoloaded.
+      (key-chord-define-global "HH" #'er/contract-region)) ; Autoloaded.
 
     (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
       (key-chord-define-global "jj" #'ace-jump-word-mode) ; Autoloaded.
@@ -6588,6 +6603,19 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
                       (visible-mode arg))))
 #+end_src
 
+#+begin_src emacs-lisp :tangle no
+(defvar hs-hide-all nil "Current state of hideshow for toggling all.")
+(make-local-variable 'hs-hide-all)
+
+(defun hs-toggle-hiding-all ()
+  "Toggle hideshow all."
+  (interactive)
+  (setq hs-hide-all (not hs-hide-all))
+  (if hs-hide-all
+      (hs-hide-all)
+    (hs-show-all)))
+#+end_src
+
 ** Boxquote
 
 Use Unicode characters.
@@ -6686,13 +6714,16 @@ work and tasks with Org mode.
     (sit-for 1.5))
 
   (with-eval-after-load "org"
-    ;; Display the Org mode manual in Info mode.
-    (global-set-key (kbd "C-h o") #'org-info)
-                                        ; XXX Not autoloaded.
+    ;; ;; Display the Org mode manual in Info mode.
+    ;; (global-set-key (kbd "C-h o") #'org-info) ; In Emacs 25: describe-symbol.
+    ;;                                     ; XXX Not autoloaded.
 
     ;; Unbind `C-j' and `C-''.
     (define-key org-mode-map (kbd "C-j") nil)
-    (define-key org-mode-map (kbd "C-'") nil)) ; `org-cycle-agenda-files'.
+    (define-key org-mode-map (kbd "C-'") nil) ; `org-cycle-agenda-files'.
+
+    ;; Double-clicking on the fringe cycles the corresponding subtree.
+    (define-key org-mode-map (kbd "<left-fringe> <double-mouse-1>") 'org-cycle))
 #+end_src
 
 These variables need to be set before Org mode is loaded.
@@ -8181,6 +8212,20 @@ From %a"
 From %a"
                    :empty-lines 1
                    :immediate-finish t) t)
+
+    (add-to-list 'org-capture-templates
+                 `("mn" "Create a note" entry
+                   (file+headline ,org-default-notes-file "Notes") ; #+FILETAGS: :mail:
+                   "* %:subject%? (from %:fromname)
+%:date-timestamp-inactive
+
+,#+begin_verse
+%i
+,#+end_verse
+
+From %a"
+                   :empty-lines 1
+                   :immediate-finish t) t)
 #+end_src
 
 The property ~:immediate-finish~, when set, immediately files the item without
@@ -9607,46 +9652,48 @@ Not very coherent!
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
 
-      (let* ((org-latex-pdf-engine-full-path
-              (cond ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-                     (or (executable-find "xelatex")
-                         (error "Please install XeLaTeX.")))
-                    (t
-                     (or (executable-find "pdflatex")
-                         (error "Please install PDFLaTeX.")))))
+      (when (equal org-export-current-backend "latex")
 
-             (org-latex-pdf-command
-              (cond ((executable-find "latexmk")
-                     "latexmk")
-                    (t
-                     (file-name-base org-latex-pdf-engine-full-path))))
-                                        ; "xelatex" or "pdflatex".
+        (let* ((org-latex-pdf-engine-full-path
+                (cond ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
+                       (or (executable-find "xelatex")
+                           (error "Please install XeLaTeX.")))
+                      (t
+                       (or (executable-find "pdflatex")
+                           (error "Please install PDFLaTeX.")))))
 
-             (latex-file
-              (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
-                     "$(cygpath -m %f)")
-                    (t
-                     "%f"))))
+               (org-latex-pdf-command
+                (cond ((executable-find "latexmk")
+                       "latexmk")
+                      (t
+                       (file-name-base org-latex-pdf-engine-full-path))))
+                                          ; "xelatex" or "pdflatex".
 
-        (message "INFO- LaTeX engine: %s" org-latex-pdf-engine-full-path)
-        (message "INFO- LaTeX command: %s" org-latex-pdf-command)
+               (latex-file
+                (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
+                       "$(cygpath -m %f)")
+                      (t
+                       "%f"))))
 
-        (setq org-latex-pdf-process
-              (cond ((equal org-latex-pdf-command "latexmk")
-                     `(;; "echo f = %f" "echo quotedf = '%f'" "echo cygpath = $(cygpath %f)"
-                       "latexmk --version"
-                       ,(concat "latexmk -cd -f -pdf -pdflatex=" (file-name-base org-latex-pdf-engine-full-path) " " latex-file
-                                " && latexmk -c"))) ; Clean up all nonessential files.
-                    ((equal org-latex-pdf-command "xelatex")
-                     `(,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)))
-                    (t
-                     `(,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)))))
-        ;; (message "Export command: %S" org-latex-pdf-process)
-        ))
+          (message "INFO- LaTeX engine: %s" org-latex-pdf-engine-full-path)
+          (message "INFO- LaTeX command: %s" org-latex-pdf-command)
+
+          (setq org-latex-pdf-process
+                (cond ((equal org-latex-pdf-command "latexmk")
+                       `(;; "echo f = %f" "echo quotedf = '%f'" "echo cygpath = $(cygpath %f)"
+                         "latexmk --version"
+                         ,(concat "latexmk -cd -f -pdf -pdflatex=" (file-name-base org-latex-pdf-engine-full-path) " " latex-file
+                                  " && latexmk -c"))) ; Clean up all nonessential files.
+                      ((equal org-latex-pdf-command "xelatex")
+                       `(,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
+                         ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
+                         ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)))
+                      (t
+                       `(,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
+                         ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
+                         ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)))))
+          ;; (message "Export command: %S" org-latex-pdf-process)
+          )))
 
     ;; Hook run before parsing an export buffer.
     (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
@@ -10065,6 +10112,27 @@ logically equivalent to "tangle", but without creating a separate file).
     "Show non-code-block content of the current Org mode buffer."
     (interactive)
     (mapc 'delete-overlay only-code-overlays))
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (defun org-kill-ring-save-code-block ()
+      "Save the current code block as if killed, but don't kill it."
+      (interactive)
+      (save-excursion
+        (let (beg end)
+          (search-backward "begin_src")
+          (beginning-of-line)
+          (forward-line 1)
+          (setq beg (point))
+          (search-forward "end_src")
+          (beginning-of-line)
+          (setq end (point))
+          (copy-region-as-kill beg end)
+          (message "Copied the current code block"))))
+
+    ;; Copy current code block.
+    (define-key org-mode-map (kbd "H-w") #'org-kill-ring-save-code-block))
 #+end_src
 
 *** Evaluating code blocks
@@ -11072,8 +11140,9 @@ file, AUCTeX gives you a ~Command~ menu.
                  '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
 
     (defun leuven--LaTeX-mode-hook ()
+
       ;; Default command to run in the LaTeX buffer.
-      (setq TeX-command-default
+      (setq TeX-command-default         ; TeX-engine?
             (save-excursion
               (save-restriction
                 (widen)
@@ -11084,7 +11153,10 @@ file, AUCTeX gives you a ~Command~ menu.
                   (save-match-data
                     (if (re-search-forward re 3000 t)
                         "XeLaTeX"
-                      "LaTeX")))))))
+                      "LaTeX"))))))
+
+      ;; Minor mode for hiding and revealing macros and environments.
+      (TeX-fold-mode t))
 
     (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
 
@@ -11752,6 +11824,9 @@ things.
   (show-paren-mode 1)
   (setq show-paren-style 'mixed)
   (setq show-paren-ring-bell-on-mismatch t)
+
+(setq show-paren-when-point-inside-paren t)
+(setq show-paren-when-point-in-periphery t)
 #+end_src
 
 XXX Is the following still necessary?  Paren are highlighted by smartparens?
@@ -11799,7 +11874,19 @@ http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/.
 
 Balanced editing: inserting two matching parentheses at once, etc.
 
-- electric-pair-mode (in Emacs, since 24.1)
+- autopair
+
+#+begin_src emacs-lisp :tangle no
+  (with-eval-after-load "autopair-autoloads"
+
+    ;; Attempts to wrap the selected region.
+    (setq autopair-autowrap t)
+
+    ;; Enable Autopair-Global mode.
+    (autopair-global-mode 1))
+#+end_src
+
+- ~electric-pair-mode~ (in Emacs, since 24.1)
 
   Here's a quick summary (~|~ marks point):
 
@@ -11825,14 +11912,38 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
   (defun leuven--org-add-electric-pairs ()
     (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
-    ;; (setq-local electric-pair-text-pairs electric-pair-pairs) ; In comments.
-  )
+    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
 
   (add-hook 'org-mode-hook #'leuven--org-add-electric-pairs)
 #+end_src
 
-  Deleting one bracket doesn't delete the other.  If you want that, install
-  ~autopair~ package.
+  Alternatives: http://emacs.stackexchange.com/questions/17284/adding-tilde-to-electric-pairs-in-org-mode/17341#17341
+
+  As of Emacs 24.4, this mode is greatly improved and matches autopair.el in
+  functionality (also recommended by the autopair author).
+
+- *paredit* is (was?) the thing to use for Emacs Lisp!
+
+  Paredit-kill kills text until next paren or double quote!  Also exists now in
+  smartparens strict mode...
+
+#+begin_src emacs-lisp :tangle no
+  ;; Minor mode for editing parentheses.
+  (with-eval-after-load "paredit-autoloads"
+
+    (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+
+    ;; Common Lisp editing extensions.
+    (with-eval-after-load "redshank"    ; Requires `paredit'.
+
+      (add-hook 'emacs-lisp-mode-hook #'redshank-mode)))
+#+end_src
+
+  Use it in ELisp; use smartparens in other modes (NOT globally!)
+
+  Keep looking at the [[http://www.emacswiki.org/emacs/PareditCheatsheet][cheatsheet]] until you've got the hang of it.
+
+  [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][The Animated Guide to Paredit]]
 
 - *smartparens*
 
@@ -11871,7 +11982,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
        This one's surpisingly useful for writing prose.
 
-  - ~C-S-<backspace>~ (~sp-splice-sexp-killing-around~) ::
+  - ~C-S-<backspace>~ or ~M-R~ ? (~sp-splice-sexp-killing-around~) ::
        Unwrap the current list and kill everything inside except next
        expression.
 
@@ -11889,7 +12000,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
     ;; Default configuration for smartparens package.
     (require 'smartparens-config)       ; Keybinding management, markdown-mode,
-                                        ; org-mode, (la)tex-mode, lisp modes,
+                                        ; org-mode, (la)tex-mode, Lisp modes,
                                         ; C++, PHP.
     (global-set-key "\M-R" #'sp-splice-sexp-killing-around) ; `sp-raise-sexp'.
 
@@ -11934,41 +12045,6 @@ Balanced editing: inserting two matching parentheses at once, etc.
     )
 #+end_src
 
-- *paredit* is (was?) the thing to use for Emacs Lisp!
-
-  Paredit-kill kills text until next paren or double quote!  Also exists now in
-  smartparens strict mode...
-
-#+begin_src emacs-lisp :tangle no
-  ;; Minor mode for editing parentheses.
-  (with-eval-after-load "paredit-autoloads"
-
-    (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-
-    ;; Common Lisp editing extensions.
-    (with-eval-after-load "redshank"    ; Requires `paredit'.
-
-      (add-hook 'emacs-lisp-mode-hook #'redshank-mode)))
-#+end_src
-
-  Use it in ELisp; use smartparens in other modes (NOT globally!)
-
-  Keep looking at the [[http://www.emacswiki.org/emacs/PareditCheatsheet][cheatsheet]] until you've got the hang of it.
-
-  [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][The Animated Guide to Paredit]]
-
-- autopair
-
-#+begin_src emacs-lisp :tangle no
-  (with-eval-after-load "autopair-autoloads"
-
-    ;; Attempts to wrap the selected region.
-    (setq autopair-autowrap t)
-
-    ;; Enable Autopair-Global mode.
-    (autopair-global-mode 1))
-#+end_src
-
 ** Manipulating Comments
 
 #+begin_src emacs-lisp
@@ -11996,7 +12072,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
 ** Documentation Lookup
 
-Function argument hint.
+Function argument hint.  Highlight the arguments in
+~eldoc-highlight-function-argument~.
 
 #+begin_src emacs-lisp
 ;;** 26.6 (info "(emacs)Documentation") Lookup
@@ -12008,20 +12085,13 @@ Function argument hint.
 
   ;; Resize echo area to fit documentation.
   (setq eldoc-echo-area-use-multiline-p t)
+#+end_src
 
-  ;; Show the function arglist or the variable docstring in the echo area.
-  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
-  (add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
-  (add-hook 'ielm-mode-hook #'eldoc-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode)
+New minor mode ~global-eldoc-mode~ is enabled by default in Emacs 25.
+
+#+begin_src emacs-lisp
+  ;; ;; Show the function arglist or the variable docstring in the echo area.
   ;; (global-eldoc-mode)                 ; In Emacs 25.
-
-  ;; Highlight the arguments in `font-lock-variable-name-face'.
-  (defun leuven--frob-eldoc-argument-list (string)
-    "Upcase and fontify STRING for use with `eldoc-mode'."
-    (propertize (upcase string)
-                'face 'font-lock-variable-name-face))
-  (setq eldoc-argument-case 'leuven--frob-eldoc-argument-list)
 #+end_src
 
 ** Hideshow minor mode
@@ -12037,6 +12107,8 @@ many programming modes.
 ~hs-minor-mode.el~ collapses code for a lot of languages, not only Lisp.  See
 [[id:42ad895e-c049-4710-a877-5014a7f6acfc][outline-minor-mode]] as well.
 
+And the pretty awesome ~hideshow-org~.  Folding made useful.
+
 #+begin_src emacs-lisp
 ;;** 26.7 (info "(emacs)Hideshow") minor mode
 
@@ -12047,14 +12119,29 @@ many programming modes.
 
   (with-eval-after-load "hideshow"
 
+    ;; Unhide both code and comment hidden blocks when doing incremental search.
+    (setq hs-isearch-open t)
+
+    (defadvice goto-line (after expand-after-goto-line activate compile)
+      (save-excursion (hs-show-block)))
+
+    (defadvice find-tag (after expand-after-find-tag activate compile)
+      (save-excursion (hs-show-block)))
+
     ;; Change those really awkward key bindings with `@' in the middle.
     (define-key hs-minor-mode-map (kbd "<C-kp-subtract>") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C-c <left>") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C--") #'hs-hide-block)
                                         ; `C-c @ C-h' (collapse current fold)
     (define-key hs-minor-mode-map (kbd "<C-kp-add>") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-c <right>") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-+") #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold)
     (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "C-c <up>") #'hs-hide-all)
                                         ; `C-c @ C-M-h' (collapse all folds)
     (define-key hs-minor-mode-map (kbd "<C-S-kp-add>") #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "C-c <down>") #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds)
 
     (defcustom hs-face 'hs-face
@@ -12081,13 +12168,13 @@ many programming modes.
 #+begin_src emacs-lisp :tangle no
   ;; If hideshowvis is not installed, do not attempt to configure it, as this
   ;; will prevent packages (including hideshowvis itself) from compiling.
-  (when display-graphic-p
+  (when (display-graphic-p)
     (with-eval-after-load "hideshowvis-autoloads"
 
       ;; Enable hideshowvis for programming modes.
       (add-hook 'prog-mode-hook
                 (lambda ()
-                  (require 'fold-dwim)  ; More syntax definitions.
+                  ;; (require 'fold-dwim)  ; More syntax definitions.
                   (hideshowvis-enable)))
 
       ;; (defface hs-fringe-face
@@ -12113,6 +12200,17 @@ many programming modes.
             (overlay-put ov 'display display-string))))
 
       (setq hs-set-up-overlay 'hs-display-code-line-counts)))
+
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(dolist (hook '(emacs-lisp-mode-hook c++-mode-hook))
+  (add-hook hook 'hideshowvis-enable))
+
+(defun hideshowvis-enable-immediately ()
+  (run-at-time "0 seconds" nil 'hideshowvis-enable))
+
+(add-hook 'js2-mode-hook 'hideshowvis-enable-immediately)
 #+end_src
 
 ** Completion for Symbol Names
@@ -12439,7 +12537,7 @@ http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functio
     ;;       (indent-for-tab-command)
     ;;       (if (looking-back "^\s*")
     ;;           (back-to-indentation)))))
-    ;; 
+    ;;
     ;; (define-key js2-mode-map (kbd "TAB") 'js2-tab-properly)
 #+end_src
 
@@ -12587,7 +12685,7 @@ List of available *refactorings*:
 
 - ~ao~ (~arguments-to-object~) ::
      Replaces arguments to a function call with an object literal of named
-     arguments.  Requires YASnippets.
+     arguments.  Requires YASnippet.
 
 - ~3i~ (~ternary-to-if~) ::
      Converts ternary operator to if-statement.
@@ -12662,6 +12760,10 @@ that is done, visit ~localhost:8080~ in your browser.
 
 ** SQL
 
+- C-c C-n (M-x sql-send-line-and-next) ::
+     Send the current line to the SQL process and advances to the next line,
+     skipping whitespace and comments.
+
 *** Indenting
 
 http://emacs.stackexchange.com/questions/13214/automatically-formatting-sql-code
@@ -12670,6 +12772,11 @@ The best thing out there is sql-indent.el
 Which doesn't do auto-indenting only on command indentation.
 I have found it pretty useful at times.
 
+#+begin_src emacs-lisp
+  (with-eval-after-load "sql-indent"
+    (add-hook 'sql-mode-hook 'sqlind-setup))
+#+end_src
+
 *** https://www.emacswiki.org/emacs/SqlBeautify
 
 *** Word case
@@ -12677,7 +12784,7 @@ I have found it pretty useful at times.
 Automatically convert SQL *keywords to* the *upper case* (see general well-known
 [[http://stackoverflow.com/questions/522356/what-sql-coding-standard-do-you-follow][coding standards]] and styles for SQL).
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (with-eval-after-load "sqlup-mode-autoloads"
     (add-hook 'sql-mode-hook 'sqlup-mode)
     (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
@@ -12745,7 +12852,7 @@ XXX Compiling with ~ant~?
   ;;     (goto-char (point-min))
   ;;     (compilation-next-error 1)
   ;;     (beep)))
-  ;; 
+  ;;
   ;; (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
 
   (defun compile-scroll-eob (buffer _status)
@@ -13092,10 +13199,10 @@ a clean buffer we're an order of magnitude laxer about checking."
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Provide an error display function to show errors in a tooltip.
   (with-eval-after-load 'flycheck
-    (flycheck-pos-tip-mode))
+    (flycheck-pos-tip-mode)) ; XXX Check if defined.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -13294,6 +13401,21 @@ mode.
 
 To evaluate a non-interactive command, simply use ~IELM~.
 
+** Switching to a Buffer in a Window
+
+Emacs's windows are locked in an eternal fight with their user as they fight
+over screen estate and what buffer is allowed to be shown where. The concept of
+strongly dedicated window is alien to most Emacs users as it's fairly byzantine
+to figure out. This variable, which is customizable, will let you decide how
+buffer switching works when a window and its buffer are fundamentally
+entwined. I recommend you set it to ~prompt~ if you are curious about its effects,
+as that will prompt you to decide what to do next -- no doubt annoying in the
+long run, but useful for figuring out how Emacs's windowing mechanics work.
+
+#+begin_src emacs-lisp
+  (setq switch-to-buffer-in-dedicated-window 'prompt)
+#+end_src
+
 #+begin_src emacs-lisp
 )                                       ; Chapter 27 ends here.
 #+end_src
@@ -13423,6 +13545,12 @@ the other on the *repository* as a whole (entire project).
 - ~n~ and ~p~ to move between commits.
 - ~f~ to visit the file as of the commit at point.
 
+The command ~vc-region-history~ shows the *log+diff of the active region*.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-x v H") #'vc-region-history)
+#+end_src
+
 ~git-timemachine~ makes the process of *navigating between different versions* of
 a file almost completely seamless.
 
@@ -13537,6 +13665,11 @@ can use the following keys to navigate historic versions of the file:
     (let ((ediff-ignore-similar-regions t))
       (call-interactively 'vc-ediff)))  ; XXX does not work yet!
 #+end_src
+
+*** Branches
+
+- C-x v P (M-x vc-push) ::
+     Basic *push* support.
 
 *** Customizing VC
 
@@ -13771,6 +13904,35 @@ After this, you can select the tag file to use with the command
 #+end_src
 
 *** Finding a Tag (go to function definition)
+
+#+begin_note
+New package Xref replaces Etags's front-end and UI.
+
+The new package Xref provides a generic framework and new commands to
+find and move to definitions of functions, macros, data structures
+etc., as well as go back to the location where you were before moving
+to a definition.  It supersedes and obsoletes many Etags commands,
+while still using the etags.el code that reads the TAGS tables as one
+of its back-ends.
+
+The command 'xref-find-definitions' replaces 'find-tag' and provides
+an interface to pick one definition among several.
+'tags-loop-continue' is now unbound.  'xref-pop-marker-stack' replaces
+'pop-tag-mark', but has a keybinding ('M-,') different from the one
+'pop-tag-mark' used.
+
+'xref-find-definitions-other-window' replaces 'find-tag-other-window'.
+'xref-find-definitions-other-frame' replaces 'find-tag-other-frame'.
+'xref-find-apropos' replaces 'find-tag-regexp'.
+
+As a result of this, the following commands are now obsolete:
+'find-tag-other-window', 'find-tag-other-frame', 'find-tag-regexp',
+'tags-apropos'.
+
+'tags-loop-continue' is not obsolete because it's still useful in
+'tags-search' and 'tags-query-replace', for which there are no direct
+replacements yet.
+#+end_note
 
 You can *go to* the first *definition* of a tag (matching your regexp) -- *according*
 *to TAGS file* -- by using ~M-x find-tag~ (bound to ~M-.~).  The default tag is the
@@ -14155,42 +14317,12 @@ Predefined YASnippet variables:
 - ~`yas-selected-text`~ is used in *surround templates* and stands for the code
   fragment to be wrapped.
 
-*** Installation
-
 #+begin_src emacs-lisp
   ;; Yet Another Snippet extension for Emacs
   (with-eval-after-load "yasnippet-autoloads"
     (idle-require 'yasnippet))
 
   (with-eval-after-load "yasnippet"
-#+end_src
-
-**** Use YASnippet as a global minor mode
-
-#+begin_src emacs-lisp
-    ;; Enable YASnippet in all buffers.
-    (yas-global-mode 1)
-#+end_src
-
-**** Use ~yas-minor-mode~ on a per-buffer basis
-
-#+begin_src emacs-lisp :tangle no
-    ;; Enable YASnippet in programming modes only.
-    (add-hook 'prog-mode-hook #'yas-minor-mode)
-#+end_src
-
-#+begin_src emacs-lisp
-    (with-eval-after-load "diminish-autoloads"
-      (diminish 'yas-minor-mode " y"))
-
-    ;; ;; No need to be so verbose.
-    ;; (setq yas-verbosity 1)
-
-    ;; Load the snippet tables.
-    (yas-reload-all)
-
-    ;; Wrap around region.
-    (setq yas/wrap-around-region t)
 #+end_src
 
 *** Organizing snippets
@@ -14221,6 +14353,41 @@ Load additional snippets.
 
     ;; Use Snippet mode for files with a `yasnippet' extension.
     (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
+#+end_src
+
+*** Installation
+
+**** Use YASnippet as a global minor mode
+
+#+begin_src emacs-lisp
+    ;; Enable YASnippet in all buffers.
+    (yas-global-mode 1)
+#+end_src
+
+#+begin_tip
+Use ~yas-global-mode~ *after* you set yas-snippet-dirs. Otherwise you have to use
+~yas-reload-all~.
+#+end_tip
+
+**** Use ~yas-minor-mode~ on a per-buffer basis
+
+#+begin_src emacs-lisp :tangle no
+    ;; Enable YASnippet in programming modes only.
+    (add-hook 'prog-mode-hook #'yas-minor-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+    (with-eval-after-load "diminish-autoloads"
+      (diminish 'yas-minor-mode " y"))
+
+    ;; ;; No need to be so verbose.
+    ;; (setq yas-verbosity 1)
+
+    ;; Load the snippet tables.
+    (yas-reload-all)
+
+    ;; Wrap around region.
+    (setq yas/wrap-around-region t)
 #+end_src
 
 *** Expanding snippets
@@ -14393,6 +14560,14 @@ Find it at http://capitaomorte.github.io/yasnippet/snippet-reference.html#yas-ke
     (setq yas-verbosity 2)              ; Warning.
 #+end_src
 
+*** Quickly create disposable YASnippets
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "auto-yasnippet-autoloads"
+      ;; (global-set-key (kbd "H-w") #'aya-create)
+      (global-set-key (kbd "H-y") #'aya-open-line))
+#+end_src
+
 ** Dynamic Abbrev Expansion
    :PROPERTIES:
    :ID:       0fa23e4a-e42c-4317-834c-d2ef7c9d741c
@@ -14532,8 +14707,8 @@ Popups:
   + ~f~ -- Function
   + ~s~ -- Symbol
   + ~c~ -- Constant
-  + ~a~ -- Abbrev, yasnippet
-  + ~d~ -- Dictionary, environment variable (e.g. LC_CTYPE)
+  + ~a~ -- Abbrev, YASnippet
+  + ~d~ -- Dictionary, environment variable (e.g. ~LC_CTYPE~)
   + ~m~ -- Module
 
 - *Quick help* (tooltip appearing at the side of the completion menu)
@@ -14575,6 +14750,11 @@ Other operations are enabled temporarily *once the completion is started*:
      Show additional *help* in *persistent buffer*.
 
 Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-complete-work-with-yasnippet-and-abbrev][How to make auto-complete work with yasnippet and abbrev?]]
+
+#+begin_src emacs-lisp :tangle no
+;; Let's have snippets in the auto-complete dropdown
+(add-to-list 'ac-sources 'ac-source-yasnippet)
+#+end_src
 
 #+begin_src emacs-lisp
   ;; Auto Completion.
@@ -14618,7 +14798,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
                     text-mode)))
 
     ;; 7.9 Just ignore case.
-    (setq ac-ignore-case t)
+    (setq ac-ignore-case t)             ; ???
 
     ;; 8.1 Delay to completions will be available.
     (setq ac-delay 0)                   ; Faster than default 0.1.
@@ -16172,10 +16352,36 @@ See https://www.gnu.org/software/emacs/manual/html_node/eww/index.html.
      Open the Web page in an *external browser* (when JavaScript is needed or the
      "design" is just too bad).
 
+- F (eww-toggle-fonts) ::
+     Toggle whether to use variable-pitch fonts or not.  The user can also
+     customize the ~shr-use-fonts~ variable.
+
+- R (eww-readable) ::
+     Try do identify the *main textual parts of a web page* and *display only* that,
+     leaving menus and the like off the page.
+
+- D (eww-toggle-paragraph-direction) ::
+     Toggle the paragraph direction between left-to-right and right-to-left.
+
+- S ::
+     List all eww buffers, and allow managing them.
+
+HTTPS pages with valid certificates have headers marked in green, while invalid
+certificates are marked in red.
+
 *************** TODO See package ~eww-lnum~ (or ~ace-link-eww~?)
 (define-key eww-mode-map (kbd "f") #'eww-lnum-follow)
 (define-key eww-mode-map (kbd "F") #'eww-lnum-universal)
 *************** END
+
+#+begin_tip
+The ~M-s M-w~ key binding (new in Emacs 25) uses ~eww~ to search the web for the
+text in the region.  It is super handy for quick Google and documentation
+searches and this will only make it more useful.
+
+The search engine to use for this is specified by the customizable variable
+~eww-search-prefix~.
+#+end_tip
 
 * Running Shell Commands from Emacs
 
@@ -17285,6 +17491,15 @@ printing on Windows.
 - ~C-c g t~ ::
      ~google-this~
 
+#+begin_tip
+The ~M-s M-w~ key binding (new in Emacs 25) uses ~eww~ to search the web for the
+text in the region.  It is super handy for quick Google and documentation
+searches and this will only make it more useful.
+
+The search engine to use for this is specified by the customizable variable
+~eww-search-prefix~.
+#+end_tip
+
 ~url-parse~ and ~url-cookies~ are quite heavy to load, hence:
 
 #+begin_src emacs-lisp
@@ -17354,10 +17569,11 @@ bind it to a key:
 
 Instant coding answers via Emacs.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; A set of functions and bindings to Google under point.
   (with-eval-after-load "howdoi-autoloads"
 
+    ;; XXX Key sequence starts with non-prefix key C-c h. Conflict with Helm!
     (global-set-key (kbd "C-c h n") #'howdoi-query)
     (global-set-key (kbd "C-c h d") #'howdoi-query-insert-code-snippet-at-point))
 #+end_src
@@ -17745,11 +17961,6 @@ There are a few commands to adjust the font sizes:
 
 Those bindings are global and repeatable, e.g. ~C-x C-+ C-+ C-+~.
 
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-+") #'text-scale-increase)
-  (global-set-key (kbd "C--") #'text-scale-decrease)
-#+end_src
-
 Zoom in/out with Ctrl + Scroll wheel on the mouse:
 
 #+begin_src emacs-lisp
@@ -17891,7 +18102,13 @@ Start the Calc: ~C-x * c~.
 
 *** "Quick Calculator" Mode
 
-Run the Calculator in the minibuffer: ~C-x * q~ (~M-x quick-calc~).
+Run the Calculator in the minibuffer: ~M-x quick-calc~ (bound to ~C-x * q~ or
+~C-x * Q~).
+
+#+begin_note
+If ~quick-calc~ is called with a prefix argument, insert the result of the
+calculation into the current buffer.
+#+end_note
 
 ** Embedded Mode
 
