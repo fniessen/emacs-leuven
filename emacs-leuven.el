@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161107.1402
+;; Version: 20161118.1027
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161107.1402"
+(defconst leuven--emacs-version "20161118.1027"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -387,6 +387,7 @@ loaded.  If not, just print a message."
                                       auctex
                                       auto-complete
                                       auto-highlight-symbol
+                                      auto-package-update
                                       back-button
                                       bbdb
                                       bookmark+
@@ -511,6 +512,16 @@ These packages are neither built-in nor already installed nor ignored."
             (sit-for 1.5)))))
 
     )
+
+  ;; Automatically update Emacs packages.
+  (with-eval-after-load "auto-package-update-autoloads"
+
+    (setq auto-package-update-delete-old-versions t)
+
+    (add-hook 'auto-package-update-before-hook
+              (lambda () (message "Updating (M)ELPA packages now...")))
+
+    (auto-package-update-maybe))
 
 )                                       ; Chapter 48 ends here.
 
@@ -3536,6 +3547,8 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
+
+    (key-chord-define-global "::" #'isearch-forward)
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
@@ -8045,10 +8058,10 @@ a clean buffer we're an order of magnitude laxer about checking."
     (interactive)
     (find-tag nil t))
 
-  (with-eval-after-load "etags"
-
-    ;; Select from multiple tags.
-    (try-require 'etags-select))
+  ;; (with-eval-after-load "etags"
+  ;;
+  ;;   ;; Select from multiple tags.
+  ;;   (try-require 'etags-select))
 
   (with-eval-after-load "etags-select"
 

@@ -838,6 +838,7 @@ like this into your configuration file:
                                       auctex
                                       auto-complete
                                       auto-highlight-symbol
+                                      auto-package-update
                                       back-button
                                       bbdb
                                       bookmark+
@@ -962,6 +963,18 @@ These packages are neither built-in nor already installed nor ignored."
             (sit-for 1.5)))))
 
     )
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Automatically update Emacs packages.
+  (with-eval-after-load "auto-package-update-autoloads"
+
+    (setq auto-package-update-delete-old-versions t)
+
+    (add-hook 'auto-package-update-before-hook
+              (lambda () (message "Updating (M)ELPA packages now...")))
+
+    (auto-package-update-maybe))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -6258,6 +6271,8 @@ a factor 2!?
 
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
+
+    (key-chord-define-global "::" #'isearch-forward)
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
@@ -13960,10 +13975,10 @@ To continue searching for next match (or to *pop back* to where ~M-.~ was last
 invoked??), use "M-,".
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "etags"
-
-    ;; Select from multiple tags.
-    (try-require 'etags-select))
+  ;; (with-eval-after-load "etags"
+  ;;
+  ;;   ;; Select from multiple tags.
+  ;;   (try-require 'etags-select))
 
   (with-eval-after-load "etags-select"
 
