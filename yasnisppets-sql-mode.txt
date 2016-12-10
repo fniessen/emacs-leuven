@@ -299,7 +299,7 @@ BEGIN CATCH
             ERROR_LINE() AS ErrorLine,
             ERROR_MESSAGE() AS ErrorMessage
     */
-END CATCH
+END CATCH;
 #+end_src
 
 *** [ifs] If
