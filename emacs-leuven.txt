@@ -6308,7 +6308,7 @@ a factor 2!?
     ;; (key-chord-define-global "x1" #'delete-other-windows) ; 2015-02-05 Crash Gnus `C-u 1'
     (key-chord-define-global "xh" #'mark-whole-buffer)
     (key-chord-define-global "xk" #'kill-buffer)
-    (key-chord-define-global "xo" #'other-window)
+    (key-chord-define-global "xo" #'other-window) ; box...
     (key-chord-define-global "xs" #'save-buffer)
 
     (key-chord-define-global "yy" #'browse-kill-ring)
@@ -11474,8 +11474,6 @@ tags around a region you've specified.
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
                                         ; Alias for `nxml-mode'.
-
-  ;; (add-to-list 'auto-mode-alist '("\\.axvw\\'" . xml-mode)) ; ARCHIBUS view
 #+end_src
 
 Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode.  It adds a lot
@@ -12955,12 +12953,12 @@ variable ~next-error-highlight~.
 
   (leuven--section "27.2 (emacs)Compilation Mode")
 
-  ;; Automatically jump to the first error during compilation.
-  (setq compilation-auto-jump-to-first-error t)
+  ;; ;; Automatically jump to the first error during compilation.
+  ;; (setq compilation-auto-jump-to-first-error t)
 
   ;; Display the next compiler error message.
   (global-set-key (kbd "<f10>") #'next-error)
-                                        ; Also on `C-x `' and `M-g n'.
+                                        ; Also on `M-g n' and `C-x `'.
 
   ;; Display the previous compiler error message.
   (global-set-key (kbd "<S-f10>") #'previous-error)
@@ -13029,7 +13027,8 @@ set up ignored files/dirs in advance:
 
     ;; Directories to ignore for ARCHIBUS.
     (add-to-list 'grep-find-ignored-directories "ab-core")
-    (add-to-list 'grep-find-ignored-directories "ckeditor"))
+    (add-to-list 'grep-find-ignored-directories "ckeditor")
+    (add-to-list 'grep-find-ignored-directories "ab-products/common/mobile"))
 #+end_src
 
 #+begin_note

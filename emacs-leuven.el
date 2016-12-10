@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161118.1027
+;; Version: 20161210.1025
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161118.1027"
+(defconst leuven--emacs-version "20161210.1025"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3584,7 +3584,7 @@ Should be selected from `fringe-bitmaps'.")
     ;; (key-chord-define-global "x1" #'delete-other-windows) ; 2015-02-05 Crash Gnus `C-u 1'
     (key-chord-define-global "xh" #'mark-whole-buffer)
     (key-chord-define-global "xk" #'kill-buffer)
-    (key-chord-define-global "xo" #'other-window)
+    (key-chord-define-global "xo" #'other-window) ; box...
     (key-chord-define-global "xs" #'save-buffer)
 
     (key-chord-define-global "yy" #'browse-kill-ring)
@@ -6908,8 +6908,6 @@ this with to-do items than with projects or headings."
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
                                         ; Alias for `nxml-mode'.
 
-  ;; (add-to-list 'auto-mode-alist '("\\.axvw\\'" . xml-mode)) ; ARCHIBUS view
-
   (with-eval-after-load "web-mode-autoloads"
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
@@ -7597,12 +7595,12 @@ mouse-3: go to end") "]")))
 
   (leuven--section "27.2 (emacs)Compilation Mode")
 
-  ;; Automatically jump to the first error during compilation.
-  (setq compilation-auto-jump-to-first-error t)
+  ;; ;; Automatically jump to the first error during compilation.
+  ;; (setq compilation-auto-jump-to-first-error t)
 
   ;; Display the next compiler error message.
   (global-set-key (kbd "<f10>") #'next-error)
-                                        ; Also on `C-x `' and `M-g n'.
+                                        ; Also on `M-g n' and `C-x `'.
 
   ;; Display the previous compiler error message.
   (global-set-key (kbd "<S-f10>") #'previous-error)
@@ -7647,7 +7645,8 @@ mouse-3: go to end") "]")))
 
     ;; Directories to ignore for ARCHIBUS.
     (add-to-list 'grep-find-ignored-directories "ab-core")
-    (add-to-list 'grep-find-ignored-directories "ckeditor"))
+    (add-to-list 'grep-find-ignored-directories "ckeditor")
+    (add-to-list 'grep-find-ignored-directories "ab-products/common/mobile"))
 
     (when (executable-find "agXXX") ; Need to fix base dir and file extensions
 
