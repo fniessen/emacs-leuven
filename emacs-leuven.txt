@@ -876,8 +876,10 @@ like this into your configuration file:
                                       helm-ag
                                       helm-descbinds
                                       helm-ls-git
+                                      helm-projectile ; Obsolete package?
                                       helm-swoop
                                       hideshowvis
+                                      highlight-numbers
                                       highlight-symbol
                                       howdoi
                                       htmlize
@@ -1105,7 +1107,7 @@ Show line numbers temporarily -- just when you're going to a line number with
   (global-set-key (kbd "<f11>") #'undo)
 #+end_src
 
-visual feedback on some operations (~undo~, ~yank~, etc.).
+Visual feedback on some operations (~undo~, ~yank~, etc.).
 
 #+begin_src emacs-lisp
   (with-eval-after-load "volatile-highlights-autoloads"
@@ -2342,7 +2344,7 @@ to follow some key variables through a block of code.
   (with-eval-after-load "highlight-symbol"
 
     ;; Number of seconds of idle time before highlighting the current symbol.
-    (setq highlight-symbol-idle-delay 0.5)
+    (setq highlight-symbol-idle-delay 0.2)
 
     (setq highlight-symbol-colors '("#A67CEB" "#70BE53" "#3CA9D3"))
     (setq highlight-symbol-foreground-color "black")
@@ -2367,13 +2369,18 @@ Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
 *symbol at point* in the current file (if you pause on a symbol).  When you move
 point, the highlighting goes away.
 
+#+begin_tip
+This can also be done by ~highlight-symbol-mode~.  Though, ~ahs~ can find the
+definition of a symbol, and color it differently!
+#+end_tip
+
 Toggle Auto-Highlight-Symbol using key chord ~**~.
 
 #+begin_src emacs-lisp
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol)
+  (when (try-require 'auto-highlight-symbol-XXX)
 
-    ;; Number of seconds to wait before highlighting symbol.
+    ;; Number of seconds to wait before highlighting the current symbol.
     (setq ahs-idle-interval 0.2) ; 0.35.
 
     ;; Add major modes Auto-Highlight-Symbol can run on.
@@ -2407,10 +2414,16 @@ Color Identifiers Mode: *color* every *variable* in its own, consistent color.
 ** Window Fringes
 
 Show an icon in the fringe of version-controlled files indicating which *lines*
-have been *edited* (inserted, modified or deleted) *since the last commit*.
+have been *edited* (inserted, modified or deleted) *since the last commit*.  Similar
+to Git Gutter.
 
 This feature gives you a really nice at-a-glance view of where you've made
 changes.
+
+#+begin_tip
+If you need to know what lines changed in latest commit as well, you can enable
+~diff-hl-amend-mode~ to *show changes against the second-last revision*.
+#+end_tip
 
 #+begin_src emacs-lisp
   (with-eval-after-load "diff-hl-autoloads"
@@ -3065,8 +3078,11 @@ the user see truly invisible matches before replacing them.
                         (replace (format (if (> total 1)
                                              " %d of %d matches "
                                            " %d of %d match ")
-                                         here total)))))
-          (propertize status 'face 'anzu-mode-line))))
+                                         here total))))
+              (face (if (and (zerop total) (not (string= isearch-string "")))
+                        'anzu-mode-line-no-match
+                      'anzu-mode-line)))
+          (propertize status 'face face))))
     (setq anzu-mode-line-update-function #'leuven--anzu-update-mode-line)
 
     ;; Enable Global-Anzu mode.
@@ -3745,7 +3761,7 @@ Turn on auto-revert mode globally.
                                         ; problems... Emacs bug 20927
 
     ;; Don't use file notification functions.
-    (setq auto-revert-use-notify nil))  ; XXX
+    (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
   (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
@@ -4353,14 +4369,14 @@ email, including several trace information for analysis.
 #+end_src
 
 *** Helm
-    :PROPERTIES:
-    :ID:       59418189-b87e-45a2-b128-5cbdc8a16430
-    :END:
+:PROPERTIES:
+:ID:       59418189-b87e-45a2-b128-5cbdc8a16430
+:END:
 
 **** What is Helm?
 
-Helm (successor of Anything) is a incremental completion and selection narrowing
-framework for Emacs.
+Helm (successor of Anything) is an incremental completion and selection
+narrowing framework for Emacs.
 
 It will help *steer* you in the right direction when you're looking for stuff in
 Emacs (like buffers, files, etc).  You don't have anymore to remember the
@@ -4368,11 +4384,32 @@ structure of your working directory; you can focus on more important things.
 
 **** How does it work?
 
-The /default/ prefix for Helm commands is ~C-x c~.  In Emacs-Leuven, we changed it
-to ~C-c h~.
+The /default/ prefix for the preconfigured Helm commands is ~C-x c~.  In
+Emacs-Leuven, we changed it to ~C-c h~.
 
-In Helm, generally, look at the *mode line*: you will see ~C-c ?:Help~, it is your
+#+begin_src emacs-lisp
+  (leuven--section "Helm")
+
+  ;; Change `helm-command-prefix-key'.
+  (global-set-key (kbd "C-c h") #'helm-command-prefix)
+
+  ;; Open Helm (QuickSilver-like candidate-selection framework).
+  (when (try-require 'helm-config)      ; [default `helm-command-prefix-key']
+                                        ; Explicitly loads `helm-autoloads'!
+                                        ; CAUTION for recursive loads...
+
+    (global-unset-key (kbd "C-x c"))
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; Resume a previous ‘helm’ session.
+    (global-set-key (kbd "C-M-z") #'helm-resume)
+#+end_src
+
+In Helm, generally, look at the *mode line*: you will see ~C-h m:Help~, it is your
 friend; hit it for more info.
+
+In default Helm:
 
 - Narrow the list by typing some patterns (use the *space as separator* for
   multiple patterns),
@@ -4414,13 +4451,13 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 In ~helm-find-file~, you may want to try using the left arrow to go to the parent
 directory!
 
-You can reassign ~TAB~ only during `helm-find-file'.  The
-~helm-find-file~ almost looks like Dired and I assign ~^~ for going
-up.  Minor side effect is you cannot type in ~^~ without using ~C-q~.
+You can reassign ~TAB~ only during ~helm-find-file~.  The ~helm-find-file~ almost
+looks like Dired and I assign ~^~ for going up.  Minor side effect is you cannot
+type in ~^~ without using ~C-q~.
 
-Sometimes you want to hit ~TAB~ for `helm-selection-action'; however,
-you chose not to happen.  Now look for substitute for ~TAB~.
-Something not ~TAB~ can be ~C-z~, ~C-TAB~, and ~SPC~.
+Sometimes you want to hit ~TAB~ for ~helm-selection-action~; however, you chose not
+to happen.  Now look for substitute for ~TAB~.  Something not ~TAB~ can be ~C-z~,
+~C-TAB~, and ~SPC~.
 
 #+begin_src emacs-lisp :tangle no
 (define-key helm-find-files-map (kbd "<C-tab>") #'helm-select-action)
@@ -4441,7 +4478,6 @@ Something not ~TAB~ can be ~C-z~, ~C-TAB~, and ~SPC~.
 - [[https://github.com/emacs-helm/helm/wiki][Emacs-helm wiki]]
 - [[https://github.com/thierryvolpiatto/emacs-tv-config/blob/master/init-helm-thierry.el][Helm configuration file of Thierry Volpiatto]]!
 - http://tuhdo.github.io/helm-intro.html
-
 
 Helm allows you to do interesting things with its interactive interface. For
 example:
@@ -4464,49 +4500,32 @@ example:
 **** Features
 
 Finally, the strings in Helm are not just strings; they are *regexps* and I think
-they are more powerful then normal fuzzy matcher.
+they are more powerful than normal fuzzy matcher.
 
-Grep in Helm is interactive, unlike the stock grep/rgrep. Demo:
-http://tuhdo.github.io/static/live_grep.gif
+Grep in Helm is interactive, unlike the stock grep/rgrep.
+Demo: http://tuhdo.github.io/static/live_grep.gif
 
 No package does any of this:
 
 - Live grep: http://tuhdo.github.io/static/live_grep.gif
 - A live outline tree for jumping to function/variable in current file:
-
-+ Demo 1: http://tuhdo.github.io/static/part3/helm-semantic-or-imenu.gif
-+ Demo 2:
-https://cloud.githubusercontent.com/assets/4818719/4102208/cda8f392-311e-11e4-9c83-e68df38ef68e.gif
+  + Demo 1: http://tuhdo.github.io/static/part3/helm-semantic-or-imenu.gif
+  + Demo 2: https://cloud.githubusercontent.com/assets/4818719/4102208/cda8f392-311e-11e4-9c83-e68df38ef68e.gif
 
 - Interactively select color and faces: http://tuhdo.github.io/static/part3/helm-color.gif
 
-- Interactive Eshell history, certainly superior to the stock C-c C-l:
-http://tuhdo.github.io/static/part3/helm-eshell-history.gif . I store a large
-amount of eshell/shell history, so I want a quick way to narrow down.
+- Interactive Eshell history, certainly superior to the stock ~C-c C-l~:
+  http://tuhdo.github.io/static/part3/helm-eshell-history.gif. I store a large
+  amount of shell history, so I want a quick way to narrow down.
 
 
 
 XXX Helm is also very useful to look up Elisp variable/function documentation
-and for finding stuff in the Info Manuals (e.g. helm-info-elisp or
-helm-info-emacs).
+and for finding stuff in the Info Manuals (e.g. ~helm-info-elisp~ or
+~helm-info-emacs~).
 
 XXX Look at helm-dictionary.
 
-#+begin_src emacs-lisp
-  (leuven--section "Helm")
-
-  ;; Change `helm-command-prefix-key'.
-  (global-set-key (kbd "C-c h") #'helm-command-prefix)
-
-  ;; Open Helm (QuickSilver-like candidate-selection framework).
-  (when (try-require 'helm-config)      ; [default `helm-command-prefix-key']
-                                        ; Explicitly loads `helm-autoloads'!
-                                        ; CAUTION for recursive loads...
-
-    (global-unset-key (kbd "C-x c"))
-
-    (global-set-key (kbd "C-M-z") #'helm-resume)
-#+end_src
 
 #+begin_src emacs-lisp
     ;; Via: http://www.reddit.com/r/emacs/comments/3asbyn/new_and_very_useful_helm_feature_enter_search/
@@ -4524,6 +4543,7 @@ XXX Look at helm-dictionary.
 
 #+begin_src emacs-lisp
     ;; Better version of `occur'.
+;;    (global-set-key [remap occur] #'helm-occur) ; helm-regexp.el
     (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
     (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
 #+end_src
@@ -4536,7 +4556,7 @@ XXX Look at helm-dictionary.
     ;; Speedy file opening.
     (global-set-key (kbd "<f3>") #'helm-for-files)
 
-    ;; (global-set-key (kbd "C-x C-f") #'helm-find-files) ; OK.
+    ;; (global-set-key [remap find-file] #'helm-find-files) ; OK. C-x C-f
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4544,11 +4564,12 @@ XXX Look at helm-dictionary.
     (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
 
-    (global-set-key (kbd "C-x C-b") #'helm-buffers-list) ; OK.
+    (global-set-key [remap list-buffers] #'helm-buffers-list) ; OK. C-x C-b
 #+end_src
 
 #+begin_src emacs-lisp
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
+    ;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4603,19 +4624,25 @@ See helm-flycheck!
 
 #+begin_src emacs-lisp
   (with-eval-after-load "helm"
+#+end_src
 
+#+begin_src emacs-lisp
     ;; Rebind TAB to do persistent action.
     (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
     (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
                                         ; Make TAB works in terminal.
-    ;; List actions using C-z.
-    (define-key helm-map (kbd "C-z") #'helm-select-action)
 
+    ;; List available actions using C-z.
+    (define-key helm-map (kbd "C-z") #'helm-select-action)
+#+end_src
+
+#+begin_src emacs-lisp
     (define-key helm-map (kbd "C-M-n") #'helm-next-source)
     (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
 
-    ;; Ace-Jump to a candidate line in Helm window.
-    (define-key helm-map (kbd "@") 'ace-jump-helm-line) ; C-'.
+    ;; Reserved for searching inside buffers! (See C-h m)
+    ;; ;; Ace-Jump to a candidate line in Helm window.
+    ;; (define-key helm-map (kbd "@") 'ace-jump-helm-line) ; C-'.
 
     ;; Various functions for Helm (Shell history, etc.).
     (require 'helm-misc)
@@ -4819,7 +4846,7 @@ or if you use ~helm-do-ag~, you can use ~C-u~ prefix for specifying extension.
       (global-set-key (kbd "M-g >") #'helm-ag-this-file)
 
       ;; Search with Ag in current projectile project.
-      (global-set-key (kbd "C-S-a") 'helm-projectile-ag)
+      (global-set-key (kbd "C-S-a") #'helm-projectile-ag)
 
       (global-set-key (kbd "M-g ,") #'helm-ag-pop-stack)
       ))
@@ -4985,13 +5012,12 @@ You can easily add actions for other sites you usually search for info on.
   ;;   )
 #+end_src
 
-**** Helm projectile
+**** Helm Projectile
 
 Exploring large projects with Projectile and Helm Projectile:
 http://tuhdo.github.io/helm-projectile.html
 
-The new Helm Projectile is not just a single command `helm-projectile` anymore;
-it can now replace many Projectile "core commands", such as
+Helm Projectile replaces many Projectile "core commands", such as
 `projectile-find-file`.
 
 A few demos:
@@ -5021,6 +5047,13 @@ A few demos:
 
 - You can invoke `helm-do-grep` on any project directory when using
   a `helm-projectile` command.
+
+Key bindings:
+
+- ~C-c p p~ for ~helm-projectile-switch-project~
+- ~C-c p f~ for ~helm-projectile-find-file~
+- ~C-c p s g~ for ~helm-projectile-grep~
+- ~C-c p s a~ for ~helm-projectile-ag~
 
 #+begin_src emacs-lisp :tangle no
   ;; (global-set-key (kbd "C-;") #'helm-projectile)
@@ -6139,17 +6172,20 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   (setq-default fill-column 80)
 
   ;; (Un-)fill paragraph.
-  (defun leuven-fill-paragraph (&optional arg)
-    "`M-q' runs the command `fill-paragraph'.
-  `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and
-  converts it into a single line of text."
+  (defun leuven-fill-or-unfill-paragraph (count)
+    "Like `fill-paragraph', but unfill if used twice."
     (interactive "P")
-    (let ((fill-column (if arg
-                           (point-max)
-                         fill-column)))
-      (fill-paragraph nil)))
+    (let ((fill-column
+           (if count
+               (prefix-numeric-value count)
+             (if (eq last-command 'leuven-fill-or-unfill-paragraph)
+                 (progn (setq this-command nil)
+                        (point-max))
+               fill-column))))
+      (fill-paragraph)))
 
-  (global-set-key (kbd "M-q") #'leuven-fill-paragraph)
+  ;; M-q.
+  (global-set-key [remap fill-paragraph] #'leuven-fill-or-unfill-paragraph)
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -6376,9 +6412,9 @@ a factor 2!?
 #+end_src
 
 ** Outline Mode
-   :PROPERTIES:
-   :ID:       42ad895e-c049-4710-a877-5014a7f6acfc
-   :END:
+:PROPERTIES:
+:ID:       42ad895e-c049-4710-a877-5014a7f6acfc
+:END:
 
 Outline is line-oriented and does not distinguish end-of-block.
 
@@ -6681,9 +6717,9 @@ Region Marked>~.
 #+end_src
 
 * Org Mode (Getting Things Done)
-  :PROPERTIES:
-  :ID:       737b836b-ac1f-4120-94ca-c9e0282268f0
-  :END:
+:PROPERTIES:
+:ID:       737b836b-ac1f-4120-94ca-c9e0282268f0
+:END:
 
 - 40 variables most frequently customized in Org
   http://orgmode.org/worg/org-configs/org-customization-survey.html
@@ -7178,9 +7214,9 @@ See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior 
 #+end_src
 
 *** Sparse trees
-    :PROPERTIES:
-    :ID:       a9fe61b7-cdbd-478e-a4af-da9e122fb2d9
-    :END:
+:PROPERTIES:
+:ID:       a9fe61b7-cdbd-478e-a4af-da9e122fb2d9
+:END:
 
 #+begin_src emacs-lisp
 ;;** (info "(org)Sparse trees")
@@ -10152,6 +10188,10 @@ logically equivalent to "tangle", but without creating a separate file).
 
 *** Evaluating code blocks
 
+See:
+- ~org-babel-default-header-args~
+- ~org-babel-default-inline-header-args~
+
 #+begin_src emacs-lisp
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
@@ -10969,9 +11009,9 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 Link emails from Org files.
 
 *** Google Weather
-  :PROPERTIES:
-  :CATEGORY: Weather
-  :END:
+:PROPERTIES:
+:CATEGORY: Weather
+:END:
 
 #+begin_example
 ,* Weather
@@ -11490,8 +11530,8 @@ Though, it takes a while to load.
 
 ** web-mode
 
-[[http://web-mode.org/][web-mode]] could be another alternative for editing HTML documents embedding
-CSS/JS and blocks (client/server side).
+[[http://web-mode.org/][web-mode]] is another alternative for editing HTML documents embedding CSS/JS and
+blocks (client/server side).
 
 #+begin_src emacs-lisp
   (with-eval-after-load "web-mode-autoloads"
@@ -11499,28 +11539,58 @@ CSS/JS and blocks (client/server side).
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
 
+  ;; Major mode for editing web templates.
   (with-eval-after-load "web-mode"
 
-    ;; ;; Enable element highlight.
-    ;; (setq web-mode-enable-current-element-highlight t) ; web-mode-current-element-highlight-face.
+    ;; Script element left padding.
+    (setq web-mode-script-padding
+          (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+
+    ;; Style element left padding.
+    (setq web-mode-style-padding
+          (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+
+    ;; CSS indentation level.
+    (setq-default web-mode-css-indent-offset
+                  (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+
+    ;; Code (javascript, php, etc.) indentation level.
+    (setq-default web-mode-code-indent-offset
+                  (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+                                        ; XXX Check out ab-pm-cf-wr-newother.axvw.
 
     ;; Auto-pairing.
     (setq web-mode-enable-auto-pairing t)
 
+    ;; Enable element highlight.
+    (setq web-mode-enable-current-element-highlight t) ; web-mode-current-element-highlight-face.
+
     ;; Enable block face (useful for setting background of <style>).
-    (setq web-mode-enable-block-face t)
+    (setq web-mode-enable-block-face t) ; web-mode-block-face.
 
     ;; Enable part face (useful for setting background of <script>).
-    (setq web-mode-enable-part-face t)
+    (setq web-mode-enable-part-face t) ; web-mode-part-face.
+
+    ;; ;; Comment style : 1 = default, 2 = force server comments outside a block.
+    ;; (setq web-mode-comment-style 2)
+
+    ;; A list of additional snippets.
+    (setq web-mode-extra-snippets
+      '((nil . (("input" . ("\t<input type=\"" . "\"/>"))
+                ("a" . ("\t<a href=\"#\">" . "</a>"))
+                ("img" . ("\t<img src=\"" . "\">"))
+                ("div" . ("\t<div>" . "</div>"))
+                ))))
 
     ;; (flycheck-add-mode 'html-tidy 'web-mode)
+
     )
 #+end_src
 
 ** XML
-   :PROPERTIES:
-   :ID:       786a2051-476a-4277-82df-d8ebf8ba0e99
-   :END:
+:PROPERTIES:
+:ID:       786a2051-476a-4277-82df-d8ebf8ba0e99
+:END:
 
 nXML mode (default for editing XML files, since GNU Emacs 23.2) does:
 
@@ -11686,9 +11756,9 @@ Also =who-calls.el=
 #+end_src
 
 ** Top-Level Definitions, or Defuns
-   :PROPERTIES:
-   :ID:       ea687cd8-fff0-461f-999e-c9fbc84b5901
-   :END:
+:PROPERTIES:
+:ID:       ea687cd8-fff0-461f-999e-c9fbc84b5901
+:END:
 
 Imenu is a great tool allowing you to *go to a function definition* (by name), but
 only if the definition is *in the buffer you are currently editing* (it won't jump
@@ -12108,9 +12178,9 @@ New minor mode ~global-eldoc-mode~ is enabled by default in Emacs 25.
 #+end_src
 
 ** Hideshow minor mode
-   :PROPERTIES:
-   :ID:       a36b1dbd-1d05-4ff2-b19a-167e50c4f1f7
-   :END:
+:PROPERTIES:
+:ID:       a36b1dbd-1d05-4ff2-b19a-167e50c4f1f7
+:END:
 
 XXX See http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs
 
@@ -12179,7 +12249,7 @@ And the pretty awesome ~hideshow-org~.  Folding made useful.
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  ;; If hideshowvis is not installed, do not attempt to configure it, as this
+  ;; If Hideshowvis is not installed, do not attempt to configure it, as this
   ;; will prevent packages (including hideshowvis itself) from compiling.
   (when (display-graphic-p)
     (with-eval-after-load "hideshowvis-autoloads"
@@ -12213,23 +12283,22 @@ And the pretty awesome ~hideshow-org~.  Folding made useful.
             (overlay-put ov 'display display-string))))
 
       (setq hs-set-up-overlay 'hs-display-code-line-counts)))
-
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(dolist (hook '(emacs-lisp-mode-hook c++-mode-hook))
-  (add-hook hook 'hideshowvis-enable))
+  (dolist (hook '(emacs-lisp-mode-hook c++-mode-hook))
+    (add-hook hook 'hideshowvis-enable))
 
-(defun hideshowvis-enable-immediately ()
-  (run-at-time "0 seconds" nil 'hideshowvis-enable))
+  (defun hideshowvis-enable-immediately ()
+    (run-at-time "0 seconds" nil 'hideshowvis-enable))
 
-(add-hook 'js2-mode-hook 'hideshowvis-enable-immediately)
+  (add-hook 'js2-mode-hook 'hideshowvis-enable-immediately)
 #+end_src
 
 ** Completion for Symbol Names
-   :PROPERTIES:
-   :ID:       4b262301-5370-40c6-8da6-019215634e20
-   :END:
+:PROPERTIES:
+:ID:       4b262301-5370-40c6-8da6-019215634e20
+:END:
 
 #+begin_src emacs-lisp
 ;;** 26.8 (info "(emacs)Symbol Completion")
@@ -12479,34 +12548,176 @@ among JS developers.
 Config examples:
 - https://github.com/cjohansen/.emacs.d/blob/98ddde2a17b1d0c6181891561bc01aaf570376ae/setup-js2-mode.el
 
+Vidéo:
+- [[https://www.youtube.com/watch?v=dbxoo-qEmcg][Some stuff you can do in Emacs in JavaScript]]
+
+Key bindings:
+
+- ~M-.~ (~js2-jump-to-definition~) ::
+     Jump to the definition of an object's property, variable or function.
+
+- M-, ::
+     Pop back to where ~M-x xref-find-definitions~ was last invoked.
+
 #+begin_src emacs-lisp
   (with-eval-after-load "js2-mode-autoloads"
 
     (add-to-list 'auto-mode-alist '("\\.js\\'\\|\\.json\\'" . js2-mode)))
+#+end_src
 
+#+begin_src emacs-lisp
   (with-eval-after-load "js2-mode"
 
     ;; Add highlighting of many ECMA built-in functions.
     (setq js2-highlight-level 3)
+
+    ;; Delay in secs before re-parsing after user makes changes.
+    (setq-default js2-idle-timer-delay 0.1)
 
     ;; `js2-line-break' in mid-string will make it a string concatenation.
     ;; The '+' will be inserted at the end of the line.
     (setq js2-concat-multiline-strings 'eol)
 
     ;; List of any extern names you'd like to consider always declared.
-    (setq js2-global-externs
-          '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout"
-            "clearTimeout" "setInterval" "clearInterval" "location" "__dirname"
-            "console" "JSON"))
+    (setq js2-global-externs '("View")) ; ARCHIBUS.
 
     ;; Treat unused function arguments like declared-but-unused variables.
     (setq js2-warn-about-unused-function-arguments t)
+
+    ;; Augment the default indent-line behavior with cycling among several
+    ;; computed alternatives.
+    (setq js2-bounce-indent-p t)
+
+    ;; Let Flycheck handle parse errors.
+    (setq js2-strict-missing-semi-warning nil)
+
+    (add-hook 'js2-mode-hook
+              (lambda ()
+                (flycheck-mode 1)))
 #+end_src
 
+*** JS2-refactor
+
+The ~js2-refactor~ mode should start with ~C-c C-m~ and then a two-letter mnemonic
+shortcut.
+
+List of available *refactorings*:
+
+- ~ev~ (~extract-var~) ::
+     Takes a *marked expression* and replaces it with a *var*.
+
+- ~ip~ (~introduce-parameter~) ::
+     Changes the *marked expression* to a *parameter* in a local function.
+
+- ~ef~ (~extract-function~) ::
+     *Extracts* the marked expressions out into a new named *function*.
+
+- ~em~ (~extract-method~) ::
+     *Extracts* the marked expressions out into a new named *method* in an object
+     literal.
+
+- ~vt~ (~var-to-this~) ::
+     Changes *local ~var* a~ to be ~this.a~ (*instance variable*) instead.
+
+- ~lp~ (~localize-parameter~) ::
+     Changes a parameter to a local var in a local function.
+
+- ~eo~ (~expand-object~) ::
+     Converts a one line object literal to multiline.
+
+- ~co~ (~contract-object~) ::
+     Converts a multiline object literal to one line.
+
+- ~eu~ (~expand-function~) ::
+     Converts a one line function to multiline (expecting semicolons as
+     statement delimiters).
+
+- ~cu~ (~contract-function~) ::
+     Converts a multiline function to one line (expecting semicolons as
+     statement delimiters).
+
+- ~ea~ (~expand-array~) ::
+     Converts a one line array to multiline.
+
+- ~ca~ (~contract-array~) ::
+     Converts a multiline array to one line.
+
+- ~wi~ (~wrap-buffer-in-iife~) ::
+     Wraps the entire buffer in an immediately invoked function expression.
+
+- ~ig~ (~inject-global-in-iife~) ::
+     Creates a shortcut for a marked global by injecting it in the wrapping
+     immediately invoked function expression.
+
+- ~ag~ (~add-to-globals-annotation~) ::
+     Creates a ~/*global */~ annotation if it is missing, and adds the var at
+     point to it.
+
+- ~iv~ (~inline-var~) ::
+     Replaces all instances of a variable with its initial value.
+
+- ~rv~ (~rename-var~) ::
+     Renames the variable on point and all occurrences in its lexical scope.
+
+- ~ao~ (~arguments-to-object~) ::
+     Replaces arguments to a function call with an object literal of named
+     arguments.  Requires YASnippet.
+
+- ~3i~ (~ternary-to-if~) ::
+     Converts ternary operator to if-statement.
+
+- ~sv~ (~split-var-declaration~) ::
+     Splits a ~var~ with multiple vars declared, into several ~var~ statements.
+
+- ~uw~ (~unwrap~) ::
+     Replaces the parent statement with the selected region.
+
 #+begin_src emacs-lisp
-    ;; Imenu support for additional constructs.
+  (with-eval-after-load "js2-refactor-autoloads"
+    (add-hook 'js2-mode-hook #'js2-refactor-mode)
+
+    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
+                                                 ; `C-c C-m ev`.
+    )
+)
+#+end_src
+
+*** Imenu
+
+See http://blog.binchen.org/posts/why-emacs-is-better-editor-part-two.html.
+
+http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
+
+#+begin_src emacs-lisp
+    ;; Below regex list could be used in both js-mode and js2-mode.
+    (setq javascript-common-imenu-regex-list
+          '(("Controller" "[. \t]controller([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Controller" "[. \t]controllerAs:[ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Filter" "[. \t]filter([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("State" "[. \t]state[(:][ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Factory" "[. \t]factory([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Service" "[. \t]service([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Module" "[. \t]module( *['\"]\\([a-zA-Z0-9_.]+\\)['\"], *\\[" 1)
+            ("ngRoute" "[. \t]when(\\(['\"][a-zA-Z0-9_\/]+['\"]\\)" 1)
+            ("Directive" "[. \t]directive([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Event" "[. \t]\$on([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Config" "[. \t]config([ \t]*function *( *\\([^\)]+\\)" 1)
+            ("Config" "[. \t]config([ \t]*\\[ *['\"]\\([^'\"]+\\)" 1)
+            ("OnChange" "[ \t]*\$(['\"]\\([^'\"]*\\)['\"]).*\.change *( *function" 1)
+            ("OnClick" "[ \t]*\$([ \t]*['\"]\\([^'\"]*\\)['\"]).*\.click *( *function" 1)
+            ("Watch" "[. \t]\$watch( *['\"]\\([^'\"]+\\)" 1)
+            ("Function" "function[ \t]+\\([a-zA-Z0-9_$.]+\\)[ \t]*(" 1)
+            ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
+            ("Task" "[. \t]task([ \t]*['\"]\\([^'\"]+\\)" 1)))
+
+    ;; Patching Imenu in js2-mode.
+    (setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
+
+    ;; Imenu support for frameworks and structural patterns.
     (js2-imenu-extras-setup)
 #+end_src
+
+*** Others
 
 #+begin_src emacs-lisp
     (defun js2-imenu-record-object-clone-extend ()
@@ -12527,10 +12738,12 @@ Config examples:
                                            (js2-node-abs-pos methods)))))))))
 #+end_src
 
-http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
+Highlight every variable in its own, consistent color -- "semantic highlighting"
+or "hashed highlighting" (in
+http://www.wilfred.me.uk/blog/2014/09/27/the-definitive-guide-to-syntax-highlighting/).
 
 #+begin_src emacs-lisp
-    ;; Color defined variables.
+    ;; Color identifiers based on their names.
     (with-eval-after-load "color-identifiers-mode-autoloads"
       (add-hook 'js2-mode-hook 'color-identifiers-mode))
 #+end_src
@@ -12633,95 +12846,11 @@ The following additional keys are bound:
       (add-hook 'web-mode-hook #'tern-mode))
 #+end_src
 
-*** JS2-refactor
-
-The ~js2-refactor~ mode should start with ~C-c C-m~ and then a two-letter mnemonic
-shortcut.
-
-List of available *refactorings*:
-
-- ~ev~ (~extract-var~) ::
-     Takes a *marked expression* and replaces it with a *var*.
-
-- ~ip~ (~introduce-parameter~) ::
-     Changes the *marked expression* to a *parameter* in a local function.
-
-- ~ef~ (~extract-function~) ::
-     *Extracts* the marked expressions out into a new named *function*.
-
-- ~em~ (~extract-method~) ::
-     *Extracts* the marked expressions out into a new named *method* in an object
-     literal.
-
-- ~vt~ (~var-to-this~) ::
-     Changes *local ~var* a~ to be ~this.a~ (*instance variable*) instead.
-
-- ~lp~ (~localize-parameter~) ::
-     Changes a parameter to a local var in a local function.
-
-- ~eo~ (~expand-object~) ::
-     Converts a one line object literal to multiline.
-
-- ~co~ (~contract-object~) ::
-     Converts a multiline object literal to one line.
-
-- ~eu~ (~expand-function~) ::
-     Converts a one line function to multiline (expecting semicolons as
-     statement delimiters).
-
-- ~cu~ (~contract-function~) ::
-     Converts a multiline function to one line (expecting semicolons as
-     statement delimiters).
-
-- ~ea~ (~expand-array~) ::
-     Converts a one line array to multiline.
-
-- ~ca~ (~contract-array~) ::
-     Converts a multiline array to one line.
-
-- ~wi~ (~wrap-buffer-in-iife~) ::
-     Wraps the entire buffer in an immediately invoked function expression.
-
-- ~ig~ (~inject-global-in-iife~) ::
-     Creates a shortcut for a marked global by injecting it in the wrapping
-     immediately invoked function expression.
-
-- ~ag~ (~add-to-globals-annotation~) ::
-     Creates a ~/*global */~ annotation if it is missing, and adds the var at
-     point to it.
-
-- ~iv~ (~inline-var~) ::
-     Replaces all instances of a variable with its initial value.
-
-- ~rv~ (~rename-var~) ::
-     Renames the variable on point and all occurrences in its lexical scope.
-
-- ~ao~ (~arguments-to-object~) ::
-     Replaces arguments to a function call with an object literal of named
-     arguments.  Requires YASnippet.
-
-- ~3i~ (~ternary-to-if~) ::
-     Converts ternary operator to if-statement.
-
-- ~sv~ (~split-var-declaration~) ::
-     Splits a ~var~ with multiple vars declared, into several ~var~ statements.
-
-- ~uw~ (~unwrap~) ::
-     Replaces the parent statement with the selected region.
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "js2-refactor-autoloads"
-    (add-hook 'js2-mode-hook #'js2-refactor-mode)
-
-    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
-                                                 ; `C-c C-m ev`.
-    )
-)
-#+end_src
-
 *** Skewer: live web development with Emacs
 
 Skewer lets you send HTML, CSS, and JavaScript fragments to a browser.
+
+See [[https://www.youtube.com/watch?v=4tyTgyzUJqM][Skewer -- Emacs browser interaction]].
 
 #+begin_tip
 You may need to start Chrome with ~chrome --allow-running-insecure-content~, if
@@ -12942,6 +13071,12 @@ See jdc.el
   (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; Color identifiers based on their names.
+  (with-eval-after-load "color-identifiers-mode-autoloads"
+    (add-hook 'java-mode-hook 'color-identifiers-mode))
+#+end_src
+
 ** Compilation Mode
 
 When Emacs visits the locus of an error message, it momentarily highlights the
@@ -13012,8 +13147,8 @@ thereafter.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 #+end_src
 
-To exclude files from ~rgrep~ results, if you use it instead of ~grep-find~, you can
-set up ignored files/dirs in advance:
+To exclude files from ~lgrep~ and ~rgrep~ results (if you use ~rgrep~ instead of
+~grep-find~), you can set up ignored files/dirs in advance:
 
 #+begin_src emacs-lisp
   (with-eval-after-load "grep"
@@ -13022,18 +13157,20 @@ set up ignored files/dirs in advance:
 
     ;; Files to ignore for ARCHIBUS.
     (add-to-list 'grep-find-ignored-files "app.js")
+    ;; (add-to-list 'grep-find-ignored-files "cordova.js")
     (add-to-list 'grep-find-ignored-files "app.css")
     (add-to-list 'grep-find-ignored-files "sencha-touch.css")
 
     ;; Directories to ignore for ARCHIBUS.
     (add-to-list 'grep-find-ignored-directories "ab-core")
     (add-to-list 'grep-find-ignored-directories "ckeditor")
-    (add-to-list 'grep-find-ignored-directories "ab-products/common/mobile"))
+    ;; (add-to-list 'grep-find-ignored-directories "ab-products/common/mobile")
+    (add-to-list 'grep-find-ignored-directories "common/mobile"))
 #+end_src
 
 #+begin_note
-Also useful for ~helm-ag~, which also uses the settings of the ~grep-find-ignored-*~
-variables.
+~helm-ag~ and ~helm-projectile-grep~ also use the settings of the
+~grep-find-ignored-*~ variables.
 #+end_note
 
 Ag, the silver searcher (in Cygwin!):
@@ -14056,7 +14193,13 @@ It provides:
      A *project management* system which can *generate Makefiles* to compile your
      code for you.
 
-     (Look as well at Projectile!)
+     #+begin_tip
+     Projectile is another Emacs library providing easy project management and
+     navigation.  The concept of a project is pretty basic -- just a folder
+     containing special file.  Git repos are considered projects by default.  If
+     you want to mark a folder manually as a project just create an empty
+     =.projectile= file in it.
+     #+end_tip
 
 - SRecode ::
      A template / *code generation* system which can convert tags from semantic
@@ -14152,10 +14295,10 @@ The commands to display *symbol references* are:
         (local-set-key
           (kbd "C-c >") #'semantic-complete-analyze-inline)
 
-        ;; Toggle between the implementation and a prototype of symbol under
-        ;; cursor.
-        (local-set-key
-          (kbd "C-c p") #'semantic-analyze-proto-impl-toggle)
+        ;; ;; Toggle between the implementation and a prototype of symbol under
+        ;; ;; cursor.
+        ;; (local-set-key
+        ;;   (kbd "C-c p") #'semantic-analyze-proto-impl-toggle) ; vs Projectile.
 
         ;; Visit the header file under cursor.
         (local-set-key
@@ -14203,9 +14346,9 @@ The commands to display *symbol references* are:
 #+end_src
 
 *** Advanced Code Browsing
-    :PROPERTIES:
-    :ID:       5032bcdb-ac6b-4101-a0ce-28192fb7e247
-    :END:
+:PROPERTIES:
+:ID:       5032bcdb-ac6b-4101-a0ce-28192fb7e247
+:END:
 
 Some people use CEDET in combination with [[http://www.xemacs.org/Documentation/packages/html/ecb_2.html][ECB (the Emacs Code Browser)]], which
 provides views of directories and files.
@@ -14263,16 +14406,16 @@ narrows down the list as you type substrings.  Tastes differ, but I for one
 really like this.
 
 #+begin_src emacs-lisp :tangle no
-   (try-require 'eassist)
-   (with-eval-after-load "eassist"
+  (try-require 'eassist)
+  (with-eval-after-load "eassist"
 
-     (defun leuven--c-mode-eassist ()
-       (local-set-key (kbd "C-c t") #'eassist-switch-h-cpp)
-       (local-set-key (kbd "C-x t") #'eassist-switch-h-cpp)
-       ;; (local-set-key (kbd "C-c e") #'eassist-list-methods)
-       )
+    (defun leuven--c-mode-eassist ()
+      (local-set-key (kbd "C-c t") #'eassist-switch-h-cpp)
+      (local-set-key (kbd "C-x t") #'eassist-switch-h-cpp)
+      ;; (local-set-key (kbd "C-c e") #'eassist-list-methods)
+      )
 
-     (add-hook 'c-mode-common-hook #'leuven--c-mode-eassist))
+    (add-hook 'c-mode-common-hook #'leuven--c-mode-eassist))
                                         ; Note that this will apply to all
                                         ; cc-modes, e.g. c-mode, c++-mode,
                                         ; php-mode, csharp-mode, awk-mode.
@@ -14280,6 +14423,137 @@ really like this.
 
 #+begin_src emacs-lisp
 )                                       ; Chapter 28 ends here.
+#+end_src
+
+*** Projectile
+
+Projectile's features.
+
+- C-c p p ::
+     *Switch* between *projects* you have worked on.
+
+**** Navigating project files
+
+- C-c p f ::
+     Prompt you for a *file* in project to *jump to*.
+
+- C-c p d ::
+     Prompt you for a *directory* in project to *jump to*.
+
+- C-c p e ::
+     Prompt you for a *recently visited file* in the project to *jump to*.
+
+- C-c p b ::
+     Prompt you for a project *buffer* to *jump to*.
+
+- C-c p l ::
+     *Jump to* a *file in a directory*.
+
+**** Running grep and occur
+
+- C-c p s g ::
+     Run *~grep~* on the files in the project.
+
+- C-c p s s ::
+     Run *~ag~* on the files in the project. [Helm-Projectile]
+
+- C-c p o ::
+     Run *~multi-occur~* on all project's buffers currently open.
+
+**** X
+
+- C-c p R ::
+     *Regenerate* project *~etags~ or ~gtags~* (requires ~ggtags~).
+
+**** Running tests and compilation commands
+
+- C-c p P ::
+     Run a *test* command (~make test~) for the current project.
+
+- C-c p c ::
+     Run a *compilation* command (~make~) for the current project.
+
+- C-c p u ::
+     Run a *run* command for the current project.
+
+**** Switching between tests and source files
+
+- C-c p t ::
+     *Toggle between* an *implementation* file *and* its *test* file.
+
+- C-c p T ::
+     *Jump to* a *test file* in project.
+
+**** Switching between controllers and views
+
+- C-c p a ::
+     *Switch between files* with *same name* but *different extensions* (e.g. =.h= <->
+     =.c= / =.cpp=).
+
+- C-c p g ::
+     *Jump to file at point* in project.
+
+**** Running VC
+
+- C-c p v ::
+     Open version control for the current project.
+
+**** Opening Dired
+
+- C-c p D ::
+     Open *Dired* at the root of the project.
+
+**** Running a shell command
+
+- C-c p ! ::
+     Run a shell command in the project root.
+
+**** X
+
+- C-c p k ::
+     *Kill all* project *buffers*.
+
+- C-c p r ::
+     *Replace* literal string in project.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "projectile-autoloads"
+
+    ;; Turn on projectile mode by default for all file types
+    (projectile-global-mode)
+
+    (setq projectile-completion-system 'helm)
+    (setq projectile-completion-system 'helm-comp-read)
+
+    ;; Turn on Helm bindings for projectile
+    (helm-projectile-on)
+
+    ;; ;; For large projects.
+    ;; (setq helm-projectile-sources-list
+    ;;       '(helm-source-projectile-projects
+    ;;         helm-source-projectile-files-list))
+
+;; (define-key projectile-mode-map [?\s-p] 'projectile-switch-project)
+;; (define-key projectile-mode-map [?\s-d] 'projectile-find-dir)
+;; (define-key projectile-mode-map [?\s-f] 'projectile-find-file)
+;; (define-key projectile-mode-map [?\s-g] 'projectile-grep)
+  )
+
+  (with-eval-after-load "projectile"
+
+    ;; Action invoked AFTER SWITCHING PROJECTS with `C-c p p'.
+    (setq projectile-switch-project-action 'helm-projectile-find-file)
+                                        ;; 'projectile-find-file ; Default.
+                                        ;; 'projectile-find-file-in-known-projects
+                                        ;; 'projectile-find-file-dwim
+                                        ;; 'projectile-dired
+                                        ;; 'projectile-find-dir
+
+    (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
+
+(add-to-list 'projectile-other-file-alist '("axvw" "js")) ;; switch from axvw -> js
+(add-to-list 'projectile-other-file-alist '("js" "axvw")) ;; switch from js -> axvw
+  )
 #+end_src
 
 *** Refactoring
@@ -14583,9 +14857,9 @@ Find it at http://capitaomorte.github.io/yasnippet/snippet-reference.html#yas-ke
 #+end_src
 
 ** Dynamic Abbrev Expansion
-   :PROPERTIES:
-   :ID:       0fa23e4a-e42c-4317-834c-d2ef7c9d741c
-   :END:
+:PROPERTIES:
+:ID:       0fa23e4a-e42c-4317-834c-d2ef7c9d741c
+:END:
 
 "Dynamic abbrevs" allow the meanings of abbreviations (expansions) to be
 *determined automatically from the contents of the buffer*.  It is completely
@@ -14948,6 +15222,27 @@ completions and filter as well.
     )
 #+end_src
 
+#+begin_src emacs-lisp
+;; Hooks
+(add-hook 'web-mode-hook
+          '(lambda ()
+             ;; Company-mode.
+             (set (make-local-variable 'company-backends)
+                  (append company-backends '((company-web-html
+                                              company-web-jade
+                                              company-yasnippet))))
+
+             ;; Auto indent.
+             (local-set-key (kbd "RET") 'newline-and-indent)
+
+             ;; Disabled smartparens in web-mode.
+             (setq smartparens-mode nil)))
+#+end_src
+
+#+begin_src emacs-lisp
+;; See web-mode-imenu-regexp-list.
+#+end_src
+
 **** Common
 
 #+begin_src emacs-lisp
@@ -14972,6 +15267,9 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 #+end_src
 
 #+begin_src emacs-lisp
+    ;; Align annotations to the right tooltip border.
+    (setq company-tooltip-align-annotations t)
+
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 1)
 
@@ -15009,8 +15307,6 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     (define-key company-active-map (kbd "C-g") #'company-abort)
     (define-key company-active-map (kbd "<left>") #'company-abort)
 #+end_src
-
-tes
 
 #+begin_src emacs-lisp
     ;; Do nothing if the indicated candidate contains digits (actually, it will
@@ -15272,9 +15568,9 @@ GNU ~ls~.
 #+end_src
 
 ** Emulation of ~ls~ on MS-Windows
-   :PROPERTIES:
-   :ID:       26d881f0-0f56-4259-9b31-eb4fecb08c88
-   :END:
+:PROPERTIES:
+:ID:       26d881f0-0f56-4259-9b31-eb4fecb08c88
+:END:
 
 Use Emacs's own emulation of ~ls~ in all versions of Emacs.
 
@@ -15319,16 +15615,14 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
       (beginning-of-buffer)
       (dired-next-line 4))
 
-    (define-key dired-mode-map
-      (vector 'remap 'beginning-of-buffer) #'dired-back-to-top)
+    (define-key dired-mode-map [remap beginning-of-buffer] #'dired-back-to-top)
 
     (defun dired-jump-to-bottom ()
       (interactive)
       (end-of-buffer)
       (dired-next-line -1))
 
-    (define-key dired-mode-map
-      (vector 'remap 'end-of-buffer) #'dired-jump-to-bottom)
+    (define-key dired-mode-map [remap end-of-buffer] #'dired-jump-to-bottom)
 #+end_src
 
 ** Deleting Files with Dired
@@ -15541,8 +15835,7 @@ prestations-2013-06.tex changed on disk; really edit the buffer? (y, n, r or C-h
               (lambda ()
 
                 ;; Auto-refresh Dired on file change.
-                (auto-revert-mode)
-                (setq-default auto-revert-interval 1)))
+                (auto-revert-mode)))
 #+end_src
 
 Maybe the following fixes this above problem?
@@ -15853,6 +16146,8 @@ Send notifications using ~notifications-notify~ (which was added in Emacs 24).
 It uses ~notify-send~ (if the ~libnotify-bin~ Ubuntu package is installed).
 
 *************** TODO For Windows users: use `todochicku.el' (cross-platform?) and the snarl notifier
+
+Or better look at the ~alert~ package?
 
 *************** TODO Diff between shell-command and call-process?  Blocking call?
 
@@ -16481,9 +16776,9 @@ output going to that buffer.
 #+end_src
 
 ** Shell Mode
-   :PROPERTIES:
-   :ID:       9e938c3d-3752-4c12-b3a8-cc12cdcdfd88
-   :END:
+:PROPERTIES:
+:ID:       9e938c3d-3752-4c12-b3a8-cc12cdcdfd88
+:END:
 
 *** Entering commands and fixing mistakes
 
@@ -16724,9 +17019,9 @@ solves this problem:
 #+end_src
 
 ** Term Mode
-   :PROPERTIES:
-   :ID:       d12c2e1e-8147-4b39-8128-aaa70fbf4657
-   :END:
+:PROPERTIES:
+:ID:       d12c2e1e-8147-4b39-8128-aaa70fbf4657
+:END:
 
 To run a subshell in a text *terminal emulator*, use ~M-x term~.  This creates (or
 reuses) a buffer named ~*terminal*~, and runs a subshell with input coming from
@@ -17395,6 +17690,8 @@ printing on Windows.
 
 *************** TODO Check that there is no extra ~/.saves directory!
 
+Pick up where you left off.
+
 #+begin_src emacs-lisp
 ;;* 44 (info "(emacs)Saving Emacs Sessions")
 
@@ -17987,10 +18284,10 @@ Zoom in/out with Ctrl + Scroll wheel on the mouse:
 #+end_src
 
 ** Images
-   :PROPERTIES:
-   :ID:       9432da83-fa9d-4466-a4da-57f33d662bbd
-   :header-args: :tangle no
-   :END:
+:PROPERTIES:
+:ID:       9432da83-fa9d-4466-a4da-57f33d662bbd
+:header-args: :tangle no
+:END:
 
 #+begin_src emacs-lisp
 ;;** 37.17 (info "(elisp)Images")

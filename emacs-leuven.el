@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20161210.1025"
+(defconst leuven--emacs-version "20170115.2048"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -425,8 +425,10 @@ loaded.  If not, just print a message."
                                       helm-ag
                                       helm-descbinds
                                       helm-ls-git
+                                      helm-projectile ; Obsolete package?
                                       helm-swoop
                                       hideshowvis
+                                      highlight-numbers
                                       highlight-symbol
                                       howdoi
                                       htmlize
@@ -1242,7 +1244,7 @@ Should be selected from `fringe-bitmaps'.")
   (with-eval-after-load "highlight-symbol"
 
     ;; Number of seconds of idle time before highlighting the current symbol.
-    (setq highlight-symbol-idle-delay 0.5)
+    (setq highlight-symbol-idle-delay 0.2)
 
     (setq highlight-symbol-colors '("#A67CEB" "#70BE53" "#3CA9D3"))
     (setq highlight-symbol-foreground-color "black")
@@ -1252,9 +1254,9 @@ Should be selected from `fringe-bitmaps'.")
     (setq highlight-symbol-on-navigation-p t))
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol)
+  (when (try-require 'auto-highlight-symbol-XXX)
 
-    ;; Number of seconds to wait before highlighting symbol.
+    ;; Number of seconds to wait before highlighting the current symbol.
     (setq ahs-idle-interval 0.2) ; 0.35.
 
     ;; Add major modes Auto-Highlight-Symbol can run on.
@@ -1724,8 +1726,11 @@ Should be selected from `fringe-bitmaps'.")
                         (replace (format (if (> total 1)
                                              " %d of %d matches "
                                            " %d of %d match ")
-                                         here total)))))
-          (propertize status 'face 'anzu-mode-line))))
+                                         here total))))
+              (face (if (and (zerop total) (not (string= isearch-string "")))
+                        'anzu-mode-line-no-match
+                      'anzu-mode-line)))
+          (propertize status 'face face))))
     (setq anzu-mode-line-update-function #'leuven--anzu-update-mode-line)
 
     ;; Enable Global-Anzu mode.
@@ -2117,7 +2122,7 @@ Should be selected from `fringe-bitmaps'.")
                                         ; problems... Emacs bug 20927
 
     ;; Don't use file notification functions.
-    (setq auto-revert-use-notify nil))  ; XXX
+    (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
   (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
@@ -2450,6 +2455,7 @@ Should be selected from `fringe-bitmaps'.")
 
     (global-unset-key (kbd "C-x c"))
 
+    ;; Resume a previous ‘helm’ session.
     (global-set-key (kbd "C-M-z") #'helm-resume)
 
     ;; Via: http://www.reddit.com/r/emacs/comments/3asbyn/new_and_very_useful_helm_feature_enter_search/
@@ -2465,6 +2471,7 @@ Should be selected from `fringe-bitmaps'.")
     ;; (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
 
     ;; Better version of `occur'.
+;;    (global-set-key [remap occur] #'helm-occur) ; helm-regexp.el
     (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
     (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
 
@@ -2473,15 +2480,16 @@ Should be selected from `fringe-bitmaps'.")
     ;; Speedy file opening.
     (global-set-key (kbd "<f3>") #'helm-for-files)
 
-    ;; (global-set-key (kbd "C-x C-f") #'helm-find-files) ; OK.
+    ;; (global-set-key [remap find-file] #'helm-find-files) ; OK. C-x C-f
 
     ;; Buffer list.
     (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
                                         ; = `helm-buffers-list' + recents.
 
-    (global-set-key (kbd "C-x C-b") #'helm-buffers-list) ; OK.
+    (global-set-key [remap list-buffers] #'helm-buffers-list) ; OK. C-x C-b
 
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
+    ;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
 
     (defun leuven-helm-org-prog-menu (arg)
       "Jump to a place in the buffer using an Index menu.
@@ -2521,14 +2529,16 @@ Should be selected from `fringe-bitmaps'.")
     (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
     (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
                                         ; Make TAB works in terminal.
-    ;; List actions using C-z.
+
+    ;; List available actions using C-z.
     (define-key helm-map (kbd "C-z") #'helm-select-action)
 
     (define-key helm-map (kbd "C-M-n") #'helm-next-source)
     (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
 
-    ;; Ace-Jump to a candidate line in Helm window.
-    (define-key helm-map (kbd "@") 'ace-jump-helm-line) ; C-'.
+    ;; Reserved for searching inside buffers! (See C-h m)
+    ;; ;; Ace-Jump to a candidate line in Helm window.
+    ;; (define-key helm-map (kbd "@") 'ace-jump-helm-line) ; C-'.
 
     ;; Various functions for Helm (Shell history, etc.).
     (require 'helm-misc)
@@ -2651,7 +2661,7 @@ Should be selected from `fringe-bitmaps'.")
       (global-set-key (kbd "M-g >") #'helm-ag-this-file)
 
       ;; Search with Ag in current projectile project.
-      (global-set-key (kbd "C-S-a") 'helm-projectile-ag)
+      (global-set-key (kbd "C-S-a") #'helm-projectile-ag)
 
       (global-set-key (kbd "M-g ,") #'helm-ag-pop-stack)
       ))
@@ -3435,17 +3445,20 @@ Should be selected from `fringe-bitmaps'.")
   (setq-default fill-column 80)
 
   ;; (Un-)fill paragraph.
-  (defun leuven-fill-paragraph (&optional arg)
-    "`M-q' runs the command `fill-paragraph'.
-  `C-u M-q' runs \"unfill-paragraph\": it takes a multi-line paragraph and
-  converts it into a single line of text."
+  (defun leuven-fill-or-unfill-paragraph (count)
+    "Like `fill-paragraph', but unfill if used twice."
     (interactive "P")
-    (let ((fill-column (if arg
-                           (point-max)
-                         fill-column)))
-      (fill-paragraph nil)))
+    (let ((fill-column
+           (if count
+               (prefix-numeric-value count)
+             (if (eq last-command 'leuven-fill-or-unfill-paragraph)
+                 (progn (setq this-command nil)
+                        (point-max))
+               fill-column))))
+      (fill-paragraph)))
 
-  (global-set-key (kbd "M-q") #'leuven-fill-paragraph)
+  ;; M-q.
+  (global-set-key [remap fill-paragraph] #'leuven-fill-or-unfill-paragraph)
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -6913,21 +6926,51 @@ this with to-do items than with projects or headings."
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
 
+  ;; Major mode for editing web templates.
   (with-eval-after-load "web-mode"
 
-    ;; ;; Enable element highlight.
-    ;; (setq web-mode-enable-current-element-highlight t) ; web-mode-current-element-highlight-face.
+    ;; Script element left padding.
+    (setq web-mode-script-padding
+          (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+
+    ;; Style element left padding.
+    (setq web-mode-style-padding
+          (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+
+    ;; CSS indentation level.
+    (setq-default web-mode-css-indent-offset
+                  (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+
+    ;; Code (javascript, php, etc.) indentation level.
+    (setq-default web-mode-code-indent-offset
+                  (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+                                        ; XXX Check out ab-pm-cf-wr-newother.axvw.
 
     ;; Auto-pairing.
     (setq web-mode-enable-auto-pairing t)
 
+    ;; Enable element highlight.
+    (setq web-mode-enable-current-element-highlight t) ; web-mode-current-element-highlight-face.
+
     ;; Enable block face (useful for setting background of <style>).
-    (setq web-mode-enable-block-face t)
+    (setq web-mode-enable-block-face t) ; web-mode-block-face.
 
     ;; Enable part face (useful for setting background of <script>).
-    (setq web-mode-enable-part-face t)
+    (setq web-mode-enable-part-face t) ; web-mode-part-face.
+
+    ;; ;; Comment style : 1 = default, 2 = force server comments outside a block.
+    ;; (setq web-mode-comment-style 2)
+
+    ;; A list of additional snippets.
+    (setq web-mode-extra-snippets
+      '((nil . (("input" . ("\t<input type=\"" . "\"/>"))
+                ("a" . ("\t<a href=\"#\">" . "</a>"))
+                ("img" . ("\t<img src=\"" . "\">"))
+                ("div" . ("\t<div>" . "</div>"))
+                ))))
 
     ;; (flycheck-add-mode 'html-tidy 'web-mode)
+
     )
 
   (with-eval-after-load "nxml-mode"
@@ -7388,20 +7431,63 @@ mouse-3: go to end") "]")))
     ;; Add highlighting of many ECMA built-in functions.
     (setq js2-highlight-level 3)
 
+    ;; Delay in secs before re-parsing after user makes changes.
+    (setq-default js2-idle-timer-delay 0.1)
+
     ;; `js2-line-break' in mid-string will make it a string concatenation.
     ;; The '+' will be inserted at the end of the line.
     (setq js2-concat-multiline-strings 'eol)
 
     ;; List of any extern names you'd like to consider always declared.
-    (setq js2-global-externs
-          '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout"
-            "clearTimeout" "setInterval" "clearInterval" "location" "__dirname"
-            "console" "JSON"))
+    (setq js2-global-externs '("View")) ; ARCHIBUS.
 
     ;; Treat unused function arguments like declared-but-unused variables.
     (setq js2-warn-about-unused-function-arguments t)
 
-    ;; Imenu support for additional constructs.
+    ;; Augment the default indent-line behavior with cycling among several
+    ;; computed alternatives.
+    (setq js2-bounce-indent-p t)
+
+    ;; Let Flycheck handle parse errors.
+    (setq js2-strict-missing-semi-warning nil)
+
+    (add-hook 'js2-mode-hook
+              (lambda ()
+                (flycheck-mode 1)))
+
+  (with-eval-after-load "js2-refactor-autoloads"
+    (add-hook 'js2-mode-hook #'js2-refactor-mode)
+
+    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
+                                                 ; `C-c C-m ev`.
+    )
+)
+
+    ;; Below regex list could be used in both js-mode and js2-mode.
+    (setq javascript-common-imenu-regex-list
+          '(("Controller" "[. \t]controller([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Controller" "[. \t]controllerAs:[ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Filter" "[. \t]filter([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("State" "[. \t]state[(:][ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Factory" "[. \t]factory([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Service" "[. \t]service([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Module" "[. \t]module( *['\"]\\([a-zA-Z0-9_.]+\\)['\"], *\\[" 1)
+            ("ngRoute" "[. \t]when(\\(['\"][a-zA-Z0-9_\/]+['\"]\\)" 1)
+            ("Directive" "[. \t]directive([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Event" "[. \t]\$on([ \t]*['\"]\\([^'\"]+\\)" 1)
+            ("Config" "[. \t]config([ \t]*function *( *\\([^\)]+\\)" 1)
+            ("Config" "[. \t]config([ \t]*\\[ *['\"]\\([^'\"]+\\)" 1)
+            ("OnChange" "[ \t]*\$(['\"]\\([^'\"]*\\)['\"]).*\.change *( *function" 1)
+            ("OnClick" "[ \t]*\$([ \t]*['\"]\\([^'\"]*\\)['\"]).*\.click *( *function" 1)
+            ("Watch" "[. \t]\$watch( *['\"]\\([^'\"]+\\)" 1)
+            ("Function" "function[ \t]+\\([a-zA-Z0-9_$.]+\\)[ \t]*(" 1)
+            ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
+            ("Task" "[. \t]task([ \t]*['\"]\\([^'\"]+\\)" 1)))
+
+    ;; Patching Imenu in js2-mode.
+    (setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
+
+    ;; Imenu support for frameworks and structural patterns.
     (js2-imenu-extras-setup)
 
     (defun js2-imenu-record-object-clone-extend ()
@@ -7421,7 +7507,7 @@ mouse-3: go to end") "]")))
                                            (js2-compute-nested-prop-get subject)
                                            (js2-node-abs-pos methods)))))))))
 
-    ;; Color defined variables.
+    ;; Color identifiers based on their names.
     (with-eval-after-load "color-identifiers-mode-autoloads"
       (add-hook 'js2-mode-hook 'color-identifiers-mode))
 
@@ -7468,14 +7554,6 @@ mouse-3: go to end") "]")))
       (add-hook 'js-mode-hook #'tern-mode)
       (add-hook 'js2-mode-hook #'tern-mode)
       (add-hook 'web-mode-hook #'tern-mode))
-
-  (with-eval-after-load "js2-refactor-autoloads"
-    (add-hook 'js2-mode-hook #'js2-refactor-mode)
-
-    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
-                                                 ; `C-c C-m ev`.
-    )
-)
 
 ;; (require 'css-mode)
 ;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
@@ -7591,6 +7669,10 @@ mouse-3: go to end") "]")))
   ;; Use Java for class files decompiled with Jad.
   (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
 
+  ;; Color identifiers based on their names.
+  (with-eval-after-load "color-identifiers-mode-autoloads"
+    (add-hook 'java-mode-hook 'color-identifiers-mode))
+
 ;;** 27.2 (info "(emacs)Compilation Mode")
 
   (leuven--section "27.2 (emacs)Compilation Mode")
@@ -7640,13 +7722,15 @@ mouse-3: go to end") "]")))
 
     ;; Files to ignore for ARCHIBUS.
     (add-to-list 'grep-find-ignored-files "app.js")
+    ;; (add-to-list 'grep-find-ignored-files "cordova.js")
     (add-to-list 'grep-find-ignored-files "app.css")
     (add-to-list 'grep-find-ignored-files "sencha-touch.css")
 
     ;; Directories to ignore for ARCHIBUS.
     (add-to-list 'grep-find-ignored-directories "ab-core")
     (add-to-list 'grep-find-ignored-directories "ckeditor")
-    (add-to-list 'grep-find-ignored-directories "ab-products/common/mobile"))
+    ;; (add-to-list 'grep-find-ignored-directories "ab-products/common/mobile")
+    (add-to-list 'grep-find-ignored-directories "common/mobile"))
 
     (when (executable-find "agXXX") ; Need to fix base dir and file extensions
 
@@ -8164,10 +8248,10 @@ a clean buffer we're an order of magnitude laxer about checking."
         (local-set-key
           (kbd "C-c >") #'semantic-complete-analyze-inline)
 
-        ;; Toggle between the implementation and a prototype of symbol under
-        ;; cursor.
-        (local-set-key
-          (kbd "C-c p") #'semantic-analyze-proto-impl-toggle)
+        ;; ;; Toggle between the implementation and a prototype of symbol under
+        ;; ;; cursor.
+        ;; (local-set-key
+        ;;   (kbd "C-c p") #'semantic-analyze-proto-impl-toggle) ; vs Projectile.
 
         ;; Visit the header file under cursor.
         (local-set-key
@@ -8214,6 +8298,44 @@ a clean buffer we're an order of magnitude laxer about checking."
     )
 
 )                                       ; Chapter 28 ends here.
+
+  (with-eval-after-load "projectile-autoloads"
+
+    ;; Turn on projectile mode by default for all file types
+    (projectile-global-mode)
+
+    (setq projectile-completion-system 'helm)
+    (setq projectile-completion-system 'helm-comp-read)
+
+    ;; Turn on Helm bindings for projectile
+    (helm-projectile-on)
+
+    ;; ;; For large projects.
+    ;; (setq helm-projectile-sources-list
+    ;;       '(helm-source-projectile-projects
+    ;;         helm-source-projectile-files-list))
+
+;; (define-key projectile-mode-map [?\s-p] 'projectile-switch-project)
+;; (define-key projectile-mode-map [?\s-d] 'projectile-find-dir)
+;; (define-key projectile-mode-map [?\s-f] 'projectile-find-file)
+;; (define-key projectile-mode-map [?\s-g] 'projectile-grep)
+  )
+
+  (with-eval-after-load "projectile"
+
+    ;; Action invoked AFTER SWITCHING PROJECTS with `C-c p p'.
+    (setq projectile-switch-project-action 'helm-projectile-find-file)
+                                        ;; 'projectile-find-file ; Default.
+                                        ;; 'projectile-find-file-in-known-projects
+                                        ;; 'projectile-find-file-dwim
+                                        ;; 'projectile-dired
+                                        ;; 'projectile-find-dir
+
+    (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
+
+(add-to-list 'projectile-other-file-alist '("axvw" "js")) ;; switch from axvw -> js
+(add-to-list 'projectile-other-file-alist '("js" "axvw")) ;; switch from js -> axvw
+  )
 
 ;;* 29 (info "(emacs)Abbrevs")
 
@@ -8496,6 +8618,23 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; and the replacement.
     )
 
+;; Hooks
+(add-hook 'web-mode-hook
+          '(lambda ()
+             ;; Company-mode.
+             (set (make-local-variable 'company-backends)
+                  (append company-backends '((company-web-html
+                                              company-web-jade
+                                              company-yasnippet))))
+
+             ;; Auto indent.
+             (local-set-key (kbd "RET") 'newline-and-indent)
+
+             ;; Disabled smartparens in web-mode.
+             (setq smartparens-mode nil)))
+
+;; See web-mode-imenu-regexp-list.
+
   (with-eval-after-load "company"
 
     ;; ... Except in some modes.
@@ -8509,6 +8648,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; (setq company-transformers '(company-sort-by-occurrence))
     ;; (setq company-transformers '(;; company-sort-by-statistics ;; unknown
     ;;                              company-sort-by-backend-importance))
+
+    ;; Align annotations to the right tooltip border.
+    (setq company-tooltip-align-annotations t)
 
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 1)
@@ -8680,16 +8822,14 @@ a clean buffer we're an order of magnitude laxer about checking."
       (beginning-of-buffer)
       (dired-next-line 4))
 
-    (define-key dired-mode-map
-      (vector 'remap 'beginning-of-buffer) #'dired-back-to-top)
+    (define-key dired-mode-map [remap beginning-of-buffer] #'dired-back-to-top)
 
     (defun dired-jump-to-bottom ()
       (interactive)
       (end-of-buffer)
       (dired-next-line -1))
 
-    (define-key dired-mode-map
-      (vector 'remap 'end-of-buffer) #'dired-jump-to-bottom)
+    (define-key dired-mode-map [remap end-of-buffer] #'dired-jump-to-bottom)
 
 ;;** (info "(emacs)Dired Deletion")
 

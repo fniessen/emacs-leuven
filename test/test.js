@@ -1,3 +1,17 @@
+// Hashed Highlighting
+// http://www.wilfred.me.uk/blog/2014/09/27/the-definitive-guide-to-syntax-highlighting/
+$('#preview a').each(function() {
+    var $a = $(this),
+        url = $a.attr('href'),
+        iconUrl;
+
+    if (isExternal(url)) {
+        iconUrl = "//getfavicon.appspot.com/" + encodeURIComponent(url);
+        $a.after('<img class="favicon" src="' + iconUrl + '">');
+    }
+});
+
+
 // Refactoring
 
 function calculate_sum(i) {

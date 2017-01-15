@@ -1,3 +1,4 @@
+
 ;;; .emacs-minimal --- Minimal configuration file for Emacs
 
 ;;; Commentary:
