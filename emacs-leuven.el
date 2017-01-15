@@ -1,11 +1,11 @@
 
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2016 Fabrice Niessen
+;; Copyright (C) 1999-2017 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20161210.1025
+;; Version: 20170115.2048
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -1152,46 +1152,31 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "14.12 (emacs)Font Lock")
 
-  ;; Highlight FIXME notes.
-  (defvar leuven-highlight-todo-items
-    "\\(TODO\\|FIXME\\|XXX\\)"
-    "TODO patterns to highlight.")
-
-  (defvar leuven-highlight-todo-items-in-org
-    "\\(FIXME\\|XXX\\)"
-    "TODO patterns to highlight (for Org mode only).
-  The goal is to ensure no conflict with the Org mode TODO keyword.")
-
-  (defface leuven-highlight-todo-items-face
+  (defface leuven-todo-items-face
     '((t (:weight bold :foreground "#FF3125" :background "#FFFF88")))
     "Face for making TODO items stand out.")
 
-  ;; Add highlighting keywords for selected major modes only.
-  (dolist (mode '(fundamental-mode
-                  text-mode))
-    (font-lock-add-keywords mode
-     `((,leuven-highlight-todo-items 1 'leuven-highlight-todo-items-face prepend))
-     'end))
+  ;; Highlight FIXME notes.
+  (defvar leuven-todo-items-in-org
+    "\\<\\(\\(FIXME\\|XXX\\)\\(([^)]*)\\)?:?\\)" ; Start of word.
+    "TODO patterns to highlight (for Org mode only).
+  The goal is to ensure no conflict with the Org mode TODO keyword.")
 
-  ;; Add highlighting keywords for Org mode only.
-  (dolist (mode '(org-mode))
-    (font-lock-add-keywords mode
-     `((,leuven-highlight-todo-items-in-org 1 'leuven-highlight-todo-items-face prepend))
-     'end))
+  (defvar leuven-todo-items
+    "\\<\\(\\(TODO\\|FIXME\\|XXX\\)\\(([^)]*)\\)?:?\\)"
+    "TODO patterns to highlight.")
 
-  ;; Add highlighting keywords for selected major modes *and* all major modes
-  ;; derived from them.
-  (dolist (hook '(prog-mode-hook
-                  ;; text-mode-hook     ; Avoid Org.
-                  css-mode-hook         ; [parent: fundamental]
-                  latex-mode-hook
-                  shell-mode-hook       ; [parent: fundamental]
-                  ssh-config-mode-hook))
-    (add-hook hook
-     (lambda ()
-       (font-lock-add-keywords nil      ; In the current buffer.
-        `((,leuven-highlight-todo-items 1 'leuven-highlight-todo-items-face prepend)) 'end))))
-        ;; FIXME                      0                        t          t
+  ;; Add highlighting keywords.
+  (defun leuven-add-font-lock-keywords ()
+    (cond
+     ((derived-mode-p 'org-mode)
+      (font-lock-add-keywords nil         ; In the current buffer.
+       `((,leuven-todo-items-in-org 1 'leuven-todo-items-face prepend)) 'end))
+     ((not (derived-mode-p 'diff-mode))
+      (font-lock-add-keywords nil         ; In the current buffer.
+       `((,leuven-todo-items 1 'leuven-todo-items-face prepend)) 'end))))
+
+  (add-hook 'find-file-hook #'leuven-add-font-lock-keywords)
 
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"

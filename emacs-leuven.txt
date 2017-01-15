@@ -13,11 +13,13 @@
 #+SETUPFILE: ~/.dotfiles/org/theme-readtheorg.setup
 
 * Tasks                                                               :noexport:
-  :PROPERTIES:
-  :header-args: :tangle no
-  :END:
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 
 ** TODO Emacs hl-line derrière C-*
+
+** TODO Add Imenu regexp for AXVW files
 
 ** TODO Check out features of IntelliJ IDEA
 
@@ -45,7 +47,7 @@ Use my Org html theme!
 
 Others did already:
 - http://coldnew.github.io/coldnew-emacs/
-- spacemacs
+- http://spacemacs.org/doc/DOCUMENTATION.html
 
 Or put in on RTD:
 - http://emacs.readthedocs.io/en/latest/completion_and_selection.html (via =docs=
@@ -193,9 +195,9 @@ Other:
 https://support.rstudio.com/hc/en-us/articles/200710523
 
 ** TODO Automate reporting of style errors
-   :PROPERTIES:
-   :header-args: :tangle no
-   :END:
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 
 Report all errors with:
 
@@ -221,9 +223,9 @@ Report all errors with:
   the string!
 
 ** TODO Optimize startup time
-   :PROPERTIES:
-   :header-args: :tangle no
-   :END:
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 
 *** Context
 
@@ -314,7 +316,7 @@ Citations:
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2016 Fabrice Niessen
+;; Copyright (C) 1999-2017 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -758,9 +760,9 @@ See function ~--find-program~ at http://www.visualco.de/src/elisp/.emacs.el.html
 #+end_src
 
 * Emacs Lisp Packages
-  :PROPERTIES:
-  :ID:       8c71fa50-b62e-49ae-bcbb-2ed1ee7a5d65
-  :END:
+:PROPERTIES:
+:ID:       8c71fa50-b62e-49ae-bcbb-2ed1ee7a5d65
+:END:
 
 Another *first thing* in your init script should be ~(package-initialize)~ so that
 customization of Org variables (for example) doesn't auto-load the old version
@@ -2185,50 +2187,35 @@ Prior to running their own mode hooks,
 - all text-based major modes run ~text-mode-hook~, and
 - all programming language modes run ~prog-mode-hook~.
 
-XXX Try to get Org TODO overriding the TODO defined in
-leuven-highlight-todo-items, so that only one expression can be used for *all* modes!
+Add font locking for TODO, FIXME and XXX to all modes except Diff mode and
+Org mode.
 
 #+begin_src emacs-lisp
-  ;; Highlight FIXME notes.
-  (defvar leuven-highlight-todo-items
-    "\\(TODO\\|FIXME\\|XXX\\)"
-    "TODO patterns to highlight.")
-
-  (defvar leuven-highlight-todo-items-in-org
-    "\\(FIXME\\|XXX\\)"
-    "TODO patterns to highlight (for Org mode only).
-  The goal is to ensure no conflict with the Org mode TODO keyword.")
-
-  (defface leuven-highlight-todo-items-face
+  (defface leuven-todo-items-face
     '((t (:weight bold :foreground "#FF3125" :background "#FFFF88")))
     "Face for making TODO items stand out.")
 
-  ;; Add highlighting keywords for selected major modes only.
-  (dolist (mode '(fundamental-mode
-                  text-mode))
-    (font-lock-add-keywords mode
-     `((,leuven-highlight-todo-items 1 'leuven-highlight-todo-items-face prepend))
-     'end))
+  ;; Highlight FIXME notes.
+  (defvar leuven-todo-items-in-org
+    "\\<\\(\\(FIXME\\|XXX\\)\\(([^)]*)\\)?:?\\)" ; Start of word.
+    "TODO patterns to highlight (for Org mode only).
+  The goal is to ensure no conflict with the Org mode TODO keyword.")
 
-  ;; Add highlighting keywords for Org mode only.
-  (dolist (mode '(org-mode))
-    (font-lock-add-keywords mode
-     `((,leuven-highlight-todo-items-in-org 1 'leuven-highlight-todo-items-face prepend))
-     'end))
+  (defvar leuven-todo-items
+    "\\<\\(\\(TODO\\|FIXME\\|XXX\\)\\(([^)]*)\\)?:?\\)"
+    "TODO patterns to highlight.")
 
-  ;; Add highlighting keywords for selected major modes *and* all major modes
-  ;; derived from them.
-  (dolist (hook '(prog-mode-hook
-                  ;; text-mode-hook     ; Avoid Org.
-                  css-mode-hook         ; [parent: fundamental]
-                  latex-mode-hook
-                  shell-mode-hook       ; [parent: fundamental]
-                  ssh-config-mode-hook))
-    (add-hook hook
-     (lambda ()
-       (font-lock-add-keywords nil      ; In the current buffer.
-        `((,leuven-highlight-todo-items 1 'leuven-highlight-todo-items-face prepend)) 'end))))
-        ;; FIXME                      0                        t          t
+  ;; Add highlighting keywords.
+  (defun leuven-add-font-lock-keywords ()
+    (cond
+     ((derived-mode-p 'org-mode)
+      (font-lock-add-keywords nil         ; In the current buffer.
+       `((,leuven-todo-items-in-org 1 'leuven-todo-items-face prepend)) 'end))
+     ((not (derived-mode-p 'diff-mode))
+      (font-lock-add-keywords nil         ; In the current buffer.
+       `((,leuven-todo-items 1 'leuven-todo-items-face prepend)) 'end))))
+
+  (add-hook 'find-file-hook #'leuven-add-font-lock-keywords)
 #+end_src
 
 See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
