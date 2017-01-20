@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170115.2048
+;; Version: 20170120.2000
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170115.2048"
+(defconst leuven--emacs-version "20170120.2000"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -404,6 +404,7 @@ loaded.  If not, just print a message."
                                       diff-hl
                                       diminish
                                       dired+
+                                      dumb-jump
                                       ;; emacs-eclim
                                       emr
                                       ess
@@ -676,6 +677,9 @@ These packages are neither built-in nor already installed nor ignored."
     (autoload 'dircolors "dircolors" nil t)
     (add-hook 'completion-list-mode-hook #'dircolors))
 
+  ;; Delete duplicates in history.
+  (setq history-delete-duplicates t)
+
 )                                       ; Chapter 8 ends here.
 
 ;;* 10 (info "(emacs)Help")
@@ -800,6 +804,9 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
+
+    ;; ;; Key to use after an initial expand/contract to undo.
+    ;; (setq expand-region-reset-fast-key "<escape> <escape>")
 
     (global-set-key (kbd "C-+") #'er/expand-region) ; See key-chord `hh'.
     (global-set-key (kbd "C--") #'er/contract-region)) ; See key-chord `HH'.
@@ -986,8 +993,6 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "13.1 (emacs)Position Registers")
 
-  (global-set-key (kbd "C-j") #'jump-to-register) ; Also on `C-x r j'.
-
 ;;** 13.7 (info "(emacs)Bookmarks")
 
   (leuven--section "13.7 (emacs)Bookmarks")
@@ -1090,8 +1095,12 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "avy"
 
     ;; Default keys for jumping.
-    (setq avy-keys '(?a ?b ?c ?d ?e ?f ?g ?h ?i ?j ?k ?l ?m
-                     ?n ?o ?p ?q ?r ?s ?t ?u ?v ?w ?x ?y ?z))
+    (setq avy-keys (number-sequence ?a ?z))
+
+
+    ;; Highlight the first decision char with `avy-lead-face-0'.
+    (setq avy-highlight-first t)
+
 
     ;; Ace-jump during Isearch to one of the current candidates.
     (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
@@ -1133,7 +1142,7 @@ These packages are neither built-in nor already installed nor ignored."
   (setq scroll-conservatively 10000)    ; Or `most-positive-fixnum'.
 
   ;; Number of lines of margin at the top and bottom of a window.
-  (setq scroll-margin 4) ; or 1 or 3?   ; Also for `isearch-forward'.
+  (setq scroll-margin 4)                ; Also for `isearch-forward'.
 
   ;; Scrolling down looks much better.
   (setq auto-window-vscroll nil)
@@ -1399,7 +1408,8 @@ Should be selected from `fringe-bitmaps'.")
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
-    (with-eval-after-load "smartparens"  (diminish 'smartparens-mode)))
+    (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
+    (with-eval-after-load "which-key"    (diminish 'which-key-mode)))
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
 
   (defface powerline-modified-face
@@ -1626,6 +1636,9 @@ Should be selected from `fringe-bitmaps'.")
   ;; Echo what I'm typing *immediately*.
   (setq echo-keystrokes 0.01)
 
+  ;; Let emacs react faster to keystrokes.
+  (setq idle-update-delay 0.35)
+
   ;; Exhaustive log of interactions with Emacs (display keystrokes, etc.).
   (with-eval-after-load "interaction-log-autoloads"
 
@@ -1670,8 +1683,8 @@ Should be selected from `fringe-bitmaps'.")
   ;; Don't re-hide an invisible match right away.
   (setq isearch-hide-immediately nil)   ; XXX
 
-  ;; Scrolling commands are allowed during incremental search (without
-  ;; canceling Isearch mode).
+  ;; Scrolling commands are allowed during incremental search (without canceling
+  ;; Isearch mode).
   (setq isearch-allow-scroll t)
 
 (setq isearch-regexp-lax-whitespace t)
@@ -1755,19 +1768,6 @@ Should be selected from `fringe-bitmaps'.")
 ;;** 15.11 (info "(emacs)Other Repeating Search") Commands
 
   (leuven--section "15.11 (emacs)Other Repeating Search Commands")
-
-  ;; ;; Invoke `occur' easily from within `isearch'.
-  ;; (define-key isearch-mode-map (kbd "C-o")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (let ((case-fold-search isearch-case-fold-search))
-  ;;       (occur
-  ;;        (if isearch-regexp
-  ;;            isearch-string
-  ;;          (regexp-quote isearch-string))))))
-
-  ;; When doing Isearch, hand the word over to `helm-swoop'.
-  (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
 
   (global-unset-key (kbd "M-o")) ; XXX???
 
@@ -2440,7 +2440,7 @@ Should be selected from `fringe-bitmaps'.")
 
     (global-unset-key (kbd "C-x c"))
 
-    ;; Resume a previous ‘helm’ session.
+    ;; Resume a previous `helm' session.
     (global-set-key (kbd "C-M-z") #'helm-resume)
 
     ;; Via: http://www.reddit.com/r/emacs/comments/3asbyn/new_and_very_useful_helm_feature_enter_search/
@@ -2757,6 +2757,12 @@ Should be selected from `fringe-bitmaps'.")
 
   (with-eval-after-load "helm-swoop"
 
+    ;; Move up and down like Isearch.
+    (define-key helm-swoop-map (kbd "C-r") #'helm-previous-line)
+    (define-key helm-swoop-map (kbd "C-s") #'helm-next-line)
+    (define-key helm-multi-swoop-map (kbd "C-r") #'helm-previous-line)
+    (define-key helm-multi-swoop-map (kbd "C-s") #'helm-next-line)
+
     ;; From `helm-swoop' to `helm-multi-swoop-all'.
     (define-key helm-swoop-map (kbd "C-o") #'helm-multi-swoop-all-from-helm-swoop)
     ;; (define-key helm-swoop-map (kbd "M-i") #'helm-multi-swoop-all-from-helm-swoop)
@@ -2770,6 +2776,43 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Don't save each buffer you edit when editing is complete.
     (setq helm-multi-swoop-edit-save nil))
+
+(defun ublt/helm-should-use-variable-pitch? (sources)
+  "Determine whether all of SOURCES should use variable-pitch
+font (fixed-pitch is still preferable)."
+  (every (lambda (x)
+           (member x '(;; helm-c-source-ffap-line
+                       ;; helm-c-source-ffap-guesser
+                       ;; helm-c-source-buffers-list
+                       helm-source-bookmarks
+                       ;; helm-source-recentf
+                       ;; helm-source-file-cache
+                       ;; helm-source-filelist
+                       ;; helm-source-files-in-current-dir+
+                       ;; helm-source-files-in-all-dired
+                       ;; helm-source-locate
+                       helm-source-emacs-process
+                       helm-source-org-headline
+                       helm-source-emms-streams
+                       helm-source-emms-files
+                       helm-source-emms-dired
+                       ;; helm-source-google-suggest
+                       helm-source-apt
+                       ;; helm-source-helm-commands
+                       )))
+         sources))
+
+(defun ublt/helm-tweak-appearance ()
+  "Use `variable-pitch' font for helm if it's suitable for
+all of the sources."
+  (with-current-buffer helm-buffer
+    (when (ublt/helm-should-use-variable-pitch? helm-sources)
+      (variable-pitch-mode +1))
+    (setq line-spacing 0.2)
+    ;; (text-scale-increase 1)
+    ))
+
+(add-hook 'helm-after-initialize-hook 'ublt/helm-tweak-appearance)
 
   (leuven--section "Image mode")
 
@@ -2917,10 +2960,20 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "20.3 (emacs)Other Window")
 
-  ;; Cycle through all windows on current frame.
   (global-set-key (kbd "<f6>") #'other-window)
 
-  ;; Reverse operation of `C-x o' (or `f6').
+  (defun leuven-switch-to-other-window-or-buffer ()
+    "If there is only one window displayed, swap it with previous buffer.
+If there are two or more windows displayed, act like `other-window':
+cycle through all windows on current frame."
+    (interactive)
+    (if (one-window-p t)
+        (switch-to-buffer (other-buffer (current-buffer) 1))
+      (other-window -1)))
+
+  (global-set-key (kbd "<f6>") #'leuven-switch-to-other-window-or-buffer)
+
+  ;; Reverse operation of `other-window' (`C-x o').
   (global-set-key (kbd "<S-f6>") #'previous-multiframe-window)
 
 ;;** 20.5 (info "(emacs)Change Window")
@@ -2944,7 +2997,7 @@ Should be selected from `fringe-bitmaps'.")
   Do you want to go back to the first window?  Switch to
   it (f6)."
     (interactive)
-    (cond ((= (count-windows) 1)
+    (cond ((one-window-p t)
            (select-window
             (if (> (frame-width) split-width-threshold)
                 (split-window-horizontally)
@@ -3007,6 +3060,15 @@ Should be selected from `fringe-bitmaps'.")
 
   (global-set-key (kbd "C-c |") #'leuven-toggle-window-split)
 
+  (defadvice delete-window (around delete-window (&optional window) activate)
+    (interactive)
+    (save-current-buffer
+      (setq window (or window (selected-window)))
+      (select-window window)
+      (if (one-window-p t)
+      (delete-frame)
+        ad-do-it (selected-window))))
+
   (defun toggle-current-window-dedication ()
     "Toggle whether the current active window is dedicated or not."
     (interactive)
@@ -3044,6 +3106,9 @@ Should be selected from `fringe-bitmaps'.")
   (setq mouse-wheel-scroll-amount
         '(1
           ((shift) . 1)))
+
+  ;; Paste at text-cursor, not at mouse-cursor.
+  (setq mouse-yank-at-point t)
 
 ;;** 21.6 (info "(emacs)Creating Frames")
 
@@ -3397,6 +3462,8 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Indentation can't insert TABs.
   (setq-default indent-tabs-mode nil)
+
+  ;; (setq tab-always-indent 'complete)
 
 )                                       ; Chapter 24 ends here.
 
@@ -4129,6 +4196,7 @@ Should be selected from `fringe-bitmaps'.")
   (with-eval-after-load "org"
 
     (when (boundp 'org-show-context-detail)
+      ;; (setq org-show-context-detail '((default . local)))
       (add-to-list 'org-show-context-detail '(tags-tree . minimal))
       (add-to-list 'org-show-context-detail '(occur-tree . minimal))))
 
@@ -4966,6 +5034,9 @@ From %a"
 
     ;; ;; Speed up agenda by avoiding to update some text properties.
     ;; (setq org-agenda-ignore-drawer-properties '(effort category)) ; org.el
+
+    ;; Normally hide the "someday" (nice-to-have) things.
+    ;; (setq org-agenda-filter-preset '("-SDAY"))
 
 ;;** 10.1 (info "(org)Agenda files")
 
@@ -6362,6 +6433,10 @@ this with to-do items than with projects or headings."
 
     (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
     (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
+    (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
+    (add-to-list 'org-speed-commands-user '("N" org-narrow-to-subtree))
+    (add-to-list 'org-speed-commands-user '("W" widen))
+    (add-to-list 'org-speed-commands-user '("k" org-cut-subtree))
 
     ;; Run current line (mapped to H-r).
 
@@ -6963,6 +7038,8 @@ this with to-do items than with projects or headings."
     ;; Indent 4 spaces (for the children of an element relative to the start-tag).
     (setq nxml-child-indent 4)
 
+    (setq nxml-slash-auto-complete-flag t)
+
     ;; Remove the binding of `C-c C-x' (`nxml-insert-xml-declaration'), used by
     ;; Org timeclocking commands.
     (define-key nxml-mode-map (kbd "C-c C-x") nil)
@@ -7120,12 +7197,12 @@ mouse-3: go to end") "]")))
     (add-hook 'lisp-mode-hook #'auto-fill-mode)
     (add-hook 'emacs-lisp-mode-hook #'auto-fill-mode)
 
-    ;; Auto-indentation: automatically jump to the "correct" column when
-    ;; the RET key is pressed while editing a program (act as if you
-    ;; pressed `C-j').
+    ;; Auto-indentation: automatically jump to the "correct" column when the RET
+    ;; key is pressed while editing a program (act as if you pressed `C-j').
     (add-hook 'prog-mode-hook
               (lambda ()
-                (local-set-key (kbd "<RET>") #'newline-and-indent)))
+                (local-set-key (kbd "<RET>") #'newline-and-indent)
+                (local-set-key (kbd "C-j") #'newline)))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -7423,8 +7500,8 @@ mouse-3: go to end") "]")))
     ;; The '+' will be inserted at the end of the line.
     (setq js2-concat-multiline-strings 'eol)
 
-    ;; List of any extern names you'd like to consider always declared.
-    (setq js2-global-externs '("View")) ; ARCHIBUS.
+    ;; ;; List of any extern names you'd like to consider always declared.
+    ;; (setq js2-global-externs '("View")) ; ARCHIBUS.
 
     ;; Treat unused function arguments like declared-but-unused variables.
     (setq js2-warn-about-unused-function-arguments t)
@@ -7435,6 +7512,17 @@ mouse-3: go to end") "]")))
 
     ;; Let Flycheck handle parse errors.
     (setq js2-strict-missing-semi-warning nil)
+
+    (defun js-align-assignments (&optional NUM)
+      "Align region to equal signs and colons."
+      (interactive "p")
+      ;; Keep them separate align calls, otherwise colons align with spaces if
+      ;; they're in the same region.
+      (align-regexp (region-beginning) (region-end) "\\(\\s-*\\)=")
+      (align-regexp (region-beginning) (region-end) "\\(\\s-*\\):"))
+
+    ;; (evil-define-key `normal js2-mode-map (kbd "SPC \\") 'js-align-assignments)
+    ;; (evil-define-key `visual js2-mode-map (kbd "SPC \\") 'js-align-assignments)
 
     (add-hook 'js2-mode-hook
               (lambda ()
@@ -7448,32 +7536,151 @@ mouse-3: go to end") "]")))
     )
 )
 
-    ;; Below regex list could be used in both js-mode and js2-mode.
-    (setq javascript-common-imenu-regex-list
-          '(("Controller" "[. \t]controller([ \t]*['\"]\\([^'\"]+\\)" 1)
-            ("Controller" "[. \t]controllerAs:[ \t]*['\"]\\([^'\"]+\\)" 1)
-            ("Filter" "[. \t]filter([ \t]*['\"]\\([^'\"]+\\)" 1)
-            ("State" "[. \t]state[(:][ \t]*['\"]\\([^'\"]+\\)" 1)
-            ("Factory" "[. \t]factory([ \t]*['\"]\\([^'\"]+\\)" 1)
-            ("Service" "[. \t]service([ \t]*['\"]\\([^'\"]+\\)" 1)
-            ("Module" "[. \t]module( *['\"]\\([a-zA-Z0-9_.]+\\)['\"], *\\[" 1)
-            ("ngRoute" "[. \t]when(\\(['\"][a-zA-Z0-9_\/]+['\"]\\)" 1)
-            ("Directive" "[. \t]directive([ \t]*['\"]\\([^'\"]+\\)" 1)
-            ("Event" "[. \t]\$on([ \t]*['\"]\\([^'\"]+\\)" 1)
-            ("Config" "[. \t]config([ \t]*function *( *\\([^\)]+\\)" 1)
-            ("Config" "[. \t]config([ \t]*\\[ *['\"]\\([^'\"]+\\)" 1)
-            ("OnChange" "[ \t]*\$(['\"]\\([^'\"]*\\)['\"]).*\.change *( *function" 1)
-            ("OnClick" "[ \t]*\$([ \t]*['\"]\\([^'\"]*\\)['\"]).*\.click *( *function" 1)
-            ("Watch" "[. \t]\$watch( *['\"]\\([^'\"]+\\)" 1)
-            ("Function" "function[ \t]+\\([a-zA-Z0-9_$.]+\\)[ \t]*(" 1)
-            ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
-            ("Task" "[. \t]task([ \t]*['\"]\\([^'\"]+\\)" 1)))
+  ;; Below regex list could be used in both js-mode and js2-mode.
+  (setq javascript-common-imenu-regex-list
+        `((,(propertize "Local Function" 'face 'font-lock-warning-face) "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring Panel Event _after" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring Panel Event _on" "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring Panel Event _before" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring View Event 1" "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring View Event 0" "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          (,(propertize "Local Variable" 'face 'font-lock-variable-name-face) "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
+          ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
+          ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
+          ("Controller" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)
+          ))
 
-    ;; Patching Imenu in js2-mode.
-    (setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
+;; {{ Patching Imenu in js2-mode
+(setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
 
-    ;; Imenu support for frameworks and structural patterns.
-    (js2-imenu-extras-setup)
+(defvar js2-imenu-original-item-lines nil
+  "List of line information of original Imenu items.")
+
+(defun js2-imenu--get-line-start-end (pos)
+  (let (b e)
+    (save-excursion
+      (goto-char pos)
+      (setq b (line-beginning-position))
+      (setq e (line-end-position)))
+    (list b e)))
+
+(defun js2-imenu--get-pos (item)
+  (let (val)
+    (cond
+     ((integerp item)
+      (setq val item))
+
+     ((markerp item)
+      (setq val (marker-position item))))
+
+    val))
+
+(defun js2-imenu--get-extra-item-pos (item)
+  (let (val)
+    (cond
+     ((integerp item)
+      (setq val item))
+
+     ((markerp item)
+      (setq val (marker-position item)))
+
+     ;; plist
+     ((and (listp item) (listp (cdr item)))
+      (setq val (js2-imenu--get-extra-item-pos (cadr item))))
+
+     ;; alist
+     ((and (listp item) (not (listp (cdr item))))
+      (setq val (js2-imenu--get-extra-item-pos (cdr item)))))
+
+    val))
+
+(defun js2-imenu--extract-line-info (item)
+  "Recursively parse the original imenu items created by js2-mode.
+The line numbers of items will be extracted."
+  (let (val)
+    (if item
+      (cond
+       ;; Marker or line number
+       ((setq val (js2-imenu--get-pos item))
+        (push (js2-imenu--get-line-start-end val)
+              js2-imenu-original-item-lines))
+
+       ;; The item is Alist, example: (hello . 163)
+       ((and (listp item) (not (listp (cdr item))))
+        (setq val (js2-imenu--get-pos (cdr item)))
+        (if val (push (js2-imenu--get-line-start-end val)
+                      js2-imenu-original-item-lines)))
+
+       ;; The item is a Plist
+       ((and (listp item) (listp (cdr item)))
+        (js2-imenu--extract-line-info (cadr item))
+        (js2-imenu--extract-line-info (cdr item)))
+
+       ;;Error handling
+       (t (message "Impossible to here! item=%s" item)
+          )))
+    ))
+
+(defun js2-imenu--item-exist (pos lines)
+  "Try to detect does POS belong to some LINE"
+  (let (rlt)
+    (dolist (line lines)
+      (if (and (< pos (cadr line)) (>= pos (car line)))
+          (setq rlt t)))
+    rlt))
+
+(defun js2-imenu--is-item-already-created (item)
+  (unless (js2-imenu--item-exist
+           (js2-imenu--get-extra-item-pos item)
+           js2-imenu-original-item-lines)
+    item))
+
+(defun js2-imenu--check-single-item (r)
+  (cond
+   ((and (listp (cdr r)))
+    (let (new-types)
+      (setq new-types
+            (delq nil (mapcar 'js2-imenu--is-item-already-created (cdr r))))
+      (if new-types (setcdr r (delq nil new-types))
+        (setq r nil))))
+   (t (if (js2-imenu--item-exist (js2-imenu--get-extra-item-pos r)
+                                 js2-imenu-original-item-lines)
+          (setq r nil))))
+  r)
+
+(defun js2-imenu--remove-duplicate-items (extra-rlt)
+  (delq nil (mapcar 'js2-imenu--check-single-item extra-rlt)))
+
+(defun js2-imenu--merge-imenu-items (rlt extra-rlt)
+  "RLT contains imenu items created from AST.
+EXTRA-RLT contains items parsed with simple regex.
+Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
+  ;; Clear the lines.
+  (set (make-variable-buffer-local 'js2-imenu-original-item-lines) nil)
+  ;; Analyze the original imenu items created from AST,
+  ;; I only care about line number.
+  (dolist (item rlt)
+    (js2-imenu--extract-line-info item))
+
+  ;; @see https://gist.github.com/redguardtoo/558ea0133daa72010b73#file-hello-js
+  ;; EXTRA-RLT sample:
+  ;; ((function ("hello" . #<marker 63>) ("bye" . #<marker 128>))
+  ;;  (controller ("MyController" . #<marker 128))
+  ;;  (hellworld . #<marker 161>))
+  (setq extra-rlt (js2-imenu--remove-duplicate-items extra-rlt))
+  (append rlt extra-rlt))
+
+(eval-after-load 'js2-mode
+  '(progn
+     (defadvice js2-mode-create-imenu-index (around my-js2-mode-create-imenu-index activate)
+       (let (rlt extra-rlt)
+         ad-do-it
+         (setq extra-rlt
+               (save-excursion
+                 (imenu--generic-function js2-imenu-extra-generic-expression)))
+         (setq ad-return-value (js2-imenu--merge-imenu-items ad-return-value extra-rlt))
+         ad-return-value))))
+;; }}
 
     (defun js2-imenu-record-object-clone-extend ()
       (let* ((node (js2-node-at-point (1- (point)))))
@@ -7742,6 +7949,7 @@ mouse-3: go to end") "]")))
                                         ; `<R>' for the regular expression to
                                         ;       search for.
 
+    ;; This is how compilers number the first column, usually 1 or 0.
     ;; (setq-default grep-first-column 1)
 
     ;; Use `find -print0' and `xargs -0'.
@@ -8154,6 +8362,21 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 
+(with-eval-after-load "dumb-jump-autoloads"
+
+  ;; Number of seconds a grep/find command can take before being warned to use
+  ;; ag and config.
+  (setq dumb-jump-max-find-time 4)
+
+  (global-set-key (kbd "C-M-g") #'dumb-jump-go)
+
+  ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
+
+  (global-set-key (kbd "C-M-p") #'dumb-jump-back)
+
+  (define-key prog-mode-map (kbd "C-M-q") nil)
+  (global-set-key (kbd "C-M-q") #'dumb-jump-quick-look))
+
 ;;** 28.4 (info "(emacs)EDE")
 
   (leuven--section "28.4 Emacs Development Environment")
@@ -8300,13 +8523,11 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;;       '(helm-source-projectile-projects
     ;;         helm-source-projectile-files-list))
 
-;; (define-key projectile-mode-map [?\s-p] 'projectile-switch-project)
-;; (define-key projectile-mode-map [?\s-d] 'projectile-find-dir)
-;; (define-key projectile-mode-map [?\s-f] 'projectile-find-file)
-;; (define-key projectile-mode-map [?\s-g] 'projectile-grep)
   )
 
   (with-eval-after-load "projectile"
+
+    ;; (setq projectile-indexing-method 'native)
 
     ;; Action invoked AFTER SWITCHING PROJECTS with `C-c p p'.
     (setq projectile-switch-project-action 'helm-projectile-find-file)
@@ -8318,8 +8539,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
 
-(add-to-list 'projectile-other-file-alist '("axvw" "js")) ;; switch from axvw -> js
-(add-to-list 'projectile-other-file-alist '("js" "axvw")) ;; switch from js -> axvw
+(add-to-list 'projectile-other-file-alist '("axvw" "js")) ; Switch from AXVW -> JS.
+(add-to-list 'projectile-other-file-alist '("js" "axvw")) ; Switch from JS -> AXVW.
   )
 
 ;;* 29 (info "(emacs)Abbrevs")
@@ -8369,7 +8590,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (yas-reload-all)
 
     ;; Wrap around region.
-    (setq yas/wrap-around-region t)
+    (setq yas-wrap-around-region t)
 
     ;; Don't expand when you are typing in a string or comment.
     (add-hook 'prog-mode-hook
@@ -8422,7 +8643,7 @@ a clean buffer we're an order of magnitude laxer about checking."
               (lambda ()
                 (setq require-final-newline nil)))
 
-    ;; ;; Make the "yas/minor-mode"'s expansion behavior to take input word
+    ;; ;; Make the "yas-minor-mode"'s expansion behavior to take input word
     ;; ;; including hyphen.
     ;; (setq yas-key-syntaxes '("w_" "w_." "^ "))
                                         ; [default:
@@ -8636,6 +8857,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Align annotations to the right tooltip border.
     (setq company-tooltip-align-annotations t)
+
+    ;; Flip the tooltip when it's above the current line.
+    (setq company-tooltip-flip-when-above t)
 
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 1)
@@ -9882,13 +10106,13 @@ a clean buffer we're an order of magnitude laxer about checking."
   (if (version< emacs-version "25.0")
 
       (progn
-        (require 'saveplace)
-
         ;; Automatically save place in each file.
         (setq-default save-place t)     ; Default value for all buffers.
 
         ;; Name of the file that records `save-place-alist' value.
-        (setq save-place-file "~/.emacs.d/.places"))
+        (setq save-place-file "~/.emacs.d/places")
+
+        (require 'saveplace))
 
     (save-place-mode 1))
 
@@ -10170,6 +10394,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (which-key-mode)
 
+    ;; Apply suggested settings for side-window that opens on right if there is
+    ;; space and the bottom otherwise.
     (which-key-setup-side-window-right-bottom)
 
     (setq which-key-idle-delay 0.4)
