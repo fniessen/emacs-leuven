@@ -205,11 +205,13 @@ Global key bindings.
 
 ** Lines
 
-| Shortcut | What it runs       |
-|----------+--------------------|
-| <return> | newline-and-indent |
-| C-c ^    | sort-lines         |
-| M-G      | what-line          |
+| Shortcut   | What it runs          |
+|------------+-----------------------|
+| <return>   | newline-and-indent    |
+| C-c ^      | sort-lines            |
+| M-G        | what-line             |
+| <C-S-down> | leuven-move-line-down |
+| <C-S-up>   | leuven-move-line-up   |
 
 ** Code folding
 
