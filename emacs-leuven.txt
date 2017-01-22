@@ -2030,7 +2030,7 @@ Annotating bookmarks.
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
 
-      ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
+      (setq bmkp-last-as-first-bookmark-file nil)
 
       ;; Name ANONYMOUS bookmarks with buffer name and line number.
       ;; (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
@@ -2118,9 +2118,9 @@ Alternative to ~ace-jump-mode~:
 
   (leuven--section "14.1 (emacs)Scrolling")
 
-  ;; Scroll window up/down by one line.
-  (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
-  (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
+  ;; ;; Scroll window up/down by one line.
+  ;; (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
+  ;; (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2346,7 +2346,7 @@ to follow some key variables through a block of code.
     ;; Number of seconds of idle time before highlighting the current symbol.
     (setq highlight-symbol-idle-delay 0.2)
 
-    (setq highlight-symbol-colors '("#A67CEB" "#70BE53" "#3CA9D3"))
+    (setq highlight-symbol-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
     (setq highlight-symbol-foreground-color "black")
 
     ;; Temporarily highlight the symbol when using `highlight-symbol-jump'
@@ -3996,11 +3996,17 @@ In Ediff, press:
               (split-window-vertically arg))))
 
     ;; (setq ediff-merge-split-window-function 'split-window-vertically)
+#+end_src
 
+When using Ediff, everything must be visible; otherwise, it's fairly hard to
+resolve conflicts.
+
+#+begin_src emacs-lisp
     (defun turn-on-visible-mode ()
-      "Make all invisible text temporarily visible."
+      "Make all invisible text visible."
       (visible-mode 1)
       (setq truncate-lines nil)
+      (hs-show-all)
       (when (derived-mode-p 'org-mode)
         (org-remove-inline-images)))
 
@@ -5083,17 +5089,18 @@ Key bindings:
 - ~C-c p s g~ for ~helm-projectile-grep~
 - ~C-c p s a~ for ~helm-projectile-ag~
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   ;; (global-set-key (kbd "C-;") #'helm-projectile)
 
   (with-eval-after-load "projectile"
-   (setq projectile-mode-line
-          '(:eval (list " P["
-                        (propertize (projectile-project-name)
-                                    'face '(:foreground "gray75")) "]"))))
+    (setq projectile-mode-line
+          '(:eval (list " P[" ;; (propertize
+                               (projectile-project-name)
+                              ;; 'face '(:foreground "gray75"))
+                        "]")))
 
-  ;; Always ignore .class files.
-  (add-to-list 'projectile-globally-ignored-file-suffixes ".class")
+    ;; Always ignore .class files.
+    (add-to-list 'projectile-globally-ignored-file-suffixes ".class"))
 #+end_src
 
 **** Lisp completion
@@ -6154,18 +6161,20 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
       (indent-region (point-min) (point-max) nil)))
 #+end_src
 
-#+begin_src emacs-lisp
-  ;; Align your code in a pretty way.
-  (global-set-key (kbd "C-x \\") #'align-regexp)
-#+end_src
+*Code alignment* (align declarations):
 
 #+begin_src emacs-lisp
-  (defun leuven-align-to-equals (begin end)
-    "Align region to equal signs."
+  (defun leuven-align-code (begin end)
+    "Align region to equal signs and colons."
     (interactive "r")
-    (align-regexp begin end "\\(\\s-*\\)=" 1 1))
+    ;; Keep them separate align calls, otherwise colons align with spaces if
+    ;; they're in the same region.
+    (align-regexp begin end "\\(\\s-*\\)=" 1 1)
+    (align-regexp begin end "\\(\\s-*\\):" 1 1))
 
-  (global-set-key (kbd "C-c =") #'leuven-align-to-equals)
+  ;; Align your code in a pretty way.
+  (global-set-key (kbd "C-x \\") #'leuven-align-code)
+  (global-set-key (kbd "C-c =") #'leuven-align-code)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -6890,6 +6899,8 @@ work and tasks with Org mode.
     ;; Unbind `C-j' and `C-''.
     (define-key org-mode-map (kbd "C-j") nil)
     (define-key org-mode-map (kbd "C-'") nil) ; `org-cycle-agenda-files'.
+    (define-key org-mode-map (kbd "<C-S-down>") nil)
+    (define-key org-mode-map (kbd "<C-S-up>") nil)
 
     ;; Double-clicking on the fringe cycles the corresponding subtree.
     (define-key org-mode-map (kbd "<left-fringe> <double-mouse-1>") 'org-cycle))
@@ -7250,10 +7261,8 @@ options.
 
   (leuven--section "2.3 (org)Visibility cycling")
 
-  ;; Do not switch to OVERVIEW at startup.
-  (setq org-startup-folded nil)         ; Emacs hangs when editing a 5-line Org
-                                        ; file (with Company auto-starting after
-                                        ; 2 characters and 0 s delay)
+  ;; Switch to OVERVIEW (fold all) at startup.
+  (setq org-startup-folded t)
 
   ;; Inhibit startup when preparing agenda buffers -- agenda optimization.
   (setq org-agenda-inhibit-startup t)   ; XXX
@@ -10201,9 +10210,10 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
   (with-eval-after-load "org-src"
 
     ;; Mapping languages to their major mode (for editing the source code block
-    ;; with `C-c '').
-    (add-to-list 'org-src-lang-modes    ; Add new languages.
-                 '("dot" . graphviz-dot)))
+    ;; with `C-c '') -- when the language name doesn't match exactly the
+    ;; language mode.
+    (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
+    (add-to-list 'org-src-lang-modes '("js" . js2)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -10903,6 +10913,8 @@ Anonymize Org contents (sanitize the sensitive data).
 #+begin_src emacs-lisp
   ;; Don't pad tangled code with newlines.
   (setq org-babel-tangle-pad-newline nil)
+
+  (setq org-babel-tangle-use-relative-file-links t)
 
   ;; How to combine blocks of the same name during tangling.
   (setq org-babel-tangle-named-block-combination 'append)
@@ -11667,6 +11679,7 @@ blocks (client/server side).
 
 #+begin_src emacs-lisp
   (with-eval-after-load "web-mode-autoloads"
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
@@ -11826,26 +11839,26 @@ Some key bindings:
 Move the current line up or down.
 
 #+begin_src emacs-lisp
-  ;; Swap the current and previous line.
-  (defun leuven-move-line-up ()
-    "Move the current line up."
-    (interactive)
-    (transpose-lines 1)
-    (forward-line -2))
-
   ;; Swap the current and next line.
   (defun leuven-move-line-down ()
-    "Move the current line down."
+    "Move the current line down one line."
     (interactive)
     (forward-line 1)
     (transpose-lines 1)
     (forward-line -1))
 
+  ;; Swap the current and previous line.
+  (defun leuven-move-line-up ()
+    "Move the current line up one line."
+    (interactive)
+    (transpose-lines 1)
+    (forward-line -2))
+
   (add-hook 'prog-mode-hook
             (lambda ()
-              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
-              (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)))
-                                        ; Sublime Text
+              (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
+              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)))
+                                        ; Sublime Text and js2-refactor.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -11973,7 +11986,11 @@ is often more convenient as you don't have to explicitly build the ~etags~ table
     ;; Helm Imenu tag selection across all buffers (with the same mode).
     (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers))
 
+  ;; Helm interface for Imenu.
   (with-eval-after-load "helm-imenu"
+
+    ;; Delimit types of candidates and his value
+    (setq helm-imenu-delimiter ": ")
 
     ;; Do not directly jump to the definition even if there is just on candidate.
     (setq helm-imenu-execute-action-at-once-if-one nil))
@@ -12726,33 +12743,18 @@ Key bindings:
     (setq js2-strict-missing-semi-warning nil)
 #+end_src
 
-Align declarations:
-
-#+begin_src emacs-lisp
-    (defun js-align-assignments (&optional NUM)
-      "Align region to equal signs and colons."
-      (interactive "p")
-      ;; Keep them separate align calls, otherwise colons align with spaces if
-      ;; they're in the same region.
-      (align-regexp (region-beginning) (region-end) "\\(\\s-*\\)=")
-      (align-regexp (region-beginning) (region-end) "\\(\\s-*\\):"))
-
-    ;; (evil-define-key `normal js2-mode-map (kbd "SPC \\") 'js-align-assignments)
-    ;; (evil-define-key `visual js2-mode-map (kbd "SPC \\") 'js-align-assignments)
-#+end_src
-
-#+begin_src emacs-lisp
-    (add-hook 'js2-mode-hook
-              (lambda ()
-                (flycheck-mode 1)))
-#+end_src
-
 *** JS2-refactor
 
-The ~js2-refactor~ mode should start with ~C-c C-m~ and then a two-letter mnemonic
-shortcut.
+The ~js2-refactor~ mode should start with ~C-c C-m~ (that is, ~C-c RET~) and then
+a two-letter mnemonic shortcut.
 
 List of available *refactorings*:
+
+- lt (log-this) ::
+     *Adds a console.log()* statement for what is at point (or region).
+
+- ~rv~ (~rename-var~) ::
+     *Renames* the *variable* on point and all occurrences in its lexical scope.
 
 - ~ev~ (~extract-var~) ::
      Takes a *marked expression* and replaces it with a *var*.
@@ -12807,9 +12809,6 @@ List of available *refactorings*:
 - ~iv~ (~inline-var~) ::
      Replaces all instances of a variable with its initial value.
 
-- ~rv~ (~rename-var~) ::
-     Renames the variable on point and all occurrences in its lexical scope.
-
 - ~ao~ (~arguments-to-object~) ::
      Replaces arguments to a function call with an object literal of named
      arguments.  Requires YASnippet.
@@ -12844,13 +12843,13 @@ http://www.archibus.com/ai/abizfiles/v19.2_help/system-management/Content/wc_vie
 #+begin_src emacs-lisp
   ;; Below regex list could be used in both js-mode and js2-mode.
   (setq javascript-common-imenu-regex-list
-        `((,(propertize "Local Function" 'face 'font-lock-warning-face) "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+        `(("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _after" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _on" "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _before" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring View Event 1" "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring View Event 0" "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          (,(propertize "Local Variable" 'face 'font-lock-variable-name-face) "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
+          ("Variable" "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
           ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
           ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
           ("Controller" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)

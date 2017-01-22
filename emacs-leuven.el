@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170120.2000
+;; Version: 20170122.2146
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170120.2000"
+(defconst leuven--emacs-version "20170122.2146"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1051,7 +1051,7 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; between using Bookmark+ and using
                                         ; vanilla Emacs.
 
-      ;; (setq bmkp-last-as-first-bookmark-file bookmark-default-file)
+      (setq bmkp-last-as-first-bookmark-file nil)
 
       ;; Name ANONYMOUS bookmarks with buffer name and line number.
       ;; (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
@@ -1116,9 +1116,9 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "14.1 (emacs)Scrolling")
 
-  ;; Scroll window up/down by one line.
-  (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
-  (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
+  ;; ;; Scroll window up/down by one line.
+  ;; (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
+  ;; (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
 
   ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place).
@@ -1240,7 +1240,7 @@ Should be selected from `fringe-bitmaps'.")
     ;; Number of seconds of idle time before highlighting the current symbol.
     (setq highlight-symbol-idle-delay 0.2)
 
-    (setq highlight-symbol-colors '("#A67CEB" "#70BE53" "#3CA9D3"))
+    (setq highlight-symbol-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
     (setq highlight-symbol-foreground-color "black")
 
     ;; Temporarily highlight the symbol when using `highlight-symbol-jump'
@@ -2264,9 +2264,10 @@ Should be selected from `fringe-bitmaps'.")
     ;; (setq ediff-merge-split-window-function 'split-window-vertically)
 
     (defun turn-on-visible-mode ()
-      "Make all invisible text temporarily visible."
+      "Make all invisible text visible."
       (visible-mode 1)
       (setq truncate-lines nil)
+      (hs-show-all)
       (when (derived-mode-p 'org-mode)
         (org-remove-inline-images)))
 
@@ -2723,6 +2724,18 @@ Should be selected from `fringe-bitmaps'.")
   ;;   ;; (when (executable-find "curl")
   ;;   ;;   (setq helm-google-suggest-use-curl-p t))
   ;;   )
+
+  ;; (global-set-key (kbd "C-;") #'helm-projectile)
+
+  (with-eval-after-load "projectile"
+    (setq projectile-mode-line
+          '(:eval (list " P[" ;; (propertize
+                               (projectile-project-name)
+                              ;; 'face '(:foreground "gray75"))
+                        "]")))
+
+    ;; Always ignore .class files.
+    (add-to-list 'projectile-globally-ignored-file-suffixes ".class"))
 
   ;; Lisp complete.
   (define-key lisp-interaction-mode-map
@@ -3430,15 +3443,17 @@ cycle through all windows on current frame."
     (save-excursion
       (indent-region (point-min) (point-max) nil)))
 
-  ;; Align your code in a pretty way.
-  (global-set-key (kbd "C-x \\") #'align-regexp)
-
-  (defun leuven-align-to-equals (begin end)
-    "Align region to equal signs."
+  (defun leuven-align-code (begin end)
+    "Align region to equal signs and colons."
     (interactive "r")
-    (align-regexp begin end "\\(\\s-*\\)=" 1 1))
+    ;; Keep them separate align calls, otherwise colons align with spaces if
+    ;; they're in the same region.
+    (align-regexp begin end "\\(\\s-*\\)=" 1 1)
+    (align-regexp begin end "\\(\\s-*\\):" 1 1))
 
-  (global-set-key (kbd "C-c =") #'leuven-align-to-equals)
+  ;; Align your code in a pretty way.
+  (global-set-key (kbd "C-x \\") #'leuven-align-code)
+  (global-set-key (kbd "C-c =") #'leuven-align-code)
 
   ;; Show vertical lines to guide indentation.
   (with-eval-after-load "indent-guide-autoloads-XXX" ; Display problems with CrossMapIntegration.java
@@ -3917,6 +3932,8 @@ cycle through all windows on current frame."
     ;; Unbind `C-j' and `C-''.
     (define-key org-mode-map (kbd "C-j") nil)
     (define-key org-mode-map (kbd "C-'") nil) ; `org-cycle-agenda-files'.
+    (define-key org-mode-map (kbd "<C-S-down>") nil)
+    (define-key org-mode-map (kbd "<C-S-up>") nil)
 
     ;; Double-clicking on the fringe cycles the corresponding subtree.
     (define-key org-mode-map (kbd "<left-fringe> <double-mouse-1>") 'org-cycle))
@@ -4133,10 +4150,8 @@ cycle through all windows on current frame."
 
   (leuven--section "2.3 (org)Visibility cycling")
 
-  ;; Do not switch to OVERVIEW at startup.
-  (setq org-startup-folded nil)         ; Emacs hangs when editing a 5-line Org
-                                        ; file (with Company auto-starting after
-                                        ; 2 characters and 0 s delay)
+  ;; Switch to OVERVIEW (fold all) at startup.
+  (setq org-startup-folded t)
 
   ;; Inhibit startup when preparing agenda buffers -- agenda optimization.
   (setq org-agenda-inhibit-startup t)   ; XXX
@@ -6089,9 +6104,10 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org-src"
 
     ;; Mapping languages to their major mode (for editing the source code block
-    ;; with `C-c '').
-    (add-to-list 'org-src-lang-modes    ; Add new languages.
-                 '("dot" . graphviz-dot)))
+    ;; with `C-c '') -- when the language name doesn't match exactly the
+    ;; language mode.
+    (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
+    (add-to-list 'org-src-lang-modes '("js" . js2)))
 
   ;; Display the source code edit buffer in the current window, keeping all
   ;; other windows.
@@ -6523,6 +6539,8 @@ this with to-do items than with projects or headings."
 
   ;; Don't pad tangled code with newlines.
   (setq org-babel-tangle-pad-newline nil)
+
+  (setq org-babel-tangle-use-relative-file-links t)
 
   ;; How to combine blocks of the same name during tangling.
   (setq org-babel-tangle-named-block-combination 'append)
@@ -6982,6 +7000,7 @@ this with to-do items than with projects or headings."
                                         ; Alias for `nxml-mode'.
 
   (with-eval-after-load "web-mode-autoloads"
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
@@ -7093,26 +7112,26 @@ this with to-do items than with projects or headings."
 
 (leuven--chapter leuven-load-chapter-26-programs "26 Editing Programs"
 
-  ;; Swap the current and previous line.
-  (defun leuven-move-line-up ()
-    "Move the current line up."
-    (interactive)
-    (transpose-lines 1)
-    (forward-line -2))
-
   ;; Swap the current and next line.
   (defun leuven-move-line-down ()
-    "Move the current line down."
+    "Move the current line down one line."
     (interactive)
     (forward-line 1)
     (transpose-lines 1)
     (forward-line -1))
 
+  ;; Swap the current and previous line.
+  (defun leuven-move-line-up ()
+    "Move the current line up one line."
+    (interactive)
+    (transpose-lines 1)
+    (forward-line -2))
+
   (add-hook 'prog-mode-hook
             (lambda ()
-              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
-              (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)))
-                                        ; Sublime Text
+              (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
+              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)))
+                                        ; Sublime Text and js2-refactor.
 
   (defun leuven-scroll-up-one-line ()
     "Scroll text of current window upward 1 line."
@@ -7184,7 +7203,11 @@ mouse-3: go to end") "]")))
     ;; Helm Imenu tag selection across all buffers (with the same mode).
     (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers))
 
+  ;; Helm interface for Imenu.
   (with-eval-after-load "helm-imenu"
+
+    ;; Delimit types of candidates and his value
+    (setq helm-imenu-delimiter ": ")
 
     ;; Do not directly jump to the definition even if there is just on candidate.
     (setq helm-imenu-execute-action-at-once-if-one nil))
@@ -7513,21 +7536,6 @@ mouse-3: go to end") "]")))
     ;; Let Flycheck handle parse errors.
     (setq js2-strict-missing-semi-warning nil)
 
-    (defun js-align-assignments (&optional NUM)
-      "Align region to equal signs and colons."
-      (interactive "p")
-      ;; Keep them separate align calls, otherwise colons align with spaces if
-      ;; they're in the same region.
-      (align-regexp (region-beginning) (region-end) "\\(\\s-*\\)=")
-      (align-regexp (region-beginning) (region-end) "\\(\\s-*\\):"))
-
-    ;; (evil-define-key `normal js2-mode-map (kbd "SPC \\") 'js-align-assignments)
-    ;; (evil-define-key `visual js2-mode-map (kbd "SPC \\") 'js-align-assignments)
-
-    (add-hook 'js2-mode-hook
-              (lambda ()
-                (flycheck-mode 1)))
-
   (with-eval-after-load "js2-refactor-autoloads"
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
 
@@ -7538,13 +7546,13 @@ mouse-3: go to end") "]")))
 
   ;; Below regex list could be used in both js-mode and js2-mode.
   (setq javascript-common-imenu-regex-list
-        `((,(propertize "Local Function" 'face 'font-lock-warning-face) "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+        `(("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _after" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _on" "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _before" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring View Event 1" "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring View Event 0" "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          (,(propertize "Local Variable" 'face 'font-lock-variable-name-face) "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
+          ("Variable" "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
           ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
           ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
           ("Controller" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)
