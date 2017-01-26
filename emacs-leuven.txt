@@ -37,7 +37,7 @@ and fast navigation, etc.)
 
 http://emacs.stackexchange.com/questions/18253/how-does-package-autoremove-decide-which-packages-to-remove
 
-** TODO Port old advices
+** TODO Port old advices to Emacs 24.4+
 
 https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices
 
@@ -347,7 +347,7 @@ Citations:
 
 ;;; Commentary:
 
-;; Emacs configuration file with many packages already enabled and a more
+;; Emacs 24.4+ configuration file with many packages already enabled and a more
 ;; pleasant set of defaults.
 ;;
 ;; Operating systems: supposed to work both for Windows and for Linux.
@@ -1491,13 +1491,16 @@ Visual navigation through mark rings.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "back-button-autoloads"
-    (back-button-mode 1))
+    (back-button-mode 1)
+
+    (global-set-key (kbd "<M-left>") #'back-button-global-backward) ; Vs left-word.
+    (global-set-key (kbd "<M-right>") #'back-button-global-forward)) ; Vs right-word.
 #+end_src
 
-- C-x C-<left> ::
+- C-x C-<left> (or M-left in Emacs Leuven) ::
      Go back in ~global-mark-ring~.
 
-- C-x C-<right> ::
+- C-x C-<right> (or M-right in Emacs Leuven) ::
      Go forward in ~global-mark-ring~.
 
 - C-x <left> ::
@@ -1512,7 +1515,7 @@ consecutive ~back-button~ commands.
 *Go to* the *place* where you *last changed* something:
 
 #+begin_src emacs-lisp
-  ;; Goto last change.
+  ;; Goto last (buffer-local) change.
   (with-eval-after-load "goto-chg-autoloads"
     (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 #+end_src
@@ -1688,51 +1691,36 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 #+end_src
 
+With the following gems, you can kill or copy the line point is on with a single
+keystroke:
+
+- ~C-w~ kills the current line
+- ~M-w~ copies the current line
+
+#+begin_note
+If there is an active region, ~kill-region~ and ~kill-ring-save~ will continue to do
+what they normally do: kill or copy it.
+#+end_note
+
 #+begin_src emacs-lisp
-;; old ([2012-09-07 Fri] remove "compile" after "activate")
-
-  ;; Add the ability to copy the current line without marking it (no selection).
-  (defadvice kill-ring-save (before leuven-slick-copy activate)
-    "When called with no active region, copy the current line instead."
-    (interactive
-     (if (use-region-p) (list (region-beginning) (region-end))
-       (message "Copied the current line")
-       (list (line-beginning-position)
-             (line-beginning-position 2)))))
-
   ;; Add the ability to cut the current line without marking it (no selection).
-  (defadvice kill-region (before leuven-slick-cut activate)
+  (defun kill-region--slick-cut (beg end)
     "When called with no active region, kill the current line instead."
     (interactive
-     (if (use-region-p) (list (region-beginning) (region-end))
-       (list (line-beginning-position)
-             (line-beginning-position 2)))))
+     (if (use-region-p)
+         (list (region-beginning) (region-end))
+       (list (line-beginning-position) (line-beginning-position 2)))))
+  (advice-add 'kill-region :before #'kill-region--slick-cut)
 
-;; new
-
-    ;; (defadvice kill-ring-save (around leuven-slick-copy activate)
-    ;;   "When called interactively with no active region, copy a single line instead."
-    ;;   (if (or (use-region-p) (not (called-interactively-p 'any)))
-    ;;       ad-do-it
-    ;;     (kill-new (buffer-substring (line-beginning-position)
-    ;;                                 (line-beginning-position 2)))
-    ;;     (message "Copied line")))
-    ;;
-    ;; (defadvice kill-region (around leuven-slick-cut activate)
-    ;;   "When called interactively with no active region, kill a single line instead."
-    ;;   (if (or (use-region-p) (not (called-interactively-p 'any)))
-    ;;       ad-do-it
-    ;;     (kill-new (filter-buffer-substring (line-beginning-position)
-    ;;                                        (line-beginning-position 2) t))))
-    ;;
-    ;; (defun yank-line (string)
-    ;;   "Insert STRING above the current line."
-    ;;   (beginning-of-line)
-    ;;   (unless (= (elt string (1- (length string))) ?\n)
-    ;;     (save-excursion (insert "\n")))
-    ;;   (insert string))
-
-;; XXX perf 2.00 s requiring bytecomp and warnings...
+  ;; Add the ability to copy the current line without marking it (no selection).
+  (defun kill-ring-save--slick-copy (beg end)
+    "When called with no active region, copy the current line instead."
+    (interactive
+     (if (use-region-p)
+         (list (region-beginning) (region-end))
+       (message "Copied the current line")
+       (list (line-beginning-position) (line-beginning-position 2)))))
+  (advice-add 'kill-ring-save :before #'kill-ring-save--slick-copy)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2259,7 +2247,7 @@ https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html.
       "The fringe bitmap name marked at changed line.
 Should be selected from `fringe-bitmaps'.")
 
-    (defadvice hilit-chg-make-ov (after hilit-chg-add-fringe activate)
+    (defun hilit-chg-make-ov--add-fringe ()
       (mapc (lambda (ov)
               (if (overlay-get ov 'hilit-chg)
                   (let ((fringe-anchor (make-string 1 ?x)))
@@ -2267,7 +2255,8 @@ Should be selected from `fringe-bitmaps'.")
                                        (list 'left-fringe highlight-fringe-mark)
                                        fringe-anchor)
                     (overlay-put ov 'before-string fringe-anchor))))
-            (overlays-at (ad-get-arg 1)))))
+            (overlays-at (ad-get-arg 1))))
+    (advice-add 'hilit-chg-make-ov :after #'hilit-chg-make-ov--add-fringe))
 
   ;; ;; Enable Global-Highlight-Changes mode.
   ;; (global-highlight-changes-mode 1)
@@ -2465,11 +2454,12 @@ Act on changes:
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-    (defadvice magit-refresh (after diff-hl-refresh-after-magit-refresh activate)
+    (defun magit-refresh--diff-hl-refresh-after ()
       (dolist (buffer (buffer-list))
         (with-current-buffer buffer
           (when diff-hl-mode
             (diff-hl-update)))))
+    (advice-add 'magit-refresh :after #'magit-refresh--diff-hl-refresh-after)
 #+end_src
 
 #+begin_tip
@@ -2532,20 +2522,20 @@ Remove trailing whitespace *in edited lines* with ~ws-butler~:
 
   (with-eval-after-load "ws-butler"
 
-    ;; Remove all tab/space indent conversion.
-    (defun ws-butler-clean-region (beg end)
-      "Delete trailing blanks in region BEG END."
-      (interactive "*r")
-      (ws-butler-with-save
-       (narrow-to-region beg end)
-       ;;  _much slower would be:       (replace-regexp "[ \t]+$" "")
-       (goto-char (point-min))
-       (while (not (eobp))
-         (end-of-line)
-         (delete-horizontal-space)
-         (forward-line 1)))
-      ;; clean return code for hooks
-      nil)
+    ;; ;; Remove all tab/space indent conversion.
+    ;; (defun ws-butler-clean-region (beg end)
+    ;;   "Delete trailing blanks in region BEG END."
+    ;;   (interactive "*r")
+    ;;   (ws-butler-with-save
+    ;;    (narrow-to-region beg end)
+    ;;    ;;  _much slower would be:       (replace-regexp "[ \t]+$" "")
+    ;;    (goto-char (point-min))
+    ;;    (while (not (eobp))
+    ;;      (end-of-line)
+    ;;      (delete-horizontal-space)
+    ;;      (forward-line 1)))
+    ;;   ;; clean return code for hooks
+    ;;   nil)
 
     (diminish 'ws-butler-mode))
 #+end_src
@@ -3336,10 +3326,11 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
                 (message "Turn on Flyspell mode in `%s'" (buffer-name))
                 (flyspell-mode)))
 
-    (defadvice org-export-as (around leuven-org-export-as activate)
+    (defun org-export-as--org-export-as-around (orig-fun &rest args)
       "Turn off Text mode hooks (Flyspell, etc.) when exporting current Org buffer."
-      (let (text-mode-hook)
-        ad-do-it))
+      (let ((text-mode-hook nil))
+        (apply orig-fun args)))
+    (advice-add 'org-export-as :around #'org-export-as--org-export-as-around)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3929,22 +3920,27 @@ You can also decide to revert a change: *select a hunk and apply it (in reverse)
                            ;; after the delay.
                            (goto-char (point-min)))))))
 
-    (defun leuven--diff-make-fine-diffs-if-necessary ()
+    (defun vc-diff--diff-make-fine-diffs-if-necessary ()
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; Check for auto-refine limit.
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
+    ;; Push the auto-refine function after `vc-diff'.
+    (advice-add 'vc-diff :after #'vc-diff--diff-make-fine-diffs-if-necessary)
+#+end_src
 
-    ;; (when (fboundp 'advice-add)
-    ;;   (advice-add 'vc-diff :after
-    ;;    (lambda (&rest _)
-    ;;      (leuven--diff-make-fine-diffs-if-necessary))))
+#+begin_src emacs-lisp
+    (defun vc-diff-finish--handle-color-in-diff-output ()
+      "Run `ansi-color-apply-on-region'."
+      (progn
+        (require 'ansi-color)
+        (toggle-read-only)
+        (ansi-color-apply-on-region (point-min) (point-max))
+        (toggle-read-only)))
+    (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
+#+end_src
 
-    ;; XXX I tried this simpler form, but does not work.
-    (defadvice vc-diff (after leuven-vc-diff activate)
-      "Push the auto-refine function after `vc-diff'."
-      (leuven--diff-make-fine-diffs-if-necessary))
-
+#+begin_src emacs-lisp
     )
 #+end_src
 
@@ -4006,7 +4002,7 @@ resolve conflicts.
       "Make all invisible text visible."
       (visible-mode 1)
       (setq truncate-lines nil)
-      (hs-show-all)
+      (when hs-minor-mode (hs-show-all))
       (when (derived-mode-p 'org-mode)
         (org-remove-inline-images)))
 
@@ -11682,10 +11678,27 @@ blocks (client/server side).
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
+    (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode)) ; ARCHIBUS view
+  )
 
   ;; Major mode for editing web templates.
   (with-eval-after-load "web-mode"
+
+    (define-key web-mode-map (kbd "M-<up>")   #'web-mode-element-previous)
+    (define-key web-mode-map (kbd "M-<down>") #'web-mode-element-next)
+    (define-key web-mode-map (kbd "C--")      #'web-mode-fold-or-unfold)
+    (define-key web-mode-map (kbd "C-+")      #'web-mode-fold-or-unfold)
+    (define-key web-mode-map (kbd "C-M-u")    #'web-mode-element-parent)
+    (define-key web-mode-map (kbd "C-M-d")    #'web-mode-element-child)
+    (define-key web-mode-map (kbd "M-(")      #'web-mode-element-wrap)
+
+    (define-key web-mode-map (kbd "M-h")   'web-mode-mark-and-expand)
+    (define-key web-mode-map (kbd "M-n")   'web-mode-tag-next)
+    (define-key web-mode-map (kbd "M-p")   'web-mode-tag-previous)
+    (define-key web-mode-map (kbd "C-M-p") 'web-mode-tag-previous)
+    (define-key web-mode-map (kbd "C-M-u") 'web-mode-element-parent)
+    (define-key web-mode-map (kbd "C-M-a") 'web-mode-element-previous)
+    (define-key web-mode-map (kbd "C-M-e") 'web-mode-element-end)
 
     ;; Script element left padding.
     (setq web-mode-script-padding
@@ -11955,7 +11968,7 @@ Truncate the current function name (for the mode line):
     (defun my-which-func-current ()
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
-            (truncate-string-to-width current 30 nil nil "...")
+            (truncate-string-to-width current 30 nil nil "...") ; 30 = OK!
           which-func-unknown)))
 
     (setq which-func-format
@@ -14476,7 +14489,7 @@ See https://github.com/jacktasia/dumb-jump.
 
   ;; Number of seconds a grep/find command can take before being warned to use
   ;; ag and config.
-  (setq dumb-jump-max-find-time 4)
+  (setq dumb-jump-max-find-time 5)
 
   (global-set-key (kbd "C-M-g") #'dumb-jump-go)
 
@@ -15536,7 +15549,7 @@ completions and filter as well.
     )
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; Hooks
 (add-hook 'web-mode-hook
           '(lambda ()
@@ -15628,8 +15641,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 #+begin_src emacs-lisp
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
-    (advice-add
-     'company-complete-number :around
+    (advice-add 'company-complete-number :around
      (lambda (fun n)
        (let ((cand (nth (+ (1- n) company-tooltip-offset)
                         company-candidates)))
@@ -15693,10 +15705,11 @@ Only trigger the tooltip on manual invocation, but still have the preview (of
 the first candidate) show up immediately:
 
 #+begin_src emacs-lisp :tangle no
-    (defadvice company-pseudo-tooltip-unless-just-one-frontend
-               (around only-show-tooltip-when-invoked activate)
+    (defun company-pseudo-tooltip-unless-just-one-frontend--only-show-tooltip-when-invoked (orig-fun &rest args)
       (when (company-explicit-action-p)
-        ad-do-it))
+        (apply orig-fun args)))
+    (advice-add 'company-pseudo-tooltip-unless-just-one-frontend
+       :around #'company-pseudo-tooltip-unless-just-one-frontend--only-show-tooltip-when-invoked)
 #+end_src
 
 From https://github.com/company-mode/company-mode/issues/87.

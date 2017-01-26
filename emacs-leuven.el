@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170122.2146
+;; Version: 20170126.2225
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -32,7 +32,7 @@
 
 ;;; Commentary:
 
-;; Emacs configuration file with many packages already enabled and a more
+;; Emacs 24.4+ configuration file with many packages already enabled and a more
 ;; pleasant set of defaults.
 ;;
 ;; Operating systems: supposed to work both for Windows and for Linux.
@@ -61,7 +61,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170122.2146"
+(defconst leuven--emacs-version "20170126.2226"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -796,9 +796,12 @@ These packages are neither built-in nor already installed nor ignored."
 (leuven--chapter leuven-load-chapter-11-mark "11 The Mark and the Region"
 
   (with-eval-after-load "back-button-autoloads"
-    (back-button-mode 1))
+    (back-button-mode 1)
 
-  ;; Goto last change.
+    (global-set-key (kbd "<M-left>") #'back-button-global-backward) ; Vs left-word.
+    (global-set-key (kbd "<M-right>") #'back-button-global-forward)) ; Vs right-word.
+
+  ;; Goto last (buffer-local) change.
   (with-eval-after-load "goto-chg-autoloads"
     (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 
@@ -892,50 +895,24 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Manipulate whitespace around point in a smart way.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
-;; old ([2012-09-07 Fri] remove "compile" after "activate")
-
-  ;; Add the ability to copy the current line without marking it (no selection).
-  (defadvice kill-ring-save (before leuven-slick-copy activate)
-    "When called with no active region, copy the current line instead."
-    (interactive
-     (if (use-region-p) (list (region-beginning) (region-end))
-       (message "Copied the current line")
-       (list (line-beginning-position)
-             (line-beginning-position 2)))))
-
   ;; Add the ability to cut the current line without marking it (no selection).
-  (defadvice kill-region (before leuven-slick-cut activate)
+  (defun kill-region--slick-cut (beg end)
     "When called with no active region, kill the current line instead."
     (interactive
-     (if (use-region-p) (list (region-beginning) (region-end))
-       (list (line-beginning-position)
-             (line-beginning-position 2)))))
+     (if (use-region-p)
+         (list (region-beginning) (region-end))
+       (list (line-beginning-position) (line-beginning-position 2)))))
+  (advice-add 'kill-region :before #'kill-region--slick-cut)
 
-;; new
-
-    ;; (defadvice kill-ring-save (around leuven-slick-copy activate)
-    ;;   "When called interactively with no active region, copy a single line instead."
-    ;;   (if (or (use-region-p) (not (called-interactively-p 'any)))
-    ;;       ad-do-it
-    ;;     (kill-new (buffer-substring (line-beginning-position)
-    ;;                                 (line-beginning-position 2)))
-    ;;     (message "Copied line")))
-    ;;
-    ;; (defadvice kill-region (around leuven-slick-cut activate)
-    ;;   "When called interactively with no active region, kill a single line instead."
-    ;;   (if (or (use-region-p) (not (called-interactively-p 'any)))
-    ;;       ad-do-it
-    ;;     (kill-new (filter-buffer-substring (line-beginning-position)
-    ;;                                        (line-beginning-position 2) t))))
-    ;;
-    ;; (defun yank-line (string)
-    ;;   "Insert STRING above the current line."
-    ;;   (beginning-of-line)
-    ;;   (unless (= (elt string (1- (length string))) ?\n)
-    ;;     (save-excursion (insert "\n")))
-    ;;   (insert string))
-
-;; XXX perf 2.00 s requiring bytecomp and warnings...
+  ;; Add the ability to copy the current line without marking it (no selection).
+  (defun kill-ring-save--slick-copy (beg end)
+    "When called with no active region, copy the current line instead."
+    (interactive
+     (if (use-region-p)
+         (list (region-beginning) (region-end))
+       (message "Copied the current line")
+       (list (line-beginning-position) (line-beginning-position 2)))))
+  (advice-add 'kill-ring-save :before #'kill-ring-save--slick-copy)
 
   (defun duplicate-current-line ()
     "Duplicate the line containing point."
@@ -1203,7 +1180,7 @@ These packages are neither built-in nor already installed nor ignored."
       "The fringe bitmap name marked at changed line.
 Should be selected from `fringe-bitmaps'.")
 
-    (defadvice hilit-chg-make-ov (after hilit-chg-add-fringe activate)
+    (defun hilit-chg-make-ov--add-fringe ()
       (mapc (lambda (ov)
               (if (overlay-get ov 'hilit-chg)
                   (let ((fringe-anchor (make-string 1 ?x)))
@@ -1211,7 +1188,8 @@ Should be selected from `fringe-bitmaps'.")
                                        (list 'left-fringe highlight-fringe-mark)
                                        fringe-anchor)
                     (overlay-put ov 'before-string fringe-anchor))))
-            (overlays-at (ad-get-arg 1)))))
+            (overlays-at (ad-get-arg 1))))
+    (advice-add 'hilit-chg-make-ov :after #'hilit-chg-make-ov--add-fringe))
 
   ;; ;; Enable Global-Highlight-Changes mode.
   ;; (global-highlight-changes-mode 1)
@@ -1315,20 +1293,20 @@ Should be selected from `fringe-bitmaps'.")
 
   (with-eval-after-load "ws-butler"
 
-    ;; Remove all tab/space indent conversion.
-    (defun ws-butler-clean-region (beg end)
-      "Delete trailing blanks in region BEG END."
-      (interactive "*r")
-      (ws-butler-with-save
-       (narrow-to-region beg end)
-       ;;  _much slower would be:       (replace-regexp "[ \t]+$" "")
-       (goto-char (point-min))
-       (while (not (eobp))
-         (end-of-line)
-         (delete-horizontal-space)
-         (forward-line 1)))
-      ;; clean return code for hooks
-      nil)
+    ;; ;; Remove all tab/space indent conversion.
+    ;; (defun ws-butler-clean-region (beg end)
+    ;;   "Delete trailing blanks in region BEG END."
+    ;;   (interactive "*r")
+    ;;   (ws-butler-with-save
+    ;;    (narrow-to-region beg end)
+    ;;    ;;  _much slower would be:       (replace-regexp "[ \t]+$" "")
+    ;;    (goto-char (point-min))
+    ;;    (while (not (eobp))
+    ;;      (end-of-line)
+    ;;      (delete-horizontal-space)
+    ;;      (forward-line 1)))
+    ;;   ;; clean return code for hooks
+    ;;   nil)
 
     (diminish 'ws-butler-mode))
 
@@ -2213,21 +2191,22 @@ Should be selected from `fringe-bitmaps'.")
                            ;; after the delay.
                            (goto-char (point-min)))))))
 
-    (defun leuven--diff-make-fine-diffs-if-necessary ()
+    (defun vc-diff--diff-make-fine-diffs-if-necessary ()
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; Check for auto-refine limit.
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
+    ;; Push the auto-refine function after `vc-diff'.
+    (advice-add 'vc-diff :after #'vc-diff--diff-make-fine-diffs-if-necessary)
 
-    ;; (when (fboundp 'advice-add)
-    ;;   (advice-add 'vc-diff :after
-    ;;    (lambda (&rest _)
-    ;;      (leuven--diff-make-fine-diffs-if-necessary))))
-
-    ;; XXX I tried this simpler form, but does not work.
-    (defadvice vc-diff (after leuven-vc-diff activate)
-      "Push the auto-refine function after `vc-diff'."
-      (leuven--diff-make-fine-diffs-if-necessary))
+    (defun vc-diff-finish--handle-color-in-diff-output ()
+      "Run `ansi-color-apply-on-region'."
+      (progn
+        (require 'ansi-color)
+        (toggle-read-only)
+        (ansi-color-apply-on-region (point-min) (point-max))
+        (toggle-read-only)))
+    (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
 
     )
 
@@ -2267,7 +2246,7 @@ Should be selected from `fringe-bitmaps'.")
       "Make all invisible text visible."
       (visible-mode 1)
       (setq truncate-lines nil)
-      (hs-show-all)
+      (when hs-minor-mode (hs-show-all))
       (when (derived-mode-p 'org-mode)
         (org-remove-inline-images)))
 
@@ -7003,10 +6982,27 @@ this with to-do items than with projects or headings."
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode))) ; ARCHIBUS view
+    (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode)) ; ARCHIBUS view
+  )
 
   ;; Major mode for editing web templates.
   (with-eval-after-load "web-mode"
+
+    (define-key web-mode-map (kbd "M-<up>")   #'web-mode-element-previous)
+    (define-key web-mode-map (kbd "M-<down>") #'web-mode-element-next)
+    (define-key web-mode-map (kbd "C--")      #'web-mode-fold-or-unfold)
+    (define-key web-mode-map (kbd "C-+")      #'web-mode-fold-or-unfold)
+    (define-key web-mode-map (kbd "C-M-u")    #'web-mode-element-parent)
+    (define-key web-mode-map (kbd "C-M-d")    #'web-mode-element-child)
+    (define-key web-mode-map (kbd "M-(")      #'web-mode-element-wrap)
+
+    (define-key web-mode-map (kbd "M-h")   'web-mode-mark-and-expand)
+    (define-key web-mode-map (kbd "M-n")   'web-mode-tag-next)
+    (define-key web-mode-map (kbd "M-p")   'web-mode-tag-previous)
+    (define-key web-mode-map (kbd "C-M-p") 'web-mode-tag-previous)
+    (define-key web-mode-map (kbd "C-M-u") 'web-mode-element-parent)
+    (define-key web-mode-map (kbd "C-M-a") 'web-mode-element-previous)
+    (define-key web-mode-map (kbd "C-M-e") 'web-mode-element-end)
 
     ;; Script element left padding.
     (setq web-mode-script-padding
@@ -7183,7 +7179,7 @@ this with to-do items than with projects or headings."
     (defun my-which-func-current ()
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
-            (truncate-string-to-width current 30 nil nil "...")
+            (truncate-string-to-width current 30 nil nil "...") ; 30 = OK!
           which-func-unknown)))
 
     (setq which-func-format
@@ -8374,7 +8370,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Number of seconds a grep/find command can take before being warned to use
   ;; ag and config.
-  (setq dumb-jump-max-find-time 4)
+  (setq dumb-jump-max-find-time 5)
 
   (global-set-key (kbd "C-M-g") #'dumb-jump-go)
 
@@ -8832,21 +8828,6 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; and the replacement.
     )
 
-;; Hooks
-(add-hook 'web-mode-hook
-          '(lambda ()
-             ;; Company-mode.
-             (set (make-local-variable 'company-backends)
-                  (append company-backends '((company-web-html
-                                              company-web-jade
-                                              company-yasnippet))))
-
-             ;; Auto indent.
-             (local-set-key (kbd "RET") 'newline-and-indent)
-
-             ;; Disabled smartparens in web-mode.
-             (setq smartparens-mode nil)))
-
 ;; See web-mode-imenu-regexp-list.
 
   (with-eval-after-load "company"
@@ -8908,8 +8889,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
-    (advice-add
-     'company-complete-number :around
+    (advice-add 'company-complete-number :around
      (lambda (fun n)
        (let ((cand (nth (+ (1- n) company-tooltip-offset)
                         company-candidates)))
