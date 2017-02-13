@@ -1,11 +1,10 @@
-
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2017 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170126.2225
+;; Version: 20170213.0900
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -61,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170126.2226"
+(defconst leuven--emacs-version "20170213.0900"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -450,6 +449,7 @@ loaded.  If not, just print a message."
                                       multi-term
                                       multiple-cursors
                                       ;; multi-term
+                                      org-plus-contrib
                                       pager
                                       ;; paredit
                                       ;; pdf-tools
@@ -2203,10 +2203,10 @@ Should be selected from `fringe-bitmaps'.")
       "Run `ansi-color-apply-on-region'."
       (progn
         (require 'ansi-color)
-        (toggle-read-only)
+        (read-only-mode)
         (ansi-color-apply-on-region (point-min) (point-max))
-        (toggle-read-only)))
-    (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
+        (read-only-mode)))
+    ;; (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
 
     )
 
@@ -3082,7 +3082,7 @@ cycle through all windows on current frame."
   (setq split-height-threshold nil)
 
   ;; ;; Minimum width for splitting windows horizontally.
-  ;; (setq split-width-threshold 160)      ; See `split-window-sensibly'.
+  ;; (setq split-width-threshold (* 2 132))      ; See `split-window-sensibly'.
 
 )                                       ; Chapter 20 ends here.
 
@@ -4153,9 +4153,10 @@ cycle through all windows on current frame."
               ;; (local-set-key (kbd "M-n") #'outline-next-visible-heading)
               ;; (local-set-key (kbd "M-p") #'outline-previous-visible-heading)
               ;;
-              (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
-              (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
-              (local-set-key (kbd "C-M-u") #'outline-up-heading)))
+ ;;             (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
+   ;;           (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
+     ;;         (local-set-key (kbd "C-M-u") #'outline-up-heading)
+))
 
   ;; Headlines in the current buffer are offered via completion
   ;; (interface also used by the `refile' command).
@@ -4269,7 +4270,7 @@ cycle through all windows on current frame."
 
     ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on 320px
     ;; width if none is found.
-    (setq org-image-actual-width '(320))
+;;    (setq org-image-actual-width '(320)) ; crashes Emacs with Org 9?
 
     (defun leuven-org-search-backlinks ()
       "Show all entries that point to the current node.  Also show the current
@@ -7004,6 +7005,16 @@ this with to-do items than with projects or headings."
     (define-key web-mode-map (kbd "C-M-a") 'web-mode-element-previous)
     (define-key web-mode-map (kbd "C-M-e") 'web-mode-element-end)
 
+;; C-M-a           c-beginning-of-defun
+;; C-M-e           c-end-of-defun
+;; C-M-h           c-mark-function
+;; C-M-j           c-indent-new-comment-line
+;; C-M-q           c-indent-exp
+;; M-a             c-beginning-of-statement
+;; M-e             c-end-of-statement
+;; M-j             c-indent-new-comment-line
+;; M-q             c-fill-paragraph
+
     ;; Script element left padding.
     (setq web-mode-script-padding
           (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
@@ -7542,6 +7553,7 @@ mouse-3: go to end") "]")))
 
   ;; Below regex list could be used in both js-mode and js2-mode.
   (setq javascript-common-imenu-regex-list
+        ;; Items are in reverse order because they are rendered in reverse.
         `(("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _after" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _on" "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
@@ -7759,6 +7771,120 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode))
 
+  (require 'sql)
+
+  (setq sql-connection-alist
+        '((localhost_HQ     (sql-product  'ms)
+                            (sql-port     1433)
+                            (sql-server   "localhost")
+                            (sql-user     "afm")
+                            (sql-password "afm")
+                            (sql-database "ARCHIBUS_23_1_HQ"))
+
+          (localhost_Schema (sql-product  'ms)
+                            (sql-port     1433)
+                            (sql-server   "localhost")
+                            (sql-user     "afm")
+                            (sql-password "afm")
+                            (sql-database "ARCHIBUS_23_1_Schema"))
+
+          (localhost_PFlow  (sql-product  'ms)
+                            (sql-port     1433)
+                            (sql-server   "localhost")
+                            (sql-user     "")
+                            (sql-password "")
+                            (sql-database "PFlowXiphias"))
+
+          (localhost_CSPO   (sql-product  'oracle)
+                            (sql-port     1521)
+                            (sql-server   "localhost")
+                            (sql-user     "afm")
+                            (sql-password "AFM")
+                            (sql-database "CSPOv213"))))
+
+  (defun sql-localhost_HQ ()
+    (interactive)
+    (sql-connect-preset 'localhost_HQ))
+
+  (defun sql-localhost_Schema ()
+    (interactive)
+    (sql-connect-preset 'localhost_Schema))
+
+  (defun sql-localhost_CSPO ()
+    (interactive)
+    (sql-connect-preset 'localhost_CSPO))
+
+  (defun sql-localhost_PFlow ()
+    (interactive)
+    (sql-connect-preset 'localhost_PFlow))
+
+  ;; This makes all it all happen via M-x sql-localhost_HQ, etc.
+  (defun sql-connect-preset (name)
+    "Connect to a predefined SQL connection listed in `sql-connection-alist'"
+    (eval `(let ,(cdr (assoc name sql-connection-alist))
+             (flet ((sql-get-login (&rest what))) ; In sql.el.
+               (sql-product-interactive sql-product)))))
+
+  (add-hook 'sql-mode-hook
+            #'(lambda ()
+                (setq truncate-lines t)
+                (sql-highlight-ms-keywords)
+                (setq sql-send-terminator t)
+                (setq comint-process-echoes t)))
+
+  (add-hook 'sql-interactive-mode-hook
+            #'(lambda ()
+                (setq truncate-lines t)
+                (setq comint-process-echoes t)
+                ;; (text-scale-decrease 1)
+                (setq-local show-trailing-whitespace nil)))
+
+  ;; Default login parameters to connect to Microsoft procSQL Server.
+  (setq sql-ms-login-params
+        '((user     :default "afm")
+          (database :default "ARCHIBUS_23_1_HQ")
+          (server   :default "localhost")
+          (port     :default 1433)))
+
+  (setq sql-ms-program "sqlcmd")
+
+  ;; Force Emacs to use CP 850 for every sqlcmd process (for accents) and
+  ;; force DOS line endings.
+  (add-to-list 'process-coding-system-alist '("sqlcmd" . cp850-dos))
+  (add-to-list 'process-coding-system-alist '("osql" . cp850-dos))
+
+  ;; (setq sql-ms-options (quote ("-w" "65535" "-h" "20000" )))
+  (setq sql-ms-options '("-w" "65535"))
+
+  (setq sql-ms-program "tsql")
+
+  (setq sql-ms-options (remove "-n" sql-ms-options))
+  (setq sql-ms-options nil)
+
+  ;; Redefined.
+  (defun sql-comint-ms (product options)
+    "Create comint buffer and connect to Microsoft SQL Server."
+    ;; Put all parameters to the program (if defined) in a list and call
+    ;; make-comint.
+    (message "Leuven Options: %s" options)
+    (let ((params options))
+      (if (not (string= "" sql-server))
+          (setq params (append (list "-S" sql-server) params)))
+      (if (not (string= "" sql-database))
+          (setq params (append (list "-D" sql-database) params)))
+      (if (not (string= "" sql-user))
+          (setq params (append (list "-U" sql-user) params)))
+      (if (not (string= "" sql-password))
+          (setq params (append (list "-P" sql-password) params))
+        (if (string= "" sql-user)
+            ;; if neither user nor password is provided, use system credentials.
+            (setq params (append (list "-E") params))
+          ;; If -P is passed to ISQL as the last argument without a password, it's
+          ;; considered null.
+          (setq params (append params (list "-P")))))
+      (message "Leuven Params: %s" params)
+      (sql-comint product params)))
+
   (with-eval-after-load "sql-indent"
     (add-hook 'sql-mode-hook 'sqlind-setup))
 
@@ -7785,40 +7911,37 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;; Number of lines in a compilation window.
   (setq compilation-window-height 8)
 
-  ;; ;; I also don't like that the compilation window sticks around after
-  ;; ;; a successful compile.  After all, most of the time, all I care
-  ;; ;; about is that the compile completed cleanly.  Here's how I make the
-  ;; ;; compilation window go away, only if there was no compilation
-  ;; ;; errors:
-  ;; (setq compilation-finish-function
-  ;;       (lambda (buf str)
-  ;;         (if (string-match "exited abnormally" str)
-  ;;             ;; there were errors
-  ;;             (message "Compilation errors, press C-x ` to visit")
-  ;;           ;; no errors, make compilation window go away in 0.5 sec
-  ;;           (run-at-time 0.5 nil 'delete-windows-on buf)
-  ;;           (message "NO COMPILATION ERRORS!"))))
+  (defun compile-hide-window-if-successful (cur-buffer msg)
+    (if (string-match "exited abnormally" msg)
+        ;; There were errors.
+        (message "Compilation errors, press C-x ` to visit")
+      ;; No errors, make compilation window go away in 0.5 sec
+      (run-at-time 0.5 nil
+                   'delete-windows-on cur-buffer)
+      (message "No compilation errors!")))
 
-  ;; (defun cc-goto-first-error (buffer exit-condition)
-  ;;   (with-current-buffer buffer
+  (add-to-list 'compilation-finish-functions #'compile-hide-window-if-successful)
+
+  ;; (defun compile-goto-first-error (cur-buffer msg)
+  ;;   (with-current-buffer cur-buffer
   ;;     (goto-char (point-min))
   ;;     (compilation-next-error 1)
   ;;     (beep)))
   ;;
-  ;; (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
+  ;; (add-to-list 'compilation-finish-functions #'compile-goto-first-error)
 
-  (defun compile-scroll-eob (buffer _status)
-    (let ((win (get-buffer-window buffer))
+  (defun compile-scroll-eob (cur-buffer msg)
+    (let ((win (get-buffer-window cur-buffer))
           (current (selected-window)))
       (when win
         (select-window win)
-        (with-current-buffer buffer
+        (with-current-buffer cur-buffer
           (when (> (line-number-at-pos (point-max)) (window-height))
             (goto-char (point-max))
             (recenter (window-height))))
         (select-window current))))
 
-  (add-to-list 'compilation-finish-functions 'compile-scroll-eob)
+  (add-to-list 'compilation-finish-functions #'compile-scroll-eob)
 
   (defvar make-clean-command "make clean all"
     "*Command used by the `make-clean' function.")
@@ -8366,20 +8489,21 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 
-(with-eval-after-load "dumb-jump-autoloads"
+  (with-eval-after-load "dumb-jump-autoloads"
 
-  ;; Number of seconds a grep/find command can take before being warned to use
-  ;; ag and config.
-  (setq dumb-jump-max-find-time 5)
+    ;; Number of seconds a grep/find command can take before being warned to use
+    ;; ag and config.
+    (setq dumb-jump-max-find-time 5)
 
-  (global-set-key (kbd "C-M-g") #'dumb-jump-go)
+    (global-set-key (kbd "C-M-g") #'dumb-jump-go)
+    (global-set-key (kbd "C-c S") #'dumb-jump-go)
 
-  ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
+    ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
 
-  (global-set-key (kbd "C-M-p") #'dumb-jump-back)
+    (global-set-key (kbd "C-M-p") #'dumb-jump-back)
 
-  (define-key prog-mode-map (kbd "C-M-q") nil)
-  (global-set-key (kbd "C-M-q") #'dumb-jump-quick-look))
+    ;; (define-key prog-mode-map (kbd "C-M-q") nil)
+    (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look))
 
 ;;** 28.4 (info "(emacs)EDE")
 
@@ -8514,7 +8638,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "projectile-autoloads"
 
     ;; Turn on projectile mode by default for all file types
-    (projectile-global-mode)
+    (projectile-mode)
 
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
@@ -9016,14 +9140,14 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (defun dired-back-to-top ()
       (interactive)
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (dired-next-line 4))
 
     (define-key dired-mode-map [remap beginning-of-buffer] #'dired-back-to-top)
 
     (defun dired-jump-to-bottom ()
       (interactive)
-      (end-of-buffer)
+      (goto-char (point-max))
       (dired-next-line -1))
 
     (define-key dired-mode-map [remap end-of-buffer] #'dired-jump-to-bottom)
@@ -9708,9 +9832,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
 
   ;; Regexp to recognize prompts in the inferior process.
-  (setq comint-prompt-regexp shell-prompt-pattern)
-                                        ;! only used if the variable
-                                        ;! `comint-use-prompt-regexp' is non-nil
+;;   (setq comint-prompt-regexp shell-prompt-pattern) ; Used as well by SQLi!
+                                        ;! Only used if the variable
+                                        ;! `comint-use-prompt-regexp' is non-nil.
 
 ;;** 38.5 Shell Command History
 

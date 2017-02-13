@@ -266,15 +266,15 @@ After much optimization...
   user    0m0.028s
   sys     0m0.020s
 
-#+begin_src shell
+#+begin_src sh
 time emacs -f kill-emacs 2>&1
 #+end_src
 
-#+begin_src shell
+#+begin_src sh
 time emacs -q -f kill-emacs 2>&1
 #+end_src
 
-#+begin_src shell
+#+begin_src sh
 time emacs -Q -f kill-emacs 2>&1
 #+end_src
 
@@ -903,6 +903,7 @@ like this into your configuration file:
                                       multi-term
                                       multiple-cursors
                                       ;; multi-term
+                                      org-plus-contrib
                                       pager
                                       ;; paredit
                                       ;; pdf-tools
@@ -3934,10 +3935,10 @@ You can also decide to revert a change: *select a hunk and apply it (in reverse)
       "Run `ansi-color-apply-on-region'."
       (progn
         (require 'ansi-color)
-        (toggle-read-only)
+        (read-only-mode)
         (ansi-color-apply-on-region (point-min) (point-max))
-        (toggle-read-only)))
-    (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
+        (read-only-mode)))
+    ;; (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4070,7 +4071,7 @@ file.  It is a *symbolic link to ~gzip~*; you can verify this by
 Since *GNU Emacs does not understand Cygwin's symbolic links*, it cannot execute
 ~gunzip~.  The solution is to replace ~gunzip~ with ~gzip -d~.
 
-#+begin_src shell :tangle ~/.dotfiles/winbin/gunzip :padline no
+#+begin_src sh :tangle ~/.dotfiles/winbin/gunzip :padline no
 #!/bin/sh
 # gunzip -- gunzip solution on Windows
 
@@ -5605,7 +5606,7 @@ See as well ~split-window-preferred-function~.
   (setq split-height-threshold nil)
 
   ;; ;; Minimum width for splitting windows horizontally.
-  ;; (setq split-width-threshold 160)      ; See `split-window-sensibly'.
+  ;; (setq split-width-threshold (* 2 132))      ; See `split-window-sensibly'.
 #+end_src
 
 ** Window Handling Convenience Features and Customization
@@ -5885,6 +5886,11 @@ mail buffer) under "Important settings" when you type
 - value of ~$XMODIFIERS~: ~nil~
 - ~locale-coding-system~: ~utf-8-unix~
 - ~default-enable-multibyte-characters~: ~t~
+
+#+begin_note
+If ~LANG~ is set, that's enough: all the ~LC_*~ default to whatever ~LANG~ says, but
+you can override them if you set them explicitly.
+#+end_note
 
 ** Introduction to International Character Sets
 
@@ -7290,9 +7296,10 @@ full outline path.
               ;; (local-set-key (kbd "M-n") #'outline-next-visible-heading)
               ;; (local-set-key (kbd "M-p") #'outline-previous-visible-heading)
               ;;
-              (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
-              (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
-              (local-set-key (kbd "C-M-u") #'outline-up-heading)))
+ ;;             (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
+   ;;           (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
+     ;;         (local-set-key (kbd "C-M-u") #'outline-up-heading)
+))
 #+end_src
 
 Move through an Org file like ~cd~ on a file system with ~org-goto~:
@@ -7489,7 +7496,7 @@ and resize it to a specific width.
 
     ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on 320px
     ;; width if none is found.
-    (setq org-image-actual-width '(320))
+;;    (setq org-image-actual-width '(320)) ; crashes Emacs with Org 9?
 #+end_src
 
 Search for backlinks:
@@ -10450,7 +10457,7 @@ languages which can be evaluated in Org mode buffers.
 #+end_src
 
 *************** TODO Why isn't diff-mode.el found?
-[[file:~/org/personal/Org-for-dummies.org]]
+[[file:~/5-Personal/3-Organization/Org-for-dummies.org]]
 *************** END
 
 *************** TODO Check src blocks in  *temp* buffers?
@@ -11700,6 +11707,16 @@ blocks (client/server side).
     (define-key web-mode-map (kbd "C-M-a") 'web-mode-element-previous)
     (define-key web-mode-map (kbd "C-M-e") 'web-mode-element-end)
 
+;; C-M-a           c-beginning-of-defun
+;; C-M-e           c-end-of-defun
+;; C-M-h           c-mark-function
+;; C-M-j           c-indent-new-comment-line
+;; C-M-q           c-indent-exp
+;; M-a             c-beginning-of-statement
+;; M-e             c-end-of-statement
+;; M-j             c-indent-new-comment-line
+;; M-q             c-fill-paragraph
+
     ;; Script element left padding.
     (setq web-mode-script-padding
           (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
@@ -12588,7 +12605,7 @@ that aren't (yet) supported by either ~emacs-eclim~ or ~eclim~, you can switch t
 
 To tell eclim *which Eclipse workspace to use*, you can start eclimd like so:
 
-#+begin_src shell :tangle no
+#+begin_src sh :tangle no
 eclimd -Dosgi.instance.area.default=@user.home/another_workspace
 #+end_src
 
@@ -12856,6 +12873,7 @@ http://www.archibus.com/ai/abizfiles/v19.2_help/system-management/Content/wc_vie
 #+begin_src emacs-lisp
   ;; Below regex list could be used in both js-mode and js2-mode.
   (setq javascript-common-imenu-regex-list
+        ;; Items are in reverse order because they are rendered in reverse.
         `(("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _after" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
           ("Auto-Wiring Panel Event _on" "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
@@ -13201,9 +13219,202 @@ that is done, visit ~localhost:8080~ in your browser.
 
 ** SQL
 
+Working with SQL databases.
+
+- C-c C-b (M-x sql-send-buffer) ::
+
+- C-c C-c (M-x sql-send-paragraph) ::
+
+- C-c C-r (M-x sql-send-region) ::
+
 - C-c C-n (M-x sql-send-line-and-next) ::
      Send the current line to the SQL process and advances to the next line,
      skipping whitespace and comments.
+
+- C-c C-s (M-x sql-send-string) ::
+
+- C-c C-l a (M-x sql-list-all) ::
+
+- C-c C-l t (M-x sql-list-table) ::
+
+- C-c C-i (M-x sql-product-interactive) ::
+     Start SQLi session.
+
+- C-c C-z (M-x sql-show-sqli-buffer) ::
+     Show the current SQLi buffer.
+
+Server list.
+
+#+begin_src emacs-lisp
+  (require 'sql)
+
+  (setq sql-connection-alist
+        '((localhost_HQ     (sql-product  'ms)
+                            (sql-port     1433)
+                            (sql-server   "localhost")
+                            (sql-user     "afm")
+                            (sql-password "afm")
+                            (sql-database "ARCHIBUS_23_1_HQ"))
+
+          (localhost_Schema (sql-product  'ms)
+                            (sql-port     1433)
+                            (sql-server   "localhost")
+                            (sql-user     "afm")
+                            (sql-password "afm")
+                            (sql-database "ARCHIBUS_23_1_Schema"))
+
+          (localhost_PFlow  (sql-product  'ms)
+                            (sql-port     1433)
+                            (sql-server   "localhost")
+                            (sql-user     "")
+                            (sql-password "")
+                            (sql-database "PFlowXiphias"))
+
+          (localhost_CSPO   (sql-product  'oracle)
+                            (sql-port     1521)
+                            (sql-server   "localhost")
+                            (sql-user     "afm")
+                            (sql-password "AFM")
+                            (sql-database "CSPOv213"))))
+
+  (defun sql-localhost_HQ ()
+    (interactive)
+    (sql-connect-preset 'localhost_HQ))
+
+  (defun sql-localhost_Schema ()
+    (interactive)
+    (sql-connect-preset 'localhost_Schema))
+
+  (defun sql-localhost_CSPO ()
+    (interactive)
+    (sql-connect-preset 'localhost_CSPO))
+
+  (defun sql-localhost_PFlow ()
+    (interactive)
+    (sql-connect-preset 'localhost_PFlow))
+
+  ;; This makes all it all happen via M-x sql-localhost_HQ, etc.
+  (defun sql-connect-preset (name)
+    "Connect to a predefined SQL connection listed in `sql-connection-alist'"
+    (eval `(let ,(cdr (assoc name sql-connection-alist))
+             (flet ((sql-get-login (&rest what))) ; In sql.el.
+               (sql-product-interactive sql-product)))))
+#+end_src
+
+See https://truongtx.me/2014/08/23/setup-emacs-as-an-sql-database-client.
+
+#+begin_src emacs-lisp
+  (add-hook 'sql-mode-hook
+            #'(lambda ()
+                (setq truncate-lines t)
+                (sql-highlight-ms-keywords)
+                (setq sql-send-terminator t)
+                (setq comint-process-echoes t)))
+
+  (add-hook 'sql-interactive-mode-hook
+            #'(lambda ()
+                (setq truncate-lines t)
+                (setq comint-process-echoes t)
+                ;; (text-scale-decrease 1)
+                (setq-local show-trailing-whitespace nil)))
+#+end_src
+
+Basic config for MS SQL.
+
+#+begin_src emacs-lisp
+  ;; Default login parameters to connect to Microsoft procSQL Server.
+  (setq sql-ms-login-params
+        '((user     :default "afm")
+          (database :default "ARCHIBUS_23_1_HQ")
+          (server   :default "localhost")
+          (port     :default 1433)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq sql-ms-program "sqlcmd")
+
+  ;; Force Emacs to use CP 850 for every sqlcmd process (for accents) and
+  ;; force DOS line endings.
+  (add-to-list 'process-coding-system-alist '("sqlcmd" . cp850-dos))
+  (add-to-list 'process-coding-system-alist '("osql" . cp850-dos))
+
+  ;; (setq sql-ms-options (quote ("-w" "65535" "-h" "20000" )))
+  (setq sql-ms-options '("-w" "65535"))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq sql-ms-program "tsql")
+
+  (setq sql-ms-options (remove "-n" sql-ms-options))
+  (setq sql-ms-options nil)
+
+  ;; Redefined.
+  (defun sql-comint-ms (product options)
+    "Create comint buffer and connect to Microsoft SQL Server."
+    ;; Put all parameters to the program (if defined) in a list and call
+    ;; make-comint.
+    (message "Leuven Options: %s" options)
+    (let ((params options))
+      (if (not (string= "" sql-server))
+          (setq params (append (list "-S" sql-server) params)))
+      (if (not (string= "" sql-database))
+          (setq params (append (list "-D" sql-database) params)))
+      (if (not (string= "" sql-user))
+          (setq params (append (list "-U" sql-user) params)))
+      (if (not (string= "" sql-password))
+          (setq params (append (list "-P" sql-password) params))
+        (if (string= "" sql-user)
+            ;; if neither user nor password is provided, use system credentials.
+            (setq params (append (list "-E") params))
+          ;; If -P is passed to ISQL as the last argument without a password, it's
+          ;; considered null.
+          (setq params (append params (list "-P")))))
+      (message "Leuven Params: %s" params)
+      (sql-comint product params)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+;; starting SQL mode loading sql-indent / sql-complete
+(eval-after-load "sql"
+  '(progn
+     (load-library "sql-indent")
+     ;; (load-library "sql-complete")
+     ;; (load-library "sql-transform")
+))
+#+end_src
+
+*** Troubleshooting
+
+1. Start with ~ping~:
+
+:  ping myhost
+
+2. Test with ~telnet~:
+
+:  telnet myhost 1433
+
+3. Test with ~tsql~:
+
+:  tsql -H myhost -p 1433 -U sa   # Bypassing `/etc/freetds/freetds.conf'.
+:  tsql -S myserver -U sa         # Using `/etc/freetds/freetds.conf'.
+
+   or ~sqsh~:
+
+:  sqsh -S myhost -p 1433 -U sa   # Bypassing `/etc/freetds/freetds.conf'.
+
+You need to write your command like this
+
+#+begin_src sql :tangle no
+SELECT * FROM c_props
+go
+#+end_src
+
+Alternatively, in ~sqsh~, if you set the ~semicolon_hack~ variable (which turns on
+the ability to use a semicolon as a sort of in-line go), you can do:
+
+#+begin_src sql :tangle no
+SELECT * FROM c_props;
+#+end_src
 
 *** Indenting
 
@@ -13273,42 +13484,49 @@ XXX Compiling with ~ant~?
 
   ;; Number of lines in a compilation window.
   (setq compilation-window-height 8)
+#+end_src
 
-  ;; ;; I also don't like that the compilation window sticks around after
-  ;; ;; a successful compile.  After all, most of the time, all I care
-  ;; ;; about is that the compile completed cleanly.  Here's how I make the
-  ;; ;; compilation window go away, only if there was no compilation
-  ;; ;; errors:
-  ;; (setq compilation-finish-function
-  ;;       (lambda (buf str)
-  ;;         (if (string-match "exited abnormally" str)
-  ;;             ;; there were errors
-  ;;             (message "Compilation errors, press C-x ` to visit")
-  ;;           ;; no errors, make compilation window go away in 0.5 sec
-  ;;           (run-at-time 0.5 nil 'delete-windows-on buf)
-  ;;           (message "NO COMPILATION ERRORS!"))))
+Make the compilation window go away -- if there were no compilation errors:
 
-  ;; (defun cc-goto-first-error (buffer exit-condition)
-  ;;   (with-current-buffer buffer
+#+begin_src emacs-lisp
+  (defun compile-hide-window-if-successful (cur-buffer msg)
+    (if (string-match "exited abnormally" msg)
+        ;; There were errors.
+        (message "Compilation errors, press C-x ` to visit")
+      ;; No errors, make compilation window go away in 0.5 sec
+      (run-at-time 0.5 nil
+                   'delete-windows-on cur-buffer)
+      (message "No compilation errors!")))
+
+  (add-to-list 'compilation-finish-functions #'compile-hide-window-if-successful)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; (defun compile-goto-first-error (cur-buffer msg)
+  ;;   (with-current-buffer cur-buffer
   ;;     (goto-char (point-min))
   ;;     (compilation-next-error 1)
   ;;     (beep)))
   ;;
-  ;; (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
+  ;; (add-to-list 'compilation-finish-functions #'compile-goto-first-error)
+#+end_src
 
-  (defun compile-scroll-eob (buffer _status)
-    (let ((win (get-buffer-window buffer))
+#+begin_src emacs-lisp
+  (defun compile-scroll-eob (cur-buffer msg)
+    (let ((win (get-buffer-window cur-buffer))
           (current (selected-window)))
       (when win
         (select-window win)
-        (with-current-buffer buffer
+        (with-current-buffer cur-buffer
           (when (> (line-number-at-pos (point-max)) (window-height))
             (goto-char (point-max))
             (recenter (window-height))))
         (select-window current))))
 
-  (add-to-list 'compilation-finish-functions 'compile-scroll-eob)
+  (add-to-list 'compilation-finish-functions #'compile-scroll-eob)
+#+end_src
 
+#+begin_src emacs-lisp
   (defvar make-clean-command "make clean all"
     "*Command used by the `make-clean' function.")
 
@@ -13503,7 +13721,7 @@ Ag search options:
 - ~--all-text~ ::
      Search *all text files* (doesn't include hidden files).
 
-#+begin_src shell :tangle no
+#+begin_src sh :tangle no
 ag %s -l --nocolor --hidden -g ""
 #+end_src
 
@@ -14257,7 +14475,7 @@ Comparison of tools:
 
      For example, I can now look for tags in my shell code to by running:
 
-     #+begin_src shell :tangle no
+     #+begin_src sh :tangle no
      etags --langdef=shell --regex-shell='/function [_[:alnum:]]+/[_[:alnum:]]+/' --language-force=shell
      #+end_src
 
@@ -14475,31 +14693,48 @@ Go to source code for symbol at point:
 
 *** dump-jump (goto definition)
 
-With this package you can goto a definition without any setup (e.g. no =TAGS= file
-is needed).
+With this package, you can jump to a definition (of the symbol at point) for
+multiple languages without any setup (e.g. no =TAGS= file is needed).
+
+Dumb Jump uses The Silver Searcher ~ag~ (the best ~grep~ alternative, and falls back
+to ~grep~) to find potential definitions of a function or variable under point. It
+uses a set of regular expressions based on the file extension, or ~major-mode~, of
+the current buffer.
 
 See https://github.com/jacktasia/dumb-jump.
 
-| C-M g | goto definition                     |
-| C-M p | back (can be called multiple times) |
-| C-M-q | quick look                          |
+| C-M-g | goto definition                     |
+| C-M-p | back (can be called multiple times) |
+|-------+-------------------------------------|
+| C-M-y | quick look                          |
 
 #+begin_src emacs-lisp
-(with-eval-after-load "dumb-jump-autoloads"
+  (with-eval-after-load "dumb-jump-autoloads"
 
-  ;; Number of seconds a grep/find command can take before being warned to use
-  ;; ag and config.
-  (setq dumb-jump-max-find-time 5)
+    ;; Number of seconds a grep/find command can take before being warned to use
+    ;; ag and config.
+    (setq dumb-jump-max-find-time 5)
 
-  (global-set-key (kbd "C-M-g") #'dumb-jump-go)
+    (global-set-key (kbd "C-M-g") #'dumb-jump-go)
+    (global-set-key (kbd "C-c S") #'dumb-jump-go)
 
-  ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
+    ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
 
-  (global-set-key (kbd "C-M-p") #'dumb-jump-back)
+    (global-set-key (kbd "C-M-p") #'dumb-jump-back)
 
-  (define-key prog-mode-map (kbd "C-M-q") nil)
-  (global-set-key (kbd "C-M-q") #'dumb-jump-quick-look))
+    ;; (define-key prog-mode-map (kbd "C-M-q") nil)
+    (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look))
 #+end_src
+
+Need to debug it?
+
+- If ~dumb-jump-go~ fails, search the same string with ~helm-projectile-ag~.
+- If ~helm-projectile-ag~ fails, see ~helm-ag--last-command~ and make it from
+  command line.
+- If it fails, try it with plain ~ag~ without all the flags.
+- If it fails, try it with alternative tool like ~grep~ or ~ack~.
+
+(from https://kozikow.com/2016/05/21/nice-new-emacs-package-dumb-jump-el/)
 
 ** Emacs Development Environment
 
@@ -14849,7 +15084,7 @@ Projectile's features.
   (with-eval-after-load "projectile-autoloads"
 
     ;; Turn on projectile mode by default for all file types
-    (projectile-global-mode)
+    (projectile-mode)
 
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
@@ -14921,11 +15156,13 @@ to ~@param~ with ~abbrev~, but I can with ~YASnippet~.
 
 XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el
 
-#+begin_src emacs-lisp
-;;** 29.3 Controlling (info "(emacs)Expanding Abbrevs")
-
-  (leuven--section "29.3 Controlling Expanding Abbrevs")
-#+end_src
+#+begin_example
+# -*- mode: snippet -*-
+# name: file.name
+# key: hello
+# --
+Hello,$0 ${1:this} is a ${2:snippet}.
+#+end_example
 
 Predefined YASnippet variables:
 - ~$0~ indicates the position of the cursor after the template is expanded.
@@ -14933,6 +15170,10 @@ Predefined YASnippet variables:
   fragment to be wrapped.
 
 #+begin_src emacs-lisp
+;;** 29.3 Controlling (info "(emacs)Expanding Abbrevs")
+
+  (leuven--section "29.3 Controlling Expanding Abbrevs")
+
   ;; Yet Another Snippet extension for Emacs
   (with-eval-after-load "yasnippet-autoloads"
     (idle-require 'yasnippet))
@@ -15992,14 +16233,14 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
 
     (defun dired-back-to-top ()
       (interactive)
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (dired-next-line 4))
 
     (define-key dired-mode-map [remap beginning-of-buffer] #'dired-back-to-top)
 
     (defun dired-jump-to-bottom ()
       (interactive)
-      (end-of-buffer)
+      (goto-char (point-max))
       (dired-next-line -1))
 
     (define-key dired-mode-map [remap end-of-buffer] #'dired-jump-to-bottom)
@@ -17267,9 +17508,9 @@ bufffer from Emacs.
   (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
 
   ;; Regexp to recognize prompts in the inferior process.
-  (setq comint-prompt-regexp shell-prompt-pattern)
-                                        ;! only used if the variable
-                                        ;! `comint-use-prompt-regexp' is non-nil
+;;   (setq comint-prompt-regexp shell-prompt-pattern) ; Used as well by SQLi!
+                                        ;! Only used if the variable
+                                        ;! `comint-use-prompt-regexp' is non-nil.
 #+end_src
 
 ** Shell Command History
@@ -17434,7 +17675,7 @@ Though, ~term~, ~ansi-term~, and ~multi-term~ do *work in Cygwin Emacs*.
 Emacs *Shell mode* doesn't support (all) terminal control codes, so ~less~ doesn't
 work ("page-at-a-time" feature).
 
-Shell mode buffers do not use ptys (pseudo-terminals), so programs running in
+Shell mode buffers do not use PTYs (pseudo-terminals), so programs running in
 such a buffer (the shell, the programs run by the shell, etc.) can't perform
 character-at-a-time input.  Each line is typed in full and only sent when ~RET~
 is pressed.  To see proof, run the ~tty~ command in a Shell mode buffer, and its
