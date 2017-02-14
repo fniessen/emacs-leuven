@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170213.0900
+;; Version: 20170214.2213
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170213.0900"
+(defconst leuven--emacs-version "20170214.2213"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -470,7 +470,8 @@ loaded.  If not, just print a message."
                                       web-mode
                                       which-key
                                       ws-butler
-                                      yasnippet))
+                                      yasnippet
+                                      ztree))
 
     ;; Load the latest version of all installed packages, and activate them.
     (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
@@ -2263,6 +2264,9 @@ Should be selected from `fringe-bitmaps'.")
     (add-hook 'ediff-quit-hook #'turn-off-visible-mode)
 
     )
+
+  ;; ("M-m g v" . ztree-dir)
+  ;; ("M-m g V" . ztree-diff)
 
 ;;** 18.11 (info "(emacs)Misc File Ops")
 
@@ -7884,6 +7888,38 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
           (setq params (append params (list "-P")))))
       (message "Leuven Params: %s" params)
       (sql-comint product params)))
+
+  (add-to-list 'process-coding-system-alist '("sqlplus" . windows-1252))
+
+  (defvar sql-last-prompt-pos 1
+    "position of last prompt when added recording started")
+  (make-variable-buffer-local 'sql-last-prompt-pos)
+  (put 'sql-last-prompt-pos 'permanent-local t)
+
+  (defun sql-add-newline-first (output)
+    "Add newline to beginning of OUTPUT for `comint-preoutput-filter-functions'
+    This fixes up the display of queries sent to the inferior buffer
+    programatically."
+    (let ((begin-of-prompt
+           (or (and comint-last-prompt-overlay
+                    ;; sometimes this overlay is not on prompt
+                    (save-excursion
+                      (goto-char (overlay-start comint-last-prompt-overlay))
+                      (looking-at-p comint-prompt-regexp)
+                      (point)))
+               1)))
+      (if (> begin-of-prompt sql-last-prompt-pos)
+          (progn
+            (setq sql-last-prompt-pos begin-of-prompt)
+            (concat "\n" output))
+        output)))
+
+  (defun sqli-add-hooks ()
+    "Add hooks to `sql-interactive-mode-hook'."
+    (add-hook 'comint-preoutput-filter-functions
+              'sql-add-newline-first))
+
+  (add-hook 'sql-interactive-mode-hook 'sqli-add-hooks)
 
   (with-eval-after-load "sql-indent"
     (add-hook 'sql-mode-hook 'sqlind-setup))

@@ -924,7 +924,8 @@ like this into your configuration file:
                                       web-mode
                                       which-key
                                       ws-butler
-                                      yasnippet))
+                                      yasnippet
+                                      ztree))
 
     ;; Load the latest version of all installed packages, and activate them.
     (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
@@ -4022,7 +4023,10 @@ resolve conflicts.
     )
 #+end_src
 
-For *comparing two directories*, you can use ~ediff-directories~ or [[http://meldmerge.org/][Meld]].
+*** Ediff-directories
+
+For *comparing two directories*, you can use ~ediff-directories~, ~ztree-diff~ or
+[[http://meldmerge.org/][Meld]].
 
 ~ediff-directories~ combined with the key sequence == h x= ~= h x~ shows you only the
 files which differ.
@@ -4036,6 +4040,31 @@ As bonus, it even works for remote directories.
 ~ediff-directories~ does not list files in one directory with no corresponding
 files in the other directory.
 #+end_warning
+
+*** Ztree
+
+#+begin_src emacs-lisp
+  ;; ("M-m g v" . ztree-dir)
+  ;; ("M-m g V" . ztree-diff)
+#+end_src
+
+Hotkeys supported:
+
+- Open/close directories with double-click, ~RET~ or ~SPC~ keys.
+- To jump to the parent directory, hit the ~Backspace~ key.
+- To toggle open/closed state of the subtree of the current directory, hit the
+  ~x~ key.
+- ~RET~ on different files starts the *Ediff* (or open file if one absent or the same)
+- ~SPC~ show the simple diff window for the current file instead of *Ediff* (or view
+  file if one absent or the same)
+- ~TAB~ to fast switch between panels
+- ~h~ key to toggle show/hide identical files/directories
+- ~H~ key to toggle show/hide hidden/ignored files/directories
+- ~C~ key to copy current file or directory to the left or right panel
+- ~D~ key to delete current file or directory
+- ~v~ key to quick view the current file
+- ~r~ initiates the rescan/refresh of current file or subdirectory
+- ~F5~ forces the full rescan.
 
 ** Miscellaneous File Operations
 
@@ -13373,6 +13402,53 @@ Basic config for MS SQL.
       (sql-comint product params)))
 #+end_src
 
+Basic config for Oracle.
+
+#+begin_src emacs-lisp
+  (add-to-list 'process-coding-system-alist '("sqlplus" . windows-1252))
+#+end_src
+
+Have a look at https://www.emacswiki.org/emacs/SqlPlus.
+
+When using sql-send-region to execute a query in a SQLi buffer, the table
+formatting is off because the column names are printed on the same row as the
+the prompt. By adding a newline before the comint output we can make sure
+everything lines up nice. This will add a preceding newline to every comint
+output, even queries run at the prompt - though the extra line isn't too
+noticeable.
+
+#+begin_src emacs-lisp
+  (defvar sql-last-prompt-pos 1
+    "position of last prompt when added recording started")
+  (make-variable-buffer-local 'sql-last-prompt-pos)
+  (put 'sql-last-prompt-pos 'permanent-local t)
+
+  (defun sql-add-newline-first (output)
+    "Add newline to beginning of OUTPUT for `comint-preoutput-filter-functions'
+    This fixes up the display of queries sent to the inferior buffer
+    programatically."
+    (let ((begin-of-prompt
+           (or (and comint-last-prompt-overlay
+                    ;; sometimes this overlay is not on prompt
+                    (save-excursion
+                      (goto-char (overlay-start comint-last-prompt-overlay))
+                      (looking-at-p comint-prompt-regexp)
+                      (point)))
+               1)))
+      (if (> begin-of-prompt sql-last-prompt-pos)
+          (progn
+            (setq sql-last-prompt-pos begin-of-prompt)
+            (concat "\n" output))
+        output)))
+
+  (defun sqli-add-hooks ()
+    "Add hooks to `sql-interactive-mode-hook'."
+    (add-hook 'comint-preoutput-filter-functions
+              'sql-add-newline-first))
+
+  (add-hook 'sql-interactive-mode-hook 'sqli-add-hooks)
+#+end_src
+
 #+begin_src emacs-lisp :tangle no
 ;; starting SQL mode loading sql-indent / sql-complete
 (eval-after-load "sql"
@@ -19291,7 +19367,9 @@ and specifically do not want to know about *untracked files*.
 
 This should do it:
 
+#+begin_src shell :tangle no
 git status --untracked-files=no --porcelain
+#+end_src
 
 See https://github.com/mordocai/.emacs.d/blob/master/init.el for many Git
 functions implemented in Emacs Lisp.
