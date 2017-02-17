@@ -679,6 +679,7 @@ All *tasks*, grouped by *due date*:
                                '(org-agenda-skip-entry-if 'deadline))))
                   (tags-todo "TODO={SDAY}"
                              ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
+                              (org-agenda-filter-preset '("+SDAY"))
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'deadline)))))
                  ((org-agenda-sorting-strategy '(priority-down))
@@ -1209,7 +1210,8 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
                         ((org-agenda-format-date "")
                          (org-agenda-overriding-header "SOMEDAY")
                          (org-agenda-todo-ignore-deadlines 'all)
-                         (org-agenda-todo-ignore-scheduled t)))
+                         (org-agenda-todo-ignore-scheduled t)
+                         (org-agenda-filter-preset '("+SDAY"))))
 
                  ;; ((org-agenda-start-with-clockreport-mode nil)
                  ;;  (org-agenda-prefix-format " %i %?-12t% s")
@@ -1846,6 +1848,7 @@ Search any word or regexp within your task name or in the note field:
                  '("6" "Someday"
                    ((tags-todo "TODO={SDAY}"))
                    ((org-agenda-overriding-header "Someday")
+                    (org-agenda-filter-preset '("+SDAY"))
                     (org-agenda-sorting-strategy '(deadline-up)))) t)
 
     (add-to-list 'org-agenda-custom-commands
@@ -1888,6 +1891,7 @@ Search any word or regexp within your task name or in the note field:
 
                    (tags-todo "TODO={SDAY}"
                                ((org-agenda-overriding-header "Someday")
+                                (org-agenda-filter-preset '("+SDAY"))
                                 (org-agenda-sorting-strategy '(deadline-up))))
 ;; Ignore DEADLINE < tomorrow.
                    (tags-todo "TODO={WAIT}"
@@ -1911,6 +1915,7 @@ Chercher l'erreur :
                  '("E1" "Someday with a SCHEDULED date"
                    ((tags-todo "TODO={SDAY}"))
                    ((org-agenda-overriding-header "Someday")
+                    (org-agenda-filter-preset '("+SDAY"))
                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'notscheduled))
                     (org-agenda-sorting-strategy '(deadline-up)))) t)
 
