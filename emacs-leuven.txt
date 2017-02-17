@@ -4595,7 +4595,11 @@ XXX Look at helm-dictionary.
 
 #+begin_src emacs-lisp
     ;; Speedy file opening.
-    (global-set-key (kbd "<f3>") #'helm-for-files)
+    (global-set-key (kbd "<f3>")
+                    #'(lambda ()
+                        (interactive)
+                        (let ((split-width-threshold (* 2 132)))
+                          (helm-for-files))))
 
     ;; (global-set-key [remap find-file] #'helm-find-files) ; OK. C-x C-f
 #+end_src
@@ -5635,7 +5639,7 @@ See as well ~split-window-preferred-function~.
   (setq split-height-threshold nil)
 
   ;; ;; Minimum width for splitting windows horizontally.
-  ;; (setq split-width-threshold (* 2 132))      ; See `split-window-sensibly'.
+  ;; (setq split-width-threshold (* 2 80))      ; See `split-window-sensibly'.
 #+end_src
 
 ** Window Handling Convenience Features and Customization
@@ -11758,6 +11762,9 @@ blocks (client/server side).
     (setq-default web-mode-css-indent-offset
                   (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
 
+    (setq-default web-mode-attr-indent-offset
+                  (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+
     ;; Code (javascript, php, etc.) indentation level.
     (setq-default web-mode-code-indent-offset
                   (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
@@ -11777,7 +11784,41 @@ blocks (client/server side).
 
     ;; ;; Comment style : 1 = default, 2 = force server comments outside a block.
     ;; (setq web-mode-comment-style 2)
+#+end_src
 
+#+begin_src emacs-lisp
+    ;; ARCHIBUS Imenu
+    (add-to-list 'web-mode-imenu-regexp-list
+                 '("\\(dataSource\\) id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
+    (add-to-list 'web-mode-imenu-regexp-list
+                 '("\\(panel\\) .*id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
+    (add-to-list 'web-mode-imenu-regexp-list
+                 '("\\(button\\).*id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
+    (add-to-list 'web-mode-imenu-regexp-list
+                 '("id=\"\\([a-zA-Z0-9_]*\\).*\\(button\\)" 2 1 " "))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+    (setq web-mode-imenu-generic-expression
+          '(
+            ("DataSource" "<dataSource[ ]*id=\"\\([a-zA-Z0-9-_./#]*\\)\"[ ]*>" 1)
+            ;; ("Includes" "<cfinclude[ ]*template=\"\\([a-zA-Z0-9-_./#]*\\)\"[ ]*>" 1)
+            ;; ("Cases" "<cfcase[ ]*value=\"\\([a-zA-Z0-9-_,. ]*\\)\".*>" 1)
+            ;; ("Forms" "<form.*action[ ]*=[ ]*\"\\([a-zA-Z0-9-_#.\?=]*\\)\".*>" 1)
+            ;; ("Queries" "<cfquery.*name[ ]*=[ ]*\"\\([a-zA-Z0-9-_#.]*\\)\".*>" 1)
+            ;; ("Loops" "<\\(cfloop\\|cfoutput\\).*\\(list\\|to\\|query\\)[ ]*=[ ]*\"\\([a-zA-Z0-9-_#.=]*\\)\".*>" 3)
+            ;; ("JSFunctions" "function[ ]*\\([a-zA-Z0-9-_]*\\)[ ]*(.*)" 1)
+            ;; ("Content" "<cfcontent.*type=\"\\([a-zA-Z0-9-_./]*\\)\".*>" 1)
+            ;;                             ;cfmodule, cflocation, cftransaction, cfabort, cfif?, add cfform to forms, cflock
+            ))
+
+    (add-hook 'web-mode-hook
+              (lambda ()
+                (setq imenu-generic-expression
+                      web-mode-imenu-generic-expression)))
+#+end_src
+
+#+begin_src emacs-lisp
     ;; A list of additional snippets.
     (setq web-mode-extra-snippets
       '((nil . (("input" . ("\t<input type=\"" . "\"/>"))

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170214.2213
+;; Version: 20170217.2033
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170214.2213"
+(defconst leuven--emacs-version "20170217.2033"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2447,7 +2447,11 @@ Should be selected from `fringe-bitmaps'.")
     (global-set-key (kbd "M-x") #'helm-M-x)
 
     ;; Speedy file opening.
-    (global-set-key (kbd "<f3>") #'helm-for-files)
+    (global-set-key (kbd "<f3>")
+                    #'(lambda ()
+                        (interactive)
+                        (let ((split-width-threshold (* 2 132)))
+                          (helm-for-files))))
 
     ;; (global-set-key [remap find-file] #'helm-find-files) ; OK. C-x C-f
 
@@ -3086,7 +3090,7 @@ cycle through all windows on current frame."
   (setq split-height-threshold nil)
 
   ;; ;; Minimum width for splitting windows horizontally.
-  ;; (setq split-width-threshold (* 2 132))      ; See `split-window-sensibly'.
+  ;; (setq split-width-threshold (* 2 80))      ; See `split-window-sensibly'.
 
 )                                       ; Chapter 20 ends here.
 
@@ -7031,6 +7035,9 @@ this with to-do items than with projects or headings."
     (setq-default web-mode-css-indent-offset
                   (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
 
+    (setq-default web-mode-attr-indent-offset
+                  (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
+
     ;; Code (javascript, php, etc.) indentation level.
     (setq-default web-mode-code-indent-offset
                   (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
@@ -7050,6 +7057,16 @@ this with to-do items than with projects or headings."
 
     ;; ;; Comment style : 1 = default, 2 = force server comments outside a block.
     ;; (setq web-mode-comment-style 2)
+
+    ;; ARCHIBUS Imenu
+    (add-to-list 'web-mode-imenu-regexp-list
+                 '("\\(dataSource\\) id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
+    (add-to-list 'web-mode-imenu-regexp-list
+                 '("\\(panel\\) .*id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
+    (add-to-list 'web-mode-imenu-regexp-list
+                 '("\\(button\\).*id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
+    (add-to-list 'web-mode-imenu-regexp-list
+                 '("id=\"\\([a-zA-Z0-9_]*\\).*\\(button\\)" 2 1 " "))
 
     ;; A list of additional snippets.
     (setq web-mode-extra-snippets
