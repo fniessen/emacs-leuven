@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170217.2224
+;; Version: 20170217.2302
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170217.2224"
+(defconst leuven--emacs-version "20170217.2302"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -71,11 +71,22 @@
 (defconst leuven--before-time (float-time)
   "Value of `float-time' before loading the Emacs-Leuven library.")
 
+;; Time the loading of the .emacs.  Keep this on top of your .emacs.
+(defvar emacs-start-time (current-time))
+
+(add-hook 'after-init-hook
+          `(lambda ()
+             (let ((elapsed (float-time (time-subtract (current-time)
+                                                       emacs-start-time))))
+               (message "[Loading %s...done (%.3fs) [executed in after-init]]"
+                        ,load-file-name elapsed)))
+  t)
+
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
   `(let ((start (current-time)))
      ,@body
-     (message "__%s (in %.02f s)___________________________"
+     (message "[__%s (in %.02f s)___________________________]"
               ,message (float-time (time-since start)))))
 
 ;;; User Customizable Internal Variables
@@ -179,7 +190,7 @@ Last time is saved in global variable `leuven--before-section-time'."
                               leuven--before-section-time)))
     (when leuven-verbose-loading
       (when (not (equal this-section-time 0.000))
-        (message "    Section time: %.3f s" this-section-time))
+        (message "[    Section time: %.3f s]" this-section-time))
       (unless end-of-chapter (message "*** %s" sectionname)))
     ;; For next one.
     (setq leuven--before-section-time (float-time))))
@@ -202,7 +213,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
           (when leuven-verbose-loading
-            (message "INFO- Added `%s' to `load-path'" this-directory))))))
+            (message "[INFO- Added `%s' to `load-path']" this-directory))))))
 
   ;; Remember this directory.
   (defconst leuven--directory
@@ -230,8 +241,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (unless (fboundp 'try-require)
     (defun try-require (feature)
       "Attempt to load a FEATURE (or library).
-Return true if the library given as argument is successfully
-loaded.  If not, just print a message."
+Return true if the library given as argument is successfully loaded.
+If not, just print a message."
       (condition-case err
           (progn
             (if (stringp feature)
@@ -240,7 +251,7 @@ loaded.  If not, just print a message."
             t)                          ; Necessary for correct behavior in
                                         ; conditional expressions.
         (file-error
-         (message "Requiring `%s'... missing" feature)
+         (message "[Requiring `%s'... missing]" feature)
          nil))))
 
   ;; TEMPORARY.
@@ -328,7 +339,7 @@ loaded.  If not, just print a message."
     (if file
         (if (file-executable-p file)
             file
-          (message "WARN- Can't find executable `%s'" file)
+          (message "[WARN- Can't find executable `%s']" file)
           ;; Sleep 1.5 s so that you can see the warning.
           (sit-for 1.5))
       (error "Missing argument to \"leuven--file-exists-and-executable-p\"")))
@@ -511,8 +522,7 @@ These packages are neither built-in nor already installed nor ignored."
               (ignore-errors
                 (package-install pkg))  ; Must be run after initializing
                                         ; `package-initialize'.
-            (message (concat "Customize Emacs-Leuven to ignore "
-                             "the `%s' package next times...") pkg)
+            (message (concat "[Customize Emacs-Leuven to ignore the `%s' package next times...]") pkg)
             (sit-for 1.5)))))
 
     )
@@ -523,7 +533,8 @@ These packages are neither built-in nor already installed nor ignored."
     (setq auto-package-update-delete-old-versions t)
 
     (add-hook 'auto-package-update-before-hook
-              (lambda () (message "Updating (M)ELPA packages now...")))
+              #'(lambda ()
+                  (message "[Updating (M)ELPA packages now...]")))
 
     (auto-package-update-maybe))
 
@@ -741,7 +752,7 @@ These packages are neither built-in nor already installed nor ignored."
                  (describe-function sym))
                 ((boundp sym)
                  (describe-variable sym)))
-        (message "nothing"))))
+        (message "[nothing]"))))
 
   (global-set-key (kbd "<f1>") #'leuven-describe-elisp-symbol-at-point)
 
@@ -911,7 +922,7 @@ These packages are neither built-in nor already installed nor ignored."
     (interactive
      (if (use-region-p)
          (list (region-beginning) (region-end))
-       (message "Copied the current line")
+       (message "[Copied the current line]")
        (list (line-beginning-position) (line-beginning-position 2)))))
   (advice-add 'kill-ring-save :before #'kill-ring-save--slick-copy)
 
@@ -1821,8 +1832,8 @@ Should be selected from `fringe-bitmaps'.")
                         (and (boundp 'org-babel-exp-reference-buffer)
                              org-babel-exp-reference-buffer))
                                         ; Export buffer.
-                    (message "DON'T TURN ON Flyspell mode in `%s'" (buffer-name))
-                  (message "Turn on Flyspell mode in `%s'" (buffer-name))
+                    (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
+                  (message "[Turn on Flyspell mode in `%s']" (buffer-name))
                   (flyspell-mode))))
 
     ;; Prevent Flyspell from finding mistakes in the code, well in comments and
@@ -1900,7 +1911,7 @@ Should be selected from `fringe-bitmaps'.")
        (let ((dict (or ispell-local-dictionary
                        ispell-dictionary)))
          (setq dict (if (string= dict "francais") "american" "francais"))
-         (message "Switched to %S" dict)
+         (message "[Switched to %S]" dict)
          (sit-for 0.5)
          (ispell-change-dictionary dict)
          (force-mode-line-update)
@@ -1982,9 +1993,9 @@ Should be selected from `fringe-bitmaps'.")
     "Open the file named FILENAME and report time spent."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (message "INFO- Finding file %s..." filename)
+      (message "[INFO- Finding file %s...]" filename)
       ad-do-it
-      (message "INFO- Found file %s in %.2f s" filename
+      (message "[INFO- Found file %s in %.2f s]" filename
                (- (float-time) find-file-time-start))))
 
   ;; Visit a file.
@@ -1998,9 +2009,9 @@ Should be selected from `fringe-bitmaps'.")
     "Save the file named FILENAME and report time spent."
     (let ((filename (buffer-file-name))
           (save-buffer-time-start (float-time)))
-      (message "INFO- Saving file %s..." filename)
+      (message "[INFO- Saving file %s...]" filename)
       ad-do-it
-      (message "INFO- Saved file %s in %.2f s" filename
+      (message "[INFO- Saved file %s in %.2f s]" filename
                (- (float-time) save-buffer-time-start))))
 
   ;; Make your changes permanent.
@@ -2076,7 +2087,7 @@ Should be selected from `fringe-bitmaps'.")
         (delete-overlay o)))            ; Useful when our advice of function
                                         ; `org-babel-execute-src-block' fails to
                                         ; remove the background color.
-    (message "Buffer is up to date with file on disk"))
+    (message "[Buffer is up to date with file on disk]"))
 
   ;; Key binding.
   (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
@@ -3013,7 +3024,7 @@ cycle through all windows on current frame."
     "If you have 2 windows, swap them."
     (interactive)
     (cond ((not (= (count-windows) 2))
-           (message "You need exactly 2 windows to swap them."))
+           (message "[You need exactly 2 windows to swap them.]"))
           (t
            (let* ((wind-1 (first (window-list)))
                   (wind-2 (second (window-list)))
@@ -3034,7 +3045,7 @@ cycle through all windows on current frame."
   This code only works for frames with exactly two windows."
     (interactive)
     (cond ((not (= (count-windows) 2))
-           (message "You need exactly 2 windows to toggle the window split."))
+           (message "[You need exactly 2 windows to toggle the window split.]"))
           (t
            (let* ((this-win-buffer (window-buffer))
                   (next-win-buffer (window-buffer (next-window)))
@@ -3075,7 +3086,7 @@ cycle through all windows on current frame."
     (let* ((window (selected-window))
            (dedicated (window-dedicated-p window)))
       (set-window-dedicated-p window (not dedicated))
-      (message "Window %sdedicated to %s"
+      (message "[Window %sdedicated to %s]"
                (if dedicated "no longer " "")
                (buffer-name))))
 
@@ -3582,7 +3593,7 @@ cycle through all windows on current frame."
                       ispell-local-dictionary)
                     (when (boundp 'ispell-dictionary)
                       ispell-dictionary))))
-(message ">>> %s" major-mode)
+      (message "[>>> %s]" major-mode)
       (cond
        ((and (string= dict "francais")
              (eq (char-before) ?\")
@@ -3907,7 +3918,7 @@ cycle through all windows on current frame."
 
   (when (or (not (boundp 'org-agenda-files))
             (null org-agenda-files))
-    (message "WARN- Found no entries in `org-agenda-files'")
+    (message "[WARN- Found no entries in `org-agenda-files']")
     (sit-for 1.5))
 
   (with-eval-after-load "org"
@@ -3994,7 +4005,7 @@ cycle through all windows on current frame."
               ))
 
   (with-eval-after-load "org"
-    (message "... Org Introduction")
+    (message "[... Org Introduction]")
 
 ;;** 1.3 (info "(org)Activation")
 
@@ -4006,7 +4017,7 @@ cycle through all windows on current frame."
 ;;* 2 (info "(org)Document Structure")
 
   (with-eval-after-load "org"
-    (message "... Org Document Structure")
+    (message "[... Org Document Structure]")
 
     ;; Improve display of the ellipsis.
     (set-face-attribute 'org-ellipsis nil
@@ -4041,7 +4052,7 @@ cycle through all windows on current frame."
   (setq org-special-ctrl-a/e 'reversed)
 
   (with-eval-after-load "org"
-    (message "... Org Headlines")
+    (message "[... Org Headlines]")
 
     ;; Insert an inline task (independent of outline hierarchy).
     (try-require 'org-inlinetask))      ; Needed.
@@ -4248,7 +4259,7 @@ cycle through all windows on current frame."
   (setq org-url-hexify-p nil)
 
   (with-eval-after-load "org"
-    (message "... Hyperlinks")
+    (message "[... Hyperlinks]")
 
     ;; Open non-existing files.
     (setq org-open-non-existing-files t)
@@ -4270,7 +4281,7 @@ cycle through all windows on current frame."
           'create-if-interactive-and-no-custom-id))
 
   (with-eval-after-load "org"
-    (message "... Handling links")
+    (message "[... Handling links]")
 
     ;; 4.4 Show inline images when loading a new Org file.
     (setq org-startup-with-inline-images t) ; Invokes org-display-inline-images.
@@ -4451,7 +4462,7 @@ cycle through all windows on current frame."
 
   ;; ~5.3.2 Heading for state change added to entries.
   (with-eval-after-load "org"
-    (message "... Progress logging")
+    (message "[... Progress logging]")
 
     (setcdr (assq 'state org-log-note-headings)
             "State %-12S  ->  %-12s %t")) ; "State old -> new + timestamp".
@@ -4575,7 +4586,7 @@ cycle through all windows on current frame."
 
   ;; Insinuate appt if Org mode is loaded.
   (with-eval-after-load "org"
-    (message "... Org Dates and Times")
+    (message "[... Org Dates and Times]")
 
     (try-require 'appt))
 
@@ -4970,7 +4981,7 @@ From %a"
                    :working-directory "~/Public/Repositories/worg/") t))
 
   (with-eval-after-load "org"
-    (message "... Org Refile")
+    (message "[... Org Refile]")
 
     (defvar leuven-org-refile-extra-files
       (if (file-exists-p "~/org/notes/")
@@ -5045,7 +5056,7 @@ From %a"
     (leuven--section "10.1 (org)Agenda files")
 
     (when (boundp 'org-agenda-files)
-      (message "INFO- Found %s entries in `org-agenda-files'"
+      (message "[INFO- Found %s entries in `org-agenda-files']"
                (length org-agenda-files))
       ;; (sit-for 0.5)
       )
@@ -5411,7 +5422,7 @@ From %a"
            (org-agenda-overriding-header
             (format "List of TODO items restricted to directory\n%s" dname))
            (org-agenda-sticky nil))
-      (message "%s..." org-agenda-overriding-header)
+      (message "[%s...]" org-agenda-overriding-header)
       (org-todo-list)))
 
   ;; "TODO list" without asking for a directory.
@@ -5498,7 +5509,7 @@ this with to-do items than with projects or headings."
     (setq org-fontify-quote-and-verse-blocks t))
 
   (with-eval-after-load "org"
-    (message "... Org Markup")
+    (message "[... Org Markup]")
 
     ;;??? Change the face of a headline (as an additional information) if it is
     ;; marked DONE (to face `org-headline-done').
@@ -5528,9 +5539,9 @@ this with to-do items than with projects or headings."
       (unless (file-exists-p name)
         (if (file-writable-p name)
             (progn
-              (message "Taking screenshot into %s" name)
+              (message "[Taking screenshot into %s]" name)
               (call-process "import" nil nil nil name)
-              (message "Taking screenshot...done"))
+              (message "[Taking screenshot...done]"))
           (error "Cannot create image file")))
       (insert (concat "[[" name "]]"))
       (org-display-inline-images))
@@ -5587,7 +5598,7 @@ this with to-do items than with projects or headings."
 
   ;; Bind the exporter dispatcher to a key sequence.
   (with-eval-after-load "org"
-    (message "... Org Exporting")
+    (message "[... Org Exporting]")
 
     ;; Libraries in this list will be loaded once the export framework is needed.
     (setq org-export-backends '(ascii html icalendar latex odt md))
@@ -5620,7 +5631,7 @@ this with to-do items than with projects or headings."
             (measure-time "Linted Org mode"
                           (if (org-lint)
                               (progn
-                                (message "You should run `org-lint'!!!")
+                                (message "[You should run `org-lint'!!!]")
                                 (beep)
                                 (sit-for 1)))))
 
@@ -5645,12 +5656,12 @@ this with to-do items than with projects or headings."
             (if (file-newer-than-file-p orgfile mdfile)
                 (measure-time "Buffer exported to Markdown"
                  (org-md-export-to-markdown))
-              (message "Markdown is up to date with Org file")))
+              (message "[Markdown is up to date with Org file]")))
           (when (file-exists-p htmlfile)
             (if (file-newer-than-file-p orgfile htmlfile)
                 (measure-time "Buffer exported to HTML"
                  (org-html-export-to-html))
-              (message "HTML is up to date with Org file")))
+              (message "[HTML is up to date with Org file]")))
           (when (or (file-exists-p texfile) (file-exists-p pdffile))
             (if (or (and (file-exists-p pdffile)
                          (file-newer-than-file-p orgfile pdffile))
@@ -5661,7 +5672,7 @@ this with to-do items than with projects or headings."
                  (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
                      (org-beamer-export-to-pdf)
                    (org-latex-export-to-pdf)))
-              (message "PDF is up to date with Org file")))
+              (message "[PDF is up to date with Org file]")))
           (beep))))
 
     (define-key org-mode-map (kbd "<f9>") #'org-save-buffer-and-do-related))
@@ -5759,7 +5770,7 @@ this with to-do items than with projects or headings."
 
       (defun leuven--export-html-final-filter (contents backend info)
         (if (not (eq backend 'html)) contents
-          (message "Tidy'fying...")
+          (message "[Tidy'fying...]")
           (let* ((new-contents
                   (with-temp-buffer
                     (insert contents)
@@ -5767,7 +5778,7 @@ this with to-do items than with projects or headings."
                                              "tidy -config ~/.tidyrc"
                                              t t "*Tidy errors*")
                     (buffer-string))))
-            (message "Tidy'fying... Done")
+            (message "[Tidy'fying... Done]")
             new-contents)))
 
       (add-to-list 'org-export-filter-final-output-functions
@@ -5910,8 +5921,8 @@ this with to-do items than with projects or headings."
                       (t
                        "%f"))))
 
-          (message "INFO- LaTeX engine: %s" org-latex-pdf-engine-full-path)
-          (message "INFO- LaTeX command: %s" org-latex-pdf-command)
+          (message "[INFO- LaTeX engine: %s]" org-latex-pdf-engine-full-path)
+          (message "[INFO- LaTeX command: %s]" org-latex-pdf-command)
 
           (setq org-latex-pdf-process
                 (cond ((equal org-latex-pdf-command "latexmk")
@@ -5927,7 +5938,7 @@ this with to-do items than with projects or headings."
                        `(,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
                          ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
                          ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)))))
-          ;; (message "Export command: %S" org-latex-pdf-process)
+          (message "[Export command: %S]" org-latex-pdf-process)
           )))
 
     ;; Hook run before parsing an export buffer.
@@ -6123,7 +6134,7 @@ this with to-do items than with projects or headings."
 
 
   ;; (with-eval-after-load "org"
-  ;;   (message "... Org Editing source code")
+  ;;   (message "[... Org Editing source code]")
   ;;
   ;;   ;; Allow indent region in the code edit buffer (according to language).
   ;;   (defun leuven-org-indent-region (&optional arg)
@@ -6182,7 +6193,7 @@ this with to-do items than with projects or headings."
           (beginning-of-line)
           (setq end (point))
           (copy-region-as-kill beg end)
-          (message "Copied the current code block"))))
+          (message "[Copied the current code block]"))))
 
     ;; Copy current code block.
     (define-key org-mode-map (kbd "H-w") #'org-kill-ring-save-code-block))
@@ -6220,7 +6231,7 @@ this with to-do items than with projects or headings."
   ;; setting language to yes...
 
   (with-eval-after-load "org"
-    (message "... Org Languages")
+    (message "[... Org Languages]")
 
     ;; Configure Babel to support most languages.
     (add-to-list 'org-babel-load-languages '(R . t)) ; Requires R and ess-mode.
@@ -6279,7 +6290,7 @@ this with to-do items than with projects or headings."
                   ;;         (buffer-name)))
                   ))))
 
-      ;; (message "Source blocks checked in %s."
+      ;; (message "[Source blocks checked in %s]"
       ;;          (buffer-name (buffer-base-buffer)))
       )
 
@@ -6336,7 +6347,7 @@ this with to-do items than with projects or headings."
                (lambda (d) (equal (org-element-property :name d) "PROPERTIES"))
                nil t 'headline)
              (let ((begin (org-element-property :begin h)))
-               (message "Entry with erroneous properties drawer at %d" begin)
+               (message "[Entry with erroneous properties drawer at %d]" begin)
                begin)))))
 
   (defun org-repair-property-drawers ()
@@ -6389,7 +6400,7 @@ this with to-do items than with projects or headings."
                 (progn
                   (ispell-change-dictionary dict)
                   (force-mode-line-update))
-              (message "No Ispell dictionary for language `%s' (see file `%s')"
+              (message "[No Ispell dictionary for language `%s' (see file `%s')]"
                        lang (file-name-base))
               (sit-for 1.5)))))))
 
@@ -6401,7 +6412,7 @@ this with to-do items than with projects or headings."
   (leuven--section "15.2 (org)Easy Templates")
 
   (with-eval-after-load "org"
-    (message "... Org Easy Templates")
+    (message "[... Org Easy Templates]")
 
     ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
     (mapc (lambda (asc)
@@ -6429,7 +6440,7 @@ this with to-do items than with projects or headings."
   (leuven--section "15.3 (org)Speed keys")
 
   (with-eval-after-load "org"
-    (message "... Org Speek keys")
+    (message "[... Org Speek keys]")
 
     ;; Activate single letter commands at beginning of a headline.
     (setq org-use-speed-commands t)
@@ -6474,7 +6485,7 @@ this with to-do items than with projects or headings."
 ;;** 15.8 A (info "(org)Clean view")
 
   (with-eval-after-load "org"
-    (message "... Org Clean view")
+    (message "[... Org Clean view]")
 
     ;; 15.8 Don't skip even levels for the outline.
     (setq org-odd-levels-only nil))
@@ -6486,7 +6497,7 @@ this with to-do items than with projects or headings."
   ;; Keep my encrypted data (like account passwords) in my Org mode files with
   ;; a special tag instead.
   (with-eval-after-load "org"
-    (message "... Org Crypt")
+    (message "[... Org Crypt]")
 
     (try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
 
@@ -6594,7 +6605,7 @@ this with to-do items than with projects or headings."
   ;; (define-key org-mode-map (kbd "=") #'insert-one-equal-or-two)
 
   (with-eval-after-load "org"
-    (message "... Org Mime")
+    (message "[... Org Mime]")
 
     ;; Using Org mode to send buffer/subtree per mail.
     (try-require 'org-mime))
@@ -6623,7 +6634,7 @@ this with to-do items than with projects or headings."
 ;;** A.3 (info "(org)Adding hyperlink types")
 
   (with-eval-after-load "org"
-    (message "... Org Adding hyperlink types")
+    (message "[... Org Adding hyperlink types]")
 
     ;; Define a new link type (`latex') whose path argument can hold the name of
     ;; any LaTeX command.
@@ -6659,7 +6670,7 @@ this with to-do items than with projects or headings."
   (defun leuven--org-update-buffer-before-save ()
     "Update all dynamic blocks and all tables in the buffer before save."
     (when (derived-mode-p 'org-mode)
-      (message "INFO- Update Org buffer %s"
+      (message "[INFO- Update Org buffer %s]"
                (file-name-nondirectory (buffer-file-name)))
       ;; (sit-for 1.5)
       (let ((cache-long-scans nil)      ; Make `forward-line' much faster and
@@ -6684,7 +6695,7 @@ this with to-do items than with projects or headings."
   (add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)
 
   ;; (with-eval-after-load "org"
-  ;;   (message "... Org Effectiveness")
+  ;;   (message "[... Org Effectiveness]")
   ;;
   ;;   (try-require 'org-effectiveness)
   ;;   (with-eval-after-load "org-effectiveness"
@@ -7381,7 +7392,7 @@ mouse-3: go to end") "]")))
           ad-do-it
         (comment-or-uncomment-region (line-beginning-position)
                                      (line-end-position))
-        (message "Commented line"))))
+        (message "[Commented line]"))))
 
   (with-eval-after-load "smart-comment-autoloads-XXX"
 
@@ -7654,7 +7665,7 @@ The line numbers of items will be extracted."
         (js2-imenu--extract-line-info (cdr item)))
 
        ;;Error handling
-       (t (message "Impossible to here! item=%s" item)
+       (t (message "[Impossible to here! item=%s]" item)
           )))
     ))
 
@@ -7887,7 +7898,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     "Create comint buffer and connect to Microsoft SQL Server."
     ;; Put all parameters to the program (if defined) in a list and call
     ;; make-comint.
-    (message "Leuven Options: %s" options)
+    (message "[Leuven Options: %s]" options)
     (let ((params options))
       (if (not (string= "" sql-server))
           (setq params (append (list "-S" sql-server) params)))
@@ -7903,7 +7914,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
           ;; If -P is passed to ISQL as the last argument without a password, it's
           ;; considered null.
           (setq params (append params (list "-P")))))
-      (message "Leuven Params: %s" params)
+      (message "[Leuven Params: %s]" params)
       (sql-comint product params)))
 
   (add-to-list 'process-coding-system-alist '("sqlplus" . windows-1252))
@@ -7967,11 +7978,11 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   (defun compile-hide-window-if-successful (cur-buffer msg)
     (if (string-match "exited abnormally" msg)
         ;; There were errors.
-        (message "Compilation errors, press C-x ` to visit")
+        (message "[Compilation errors, press C-x ` to visit]")
       ;; No errors, make compilation window go away in 0.5 sec
       (run-at-time 0.5 nil
                    'delete-windows-on cur-buffer)
-      (message "No compilation errors!")))
+      (message "[No compilation errors!]")))
 
   (add-to-list 'compilation-finish-functions #'compile-hide-window-if-successful)
 
@@ -8028,7 +8039,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
                     (not (equal dir (file-truename (concat dir "/..")))))
           (setf dir (file-truename (concat dir "/.."))))
         (if (not (file-exists-p (concat dir "/build.xml")))
-            (message "No build.xml found")
+            (message "[No build.xml found]")
           (compile (read-from-minibuffer "Command: "
                                          (concat "ant -emacs -f "
                                          dir "/build.xml compile") nil
@@ -8372,7 +8383,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                           fname
                         (file-name-directory fname))
                     default-directory)))
-      (message "VC status for directory: %s" dname)
+      (message "[VC status for directory: %s]" dname)
       (vc-dir dname)))
 
   ;; VC status without asking for a directory.
@@ -8793,7 +8804,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (when (derived-mode-p 'snippet-mode)
         (yas-recompile-all)
         (yas-reload-all)
-        (message "Reloaded all snippets")))
+        (message "[Reloaded all snippets]")))
 
     (add-hook 'after-save-hook #'recompile-and-reload-all-snippets)
 
@@ -9414,7 +9425,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (if (file-readable-p "~/diary")
       (try-require 'appt)               ; Requires `diary-lib', which requires
                                         ; `diary-loaddefs'.
-    (message "Appointment reminders lib `appt' not loaded (no diary file found)"))
+    (message "[Appointment reminders lib `appt' not loaded (no diary file found)]"))
 
   (with-eval-after-load "appt"
 
@@ -9446,15 +9457,15 @@ a clean buffer we're an order of magnitude laxer about checking."
                         "'Appointment' "
                         "'" (nth i notification-string) "'")))
               (t
-               (message "%s" (nth i notification-string))
+               (message "[%s]" (nth i notification-string))
                (sit-for 1)))))
 
     ;; Turn appointment checking on (enable reminders).
     (when leuven-verbose-loading
-      (message "INFO- Enable appointment reminders..."))
+      (message "[INFO- Enable appointment reminders...]"))
     (appt-activate 1)
     (when leuven-verbose-loading
-      (message "INFO- Enable appointment reminders... Done"))
+      (message "[INFO- Enable appointment reminders... Done]"))
 
     ;; Enable appointment notification, several minutes beforehand.
     (add-hook 'diary-hook #'appt-make-list)
@@ -10595,7 +10606,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (when (or (string= file ".Xdefaults")
                 (string= file ".Xresources"))
         (start-process "xrdb" nil "xrdb" "-merge" (buffer-file-name))
-        (message (format "Merged %s into X resource database" file)))))
+        (message (format "[Merged %s into X resource database]" file)))))
 
   (add-hook 'after-save-hook #'leuven--merge-x-resources)
 
@@ -10665,36 +10676,40 @@ a clean buffer we're an order of magnitude laxer about checking."
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
 
-(message "Loading `%s'...done (in %.3f s)"
+(message "[Loading `%s'...done (in %.3f s)]"
          load-file-name
          (- (float-time) leuven--before-time))
 (sit-for 0.3)
 
-;; (message "Emacs startup time: %s" (emacs-init-time))
+(let ((elapsed (float-time (time-subtract (current-time)
+                                          emacs-start-time))))
+  (message "[Loading `%s'... loaded in %.3f s]" load-file-name elapsed))
+
+(message "[Emacs startup time: %s]" (emacs-init-time))
 
   (defun leuven-update ()
     "Update Emacs-Leuven to its latest version."
     (interactive)
     (leuven-emacs-version)
-    (message "Updating Leuven...")
+    (message "[Updating Leuven...]")
     (cd leuven--directory)
     (let ((ret (shell-command-to-string "LC_ALL=C git pull --rebase")))
       (if (string-match "\\(up to date\\|up-to-date\\)" ret)
-          (message "Configuration already up-to-date.")
+          (message "[Configuration already up-to-date]")
         (princ ret)
         (sit-for 3)
-        (message "Configuration updated. Restart Emacs to complete the process."))))
+        (message "[Configuration updated. Restart Emacs to complete the process]"))))
 
   (defun leuven-show-latest-commits ()
     "List latest changes in Emacs-Leuven."
     (interactive)
     (leuven-emacs-version)
-    (message "Fetching last changes in Leuven...")
+    (message "[Fetching last changes in Leuven...]")
     (cd leuven--directory)
     (let ((ret (shell-command-to-string "LC_ALL=C git fetch --verbose"))
           (bufname "*Leuven latest commits*"))
       (if (string-match "\\(up to date\\|up-to-date\\)" ret)
-          (message "Configuration already up-to-date.")
+          (message "[Configuration already up-to-date]")
        (with-output-to-temp-buffer bufname
          (shell-command
           "LC_ALL=C git log --pretty=format:'%h %ad %s' --date=short HEAD..origin"
@@ -10703,7 +10718,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (defun leuven-emacs-version ()
     (interactive)
-    (message "Emacs-Leuven version %s" leuven--emacs-version))
+    (message "[Emacs-Leuven version %s]" leuven--emacs-version))
 
 (message "* --[ Loaded Emacs-Leuven %s]--" leuven--emacs-version)
 
