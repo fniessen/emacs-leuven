@@ -1,4 +1,3 @@
-
 ;;; org-leuven-agenda-views.el --- Org customized views
 
 ;;; Commentary:
@@ -195,6 +194,7 @@
                                '(org-agenda-skip-entry-if 'deadline))))
                   (tags-todo "TODO={SDAY}"
                              ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
+                              (org-agenda-filter-preset '("+SDAY"))
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'deadline)))))
                  ((org-agenda-sorting-strategy '(priority-down))
@@ -540,7 +540,8 @@
                         ((org-agenda-format-date "")
                          (org-agenda-overriding-header "SOMEDAY")
                          (org-agenda-todo-ignore-deadlines 'all)
-                         (org-agenda-todo-ignore-scheduled t)))
+                         (org-agenda-todo-ignore-scheduled t)
+                         (org-agenda-filter-preset '("+SDAY"))))
 
                  ;; ((org-agenda-start-with-clockreport-mode nil)
                  ;;  (org-agenda-prefix-format " %i %?-12t% s")
