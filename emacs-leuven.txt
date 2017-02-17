@@ -6373,14 +6373,13 @@ Show column guideline (right margin):
     (setq fci-dash-pattern 0.5)
 
     ;; Enable fci-mode in programming, message and Org modes.
-    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
-    (add-hook 'message-mode-hook #'fci-mode)
-    (add-hook 'org-mode-hook #'fci-mode))
+    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 x Unicode char E001 added at the end of every line when exporting code blocks to HTML!!!
+    (add-hook 'message-mode-hook #'fci-mode))
 #+end_src
 
 #+begin_warning
-Enabling ~fci-mode~ as a global minor mode slows down the tangling of this file by
-a factor 2!?
+Enabling ~fci-mode~ as a global minor mode (hence in Org as well) *slows down the
+tangling* of this file by a giga-mega-huge factor!?
 #+end_warning
 
 #+begin_src emacs-lisp
@@ -10950,6 +10949,7 @@ Anonymize Org contents (sanitize the sensitive data).
   ;; Don't pad tangled code with newlines.
   (setq org-babel-tangle-pad-newline nil)
 
+  ;; Use relative path names in links from tangled source back the Org file.
   (setq org-babel-tangle-use-relative-file-links t)
 
   ;; How to combine blocks of the same name during tangling.

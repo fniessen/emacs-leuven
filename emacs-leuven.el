@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170217.2033
+;; Version: 20170217.2224
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170217.2033"
+(defconst leuven--emacs-version "20170217.2224"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3534,9 +3534,8 @@ cycle through all windows on current frame."
     (setq fci-dash-pattern 0.5)
 
     ;; Enable fci-mode in programming, message and Org modes.
-    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 special chars at the end of every line when exporting code blocks to HTML!!!
-    (add-hook 'message-mode-hook #'fci-mode)
-    (add-hook 'org-mode-hook #'fci-mode))
+    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 x Unicode char E001 added at the end of every line when exporting code blocks to HTML!!!
+    (add-hook 'message-mode-hook #'fci-mode))
 
   (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
@@ -6528,6 +6527,7 @@ this with to-do items than with projects or headings."
   ;; Don't pad tangled code with newlines.
   (setq org-babel-tangle-pad-newline nil)
 
+  ;; Use relative path names in links from tangled source back the Org file.
   (setq org-babel-tangle-use-relative-file-links t)
 
   ;; How to combine blocks of the same name during tangling.
