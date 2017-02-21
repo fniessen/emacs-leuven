@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170217.2302
+;; Version: 20170221.1500
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170217.2302"
+(defconst leuven--emacs-version "20170221.1500"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -387,102 +387,105 @@ If not, just print a message."
 
     ;; Packages which were installed by the user (as opposed to installed as
     ;; dependencies).
-    (setq package-selected-packages '(ace-jump-helm-line
-                                      ace-jump-mode
-                                      ace-link
-                                      ace-window
-                                      ;; aggressive-indent
-                                      ant
-                                      anzu
-                                      auctex
-                                      auto-complete
-                                      auto-highlight-symbol
-                                      auto-package-update
-                                      back-button
-                                      bbdb
-                                      bookmark+
-                                      boxquote
-                                      ;; calfw
-                                      circe
-                                      color-identifiers-mode
-                                      company
-                                      company-tern
-                                      company-quickhelp
-                                      csv-mode
-                                      cygwin-mount
-                                      dictionary
-                                      diff-hl
-                                      diminish
-                                      dired+
-                                      dumb-jump
-                                      ;; emacs-eclim
-                                      emr
-                                      ess
-                                      expand-region
-                                      fancy-narrow
-                                      fill-column-indicator
-                                      flycheck
-                                      flycheck-color-mode-line
-                                      flycheck-ledger
-                                      fuzzy
-                                      git-commit
-                                      git-messenger
-                                      git-timemachine
-                                      google-this
-                                      google-translate
-                                      goto-chg
-                                      graphviz-dot-mode
-                                      helm
-                                      helm-ag
-                                      helm-descbinds
-                                      helm-ls-git
-                                      helm-projectile ; Obsolete package?
-                                      helm-swoop
-                                      hideshowvis
-                                      highlight-numbers
-                                      highlight-symbol
-                                      howdoi
-                                      htmlize
-                                      indent-guide
-                                      ;; jabber
-                                      jquery-doc
-                                      js2-mode
-                                      js2-refactor
-                                      key-chord
-                                      litable
-                                      idle-require
-                                      info+
-                                      interaction-log
-                                      ledger-mode
-                                      leuven-theme
-                                      ;; magit
-                                      markdown-mode
-                                      multi-term
-                                      multiple-cursors
-                                      ;; multi-term
-                                      org-plus-contrib
-                                      pager
-                                      ;; paredit
-                                      ;; pdf-tools
-                                      powerline
-                                      rainbow-delimiters
-                                      rainbow-mode
-                                      ;; redshank
-                                      skewer-mode
-                                      sqlup-mode
-                                      tern
-                                      tidy
-                                      smart-comment
-                                      smartparens
-                                      sql-indent
-                                      unbound
-                                      undo-tree
-                                      volatile-highlights
-                                      web-mode
-                                      which-key
-                                      ws-butler
-                                      yasnippet
-                                      ztree))
+    (setq package-selected-packages
+          '(ace-jump-helm-line
+            ace-jump-mode
+            ace-link
+            ace-window
+            ag
+            ;; aggressive-indent
+            ant
+            anzu
+            auctex
+            auto-complete
+            auto-highlight-symbol
+            auto-package-update
+            back-button
+            bbdb
+            bookmark+
+            boxquote
+            ;; calfw
+            circe
+            color-identifiers-mode
+            company
+            company-tern
+            company-quickhelp
+            csv-mode
+            cygwin-mount
+            dictionary
+            diff-hl
+            diminish
+            dired+
+            dumb-jump
+            ;; emacs-eclim
+            emr
+            ess
+            expand-region
+            fancy-narrow
+            fill-column-indicator
+            flycheck
+            flycheck-color-mode-line
+            flycheck-ledger
+            fuzzy
+            git-commit
+            git-messenger
+            git-timemachine
+            google-this
+            google-translate
+            goto-chg
+            graphviz-dot-mode
+            helm
+            helm-ag
+            helm-descbinds
+            helm-ls-git
+            helm-projectile ; Obsolete package?
+            helm-swoop
+            hideshowvis
+            highlight-numbers
+            highlight-symbol
+            howdoi
+            htmlize
+            indent-guide
+            ;; jabber
+            jquery-doc
+            js2-mode
+            js2-refactor
+            json-mode
+            key-chord
+            litable
+            idle-require
+            info+
+            interaction-log
+            ledger-mode
+            leuven-theme
+            ;; magit
+            markdown-mode
+            multi-term
+            multiple-cursors
+            ;; multi-term
+            org-plus-contrib
+            pager
+            ;; paredit
+            ;; pdf-tools
+            powerline
+            rainbow-delimiters
+            rainbow-mode
+            ;; redshank
+            skewer-mode
+            sqlup-mode
+            tern
+            tidy
+            smart-comment
+            smartparens
+            sql-indent
+            unbound
+            undo-tree
+            volatile-highlights
+            web-mode
+            which-key
+            ws-butler
+            yasnippet
+            ztree))
 
     ;; Load the latest version of all installed packages, and activate them.
     (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
@@ -4019,11 +4022,11 @@ cycle through all windows on current frame."
   (with-eval-after-load "org"
     (message "[... Org Document Structure]")
 
-    ;; Improve display of the ellipsis.
-    (set-face-attribute 'org-ellipsis nil
-                        :box '(:line-width 1 :color "#999999")
-                        :foreground "#999999" :background "#FFF8C0"
-                        :underline nil)
+    ;; ;; Improve display of the ellipsis.
+    ;; (set-face-attribute 'org-ellipsis nil
+    ;;                     :box '(:line-width 1 :color "#999999")
+    ;;                     :foreground "#999999" :background "#FFF8C0"
+    ;;                     :underline nil)
 
     ;; Ellipsis to use in the Org mode outline.
     (setq org-ellipsis
@@ -7984,14 +7987,14 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
                    'delete-windows-on cur-buffer)
       (message "[No compilation errors!]")))
 
-  (add-to-list 'compilation-finish-functions #'compile-hide-window-if-successful)
+  ;; (add-to-list 'compilation-finish-functions #'compile-hide-window-if-successful)
 
-  ;; (defun compile-goto-first-error (cur-buffer msg)
-  ;;   (with-current-buffer cur-buffer
-  ;;     (goto-char (point-min))
-  ;;     (compilation-next-error 1)
-  ;;     (beep)))
-  ;;
+  (defun compile-goto-first-error (cur-buffer msg)
+    (with-current-buffer cur-buffer
+      (goto-char (point-min))
+      (compilation-next-error 1)
+      (beep)))
+
   ;; (add-to-list 'compilation-finish-functions #'compile-goto-first-error)
 
   (defun compile-scroll-eob (cur-buffer msg)
