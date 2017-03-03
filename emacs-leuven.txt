@@ -2342,7 +2342,7 @@ It is complementary to the features of the library *Hl-anything*.
 - Hi Lock and Hl-anything both *highlight new text* as you type it.
 
 - Hl-anything lets you *navigate among highlights*: ~hl-find-next-thing~,
-  ~hl-find-previous-thing~.
+  ~hl-find-prev-thing~.
 
 - ~Hl-anything~ automatically chooses *rainbow colors* and makes it much easier to
   follow some key variables through a block of code.
@@ -2359,7 +2359,7 @@ such a background behind or underneath the text.  Think of a marker pen
     ;; Emulation of Vim's `*' search.
     (global-set-key (kbd "C-*") #'hl-highlight-thingatpt-global)
     (global-set-key (kbd "C-<f4>") #'hl-find-next-thing)
-    (global-set-key (kbd "S-<f4>") #'hl-find-previous-thing)
+    (global-set-key (kbd "S-<f4>") #'hl-find-prev-thing)
     (global-set-key (kbd "C-M-*") #'hl-unhighlight-all-global))
 
 ;; (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))

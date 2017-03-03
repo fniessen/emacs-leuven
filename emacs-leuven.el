@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170303.2250
+;; Version: 20170303.2335
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170303.2250"
+(defconst leuven--emacs-version "20170303.2335"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1223,7 +1223,7 @@ Should be selected from `fringe-bitmaps'.")
     ;; Emulation of Vim's `*' search.
     (global-set-key (kbd "C-*") #'hl-highlight-thingatpt-global)
     (global-set-key (kbd "C-<f4>") #'hl-find-next-thing)
-    (global-set-key (kbd "S-<f4>") #'hl-find-previous-thing)
+    (global-set-key (kbd "S-<f4>") #'hl-find-prev-thing)
     (global-set-key (kbd "C-M-*") #'hl-unhighlight-all-global))
 
 ;; (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
