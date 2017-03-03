@@ -2660,11 +2660,14 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
   ;; Unclutter the mode line.
   (with-eval-after-load "diminish-autoloads"
     (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
+    (with-eval-after-load "back-button"  (diminish 'back-button-mode))
+    (with-eval-after-load "volatile-highlights" (diminish 'volatile-highlights-mode))
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
     ;; (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
                                         ; Company displays the currently used
                                         ; backend in the mode-line.
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
+    (with-eval-after-load "color-identifiers-mode" (diminish 'color-identifiers-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
     ;; (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
@@ -2676,7 +2679,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     (with-eval-after-load "simple"       (diminish 'auto-fill-function))
     (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
-    ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
+    (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
     (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
     (with-eval-after-load "which-key"    (diminish 'which-key-mode)))
@@ -7121,18 +7124,19 @@ unsetting local keys?
   (with-eval-after-load "org"
     (message "[... Org Document Structure]")
 
-    ;; ;; Improve display of the ellipsis.
-    ;; (set-face-attribute 'org-ellipsis nil
-    ;;                     :box '(:line-width 1 :color "#999999")
-    ;;                     :foreground "#999999" :background "#FFF8C0"
-    ;;                     :underline nil)
-
     ;; Ellipsis to use in the Org mode outline.
-    (setq org-ellipsis
-          (if (char-displayable-p ?\u25BA) ; This test takes ~ 0.40s hence,
-                                           ; wrapped in `with-eval-after-load'.
-              " \u25BA"                 ; String (black right-pointing pointer) XXX #929490
-            'org-ellipsis)))            ; Face.
+    (if (char-displayable-p ?\u25BA)    ; This test takes ~ 0.40s hence,
+                                        ; wrapped in `with-eval-after-load'.
+        ;; String (black right-pointing pointer).
+        (setq org-ellipsis " \u25BA")
+
+      ;; Face.
+      (set-face-attribute 'org-ellipsis nil
+                          :box '(:line-width 1 :color "#999999") ; #929490
+                          :foreground "#999999" :background "#FFF8C0"
+                          :underline nil)
+
+      (setq org-ellipsis 'org-ellipsis)))
 
   ;; RET follows links (except in tables, where you must use `C-c C-o').
   (setq org-return-follows-link t)
@@ -8425,7 +8429,7 @@ Additional parameters can be included via the commands you use:
 %i
 ,#+end_verse
 
-From %a"
+From the address <%a>"
                    :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
@@ -8438,7 +8442,7 @@ From %a"
 %i
 ,#+end_verse
 
-From %a"
+From the address <%a>"
                    :empty-lines 1
                    :immediate-finish t) t)
 
@@ -8452,7 +8456,7 @@ From %a"
 %i
 ,#+end_verse
 
-From %a"
+From the address <%a>"
                    :empty-lines 1
                    :immediate-finish t) t)
 #+end_src
@@ -10715,7 +10719,10 @@ Lower-case in ~BEGIN_SRC~ and other keywords: do not stand out!
                  '("C" "#+begin_comment\n?\n#+end_comment"))
 
     (add-to-list 'org-structure-template-alist
-                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" "")))
+                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
+
+    ;; (setq org-babel-uppercase-example-markers nil)
+    )
 #+end_src
 
 *** Speed keys
@@ -12696,35 +12703,47 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
 
 **** Core functionality
 
-- ~C-c C-e p c~ (or ~M-x eclim-project-create~) ::
-     Not documented.
-
-- ~M-x eclim-manage-projects~ ::
-     *Manage all your eclim projects* in one buffer.
-
 - ~M-x eclim-project-build~ ::
      Triggers a *build* of *the current project*.
-
-- ~C-c C-e b~ (or ~M-x eclim-problems~) ::
-     *Show current compilation problems* in a separate window.
-
-- ~C-c C-e o~ (or ~M-x eclim-problems-open~) ::
-     Opens a new window inside the current frame showing the current project
-     *compilation problems*.
-
-- ~C-c C-e f d~ (or ~M-x eclim-java-find-declaration~ or ~M-.~ in Emacs-Leuven) ::
-     *Find* and display the *declaration* of the *Java identifier at point*.
-
-- ~C-c C-e f r~ (or ~M-x eclim-java-find-references~) ::
-     *Find* and display *references* for the *Java identifier at point*
-     = list callers.
-     = Find Usages?
 
 - M-x eclim-run-class ::
      *Run the current class*.
 
 - ~C-c C-e t~ (or ~M-x eclim-run-junit~) ::
      *Run* the current *JUnit* class or method at point.
+
+Browsing:
+
+- C-c C-e h (M-x eclim-java-hierarchy) ::
+     Class hierarchy tree.
+
+- C-c C-e f t (M-x eclim-java-find-type) ::
+     Types.
+
+- ~C-c C-e f d~ (~M-x eclim-java-find-declaration~ or ~M-.~ in Emacs-Leuven) ::
+     *Find* and display the *declaration* of the *Java identifier at point*.
+
+- ~C-c C-e f r~ (~M-x eclim-java-find-references~) ::
+     *Find* and display *references* for the *Java identifier at point*
+     = list callers.
+     = Find Usages?
+
+Problems and Errors:
+
+- ~C-c C-e b~ (~M-x eclim-problems~) ::
+     *Show current compilation problems* in a separate window.
+
+- ~C-c C-e o~ (~M-x eclim-problems-open~) ::
+     Opens a new window inside the current frame showing the current project
+     *compilation problems*.
+
+Projects:
+
+- ~C-c C-e p c~ (~M-x eclim-project-create~) ::
+     Not documented.
+
+- ~M-x eclim-manage-projects~ ::
+     *Manage all your eclim projects* in one buffer.
 
 #+begin_src emacs-lisp
   ;; An interface to the Eclipse IDE.
@@ -12770,6 +12789,8 @@ eclimd -Dosgi.instance.area.default=@user.home/another_workspace
 
     (ac-emacs-eclim-config)
 #+end_src
+
+https://github.com/senny/emacs-eclim/wiki/Code-Completion
 
 #+begin_note
 There are 2 Eclim Company-mode backends:
@@ -12959,16 +12980,20 @@ http://www.archibus.com/ai/abizfiles/v19.2_help/system-management/Content/wc_vie
   ;; Below regex list could be used in both js-mode and js2-mode.
   (setq javascript-common-imenu-regex-list
         ;; Items are in reverse order because they are rendered in reverse.
-        `(("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _after" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _on" "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _before" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring View Event 1" "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring View Event 0" "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Variable" "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
-          ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
-          ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
-          ("Controller" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)
+        `(("Function"                        "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+
+          ("Auto-Wiring Panel Event _after"  "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring Panel Event _on"     "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring Panel Event _before" "^[ \t]*.*_before\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+
+          ("Auto-Wiring View Event 1"        "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring View Event 0"        "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+
+          ("Variable"                        "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
+
+          ("Controller Extension"            "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
+          ("Controller Extension"            "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
+          ("Controller"                      "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)
           ))
 #+end_src
 
@@ -13169,11 +13194,53 @@ http://www.wilfred.me.uk/blog/2014/09/27/the-definitive-guide-to-syntax-highligh
     ;; (define-key js2-mode-map (kbd "TAB") 'js2-tab-properly)
 #+end_src
 
-We prefer ~eslint~ over ~jshint~:
+There are 4 popular JavaScript Linting tools:
+
+1. JSLint (the oldest),
+2. JSHint,
+3. JSCS and
+4. ESLint.
+
+We prefer ~eslint~ over ~jshint~.
+
+Install Node and ~npm~ (the package manager for JavaScript):
+- Install https://nodejs.org/en/download/.
+- Run ~node -v~ (to see if ~node~ is correctly installed).
+- Type ~npm~ at the command prompt.
+- Run ~npm -v~ (to see if ~npm~ is correctly installed).
+
+Install ESLint (globally) using ~npm~:
+- Type ~npm install -g eslint~.
+- Type ~eslint -v~ at the command prompt (to view version and confirm that it's
+  in your ~PATH~).
+- Set up a configuration file with ~eslint --init~.
 
 #+begin_src emacs-lisp
+
+;; Disable JSHint since we prefer ESLint checking.
+(with-eval-after-load "flycheck"
+
+  ;; (setq-default flycheck-disabled-checkers
+  ;;               (append flycheck-disabled-checkers
+  ;;                       '(javascript-jshint)))
+
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(javascript-eslint)))
+
+  ;; ;; use eslint with web-mode for jsx files
+  ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
+
     ;; (add-hook 'js2-mode-hook
     ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
+
+  (add-hook 'js2-mode-hook
+            (defun my-js2-mode-setup ()
+              (flycheck-mode t)
+              ;; (when (executable-find "eslint")
+              ;;   (flycheck-select-checker 'javascript-eslint))
+              ))
+  )
 #+end_src
 
 #+begin_src emacs-lisp
@@ -13742,11 +13809,11 @@ variable ~next-error-highlight~.
 
   ;; Display the next compiler error message.
   (global-set-key (kbd "<f10>") #'next-error)
-                                        ; Also on `M-g n' and `C-x `'.
+                                        ; Also on `M-g n', `M-g M-n' and `C-x `'.
 
   ;; Display the previous compiler error message.
   (global-set-key (kbd "<S-f10>") #'previous-error)
-                                        ; Also on `M-g p'.
+                                        ; Also on `M-g p' and `M-g M-p'.
 
   ;; Display the first compiler error message.
   (global-set-key (kbd "<C-f10>") #'first-error)
@@ -13928,10 +13995,11 @@ In the error list window the following keybindings are available:
      Sort the error list by the column at point. Press repeatedly to inverse the
      sorting order.
 
-Of particular note is ~C-c ! v~ as a diagnostic tool. When you run the command
-Flycheck will display diagnostic information about the active checker in your
-current buffer. Useful if you have ~$PATH~ issues or are missing the checker
-entirely on your system.
+#+begin_note
+~C-c ! v~ (or ~M-x flycheck-verify-setup~) is a diagnostic tool which displays
+diagnostic information about the active checker in your current buffer.  Useful
+if you have ~$PATH~ issues or are missing the checker entirely on your system.
+#+end_note
 
 XXX Display errors in the right fringe
 
@@ -13966,7 +14034,7 @@ Navigate:
 
     (setq flycheck-indication-mode 'left-fringe) ; See init.el.
     ;; ;; Indicate errors and warnings via icons in the right fringe.
-    ;; (setq flycheck-indication-mode 'right-fringe)
+    (setq flycheck-indication-mode 'right-fringe)
 
     ;; Remove newline checks, since they would trigger an immediate check when
     ;; we want the `flycheck-idle-change-delay' to be in effect while editing.
@@ -13994,7 +14062,12 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Functions to run after each syntax check.
     (add-hook 'flycheck-after-syntax-check-hook
               #'leuven--adjust-flycheck-automatic-syntax-eagerness)
+#+end_src
 
+A summary of the inspection results for the current file is shown in the colored
+mode line on bottom.  Make it blue!
+
+#+begin_src emacs-lisp
     ;; Change mode line color with Flycheck status.
     (with-eval-after-load "flycheck-color-mode-line"
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
@@ -14231,7 +14304,8 @@ long run, but useful for figuring out how Emacs's windowing mechanics work.
 
 ** Version Control
 
-Version control systems that interact with Emacs in a generic way.
+A unified Emacs UI for interacting with Git, SVN and other VCS (Version Control
+Systems) in a generic way -- a real timesaver.
 
 - ~C-x v d~ ::
      Open Dired buffer in VC-mode.
@@ -14415,17 +14489,17 @@ can use the following keys to navigate historic versions of the file:
   ;; VC status without asking for a directory.
   (global-set-key (kbd "<C-f9>") #'leuven-vc-jump)
 
-  (add-hook  'vc-dir-mode-hook
-             (lambda ()
-               ;; Hide up-to-date and unregistered files.
-               (define-key vc-dir-mode-map
-                 (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
-               (define-key vc-dir-mode-map
-                 (kbd "E") #'vc-ediff)
-               (define-key vc-dir-mode-map
-                 (kbd "#") #'vc-ediff-ignore-whitespace)
-                                         ; ediff-windows-wordwise?
-               ))
+  (add-hook 'vc-dir-mode-hook
+            (lambda ()
+              ;; Hide up-to-date and unregistered files.
+              (define-key vc-dir-mode-map
+                (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
+              (define-key vc-dir-mode-map
+                (kbd "E") #'vc-ediff)
+              (define-key vc-dir-mode-map
+                (kbd "#") #'vc-ediff-ignore-whitespace)
+                                        ; ediff-windows-wordwise?
+              ))
 
   (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
     (interactive)

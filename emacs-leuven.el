@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170221.1500
+;; Version: 20170303.2033
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170221.1500"
+(defconst leuven--emacs-version "20170303.2033"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1383,11 +1383,14 @@ Should be selected from `fringe-bitmaps'.")
   ;; Unclutter the mode line.
   (with-eval-after-load "diminish-autoloads"
     (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
+    (with-eval-after-load "back-button"  (diminish 'back-button-mode))
+    (with-eval-after-load "volatile-highlights" (diminish 'volatile-highlights-mode))
     (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
     ;; (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
                                         ; Company displays the currently used
                                         ; backend in the mode-line.
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
+    (with-eval-after-load "color-identifiers-mode" (diminish 'color-identifiers-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
     ;; (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
@@ -1399,7 +1402,7 @@ Should be selected from `fringe-bitmaps'.")
     (with-eval-after-load "simple"       (diminish 'auto-fill-function))
     (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
-    ;; (with-eval-after-load "glasses"      (diminish 'glasses-mode))
+    (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
     (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
     (with-eval-after-load "which-key"    (diminish 'which-key-mode)))
@@ -4022,18 +4025,19 @@ cycle through all windows on current frame."
   (with-eval-after-load "org"
     (message "[... Org Document Structure]")
 
-    ;; ;; Improve display of the ellipsis.
-    ;; (set-face-attribute 'org-ellipsis nil
-    ;;                     :box '(:line-width 1 :color "#999999")
-    ;;                     :foreground "#999999" :background "#FFF8C0"
-    ;;                     :underline nil)
-
     ;; Ellipsis to use in the Org mode outline.
-    (setq org-ellipsis
-          (if (char-displayable-p ?\u25BA) ; This test takes ~ 0.40s hence,
-                                           ; wrapped in `with-eval-after-load'.
-              " \u25BA"                 ; String (black right-pointing pointer) XXX #929490
-            'org-ellipsis)))            ; Face.
+    (if (char-displayable-p ?\u25BA)    ; This test takes ~ 0.40s hence,
+                                        ; wrapped in `with-eval-after-load'.
+        ;; String (black right-pointing pointer).
+        (setq org-ellipsis " \u25BA")
+
+      ;; Face.
+      (set-face-attribute 'org-ellipsis nil
+                          :box '(:line-width 1 :color "#999999") ; #929490
+                          :foreground "#999999" :background "#FFF8C0"
+                          :underline nil)
+
+      (setq org-ellipsis 'org-ellipsis)))
 
   ;; RET follows links (except in tables, where you must use `C-c C-o').
   (setq org-return-follows-link t)
@@ -4873,7 +4877,7 @@ cycle through all windows on current frame."
 %i
 #+end_verse
 
-From %a"
+From the address <%a>"
                    :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
@@ -4886,7 +4890,7 @@ From %a"
 %i
 #+end_verse
 
-From %a"
+From the address <%a>"
                    :empty-lines 1
                    :immediate-finish t) t)
 
@@ -4900,7 +4904,7 @@ From %a"
 %i
 #+end_verse
 
-From %a"
+From the address <%a>"
                    :empty-lines 1
                    :immediate-finish t) t)
 
@@ -6436,7 +6440,10 @@ this with to-do items than with projects or headings."
                  '("C" "#+begin_comment\n?\n#+end_comment"))
 
     (add-to-list 'org-structure-template-alist
-                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" "")))
+                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
+
+    ;; (setq org-babel-uppercase-example-markers nil)
+    )
 
 ;;** 15.3 (info "(org)Speed keys")
 
@@ -7589,16 +7596,20 @@ mouse-3: go to end") "]")))
   ;; Below regex list could be used in both js-mode and js2-mode.
   (setq javascript-common-imenu-regex-list
         ;; Items are in reverse order because they are rendered in reverse.
-        `(("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _after" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _on" "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _before" "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring View Event 1" "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring View Event 0" "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Variable" "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
-          ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
-          ("Controller Extension" "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
-          ("Controller" "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)
+        `(("Function"                        "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+
+          ("Auto-Wiring Panel Event _after"  "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring Panel Event _on"     "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring Panel Event _before" "^[ \t]*.*_before\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+
+          ("Auto-Wiring View Event 1"        "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+          ("Auto-Wiring View Event 0"        "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+
+          ("Variable"                        "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
+
+          ("Controller Extension"            "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
+          ("Controller Extension"            "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
+          ("Controller"                      "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)
           ))
 
 ;; {{ Patching Imenu in js2-mode
@@ -7758,8 +7769,30 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     ;; (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
     ;; (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
 
+;; Disable JSHint since we prefer ESLint checking.
+(with-eval-after-load "flycheck"
+
+  ;; (setq-default flycheck-disabled-checkers
+  ;;               (append flycheck-disabled-checkers
+  ;;                       '(javascript-jshint)))
+
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(javascript-eslint)))
+
+  ;; ;; use eslint with web-mode for jsx files
+  ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
+
     ;; (add-hook 'js2-mode-hook
     ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
+
+  (add-hook 'js2-mode-hook
+            (defun my-js2-mode-setup ()
+              (flycheck-mode t)
+              ;; (when (executable-find "eslint")
+              ;;   (flycheck-select-checker 'javascript-eslint))
+              ))
+  )
 
     ;; (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
 
@@ -8068,11 +8101,11 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
   ;; Display the next compiler error message.
   (global-set-key (kbd "<f10>") #'next-error)
-                                        ; Also on `M-g n' and `C-x `'.
+                                        ; Also on `M-g n', `M-g M-n' and `C-x `'.
 
   ;; Display the previous compiler error message.
   (global-set-key (kbd "<S-f10>") #'previous-error)
-                                        ; Also on `M-g p'.
+                                        ; Also on `M-g p' and `M-g M-p'.
 
   ;; Display the first compiler error message.
   (global-set-key (kbd "<C-f10>") #'first-error)
@@ -8171,7 +8204,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
     (setq flycheck-indication-mode 'left-fringe) ; See init.el.
     ;; ;; Indicate errors and warnings via icons in the right fringe.
-    ;; (setq flycheck-indication-mode 'right-fringe)
+    (setq flycheck-indication-mode 'right-fringe)
 
     ;; Remove newline checks, since they would trigger an immediate check when
     ;; we want the `flycheck-idle-change-delay' to be in effect while editing.
@@ -8392,17 +8425,17 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; VC status without asking for a directory.
   (global-set-key (kbd "<C-f9>") #'leuven-vc-jump)
 
-  (add-hook  'vc-dir-mode-hook
-             (lambda ()
-               ;; Hide up-to-date and unregistered files.
-               (define-key vc-dir-mode-map
-                 (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
-               (define-key vc-dir-mode-map
-                 (kbd "E") #'vc-ediff)
-               (define-key vc-dir-mode-map
-                 (kbd "#") #'vc-ediff-ignore-whitespace)
-                                         ; ediff-windows-wordwise?
-               ))
+  (add-hook 'vc-dir-mode-hook
+            (lambda ()
+              ;; Hide up-to-date and unregistered files.
+              (define-key vc-dir-mode-map
+                (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
+              (define-key vc-dir-mode-map
+                (kbd "E") #'vc-ediff)
+              (define-key vc-dir-mode-map
+                (kbd "#") #'vc-ediff-ignore-whitespace)
+                                        ; ediff-windows-wordwise?
+              ))
 
   (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
     (interactive)
