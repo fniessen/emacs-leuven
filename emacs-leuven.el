@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170303.2033
+;; Version: 20170303.2250
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170303.2033"
+(defconst leuven--emacs-version "20170303.2250"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -442,7 +442,7 @@ If not, just print a message."
             helm-swoop
             hideshowvis
             highlight-numbers
-            highlight-symbol
+            hl-anything                 ; Better than `highlight-symbol'.
             howdoi
             htmlize
             indent-guide
@@ -1218,30 +1218,19 @@ Should be selected from `fringe-bitmaps'.")
   ;; ;; Enable Hi Lock mode for all buffers.
   ;; (global-hi-lock-mode 1)
 
-  (with-eval-after-load "highlight-symbol-autoloads"
-
+  ;; Highlight symbols, selections, enclosing parens and more.
+  (with-eval-after-load "hl-anything-autoloads"
     ;; Emulation of Vim's `*' search.
-    (global-set-key (kbd "C-*") #'highlight-symbol-at-point)
-    ;; (global-set-key (kbd "C-<f4>") #'highlight-symbol-next)
-    ;; (global-set-key (kbd "S-<f4>") #'highlight-symbol-prev)
-    (global-set-key (kbd "C-M-*") #'highlight-symbol-remove-all)
-    ;; (global-set-key (kbd "+") #'highlight-symbol-query-replace)
-    )
+    (global-set-key (kbd "C-*") #'hl-highlight-thingatpt-global)
+    (global-set-key (kbd "C-<f4>") #'hl-find-next-thing)
+    (global-set-key (kbd "S-<f4>") #'hl-find-previous-thing)
+    (global-set-key (kbd "C-M-*") #'hl-unhighlight-all-global))
 
-  (with-eval-after-load "highlight-symbol"
-
-    ;; Number of seconds of idle time before highlighting the current symbol.
-    (setq highlight-symbol-idle-delay 0.2)
-
-    (setq highlight-symbol-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
-    (setq highlight-symbol-foreground-color "black")
-
-    ;; Temporarily highlight the symbol when using `highlight-symbol-jump'
-    ;; family of functions.
-    (setq highlight-symbol-on-navigation-p t))
+;; (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
+;; See the very good hl-paren-mode.
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol-XXX)
+  (when (try-require 'auto-highlight-symbol)
 
     ;; Number of seconds to wait before highlighting the current symbol.
     (setq ahs-idle-interval 0.2) ; 0.35.
@@ -3672,6 +3661,15 @@ cycle through all windows on current frame."
 
     (key-chord-define-global "yy" #'browse-kill-ring)
     (key-chord-define-global "zk" #'zap-to-char)
+
+    (with-eval-after-load "hl-anything-autoloads"    ; Package.
+      (key-chord-define-global "*o" #'hl-global-highlight-on/off)
+      (key-chord-define-global "*h" #'hl-highlight-thingatpt-global)
+      (key-chord-define-global "*u" #'hl-unhighlight-all-global)
+      (key-chord-define-global "*n" #'hl-find-next-thing)
+      (key-chord-define-global "*p" #'hl-find-prev-thing)
+      (key-chord-define-global "*r" #'hl-restore-highlights)
+      (key-chord-define-global "*s" #'hl-save-highlights))
 
     (key-chord-define-global ";s" #'set-mark-command)
 

@@ -898,7 +898,7 @@ like this into your configuration file:
             helm-swoop
             hideshowvis
             highlight-numbers
-            highlight-symbol
+            hl-anything                 ; Better than `highlight-symbol'.
             howdoi
             htmlize
             indent-guide
@@ -2323,69 +2323,60 @@ throughout a buffer.
   ;; (global-hi-lock-mode 1)
 #+end_src
 
-It is complementary to the features of the library *Highlight-symbol* (from
-Nikolaj Schumacher).
+It is complementary to the features of the library *Hl-anything*.
 
-- Hi Lock and Highlight-symbol both use *text properties*. Copying and pasting
-  text will also paste the highlighting.
+- Hi Lock uses *text properties*.  Copying and pasting text will also paste the
+  highlighting.
 
-- Hi Lock and Highlight-symbol both *highlight new text* as you type it.
+- Hl-anything uses *overlays*.  It prevents highlighted things to be hidden by
+  hl-line mode.
 
-- Highlight-symbol lets you *navigate among highlights*: ~highlight-symbol-next~,
-  ~highlight-symbol-prev~.
+  #+begin_note
+  As *overlay highlighting* (used by ~hl-line~) *always takes priority over
+  text-property highlighting*, the highlighting of symbols should use overlays at
+  all times, and thus have higher priority over ~hl-line~ (because shorter
+  overlays have an implicitly higher priority, given the same value of
+  priority).
+  #+end_note
 
-~Highlight-symbol~ automatically chooses *rainbow colors* and makes it much easier
-to follow some key variables through a block of code.
+- Hi Lock and Hl-anything both *highlight new text* as you type it.
 
-#+begin_src emacs-lisp
-  (with-eval-after-load "highlight-symbol-autoloads"
+- Hl-anything lets you *navigate among highlights*: ~hl-find-next-thing~,
+  ~hl-find-previous-thing~.
 
-    ;; Emulation of Vim's `*' search.
-    (global-set-key (kbd "C-*") #'highlight-symbol-at-point)
-    ;; (global-set-key (kbd "C-<f4>") #'highlight-symbol-next)
-    ;; (global-set-key (kbd "S-<f4>") #'highlight-symbol-prev)
-    (global-set-key (kbd "C-M-*") #'highlight-symbol-remove-all)
-    ;; (global-set-key (kbd "+") #'highlight-symbol-query-replace)
-    )
-
-  (with-eval-after-load "highlight-symbol"
-
-    ;; Number of seconds of idle time before highlighting the current symbol.
-    (setq highlight-symbol-idle-delay 0.2)
-
-    (setq highlight-symbol-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
-    (setq highlight-symbol-foreground-color "black")
-
-    ;; Temporarily highlight the symbol when using `highlight-symbol-jump'
-    ;; family of functions.
-    (setq highlight-symbol-on-navigation-p t))
-#+end_src
+- ~Hl-anything~ automatically chooses *rainbow colors* and makes it much easier to
+  follow some key variables through a block of code.
 
 #+begin_note
 We tend to think of highlighting a buffer region with a background as putting
 such a background behind or underneath the text.  Think of a marker pen
 (highlighter) instead: the highlighting goes on top.
-
-As *overlay highlighting* (used by ~hl-line~) *always takes priority over
-text-property highlighting*, the highlighting of symbols should use overlays at
-all times, and thus have higher priority over ~hl-line~ (because shorter overlays
-have an implicitly higher priority, given the same value of priority).
 #+end_note
+
+#+begin_src emacs-lisp
+  ;; Highlight symbols, selections, enclosing parens and more.
+  (with-eval-after-load "hl-anything-autoloads"
+    ;; Emulation of Vim's `*' search.
+    (global-set-key (kbd "C-*") #'hl-highlight-thingatpt-global)
+    (global-set-key (kbd "C-<f4>") #'hl-find-next-thing)
+    (global-set-key (kbd "S-<f4>") #'hl-find-previous-thing)
+    (global-set-key (kbd "C-M-*") #'hl-unhighlight-all-global))
+
+;; (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
+;; See the very good hl-paren-mode.
+#+end_src
 
 Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
 *symbol at point* in the current file (if you pause on a symbol).  When you move
 point, the highlighting goes away.
 
 #+begin_tip
-This can also be done by ~highlight-symbol-mode~.  Though, ~ahs~ can find the
-definition of a symbol, and color it differently!
+~ahs~ can find the *definition* of a symbol, and color it differently!
 #+end_tip
-
-Toggle Auto-Highlight-Symbol using key chord ~**~.
 
 #+begin_src emacs-lisp
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol-XXX)
+  (when (try-require 'auto-highlight-symbol)
 
     ;; Number of seconds to wait before highlighting the current symbol.
     (setq ahs-idle-interval 0.2) ; 0.35.
@@ -6528,6 +6519,15 @@ tangling* of this file by a giga-mega-huge factor!?
 
     (key-chord-define-global "yy" #'browse-kill-ring)
     (key-chord-define-global "zk" #'zap-to-char)
+
+    (with-eval-after-load "hl-anything-autoloads"    ; Package.
+      (key-chord-define-global "*o" #'hl-global-highlight-on/off)
+      (key-chord-define-global "*h" #'hl-highlight-thingatpt-global)
+      (key-chord-define-global "*u" #'hl-unhighlight-all-global)
+      (key-chord-define-global "*n" #'hl-find-next-thing)
+      (key-chord-define-global "*p" #'hl-find-prev-thing)
+      (key-chord-define-global "*r" #'hl-restore-highlights)
+      (key-chord-define-global "*s" #'hl-save-highlights))
 
     (key-chord-define-global ";s" #'set-mark-command)
 
