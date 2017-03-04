@@ -2362,6 +2362,8 @@ such a background behind or underneath the text.  Think of a marker pen
     (global-set-key (kbd "S-<f4>") #'hl-find-prev-thing)
     (global-set-key (kbd "C-M-*") #'hl-unhighlight-all-global))
 
+(setq hl-highlight-save-file nil)
+
 ;; (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
 ;; See the very good hl-paren-mode.
 #+end_src
