@@ -844,11 +844,7 @@ like this into your configuration file:
     ;; Packages which were installed by the user (as opposed to installed as
     ;; dependencies).
     (setq package-selected-packages
-          '(ace-jump-helm-line
-            ace-jump-mode
-            ace-link
-            ace-window
-            ag
+          '(ag
             ;; aggressive-indent
             ant
             anzu
@@ -856,6 +852,7 @@ like this into your configuration file:
             auto-complete
             auto-highlight-symbol
             auto-package-update
+            avy
             back-button
             bbdb
             bookmark+
@@ -1498,9 +1495,9 @@ Instead of setting the *mark* in order to operate on a region, you can also type
 #+begin_tip
 Many commands (especially ones which are liable to move you an an unknown or
 arbitrary distance from your original location, like ~isearch-forward~,
-~beginning-of-buffer~, ~ace-jump-mode~) automatically save the previous position in
-the mark ring -- you don't have to use ~C-SPC C-SPC~ before, but only ~C-u C-SPC~ to
-return afterwards.
+~beginning-of-buffer~, ~avy~) automatically save the previous position in the mark
+ring -- you don't have to use ~C-SPC C-SPC~ before, but only ~C-u C-SPC~ to return
+afterwards.
 
 So, after using ~C-s~ to go somewhere, you can easily jump back again.
 #+end_tip
@@ -1603,17 +1600,17 @@ the region into lines* which are then *edited simultaneously*.
 *** Quick add next/previous
 
 Use Multiple Cursors to *rename variables quickly*: *add the next* or previous
-*occurrence of the current word to the selection*.
+*occurrence of the current word to the selection*, and then type the new name.
+Done.
 
 #+begin_src emacs-lisp
-    ;; Add a cursor and region at the next part of the buffer forwards that
+    ;; Add a cursor and region at the next/previous part of the buffer that
     ;; matches the current region.
     (global-set-key (kbd "C->") #'mc/mark-next-like-this) ;!
-
-    ;; Add a cursor and region at the next part of the buffer backwards that
-    ;; matches the current region.
     (global-set-key (kbd "C-<") #'mc/mark-previous-like-this) ;!
 
+    ;; Skip the current one and select the next/previous part of the buffer that
+    ;; matches the current region.
     (global-set-key (kbd "C-M->") #'mc/skip-to-next-like-this)
     (global-set-key (kbd "C-M-<") #'mc/skip-to-previous-like-this)
 
@@ -2065,44 +2062,34 @@ jumping onto them...
                                         ; Instead of `bookmark-jump'.
 #+end_src
 
-** Ace Jump
+** Avy (alternative to Ace Jump)
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "ace-jump-mode-autoloads"
-
-    ;; (add-hook 'ace-jump-mode-end-hook 'recenter)
+  (with-eval-after-load "avy-autoloads"
 
     ;; Quickly jump to a position in the current view.
-    (global-set-key (kbd "C-c SPC") #'ace-jump-mode)
+    (global-set-key (kbd "C-c SPC") #'avy-goto-word-or-subword-1)
 
-    ;; Pop up a postion from `ace-jump-mode-mark-ring', and jump back to that
-    ;; position.
-    (global-set-key (kbd "C-c C-SPC") #'ace-jump-mode-pop-mark))
+    ;; Jump back to previous position.
+    (global-set-key (kbd "C-c C-SPC") #'avy-pop-mark)
+
+    ;; Jump during Isearch to one of the current candidates.
+    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
+    (define-key isearch-mode-map (kbd "@") 'avy-isearch))
 #+end_src
 
-Alternative to ~ace-jump-mode~:
-
 #+begin_src emacs-lisp
-  ;; Quickly follow links using `ace-jump-mode'.
-  (with-eval-after-load "ace-link-autoloads"
-
-    ;; Setup the default shortcuts.
-    (ace-link-setup-default "f"))
-
   ;; Jump to things.
   (with-eval-after-load "avy"
 
     ;; Default keys for jumping.
     (setq avy-keys (number-sequence ?a ?z))
 
+    ;; Determine the list of windows to consider in search of candidates.
+    (setq avy-all-windows 'all-frames)
 
     ;; Highlight the first decision char with `avy-lead-face-0'.
-    (setq avy-highlight-first t)
-
-
-    ;; Ace-jump during Isearch to one of the current candidates.
-    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
-    (define-key isearch-mode-map (kbd "@") 'avy-isearch))
+    (setq avy-highlight-first t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2441,7 +2428,8 @@ If you're using some package other than ~vc~ to commit changes, it might not run
 the buffer after its state has changed.
 
 #+begin_note
-Of course, ~diff-hl~ is not updated when we commit changes with ~sendpatch~...
+Of course, ~diff-hl~ is not updated when we commit changes with our ~sendpatch~
+utility...
 #+end_note
 
 Jump between changes:
@@ -2449,9 +2437,11 @@ Jump between changes:
 #+begin_src emacs-lisp
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd "M-g <down>") #'diff-hl-next-hunk)
 
     ;; Jump to previous hunk (also on `C-x v [').
     (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
+    (define-key diff-hl-mode-map (kbd "M-g <up>") #'diff-hl-previous-hunk)
 #+end_src
 
 Act on changes:
@@ -4715,9 +4705,7 @@ before running helm-flycheck"
     (define-key helm-map (kbd "C-M-n") #'helm-next-source)
     (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
 
-    ;; Reserved for searching inside buffers! (See C-h m)
-    ;; ;; Ace-Jump to a candidate line in Helm window.
-    ;; (define-key helm-map (kbd "@") 'ace-jump-helm-line) ; C-'.
+    ;; @ reserved for searching inside buffers! (See C-h m)
 
     ;; Various functions for Helm (Shell history, etc.).
     (require 'helm-misc)
@@ -6480,14 +6468,10 @@ tangling* of this file by a giga-mega-huge factor!?
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
 
-    (key-chord-define-global "::" #'isearch-forward)
+    (key-chord-define-global "SS" #'isearch-forward)
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
-
-    (with-eval-after-load "diff-hl"    ; Package.
-      (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
-      (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk))
 
     ;; (key-chord-define-global "hb" #'describe-bindings) ; dashboard.
     (key-chord-define-global "hf" #'describe-function)
@@ -6497,14 +6481,8 @@ tangling* of this file by a giga-mega-huge factor!?
       (key-chord-define-global "hh" #'er/expand-region) ; Autoloaded.
       (key-chord-define-global "HH" #'er/contract-region)) ; Autoloaded.
 
-    (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
-      (key-chord-define-global "jj" #'ace-jump-word-mode) ; Autoloaded.
-      ;; (key-chord-define-global "jk" #'ace-jump-mode-pop-mark) ; Autoloaded. lijkt.
-      ;; (key-chord-define-global "jl" #'ace-jump-line-mode) ; Autoloaded. pijl.
-      )
-
-    (with-eval-after-load "ace-window"
-      (key-chord-define-global "jw" #'ace-window))
+    (with-eval-after-load "avy-autoloads"
+      (key-chord-define-global "jj" #'avy-goto-word-or-subword-1))
 
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" #'dired-jump)) ; Autoloaded?
@@ -17507,7 +17485,7 @@ See https://www.gnu.org/software/emacs/manual/html_node/eww/index.html.
 HTTPS pages with valid certificates have headers marked in green, while invalid
 certificates are marked in red.
 
-*************** TODO See package ~eww-lnum~ (or ~ace-link-eww~?)
+*************** TODO See package ~eww-lnum~ (or ~avy~?)
 (define-key eww-mode-map (kbd "f") #'eww-lnum-follow)
 (define-key eww-mode-map (kbd "F") #'eww-lnum-universal)
 *************** END

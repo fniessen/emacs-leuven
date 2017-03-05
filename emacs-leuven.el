@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170303.2351
+;; Version: 20170305.2223
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170303.2351"
+(defconst leuven--emacs-version "20170305.2223"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -388,11 +388,7 @@ If not, just print a message."
     ;; Packages which were installed by the user (as opposed to installed as
     ;; dependencies).
     (setq package-selected-packages
-          '(ace-jump-helm-line
-            ace-jump-mode
-            ace-link
-            ace-window
-            ag
+          '(ag
             ;; aggressive-indent
             ant
             anzu
@@ -400,6 +396,7 @@ If not, just print a message."
             auto-complete
             auto-highlight-symbol
             auto-package-update
+            avy
             back-button
             bbdb
             bookmark+
@@ -839,14 +836,13 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Add a cursor to each (continuous) line in the current region.
     (global-set-key (kbd "C-S-c C-S-c") #'mc/edit-lines) ;!
 
-    ;; Add a cursor and region at the next part of the buffer forwards that
+    ;; Add a cursor and region at the next/previous part of the buffer that
     ;; matches the current region.
     (global-set-key (kbd "C->") #'mc/mark-next-like-this) ;!
-
-    ;; Add a cursor and region at the next part of the buffer backwards that
-    ;; matches the current region.
     (global-set-key (kbd "C-<") #'mc/mark-previous-like-this) ;!
 
+    ;; Skip the current one and select the next/previous part of the buffer that
+    ;; matches the current region.
     (global-set-key (kbd "C-M->") #'mc/skip-to-next-like-this)
     (global-set-key (kbd "C-M-<") #'mc/skip-to-previous-like-this)
 
@@ -1066,22 +1062,17 @@ These packages are neither built-in nor already installed nor ignored."
       (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks))
                                         ; Instead of `bookmark-jump'.
 
-  (with-eval-after-load "ace-jump-mode-autoloads"
-
-    ;; (add-hook 'ace-jump-mode-end-hook 'recenter)
+  (with-eval-after-load "avy-autoloads"
 
     ;; Quickly jump to a position in the current view.
-    (global-set-key (kbd "C-c SPC") #'ace-jump-mode)
+    (global-set-key (kbd "C-c SPC") #'avy-goto-word-or-subword-1)
 
-    ;; Pop up a postion from `ace-jump-mode-mark-ring', and jump back to that
-    ;; position.
-    (global-set-key (kbd "C-c C-SPC") #'ace-jump-mode-pop-mark))
+    ;; Jump back to previous position.
+    (global-set-key (kbd "C-c C-SPC") #'avy-pop-mark)
 
-  ;; Quickly follow links using `ace-jump-mode'.
-  (with-eval-after-load "ace-link-autoloads"
-
-    ;; Setup the default shortcuts.
-    (ace-link-setup-default "f"))
+    ;; Jump during Isearch to one of the current candidates.
+    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
+    (define-key isearch-mode-map (kbd "@") 'avy-isearch))
 
   ;; Jump to things.
   (with-eval-after-load "avy"
@@ -1089,14 +1080,11 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Default keys for jumping.
     (setq avy-keys (number-sequence ?a ?z))
 
+    ;; Determine the list of windows to consider in search of candidates.
+    (setq avy-all-windows 'all-frames)
 
     ;; Highlight the first decision char with `avy-lead-face-0'.
-    (setq avy-highlight-first t)
-
-
-    ;; Ace-jump during Isearch to one of the current candidates.
-    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
-    (define-key isearch-mode-map (kbd "@") 'avy-isearch))
+    (setq avy-highlight-first t))
 
 )                                       ; Chapter 13 ends here.
 
@@ -1268,9 +1256,11 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd "M-g <down>") #'diff-hl-next-hunk)
 
     ;; Jump to previous hunk (also on `C-x v [').
     (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
+    (define-key diff-hl-mode-map (kbd "M-g <up>") #'diff-hl-previous-hunk)
 
     ;; Popup current diff.
     (define-key diff-hl-mode-map (kbd "C-x v =") #'diff-hl-diff-goto-hunk)
@@ -2517,9 +2507,7 @@ Should be selected from `fringe-bitmaps'.")
     (define-key helm-map (kbd "C-M-n") #'helm-next-source)
     (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
 
-    ;; Reserved for searching inside buffers! (See C-h m)
-    ;; ;; Ace-Jump to a candidate line in Helm window.
-    ;; (define-key helm-map (kbd "@") 'ace-jump-helm-line) ; C-'.
+    ;; @ reserved for searching inside buffers! (See C-h m)
 
     ;; Various functions for Helm (Shell history, etc.).
     (require 'helm-misc)
@@ -3622,14 +3610,10 @@ cycle through all windows on current frame."
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
 
-    (key-chord-define-global "::" #'isearch-forward)
+    (key-chord-define-global "SS" #'isearch-forward)
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
-
-    (with-eval-after-load "diff-hl"    ; Package.
-      (key-chord-define diff-hl-mode-map ">>" #'diff-hl-next-hunk)
-      (key-chord-define diff-hl-mode-map "<<" #'diff-hl-previous-hunk))
 
     ;; (key-chord-define-global "hb" #'describe-bindings) ; dashboard.
     (key-chord-define-global "hf" #'describe-function)
@@ -3639,14 +3623,8 @@ cycle through all windows on current frame."
       (key-chord-define-global "hh" #'er/expand-region) ; Autoloaded.
       (key-chord-define-global "HH" #'er/contract-region)) ; Autoloaded.
 
-    (with-eval-after-load "ace-window-autoloads" ; Autoloads file.
-      (key-chord-define-global "jj" #'ace-jump-word-mode) ; Autoloaded.
-      ;; (key-chord-define-global "jk" #'ace-jump-mode-pop-mark) ; Autoloaded. lijkt.
-      ;; (key-chord-define-global "jl" #'ace-jump-line-mode) ; Autoloaded. pijl.
-      )
-
-    (with-eval-after-load "ace-window"
-      (key-chord-define-global "jw" #'ace-window))
+    (with-eval-after-load "avy-autoloads"
+      (key-chord-define-global "jj" #'avy-goto-word-or-subword-1))
 
     (with-eval-after-load "dired-x"
       (key-chord-define-global "xj" #'dired-jump)) ; Autoloaded?
