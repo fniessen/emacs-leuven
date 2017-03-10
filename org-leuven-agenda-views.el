@@ -58,6 +58,8 @@
                   ;; Unscheduled new tasks (waiting to be prioritized and scheduled).
                   (tags-todo "LEVEL=2"
                         ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")
+                         (org-agenda-skip-function
+                          '(org-agenda-skip-entry-if 'scheduled))
                          (org-agenda-files (list ,org-default-notes-file))))
                   ;; List of all TODO entries with deadline today.
                   (tags-todo "DEADLINE=\"<+0d>\""
