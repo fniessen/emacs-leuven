@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170305.2223
+;; Version: 20170306.1100
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170305.2223"
+(defconst leuven--emacs-version "20170306.1100"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -213,7 +213,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
           (when leuven-verbose-loading
-            (message "[INFO- Added `%s' to `load-path']" this-directory))))))
+            (message "[Added `%s' to `load-path']" this-directory))))))
 
   ;; Remember this directory.
   (defconst leuven--directory
@@ -1980,9 +1980,9 @@ Should be selected from `fringe-bitmaps'.")
     "Open the file named FILENAME and report time spent."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (message "[INFO- Finding file %s...]" filename)
+      (message "[Finding file %s...]" filename)
       ad-do-it
-      (message "[INFO- Found file %s in %.2f s]" filename
+      (message "[Found file %s in %.2f s]" filename
                (- (float-time) find-file-time-start))))
 
   ;; Visit a file.
@@ -1996,9 +1996,9 @@ Should be selected from `fringe-bitmaps'.")
     "Save the file named FILENAME and report time spent."
     (let ((filename (buffer-file-name))
           (save-buffer-time-start (float-time)))
-      (message "[INFO- Saving file %s...]" filename)
+      (message "[Saving file %s...]" filename)
       ad-do-it
-      (message "[INFO- Saved file %s in %.2f s]" filename
+      (message "[Saved file %s in %.2f s]" filename
                (- (float-time) save-buffer-time-start))))
 
   ;; Make your changes permanent.
@@ -5041,7 +5041,7 @@ From the address <%a>"
     (leuven--section "10.1 (org)Agenda files")
 
     (when (boundp 'org-agenda-files)
-      (message "[INFO- Found %s entries in `org-agenda-files']"
+      (message "[Found %s entries in `org-agenda-files']"
                (length org-agenda-files))
       ;; (sit-for 0.5)
       )
@@ -5906,8 +5906,8 @@ this with to-do items than with projects or headings."
                       (t
                        "%f"))))
 
-          (message "[INFO- LaTeX engine: %s]" org-latex-pdf-engine-full-path)
-          (message "[INFO- LaTeX command: %s]" org-latex-pdf-command)
+          (message "[LaTeX engine: %s]" org-latex-pdf-engine-full-path)
+          (message "[LaTeX command: %s]" org-latex-pdf-command)
 
           (setq org-latex-pdf-process
                 (cond ((equal org-latex-pdf-command "latexmk")
@@ -6658,7 +6658,7 @@ this with to-do items than with projects or headings."
   (defun leuven--org-update-buffer-before-save ()
     "Update all dynamic blocks and all tables in the buffer before save."
     (when (derived-mode-p 'org-mode)
-      (message "[INFO- Update Org buffer %s]"
+      (message "[Update Org buffer %s]"
                (file-name-nondirectory (buffer-file-name)))
       ;; (sit-for 1.5)
       (let ((cache-long-scans nil)      ; Make `forward-line' much faster and
@@ -9476,10 +9476,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Turn appointment checking on (enable reminders).
     (when leuven-verbose-loading
-      (message "[INFO- Enable appointment reminders...]"))
+      (message "[Enable appointment reminders...]"))
     (appt-activate 1)
     (when leuven-verbose-loading
-      (message "[INFO- Enable appointment reminders... Done]"))
+      (message "[Enable appointment reminders... Done]"))
 
     ;; Enable appointment notification, several minutes beforehand.
     (add-hook 'diary-hook #'appt-make-list)

@@ -570,7 +570,7 @@ need to load a single file that define autoloaded functions.
         (unless (file-exists-p (concat this-directory "/.nosearch"))
           (add-to-list 'load-path this-directory)
           (when leuven-verbose-loading
-            (message "[INFO- Added `%s' to `load-path']" this-directory))))))
+            (message "[Added `%s' to `load-path']" this-directory))))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3630,9 +3630,9 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
     "Open the file named FILENAME and report time spent."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
-      (message "[INFO- Finding file %s...]" filename)
+      (message "[Finding file %s...]" filename)
       ad-do-it
-      (message "[INFO- Found file %s in %.2f s]" filename
+      (message "[Found file %s in %.2f s]" filename
                (- (float-time) find-file-time-start))))
 
   ;; Visit a file.
@@ -3653,9 +3653,9 @@ a remote location.
     "Save the file named FILENAME and report time spent."
     (let ((filename (buffer-file-name))
           (save-buffer-time-start (float-time)))
-      (message "[INFO- Saving file %s...]" filename)
+      (message "[Saving file %s...]" filename)
       ad-do-it
-      (message "[INFO- Saved file %s in %.2f s]" filename
+      (message "[Saved file %s in %.2f s]" filename
                (- (float-time) save-buffer-time-start))))
 
   ;; Make your changes permanent.
@@ -8655,7 +8655,7 @@ header under which the entry will be placed.
     (leuven--section "10.1 (org)Agenda files")
 
     (when (boundp 'org-agenda-files)
-      (message "[INFO- Found %s entries in `org-agenda-files']"
+      (message "[Found %s entries in `org-agenda-files']"
                (length org-agenda-files))
       ;; (sit-for 0.5)
       )
@@ -9893,8 +9893,8 @@ Not very coherent!
                       (t
                        "%f"))))
 
-          (message "[INFO- LaTeX engine: %s]" org-latex-pdf-engine-full-path)
-          (message "[INFO- LaTeX command: %s]" org-latex-pdf-command)
+          (message "[LaTeX engine: %s]" org-latex-pdf-engine-full-path)
+          (message "[LaTeX command: %s]" org-latex-pdf-command)
 
           (setq org-latex-pdf-process
                 (cond ((equal org-latex-pdf-command "latexmk")
@@ -11144,7 +11144,7 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
   (defun leuven--org-update-buffer-before-save ()
     "Update all dynamic blocks and all tables in the buffer before save."
     (when (derived-mode-p 'org-mode)
-      (message "[INFO- Update Org buffer %s]"
+      (message "[Update Org buffer %s]"
                (file-name-nondirectory (buffer-file-name)))
       ;; (sit-for 1.5)
       (let ((cache-long-scans nil)      ; Make `forward-line' much faster and
@@ -16837,6 +16837,9 @@ a Dired buffer.  They are thus similar to the default global bindings ~C-x d~ an
 
 ** VC diff highlighting
 
+Like Git-gutter, Diff-hl shows you *which lines were modified compared to the
+latest commit* -- it supports SVN, Git, and other VC systems!
+
 #+begin_src emacs-lisp
 ;;** Diff-hl
 
@@ -16988,10 +16991,10 @@ Or better look at the ~alert~ package?
 #+begin_src emacs-lisp
     ;; Turn appointment checking on (enable reminders).
     (when leuven-verbose-loading
-      (message "[INFO- Enable appointment reminders...]"))
+      (message "[Enable appointment reminders...]"))
     (appt-activate 1)
     (when leuven-verbose-loading
-      (message "[INFO- Enable appointment reminders... Done]"))
+      (message "[Enable appointment reminders... Done]"))
 #+end_src
 
 #+begin_src emacs-lisp
