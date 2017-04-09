@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170410.0030
+;; Version: 20170410.0035
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170410.0030"
+(defconst leuven--emacs-version "20170410.0035"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -9281,7 +9281,8 @@ a clean buffer we're an order of magnitude laxer about checking."
          (dired-get-marked-files nil arg)))
 
       ;; ;; Bind it to `E' in Dired mode.
-      ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
+      ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally)
+      )
 
     (with-eval-after-load "dired"
       (define-key dired-mode-map (kbd "C-c v")

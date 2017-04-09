@@ -16626,7 +16626,8 @@ For those under Windows:
          (dired-get-marked-files nil arg)))
 
       ;; ;; Bind it to `E' in Dired mode.
-      ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
+      ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally)
+      )
 #+end_src
 
 **** ARCHIBUS
