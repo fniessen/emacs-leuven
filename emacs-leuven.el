@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170306.1100
+;; Version: 20170410.0016
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170306.1100"
+(defconst leuven--emacs-version "20170410.0016"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2163,6 +2163,29 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Compare text in current window with text in next window.
   (global-set-key (kbd "C-=") #'compare-windows)
+
+  (defun leuven-ediff-files-from-dired ()
+"Quickly Ediff files from Dired"
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (wnd (current-window-configuration)))
+      (if (<= (length files) 2)
+          (let ((file1 (car files))
+                (file2 (if (cdr files)
+                           (cadr files)
+                         (read-file-name
+                          "file: "
+                          (dired-dwim-target-directory)))))
+            (if (file-newer-than-file-p file1 file2)
+                (ediff-files file2 file1)
+              (ediff-files file1 file2))
+            (add-hook 'ediff-after-quit-hook-internal
+                      (lambda ()
+                        (setq ediff-after-quit-hook-internal nil)
+                        (set-window-configuration wnd))))
+        (error "no more than 2 files should be marked"))))
+
+  (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired)
 
 ;;** 18.10 (info "(emacs)Diff Mode")
 
@@ -9256,8 +9279,8 @@ a clean buffer we're an order of magnitude laxer about checking."
            (w32-shell-execute "open" (convert-standard-filename file)))
          (dired-get-marked-files nil arg)))
 
-      ;; Bind it to `E' in Dired mode.
-      (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
+      ;; ;; Bind it to `E' in Dired mode.
+      ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
 
     (with-eval-after-load "dired"
       (define-key dired-mode-map (kbd "C-c v")

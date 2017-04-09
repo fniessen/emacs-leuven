@@ -3878,10 +3878,52 @@ Make the message "/FILENAME has auto save data/" unmissable:
   (global-set-key (kbd "C-=") #'compare-windows)
 #+end_src
 
+Press ~e~ in Dired-mode to immediately Ediff two marked files, no questions asked:
+
+#+begin_src emacs-lisp
+  (defun leuven-ediff-files-from-dired ()
+"Quickly Ediff files from Dired"
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (wnd (current-window-configuration)))
+      (if (<= (length files) 2)
+          (let ((file1 (car files))
+                (file2 (if (cdr files)
+                           (cadr files)
+                         (read-file-name
+                          "file: "
+                          (dired-dwim-target-directory)))))
+            (if (file-newer-than-file-p file1 file2)
+                (ediff-files file2 file1)
+              (ediff-files file1 file2))
+            (add-hook 'ediff-after-quit-hook-internal
+                      (lambda ()
+                        (setq ediff-after-quit-hook-internal nil)
+                        (set-window-configuration wnd))))
+        (error "no more than 2 files should be marked"))))
+
+  (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired)
+#+end_src
+
+- In case no files are marked, the file at point is used as the first file, and
+  read-file-name is used for the second file. Since I have the magic (setq
+  dired-dwim-target t) in my config, in case a second dired buffer is open,
+  dired-dwim-target-directory will offer it as the starting directory during
+  completion. Very useful to compare two files in two different directories.
+
+- Depending on the order of the arguments to ediff-files, the changes will
+  appear either as added or removed; file-newer-than-file-p tries to put the
+  arguments in a logical order by looking at the files' last change times.
+
+- ediff-after-quit-hook-internal is used to restore the previous window
+  configuration after I quit ediff with q.
+
+#+begin_note
 You can use ~M-x smerge-mode~ to edit a file with conflict markers (output from
 the ~diff3~ program).  Smerge does not automatically select regions but provides
 convenient key bindings to navigate between conflicts and to choose the A or B
 variant.
+#+end_note
 
 ** Diff mode
 
@@ -16582,8 +16624,8 @@ For those under Windows:
            (w32-shell-execute "open" (convert-standard-filename file)))
          (dired-get-marked-files nil arg)))
 
-      ;; Bind it to `E' in Dired mode.
-      (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
+      ;; ;; Bind it to `E' in Dired mode.
+      ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally))
 #+end_src
 
 **** ARCHIBUS
