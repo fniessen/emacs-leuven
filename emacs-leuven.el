@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170410.0016
+;; Version: 20170410.0027
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170410.0016"
+(defconst leuven--emacs-version "20170410.0027"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2174,7 +2174,7 @@ Should be selected from `fringe-bitmaps'.")
                 (file2 (if (cdr files)
                            (cadr files)
                          (read-file-name
-                          "file: "
+                          "File B to compare: "
                           (dired-dwim-target-directory)))))
             (if (file-newer-than-file-p file1 file2)
                 (ediff-files file2 file1)

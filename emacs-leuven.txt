@@ -3891,7 +3891,7 @@ Press ~e~ in Dired-mode to immediately Ediff two marked files, no questions aske
                 (file2 (if (cdr files)
                            (cadr files)
                          (read-file-name
-                          "file: "
+                          "File B to compare: "
                           (dired-dwim-target-directory)))))
             (if (file-newer-than-file-p file1 file2)
                 (ediff-files file2 file1)
