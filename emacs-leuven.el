@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170410.0027
+;; Version: 20170410.0030
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,7 +60,7 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170410.0027"
+(defconst leuven--emacs-version "20170410.0030"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2185,7 +2185,8 @@ Should be selected from `fringe-bitmaps'.")
                         (set-window-configuration wnd))))
         (error "no more than 2 files should be marked"))))
 
-  (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired)
+  (with-eval-after-load "dired"
+    (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired))
 
 ;;** 18.10 (info "(emacs)Diff Mode")
 

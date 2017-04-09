@@ -3902,7 +3902,8 @@ Press ~e~ in Dired-mode to immediately Ediff two marked files, no questions aske
                         (set-window-configuration wnd))))
         (error "no more than 2 files should be marked"))))
 
-  (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired)
+  (with-eval-after-load "dired"
+    (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired))
 #+end_src
 
 - In case no files are marked, the file at point is used as the first file, and
