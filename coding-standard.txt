@@ -1,0 +1,95 @@
+Bryan Murdock: Quick Thoughts on Creating Coding Standards
+
+
+Introduction
+
+No team says, "write your code however the heck you want." Unless you are coding alone, it generally helps to have an agreed upon coding standard. Agreeing upon a coding standard, however, can be a painful process full of heated arguments and hurt feelings. This morning I thought it might be useful to first categorize coding standard items before starting the arguments. My hope is that once we categorize coding standard items we can use better decision criteria for each category of items and cut down on arguing. Below are the categories I came up with really quickly with descriptions, examples, and decision criteria for each category. Feedback is welcome in the comments.
+
+
+Categories of Things in Coding Standards
+
+Language Specific Pitfalls
+
+Characteristics?
+* not subjective, easy to recognize pattern
+
+* well recognized in the industry as dangerous
+
+* people have war stories and about these with associated scares to prove it
+
+
+Examples
+* no multiple declarations on one line in C
+
+* Cliff Cummings rules for blocking vs. non-blocking assignments in Verilog
+
+* no willy nilly gotos in C
+
+* no omitting braces for one liner blocks (or begin-end in Verilog)
+
+* no compiler warnings allowed
+
+
+How to resolve disputes on which these should be in The Coding Standard?
+Defer to engineers with best war stories. If nobody has a war story for one, you can probably omit it (or can you?).
+
+
+General Readability/Maintainability
+"Any fool can write code that a computer can understand. Good programmers write
+code that humans can understand." -- Martin Fowler
+
+
+Characteristics
+* things that help humans quickly read, understand, and safely modify code
+
+* usually not language specific
+
+* the path from these items to bugs is probably not as clear as with the above items, but a path does exist
+
+
+Examples
+* no magic numbers
+
+* no single letter variable names
+
+* keep functions short
+
+* indicators in names (_t for typedef's, p for pointers, etc.)
+
+
+How to resolve disputes on which of these should be in The Coding Standard?
+If someone says, "this really helps me" then the team should suck it up and do it. This is essentially the "put the slowest hiker at the front of the group" principle.
+
+
+ Alternatively these can be discussed on a case by case basis during code reviews instead of being codified in The Coding Standard. Be prepared for more "lively" code reviews if you go this route.
+
+
+Code Formatting
+
+The biggest wars often erupt over these because they are so subjective. This doesn't have to be the case.
+
+
+Characteristics
+* these probably aren't really preventing any bugs
+
+* most can easily be automatically corrected
+
+* are largely a matter of taste
+
+* only important for consistency (which is important!)
+
+
+Examples
+
+* amount of indent
+
+* brace style
+
+* camelCase vs. underscore_names
+* 80 column rule
+
+* dare I even mention it? tabs vs. spaces
+
+
+How to resolve disputes on which of these should be in The Coding Standard?
+Don't spend a long time arguing about these. Because they are so subjective and not likely to cause or reduce bugs one way or the other, nobody should get bent out of shape if their preference is not chosen by the team. Give everyone two minutes to make their case for their favorite, have a vote, majority wins, end of discussion. Use an existing tool (astyle, autopep8, an emacs mode, whatever is available for the language) to help people follow these rules.
