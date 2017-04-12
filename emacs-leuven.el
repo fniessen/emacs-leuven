@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170410.0035
+;; Version: 20170412.1125
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -60,27 +60,24 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-(defconst leuven--emacs-version "20170410.0035"
+;; Time the loading of Emacs Leuven.  Keep this on top of your .emacs.
+(defconst leuven--start-time (current-time)
+  "Value of `current-time' before loading the Emacs-Leuven library.")
+
+;; Speed up things by preventing garbage collections.
+(setq gc-cons-threshold (* 30 1024 1024)) ; 30 MB.
+
+;; Don't display messages at start and end of garbage collection (as it hides
+;; too many interesting messages).
+(setq garbage-collection-messages nil)
+
+(defconst leuven--emacs-version "20170412.1125"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
 
 ;; Turn on Common Lisp support.
 (eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
-
-(defconst leuven--before-time (float-time)
-  "Value of `float-time' before loading the Emacs-Leuven library.")
-
-;; Time the loading of the .emacs.  Keep this on top of your .emacs.
-(defvar emacs-start-time (current-time))
-
-(add-hook 'after-init-hook
-          `(lambda ()
-             (let ((elapsed (float-time (time-subtract (current-time)
-                                                       emacs-start-time))))
-               (message "[Loading %s...done (%.3fs) [executed in after-init]]"
-                        ,load-file-name elapsed)))
-  t)
 
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
@@ -175,7 +172,7 @@ Save execution times in the global list `leuven--load-times-list'."
        (leuven--section (concat "[" ,chaptername " ends here]") 'end-of-chapter)
                                         ; Add fake closing section.
        (setq this-chapter-time
-             (format "%.3f" (- (float-time) before-chapter-time)))
+             (format "%.2f" (- (float-time) before-chapter-time)))
        (add-to-list 'leuven--load-times-list
                     (concat "| " ,chaptername " "
                             "| " this-chapter-time " |")))))
@@ -189,8 +186,8 @@ Last time is saved in global variable `leuven--before-section-time'."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
     (when leuven-verbose-loading
-      (when (not (equal this-section-time 0.000))
-        (message "[    Section time: %.3f s]" this-section-time))
+      (when (not (equal this-section-time 0.00))
+        (message "[    Section time: %.2f s]" this-section-time))
       (unless end-of-chapter (message "*** %s" sectionname)))
     ;; For next one.
     (setq leuven--before-section-time (float-time))))
@@ -2617,7 +2614,7 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Set the warning threshold to 500 MB, which will get ride of "File abc.mp4 is
   ;; large (330.2M), really open? (y or n)" annoying message.
-  (setq large-file-warning-threshold 500000000)
+  (setq large-file-warning-threshold (* 500 1024 1024))
 
   ;; A convenient `describe-bindings' with `helm'.
   (with-eval-after-load "helm-descbinds"
@@ -10660,13 +10657,6 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Limit on number of Lisp variable bindings & unwind-protects.
   (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
-  ;; Speed up things by preventing garbage collections.
-  (setq gc-cons-threshold (* 20 1024 1024)) ; 20 MB.
-
-  ;; Don't display messages at start and end of garbage collection (as it hides
-  ;; too many interesting messages).
-  (setq garbage-collection-messages nil)
-
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
 (leuven--chapter leuven-load-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
@@ -10715,16 +10705,16 @@ a clean buffer we're an order of magnitude laxer about checking."
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
 
-(message "[Loading `%s'...done (in %.3f s)]"
-         load-file-name
-         (- (float-time) leuven--before-time))
+(let ((elapsed (float-time (time-subtract (current-time)
+                                          leuven--start-time))))
+  (message "[Loaded %s in %.2f s]" load-file-name elapsed))
 (sit-for 0.3)
 
-(let ((elapsed (float-time (time-subtract (current-time)
-                                          emacs-start-time))))
-  (message "[Loading `%s'... loaded in %.3f s]" load-file-name elapsed))
-
-(message "[Emacs startup time: %s]" (emacs-init-time))
+(add-hook 'after-init-hook
+          #'(lambda ()
+              (message "[Emacs startup time: %s; GC done: %S]" (emacs-init-time) gcs-done)
+              (sit-for 0.3))
+  t)
 
   (defun leuven-update ()
     "Update Emacs-Leuven to its latest version."
