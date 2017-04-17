@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170412.1125
+;; Version: 20170417.1649
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170412.1125"
+(defconst leuven--emacs-version "20170417.1649"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3923,7 +3923,7 @@ cycle through all windows on current frame."
 
   (when (or (not (boundp 'org-agenda-files))
             (null org-agenda-files))
-    (message "[WARN- Found no entries in `org-agenda-files']")
+    (message "[Found no entries in `org-agenda-files']")
     (sit-for 1.5))
 
   (with-eval-after-load "org"
