@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170417.1649
+;; Version: 20170417.1702
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170417.1649"
+(defconst leuven--emacs-version "20170417.1702"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3146,7 +3146,7 @@ cycle through all windows on current frame."
                            (nth 4
                                 (assq 'geometry
                                       (car (display-monitor-attributes-list)))) ; XXX Emacs 24.4 needed!
-                           106)       ; Allow for Emacs' title bar and taskbar
+                           177)       ; Allow for Emacs' title bar and taskbar
                                       ; (from the OS).
                           (frame-char-height)))))
 

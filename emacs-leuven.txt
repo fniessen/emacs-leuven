@@ -5767,7 +5767,7 @@ one.
                            (nth 4
                                 (assq 'geometry
                                       (car (display-monitor-attributes-list)))) ; XXX Emacs 24.4 needed!
-                           106)       ; Allow for Emacs' title bar and taskbar
+                           177)       ; Allow for Emacs' title bar and taskbar
                                       ; (from the OS).
                           (frame-char-height)))))
 #+end_src
