@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170417.1702
+;; Version: 20170526.1732
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170417.1702"
+(defconst leuven--emacs-version "20170526.1732"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -434,6 +434,7 @@ If not, just print a message."
             helm-ls-git
             helm-projectile ; Obsolete package?
             helm-swoop
+            hide-lines
             hideshowvis
             highlight-numbers
             hl-anything                 ; Better than `highlight-symbol'.
@@ -2211,7 +2212,7 @@ Should be selected from `fringe-bitmaps'.")
                            ;; after the delay.
                            (goto-char (point-min)))))))
 
-    (defun vc-diff--diff-make-fine-diffs-if-necessary ()
+    (defun vc-diff--diff-make-fine-diffs-if-necessary (buffer messages)
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; Check for auto-refine limit.
       (unless (> (buffer-size) 14000)
@@ -2219,14 +2220,14 @@ Should be selected from `fringe-bitmaps'.")
     ;; Push the auto-refine function after `vc-diff'.
     (advice-add 'vc-diff :after #'vc-diff--diff-make-fine-diffs-if-necessary)
 
-    (defun vc-diff-finish--handle-color-in-diff-output ()
+    (defun vc-diff-finish--handle-color-in-diff-output (buffer messages)
       "Run `ansi-color-apply-on-region'."
+      (interactive)
       (progn
         (require 'ansi-color)
-        (read-only-mode)
-        (ansi-color-apply-on-region (point-min) (point-max))
-        (read-only-mode)))
-    ;; (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
+        (let ((inhibit-read-only t))
+          (ansi-color-apply-on-region (point-min) (point-max)))))
+    (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
 
     )
 
@@ -2597,6 +2598,9 @@ Should be selected from `fringe-bitmaps'.")
 
   (with-eval-after-load "helm-files"
 
+    ;; Disable fuzzy matching.
+    (setq helm-ff-fuzzy-matching nil)
+
     ;; Don't show only basename of candidates in `helm-find-files'.
     (setq helm-ff-transformer-show-only-basename nil)
 
@@ -2728,6 +2732,9 @@ Should be selected from `fringe-bitmaps'.")
   ;;   ;; (when (executable-find "curl")
   ;;   ;;   (setq helm-google-suggest-use-curl-p t))
   ;;   )
+
+  ;; Disable fuzzy matching for Helm Projectile commands.
+  (setq helm-projectile-fuzzy-match nil)
 
   ;; (global-set-key (kbd "C-;") #'helm-projectile)
 
@@ -8754,7 +8761,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "projectile"
 
+    ;; Indexing method.
     ;; (setq projectile-indexing-method 'native)
+
+    ;; Enable caching of the project's files unconditionally.
+    (setq projectile-enable-caching t)
 
     ;; Action invoked AFTER SWITCHING PROJECTS with `C-c p p'.
     (setq projectile-switch-project-action 'helm-projectile-find-file)
