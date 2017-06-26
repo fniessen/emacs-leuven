@@ -132,9 +132,7 @@ From [[gnus:INBOX#57408.213.114.113.54.1435164814.squirrel@alexander.fl-net.se][
 
 ** TODO Error in post-command-hook (hl-tags-update): (void-function sgml-get-context)
 
-Ouvrir
-d:/Dev/Tools/Tomcat/tomcat-8.0.35-WC21_3-MMMEPO/webapps/archibus/schema/epo-products/bldgops/common/build/classes/epo-bldgops-cost-report.axvw
-au démarrage d'Emacs...
+Ouvrir =client-bldgops-cost-report.axvw= au démarrage d'Emacs...
 
 ** TODO Improve writing of time-substract
 
@@ -13999,6 +13997,12 @@ ag %s -l --nocolor --hidden -g ""
                                         ;       search is case-insensitive.
                                         ; `<R>' for the regular expression to
                                         ;       search for.
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+      ;; Default command to run for `M-x rgrep' (`C-c 3').
+      (grep-apply-setting 'grep-find-template
+                          "find <D> <X> -type f <F> -print0 | \"xargs\" -0 grep <C> -nH -e <R>")
 #+end_src
 
 grep-find-template
