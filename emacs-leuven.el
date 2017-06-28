@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170626.1649
+;; Version: 20170628.2106
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170626.1649"
+(defconst leuven--emacs-version "20170628.2106"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6881,7 +6881,7 @@ this with to-do items than with projects or headings."
       (when (boundp 'TeX-view-program-list)
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
-                       (concat "\"" ,leuven--sumatrapdf-command "\" %o")))))
+                       ,(list (concat "\"" leuven--sumatrapdf-command "\" %o"))))))
 
     (when (or leuven--win32-p leuven--cygwin-p)
       (setcdr (assoc 'output-pdf TeX-view-program-selection)

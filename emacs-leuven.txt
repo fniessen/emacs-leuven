@@ -11511,7 +11511,7 @@ SumatraPDF as your PDF viewer.
       (when (boundp 'TeX-view-program-list)
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
-                       (concat "\"" ,leuven--sumatrapdf-command "\" %o")))))
+                       ,(list (concat "\"" leuven--sumatrapdf-command "\" %o"))))))
 
     (when (or leuven--win32-p leuven--cygwin-p)
       (setcdr (assoc 'output-pdf TeX-view-program-selection)
