@@ -11422,20 +11422,6 @@ file, AUCTeX gives you a ~Command~ menu.
 #+end_src
 
 #+begin_src emacs-lisp
-;;* 3 Controlling Screen (info "(auctex)Display")
-
-;;** 3.1 (info "(auctex)Font Locking")
-
-    (leuven--section "3.1 (auctex)Font Locking")
-
-    ;; (for Org mode) Add the `comment' environment to the variable
-    ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line contains
-    ;; an odd number of dollar characters, this does not cause problems with
-    ;; font-lock in LaTeX-mode.
-    (add-to-list 'LaTeX-verbatim-environments "comment")
-#+end_src
-
-#+begin_src emacs-lisp
 ;;** 4.1 Executing (info "(auctex)Commands")
 
     (leuven--section "4.1 Executing (auctex)Commands")

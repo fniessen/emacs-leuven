@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170628.2106
+;; Version: 20170628.2115
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170628.2106"
+(defconst leuven--emacs-version "20170628.2115"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6803,18 +6803,6 @@ this with to-do items than with projects or headings."
     ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
     ;; a local key binding to `RET' in the `LaTeX-mode-hook').
     (setq TeX-newline-function 'newline-and-indent)
-
-;;* 3 Controlling Screen (info "(auctex)Display")
-
-;;** 3.1 (info "(auctex)Font Locking")
-
-    (leuven--section "3.1 (auctex)Font Locking")
-
-    ;; (for Org mode) Add the `comment' environment to the variable
-    ;; `LaTeX-verbatim-environments' so that, if the `#+TBLFM' line contains
-    ;; an odd number of dollar characters, this does not cause problems with
-    ;; font-lock in LaTeX-mode.
-    (add-to-list 'LaTeX-verbatim-environments "comment")
 
 ;;** 4.1 Executing (info "(auctex)Commands")
 
