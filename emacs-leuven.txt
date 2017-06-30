@@ -6536,8 +6536,6 @@ tangling* of this file by a giga-mega-huge factor!?
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
 
-    (key-chord-define-global "SS" #'isearch-forward)
-
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
 

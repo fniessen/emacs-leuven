@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170628.2115
+;; Version: 20170630.1015
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170628.2115"
+(defconst leuven--emacs-version "20170630.1015"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3637,8 +3637,6 @@ cycle through all windows on current frame."
 
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
-
-    (key-chord-define-global "SS" #'isearch-forward)
 
     (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
     (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
