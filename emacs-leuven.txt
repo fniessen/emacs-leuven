@@ -3882,6 +3882,8 @@ Make the message "/FILENAME has auto save data/" unmissable:
 
 ** Comparing Files
 
+*** Diff
+
 #+begin_src emacs-lisp
 ;;** 18.9 (info "(emacs)Comparing Files")
 
@@ -3889,12 +3891,9 @@ Make the message "/FILENAME has auto save data/" unmissable:
 
   ;; ;; Default to unified diffs.
   ;; (setq diff-switches "-u")             ; Default in Emacs 25.
-
-  ;; Compare text in current window with text in next window.
-  (global-set-key (kbd "C-=") #'compare-windows)
 #+end_src
 
-Press ~e~ in Dired-mode to immediately Ediff two marked files, no questions asked:
+Press ~e~ in Dired mode to immediately Ediff two marked files, no questions asked:
 
 #+begin_src emacs-lisp
   (defun leuven-ediff-files-from-dired ()
@@ -3923,24 +3922,105 @@ Press ~e~ in Dired-mode to immediately Ediff two marked files, no questions aske
 #+end_src
 
 - In case no files are marked, the file at point is used as the first file, and
-  read-file-name is used for the second file. Since I have the magic (setq
-  dired-dwim-target t) in my config, in case a second dired buffer is open,
-  dired-dwim-target-directory will offer it as the starting directory during
+  ~read-file-name~ is used for the second file. Since I have the magic
+  (setq dired-dwim-target t)
+  in my config, in case a second dired buffer is open,
+  ~dired-dwim-target-directory~ will offer it as the starting directory during
   completion. Very useful to compare two files in two different directories.
 
-- Depending on the order of the arguments to ediff-files, the changes will
-  appear either as added or removed; file-newer-than-file-p tries to put the
+- Depending on the order of the arguments to ~ediff-files~, the changes will
+  appear either as added or removed; ~file-newer-than-file-p~ tries to put the
   arguments in a logical order by looking at the files' last change times.
 
-- ediff-after-quit-hook-internal is used to restore the previous window
-  configuration after I quit ediff with q.
+- ~ediff-after-quit-hook-internal~ is used to restore the previous window
+  configuration after I quit Ediff with ~q~.
+
+*** Compare windows
+
+#+begin_src emacs-lisp
+  ;; Compare text in current window with text in next window.
+  (global-set-key (kbd "C-=") #'compare-windows)
+#+end_src
+
+*** SMerge mode
+
+You can use ~M-x smerge-mode~ to *edit a file with conflict markers* (output from
+the ~diff3~ program).
+
+SMerge does not automatically select regions but provides convenient key
+bindings to navigate between conflicts and to choose the A or B variant.
+
+#+begin_src emacs-lisp
+  ;; Change the cumbersome default prefix (C-c ^).
+  (setq smerge-command-prefix (kbd "C-c v"))
+#+end_src
+
+Important keybindings:
+
+- ~C-c v n~ (~smerge-next~) ::
+     Move to next conflict.
+
+- ~C-c v p~ (~smerge-previous~) ::
+     Move to previous conflict.
+
+- ~C-c v RET~ (~smerge-keep-current~) ::
+     Keep the version the cursor is on.
+
+- ~C-c v m~ (~smerge-keep-mine~) ::
+     Keep your changes.
+
+- ~C-c v o~ (~smerge-keep-other~) ::
+     Keep other changes.
+
+#+begin_src emacs-lisp :tangle no
+  ;; Enable SMerge automatically.
+  (defun leuven--enable-smerge-maybe ()
+    (when (and buffer-file-name (vc-backend buffer-file-name))
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "^<<<<<<< " nil t)
+          (smerge-mode 1)))))
+
+  (add-hook 'buffer-list-update-hook #'leuven--enable-smerge-maybe)
+#+end_src
 
 #+begin_note
-You can use ~M-x smerge-mode~ to edit a file with conflict markers (output from
-the ~diff3~ program).  Smerge does not automatically select regions but provides
-convenient key bindings to navigate between conflicts and to choose the A or B
-variant.
+In recent Emacs versions, SMerge is turned on automatically??? XXX
 #+end_note
+
+*** Interface for merging files
+
+- ~C-c v E~ (~smerge-ediff~) ::
+     Start an Ediff session to merge the conflicts.
+
+Keybindings:
+
+- ~n~ and ~p~ ::
+     Navigate through the conflicts.
+
+- ~a~ or ~b~ ::
+     Accept versions.
+
+- ~/~ ::
+     Look at the ancestor!
+
+- ~q~ ::
+     Quit the ediff session.
+
+Since the year 2000, ~vc-resolve-conflict~ is an alias for ~smerge-ediff~, which as
+the name suggests starts an Ediff session, not an Emerge session.
+
+By the way, the library header of =ediff.el= acknowledges =emerge.el='s influence
+and then goes on saying "The present version of *Ediff supersedes Emerge*.  It
+provides a superior user interface and has numerous major features not found in
+Emerge.  In particular, it can do patching, and 2-way and 3-way file comparison,
+merging, and directory operations."
+
+Also note that ~magit-ediff-resolve~ (~E m~ or ~e~ on a file with conflicts) uses
+~smerge-ediff~ internally.  It does however override the ~ediff-quit-hook~ to
+provide a slightly better session finishing experience.  Instead of telling you
+that you could save "the buffer" (there are several buffers), it asks you
+whether you want to save the buffer (while showing you its name).
 
 ** Diff mode
 
@@ -9008,7 +9088,7 @@ With this function, the new sort order is temporary.  Pressing ~r~ for refresh
 will restore the default sort order for the buffer:
 
 #+begin_src emacs-lisp
-  (defun my-org-agenda-change-sorting-strategy (strategy)
+  (defun leuven-org-agenda-change-sorting-strategy (strategy)
     "Change the sorting strategy."
     (interactive (list
                   (completing-read "Choose a strategy: "
@@ -12106,14 +12186,14 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
 Truncate the current function name (for the mode line):
 
 #+begin_src emacs-lisp
-    (defun my-which-func-current ()
+    (defun leuven--which-func-current ()
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
             (truncate-string-to-width current 30 nil nil "...") ; 30 = OK!
           which-func-unknown)))
 
     (setq which-func-format
-          `("[" (:propertize (:eval (my-which-func-current))
+          `("[" (:propertize (:eval (leuven--which-func-current))
                              local-map ,which-func-keymap
                              face which-func
                              mouse-face mode-line-highlight
@@ -13154,7 +13234,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
 (eval-after-load 'js2-mode
   '(progn
-     (defadvice js2-mode-create-imenu-index (around my-js2-mode-create-imenu-index activate)
+     (defadvice js2-mode-create-imenu-index (around leuven-js2-mode-create-imenu-index activate)
        (let (rlt extra-rlt)
          ad-do-it
          (setq extra-rlt
@@ -13166,9 +13246,9 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  (defun my-archibus-js-imenu-make-index ()
+  (defun leuven--archibus-js-imenu-make-index ()
     (save-excursion
-      (imenu--generic-function my-archibus-javascript-common-imenu-regex-list)))
+      (imenu--generic-function leuven-archibus-javascript-common-imenu-regex-list)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -13267,7 +13347,7 @@ Install ESLint (globally) using ~npm~:
     ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
 
   (add-hook 'js2-mode-hook
-            (defun my-js2-mode-setup ()
+            (defun leuven--js2-mode-setup ()
               (flycheck-mode t)
               ;; (when (executable-find "eslint")
               ;;   (flycheck-select-checker 'javascript-eslint))
@@ -13993,6 +14073,8 @@ grep-find-template
 "find <D> <X> -type f <F> -print0 | \"xargs\" -0 grep <C> -nH -e <R>"
 
 find . -name "*.log" -type f -print0 | xargs -I _ sh -c 'iconv -f utf16 -t utf8 _ | grep runPMGeneration'
+
+ripgrep?
 
 #+begin_src emacs-lisp
     ;; This is how compilers number the first column, usually 1 or 0.

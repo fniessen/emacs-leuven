@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170630.1015
+;; Version: 20170706.1303
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170630.1015"
+(defconst leuven--emacs-version "20170706.1303"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2159,9 +2159,6 @@ Should be selected from `fringe-bitmaps'.")
   ;; ;; Default to unified diffs.
   ;; (setq diff-switches "-u")             ; Default in Emacs 25.
 
-  ;; Compare text in current window with text in next window.
-  (global-set-key (kbd "C-=") #'compare-windows)
-
   (defun leuven-ediff-files-from-dired ()
 "Quickly Ediff files from Dired"
     (interactive)
@@ -2185,6 +2182,12 @@ Should be selected from `fringe-bitmaps'.")
 
   (with-eval-after-load "dired"
     (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired))
+
+  ;; Compare text in current window with text in next window.
+  (global-set-key (kbd "C-=") #'compare-windows)
+
+  ;; Change the cumbersome default prefix (C-c ^).
+  (setq smerge-command-prefix (kbd "C-c v"))
 
 ;;** 18.10 (info "(emacs)Diff Mode")
 
@@ -5253,7 +5256,7 @@ From the address <%a>"
   ;; Show agenda in the current window, keeping all other windows.
   (setq org-agenda-window-setup 'current-window)
 
-  (defun my-org-agenda-change-sorting-strategy (strategy)
+  (defun leuven-org-agenda-change-sorting-strategy (strategy)
     "Change the sorting strategy."
     (interactive (list
                   (completing-read "Choose a strategy: "
@@ -7221,14 +7224,14 @@ this with to-do items than with projects or headings."
     ;; Show current function in mode line (based on Imenu).
     (which-function-mode 1)             ; ~ Stickyfunc mode (in header line)
 
-    (defun my-which-func-current ()
+    (defun leuven--which-func-current ()
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
             (truncate-string-to-width current 30 nil nil "...") ; 30 = OK!
           which-func-unknown)))
 
     (setq which-func-format
-          `("[" (:propertize (:eval (my-which-func-current))
+          `("[" (:propertize (:eval (leuven--which-func-current))
                              local-map ,which-func-keymap
                              face which-func
                              mouse-face mode-line-highlight
@@ -7726,7 +7729,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
 (eval-after-load 'js2-mode
   '(progn
-     (defadvice js2-mode-create-imenu-index (around my-js2-mode-create-imenu-index activate)
+     (defadvice js2-mode-create-imenu-index (around leuven-js2-mode-create-imenu-index activate)
        (let (rlt extra-rlt)
          ad-do-it
          (setq extra-rlt
@@ -7779,7 +7782,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
 
   (add-hook 'js2-mode-hook
-            (defun my-js2-mode-setup ()
+            (defun leuven--js2-mode-setup ()
               (flycheck-mode t)
               ;; (when (executable-find "eslint")
               ;;   (flycheck-select-checker 'javascript-eslint))
