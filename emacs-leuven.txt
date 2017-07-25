@@ -4159,7 +4159,9 @@ resolve conflicts.
       "Make all invisible text visible."
       (visible-mode 1)
       (setq truncate-lines nil)
-      (when hs-minor-mode (hs-show-all))
+      (when (and (boundp 'hs-minor-mode)
+                 hs-minor-mode)
+        (hs-show-all))
       (when (derived-mode-p 'org-mode)
         (org-remove-inline-images)))
 

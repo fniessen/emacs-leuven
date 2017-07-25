@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170724.1148
+;; Version: 20170725.1007
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170724.1148"
+(defconst leuven--emacs-version "20170725.1007"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2270,7 +2270,9 @@ Should be selected from `fringe-bitmaps'.")
       "Make all invisible text visible."
       (visible-mode 1)
       (setq truncate-lines nil)
-      (when hs-minor-mode (hs-show-all))
+      (when (and (boundp 'hs-minor-mode)
+                 hs-minor-mode)
+        (hs-show-all))
       (when (derived-mode-p 'org-mode)
         (org-remove-inline-images)))
 
