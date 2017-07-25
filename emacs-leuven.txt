@@ -4007,6 +4007,17 @@ Keybindings:
 - ~q~ ::
      Quit the ediff session.
 
+The top-left pane contains the =file= in my working directory as it was before the
+merge, the top-right pane contains the final revision of =file= at the source URL
+and the bottom pane contains the merged version.
+
+The really nice thing is that as soon as I end the Ediff session, Emacs goes
+back to the conflicted file /with all the changes done in the Ediff session
+applied/. So if you have resolved all conflicts, the file is not in Smerge mode
+anymore. The only thing left to do is to save the file. After that, the state of
+the file as displayed in the vc-dir buffer changes from /conflicted/ to /edited/.
+
+#+begin_note
 Since the year 2000, ~vc-resolve-conflict~ is an alias for ~smerge-ediff~, which as
 the name suggests starts an Ediff session, not an Emerge session.
 
@@ -4021,6 +4032,7 @@ Also note that ~magit-ediff-resolve~ (~E m~ or ~e~ on a file with conflicts) use
 provide a slightly better session finishing experience.  Instead of telling you
 that you could save "the buffer" (there are several buffers), it asks you
 whether you want to save the buffer (while showing you its name).
+#+end_note
 
 ** Diff mode
 
@@ -4168,8 +4180,8 @@ resolve conflicts.
 
 *** Ediff-directories
 
-For *comparing two directories*, you can use ~ediff-directories~, ~ztree-diff~ or
-[[http://meldmerge.org/][Meld]].
+For *comparing two directories*, you can use ~ediff-directories~, ~ztree-diff~, [[http://meldmerge.org/][Meld]]
+(free) or [[https://www.deltawalker.com/][DeltaWalker]] (39.95 USD).
 
 ~ediff-directories~ combined with the key sequence == h x= ~= h x~ shows you only the
 files which differ.
@@ -8390,7 +8402,8 @@ Structure:
   ;; 9.1.2 Directory with Org files.
   (setq org-directory
         (directory-file-name            ; This function removes the final slash.
-         (cond ((file-directory-p "~/4-Admin/") "~/4-Admin/")
+         (cond ((file-directory-p "~/.dotfiles/local/org/") "~/.dotfiles/local/org/")
+               ((file-directory-p "~/4-Admin/") "~/4-Admin/")
                ((file-directory-p "~/org/") "~/org/")
                (t "~/"))))
 

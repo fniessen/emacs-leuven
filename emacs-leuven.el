@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170706.1303
+;; Version: 20170724.1148
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170706.1303"
+(defconst leuven--emacs-version "20170724.1148"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -4813,7 +4813,8 @@ cycle through all windows on current frame."
   ;; 9.1.2 Directory with Org files.
   (setq org-directory
         (directory-file-name            ; This function removes the final slash.
-         (cond ((file-directory-p "~/4-Admin/") "~/4-Admin/")
+         (cond ((file-directory-p "~/.dotfiles/local/org/") "~/.dotfiles/local/org/")
+               ((file-directory-p "~/4-Admin/") "~/4-Admin/")
                ((file-directory-p "~/org/") "~/org/")
                (t "~/"))))
 
