@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170725.1007
+;; Version: 20170726.2154
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,7 +71,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170725.1007"
+(defconst leuven--emacs-version "20170726.2154"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -495,6 +495,12 @@ If not, just print a message."
       :group 'emacs-leuven
       :type '(repeat (string)))
 
+    (defcustom leuven-install-all-missing-elpa-packages
+     nil
+      "Force the installation (without query) of all missing packages."
+      :group 'emacs-leuven
+      :type '(repeat (string)))
+
     (defun leuven--missing-elpa-packages ()
       "List packages to install for a full blown Leuven installation.
 These packages are neither built-in nor already installed nor ignored."
@@ -506,8 +512,9 @@ These packages are neither built-in nor already installed nor ignored."
             (push pkg missing-elpa-packages)))
         missing-elpa-packages))
 
-    ;; Propose to install all the packages specified in `package-selected-packages'.
-    ;; which are missing and which shouldn't be ignored.
+    ;; Propose to install all the packages specified in
+    ;; `package-selected-packages' which are missing and which shouldn't be
+    ;; ignored.
     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
       (when missing-elpa-packages
         ;; Download once the ELPA archive description.
@@ -516,7 +523,8 @@ These packages are neither built-in nor already installed nor ignored."
                                         ; (not present in the cache of the ELPA
                                         ; contents) won't install.
         (dolist (pkg (reverse missing-elpa-packages))
-          (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
+          (if (or leuven-install-all-missing-elpa-packages
+                  (yes-or-no-p (format "Install ELPA package `%s'? " pkg)))
               (ignore-errors
                 (package-install pkg))  ; Must be run after initializing
                                         ; `package-initialize'.
@@ -2621,9 +2629,9 @@ Should be selected from `fringe-bitmaps'.")
         '(("rmvb" . "smplayer")
           ("mp4" . "smplayer")))
 
-  ;; Set the warning threshold to 500 MB, which will get ride of "File abc.mp4 is
-  ;; large (330.2M), really open? (y or n)" annoying message.
-  (setq large-file-warning-threshold (* 500 1024 1024))
+  ;; Set the warning threshold to 576 MB, which will get ride of "File xxx is
+  ;; large (xxxM), really open? (y or n)" annoying message.
+  (setq large-file-warning-threshold (* 576 1024 1024))
 
   ;; A convenient `describe-bindings' with `helm'.
   (with-eval-after-load "helm-descbinds"
