@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170726.2154
+;; Version: 20170802.1400
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -44,15 +44,21 @@
 ;; To get more debug info about the packages getting loaded, add the following
 ;; line before requiring Emacs-Leuven.
 ;;
-;;     ;; show messages describing progress of loading Emacs-Leuven
+;;     ;; Show messages describing progress of loading Emacs-Leuven.
 ;;     (setq leuven-verbose-loading t)
 ;;
-;; To avoid be questioned about packages to add to your local Emacs
+;; To avoid being questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
 ;; line before requiring Emacs-Leuven.
 ;;
-;;     ;; do not (try to) install extra Emacs packages
+;;     ;; Do not (try to) install extra Emacs packages.
 ;;     (setq package-selected-packages nil)
+;;
+;; To install all the extra packages used hereunder, without being questioned,
+;; add the following line before requiring Emacs-Leuven.
+;;
+;;     ;; Install all extra Emacs packages without asking for confirmation.
+;;     (setq leuven-install-all-missing-elpa-packages t)
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
 
@@ -71,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170726.2154"
+(defconst leuven--emacs-version "20170802.1401"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6259,16 +6265,16 @@ this with to-do items than with projects or headings."
     (message "[... Org Languages]")
 
     ;; Configure Babel to support most languages.
-    (add-to-list 'org-babel-load-languages '(R . t)) ; Requires R and ess-mode.
-    (add-to-list 'org-babel-load-languages '(awk . t))
-    (add-to-list 'org-babel-load-languages '(ditaa . t)) ; Sudo aptitude install openjdk-6-jre.
-    (add-to-list 'org-babel-load-languages '(dot . t))
-    (add-to-list 'org-babel-load-languages '(java . t))
-    (add-to-list 'org-babel-load-languages '(latex . t)) ; Shouldn't you use #+begin/end_latex blocks instead?
-    (add-to-list 'org-babel-load-languages '(ledger . t)) ; Requires ledger.
+    (add-to-list 'org-babel-load-languages '(R        . t)) ; Requires R and ess-mode.
+    (add-to-list 'org-babel-load-languages '(awk      . t))
+    (add-to-list 'org-babel-load-languages '(ditaa    . t)) ; Sudo aptitude install openjdk-6-jre.
+    (add-to-list 'org-babel-load-languages '(dot      . t))
+    (add-to-list 'org-babel-load-languages '(java     . t))
+    (add-to-list 'org-babel-load-languages '(latex    . t)) ; Shouldn't you use #+begin/end_latex blocks instead?
+    (add-to-list 'org-babel-load-languages '(ledger   . t)) ; Requires ledger.
     (add-to-list 'org-babel-load-languages '(makefile . t))
-    (add-to-list 'org-babel-load-languages '(org . t))
-    (add-to-list 'org-babel-load-languages '(python . t))
+    (add-to-list 'org-babel-load-languages '(org      . t))
+    (add-to-list 'org-babel-load-languages '(python   . t))
     (if (locate-library "ob-shell")     ; ob-sh renamed on 2013-12-13
         (add-to-list 'org-babel-load-languages '(shell . t))
       (add-to-list 'org-babel-load-languages '(sh . t)))
