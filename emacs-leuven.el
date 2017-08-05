@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170802.1400
+;; Version: 20170805.1935
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170802.1401"
+(defconst leuven--emacs-version "20170805.1935"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -686,6 +686,9 @@ These packages are neither built-in nor already installed nor ignored."
 ;;** 8.4 (info "(emacs)Completion")
 
   (leuven--section "8.4 (emacs)Completion")
+
+  ;; Ignore case differences when completing file names.
+  (setq read-file-name-completion-ignore-case t)
 
   ;; Don't consider case significant in completion.
   (setq completion-ignore-case t)
@@ -1788,6 +1791,7 @@ Should be selected from `fringe-bitmaps'.")
   ;; Spelling checker program.
   (setq ispell-program-name             ; Defined in ispell.el.
         (or (executable-find "aspell")
+            (executable-find "hunspell")
             (executable-find "ispell")
             ;; nil                      ; [Default: "ispell"]
             ))
@@ -8207,6 +8211,8 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     ;; Enable Flycheck mode in all programming modes.
     (add-hook 'prog-mode-hook #'flycheck-mode)
 
+    (add-hook 'LaTeX-mode-hook #'flycheck-mode)
+
     (global-set-key (kbd "M-g l") 'flycheck-list-errors))
 
   (with-eval-after-load "flycheck"
@@ -8364,6 +8370,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;;** 28.1 (info "(emacs)Version Control")
 
   (leuven--section "28.1 (emacs)Version Control")
+
+;; (setq vc-follow-symlinks t)
+
+;; ;; When opening a file that is a symbolic link, don't ask whether I
+;; ;; want to follow the link. Just do it
+;; (setq find-file-visit-truename t)
 
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 

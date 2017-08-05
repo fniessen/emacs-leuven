@@ -1226,6 +1226,9 @@ echo area.
 
   (leuven--section "8.4 (emacs)Completion")
 
+  ;; Ignore case differences when completing file names.
+  (setq read-file-name-completion-ignore-case t)
+
   ;; Don't consider case significant in completion.
   (setq completion-ignore-case t)
 #+end_src
@@ -3299,6 +3302,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
   ;; Spelling checker program.
   (setq ispell-program-name             ; Defined in ispell.el.
         (or (executable-find "aspell")
+            (executable-find "hunspell")
             (executable-find "ispell")
             ;; nil                      ; [Default: "ispell"]
             ))
@@ -10031,8 +10035,8 @@ Look at the variable ~org-latex-remove-logfiles~, which controls whether some
 of the files produced by LaTeX (~org-latex-logfiles-extensions~) are removed.
 
 #+begin_warning
-Under Windows Emacs, ~executable-find~ searches for =latexmk.exe= only; it *never
-will find the Cygwin symlink* to =latexmk.pl=, though Cygwin bin directory is first
+Under Windows Emacs, ~executable-find~ searches for =latexmk.exe= only; it *never*
+*will find the Cygwin symlink* to =latexmk.pl=, though Cygwin bin directory is first
 in the PATH.
 
 OTOH, when commands will be launched by the Org export process, as that will run
@@ -14180,6 +14184,8 @@ Navigate:
     ;; Enable Flycheck mode in all programming modes.
     (add-hook 'prog-mode-hook #'flycheck-mode)
 
+    (add-hook 'LaTeX-mode-hook #'flycheck-mode)
+
     (global-set-key (kbd "M-g l") 'flycheck-list-errors))
 
   (with-eval-after-load "flycheck"
@@ -14475,6 +14481,12 @@ Systems) in a generic way -- a real timesaver.
 ;;** 28.1 (info "(emacs)Version Control")
 
   (leuven--section "28.1 (emacs)Version Control")
+
+;; (setq vc-follow-symlinks t)
+
+;; ;; When opening a file that is a symbolic link, don't ask whether I
+;; ;; want to follow the link. Just do it
+;; (setq find-file-visit-truename t)
 #+end_src
 
 *** Version Control and the Mode Line
