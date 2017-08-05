@@ -1256,7 +1256,7 @@ automatically end up in the group I wrote from.
 
     ;; Added one key binding.
     (define-key message-mode-map
-      (kbd "C-c p") 'gnus-alias-select-identity)
+      (kbd "C-c x") 'gnus-alias-select-identity)
 
     ;; set up my identities
     (setq gnus-alias-identity-alist

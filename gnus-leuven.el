@@ -1,11 +1,10 @@
-
 ;;; gnus-leuven.el --- my Gnus config file
 
 ;; Copyright (C) 2004-2017 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20170101.1125
+;; Version: 20170805.1931
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -638,7 +637,7 @@
 
     ;; Added one key binding.
     (define-key message-mode-map
-      (kbd "C-c p") 'gnus-alias-select-identity)
+      (kbd "C-c x") 'gnus-alias-select-identity)
 
     ;; set up my identities
     (setq gnus-alias-identity-alist
