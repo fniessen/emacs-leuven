@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170805.1935
+;; Version: 20170805.2128
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170805.1935"
+(defconst leuven--emacs-version "20170805.2128"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7460,13 +7460,16 @@ mouse-3: go to end") "]")))
     (define-key hs-minor-mode-map (kbd "C-c <left>") #'hs-hide-block)
     (define-key hs-minor-mode-map (kbd "C--") #'hs-hide-block)
                                         ; `C-c @ C-h' (collapse current fold)
+
     (define-key hs-minor-mode-map (kbd "<C-kp-add>") #'hs-show-block)
     (define-key hs-minor-mode-map (kbd "C-c <right>") #'hs-show-block)
     (define-key hs-minor-mode-map (kbd "C-+") #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold)
+
     (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
     (define-key hs-minor-mode-map (kbd "C-c <up>") #'hs-hide-all)
                                         ; `C-c @ C-M-h' (collapse all folds)
+
     (define-key hs-minor-mode-map (kbd "<C-S-kp-add>") #'hs-show-all)
     (define-key hs-minor-mode-map (kbd "C-c <down>") #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds)
@@ -7487,8 +7490,8 @@ mouse-3: go to end") "]")))
 
     (setq hs-set-up-overlay 'hs-display-code-line-counts)
 
-    ;; Hide all top level blocks.
-    (add-hook 'find-file-hook #'hs-hide-all)
+    ;; ;; Hide all top level blocks.
+    ;; (add-hook 'find-file-hook #'hs-hide-all)
 )
 
 ;;** 26.8 (info "(emacs)Symbol Completion")
