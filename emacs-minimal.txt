@@ -8,12 +8,11 @@
 
 #+PROPERTY:  header-args :eval no
 
-# #+SETUPFILE: ./bigblow-pirilampo.setup
-#+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg-local-abs.setup
+#+SETUPFILE: ~/.dotfiles/org/theme-readtheorg.setup
 
 * Example
   :PROPERTIES:
-  :header-args: :tangle .emacs-minimal.el
+  :header-args: :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
   :END:
 
 The usual method to find a problem while avoiding to disturb a running Emacs
@@ -29,7 +28,7 @@ Here is such a minimal Emacs config file.
 ** Header
 
 #+begin_src emacs-lisp
-;;; .emacs-minimal --- Minimal configuration file for Emacs
+;;; emacs-minimal --- Minimal configuration file for Emacs
 
 ;;; Commentary:
 
@@ -133,26 +132,15 @@ Here is such a minimal Emacs config file.
    :header-args: :tangle no
    :END:
 
-#+begin_src emacs-lisp :tangle .emacs-minimal.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
 ;;* --[ Variable part Under Test ]--------------------------------------------
 #+end_src
 
 *** Sandbox
 
-#+begin_src emacs-lisp :tangle .emacs-minimal.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
 ;; Place your test code here.
 
-(setq ispell-program-name
-      (cond ((eq system-type 'cygwin)
-             "/cygdrive/c/Program Files (x86)/Aspell/bin/aspell.exe")
-            ((eq system-type 'windows-nt)
-             "c:/Program Files (x86)/Aspell/bin/aspell.exe")))
-
-;; Enable on-the-fly spell checking.
-(add-hook 'org-mode-hook 'flyspell-mode)
-
-(with-eval-after-load "helm-autoloads"
-  (global-set-key (kbd "M-y") 'helm-show-kill-ring))
 #+end_src
 
 *** Test if function is defined
@@ -277,13 +265,15 @@ You can *get backtraces* at each stopping point by Edebugging =foobar= and
 
 ** Footer
 
-#+begin_src emacs-lisp :tangle .emacs-minimal.el
+#+begin_src emacs-lisp :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
+;;* --[ Constant part ]-------------------------------------------------------
+
 (message "Loading Minimal Emacs... Done (in %.2f s)"
          (- (float-time) em/emacs-load-time-start))
 
-(provide '.emacs-minimal)
+(provide 'emacs-minimal)
 
-;;; .emacs-minimal.el ends here
+;;; emacs-minimal.el ends here
 #+end_src
 
 * One-liners
@@ -394,7 +384,7 @@ use the ~-P~ option of =emacs-helm.sh= to use another Emacs executable file.
 
 *Call this script emacs-q?*
 
-#+begin_src shell :tangle emacs-minimal :var workingDir=(file-name-directory (or load-file-name (buffer-file-name))) :padline no :shebang #!/bin/sh
+#+begin_src shell :tangle ~/.dotfiles/bin/emacs-minimal :padline no :shebang #!/bin/sh
 TESTEL=
 TESTFILE=~/test.el
 if test -e $TESTFILE # file exists
@@ -402,10 +392,10 @@ then
     TESTEL="-l $TESTFILE"
 fi
 
-EMACS="/cygdrive/c/Program\ Files\ \(x86\)/emacs-trunk/bin/emacs"
+EMACS="emacs"
 
 # No init file.
-cmd="$EMACS -q -l ${workingDir}.emacs-minimal.el $TESTEL"
+cmd="$EMACS -q -l ~/.emacs.d/lisp/emacs-minimal.el $TESTEL"
 
 echo "Launching '$cmd'..."
 eval "$cmd"
@@ -415,10 +405,4 @@ echo "Exit status: $?"
 
 #+begin_src shell
 alias em=emacs-minimal
-#+end_src
-
-Install it, by symlinking the file.
-
-#+begin_src shell :results silent :var workingDir=(file-name-directory (or load-file-name (buffer-file-name)))
-ln -f -s $workingDir/emacs-minimal ~/bin/emacs-minimal
 #+end_src
