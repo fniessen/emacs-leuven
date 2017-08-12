@@ -99,7 +99,11 @@ http://koldfront.dk/text/gnus-email-basic-usage.html
 
 * Loading Libraries of Lisp Code for Emacs
 
-#+begin_src emacs-lisp :tangle no
+It is useful to define ~try-require~ here, so that this Gnus configuration can be
+used without its Emacs configuration counterpart (then, it's not already
+defined).
+
+#+begin_src emacs-lisp
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
     (defun try-require (feature)
@@ -1064,8 +1068,8 @@ pressing ~K H~ (~gnus-article-browse-html-article~).
 
   ;; Default directory for saving attachments.
   (setq mm-default-directory
-        (cond ((or leuven--win32-p
-                   leuven--cygwin-p)
+        (cond ((or (eq system-type 'windows-nt)
+                   (eq system-type 'cygwin))
                "~/")
               (t                        ; Linux
                "~/Desktop/")))
