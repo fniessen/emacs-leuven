@@ -1,0 +1,18 @@
+# name: Create database sna...
+# --
+USE master
+GO
+
+-- Drop snapshot database if it already exists
+IF EXISTS (SELECT name
+        FROM sys.databases
+        WHERE name = N'${1:source_database}_${2:snapshot_id}')
+    DROP DATABASE $1_$2
+GO
+
+-- Create the snapshot database
+CREATE DATABASE $1_$2 ON
+( NAME = $1_$2_data,
+  FILENAME = '$1_$2.ss')
+AS SNAPSHOT OF $1;
+GO$0

@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>SQL YASnippets</title>
+<!-- 2017-08-12 Sat 10:38 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Fabrice Niessen" />
@@ -94,6 +95,52 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
 <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
 </head>
 <body>
 <div id="content">
@@ -175,26 +222,31 @@ constructs such as <code>BEGIN...END</code>, <code>IF</code>, <code>WHILE</code>
 <div class="outline-text-4" id="text-2-1-1">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Fast-forward <span class="org-keyword">read</span>-<span class="org-keyword">on</span>...
-# <span class="org-comment">--</span>
-<span class="org-comment-delimiter">/* </span><span class="org-comment">declare variables */</span>
-<span class="org-keyword">DECLARE</span> @<span class="org-keyword">variable</span> <span class="org-type">INT</span>
+<pre class="src src-sql"># name: Fast-forward read-on...
+# --
+/* declare variables */
+DECLARE @variable INT
 
-<span class="org-keyword">DECLARE</span> ${1:<span class="org-keyword">cursor_name</span>} <span class="org-keyword">CURSOR</span> FAST_FORWARD READ_ONLY <span class="org-keyword">FOR</span> ${2:select_statement}
+DECLARE ${1:cursor_name} CURSOR
+FAST_FORWARD READ_ONLY
+FOR ${2:select_statement}
 
-<span class="org-keyword">OPEN</span> $1
+OPEN $1
 
-<span class="org-keyword">FETCH</span> <span class="org-keyword">NEXT</span> <span class="org-keyword">FROM</span> $1 <span class="org-keyword">INTO</span> @<span class="org-keyword">variable</span>
+FETCH NEXT FROM $1
+INTO @variable
 
 WHILE @@FETCH_STATUS = 0
-<span class="org-keyword">BEGIN</span>
+BEGIN
     $0
 
-    <span class="org-keyword">FETCH</span> <span class="org-keyword">NEXT</span> <span class="org-keyword">FROM</span> $1 <span class="org-keyword">INTO</span> @<span class="org-keyword">variable</span>
-<span class="org-keyword">END</span>
+    FETCH NEXT FROM $1
+    INTO @variable
+END
 
-<span class="org-keyword">CLOSE</span> $1
-<span class="org-keyword">DEALLOCATE</span> $1
+CLOSE $1
+DEALLOCATE $1
+GO
 </pre>
 </div>
 </div>
@@ -207,33 +259,47 @@ WHILE @@FETCH_STATUS = 0
 </div><div id="outline-container-sec-2-2-1" class="outline-4">
 <h4 id="sec-2-2-1">[cdb] Create DataBase</h4>
 <div class="outline-text-4" id="text-2-2-1">
+<p>
+Create database.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> database
-# <span class="org-comment">--</span>
-<span class="org-keyword">CREATE</span> DATABASE ${1:database_name}
-<span class="org-keyword">ON</span>
-<span class="org-keyword">PRIMARY</span> ( <span class="org-comment">-- or use FILEGROUP filegroup_name</span>
-  <span class="org-keyword">NAME</span> = $1_data,
-  FILENAME = <span class="org-string">'$1.mdf'</span>
-) <span class="org-comment">--, and repeat as required</span>
-LOG <span class="org-keyword">ON</span>
+<pre class="src src-sql"># name: Create database
+# --
+USE master
+GO
+
+-- Drop the database if it already exists
+IF EXISTS (SELECT name
+	FROM sys.databases
+	WHERE name = N'${1:database_name}')
+    DROP DATABASE $1
+GO
+
+CREATE DATABASE $1
+ON
+PRIMARY ( -- or use FILEGROUP filegroup_name
+  NAME = $1_data,
+  FILENAME = '$1.mdf'
+) --, and repeat as required
+LOG ON
 (
-  <span class="org-keyword">NAME</span> = $1_log,
-  FILENAME = <span class="org-string">'$1.ldf'</span>
-) <span class="org-comment">--, and repeat as required</span>
-<span class="org-comment">--COLLATE collation_name</span>
-<span class="org-comment">--WITH</span>
-<span class="org-comment">--  DB_CHAINING ON/OFF</span>
-<span class="org-comment">--  TRUSTWORTHY ON/OFF</span>
-<span class="org-comment">--FOR LOAD</span>
-<span class="org-comment">--FOR ATTACH</span>
-<span class="org-comment">--WITH</span>
-<span class="org-comment">--  ENABLE_BROKER</span>
-<span class="org-comment">--  NEW_BROKER</span>
-<span class="org-comment">--  ERROR_BROKER_CONVERSATIONS</span>
-<span class="org-comment">--FOR ATTACH_REBUILD_LOG</span>
-<span class="org-keyword">GO</span>
+  NAME = $1_log,
+  FILENAME = '$1.ldf'
+) --, and repeat as required
+--COLLATE collation_name
+--WITH
+--  DB_CHAINING ON/OFF
+--  TRUSTWORTHY ON/OFF
+--FOR LOAD
+--FOR ATTACH
+--WITH
+--  ENABLE_BROKER
+--  NEW_BROKER
+--  ERROR_BROKER_CONVERSATIONS
+--FOR ATTACH_REBUILD_LOG
+GO
 </pre>
 </div>
 </div>
@@ -242,18 +308,30 @@ LOG <span class="org-keyword">ON</span>
 <div id="outline-container-sec-2-2-2" class="outline-4">
 <h4 id="sec-2-2-2">[cdbsnap] Create DataBase Snapshot</h4>
 <div class="outline-text-4" id="text-2-2-2">
+<p>
+Create snapshot.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> database sna...
-# <span class="org-comment">--</span>
-<span class="org-keyword">CREATE</span> DATABASE ${2:database_name}<span class="org-whitespace-trailing"> </span>
-<span class="org-keyword">ON</span><span class="org-whitespace-trailing"> </span>
-    (
-    <span class="org-keyword">NAME</span> = $2_data,
-    FILENAME = <span class="org-string">'$2.ss'</span>
-    )
-<span class="org-keyword">AS</span> SNAPSHOT <span class="org-keyword">OF</span> ${1:source_database}
-<span class="org-keyword">GO</span>$0
+<pre class="src src-sql"># name: Create database sna...
+# --
+USE master
+GO
+
+-- Drop snapshot database if it already exists
+IF EXISTS (SELECT name
+	FROM sys.databases
+	WHERE name = N'${1:source_database}_${2:snapshot_id}')
+    DROP DATABASE $1_$2
+GO
+
+-- Create the snapshot database
+CREATE DATABASE $1_$2 ON
+( NAME = $1_$2_data,
+  FILENAME = '$1_$2.ss')
+AS SNAPSHOT OF $1;
+GO$0
 </pre>
 </div>
 </div>
@@ -264,9 +342,69 @@ LOG <span class="org-keyword">ON</span>
 <div class="outline-text-4" id="text-2-2-3">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> database
-# <span class="org-comment">--</span>
-<span class="org-keyword">DROP</span> DATABASE $0
+<pre class="src src-sql"># name: Drop database
+# --
+USE master
+GO
+
+-- Drop the database if it already exists
+IF EXISTS (SELECT name
+	FROM sys.databases
+	WHERE name = N'${1:database_name}')
+    DROP DATABASE $1
+GO
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-4" class="outline-4">
+<h4 id="sec-2-2-4">Database Backup</h4>
+<div class="outline-text-4" id="text-2-2-4">
+<p>
+Backup database.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># name: Backup database
+# --
+BACKUP DATABASE ${1:database_name}
+    TO DISK = N'Backup_Path/$1.bak'
+WITH
+    NOFORMAT,
+    NOINIT,
+    NAME = N'$1-Full Database Backup',
+    SKIP,
+    STATS = 10;
+GO
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-5" class="outline-4">
+<h4 id="sec-2-2-5">Database Restore</h4>
+<div class="outline-text-4" id="text-2-2-5">
+<p>
+Restore database.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql"># name: Restore database
+# --
+USE master
+GO
+
+RESTORE DATABASE ${1:database_name}
+    FROM DISK = N'Backup_Path/$1.bak'
+WITH
+    FILE = 1,
+    NOUNLOAD,
+    REPLACE,
+    STATS = 10
+GO
 </pre>
 </div>
 </div>
@@ -281,9 +419,9 @@ LOG <span class="org-keyword">ON</span>
 <div class="outline-text-4" id="text-2-3-1">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">INSERT</span> <span class="org-keyword">INTO</span> $0
+<pre class="src src-sql"># name: INSERT INTO fragment
+# --
+INSERT INTO $0
 </pre>
 </div>
 </div>
@@ -294,9 +432,9 @@ LOG <span class="org-keyword">ON</span>
 <div class="outline-text-4" id="text-2-3-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span> frag...
-# <span class="org-comment">--</span>
-<span class="org-keyword">SELECT</span> * <span class="org-keyword">FROM</span> $0
+<pre class="src src-sql"># name: SELECT * FROM frag...
+# --
+SELECT * FROM $0
 </pre>
 </div>
 </div>
@@ -305,11 +443,16 @@ LOG <span class="org-keyword">ON</span>
 <div id="outline-container-sec-2-3-3" class="outline-4">
 <h4 id="sec-2-3-3">[st100] Select Top 100</h4>
 <div class="outline-text-4" id="text-2-3-3">
+<p>
+Select top 100 rows.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">SELECT</span> top 100 <span class="org-keyword">rows</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">SELECT</span> TOP 100 * <span class="org-keyword">FROM</span> $0
+<pre class="src src-sql"># name: SELECT top 100 rows
+# --
+SELECT TOP 100 *
+FROM $0
 </pre>
 </div>
 </div>
@@ -318,23 +461,27 @@ LOG <span class="org-keyword">ON</span>
 <div id="outline-container-sec-2-3-4" class="outline-4">
 <h4 id="sec-2-3-4">[scf] Select Count From</h4>
 <div class="outline-text-4" id="text-2-3-4">
+<p>
+Count number of records returned by query.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-builtin">Count</span> <span class="org-keyword">number</span> <span class="org-keyword">of</span> rec...
-# <span class="org-comment">--</span>
-<span class="org-keyword">SELECT</span> <span class="org-builtin">COUNT</span>(*) <span class="org-keyword">FROM</span> $0
+<pre class="src src-sql"># name: Count number of rec...
+# --
+SELECT COUNT(*) FROM $0
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-3-5" class="outline-4">
-<h4 id="sec-2-3-5">[is] INFORMATION_SCHEMA</h4>
+<h4 id="sec-2-3-5">[is] INFORMATION<sub>SCHEMA</sub></h4>
 <div class="outline-text-4" id="text-2-3-5">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: INFORMATION_SCH...
-# <span class="org-comment">--</span>
+<pre class="src src-sql"># name: INFORMATION_SCH...
+# --
 INFORMATION_SCHEMA$0
 </pre>
 </div>
@@ -346,9 +493,9 @@ INFORMATION_SCHEMA$0
 <div class="outline-text-4" id="text-2-3-6">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">GROUP</span> <span class="org-keyword">BY</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">GROUP</span> <span class="org-keyword">BY</span> $0
+<pre class="src src-sql"># name: GROUP BY fragment
+# --
+GROUP BY $0
 </pre>
 </div>
 </div>
@@ -359,9 +506,9 @@ INFORMATION_SCHEMA$0
 <div class="outline-text-4" id="text-2-3-7">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> $0
+<pre class="src src-sql"># name: ORDER BY fragment
+# --
+ORDER BY $0
 </pre>
 </div>
 </div>
@@ -370,11 +517,16 @@ INFORMATION_SCHEMA$0
 <div id="outline-container-sec-2-3-8" class="outline-4">
 <h4 id="sec-2-3-8">[df] Delete From</h4>
 <div class="outline-text-4" id="text-2-3-8">
+<p>
+Delete statement.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">DELETE</span> <span class="org-keyword">FROM</span> frag...
-# <span class="org-comment">--</span>
-<span class="org-keyword">DELETE</span> <span class="org-keyword">FROM</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">WHERE</span> $0
+<pre class="src src-sql"># name: DELETE FROM frag...
+# --
+DELETE FROM ${1:[schema].[table_name]}
+WHERE $0
 </pre>
 </div>
 </div>
@@ -389,11 +541,11 @@ Insert <code>BEGIN...END</code> block.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">BEGIN</span>...<span class="org-keyword">END</span> block
-# <span class="org-comment">--</span>
-<span class="org-keyword">BEGIN</span>
+<pre class="src src-sql"># name: BEGIN...END block
+# --
+BEGIN
     $0
-<span class="org-keyword">END</span>
+END
 </pre>
 </div>
 </div>
@@ -408,22 +560,22 @@ Insert <code>TRY...CATCH</code> block.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: TRY ... CATCH fragm...
-# <span class="org-comment">--</span>
-<span class="org-keyword">BEGIN</span> TRY
+<pre class="src src-sql"># name: TRY ... CATCH fragm...
+# --
+BEGIN TRY
     $0
-<span class="org-keyword">END</span> TRY
-<span class="org-keyword">BEGIN</span> CATCH
-    <span class="org-comment-delimiter">/*</span>
-<span class="org-comment">        SELECT</span>
-<span class="org-comment">            ERROR_NUMBER() AS ErrorNumber,</span>
-<span class="org-comment">            ERROR_SEVERITY() AS ErrorSeverity,</span>
-<span class="org-comment">            ERROR_STATE() AS ErrorState,</span>
-<span class="org-comment">            ERROR_PROCEDURE() AS ErrorProcedure,</span>
-<span class="org-comment">            ERROR_LINE() AS ErrorLine,</span>
-<span class="org-comment">            ERROR_MESSAGE() AS ErrorMessage</span>
-<span class="org-comment">    */</span>
-<span class="org-keyword">END</span> CATCH
+END TRY
+BEGIN CATCH
+    /*
+	SELECT
+	    ERROR_NUMBER() AS ErrorNumber,
+	    ERROR_SEVERITY() AS ErrorSeverity,
+	    ERROR_STATE() AS ErrorState,
+	    ERROR_PROCEDURE() AS ErrorProcedure,
+	    ERROR_LINE() AS ErrorLine,
+	    ERROR_MESSAGE() AS ErrorMessage
+    */
+END CATCH;
 </pre>
 </div>
 </div>
@@ -434,49 +586,75 @@ Insert <code>TRY...CATCH</code> block.
 <div class="outline-text-4" id="text-2-3-11">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: IF fragment
-# <span class="org-comment">--</span>
+<pre class="src src-sql"># name: IF fragment
+# --
 IF 1 = 1
-<span class="org-keyword">BEGIN</span>
+BEGIN
     $0
-<span class="org-keyword">END</span>
+END
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-3-12" class="outline-4">
-<h4 id="sec-2-3-12">Case</h4>
+<h4 id="sec-2-3-12">If Exists</h4>
 <div class="outline-text-4" id="text-2-3-12">
+<p>
+Perform an operation if a selected object exists.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"><span class="org-keyword">CASE</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">expression*/</span>
-    <span class="org-keyword">WHEN</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">expression*/</span> <span class="org-keyword">THEN</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">result_expression*/</span>
-    <span class="org-keyword">WHEN</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">expression*/</span> <span class="org-keyword">THEN</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">result_expression*/</span>
-    <span class="org-keyword">ELSE</span> <span class="org-comment-delimiter">/*</span><span class="org-comment">result_expression*/</span>
-<span class="org-keyword">END</span>
+<pre class="src src-sql"># name: ...
+# --
+IF EXISTS(
+ SELECT
+ FROM ${1:object})
+ BEGIN
+    $0
+ END
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-3-13" class="outline-4">
-<h4 id="sec-2-3-13">[cte] Common Table Expression</h4>
+<h4 id="sec-2-3-13">Case</h4>
 <div class="outline-text-4" id="text-2-3-13">
+<div class="org-src-container">
+
+<pre class="src src-sql">CASE /*expression*/
+    WHEN /*expression*/ THEN /*result_expression*/
+    WHEN /*expression*/ THEN /*result_expression*/
+    ELSE /*result_expression*/
+END
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-14" class="outline-4">
+<h4 id="sec-2-3-14">[cte] Common Table Expression</h4>
+<div class="outline-text-4" id="text-2-3-14">
 <p>
 Temporary inline view.
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">WITH</span> cte fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">WITH</span> ${1:cte_name} <span class="org-keyword">AS</span>
+<pre class="src src-sql"># name: WITH cte fragment
+# --
+WITH ${1:cte_name} AS
 (
-
+    -- SELECT
+    -- FROM
+    -- GROUP BY
 )
-<span class="org-keyword">SELECT</span> $0
-<span class="org-keyword">FROM</span> $1
+-- Statement that executes the common table expression
+SELECT $0
+FROM $1;
+GO
 </pre>
 </div>
 </div>
@@ -500,22 +678,41 @@ Creates an inline table function.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> inline <span class="org-keyword">table</span>-va...
-# <span class="org-comment">--</span>
-IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, N<span class="org-string">'IF'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">  </span>
-    <span class="org-keyword">DROP</span> <span class="org-keyword">FUNCTION</span> $1;<span class="org-whitespace-trailing">  </span>
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create inline table-va...
+# --
+IF OBJECT_ID (N'${1:[schema].[inline_function_name]}', N'IF') IS NOT NULL
+    DROP FUNCTION $1;  
+GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">FUNCTION</span> $1 (@${2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type})
-<span class="org-keyword">RETURNS</span> <span class="org-keyword">TABLE</span>
-<span class="org-comment">--WITH ENCRYPTION|SCHEMABINDING, ...</span>
-<span class="org-keyword">AS</span>
-<span class="org-keyword">RETURN</span>
+-- ================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
+CREATE FUNCTION $1 (@${2:parameter_name} ${3:parameter_data_type})
+RETURNS TABLE
+--WITH ENCRYPTION|SCHEMABINDING, ...
+AS
+RETURN
 (
-    <span class="org-comment">-- SELECT @$2 AS c1</span>
+    -- Add the SELECT statement with parameter references here
+    SELECT @$2 AS c1
     $0
 );
-<span class="org-keyword">GO</span>
+GO
+
+-- =============================================
+-- Example to execute function
+-- =============================================
+SELECT *
+FROM $1 /* owner.inline_function_name */
+    (/* value_for_@parameter_name */)
+GO
 </pre>
 </div>
 </div>
@@ -530,26 +727,34 @@ Creates a multi-statement table function.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> multi-stateme...
-# <span class="org-comment">--</span>
-IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, N<span class="org-string">'TF'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">  </span>
-    <span class="org-keyword">DROP</span> <span class="org-keyword">FUNCTION</span> $1;<span class="org-whitespace-trailing">  </span>
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create multi-stateme...
+# --
+IF OBJECT_ID (N'${1:[schema].[table_function_name]}', N'TF') IS NOT NULL
+    DROP FUNCTION $1;  
+GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">FUNCTION</span> $1 (@{2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type})
-<span class="org-keyword">RETURNS</span> @${4:return_variable} <span class="org-keyword">TABLE</span>
+CREATE FUNCTION $1 (@{2:parameter_name} ${3:parameter_data_type})
+RETURNS @${4:return_variable_name} TABLE
 (
-    <span class="org-comment-delimiter">/* </span><span class="org-comment">table type definition */</span>
-    <span class="org-comment">-- [$2] c1</span>
+    /* table type definition */
+    $2 $3
 )
-<span class="org-comment">--WITH ENCRYPTION|SCHEMABINDING, ...</span>
-<span class="org-keyword">AS</span>
-<span class="org-keyword">BEGIN</span>
-    <span class="org-comment-delimiter">/* </span><span class="org-comment">function body */</span>
-    $0
-    <span class="org-keyword">RETURN</span>
-<span class="org-keyword">END</span>;
-<span class="org-keyword">GO</span>
+--WITH ENCRYPTION|SCHEMABINDING, ...
+AS
+BEGIN
+    /* function body */
+    INSERT @$4
+    SELECT 1
+    RETURN
+END;
+GO
+
+-- =============================================
+-- Example to execute function
+-- =============================================
+SELECT * FROM $1 /* owner.table_function_name */
+    (/* value_for_@parameter_name */)
+GO
 </pre>
 </div>
 </div>
@@ -564,22 +769,42 @@ Creates a scalar function.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> scalar <span class="org-keyword">function</span>
-# <span class="org-comment">--</span>
-IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, N<span class="org-string">'FN'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">  </span>
-    <span class="org-keyword">DROP</span> <span class="org-keyword">FUNCTION</span> $1;<span class="org-whitespace-trailing">  </span>
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create scalar function
+# --
+IF OBJECT_ID (N'${1:[schema].[scalar_function_name]}', N'FN') IS NOT NULL
+    DROP FUNCTION $1;  
+GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">FUNCTION</span> $1 (@{2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type})
-<span class="org-keyword">RETURNS</span> ${4:data_type}
-<span class="org-comment">--WITH ENCRYPTION|SCHEMABINDING, ...</span>
-<span class="org-keyword">AS</span>
-<span class="org-comment">-- Returns ...</span>
-<span class="org-keyword">BEGIN</span>
-    <span class="org-comment-delimiter">/* </span><span class="org-comment">function body */</span>
-    <span class="org-keyword">RETURN</span> @$2$0 <span class="org-comment-delimiter">/* </span><span class="org-comment">scalar expression */</span>
-<span class="org-keyword">END</span>;
-<span class="org-keyword">GO</span>
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
+CREATE FUNCTION $1 (@{2:parameter_name} ${3:parameter_data_type})
+RETURNS ${4:function_data_type}
+--WITH ENCRYPTION|SCHEMABINDING, ...
+AS
+-- Returns ...
+BEGIN
+    /* function body */
+--  eg.
+--  DECLARE @v_ret $4
+--  SELECT @v_ret = /* scalar expression */
+--  RETURN @v_ret$0
+END;
+GO
+
+-- =============================================
+-- Example to execute function
+-- =============================================
+SELECT $1 /* owner.scalar_function_name */
+    (/* value_for_@parameter_name */)
+GO
 </pre>
 </div>
 </div>
@@ -590,9 +815,9 @@ IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, 
 <div class="outline-text-4" id="text-2-4-4">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">ALTER</span> <span class="org-keyword">FUNCTION</span> fr...
-# <span class="org-comment">--</span><span class="org-whitespace-trailing">    </span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">FUNCTION</span> $0
+<pre class="src src-sql"># name: ALTER FUNCTION fr...
+# --    
+ALTER FUNCTION $0
 </pre>
 </div>
 </div>
@@ -603,9 +828,9 @@ IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, 
 <div class="outline-text-4" id="text-2-4-5">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">function</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">DROP</span> <span class="org-keyword">FUNCTION</span> $0
+<pre class="src src-sql"># name: Drop function
+# --
+DROP FUNCTION $0
 </pre>
 </div>
 </div>
@@ -619,27 +844,27 @@ IF OBJECT_ID (N<span class="org-string">'${1:[schema].[function_name]}'</span>, 
 <h4 id="sec-2-5-1">[cni] Create Non-Clustered Index</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <p>
-Creates a simple (basic), non-clustered index.
+Creates a basic, non-clustered index.
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> non-<span class="org-keyword">unique</span> n...
-# <span class="org-comment">--</span>
-IF <span class="org-keyword">EXISTS</span> (<span class="org-keyword">SELECT</span> <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> sys.indexes <span class="org-keyword">WHERE</span> <span class="org-keyword">name</span> = N<span class="org-string">'${3:index_name}'</span>)<span class="org-whitespace-trailing">  </span>
-    <span class="org-keyword">DROP</span> INDEX $3 <span class="org-keyword">ON</span> ${1:[<span class="org-keyword">schema</span>].[owner_name]};
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create non-unique n...
+# --
+IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')  
+    DROP INDEX $3 ON ${1:[schema].[owner_name]};
+GO
 
-<span class="org-keyword">CREATE</span> NONCLUSTERED INDEX $3
-<span class="org-keyword">ON</span> $1 (${2:<span class="org-keyword">column</span>})
-<span class="org-comment">--WITH PAD_INDEX</span>
-<span class="org-comment">--    | FILLFACTOR = fillfactor</span>
-<span class="org-comment">--    | IGNORE_DUP_KEY</span>
-<span class="org-comment">--    | DROP_EXISTING</span>
-<span class="org-comment">--    | STATISTICS_NORECOMPUTE</span>
-<span class="org-comment">--    | SORT_IN_TEMPDB, .. as required</span>
-<span class="org-comment">-- ON filegroup</span>
-<span class="org-keyword">GO</span>
+CREATE NONCLUSTERED INDEX $3
+ON $1 (${2:column})
+--WITH PAD_INDEX
+--    | FILLFACTOR = fillfactor
+--    | IGNORE_DUP_KEY
+--    | DROP_EXISTING
+--    | STATISTICS_NORECOMPUTE
+--    | SORT_IN_TEMPDB, .. as required
+-- ON filegroup
+GO
 $0
 </pre>
 </div>
@@ -655,22 +880,23 @@ Creates a unique, non-clustered index.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">unique</span> nonclu...
-# <span class="org-comment">--</span>
-IF <span class="org-keyword">EXISTS</span> (<span class="org-keyword">SELECT</span> <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> sys.indexes <span class="org-keyword">WHERE</span> <span class="org-keyword">name</span> = N<span class="org-string">'${3:index_name}'</span>)<span class="org-whitespace-trailing">  </span>
-    <span class="org-keyword">DROP</span> INDEX $3 <span class="org-keyword">ON</span> ${1:[<span class="org-keyword">schema</span>].[owner_name]};
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create unique nonclu...
+# --
+IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')  
+    DROP INDEX $3 ON ${1:[schema].[owner_name]};
+GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">UNIQUE</span> NONCLUSTERED INDEX $3
-<span class="org-keyword">ON</span> $1 (${2:<span class="org-keyword">column</span>})
-<span class="org-comment">--WITH PAD_INDEX</span>
-<span class="org-comment">--    | FILLFACTOR = fillfactor</span>
-<span class="org-comment">--    | IGNORE_DUP_KEY</span>
-<span class="org-comment">--    | DROP_EXISTING</span>
-<span class="org-comment">--    | STATISTICS_NORECOMPUTE</span>
-<span class="org-comment">--    | SORT_IN_TEMPDB, .. as required</span>
-<span class="org-comment">-- ON filegroup</span>
-<span class="org-keyword">GO</span>
+CREATE UNIQUE NONCLUSTERED INDEX $3
+ON $1 (${2:column})
+--WITH
+--    PAD_INDEX,
+--    FILLFACTOR = fillfactor,
+--    IGNORE_DUP_KEY,
+--    DROP_EXISTING = OFF,
+--    STATISTICS_NORECOMPUTE,
+--    SORT_IN_TEMPDB = OFF, .. as required
+ON ${3:filegroup_name}
+GO
 $0
 </pre>
 </div>
@@ -682,22 +908,22 @@ $0
 <div class="outline-text-4" id="text-2-5-3">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> non-<span class="org-keyword">unique</span> cl...
-# <span class="org-comment">--</span>
-IF <span class="org-keyword">EXISTS</span> (<span class="org-keyword">SELECT</span> <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> sys.indexes <span class="org-keyword">WHERE</span> <span class="org-keyword">name</span> = N<span class="org-string">'${3:index_name}'</span>)<span class="org-whitespace-trailing">  </span>
-    <span class="org-keyword">DROP</span> INDEX $3 <span class="org-keyword">ON</span> ${1:[<span class="org-keyword">schema</span>].[owner_name]};
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create non-unique cl...
+# --
+IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')  
+    DROP INDEX $3 ON ${1:[schema].[owner_name]};
+GO
 
-<span class="org-keyword">CREATE</span> CLUSTERED INDEX $3
-<span class="org-keyword">ON</span> $1 (${2:<span class="org-keyword">column</span>})
-<span class="org-comment">--WITH PAD_INDEX</span>
-<span class="org-comment">--    | FILLFACTOR = fillfactor</span>
-<span class="org-comment">--    | IGNORE_DUP_KEY</span>
-<span class="org-comment">--    | DROP_EXISTING</span>
-<span class="org-comment">--    | STATISTICS_NORECOMPUTE</span>
-<span class="org-comment">--    | SORT_IN_TEMPDB, .. as required</span>
-<span class="org-comment">-- ON filegroup</span>
-<span class="org-keyword">GO</span>
+CREATE CLUSTERED INDEX $3
+ON $1 (${2:column})
+--WITH PAD_INDEX
+--    | FILLFACTOR = fillfactor
+--    | IGNORE_DUP_KEY
+--    | DROP_EXISTING
+--    | STATISTICS_NORECOMPUTE
+--    | SORT_IN_TEMPDB, .. as required
+-- ON filegroup
+GO
 $0
 </pre>
 </div>
@@ -707,24 +933,29 @@ $0
 <div id="outline-container-sec-2-5-4" class="outline-4">
 <h4 id="sec-2-5-4">[cuci] Create Unique Clustered Index</h4>
 <div class="outline-text-4" id="text-2-5-4">
+<p>
+Create index full syntax.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">unique</span> cluster...
-# <span class="org-comment">--</span>
-IF <span class="org-keyword">EXISTS</span> (<span class="org-keyword">SELECT</span> <span class="org-keyword">name</span> <span class="org-keyword">FROM</span> sys.indexes <span class="org-keyword">WHERE</span> <span class="org-keyword">name</span> = N<span class="org-string">'${3:index_name}'</span>)<span class="org-whitespace-trailing">  </span>
-    <span class="org-keyword">DROP</span> INDEX $3 <span class="org-keyword">ON</span> ${1:[<span class="org-keyword">schema</span>].[owner_name]};
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create unique cluster...
+# --
+IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')  
+    DROP INDEX $3 ON ${1:[schema].[owner_name]};
+GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">UNIQUE</span> CLUSTERED INDEX $3
-<span class="org-keyword">ON</span> $1 (${2:<span class="org-keyword">column</span>})
-<span class="org-comment">--WITH PAD_INDEX</span>
-<span class="org-comment">--    | FILLFACTOR = fillfactor</span>
-<span class="org-comment">--    | IGNORE_DUP_KEY</span>
-<span class="org-comment">--    | DROP_EXISTING</span>
-<span class="org-comment">--    | STATISTICS_NORECOMPUTE</span>
-<span class="org-comment">--    | SORT_IN_TEMPDB, .. as required</span>
-<span class="org-comment">-- ON filegroup</span>
-<span class="org-keyword">GO</span>
+CREATE UNIQUE CLUSTERED INDEX $3
+ON $1 (${2:column})
+WITH
+PAD_INDEX,
+FILLFACTOR = ${3:fillfactor_value},
+IGNORE_DUP_KEY,
+DROP_EXISTING,
+STATISTICS_NORECOMPUTE
+--    | SORT_IN_TEMPDB, .. as required
+ON ${4:filegroup_name}
+GO
 $0
 </pre>
 </div>
@@ -736,9 +967,9 @@ $0
 <div class="outline-text-4" id="text-2-5-5">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> index
-# <span class="org-comment">--</span>
-<span class="org-keyword">DROP</span> INDEX $0
+<pre class="src src-sql"># name: Drop index
+# --
+DROP INDEX $0
 </pre>
 </div>
 </div>
@@ -753,9 +984,9 @@ $0
 <div class="outline-text-4" id="text-2-6-1">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">CROSS</span> <span class="org-keyword">JOIN</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">CROSS</span> <span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: CROSS JOIN fragment
+# --
+CROSS JOIN $0
 </pre>
 </div>
 </div>
@@ -766,9 +997,9 @@ $0
 <div class="outline-text-4" id="text-2-6-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">FULL</span> <span class="org-keyword">JOIN</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">FULL</span> <span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: FULL JOIN fragment
+# --
+FULL JOIN $0
 </pre>
 </div>
 </div>
@@ -779,9 +1010,9 @@ $0
 <div class="outline-text-4" id="text-2-6-3">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">FULL</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> fr...
-# <span class="org-comment">--</span>
-<span class="org-keyword">FULL</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: FULL OUTER JOIN fr...
+# --
+FULL OUTER JOIN $0
 </pre>
 </div>
 </div>
@@ -792,9 +1023,9 @@ $0
 <div class="outline-text-4" id="text-2-6-4">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">INNER</span> <span class="org-keyword">JOIN</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">INNER</span> <span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: INNER JOIN fragment
+# --
+INNER JOIN $0
 </pre>
 </div>
 </div>
@@ -805,9 +1036,9 @@ $0
 <div class="outline-text-4" id="text-2-6-5">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">JOIN</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: JOIN fragment
+# --
+JOIN $0
 </pre>
 </div>
 </div>
@@ -818,9 +1049,9 @@ $0
 <div class="outline-text-4" id="text-2-6-6">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">LEFT</span> <span class="org-keyword">JOIN</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">LEFT</span> <span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: LEFT JOIN fragment
+# --
+LEFT JOIN $0
 </pre>
 </div>
 </div>
@@ -831,9 +1062,9 @@ $0
 <div class="outline-text-4" id="text-2-6-7">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">LEFT</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> fr...
-# <span class="org-comment">--</span>
-<span class="org-keyword">LEFT</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: LEFT OUTER JOIN fr...
+# --
+LEFT OUTER JOIN $0
 </pre>
 </div>
 </div>
@@ -844,9 +1075,9 @@ $0
 <div class="outline-text-4" id="text-2-6-8">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">RIGHT</span> <span class="org-keyword">JOIN</span> fragment
-# <span class="org-comment">--</span>
-<span class="org-keyword">RIGHT</span> <span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: RIGHT JOIN fragment
+# --
+RIGHT JOIN $0
 </pre>
 </div>
 </div>
@@ -857,9 +1088,9 @@ $0
 <div class="outline-text-4" id="text-2-6-9">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">RIGHT</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> f...
-# <span class="org-comment">--</span>
-<span class="org-keyword">RIGHT</span> <span class="org-keyword">OUTER</span> <span class="org-keyword">JOIN</span> $0
+<pre class="src src-sql"># name: RIGHT OUTER JOIN f...
+# --
+RIGHT OUTER JOIN $0
 </pre>
 </div>
 </div>
@@ -878,17 +1109,17 @@ Creates a SQL Server Authentication login.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">CREATE</span> <span class="org-keyword">SQL</span> Server l...
-# <span class="org-comment">--</span>
-<span class="org-keyword">CREATE</span> LOGIN ${1:LoginName}
-<span class="org-keyword">WITH</span> PASSWORD = N<span class="org-string">'${2:StrongP@ssword}'</span>$0 <span class="org-comment-delimiter">/* </span><span class="org-comment">HASHED */</span> <span class="org-comment-delimiter">/* </span><span class="org-comment">MUST CHANGE */</span>
-<span class="org-comment">--  SID = sid</span>
-<span class="org-comment">--  DEFAULT_DATABASE = database</span>
-<span class="org-comment">--  DEFAULT_LANGUAGE = language</span>
-<span class="org-comment">--  CHECK_EXPIRATION = ON | OFF</span>
-<span class="org-comment">--  CHECK_POLICY = ON | OFF</span>
-<span class="org-comment">--  CREDENTIAL = credential_name</span>
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: CREATE SQL Server l...
+# --
+CREATE LOGIN ${1:SQL_login_name}
+WITH PASSWORD = N'${2:Strong_P@ssword}'$0 /* HASHED */ /* MUST_CHANGE */
+--  DEFAULT_DATABASE = database
+--  DEFAULT_LANGUAGE = language
+--  CHECK_POLICY = ON | OFF
+--  SID = sid
+--  CHECK_EXPIRATION = ON | OFF
+--  CREDENTIAL = credential_name
+GO
 </pre>
 </div>
 </div>
@@ -903,16 +1134,16 @@ Creates a Windows Authentication login.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">CREATE</span> Windows l...
-# <span class="org-comment">--</span>
-<span class="org-keyword">CREATE</span> LOGIN ${1:[DomainName\UserName]}
-<span class="org-keyword">FROM</span> WINDOWS$0
-<span class="org-comment">--    WITH</span>
-<span class="org-comment">--      DEFAULT_DATABASE = database</span>
-<span class="org-comment">--      DEFAULT_LANGUAGE = language</span>
-<span class="org-comment">--  CERTIFICATE certificate_name</span>
-<span class="org-comment">--  ASYMMETRIC KEY key_name</span>
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: CREATE Windows l...
+# --
+CREATE LOGIN ${1:[domain_name\user_name]}
+FROM WINDOWS$0
+WITH
+DEFAULT_DATABASE = ${2:default_database}
+--  DEFAULT_LANGUAGE = language
+--  CERTIFICATE certificate_name
+--  ASYMMETRIC KEY key_name
+GO
 </pre>
 </div>
 </div>
@@ -921,11 +1152,16 @@ Creates a Windows Authentication login.
 <div id="outline-container-sec-2-7-3" class="outline-4">
 <h4 id="sec-2-7-3">[dl] Drop Login</h4>
 <div class="outline-text-4" id="text-2-7-3">
+<p>
+Drop login.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> login
-# <span class="org-comment">--</span>
-<span class="org-keyword">DROP</span> LOGIN $0
+<pre class="src src-sql"># name: Drop login
+# --
+DROP LOGIN ${1:SQL_login_name}
+GO
 </pre>
 </div>
 </div>
@@ -944,7 +1180,11 @@ Create Database Role.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">ROLE</span> ${1:RoleName}$0
+<pre class="src src-sql">USE ${1:database_name}
+GO
+
+CREATE ROLE ${2:role_name}$0
+GO
 </pre>
 </div>
 </div>
@@ -963,7 +1203,7 @@ Create a database schema.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">SCHEMA</span> ${1:<span class="org-keyword">schema</span>}$0
+<pre class="src src-sql">CREATE SCHEMA ${1:schema}$0
 </pre>
 </div>
 </div>
@@ -974,39 +1214,39 @@ Create a database schema.
 <h3 id="sec-2-10">Set options</h3>
 <div class="outline-text-3" id="text-2-10">
 </div><div id="outline-container-sec-2-10-1" class="outline-4">
-<h4 id="sec-2-10-1">[san] Set ANSI_NULLS</h4>
+<h4 id="sec-2-10-1">[san] Set ANSI<sub>NULLS</sub></h4>
 <div class="outline-text-4" id="text-2-10-1">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Change the <span class="org-keyword">current</span> A...
-# <span class="org-comment">--</span>
-<span class="org-keyword">SET</span> ANSI_NULLS <span class="org-keyword">ON</span>$0
+<pre class="src src-sql"># name: Change the current A...
+# --
+SET ANSI_NULLS ON$0
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-10-2" class="outline-4">
-<h4 id="sec-2-10-2">[sqi] Set QUOTED_IDENTIFIER</h4>
+<h4 id="sec-2-10-2">[sqi] Set QUOTED<sub>IDENTIFIER</sub></h4>
 <div class="outline-text-4" id="text-2-10-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Change the <span class="org-keyword">current</span> ...
-# <span class="org-comment">--</span>
-<span class="org-keyword">SET</span> QUOTED_IDENTIFIER <span class="org-keyword">ON</span>$0
+<pre class="src src-sql"># name: Change the current ...
+# --
+SET QUOTED_IDENTIFIER ON$0
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-10-3" class="outline-4">
-<h4 id="sec-2-10-3">[sxa] Set XACT_ABORT</h4>
+<h4 id="sec-2-10-3">[sxa] Set XACT<sub>ABORT</sub></h4>
 <div class="outline-text-4" id="text-2-10-3">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Change the <span class="org-keyword">current</span> X...
-# <span class="org-comment">--</span>
-<span class="org-keyword">SET</span> XACT_ABORT <span class="org-keyword">OFF</span>$0
+<pre class="src src-sql"># name: Change the current X...
+# --
+SET XACT_ABORT OFF$0
 </pre>
 </div>
 </div>
@@ -1025,32 +1265,57 @@ Naming convention: stored procedures are prefixed with <code>usp</code>.
 <h4 id="sec-2-11-1">[cp] Create Procedure Basic Template</h4>
 <div class="outline-text-4" id="text-2-11-1">
 <p>
-Create a simple stored procedure.
+Create a simple stored procedure with output parameter.
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> stored proced...
-# <span class="org-comment">--</span>
-IF OBJECT_ID (<span class="org-string">'${1:[schema].[procedure_name]}'</span>, <span class="org-string">'P'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">   </span>
-    <span class="org-keyword">DROP</span> <span class="org-keyword">PROCEDURE</span> $1;<span class="org-whitespace-trailing">  </span>
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create stored proced...
+# --
+-- Drop stored procedure if it already exists
+IF OBJECT_ID ('${1:[schema].[procedure_name]}', 'P') IS NOT NULL   
+    DROP PROCEDURE $1;  
+GO
 
-<span class="org-comment">--SET QUOTED_IDENTIFIER ON|OFF</span>
-<span class="org-comment">--SET ANSI_NULLS ON|OFF</span>
-<span class="org-comment">--GO</span>
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
+CREATE PROCEDURE $1
+    -- Add the parameters for the function here
+    @${2:parameter_name_1} ${3:parameter_data_type_1} = ${4:default_value_for_parameter_1}
+    @${5:parameter_name_2} ${6:parameter_data_type_2} OUTPUT
+-- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'
+AS
+BEGIN
+    -- SET NOCOUNT ON added to prevent extra result sets from
+    -- interfering with SELECT statements.
+    SET NOCOUNT ON;
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">PROCEDURE</span> $1
-    @${2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type} = ${4:<span class="org-keyword">default</span>}
-<span class="org-comment">-- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'</span>
-<span class="org-keyword">AS</span>
-    <span class="org-comment">-- SELECT @$2</span>
-    $0;
-<span class="org-keyword">GO</span>
+    -- Insert statements for procedure here
+    SELECT @$2$0
+END
+GO
 
-<span class="org-comment">--SET QUOTED_IDENTIFIER ON|OFF</span>
-<span class="org-comment">--SET ANSI_NULLS ON|OFF</span>
-<span class="org-comment">--GO</span>
+--SET QUOTED_IDENTIFIER ON|OFF
+--SET ANSI_NULLS ON|OFF
+--GO
+
+-- =============================================
+-- Example to execute the stored procedure
+-- =============================================
+DECLARE @${7:variable_for_output_parameter} $6
+
+EXECUTE $1 /* value_for_parameter_1 */, $7 OUTPUT
+
+SELECT $7
+GO
 </pre>
 </div>
 </div>
@@ -1061,23 +1326,23 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[procedure_name]}'</span>, 
 <div class="outline-text-4" id="text-2-11-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> CLR stored pr...
-# <span class="org-comment">--</span>
-<span class="org-comment">--SET QUOTED_IDENTIFIER ON|OFF</span>
-<span class="org-comment">--SET ANSI_NULLS ON|OFF</span>
-<span class="org-comment">--GO</span>
+<pre class="src src-sql"># name: Create CLR stored pr...
+# --
+--SET QUOTED_IDENTIFIER ON|OFF
+--SET ANSI_NULLS ON|OFF
+--GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">PROCEDURE</span> ${1:[<span class="org-keyword">schema</span>].[procedure_name]}
+CREATE PROCEDURE ${1:[schema].[procedure_name]}
 (
-    @${2:<span class="org-keyword">parameter_name</span>} ${3:parameter_data_type}
+    @${2:parameter_name} ${3:parameter_data_type}
 )
-<span class="org-comment">-- WITH EXECUTE AS CALLER|SELF|OWNER| 'user_name'</span>
-<span class="org-keyword">AS</span> <span class="org-keyword">EXTERNAL</span> <span class="org-keyword">NAME</span> ${4:[assembly].[<span class="org-keyword">class</span>].[<span class="org-keyword">method</span>]};
-<span class="org-keyword">GO</span>
+-- WITH EXECUTE AS CALLER|SELF|OWNER| 'user_name'
+AS EXTERNAL NAME ${4:[assembly].[class].[method]};
+GO
 
-<span class="org-comment">--SET QUOTED_IDENTIFIER ON|OFF</span>
-<span class="org-comment">--SET ANSI_NULLS ON|OFF</span>
-<span class="org-comment">--GO$0</span>
+--SET QUOTED_IDENTIFIER ON|OFF
+--SET ANSI_NULLS ON|OFF
+--GO$0
 </pre>
 </div>
 </div>
@@ -1088,9 +1353,9 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[procedure_name]}'</span>, 
 <div class="outline-text-4" id="text-2-11-3">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">ALTER</span> <span class="org-keyword">PROCEDURE</span>
-# <span class="org-comment">--</span><span class="org-whitespace-trailing">    </span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">PROCEDURE</span> $0
+<pre class="src src-sql"># name: ALTER PROCEDURE
+# --    
+ALTER PROCEDURE $0
 </pre>
 </div>
 </div>
@@ -1101,9 +1366,9 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[procedure_name]}'</span>, 
 <div class="outline-text-4" id="text-2-11-4">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> stored <span class="org-keyword">procedure</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">DROP</span> <span class="org-keyword">PROCEDURE</span> $0
+<pre class="src src-sql"># name: Drop stored procedure
+# --
+DROP PROCEDURE $0
 </pre>
 </div>
 </div>
@@ -1122,9 +1387,9 @@ Creates a synonym.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"><span class="org-keyword">CREATE</span> SYNONYM ${1:[<span class="org-keyword">schema</span>].[synonym_name]}
-<span class="org-keyword">FOR</span> ${2:[<span class="org-keyword">schema</span>].[object_name]};
-<span class="org-keyword">GO</span>$0
+<pre class="src src-sql">CREATE SYNONYM ${1:[schema].[synonym_name]}
+FOR ${2:[schema].[object_name]};
+GO$0
 </pre>
 </div>
 </div>
@@ -1138,22 +1403,24 @@ Creates a synonym.
 <h4 id="sec-2-13-1">[ct] Create Table</h4>
 <div class="outline-text-4" id="text-2-13-1">
 <p>
-Creates a table.
+Creates a table (and drop previous one with the same name).
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">table</span>
-# <span class="org-comment">--</span>
-IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <span class="org-string">'U'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span>
-    <span class="org-keyword">DROP</span> <span class="org-keyword">TABLE</span> $1;
-<span class="org-keyword">go</span>
+<pre class="src src-sql"># name: Create table
+# --
+IF OBJECT_ID ('${1:[schema].[table_name]}', 'U') IS NOT NULL
+    DROP TABLE $1;
+GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">TABLE</span> $1
+CREATE TABLE $1
 (
     ${2:column_1} ${3:data_type_1} ${4:column_nullability_1},
-    ${5:column_2} ${6:data_type_2} ${5:column_nullability_2}$0
+    ${5:column_2} ${6:data_type_2} ${5:column_nullability_2},$0
+    CONSTRAINT /* contraint_name */ PRIMARY KEY (/* columns_in_primary_key */)
 );
+GO
 </pre>
 </div>
 </div>
@@ -1164,9 +1431,9 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <spa
 <div class="outline-text-4" id="text-2-13-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> fragm...
-# <span class="org-comment">--</span><span class="org-whitespace-trailing">    </span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> $0
+<pre class="src src-sql"># name: ALTER TABLE fragm...
+# --    
+ALTER TABLE $0
 </pre>
 </div>
 </div>
@@ -1177,10 +1444,10 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <spa
 <div class="outline-text-4" id="text-2-13-3">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Add</span> <span class="org-keyword">column</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">ADD</span> [${2:<span class="org-keyword">column_name</span>}] ${3:data_type} ${4:column_nullability};
-<span class="org-keyword">GO</span>$0
+<pre class="src src-sql"># name: Add column
+# --
+ALTER TABLE ${1:[schema].[table_name]} ADD [${2:column_name}] ${3:data_type} ${4:column_nullability};
+GO$0
 </pre>
 </div>
 </div>
@@ -1191,10 +1458,10 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <spa
 <div class="outline-text-4" id="text-2-13-4">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Modify</span> <span class="org-keyword">column</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">ALTER</span> <span class="org-keyword">COLUMN</span> $0;
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Modify column
+# --
+ALTER TABLE ${1:[schema].[table_name]} ALTER COLUMN $0;
+GO
 </pre>
 </div>
 </div>
@@ -1205,37 +1472,61 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <spa
 <div class="outline-text-4" id="text-2-13-5">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">column</span>
-# <span class="org-comment">--</span><span class="org-whitespace-trailing">    </span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">DROP</span> <span class="org-keyword">COLUMN</span> $0;
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Drop column
+# --    
+ALTER TABLE ${1:[schema].[table_name]} DROP COLUMN $0;
+GO
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-13-6" class="outline-4">
-<h4 id="sec-2-13-6">[atdc] Drop Constraint</h4>
+<h4 id="sec-2-13-6">Add Constraint</h4>
 <div class="outline-text-4" id="text-2-13-6">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">constraint</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} <span class="org-keyword">DROP</span> <span class="org-keyword">CONSTRAINT</span> $0;
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Add constraint
+# --
+ALTER TABLE ${1:[schema].[table_name]}
+ADD CONSTRAINT ${2:constraint_name};
+GO
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-13-7" class="outline-4">
-<h4 id="sec-2-13-7">[dt] Drop Table</h4>
+<h4 id="sec-2-13-7">[atdc] Drop Constraint</h4>
 <div class="outline-text-4" id="text-2-13-7">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">table</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">DROP</span> <span class="org-keyword">TABLE</span> $0
+<pre class="src src-sql"># name: Drop constraint
+# --
+ALTER TABLE ${1:[schema].[table_name]}
+DROP CONSTRAINT ${2:constraint_name};
+GO
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-13-8" class="outline-4">
+<h4 id="sec-2-13-8">[dt] Drop Table</h4>
+<div class="outline-text-4" id="text-2-13-8">
+<div class="org-src-container">
+
+<pre class="src src-sql"># name: Drop table
+# --
+
+IF EXISTS (SELECT *
+	     FROM sys.tables
+	     JOIN sys.schemas
+	       ON sys.tables.schema_id = sys.schemas.schema_id
+	    WHERE sys.schemas.name = N'${1:schema}'
+	      AND sys.tables.name = N'${2:table}')
+    DROP TABLE $1.$2
+GO
 </pre>
 </div>
 </div>
@@ -1250,9 +1541,9 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <spa
 <div class="outline-text-4" id="text-2-14-1">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Begin</span> <span class="org-keyword">transaction</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">BEGIN</span> <span class="org-keyword">TRANSACTION</span> $0
+<pre class="src src-sql"># name: Begin transaction
+# --
+BEGIN TRANSACTION $0
 </pre>
 </div>
 </div>
@@ -1263,9 +1554,9 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <spa
 <div class="outline-text-4" id="text-2-14-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Commit</span> <span class="org-keyword">transaction</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">COMMIT</span> <span class="org-keyword">TRANSACTION</span> $0
+<pre class="src src-sql"># name: Commit transaction
+# --
+COMMIT TRANSACTION $0
 </pre>
 </div>
 </div>
@@ -1276,9 +1567,9 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[table_name]}'</span>, <spa
 <div class="outline-text-4" id="text-2-14-3">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Rollback</span> <span class="org-keyword">transaction</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">ROLLBACK</span> <span class="org-keyword">TRANSACTION</span> $0
+<pre class="src src-sql"># name: Rollback transaction
+# --
+ROLLBACK TRANSACTION $0
 </pre>
 </div>
 </div>
@@ -1297,20 +1588,36 @@ Creates a trigger.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">trigger</span>
-# <span class="org-comment">--</span>
-IF OBJECT_ID (<span class="org-string">'${1:TriggerName}'</span>, <span class="org-string">'TR'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span>
-    <span class="org-keyword">DROP</span> <span class="org-keyword">TRIGGER</span> $1;
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create trigger
+# --
+IF OBJECT_ID ('${1:trigger_name}', 'TR') IS NOT NULL
+    DROP TRIGGER $1;
+GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">TRIGGER</span> $1
-<span class="org-keyword">ON</span> ${2:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]}
-<span class="org-keyword">FOR</span> <span class="org-keyword">INSERT</span>, <span class="org-keyword">UPDATE</span>, <span class="org-keyword">DELETE</span>
-<span class="org-keyword">AS</span>
-    <span class="org-keyword">BEGIN</span>
-        <span class="org-keyword">SET</span> NOCOUNT <span class="org-keyword">ON</span>
-    <span class="org-keyword">END</span>;
-<span class="org-keyword">GO</span>$0
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
+CREATE TRIGGER $1
+ON ${2:[schema].[table_name]}
+FOR INSERT, UPDATE, DELETE
+AS
+BEGIN
+    -- SET NOCOUNT ON added to prevent extra result sets from
+    -- interfering with SELECT statements.
+    SET NOCOUNT ON;
+
+    -- Insert statements for trigger here
+    RAISERROR (50009, 16, 10)
+    $0
+END;
+GO
 </pre>
 </div>
 </div>
@@ -1321,9 +1628,9 @@ IF OBJECT_ID (<span class="org-string">'${1:TriggerName}'</span>, <span class="o
 <div class="outline-text-4" id="text-2-15-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Enable <span class="org-keyword">trigger</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} ENABLE <span class="org-keyword">TRIGGER</span> $0;
+<pre class="src src-sql"># name: Enable trigger
+# --
+ALTER TABLE ${1:[schema].[table_name]} ENABLE TRIGGER $0;
 </pre>
 </div>
 </div>
@@ -1332,11 +1639,16 @@ IF OBJECT_ID (<span class="org-string">'${1:TriggerName}'</span>, <span class="o
 <div id="outline-container-sec-2-15-3" class="outline-4">
 <h4 id="sec-2-15-3">Enable All Triggers</h4>
 <div class="outline-text-4" id="text-2-15-3">
+<p>
+Enable all triggers on table.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Enable <span class="org-keyword">all</span> triggers <span class="org-keyword">on</span>...
-# <span class="org-comment">--</span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]}$0 ENABLE <span class="org-keyword">TRIGGER</span> <span class="org-keyword">ALL</span>;
+<pre class="src src-sql"># name: Enable all triggers on...
+# --
+ALTER TABLE ${1:[schema].[table_name]}$0 ENABLE TRIGGER ALL;
+GO
 </pre>
 </div>
 </div>
@@ -1347,9 +1659,9 @@ IF OBJECT_ID (<span class="org-string">'${1:TriggerName}'</span>, <span class="o
 <div class="outline-text-4" id="text-2-15-4">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Disable <span class="org-keyword">trigger</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]} DISABLE <span class="org-keyword">TRIGGER</span> $0;
+<pre class="src src-sql"># name: Disable trigger
+# --
+ALTER TABLE ${1:[schema].[table_name]} DISABLE TRIGGER $0;
 </pre>
 </div>
 </div>
@@ -1358,11 +1670,16 @@ IF OBJECT_ID (<span class="org-string">'${1:TriggerName}'</span>, <span class="o
 <div id="outline-container-sec-2-15-5" class="outline-4">
 <h4 id="sec-2-15-5">Disable All Triggers</h4>
 <div class="outline-text-4" id="text-2-15-5">
+<p>
+Disable all triggers on table.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Disable <span class="org-keyword">all</span> triggers <span class="org-keyword">on</span>...
-# <span class="org-comment">--</span>
-<span class="org-keyword">ALTER</span> <span class="org-keyword">TABLE</span> ${1:[<span class="org-keyword">schema</span>].[<span class="org-keyword">table_name</span>]}$0 DISABLE <span class="org-keyword">TRIGGER</span> <span class="org-keyword">ALL</span>;
+<pre class="src src-sql"># name: Disable all triggers on...
+# --
+ALTER TABLE ${1:[schema].[table_name]}$0 DISABLE TRIGGER ALL;
+GO
 </pre>
 </div>
 </div>
@@ -1381,15 +1698,15 @@ Creates a database user.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> database <span class="org-builtin">user</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">CREATE</span> <span class="org-builtin">USER</span> ${1:UserName}$0
-<span class="org-keyword">FOR</span> <span class="org-comment-delimiter">/* </span><span class="org-comment">FROM */</span> LOGIN <span class="org-comment-delimiter">/* </span><span class="org-comment">login_name */</span>
-<span class="org-comment">--</span><span class="org-whitespace-tab">  </span><span class="org-comment">CERTIFICATE certificate_name</span>
-<span class="org-comment">--</span><span class="org-whitespace-tab">  </span><span class="org-comment">ASYMMETRIC KEY key_name</span>
-<span class="org-comment">--</span><span class="org-whitespace-tab">  </span><span class="org-comment">WITHOUT LOGIN</span>
-<span class="org-comment">--</span><span class="org-whitespace-tab">  </span><span class="org-comment">WITH DEFAULT_SCHEMA = schema_name</span>
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create database user
+# --
+CREATE USER ${1:UserName}$0
+FOR /* FROM */ LOGIN /* login_name */
+--      CERTIFICATE certificate_name
+--      ASYMMETRIC KEY key_name
+--      WITHOUT LOGIN
+--      WITH DEFAULT_SCHEMA = schema_name
+GO
 </pre>
 </div>
 </div>
@@ -1400,9 +1717,10 @@ Creates a database user.
 <div class="outline-text-4" id="text-2-16-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-builtin">user</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">DROP</span> <span class="org-builtin">USER</span> ${1:UserName}$0
+<pre class="src src-sql"># name: Drop user
+# --
+DROP USER ${1:user_name}
+GO
 </pre>
 </div>
 </div>
@@ -1421,8 +1739,8 @@ Creates a user-defined data type.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">TYPE</span> ${1:[<span class="org-keyword">schema</span>].[my_data_type]}
-<span class="org-keyword">FROM</span> ${2:data_type} ${3:column_nullability}
+<pre class="src src-sql">CREATE TYPE ${1:[schema].[my_data_type]}
+FROM ${2:data_type} ${3:column_nullability}
 </pre>
 </div>
 </div>
@@ -1441,12 +1759,12 @@ Creates a user-defined table type.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">TYPE</span> ${1:[<span class="org-keyword">schema</span>].[my_table_type]} <span class="org-keyword">AS</span> <span class="org-keyword">TABLE</span>
+<pre class="src src-sql">CREATE TYPE ${1:[schema].[my_table_type]} AS TABLE
 (
     ${2:column_1} ${3:data_type_1},
     ${4:column_2} ${5:data_type_2}
 );
-<span class="org-keyword">GO</span>$0
+GO$0
 </pre>
 </div>
 </div>
@@ -1465,9 +1783,9 @@ Creates a CLR integration user-defined type.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"><span class="org-keyword">CREATE</span> <span class="org-keyword">TYPE</span> ${1:Utf8String}
-<span class="org-keyword">EXTERNAL</span> <span class="org-keyword">NAME</span> ${2:utf8string}.${3:[Microsoft.Samples.SqlServer.utf8string]};
-<span class="org-keyword">GO</span>$0
+<pre class="src src-sql">CREATE TYPE ${1:Utf8String}
+EXTERNAL NAME ${2:utf8string}.${3:[Microsoft.Samples.SqlServer.utf8string]};
+GO$0
 </pre>
 </div>
 </div>
@@ -1486,20 +1804,20 @@ Creates a view.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Create</span> <span class="org-keyword">view</span>
-# <span class="org-comment">--</span>
-IF OBJECT_ID (<span class="org-string">'${1:[schema].[view_name]}'</span>, <span class="org-string">'V'</span>) <span class="org-keyword">IS</span> <span class="org-keyword">NOT</span> <span class="org-keyword">NULL</span><span class="org-whitespace-trailing">  </span>
-    <span class="org-keyword">DROP</span> <span class="org-keyword">VIEW</span> $1;<span class="org-whitespace-trailing">  </span>
-<span class="org-keyword">GO</span>
+<pre class="src src-sql"># name: Create view
+# --
+IF OBJECT_ID ('${1:[schema].[view_name]}', 'V') IS NOT NULL  
+    DROP VIEW $1;  
+GO
 
-<span class="org-keyword">CREATE</span> <span class="org-keyword">VIEW</span> $1
-<span class="org-comment">--WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA</span>
-<span class="org-keyword">AS</span>
-    <span class="org-keyword">SELECT</span> *
-    <span class="org-keyword">FROM</span> ${2:[<span class="org-keyword">schema</span>].[sample_table]}
+CREATE VIEW $1
+--WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA
+AS
+    SELECT *
+    FROM ${2:[schema].[sample_table]}
     $0
-<span class="org-comment">-- WITH CHECK OPTION</span>
-<span class="org-keyword">GO</span>
+-- WITH CHECK OPTION
+GO
 </pre>
 </div>
 </div>
@@ -1510,9 +1828,9 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[view_name]}'</span>, <span
 <div class="outline-text-4" id="text-2-20-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Drop</span> <span class="org-keyword">view</span>
-# <span class="org-comment">--</span>
-<span class="org-keyword">DROP</span> <span class="org-keyword">VIEW</span> $0
+<pre class="src src-sql"># name: Drop view
+# --
+DROP VIEW $0
 </pre>
 </div>
 </div>
@@ -1523,39 +1841,43 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[view_name]}'</span>, <span
 <h3 id="sec-2-21">&#x2014; Miscellaneous ---</h3>
 <div class="outline-text-3" id="text-2-21">
 </div><div id="outline-container-sec-2-21-1" class="outline-4">
-<h4 id="sec-2-21-1">[sph] sp_help</h4>
+<h4 id="sec-2-21-1">[sph] sp<sub>help</sub></h4>
 <div class="outline-text-4" id="text-2-21-1">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Execute</span> sp_help
-# <span class="org-comment">--</span>
-<span class="org-keyword">EXEC</span> sp_help$0
+<pre class="src src-sql"># name: Execute sp_help
+# --
+EXEC sp_help$0
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-21-2" class="outline-4">
-<h4 id="sec-2-21-2">[spt] sp_helptext</h4>
+<h4 id="sec-2-21-2">[spt] sp<sub>helptext</sub></h4>
 <div class="outline-text-4" id="text-2-21-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Execute</span> sp_helptext
-# <span class="org-comment">--</span>
-<span class="org-keyword">EXEC</span> sp_helptext$0
+<pre class="src src-sql"># name: Execute sp_helptext
+# --
+EXEC sp_helptext$0
 </pre>
 </div>
 </div>
 </div>
 
 <div id="outline-container-sec-2-21-3" class="outline-4">
-<h4 id="sec-2-21-3">[xpfd] xp_fixeddrives</h4>
+<h4 id="sec-2-21-3">[xpfd] xp<sub>fixeddrives</sub></h4>
 <div class="outline-text-4" id="text-2-21-3">
+<p>
+Retrieve free space on all fixed drives.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Retrieve <span class="org-keyword">free</span> <span class="org-keyword">space</span> o...
-# <span class="org-comment">--</span>
-<span class="org-keyword">EXEC</span> master..xp_fixeddrives
+<pre class="src src-sql"># name: Retrieve free space o...
+# --
+EXEC master..xp_fixeddrives
 </pre>
 </div>
 </div>
@@ -1566,9 +1888,9 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[view_name]}'</span>, <span
 <div class="outline-text-4" id="text-2-21-4">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: <span class="org-keyword">Execute</span> sp_who2$0
-# <span class="org-comment">--</span>
-<span class="org-keyword">EXEC</span> sp_who2$0
+<pre class="src src-sql"># name: Execute sp_who2$0
+# --
+EXEC sp_who2$0
 </pre>
 </div>
 </div>
@@ -1579,8 +1901,8 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[view_name]}'</span>, <span
 <div class="outline-text-4" id="text-2-21-5">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: @@ERROR <span class="org-keyword">function</span> ...
-# <span class="org-comment">--</span>
+<pre class="src src-sql"># name: @@ERROR function ...
+# --
 @@ERROR$0
 </pre>
 </div>
@@ -1590,13 +1912,17 @@ IF OBJECT_ID (<span class="org-string">'${1:[schema].[view_name]}'</span>, <span
 <div id="outline-container-sec-2-21-6" class="outline-4">
 <h4 id="sec-2-21-6">[mro] Most Recent Objects</h4>
 <div class="outline-text-4" id="text-2-21-6">
+<p>
+Retrieve 20 most recently created objects.
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Retrieve 20 most rec...
-# <span class="org-comment">--</span>
-<span class="org-keyword">SELECT</span> TOP 20 [<span class="org-keyword">name</span>], [<span class="org-keyword">type</span>], crdate
-<span class="org-keyword">FROM</span> sysobjects
-<span class="org-keyword">ORDER</span> <span class="org-keyword">BY</span> crdate <span class="org-keyword">DESC</span>
+<pre class="src src-sql"># name: Retrieve 20 most rec...
+# --
+SELECT TOP 20 [name], [type], crdate
+FROM sysobjects
+ORDER BY crdate DESC
 </pre>
 </div>
 </div>
@@ -1611,9 +1937,26 @@ A comment block.
 
 <div class="org-src-container">
 
-<pre class="src src-sql"><span class="org-comment-delimiter">/*</span>
-<span class="org-comment"> * $0</span>
-<span class="org-comment"> */</span>
+<pre class="src src-sql">/*
+ * $0
+ */
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-21-8" class="outline-4">
+<h4 id="sec-2-21-8">Comment</h4>
+<div class="outline-text-4" id="text-2-21-8">
+<p>
+A multiline comment block.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sql">/*******************************************
+ * $0
+ *******************************************/
 </pre>
 </div>
 </div>
@@ -1629,11 +1972,11 @@ A comment block.
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Surround <span class="org-keyword">with</span> <span class="org-keyword">BEGIN</span>...
-# <span class="org-comment">--</span>
-<span class="org-keyword">BEGIN</span>
+<pre class="src src-sql"># name: Surround with BEGIN...
+# --
+BEGIN
 `yas-selected-text`
-<span class="org-keyword">END</span>
+END
 </pre>
 </div>
 </div>
@@ -1644,14 +1987,14 @@ A comment block.
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Surround <span class="org-keyword">with</span> IF...
-# <span class="org-comment">--</span>
+<pre class="src src-sql"># name: Surround with IF...
+# --
 IF (${1:Condition})
-<span class="org-keyword">BEGIN</span>
+BEGIN
 
 `yas-selected-text`
 
-<span class="org-keyword">END</span>
+END
 </pre>
 </div>
 </div>
@@ -1662,14 +2005,14 @@ IF (${1:Condition})
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 
-<pre class="src src-sql"># <span class="org-keyword">name</span>: Surround <span class="org-keyword">with</span> WHILE...
-# <span class="org-comment">--</span>
+<pre class="src src-sql"># name: Surround with WHILE...
+# --
 WHILE (${1:Condition})
-<span class="org-keyword">BEGIN</span>
+BEGIN
 
 `yas-selected-text`
 
-<span class="org-keyword">END</span>
+END
 </pre>
 </div>
 </div>
@@ -1678,7 +2021,8 @@ WHILE (${1:Condition})
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Fabrice Niessen</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2017-08-12 Sat 10:38</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

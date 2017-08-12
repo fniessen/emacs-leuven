@@ -53,6 +53,6 @@ a code you are typing by pressing the TAB key.
 
 *** [logm] Log method name and its arguments
 
-#+begin_src java
+#+begin_src java :tangle snippets/java-mode/logm.yasnippet
 android.util.Log.d(TAG, "archiveTable() called with: " + "context = [" + context + "], table_name = [" + table_name + "], wo_id = [" + wo_id + "], wr_id = [" + wr_id + "]");
 #+end_src

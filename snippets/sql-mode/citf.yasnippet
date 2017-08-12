@@ -1,0 +1,35 @@
+# name: Create inline table-va...
+# --
+IF OBJECT_ID (N'${1:[schema].[inline_function_name]}', N'IF') IS NOT NULL
+    DROP FUNCTION $1;  
+GO
+
+-- ================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
+CREATE FUNCTION $1 (@${2:parameter_name} ${3:parameter_data_type})
+RETURNS TABLE
+--WITH ENCRYPTION|SCHEMABINDING, ...
+AS
+RETURN
+(
+    -- Add the SELECT statement with parameter references here
+    SELECT @$2 AS c1
+    $0
+);
+GO
+
+-- =============================================
+-- Example to execute function
+-- =============================================
+SELECT *
+FROM $1 /* owner.inline_function_name */
+    (/* value_for_@parameter_name */)
+GO

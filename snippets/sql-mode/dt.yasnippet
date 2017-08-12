@@ -1,0 +1,11 @@
+# name: Drop table
+# --
+
+IF EXISTS (SELECT *
+             FROM sys.tables
+             JOIN sys.schemas
+               ON sys.tables.schema_id = sys.schemas.schema_id
+            WHERE sys.schemas.name = N'${1:schema}'
+              AND sys.tables.name = N'${2:table}')
+    DROP TABLE $1.$2
+GO

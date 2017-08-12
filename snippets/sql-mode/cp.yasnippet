@@ -1,0 +1,46 @@
+# name: Create stored proced...
+# --
+-- Drop stored procedure if it already exists
+IF OBJECT_ID ('${1:[schema].[procedure_name]}', 'P') IS NOT NULL   
+    DROP PROCEDURE $1;  
+GO
+
+-- =============================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:      /* Author */
+-- Create date: /* Create Date */
+-- Description: /* Description */
+-- =============================================
+CREATE PROCEDURE $1
+    -- Add the parameters for the function here
+    @${2:parameter_name_1} ${3:parameter_data_type_1} = ${4:default_value_for_parameter_1}
+    @${5:parameter_name_2} ${6:parameter_data_type_2} OUTPUT
+-- WITH ENCRYPTION, RECOMPILE, EXECUTE AS CALLER|SELF|OWNER| 'user_name'
+AS
+BEGIN
+    -- SET NOCOUNT ON added to prevent extra result sets from
+    -- interfering with SELECT statements.
+    SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+    SELECT @$2$0
+END
+GO
+
+--SET QUOTED_IDENTIFIER ON|OFF
+--SET ANSI_NULLS ON|OFF
+--GO
+
+-- =============================================
+-- Example to execute the stored procedure
+-- =============================================
+DECLARE @${7:variable_for_output_parameter} $6
+
+EXECUTE $1 /* value_for_parameter_1 */, $7 OUTPUT
+
+SELECT $7
+GO

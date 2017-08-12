@@ -1,0 +1,28 @@
+# name: Create multi-stateme...
+# --
+IF OBJECT_ID (N'${1:[schema].[table_function_name]}', N'TF') IS NOT NULL
+    DROP FUNCTION $1;  
+GO
+
+CREATE FUNCTION $1 (@{2:parameter_name} ${3:parameter_data_type})
+RETURNS @${4:return_variable_name} TABLE
+(
+    /* table type definition */
+    $2 $3
+)
+--WITH ENCRYPTION|SCHEMABINDING, ...
+AS
+BEGIN
+    /* function body */
+    INSERT @$4
+    SELECT 1
+    RETURN
+END;
+GO
+
+-- =============================================
+-- Example to execute function
+-- =============================================
+SELECT * FROM $1 /* owner.table_function_name */
+    (/* value_for_@parameter_name */)
+GO
