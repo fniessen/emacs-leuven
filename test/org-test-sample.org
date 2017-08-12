@@ -1,0 +1,10 @@
+#+TITLE:     Test file
+#+OPTIONS:   num:nil toc:nil
+#+BIND:      org-export-with-author nil
+#+BIND:      org-html-postamble ""
+#+BIND:      org-html-style-include-default nil
+#+BIND:      org-html-style-include-scripts nil
+
+* Section
+
+Some content.
