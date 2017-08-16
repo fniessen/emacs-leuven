@@ -215,17 +215,12 @@ Global key bindings.
 
 ** Code folding
 
-| Shortcut | What it runs  |
-|----------+---------------|
-| H--      | hs-hide-block |
-| H-+      | hs-show-block |
-| H-/      | hs-hide-all   |
-| H-*      | hs-show-all   |
-|----------+---------------|
-| H-left   | hs-hide-block |
-| H-right  | hs-show-block |
-| H-up     | hs-hide-all   |
-| H-down   | hs-show-all   |
+| Shortcut    | What it runs  |
+|-------------+---------------|
+| C-c <left>  | hs-hide-block |
+| C-c <right> | hs-show-block |
+| C-c <up>    | hs-hide-all   |
+| C-c <down>  | hs-show-all   |
 
 ** Search / Find / Replace
 
