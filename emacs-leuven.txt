@@ -6696,7 +6696,7 @@ tangling* of this file by a giga-mega-huge factor!?
       ;; (key-chord-define-global ",c" #'org-capture)) ; Autoloaded. ; "Donc," is problematic...
 
     (with-eval-after-load "org"         ; Package.
-      (key-chord-define org-mode-map ",u" #'outline-up-heading)
+      ;; (key-chord-define org-mode-map ",u" #'outline-up-heading)
       (key-chord-define org-mode-map ",w" #'org-refile) ; Not autoloaded.
       ;; (key-chord-define org-mode-map ",," #'org-mark-ring-goto)           ;; Return to previous location before link.
       ;; (key-chord-define org-mode-map ",." #'org-time-stamp)               ;; Create new timestamp.

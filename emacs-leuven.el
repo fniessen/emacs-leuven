@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170805.2128
+;; Version: 20170816.2145
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170805.2128"
+(defconst leuven--emacs-version "20170816.2145"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3707,7 +3707,7 @@ cycle through all windows on current frame."
       ;; (key-chord-define-global ",c" #'org-capture)) ; Autoloaded. ; "Donc," is problematic...
 
     (with-eval-after-load "org"         ; Package.
-      (key-chord-define org-mode-map ",u" #'outline-up-heading)
+      ;; (key-chord-define org-mode-map ",u" #'outline-up-heading)
       (key-chord-define org-mode-map ",w" #'org-refile) ; Not autoloaded.
       ;; (key-chord-define org-mode-map ",," #'org-mark-ring-goto)           ;; Return to previous location before link.
       ;; (key-chord-define org-mode-map ",." #'org-time-stamp)               ;; Create new timestamp.
