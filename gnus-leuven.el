@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20170805.1931
+;; Version: 20170812.1337
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -19,6 +19,23 @@
 
 ;; List of packages that `try-require' can't find.
 (setq leuven--missing-packages nil)
+
+  ;; Require a feature/library if available; if not, fail silently.
+  (unless (fboundp 'try-require)
+    (defun try-require (feature)
+      "Attempt to load a FEATURE (or library).
+    Return true if the library given as argument is successfully loaded.  If
+    not, just print a message."
+      (condition-case err
+          (progn
+            (if (stringp feature)
+                (load-library feature)
+              (require feature))
+            t)                          ; Necessary for correct behavior in
+                                        ; conditional expressions.
+        (file-error
+         (message "Requiring `%s'... missing" feature)
+         nil))))
 
 ;;* 1 (info "(gnus)Starting Up") Gnus
 
@@ -530,8 +547,8 @@
 
   ;; Default directory for saving attachments.
   (setq mm-default-directory
-        (cond ((or leuven--win32-p
-                   leuven--cygwin-p)
+        (cond ((or (eq system-type 'windows-nt)
+                   (eq system-type 'cygwin))
                "~/")
               (t                        ; Linux
                "~/Desktop/")))
