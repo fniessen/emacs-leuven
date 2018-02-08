@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180208.1741
+;; Version: 20180208.1757
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -78,7 +78,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180208.1741"
+(defconst leuven--emacs-version "20180208.1757"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -531,11 +531,11 @@ These packages are neither built-in nor already installed nor ignored."
                            (length missing-elpa-packages))))
           (setq leuven-install-all-missing-elpa-packages t))
 
-        ;; Download once the ELPA archive description.
-        (package-refresh-contents)      ; Ensure that the list of packages is
-                                        ; up-to-date.  Otherwise, new packages
-                                        ; (not present in the cache of the ELPA
-                                        ; contents) won't install.
+        ;; ;; Download once the ELPA archive description.
+        ;; (package-refresh-contents)      ; Ensure that the list of packages is
+        ;;                                 ; up-to-date.  Otherwise, new packages
+        ;;                                 ; (not present in the cache of the ELPA
+        ;;                                 ; contents) won't install.
         (dolist (pkg (reverse missing-elpa-packages))
           (if (or leuven-install-all-missing-elpa-packages
                   (yes-or-no-p (format "Install ELPA package `%s'? " pkg)))
@@ -556,7 +556,8 @@ These packages are neither built-in nor already installed nor ignored."
               #'(lambda ()
                   (message "[Updating (M)ELPA packages now...]")))
 
-    (auto-package-update-maybe))
+    ;; (auto-package-update-maybe)
+  )
 
 )                                       ; Chapter 48 ends here.
 
@@ -8195,8 +8196,6 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
       ;; Default command to run for `M-x rgrep'.
       (grep-apply-setting 'grep-find-template
                           "find <D> <X> -type f <F> -exec rg <C> --no-heading -H <R> /dev/null {} +"))
-      (grep-apply-setting 'grep-find-template
-                          "find <D> <X> -type f <F> -exec rg <C> --no-heading -H <R> {} +"))
                                         ; `<D>' = path.
                                         ; `<X>' for the find options to restrict
                                         ;       directory list.
