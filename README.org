@@ -62,6 +62,14 @@ Using the Emacs Leuven library is very easy: you just need to...
 
 * Packages
 
+#+begin_note
+To install all the extra packages used hereunder, without being questioned, add
+the following line before requiring Emacs-Leuven.
+
+    ;; Install all extra Emacs packages without asking for confirmation.
+    (setq leuven-install-all-missing-elpa-packages t)
+#+end_note
+
 | Subject                              | Package                | Description |
 |--------------------------------------+------------------------+-------------|
 | Basic editing commands               | undo-tree              |             |
@@ -215,12 +223,8 @@ Global key bindings.
 
 ** Code folding
 
-| Shortcut    | What it runs  |
-|-------------+---------------|
-| C-c <left>  | hs-hide-block |
-| C-c <right> | hs-show-block |
-| C-c <up>    | hs-hide-all   |
-| C-c <down>  | hs-show-all   |
+| Shortcut | What it runs |
+|----------+--------------|
 
 ** Search / Find / Replace
 
