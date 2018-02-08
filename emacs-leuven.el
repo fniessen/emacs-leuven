@@ -1,10 +1,11 @@
+
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2017 Fabrice Niessen
+;; Copyright (C) 1999-2018 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20170816.2145
+;; Version: 20180208.1741
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +78,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20170816.2145"
+(defconst leuven--emacs-version "20180208.1741"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -523,6 +524,13 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ignored.
     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
       (when missing-elpa-packages
+
+        (when (or leuven-install-all-missing-elpa-packages
+                  (yes-or-no-p
+                   (format "Install the %s missing ELPA packages without confirming each? "
+                           (length missing-elpa-packages))))
+          (setq leuven-install-all-missing-elpa-packages t))
+
         ;; Download once the ELPA archive description.
         (package-refresh-contents)      ; Ensure that the list of packages is
                                         ; up-to-date.  Otherwise, new packages
@@ -1157,7 +1165,7 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "14.12 (emacs)Font Lock")
 
   (defface leuven-todo-items-face
-    '((t (:weight bold :foreground "#FF3125" :background "#FFFF88")))
+    '((t :weight bold :foreground "#FF3125" :background "#FFFF88"))
     "Face for making TODO items stand out.")
 
   ;; Highlight FIXME notes.
@@ -1186,7 +1194,12 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "jit-lock"
 
     ;; Stealth fontification should show status messages.
-    (setq jit-lock-stealth-verbose t))
+    (setq jit-lock-stealth-verbose t)
+
+    ;; ;; Idle time after which deferred fontification should take place.
+    ;; (setq jit-lock-defer-time 0.05)     ; Improve the scrolling speed in large
+    ;;                                     ; files.
+    )
 
 ;;** 14.13 (info "(emacs)Highlight Interactively") by Matching
 
@@ -2004,6 +2017,16 @@ Should be selected from `fringe-bitmaps'.")
   ;; Visit a file.
   (global-set-key (kbd "<f3>") #'find-file)
 
+;; View large files.
+(defun leuven-find-file-check-make-large-file-read-only-hook ()
+  "If a file is over a given size, make the buffer read only."
+  (when (> (buffer-size) (* 1 1024 1024))
+    (setq buffer-read-only t)
+    (buffer-disable-undo)
+    (fundamental-mode)))
+
+(add-hook 'find-file-hook 'leuven-find-file-check-make-large-file-read-only-hook)
+
 ;;** 18.3 (info "(emacs)Saving") Files
 
   (leuven--section "18.3 (emacs)Saving Files")
@@ -2146,7 +2169,7 @@ Should be selected from `fringe-bitmaps'.")
           (auto-save-mode 1))))
 
   (defface recover-this-file
-    '((t (:weight bold :background "#FF3F3F")))
+    '((t :weight bold :background "#FF3F3F"))
     "Face for buffers visiting files with auto save data."
     :group 'files)
 
@@ -2656,6 +2679,9 @@ Should be selected from `fringe-bitmaps'.")
 
       (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
                                         ; Or `C-c p s s' (Helm-projectile ag?)
+      (setq helm-grep-ag-command "rg --color=always --colors 'match:fg:black' --colors 'match:bg:yellow' --smart-case --no-heading --line-number %s %s %s")
+      (setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'"))
+
       )
 
   ;; the_silver_searcher.
@@ -3702,32 +3728,6 @@ cycle through all windows on current frame."
 
     (key-chord-define-global ";s" #'set-mark-command)
 
-    ;; (with-eval-after-load "org-loaddefs" ; Autoloads file?
-      ;; (key-chord-define-global ",a" #'org-agenda) ; Autoloaded. ; 2015-02-18 Crash Gnus `C-u a'
-      ;; (key-chord-define-global ",c" #'org-capture)) ; Autoloaded. ; "Donc," is problematic...
-
-    (with-eval-after-load "org"         ; Package.
-      ;; (key-chord-define org-mode-map ",u" #'outline-up-heading)
-      (key-chord-define org-mode-map ",w" #'org-refile) ; Not autoloaded.
-      ;; (key-chord-define org-mode-map ",," #'org-mark-ring-goto)           ;; Return to previous location before link.
-      ;; (key-chord-define org-mode-map ",." #'org-time-stamp)               ;; Create new timestamp.
-      ;; (key-chord-define org-mode-map ",b" #'org-tree-to-indirect-buffer)  ;; Show complete tree in dedicated buffer.
-      ;; (key-chord-define org-mode-map ",d" #'org-todo)                     ;; Toggle todo for headline.
-      ;; (key-chord-define org-mode-map ",e" #'org-insert-link)              ;; Edit current link.
-      ;; (key-chord-define org-mode-map ",f" #'org-footnote-action)          ;; Create new footnote link.
-      ;; (key-chord-define org-mode-map ",g" #'er/open-org-calendar)         ;; Open calendar integration. :Functions.el:
-      ;; (key-chord-define org-mode-map ",h" #'org-toggle-heading)           ;; Toggle heading for current line/list item.
-      ;; (key-chord-define org-mode-map ",k" #'org-cut-subtree)              ;; Kill subtree.
-      ;; (key-chord-define org-mode-map ",n" #'er/org-narrow-and-reveal)     ;; Narrow region and reveal. :Functions.el:
-      ;; (key-chord-define org-mode-map ",o" #'org-open-at-point)            ;; Open link at point.
-      ;; (key-chord-define org-mode-map ",p" #'org-priority)                 ;; Toggle priority.
-      ;; (key-chord-define org-mode-map ",t" #'org-set-tags-command)         ;; Choose tags.
-      ;; (key-chord-define org-mode-map ",v" #'org-paste-subtree)            ;; Paste subtree.
-      ;; (key-chord-define org-mode-map ",w" #'er/org-widen-and-outline)     ;; Widen and outline. :Functions.el:
-      ;; (key-chord-define org-mode-map ",y" #'org-copy-subtree)             ;; Copy subtree.
-      ;; (key-chord-define org-mode-map "<H" #'org-list-make-subtree)        ;; Toggle headings for all list items in subtree.
-      )
-
     ;; (key-chord-define-global "ac" #'align-current)
     ;; (key-chord-define-global "fc" #'flycheck-mode)
     ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
@@ -4427,46 +4427,46 @@ cycle through all windows on current frame."
 
     ;; Org non-standard faces.
     (defface leuven-org-created-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#1F8DD6")
-            :foreground "#1F8DD6" :background "#FFEE62")))
+      '((t :weight bold :box (:line-width 1 :color "#1F8DD6")
+           :foreground "#1F8DD6" :background "#FFEE62"))
       "Face used to display state NEW.")
     (defface leuven-org-in-progress-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#D9D14A")
-            :foreground "#D9D14A" :background "#FCFCDC")))
+      '((t :weight bold :box (:line-width 1 :color "#D9D14A")
+           :foreground "#D9D14A" :background "#FCFCDC"))
       "Face used to display state STRT.")
     (defface leuven-org-waiting-for-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#89C58F")
-            :foreground "#89C58F" :background "#E2FEDE")))
+      '((t :weight bold :box (:line-width 1 :color "#89C58F")
+           :foreground "#89C58F" :background "#E2FEDE"))
       "Face used to display state WAIT.")
     (defface leuven-org-someday-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#9EB6D4")
-            :foreground "#9EB6D4" :background "#E0EFFF")))
+      '((t :weight bold :box (:line-width 1 :color "#9EB6D4")
+           :foreground "#9EB6D4" :background "#E0EFFF"))
       "Face used to display state SDAY.")
 
     (defface leuven-org-quote-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#FC5158")
-            :foreground "#FC5158" :background "#FED5D7")))
+      '((t :weight bold :box (:line-width 1 :color "#FC5158")
+           :foreground "#FC5158" :background "#FED5D7"))
       "Face used to display .")
     (defface leuven-org-quoted-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#55BA80")
-            :foreground "#55BA80" :background "#DFFFDF")))
+      '((t :weight bold :box (:line-width 1 :color "#55BA80")
+           :foreground "#55BA80" :background "#DFFFDF"))
       "Face used to display .")
     (defface leuven-org-approved-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#969696")
-            :foreground "#969696" :background "#F2F2EE")))
+      '((t :weight bold :box (:line-width 1 :color "#969696")
+           :foreground "#969696" :background "#F2F2EE"))
       "Face used to display .")
     (defface leuven-org-rejected-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#42B5FF")
-            :foreground "#42B5FF" :background "#D3EEFF")))
+      '((t :weight bold :box (:line-width 1 :color "#42B5FF")
+           :foreground "#42B5FF" :background "#D3EEFF"))
       "Face used to display state REJECTED.")
 
     (defface leuven-org-openpo-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#FC5158")
-            :foreground "#FC5158" :background "#FED5D7")))
+      '((t :weight bold :box (:line-width 1 :color "#FC5158")
+           :foreground "#FC5158" :background "#FED5D7"))
       "Face used to display OPEN purchase order.")
     (defface leuven-org-closedpo-kwd
-      '((t (:weight bold :box (:line-width 1 :color "#969696")
-            :foreground "#969696" :background "#F2F2EE")))
+      '((t :weight bold :box (:line-width 1 :color "#969696")
+           :foreground "#969696" :background "#F2F2EE"))
       "Face used to display CLOSED purchase order."))
 
   ;; Block switching entries to DONE if
@@ -4532,8 +4532,8 @@ cycle through all windows on current frame."
 
   ;; 6.2 List of tags ("contexts") allowed in Org mode files.
   (setq org-tag-alist '((:startgroup . nil)
-                         ("personal"  . ?p)
                          ("work"      . ?w)
+                         ("personal"  . ?p)
                         (:endgroup . nil)
                         ("call"        . ?c)
                         ("errands"     . ?e)
@@ -4543,6 +4543,7 @@ cycle through all windows on current frame."
                         ("notbillable" . ?B)
                         ;; ("reading" . ?r)
                         ;; ("proj" . ?P)
+                        ;; ("now" . XXX)
 
                         ("ARCHIVE"     . ?a) ; speed command + action in task list
                         ("crypt"       . ?C)
@@ -4554,12 +4555,12 @@ cycle through all windows on current frame."
         '(("refile"
            (:slant italic
             :foreground "#A9876E"))     ; :background "#FCEEB3"
-          ("personal"
-           (:slant italic
-            :foreground "#5C88D3"))     ; :background "#BBDDFF"
           ("work"
            (:slant italic
             :foreground "#699761"))     ; :background "#C1D996"
+          ("personal"
+           (:slant italic
+            :foreground "#5C88D3"))     ; :background "#BBDDFF"
           ("FLAGGED"
            (:weight bold :slant italic
             :foreground "white" :background "#DB2D27")) ; :background "#EDC6C8"
@@ -4976,7 +4977,7 @@ From the address <%a>"
 %i") t)
 
     (add-to-list 'org-capture-templates
-                 `("S" "secure" entry
+                 `("S" "Secure safe" entry
                    (file+datetree+prompt "~/.dotfiles/.hide/safe.gpg")
                    "* %(format-time-string \"%H:%M\") %^{Entry} %^G
 %i%?") t)
@@ -5231,19 +5232,19 @@ From the address <%a>"
 
     ;; Org non-standard faces.
     (defface leuven-org-deadline-overdue
-      '((t (:foreground "#F22659")))
+      '((t :foreground "#F22659"))
       "Face used to highlight tasks whose due date is in the past.")
 
     (defface leuven-org-deadline-today
-      '((t (:weight bold :foreground "#4F4A3D" :background "#FFFFCC")))
+      '((t :weight bold :foreground "#4F4A3D" :background "#FFFFCC"))
       "Face used to highlight tasks whose due date is today.")
 
     (defface leuven-org-deadline-tomorrow
-      '((t (:foreground "#40A80B")))
+      '((t :foreground "#40A80B"))
       "Face used to highlight tasks whose due date is tomorrow.")
 
     (defface leuven-org-deadline-future
-      '((t (:foreground "#40A80B")))
+      '((t :foreground "#40A80B"))
       "Face used to highlight tasks whose due date is for later."))
 
   (with-eval-after-load "org-agenda"
@@ -7042,13 +7043,13 @@ this with to-do items than with projects or headings."
     (define-key web-mode-map (kbd "C-M-d")    #'web-mode-element-child)
     (define-key web-mode-map (kbd "M-(")      #'web-mode-element-wrap)
 
-    (define-key web-mode-map (kbd "M-h")   'web-mode-mark-and-expand)
-    (define-key web-mode-map (kbd "M-n")   'web-mode-tag-next)
-    (define-key web-mode-map (kbd "M-p")   'web-mode-tag-previous)
-    (define-key web-mode-map (kbd "C-M-p") 'web-mode-tag-previous)
-    (define-key web-mode-map (kbd "C-M-u") 'web-mode-element-parent)
-    (define-key web-mode-map (kbd "C-M-a") 'web-mode-element-previous)
-    (define-key web-mode-map (kbd "C-M-e") 'web-mode-element-end)
+    (define-key web-mode-map (kbd "M-h")   #'web-mode-mark-and-expand)
+    (define-key web-mode-map (kbd "M-n")   #'web-mode-tag-next)
+    (define-key web-mode-map (kbd "M-p")   #'web-mode-tag-previous)
+    (define-key web-mode-map (kbd "C-M-p") #'web-mode-tag-previous)
+    (define-key web-mode-map (kbd "C-M-u") #'web-mode-element-parent)
+    (define-key web-mode-map (kbd "C-M-a") #'web-mode-element-previous)
+    (define-key web-mode-map (kbd "C-M-e") #'web-mode-element-end)
 
 ;; C-M-a           c-beginning-of-defun
 ;; C-M-e           c-end-of-defun
@@ -7115,6 +7116,8 @@ this with to-do items than with projects or headings."
 
     ;; (flycheck-add-mode 'html-tidy 'web-mode)
 
+    ;; Highlight `saveWorkflowRuleId' in AXVW files.
+
     )
 
   (with-eval-after-load "nxml-mode"
@@ -7154,7 +7157,10 @@ this with to-do items than with projects or headings."
                 ;; When `html-mode-hook' is called from `html-helper-mode'.
                 (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
 
-    (add-hook 'nxml-mode-hook #'hl-tags-mode)
+    (add-hook 'nxml-mode-hook
+              (lambda ()
+                (when (> (buffer-size) (* 1024 1024)) ; View large files.
+                  (hl-tags-mode 1))))
 
     ;; (add-hook 'web-mode-hook #'hl-tags-mode)
 )
@@ -7382,7 +7388,7 @@ mouse-3: go to end") "]")))
     (global-set-key "\M-R" #'sp-splice-sexp-killing-around) ; `sp-raise-sexp'.
 
     ;; Toggle Smartparens mode in all buffers.
-    (smartparens-global-mode 1)
+    (smartparens-global-mode 1)         ; How to disable this in large files?
 
     ;; Toggle Show-Smartparens mode in all buffers.
     (show-smartparens-global-mode 1)
@@ -7480,7 +7486,7 @@ mouse-3: go to end") "]")))
       :group 'hideshow)
 
     (defface hs-face
-      '((t (:box (:line-width 1 :color "#777777") :foreground "#9A9A6A" :background "#F3F349")))
+      '((t :box (:line-width 1 :color "#777777") :foreground "#9A9A6A" :background "#F3F349"))
       "Face to hightlight the \"...\" area of hidden regions"
       :group 'hideshow)
 
@@ -7611,6 +7617,8 @@ mouse-3: go to end") "]")))
                                                  ; `C-c C-m ev`.
     )
 )
+
+;; Xref-js2
 
   ;; Below regex list could be used in both js-mode and js2-mode.
   (setq javascript-common-imenu-regex-list
@@ -8141,6 +8149,9 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
   (with-eval-after-load "grep"
 
+    ;; Run `grep' via `find', with user-friendly interface.
+    (global-set-key (kbd "C-c 3") #'rgrep)
+
     ;; Ignore case distinctions in the default `grep' command.
     (grep-apply-setting 'grep-command "grep -i -H -n -e ")
 
@@ -8159,18 +8170,45 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     (add-to-list 'grep-find-ignored-files "*.min.js")
 
     ;; Files to ignore for ARCHIBUS.
+    (add-to-list 'grep-find-ignored-files "ab-core.js")
+    (add-to-list 'grep-find-ignored-files "ab-pgnav.js")
     (add-to-list 'grep-find-ignored-files "app.js")
     ;; (add-to-list 'grep-find-ignored-files "cordova.js")
     (add-to-list 'grep-find-ignored-files "app.css")
     (add-to-list 'grep-find-ignored-files "sencha-touch.css")
 
     ;; Directories to ignore for ARCHIBUS.
-    (add-to-list 'grep-find-ignored-directories "ab-core")
     (add-to-list 'grep-find-ignored-directories "ckeditor")
-    ;; (add-to-list 'grep-find-ignored-directories "ab-products/common/mobile")
     (add-to-list 'grep-find-ignored-directories "common/mobile"))
 
-    (when (executable-find "agXXX") ; Need to fix base dir and file extensions
+    (when (executable-find "rgXXX")        ; ripgrep.
+
+      ;; Default grep command for `M-x grep'.
+      ;; (grep-apply-setting 'grep-command "ag --nogroup --numbers ")
+
+      ;; Default command to run for `M-x lgrep'.
+      (grep-apply-setting 'grep-template "rg --no-heading -H -uu -g <F> <R> <D>")
+
+      ;; Default find command for `M-x grep-find'.
+      ;; (grep-apply-setting 'grep-find-command '("ag --noheading --column " . 25))
+
+      ;; Default command to run for `M-x rgrep'.
+      (grep-apply-setting 'grep-find-template
+                          "find <D> <X> -type f <F> -exec rg <C> --no-heading -H <R> /dev/null {} +"))
+      (grep-apply-setting 'grep-find-template
+                          "find <D> <X> -type f <F> -exec rg <C> --no-heading -H <R> {} +"))
+                                        ; `<D>' = path.
+                                        ; `<X>' for the find options to restrict
+                                        ;       directory list.
+                                        ; `<F>' = glob.
+                                        ; ------------------------------------
+                                        ; `<C>' for the place to put `-i' if the
+                                        ;       search is case-insensitive.
+                                        ; `<R>' = pattern.
+
+    ;; Prefer rg > ag.
+    (when (and (executable-find "agXXX") ; XXX Need to fix base dir and file extensions!!!
+               (not (executable-find "rg")))
 
       ;; Default grep command for `M-x grep'.
       ;; (grep-apply-setting 'grep-command "ag --nogroup --numbers ")
@@ -8617,6 +8655,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 
   (with-eval-after-load "dumb-jump-autoloads"
+
+    ;; Prefer to use `rg' over `ag'.
+    (setq dumb-jump-prefer-searcher 'rg)
 
     ;; Number of seconds a grep/find command can take before being warned to use
     ;; ag and config.
@@ -10399,6 +10440,9 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; Defer the decision to Gnome.  We could
                                         ; use "firefox" or "google-chrome" as
                                         ; well.
+
+  ;; For WSL (Ubuntu on Windows).
+  (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe"))
 
   (leuven--section "FFAP")
 
