@@ -1,4 +1,5 @@
 # name: Modify column
 # --
+-- WARNING: If the column is not nullable, specify attribute NOT NULL.
 ALTER TABLE ${1:[schema].[table_name]} ALTER COLUMN $0;
 GO

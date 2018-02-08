@@ -923,9 +923,15 @@ GO$0
 
 *** [atac] modify Column
 
+#+begin_warning
+Running ~ALTER COLUMN~ without mentioning attribute ~NOT NULL~ will result in the
+column being changed to *nullable*, if it is already not.
+#+end_warning
+
 #+begin_src sql :tangle snippets/sql-mode/atac.yasnippet
 # name: Modify column
 # --
+-- WARNING: If the column is not nullable, specify attribute NOT NULL.
 ALTER TABLE ${1:[schema].[table_name]} ALTER COLUMN $0;
 GO
 #+end_src
