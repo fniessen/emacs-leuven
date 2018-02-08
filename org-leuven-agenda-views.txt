@@ -523,6 +523,17 @@ We said "get it out my way for now", nope?
 
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
+               '("w" "Work"
+                 ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
+                 ((tags-todo "work-pirilampo"
+                             ((org-agenda-overriding-header "Work")))
+                  )
+                 ((org-agenda-todo-ignore-scheduled 'future)
+                  (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
+  #+end_src
+
+  #+begin_src emacs-lisp
+  (add-to-list 'org-agenda-custom-commands
                '("fh" "Hotlist"
                  ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
                  ((tags-todo "DEADLINE<\"<+0d>\""

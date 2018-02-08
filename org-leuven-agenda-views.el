@@ -1,3 +1,4 @@
+
 ;;; org-leuven-agenda-views.el --- Org customized views
 
 ;;; Commentary:
@@ -104,6 +105,15 @@
                               (org-agenda-sorting-strategy '(priority-down)))))
                  ((org-agenda-format-date "")
                   (org-agenda-start-with-clockreport-mode nil))) t)
+
+  (add-to-list 'org-agenda-custom-commands
+               '("w" "Work"
+                 ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
+                 ((tags-todo "work-pirilampo"
+                             ((org-agenda-overriding-header "Work")))
+                  )
+                 ((org-agenda-todo-ignore-scheduled 'future)
+                  (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
 
   (add-to-list 'org-agenda-custom-commands
                '("fh" "Hotlist"
