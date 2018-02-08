@@ -4946,7 +4946,7 @@ From the address <%a>"
                    :empty-lines 1) t)
 
     (add-to-list 'org-capture-templates
-                 `("i" "interruption" entry
+                 `("i" "Interruption" entry
                    (file ,org-default-notes-file)
                    "A TEMPLATE HERE"
                    :clock-in t
