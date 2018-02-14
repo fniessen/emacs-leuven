@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180208.1757
+;; Version: 20180214.1403
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -78,7 +78,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180208.1757"
+(defconst leuven--emacs-version "20180214.1403"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -412,7 +412,6 @@ If not, just print a message."
             company-tern
             company-quickhelp
             csv-mode
-            cygwin-mount
             dictionary
             diff-hl
             diminish
@@ -556,6 +555,7 @@ These packages are neither built-in nor already installed nor ignored."
               #'(lambda ()
                   (message "[Updating (M)ELPA packages now...]")))
 
+    ;; "It looks like there's a problem with your network connection."
     ;; (auto-package-update-maybe)
   )
 
@@ -3406,6 +3406,39 @@ cycle through all windows on current frame."
   (prefer-coding-system 'utf-8-unix)    ; Unix flavor for code blocks executed
                                         ; via Org-Babel.
 
+;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
+(defun leuven-do-accent (subst-list)
+  "Utility cleanup function."
+  (dolist (pair subst-list)
+    (save-excursion
+      (while (re-search-forward (car pair) nil t)
+        (replace-match (cdr pair) t)))))
+
+(defun leuven-cleanup-accent-iso-latin-1-to-utf-8 ()
+  "Replace non-UTF-8 characters."
+  (interactive)
+  (leuven-do-accent '(("\205" . "...")
+                      ("\222" . "'")
+                      ("\223" . "\"")
+                      ("\224" . "\"")
+                      ("\226" . " - ")
+                      ("\234" . "oe")
+                      ("\251" . "©")
+                      ("\253" . "«")
+                      ("\273" . "»")
+                      ("\300" . "À")
+                      ("\311" . "É")
+                      ("\340" . "à")
+                      ("\342" . "â")
+                      ("\347" . "ç")
+                      ("\350" . "è")
+                      ("\351" . "é")
+                      ("\352" . "ê")
+                      ("\353" . "ë")
+                      ("\356" . "î")
+                      ("\364" . "ô")
+                      ("\371" . "ù"))))
+
 ;;** 22.7 (info "(emacs)Specify Coding") System of a File
 
   (leuven--section "22.7 (emacs)Specify Coding System of a File")
@@ -4895,7 +4928,7 @@ cycle through all windows on current frame."
       (org-forward-heading-same-level 1))
 
     (add-to-list 'org-capture-templates
-                 `("m" "Email processing...") t)
+                 `("m" "Email processing") t)
 
     (add-to-list 'org-capture-templates
                  `("mT" "Create a TODO Action + edit" entry
@@ -10118,7 +10151,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Let Cygwin Emacs recognize Windows paths (e.g. C:\Program Files\).
   (when leuven--cygwin-p
 
-    (try-require 'windows-path)
+    (try-require 'windows-path)         ; Require cygwin-mount!
 
     (with-eval-after-load "windows-path"
 
