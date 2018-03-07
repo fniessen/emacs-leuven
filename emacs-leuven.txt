@@ -3830,9 +3830,9 @@ Turn on auto-revert mode globally.
                                         ; to non-nil.
 #+end_src
 
-Auto-revert will automatically reload files that have changed outside of Emacs.
-It won't revert a buffer that you've edited inside Emacs, even if the file also
-changes outside.
+Auto-revert will automatically *reload files* that have been *modified outside of
+Emacs*.  It won't revert a buffer that you've edited inside Emacs, even if the
+file also changes outside.
 
 #+begin_warning
 ~global-auto-revert-mode~ blocks Cygwin Emacs for more than 5 seconds at many
@@ -6255,7 +6255,7 @@ XXX Declare PDF files as binary
                       ("\222" . "'")
                       ("\223" . "\"")
                       ("\224" . "\"")
-                      ("\226" . " - ")
+                      ("\226" . "-")
                       ("\234" . "oe")
                       ("\251" . "©")
                       ("\253" . "«")
@@ -6270,8 +6270,10 @@ XXX Declare PDF files as binary
                       ("\352" . "ê")
                       ("\353" . "ë")
                       ("\356" . "î")
+                      ("\357" . "ï")
                       ("\364" . "ô")
-                      ("\371" . "ù"))))
+                      ("\371" . "ù")
+                      ("\373" . "û"))))
 #+end_src
 
 ** Specifying a File's Coding System
@@ -14136,7 +14138,7 @@ See https://stackoverflow.com/questions/45526670/rgrep-in-emacs-to-use-ripgrep.
 
 Some problems with ripgrep:
 - no match highlighting,
-- error parsing regex when string is, for example, ~Handler().update~.
+- error parsing regex when string is, for example, ~Handler().update~ or ~myFunc(~.
 
 find . -name "*.log" -type f -print0 | xargs -I _ sh -c 'iconv -f utf16 -t utf8 _ | grep runPMGeneration'
 
