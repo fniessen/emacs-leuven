@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180307.1640
+;; Version: 20180417.0949
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -78,7 +78,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180307.1640"
+(defconst leuven--emacs-version "20180417.0949"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1850,7 +1850,7 @@ Should be selected from `fringe-bitmaps'.")
                              org-babel-exp-reference-buffer))
                                         ; Export buffer.
                     (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
-                  (message "[Turn on Flyspell mode in `%s']" (buffer-name))
+                  (message "[Turning on Flyspell mode in `%s']" (buffer-name))
                   (flyspell-mode))))
 
     ;; Prevent Flyspell from finding mistakes in the code, well in comments and
@@ -3417,7 +3417,8 @@ cycle through all windows on current frame."
 (defun leuven-cleanup-accent-iso-latin-1-to-utf-8 ()
   "Replace non-UTF-8 characters."
   (interactive)
-  (leuven-do-accent '(("\205" . "...")
+  (leuven-do-accent '(("\200" . "EUR")
+                      ("\205" . "...")
                       ("\222" . "'")
                       ("\223" . "\"")
                       ("\224" . "\"")
@@ -3430,6 +3431,7 @@ cycle through all windows on current frame."
                       ("\311" . "É")
                       ("\340" . "à")
                       ("\342" . "â")
+                      ("\344" . "ä")
                       ("\347" . "ç")
                       ("\350" . "è")
                       ("\351" . "é")

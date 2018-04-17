@@ -3364,7 +3364,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
                              org-babel-exp-reference-buffer))
                                         ; Export buffer.
                     (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
-                  (message "[Turn on Flyspell mode in `%s']" (buffer-name))
+                  (message "[Turning on Flyspell mode in `%s']" (buffer-name))
                   (flyspell-mode))))
 #+end_src
 
@@ -3374,7 +3374,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
     ;; Enable on-the-fly spell checking.
     (add-hook 'text-mode-hook
               (lambda ()
-                (message "[Turn on Flyspell mode in `%s']" (buffer-name))
+                (message "[Turning on Flyspell mode in `%s']" (buffer-name))
                 (flyspell-mode)))
 
     (defun org-export-as--org-export-as-around (orig-fun &rest args)
@@ -6251,7 +6251,8 @@ XXX Declare PDF files as binary
 (defun leuven-cleanup-accent-iso-latin-1-to-utf-8 ()
   "Replace non-UTF-8 characters."
   (interactive)
-  (leuven-do-accent '(("\205" . "...")
+  (leuven-do-accent '(("\200" . "EUR")
+                      ("\205" . "...")
                       ("\222" . "'")
                       ("\223" . "\"")
                       ("\224" . "\"")
@@ -6264,6 +6265,7 @@ XXX Declare PDF files as binary
                       ("\311" . "É")
                       ("\340" . "à")
                       ("\342" . "â")
+                      ("\344" . "ä")
                       ("\347" . "ç")
                       ("\350" . "è")
                       ("\351" . "é")
@@ -15848,8 +15850,8 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
 
 **** Why doesn't TAB expand a snippet?
 
-1. Check the mode line to see if there's ~yas~. If not, then try ~M-x
-   yas-minor-mode~ to manually turn on the minor mode and try to expand the
+1. Check the mode line to see if there's ~yas~. If not, then try
+   ~M-x yas-minor-mode~ to manually turn on the minor mode and try to expand the
    snippet again.
 
    If it works, then, you can add the following code to your =.emacs= before
