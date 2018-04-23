@@ -2227,35 +2227,36 @@ Prior to running their own mode hooks,
 - all text-based major modes run ~text-mode-hook~, and
 - all programming language modes run ~prog-mode-hook~.
 
-Add font locking for TODO, FIXME and XXX to all modes except Diff mode and
+Add font locking for TODO, FIXME, BUG and XXX to all modes except Diff mode and
 Org mode.
 
 #+begin_src emacs-lisp
-  (defface leuven-todo-items-face
+  (defface leuven-todo-patterns-face
     '((t :weight bold :foreground "#FF3125" :background "#FFFF88"))
     "Face for making TODO items stand out.")
 
   ;; Highlight FIXME notes.
-  (defvar leuven-todo-items-in-org
-    "\\<\\(\\(FIXME\\|XXX\\)\\(([^)]*)\\)?:?\\)" ; Start of word.
+  (defvar leuven-todo-patterns-in-org
+    "\\<\\(\\(FIXME\\|BUG\\|XXX\\)\\(([^)]*)\\)?:?\\)" ; Start of word.
     "TODO patterns to highlight (for Org mode only).
   The goal is to ensure no conflict with the Org mode TODO keyword.")
 
-  (defvar leuven-todo-items
-    "\\<\\(\\(TODO\\|FIXME\\|XXX\\)\\(([^)]*)\\)?:?\\)"
+  (defvar leuven-todo-patterns
+    "\\<\\(\\(TODO\\|FIXME\\|BUG\\|XXX\\)\\(([^)]*)\\)?:?\\)"
     "TODO patterns to highlight.")
 
   ;; Add highlighting keywords.
-  (defun leuven-add-font-lock-keywords ()
+  (defun leuven-highlight-todo-patterns ()
+    "Highlight TODO patterns."
     (cond
      ((derived-mode-p 'org-mode)
       (font-lock-add-keywords nil         ; In the current buffer.
-       `((,leuven-todo-items-in-org 1 'leuven-todo-items-face prepend)) 'end))
+       `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)) 'end))
      ((not (derived-mode-p 'diff-mode))
       (font-lock-add-keywords nil         ; In the current buffer.
-       `((,leuven-todo-items 1 'leuven-todo-items-face prepend)) 'end))))
+       `((,leuven-todo-patterns 1 'leuven-todo-patterns-face prepend)) 'end))))
 
-  (add-hook 'find-file-hook #'leuven-add-font-lock-keywords)
+  (add-hook 'find-file-hook #'leuven-highlight-todo-patterns)
 #+end_src
 
 See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
@@ -3827,8 +3828,8 @@ Turn on auto-revert mode globally.
 #+end_src
 
 Auto-revert will automatically *reload files* that have been *modified outside of
-Emacs*.  It won't revert a buffer that you've edited inside Emacs, even if the
-file also changes outside.
+Emacs* (externally modified files).  It won't revert a buffer that you've edited
+inside Emacs, even if the file also changes outside.
 
 #+begin_warning
 ~global-auto-revert-mode~ blocks Cygwin Emacs for more than 5 seconds at many

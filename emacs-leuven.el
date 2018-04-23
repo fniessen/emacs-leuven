@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180423.1033
+;; Version: 20180423.1400
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -78,7 +78,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180423.1033"
+(defconst leuven--emacs-version "20180423.1400"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1161,31 +1161,32 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "14.12 (emacs)Font Lock")
 
-  (defface leuven-todo-items-face
+  (defface leuven-todo-patterns-face
     '((t :weight bold :foreground "#FF3125" :background "#FFFF88"))
     "Face for making TODO items stand out.")
 
   ;; Highlight FIXME notes.
-  (defvar leuven-todo-items-in-org
-    "\\<\\(\\(FIXME\\|XXX\\)\\(([^)]*)\\)?:?\\)" ; Start of word.
+  (defvar leuven-todo-patterns-in-org
+    "\\<\\(\\(FIXME\\|BUG\\|XXX\\)\\(([^)]*)\\)?:?\\)" ; Start of word.
     "TODO patterns to highlight (for Org mode only).
   The goal is to ensure no conflict with the Org mode TODO keyword.")
 
-  (defvar leuven-todo-items
-    "\\<\\(\\(TODO\\|FIXME\\|XXX\\)\\(([^)]*)\\)?:?\\)"
+  (defvar leuven-todo-patterns
+    "\\<\\(\\(TODO\\|FIXME\\|BUG\\|XXX\\)\\(([^)]*)\\)?:?\\)"
     "TODO patterns to highlight.")
 
   ;; Add highlighting keywords.
-  (defun leuven-add-font-lock-keywords ()
+  (defun leuven-highlight-todo-patterns ()
+    "Highlight TODO patterns."
     (cond
      ((derived-mode-p 'org-mode)
       (font-lock-add-keywords nil         ; In the current buffer.
-       `((,leuven-todo-items-in-org 1 'leuven-todo-items-face prepend)) 'end))
+       `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)) 'end))
      ((not (derived-mode-p 'diff-mode))
       (font-lock-add-keywords nil         ; In the current buffer.
-       `((,leuven-todo-items 1 'leuven-todo-items-face prepend)) 'end))))
+       `((,leuven-todo-patterns 1 'leuven-todo-patterns-face prepend)) 'end))))
 
-  (add-hook 'find-file-hook #'leuven-add-font-lock-keywords)
+  (add-hook 'find-file-hook #'leuven-highlight-todo-patterns)
 
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
