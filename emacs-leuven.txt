@@ -873,7 +873,6 @@ like this into your configuration file:
             avy
             back-button
             bbdb
-            bookmark+
             boxquote
             ;; calfw
             circe
@@ -885,7 +884,6 @@ like this into your configuration file:
             dictionary
             diff-hl
             diminish
-            dired+
             dumb-jump
             ;; emacs-eclim
             emr
@@ -925,7 +923,6 @@ like this into your configuration file:
             key-chord
             litable
             idle-require
-            info+
             interaction-log
             ledger-mode
             leuven-theme
@@ -949,7 +946,6 @@ like this into your configuration file:
             smart-comment
             smartparens
             sql-indent
-            unbound
             undo-tree
             volatile-highlights
             web-mode

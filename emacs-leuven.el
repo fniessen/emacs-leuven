@@ -5,7 +5,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180417.0949
+;; Version: 20180423.1033
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -78,7 +78,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180417.0949"
+(defconst leuven--emacs-version "20180423.1033"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -403,7 +403,6 @@ If not, just print a message."
             avy
             back-button
             bbdb
-            bookmark+
             boxquote
             ;; calfw
             circe
@@ -415,7 +414,6 @@ If not, just print a message."
             dictionary
             diff-hl
             diminish
-            dired+
             dumb-jump
             ;; emacs-eclim
             emr
@@ -455,7 +453,6 @@ If not, just print a message."
             key-chord
             litable
             idle-require
-            info+
             interaction-log
             ledger-mode
             leuven-theme
@@ -479,7 +476,6 @@ If not, just print a message."
             smart-comment
             smartparens
             sql-indent
-            unbound
             undo-tree
             volatile-highlights
             web-mode
