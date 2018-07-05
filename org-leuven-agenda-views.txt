@@ -85,6 +85,10 @@ https://dzone.com/articles/scrum-kanban-scrumban.
 
   (require 'org-agenda)
 
+  ;; Open up the Tasks.
+  (global-set-key
+    (kbd "C-c T") (kbd "C-c a f . / RET"))
+
   ;; Display the calendar and tasks for today.
   (global-set-key
     (kbd "<f7>") (kbd "C-c a f ."))

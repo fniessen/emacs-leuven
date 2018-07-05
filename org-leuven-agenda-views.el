@@ -1,4 +1,3 @@
-
 ;;; org-leuven-agenda-views.el --- Org customized views
 
 ;;; Commentary:
@@ -6,6 +5,10 @@
 ;;; Code:
 
   (require 'org-agenda)
+
+  ;; Open up the Tasks.
+  (global-set-key
+    (kbd "C-c T") (kbd "C-c a f . / RET"))
 
   ;; Display the calendar and tasks for today.
   (global-set-key
