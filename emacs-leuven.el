@@ -1,11 +1,10 @@
-
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2018 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180423.1400
+;; Version: 20180705.2205
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -78,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180423.1400"
+(defconst leuven--emacs-version "20180705.2205"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1176,7 +1175,7 @@ These packages are neither built-in nor already installed nor ignored."
     "TODO patterns to highlight.")
 
   ;; Add highlighting keywords.
-  (defun leuven-highlight-todo-patterns ()
+  (defun leuven--highlight-todo-patterns ()
     "Highlight TODO patterns."
     (cond
      ((derived-mode-p 'org-mode)
@@ -1186,7 +1185,7 @@ These packages are neither built-in nor already installed nor ignored."
       (font-lock-add-keywords nil         ; In the current buffer.
        `((,leuven-todo-patterns 1 'leuven-todo-patterns-face prepend)) 'end))))
 
-  (add-hook 'find-file-hook #'leuven-highlight-todo-patterns)
+  (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
@@ -2016,14 +2015,14 @@ Should be selected from `fringe-bitmaps'.")
   (global-set-key (kbd "<f3>") #'find-file)
 
 ;; View large files.
-(defun leuven-find-file-check-make-large-file-read-only-hook ()
+(defun leuven--make-large-file-read-only ()
   "If a file is over a given size, make the buffer read only."
   (when (> (buffer-size) (* 1 1024 1024))
     (setq buffer-read-only t)
     (buffer-disable-undo)
     (fundamental-mode)))
 
-(add-hook 'find-file-hook 'leuven-find-file-check-make-large-file-read-only-hook)
+(add-hook 'find-file-hook #'leuven--make-large-file-read-only)
 
 ;;** 18.3 (info "(emacs)Saving") Files
 
@@ -3420,13 +3419,17 @@ cycle through all windows on current frame."
                       ("\223" . "\"")
                       ("\224" . "\"")
                       ("\226" . "-")
+                      ("\227" . "--")
                       ("\234" . "oe")
                       ("\251" . "©")
                       ("\253" . "«")
+                      ("\272" . "°")
                       ("\273" . "»")
                       ("\300" . "À")
+                      ("\307" . "Ç")
                       ("\311" . "É")
                       ("\340" . "à")
+                      ("\341" . "a") ;; XXX Spanish a with accent.
                       ("\342" . "â")
                       ("\344" . "ä")
                       ("\347" . "ç")
@@ -5298,6 +5301,11 @@ From the address <%a>"
   (setq org-agenda-time-grid '((daily remove-match)
                                ""
                                (0800 1000 1200 1400 1600 1800 2000)))
+
+  ;; Recent Org-mode.
+  (setq org-agenda-time-grid '((daily today remove-match)
+                                (0800 1000 1200 1400 1600 1800 2000)
+                                "...... " ""))
 
   ;; String for the current time marker in the agenda.
   (setq org-agenda-current-time-string "Right now")
@@ -10111,10 +10119,10 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Managing multiple terminal buffers in Emacs
   ;; (and fixing some troubles of `term-mode': key bindings, etc.).
 
-  (with-eval-after-load "multi-term-autoloads"
-
-    ;; (global-set-key (kbd "C-c t") #'multi-term-next)
-    (global-set-key (kbd "C-c T") #'multi-term)) ; Create a new one.
+  ;; (with-eval-after-load "multi-term-autoloads"
+  ;;
+  ;;   ;; (global-set-key (kbd "C-c t") #'multi-term-next)
+  ;;   (global-set-key (kbd "C-c T") #'multi-term)) ; Create a new one.
 
   (with-eval-after-load "multi-term"
 

@@ -2246,7 +2246,7 @@ Org mode.
     "TODO patterns to highlight.")
 
   ;; Add highlighting keywords.
-  (defun leuven-highlight-todo-patterns ()
+  (defun leuven--highlight-todo-patterns ()
     "Highlight TODO patterns."
     (cond
      ((derived-mode-p 'org-mode)
@@ -2256,7 +2256,7 @@ Org mode.
       (font-lock-add-keywords nil         ; In the current buffer.
        `((,leuven-todo-patterns 1 'leuven-todo-patterns-face prepend)) 'end))))
 
-  (add-hook 'find-file-hook #'leuven-highlight-todo-patterns)
+  (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 #+end_src
 
 See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
@@ -3685,14 +3685,14 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 
 #+begin_src emacs-lisp
 ;; View large files.
-(defun leuven-find-file-check-make-large-file-read-only-hook ()
+(defun leuven--make-large-file-read-only ()
   "If a file is over a given size, make the buffer read only."
   (when (> (buffer-size) (* 1 1024 1024))
     (setq buffer-read-only t)
     (buffer-disable-undo)
     (fundamental-mode)))
 
-(add-hook 'find-file-hook 'leuven-find-file-check-make-large-file-read-only-hook)
+(add-hook 'find-file-hook #'leuven--make-large-file-read-only)
 #+end_src
 
 ** Saving Files
@@ -3921,6 +3921,8 @@ Make the message "/FILENAME has auto save data/" unmissable:
 
   (add-hook 'find-file-hook #'leuven--recover-this-file)
 #+end_src
+
+XXX Add explanation about what to do when a file is opened in red background!
 
 ** Comparing Files
 
@@ -6254,13 +6256,17 @@ XXX Declare PDF files as binary
                       ("\223" . "\"")
                       ("\224" . "\"")
                       ("\226" . "-")
+                      ("\227" . "--")
                       ("\234" . "oe")
                       ("\251" . "©")
                       ("\253" . "«")
+                      ("\272" . "°")
                       ("\273" . "»")
                       ("\300" . "À")
+                      ("\307" . "Ç")
                       ("\311" . "É")
                       ("\340" . "à")
+                      ("\341" . "a") ;; XXX Spanish a with accent.
                       ("\342" . "â")
                       ("\344" . "ä")
                       ("\347" . "ç")
@@ -9117,6 +9123,11 @@ for today's date:
                                ""
                                (0800 1000 1200 1400 1600 1800 2000)))
 
+  ;; Recent Org-mode.
+  (setq org-agenda-time-grid '((daily today remove-match)
+                                (0800 1000 1200 1400 1600 1800 2000)
+                                "...... " ""))
+
   ;; String for the current time marker in the agenda.
   (setq org-agenda-current-time-string "Right now")
 #+end_src
@@ -10707,7 +10718,7 @@ languages which can be evaluated in Org mode buffers.
 #+end_src
 
 *************** TODO Why isn't diff-mode.el found?
-[[file:~/5-Personal/3-Organization/Org-for-dummies.org]]
+[[file:~/.dotfiles/local/org/Org-for-dummies.org]]
 *************** END
 
 *************** TODO Check src blocks in  *temp* buffers?
@@ -18239,10 +18250,10 @@ inside it."
   ;; Managing multiple terminal buffers in Emacs
   ;; (and fixing some troubles of `term-mode': key bindings, etc.).
 
-  (with-eval-after-load "multi-term-autoloads"
-
-    ;; (global-set-key (kbd "C-c t") #'multi-term-next)
-    (global-set-key (kbd "C-c T") #'multi-term)) ; Create a new one.
+  ;; (with-eval-after-load "multi-term-autoloads"
+  ;;
+  ;;   ;; (global-set-key (kbd "C-c t") #'multi-term-next)
+  ;;   (global-set-key (kbd "C-c T") #'multi-term)) ; Create a new one.
 
   (with-eval-after-load "multi-term"
 
