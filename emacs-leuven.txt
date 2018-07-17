@@ -1791,6 +1791,42 @@ what they normally do: kill or copy it.
   (global-set-key (kbd "C-c d") #'duplicate-current-line)
 #+end_src
 
+In Emacs 24.4+, the cleanest way to *uniquify lines* (~uniq-lines~) is the
+~delete-duplicate-lines~ function.
+
+Note that:
+- this works on a region, not a buffer, so select the desired text first,
+- it maintains the relative order of the originals, killing the duplicates.
+
+For example, if your input is:
+
+#+begin_example
+test
+dup
+dup
+one
+two
+one
+three
+one
+test
+five
+#+end_example
+
+~M-x delete-duplicate-lines~ would make it:
+
+#+begin_example
+test
+dup
+one
+two
+three
+five
+#+end_example
+
+That is, it does remove all *duplicate lines* in region, not only the *consecutive*
+ones.
+
 ** Yanking
 
 #+begin_src emacs-lisp
