@@ -2263,23 +2263,45 @@ Prior to running their own mode hooks,
 - all text-based major modes run ~text-mode-hook~, and
 - all programming language modes run ~prog-mode-hook~.
 
-Add font locking for TODO, FIXME, BUG and XXX to all modes except Diff mode and
-Org mode.
+Add font locking for:
+
+- ~TODO~,
+- ~FIXME~,
+- ~XXX~ and
+- ~BUG~
+
+to all modes except Diff mode and Org mode.
+
+#+begin_note
+In Eclipse, they are all *case in-sensitive* by default.
+#+end_note
+
+#+begin_example
+// TODO(fni) Please make sure that everything works
+// FIXME[fni] Main method
+// XXX-fni: Add comments
+// BUG Review script body
+
+/* TODO this is the normal way */
+/* todo this is another to-do */
+/*! \todo this is a doxygen to-do */
+// TODO this is a C++ to-do comment
+#+end_example
 
 #+begin_src emacs-lisp
   (defface leuven-todo-patterns-face
     '((t :weight bold :foreground "#FF3125" :background "#FFFF88"))
     "Face for making TODO items stand out.")
 
-  ;; Highlight FIXME notes.
+  ;; Highlight tasks.
   (defvar leuven-todo-patterns-in-org
-    "\\<\\(\\(FIXME\\|BUG\\|XXX\\)\\(([^)]*)\\)?:?\\)" ; Start of word.
+    "\\<\\(\\(FIXME\\|XXX\\|BUG\\)\\(([^)]*)\\)?:?.*\\)" ; Start of word.
     "TODO patterns to highlight (for Org mode only).
   The goal is to ensure no conflict with the Org mode TODO keyword.")
 
-  (defvar leuven-todo-patterns
-    "\\<\\(\\(TODO\\|FIXME\\|BUG\\|XXX\\)\\(([^)]*)\\)?:?\\)"
-    "TODO patterns to highlight.")
+  (defvar leuven-todo-patterns-anywhere
+    "\\<\\(\\(TODO\\|FIXME\\|XXX\\|BUG\\)\\(([^)]*)\\)?:?.*\\)"
+    "TODO patterns to highlight (for all modes).")
 
   ;; Add highlighting keywords.
   (defun leuven--highlight-todo-patterns ()
@@ -2290,7 +2312,7 @@ Org mode.
        `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)) 'end))
      ((not (derived-mode-p 'diff-mode))
       (font-lock-add-keywords nil         ; In the current buffer.
-       `((,leuven-todo-patterns 1 'leuven-todo-patterns-face prepend)) 'end))))
+       `((,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend)) 'end))))
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 #+end_src
@@ -8313,7 +8335,7 @@ Remove scheduling date with ~C-u C-c C-s~.
   (setq org-todo-repeat-to-state "TODO")
 #+end_src
 
-*** Clocking work time
+*** Clocking work time (Time tracking)
 
 *************** TODO Resume clocks when opening the first Org file
 Alternative to requiring org-clock in every Emacs session.
@@ -14129,6 +14151,7 @@ To exclude files from ~lgrep~ and ~rgrep~ results (if you use ~rgrep~ instead of
     (add-to-list 'grep-find-ignored-files "ab-pgnav.js")
     (add-to-list 'grep-find-ignored-files "app.js")
     ;; (add-to-list 'grep-find-ignored-files "cordova.js")
+    (add-to-list 'grep-find-ignored-files "dx.archibus.js")
     (add-to-list 'grep-find-ignored-files "app.css")
     (add-to-list 'grep-find-ignored-files "sencha-touch.css")
 
@@ -15676,10 +15699,12 @@ into a specified *expansion*.
   ;; See (info "(autotype)") as well
 #+end_src
 
-** Controlling Abbrev Expansion (Code templates)
+** Controlling Abbrev Expansion (live Code templates)
 
 Inspired by [[http://macromates.com/][TextMate]].  In fact, many editors support snippets: Eclipse,
 Notepad++, etc.
+
+TODO Add rv for "REVIEW[who] text" https://www.jetbrains.com/help/idea/using-live-templates-in-todo-comments.html
 
 For complex templates, I use ~YASnippet~.  For example, new file templates (where
 it's Lisp evaluation is handy), class and function templates with docblocks,

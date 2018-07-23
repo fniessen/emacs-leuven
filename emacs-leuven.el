@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180705.2205
+;; Version: 20180723.0809
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180705.2205"
+(defconst leuven--emacs-version "20180723.0809"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1164,15 +1164,15 @@ These packages are neither built-in nor already installed nor ignored."
     '((t :weight bold :foreground "#FF3125" :background "#FFFF88"))
     "Face for making TODO items stand out.")
 
-  ;; Highlight FIXME notes.
+  ;; Highlight tasks.
   (defvar leuven-todo-patterns-in-org
-    "\\<\\(\\(FIXME\\|BUG\\|XXX\\)\\(([^)]*)\\)?:?\\)" ; Start of word.
+    "\\<\\(\\(FIXME\\|XXX\\|BUG\\)\\(([^)]*)\\)?:?.*\\)" ; Start of word.
     "TODO patterns to highlight (for Org mode only).
   The goal is to ensure no conflict with the Org mode TODO keyword.")
 
-  (defvar leuven-todo-patterns
-    "\\<\\(\\(TODO\\|FIXME\\|BUG\\|XXX\\)\\(([^)]*)\\)?:?\\)"
-    "TODO patterns to highlight.")
+  (defvar leuven-todo-patterns-anywhere
+    "\\<\\(\\(TODO\\|FIXME\\|XXX\\|BUG\\)\\(([^)]*)\\)?:?.*\\)"
+    "TODO patterns to highlight (for all modes).")
 
   ;; Add highlighting keywords.
   (defun leuven--highlight-todo-patterns ()
@@ -1183,7 +1183,7 @@ These packages are neither built-in nor already installed nor ignored."
        `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)) 'end))
      ((not (derived-mode-p 'diff-mode))
       (font-lock-add-keywords nil         ; In the current buffer.
-       `((,leuven-todo-patterns 1 'leuven-todo-patterns-face prepend)) 'end))))
+       `((,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend)) 'end))))
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 
@@ -8217,6 +8217,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     (add-to-list 'grep-find-ignored-files "ab-pgnav.js")
     (add-to-list 'grep-find-ignored-files "app.js")
     ;; (add-to-list 'grep-find-ignored-files "cordova.js")
+    (add-to-list 'grep-find-ignored-files "dx.archibus.js")
     (add-to-list 'grep-find-ignored-files "app.css")
     (add-to-list 'grep-find-ignored-files "sencha-touch.css")
 
