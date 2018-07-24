@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180723.0809
+;; Version: 20180724.0920
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180723.0809"
+(defconst leuven--emacs-version "20180724.0920"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -5302,10 +5302,10 @@ From the address <%a>"
                                ""
                                (0800 1000 1200 1400 1600 1800 2000)))
 
-  ;; Recent Org-mode.
-  (setq org-agenda-time-grid '((daily today remove-match)
-                                (0800 1000 1200 1400 1600 1800 2000)
-                                "...... " ""))
+  ;; ;; Recent Org-mode.
+  ;; (setq org-agenda-time-grid '((daily today remove-match)
+  ;;                               (0800 1000 1200 1400 1600 1800 2000)
+  ;;                               "...... " ""))
 
   ;; String for the current time marker in the agenda.
   (setq org-agenda-current-time-string "Right now")

@@ -9181,10 +9181,10 @@ for today's date:
                                ""
                                (0800 1000 1200 1400 1600 1800 2000)))
 
-  ;; Recent Org-mode.
-  (setq org-agenda-time-grid '((daily today remove-match)
-                                (0800 1000 1200 1400 1600 1800 2000)
-                                "...... " ""))
+  ;; ;; Recent Org-mode.
+  ;; (setq org-agenda-time-grid '((daily today remove-match)
+  ;;                               (0800 1000 1200 1400 1600 1800 2000)
+  ;;                               "...... " ""))
 
   ;; String for the current time marker in the agenda.
   (setq org-agenda-current-time-string "Right now")
