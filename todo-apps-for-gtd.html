@@ -1,0 +1,2530 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Todo apps for getting tasks done</title>
+<meta name="generator" content="Org-mode" />
+<meta name="author" content="Fabrice Niessen" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/bigblow.css"/>
+<link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/bigblow/css/hideshow.css"/>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery-ui-1.10.2.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.localscroll-min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/jquery.zclip.min.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/bigblow.js"></script>
+<script type="text/javascript" src="http://www.pirilampo.org/styles/bigblow/js/hideshow.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Todo apps for getting tasks done</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline3">1. Summary</a>
+<ul>
+<li><a href="#orgheadline1">1.1. Contexts</a></li>
+<li><a href="#orgheadline2">1.2. <span class="todo nilTODO">TODO</span> Read Ultimate guide about productivity methods</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline10">2. Designed for personal use</a>
+<ul>
+<li><a href="#orgheadline9">2.1. Basic tools</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline28">3. Designed for teamwork</a>
+<ul>
+<li><a href="#orgheadline17">3.1. Doit.im</a></li>
+<li><a href="#orgheadline18">3.2. Toodledo</a></li>
+<li><a href="#orgheadline24">3.3. Asana</a></li>
+<li><a href="#orgheadline25">3.4. Azendoo</a></li>
+<li><a href="#orgheadline26">3.5. BeesApps</a></li>
+<li><a href="#orgheadline27">3.6. Pivotal Tracker</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline32">4. Basic tools</a>
+<ul>
+<li><a href="#orgheadline29">4.1. Firetask</a></li>
+<li><a href="#orgheadline30">4.2. TickTick</a></li>
+<li><a href="#orgheadline31">4.3. Any.do</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline43">5. Tools with Someday</a>
+<ul>
+<li><a href="#orgheadline42">5.1. IQTELL</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline48">6. Tools with Someday + Waiting</a>
+<ul>
+<li><a href="#orgheadline47">6.1. Vitalist</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline49">7. Tools with Scheduled</a></li>
+<li><a href="#orgheadline52">8. Tools with Assigned to me</a>
+<ul>
+<li><a href="#orgheadline51">8.1. DoneDesk</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline121">9. All unsorted tools</a>
+<ul>
+<li><a href="#orgheadline56">9.1. Producteev</a></li>
+<li><a href="#orgheadline59">9.2. Nirvana</a></li>
+<li><a href="#orgheadline63">9.3. Mijura</a></li>
+<li><a href="#orgheadline64">9.4. Somethngs</a></li>
+<li><a href="#orgheadline70">9.5. Get It Done</a></li>
+<li><a href="#orgheadline77">9.6. Things</a></li>
+<li><a href="#orgheadline81">9.7. Plancake</a></li>
+<li><a href="#orgheadline83">9.8. 5pm</a></li>
+<li><a href="#orgheadline84">9.9. Wrike</a></li>
+<li><a href="#orgheadline85">9.10. Do (from Salesforce)</a></li>
+<li><a href="#orgheadline86">9.11. BugNET</a></li>
+<li><a href="#orgheadline87">9.12. Kinkless</a></li>
+<li><a href="#orgheadline88">9.13. Midgnight Inbox</a></li>
+<li><a href="#orgheadline89">9.14. Smartytask for GTD</a></li>
+<li><a href="#orgheadline90">9.15. Jume.in</a></li>
+<li><a href="#orgheadline91">9.16. ThinkingRock</a></li>
+<li><a href="#orgheadline92">9.17. OmniFocus</a></li>
+<li><a href="#orgheadline93">9.18. TaskPaper</a></li>
+<li><a href="#orgheadline94">9.19. Tracks</a></li>
+<li><a href="#orgheadline95">9.20. Basecamp</a></li>
+<li><a href="#orgheadline102">9.21. TiddlyWiki based GTD systems</a></li>
+<li><a href="#orgheadline103">9.22. Nozbe</a></li>
+<li><a href="#orgheadline104">9.23. DGT Task Manager</a></li>
+<li><a href="#orgheadline105">9.24. 2Do</a></li>
+<li><a href="#orgheadline106">9.25. Podio.com</a></li>
+<li><a href="#orgheadline107">9.26. Trello</a></li>
+<li><a href="#orgheadline115">9.27. Atlassian</a></li>
+<li><a href="#orgheadline116">9.28. MyLifeOrganized</a></li>
+<li><a href="#orgheadline117">9.29. Task Coach</a></li>
+<li><a href="#orgheadline118">9.30. LiquidPlanner</a></li>
+<li><a href="#orgheadline119">9.31. FengOffice</a></li>
+<li><a href="#orgheadline120">9.32. YouTRACK</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3"><span class="section-number-2">1</span> Summary</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+To find a good task manager, we recommend this list:
+<a href="http://priacta.com/gtdsoftware">http://priacta.com/gtdsoftware</a>.
+</p>
+
+<p>
+<a href="http://www.priacta.com/Articles/Comparison_of_GTD_Software.php">http://www.priacta.com/Articles/Comparison_of_GTD_Software.php</a>
+</p>
+
+<p>
+Other alternatives?  <a href="http://alternativeto.net/software/mission-control-hq/">http://alternativeto.net/software/mission-control-hq/</a>
+</p>
+</div>
+
+<div id="outline-container-orgheadline1" class="outline-3">
+<h3 id="orgheadline1"><span class="section-number-3">1.1</span> Contexts</h3>
+<div class="outline-text-3" id="text-1-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">Computer</th>
+<th scope="col" class="org-right">Errands</th>
+<th scope="col" class="org-right">Home</th>
+<th scope="col" class="org-right">Office</th>
+<th scope="col" class="org-right">Phone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Doit.im</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">Nirvana</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Total</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2"><span class="section-number-3">1.2</span> <span class="todo TODO">TODO</span> Read Ultimate guide about productivity methods</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<a href="https://blog.todoist.com/2015/11/30/ultimate-guide-personal-productivity-methods/">https://blog.todoist.com/2015/11/30/ultimate-guide-personal-productivity-methods/</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline10" class="outline-2">
+<h2 id="orgheadline10"><span class="section-number-2">2</span> Designed for personal use</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-orgheadline9" class="outline-3">
+<h3 id="orgheadline9"><span class="section-number-3">2.1</span> Basic tools</h3>
+<div class="outline-text-3" id="text-2-1">
+</div><div id="outline-container-orgheadline6" class="outline-4">
+<h4 id="orgheadline6"><span class="section-number-4">2.1.1</span> Todoist</h4>
+<div class="outline-text-4" id="text-2-1-1">
+</div><div id="outline-container-orgheadline4" class="outline-5">
+<h5 id="orgheadline4"><span class="section-number-5">2.1.1.1</span> Views</h5>
+<div class="outline-text-5" id="text-2-1-1-1">
+<dl class="org-dl">
+<dt>Today</dt><dd>overdue, today</dd>
+
+<dt>7 days</dt><dd>overdue, 7 days</dd>
+
+<dt>View all projects</dt><dd>(due date = &ldquo;Today&rdquo;, &ldquo;Tomorrow&rdquo;, &ldquo;Wednesday&rdquo; .. &ldquo;Monday&rdquo;, &ldquo;DD Aug&rdquo;, &ldquo;DD
+Jan 2014&rdquo;)</dd>
+
+<dt>Priority 1 tasks</dt><dd>priority 1</dd>
+
+<dt>Priority 2 tasks</dt><dd>priority 2</dd>
+
+<dt>Priority 3 tasks</dt><dd>priority 3</dd>
+
+<dt>Tasks with no due date</dt><dd>no date</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-5">
+<h5 id="orgheadline5"><span class="section-number-5">2.1.1.2</span> Email &ldquo;Todoist Daily Digest for Aug 27 (1 due today, 2 overdue)&rdquo;</h5>
+<div class="outline-text-5" id="text-2-1-1-2">
+<p class="verse">
+Hi Fabrice<br  />
+<br  />
+You&rsquo;ve got 1 task(s) in 1 project(s) scheduled for today.<br  />
+<br  />
+In total you completed 2 task(s)!<br  />
+<br  />
+<b>1 TASKS DUE TODAY</b><br  />
+<br  />
+-   &lt;task&gt;             &lt;project&gt; ●<br  />
+<br  />
+<a href="http://www.example.com/">View in Todoist&#x2026;</a><br  />
+<br  />
+<b>2 TASKS OVERDUE</b><br  />
+<br  />
+- 8 day(s) ago, Aug 20, 2013<br  />
+&#xa0;&#xa0;&#xa0;&#xa0;&lt;task&gt;             &lt;project&gt; ●<br  />
+<br  />
+- 2 day(s) ago, Aug 26, 2013<br  />
+&#xa0;&#xa0;&#xa0;&#xa0;&lt;task&gt;             &lt;project&gt; ●<br  />
+<br  />
+<a href="http://www.example.com/">View in Todoist&#x2026;</a><br  />
+<br  />
+<b>YOUR PRODUCTIVITY THE LAST 9 DAYS</b><br  />
+<br  />
+&lt;Graph&gt;<br  />
+<br  />
+<a href="http://www.example.com/">View more graphs&#x2026; </a><br  />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-4">
+<h4 id="orgheadline7"><span class="section-number-4">2.1.2</span> Remember the Milk</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+You can create Smart Lists that only show:
+</p>
+
+<ul class="org-ul">
+<li>Tasks due in the upcoming month</li>
+<li>Tasks with no due date</li>
+<li>Tasks that have been completed in the past week</li>
+<li>Tasks with high priority</li>
+<li>Tasks with time estimates less than 1 hour</li>
+<li>Tasks that have been postponed 3 times already</li>
+<li>Tasks that are shared with anyone</li>
+<li>Tasks that are shared with Bob T. Monkey</li>
+<li>Tasks that are tagged with &rsquo;mall&rsquo;</li>
+<li>Tasks that contain the word &rsquo;phone&rsquo;</li>
+</ul>
+
+<p>
+Smart Lists can also be based on multiple criteria, for example:
+</p>
+
+<ul class="org-ul">
+<li>Tasks in my &rsquo;Work&rsquo; list with high priority</li>
+<li>Tasks that are high priority and due in the upcoming week</li>
+<li>Tasks that are high priority or medium priority</li>
+<li>Tasks that are shared with anyone due in the upcoming week</li>
+<li>Tasks that are tagged with both &rsquo;mall&rsquo; and &rsquo;gift&rsquo;</li>
+</ul>
+
+<p>
+From <a href="http://www.rememberthemilk.com/help/answers/smartlists/whatare.rtm">Remember The Milk - Help / FAQ / Smart Lists / What are Smart Lists?</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-4">
+<h4 id="orgheadline8"><span class="section-number-4">2.1.3</span> <a href="https://teuxdeux.com/">TeuxDeux</a></h4>
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+Combined with Fluid to turn the web application into a desktop tool, it&rsquo;s
+a brilliant option if you need something that looks great.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline28" class="outline-2">
+<h2 id="orgheadline28"><span class="section-number-2">3</span> Designed for teamwork</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-orgheadline17" class="outline-3">
+<h3 id="orgheadline17"><span class="section-number-3">3.1</span> Doit.im</h3>
+<div class="outline-text-3" id="text-3-1">
+<dl class="org-dl">
+<dt>State</dt><dd>&ldquo;Uncompleted&rdquo; or &ldquo;Completed&rdquo;.</dd>
+</dl>
+</div>
+
+<div id="outline-container-orgheadline11" class="outline-4">
+<h4 id="orgheadline11"><span class="section-number-4">3.1.1</span> Focus</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+All lists show the title and the deadline (in compact form: &ldquo;X days overdue&rdquo;,
+&ldquo;due today&rdquo;, &ldquo;X days left&rdquo;, &ldquo;MM-DD&rdquo; or &ldquo;YYYY&rdquo;).
+</p>
+
+<p>
+They&rsquo;re sorted on the deadline (no DEADLINE = last).
+</p>
+
+<dl class="org-dl">
+<dt>Inbox</dt><dd>(no SCHEDULED date)
+(Constraint: adding a project or a status [Today, Next, etc.] makes them
+<b>move</b> to Next)
+All to-dos to refine later.</dd>
+
+<dt>Today</dt><dd>(SCHEDULED date = today, sorted by DEADLINE)
+(Grouped between &ldquo;Do it now&rdquo; and &ldquo;Today others&rdquo;)
+Tasks starting or due today (<b>or before</b>).</dd>
+</dl>
+
+<p>
+General constraint for the other lists: Deadline date &gt; today; if not, they go
+to Today.
+</p>
+
+<dl class="org-dl">
+<dt>Next</dt><dd>(no SCHEDULED date)
+(Group by Project?)
+Actions to be done as soon as possible but with no exact start time.</dd>
+
+<dt>Tomorrow</dt><dd>(SCHEDULED date = tomorrow)
+(Ungrouped)
+Tasks to be handled tomorrow.</dd>
+
+<dt>Scheduled</dt><dd>(SCHEDULED date &gt; tomorrow)
+(Group by Start time: &ldquo;(after) tomorrow&rdquo;, &ldquo;next (work) week&rdquo; [up to
+Sunday], &ldquo;this month&rdquo;, &ldquo;next month and later&rdquo;)
+All to-dos with start time after tomorrow, including repeated ones.</dd>
+
+<dt>Someday</dt><dd>(no SCHEDULED date)
+(Ungrouped)
+Tasks with no start time yet and probably to be done someday in the
+future.</dd>
+
+<dt>Waiting for</dt><dd>(no SCHEDULED date)
+(Group by Contact: &ldquo;Mine&rdquo;, &#x2026;)
+Tasks forwarded to others.</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgheadline12" class="outline-4">
+<h4 id="orgheadline12"><span class="section-number-4">3.1.2</span> Projects</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+Show all tasks of a project, grouped by:
+</p>
+
+<ul class="org-ul">
+<li>Today</li>
+<li>Next</li>
+<li>Tomorrow</li>
+<li>Scheduled</li>
+<li>Someday</li>
+<li>Waiting for</li>
+<li>Completed (collapsed)</li>
+<li>Archived (collapsed)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline13" class="outline-4">
+<h4 id="orgheadline13"><span class="section-number-4">3.1.3</span> Goals</h4>
+</div>
+
+<div id="outline-container-orgheadline14" class="outline-4">
+<h4 id="orgheadline14"><span class="section-number-4">3.1.4</span> Contexts</h4>
+<div class="outline-text-4" id="text-3-1-4">
+<p>
+Show all tasks, grouped by context:
+</p>
+
+<ul class="org-ul">
+<li>Computer</li>
+<li>Errands</li>
+<li>Home</li>
+<li>Office</li>
+<li>Phone</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline15" class="outline-4">
+<h4 id="orgheadline15"><span class="section-number-4">3.1.5</span> Filters</h4>
+<div class="outline-text-4" id="text-3-1-5">
+<dl class="org-dl">
+<dt>Completed</dt><dd>(Group by Completion date, today first)
+Completed tasks.</dd>
+
+<dt>Trash</dt><dd>Deleted tasks.</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgheadline16" class="outline-4">
+<h4 id="orgheadline16"><span class="section-number-4">3.1.6</span> Review</h4>
+<div class="outline-text-4" id="text-3-1-6">
+<dl class="org-dl">
+<dt>Daily review</dt><dd>(date visible)
+(Group by &ldquo;Completed&rdquo;, &ldquo;Uncompleted&rdquo;)</dd>
+
+<dt>Weekly review</dt><dd>An overall summary of daily review in this week.
+(Weekly report: group by &ldquo;Completed&rdquo;, &ldquo;Uncompleted&rdquo;)</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline18" class="outline-3">
+<h3 id="orgheadline18"><span class="section-number-3">3.2</span> Toodledo</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Task Status:
+</p>
+<ul class="org-ul">
+<li>Planning</li>
+<li>Active</li>
+<li>Waiting</li>
+<li>Canceled</li>
+<li>Reference</li>
+<li>Delegated</li>
+<li>Next Action</li>
+<li>Hold</li>
+<li>(None)</li>
+</ul>
+
+<p>
+Contexts:
+</p>
+<ul class="org-ul">
+<li>Work</li>
+<li>Home</li>
+<li>Out</li>
+<li>(No Context)</li>
+</ul>
+
+<p>
+Some Folders:
+</p>
+<ul class="org-ul">
+<li>Chores [Daily or routine domestic tasks]</li>
+<li>Work</li>
+<li>Vacation Planning</li>
+<li>Home Repairs</li>
+<li>Shopping</li>
+</ul>
+
+<p>
+Getting things done:
+<a href="http://www.toodledo.com/forums/5/3775/0/pawnmowers-gtd-setup.html">http://www.toodledo.com/forums/5/3775/0/pawnmowers-gtd-setup.html</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline24" class="outline-3">
+<h3 id="orgheadline24"><span class="section-number-3">3.3</span> Asana</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+<a href="https://asana.com/guide/videos/plan-your-day">https://asana.com/guide/videos/plan-your-day</a>
+</p>
+</div>
+
+<div id="outline-container-orgheadline19" class="outline-4">
+<h4 id="orgheadline19"><span class="section-number-4">3.3.1</span> Great shared task list for your team</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+<a href="http://blog.asana.com/2011/05/new-asana-intro-video/">http://blog.asana.com/2011/05/new-asana-intro-video/</a>
+</p>
+
+<p>
+I use org for personal task management, but I use asana.com with my workgroup.
+</p>
+
+<p>
+I just learned that Asana offers an API that exposes all the usual interfaces.
+<a href="http://developers.asana.com/documentation/">http://developers.asana.com/documentation/</a>
+</p>
+
+<ul class="org-ul">
+<li><a href="http://asana.com/product#pricing">http://asana.com/product#pricing</a></li>
+<li><a href="http://help.asana.com/customer/portal/articles/109473-project-management-with-asana">http://help.asana.com/customer/portal/articles/109473-project-management-with-asana</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline20" class="outline-4">
+<h4 id="orgheadline20"><span class="section-number-4">3.3.2</span> Tasks</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<ul class="org-ul">
+<li>New Tasks</li>
+<li>Today</li>
+<li>Upcoming</li>
+<li>Later</li>
+</ul>
+
+<p>
+When sorted by <b>priority</b> (= default)&#x2026;
+</p>
+
+<p>
+When sorted by <b>assignee</b>:
+</p>
+<ul class="org-ul">
+<li>fniessen</li>
+<li>Unassigned</li>
+</ul>
+
+<p>
+When sorted by <b>project</b>:
+</p>
+<ul class="org-ul">
+<li>Project 1</li>
+<li>No project (latest position?)</li>
+</ul>
+
+<p>
+When sorted by <b>date</b>:
+</p>
+<ul class="org-ul">
+<li>Task  Saturday</li>
+<li>Task  Oct 10</li>
+<li>Task  Jan 13, 2014</li>
+<li>No due date</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline21" class="outline-4">
+<h4 id="orgheadline21"><span class="section-number-4">3.3.3</span> Highlights</h4>
+<div class="outline-text-4" id="text-3-3-3">
+<ul class="org-ul">
+<li>Quite complex to understand where is the overview of all tasks for all
+projects</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline22" class="outline-4">
+<h4 id="orgheadline22"><span class="section-number-4">3.3.4</span> Search Views, New Right Pane, Colored Projects &amp; Tags, and more! (from Asana)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="mail">mail</span></span></h4>
+<div class="outline-text-4" id="text-3-3-4">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">[2013-04-16 Tue 21:39]</span></span>
+</p>
+
+<p class="verse">
+Read about some of our exciting feature launches this April in Asana!<br  />
+( <a href="http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCK-0/c.aspx">http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCK-0/c.aspx</a> )<br  />
+April Newsletter<br  />
+<br  />
+Search Views ( <a href="http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCL-0/c.aspx">http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCL-0/c.aspx</a> )<br  />
+<br  />
+Teams that are successful with Asana put everything in it, from daily tasks<br  />
+and project work to high level goals and planning. Search Views, our newest<br  />
+feature, gives you a powerful new way to locate a specific task, or build<br  />
+custom views of your team&rsquo;s work.<br  />
+<br  />
+Find Anything<br  />
+Search Views allow you to find all the tasks that match your criteria for<br  />
+assignee, creator, due date, project, tags and more. You can also search<br  />
+across comments and notes! Save your searches to keep track of important lists<br  />
+- such as unassigned tasks overdue across your team, or tasks you&rsquo;ve assigned<br  />
+to a new teammate.<br  />
+<br  />
+Learn more about how Search Views work » (<br  />
+<a href="http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCL-0/c.aspx">http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCL-0/c.aspx</a> )<br  />
+<br  />
+The New Task Pane ( <a href="http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCM-0/c.aspx">http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCM-0/c.aspx</a> )<br  />
+<br  />
+Notice Anything Different?<br  />
+You may have noticed that we&rsquo;ve given the Asana task pane a design overhaul.<br  />
+We rebuilt it from the ground up, with the goal of simplifying, beautifying,<br  />
+and improving the area of Asana where you track the details of your work. All<br  />
+the same functionality is still there, but now with a more focused and elegant<br  />
+interface.<br  />
+<br  />
+Read about all the changes » ( <a href="http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCM-0/c.aspx">http://connect.asana.com/1L9Q-1EBU8-8X1XHI-K4QCM-0/c.aspx</a> )<br  />
+<br  />
+Colored Projects and Tags ( <a href="http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/c.aspx">http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/c.aspx</a> )<br  />
+<br  />
+Add a little color to your task list with colored project &amp; tag labels. Give<br  />
+any project or tag a color to help visually categorize and differentiate your<br  />
+tasks. For example, add a red tag to high priority tasks to keep them top of<br  />
+mind.<br  />
+<br  />
+Add some color to Asana » ( <a href="http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/c.aspx">http://connect.asana.com/1L9Q-1EBU8-8X1XHI-KBJNH-0/c.aspx</a> )<br  />
+</p>
+
+<p>
+From <a href="nnimap%2Bmc:INBOX#SOV-DM-DROID2520eb75c335e45f0828d56735fefbe43@sov-dm-droid2">Email from Asana: Search Views, New Right Pane, </a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline23" class="outline-4">
+<h4 id="orgheadline23"><span class="section-number-4">3.3.5</span> For Android</h4>
+<div class="outline-text-4" id="text-3-3-5">
+<p>
+<a href="https://play.google.com/store/apps/details?id=com.asana.app">https://play.google.com/store/apps/details?id=com.asana.app</a>
+</p>
+
+<p>
+Key features:
+</p>
+
+<ul class="org-ul">
+<li>GET ORGANIZED WITH TASKS
+Create tasks quickly for yourself or a teammate. Add to-dos, reminders, and
+requests.</li>
+
+<li>COMMUNICATE ABOUT WORK
+Comment directly on tasks and get updates on the progress of your team&rsquo;s tasks
+and projects.</li>
+
+<li>MANAGE THE DETAILS OF TEAMWORK
+Track due dates, assignees, and notes on your tasks.</li>
+
+<li>PLAN YOUR DAY
+View and organize your task list. Re-order tasks as priorities and statuses
+change.</li>
+
+<li>COMPLETE WORK ON-THE-GO
+Swipe to complete tasks, which notifies your team that your work is finished.</li>
+
+<li>SYNCS WITH WEB APP
+Whether working in the Asana web app or on your phone or tablet, you and your
+team will see updates and stay in sync.</li>
+
+<li>FREE
+Add tasks, projects, and comments for free (up to 15 people).</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline25" class="outline-3">
+<h3 id="orgheadline25"><span class="section-number-3">3.4</span> <a href="https://www.azendoo.com/">Azendoo</a></h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Azendoo provides easy ways to organize your work, <b>without "work about work"</b>.
+</p>
+
+<p>
+Tasks can be planned to be worked:
+</p>
+<ul class="org-ul">
+<li>on a <b>specific day</b>, making it a <b>priority</b> task on that specific day,</li>
+<li><b>anytime in a week</b>, making it a <b>planned</b> task or</li>
+<li>for <b>someday</b>, making it an <b>unorganized</b> task.</li>
+</ul>
+
+<p>
+<b>A new task is (by default) scheduled (= work planned) for today!</b>
+</p>
+
+<p>
+Un-SCHEDULE&rsquo;ing it means setting it as SOMEDAY.
+</p>
+
+<div class="note">
+<p>
+In the new version <a href="https://www.azendoo.com/task-pilot">https://www.azendoo.com/task-pilot</a>, on <span class="timestamp-wrapper"><span class="timestamp">[2015-06-02 Tue]</span></span>, they
+now have a &ldquo;Snooze until&#x2026;&rdquo;  button, with choices such as:
+</p>
+
+<ul class="org-ul">
+<li>Tomorrow</li>
+<li>Next week (= Monday?)</li>
+<li>Later today</li>
+<li>This weekend</li>
+<li>Pick a date &amp; time</li>
+</ul>
+
+<p>
+The default views are:
+</p>
+
+<ul class="org-ul">
+<li>My Todo</li>
+<li>Snoozed</li>
+<li>Someday</li>
+<li>Completed</li>
+<li>Followed</li>
+<li>With a due date</li>
+<li>Sent</li>
+<li>Sent and completed</li>
+<li>All Team Todo</li>
+<li>Team - All Completed Tasks</li>
+</ul>
+
+</div>
+
+<p>
+Tasks sometimes need some more details to be completed.  You may add checkboxes
+<b>subtasks</b> to a task&rsquo;s description.
+</p>
+
+<p>
+<i>Workspaces</i> (= Org files) are where people work on <i>Subjects</i> (like projects,
+customers, departments, products, events, meetings, or anything you want) and
+choose how involved they are in each.
+</p>
+
+<p>
+Your workspace is organized into Subjects. An Azendoo Subject can be anything,
+like a project, a client, a topic, a portfolio, an idea board, etc. And each
+Subject regroups team members, tasks, documents and messages.
+</p>
+
+<p>
+Task views:
+</p>
+
+<ul class="org-ul">
+<li><p>
+All
+</p>
+
+<p>
+All unfinished tasks, for everybody in my team:
+</p>
+<ul class="org-ul">
+<li>Sorted by scheduled date</li>
+<li>Someday for all the unscheduled tasks</li>
+</ul></li>
+
+<li><p>
+Planner (= My Tasks)
+</p>
+
+<p>
+All my unfinished and finished tasks:
+</p>
+<ul class="org-ul">
+<li>Grouped per day, by scheduled date, for the coming 7 days <br  /></li>
+<li>Grouped per week, by scheduled date, for the coming 4 weeks</li>
+</ul></li>
+
+<li><p>
+With a due date
+</p>
+
+<p>
+All unfinished tasks, sorted by target date (= deadline)
+</p></li>
+
+<li><p>
+Now
+</p>
+
+<p>
+All my unfinished and finished tasks, scheduled for today (unfinished + finished)
+</p></li>
+
+<li>Assigned to me
+
+<ul class="org-ul">
+<li>Assigned to me and unfinished (sorted by &rsquo;work planned&rsquo; date)</li>
+<li>Assigned to me and finished (sorted by completion date)</li>
+</ul></li>
+
+<li>Someday (= Tasks to organize)</li>
+
+<li><p>
+Finished
+</p>
+
+<p>
+All finished tasks
+</p></li>
+
+<li><p>
+Sent
+</p>
+
+<p>
+All tasks assigned to somebody
+</p></li>
+
+<li><p>
+Sent and finished
+</p>
+
+<p>
+All tasks assigned to somebody and finished
+</p></li>
+</ul>
+
+<p>
+Your <b>daily planner</b> (daily productivity list) =
+</p>
+<ul class="org-ul">
+<li>Your tasks scheduled for today</li>
+<li>Your tasks scheduled to do anytime this week</li>
+</ul>
+
+<p>
+Informations visible in the lists:
+</p>
+<ul class="org-ul">
+<li>Assignee (profile picture)</li>
+<li>Task label</li>
+<li>Due date</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline26" class="outline-3">
+<h3 id="orgheadline26"><span class="section-number-3">3.5</span> <a href="http://www.beesapps.com/">BeesApps</a></h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Our solution Beesy addresses 6 main subject of concern for professionals:
+</p>
+
+<ul class="org-ul">
+<li>An All-in-one App to consolidate your information (calendar, notes, to-do,
+people, projects).</li>
+<li>A fast and smart note taking app.</li>
+<li>Professional meeting minutes in less than 1 minute.</li>
+<li>Automated to-do management from these notes.</li>
+<li>Team management by assigning actions during notes.</li>
+<li>Priority management by assigning notes to goals and projects.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline27" class="outline-3">
+<h3 id="orgheadline27"><span class="section-number-3">3.6</span> Pivotal Tracker</h3>
+<div class="outline-text-3" id="text-3-6">
+<ul class="org-ul">
+<li><p>
+Workspaces (= 1 répertoire ou 1 fichier ?)
+</p>
+
+<p>
+Workspaces let you see multiple projects together.
+</p></li>
+
+<li>Projects (= fichiers Org dans ce répertoire ou sous-arbres dans ce fichier ?)</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline32" class="outline-2">
+<h2 id="orgheadline32"><span class="section-number-2">4</span> Basic tools</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-orgheadline29" class="outline-3">
+<h3 id="orgheadline29"><span class="section-number-3">4.1</span> Firetask</h3>
+<div class="outline-text-3" id="text-4-1">
+
+<div class="figure">
+<p><img src="http://firetask.com/images/Firetask-Mac-2.png" alt="Firetask-Mac-2.png" />
+</p>
+</div>
+
+<p>
+Review / Organize:
+</p>
+<ul class="org-ul">
+<li>In-tray</li>
+<li>Today</li>
+<li>Tomorrow</li>
+<li>Due</li>
+<li>Next</li>
+</ul>
+
+<p>
+Icons, lists, &#x2026;
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline30" class="outline-3">
+<h3 id="orgheadline30"><span class="section-number-3">4.2</span> TickTick</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+<a href="http://ticktick.com/">http://ticktick.com/</a>
+</p>
+
+<ul class="org-ul">
+<li>All</li>
+<li>Today</li>
+<li>Next 7 days</li>
+<li>Inbox</li>
+<li>List (Work, Family)</li>
+<li>Completed</li>
+<li>Trash</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline31" class="outline-3">
+<h3 id="orgheadline31"><span class="section-number-3">4.3</span> Any.do</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+<a href="http://www.any.do/faq">http://www.any.do/faq</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline43" class="outline-2">
+<h2 id="orgheadline43"><span class="section-number-2">5</span> Tools with Someday</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-orgheadline42" class="outline-3">
+<h3 id="orgheadline42"><span class="section-number-3">5.1</span> IQTELL</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+See Knowledge base for videos
+See Webinars (recorded session) on <a href="https://getsatisfaction.com/qtell">https://getsatisfaction.com/qtell</a>
+</p>
+
+<p>
+See playlist on YouTube: <a href="http://www.youtube.com/watch?v=1MNRzChizfA&amp;list=UUr2Am7PCP6Yg1G0pXyCQYBg">http://www.youtube.com/watch?v=1MNRzChizfA&list=UUr2Am7PCP6Yg1G0pXyCQYBg</a>
+</p>
+
+<p>
+See great summary of IQTELL on <a href="http://www.youtube.com/watch?v=jTBUqmntQhs">http://www.youtube.com/watch?v=jTBUqmntQhs</a>
+</p>
+
+<p>
+See Detailed GTD Tutorial on <a href="http://www.youtube.com/watch?v=n2q9D5QLZBo">http://www.youtube.com/watch?v=n2q9D5QLZBo</a>
+</p>
+</div>
+
+<div id="outline-container-orgheadline33" class="outline-4">
+<h4 id="orgheadline33"><span class="section-number-4">5.1.1</span> Documentation</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<ul class="org-ul">
+<li>Due Date</li>
+<li>Reminder = email to remind me of a due date</li>
+</ul>
+
+<p>
+The Tickler folder is a place to keep those non-actionable items that you need
+to review at a later date. For example, if you get an email from a friend
+about a Bruce Springsteen concert in August 2013, you could create a tickler
+entry from that email and revisit it when tickets go on sale.
+</p>
+
+<p>
+By doing this you can reach Inbox Zero, and you&rsquo;ll have the peace of mind that
+you won&rsquo;t drop the ball on anything.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline34" class="outline-4">
+<h4 id="orgheadline34"><span class="section-number-4">5.1.2</span> Folders</h4>
+<div class="outline-text-4" id="text-5-1-2">
+<ul class="org-ul">
+<li>Actions</li>
+<li>Projects</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline35" class="outline-4">
+<h4 id="orgheadline35"><span class="section-number-4">5.1.3</span> Watch lists</h4>
+<div class="outline-text-4" id="text-5-1-3">
+<ul class="org-ul">
+<li>Due today</li>
+<li>Due tomorrow</li>
+<li>Due this week</li>
+<li>Overdue</li>
+<li>Personal</li>
+<li>Work</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline36" class="outline-4">
+<h4 id="orgheadline36"><span class="section-number-4">5.1.4</span> Available applications</h4>
+<div class="outline-text-4" id="text-5-1-4">
+<ul class="org-ul">
+<li>Someday
+Categories:
+<ul class="org-ul">
+<li>Checklist</li>
+<li>Don&rsquo;t procrastinate</li>
+<li>Fun</li>
+<li>Great quotes</li>
+<li>Ideas</li>
+<li>Inspiration</li>
+<li>Knowhow</li>
+<li>Might like to buy</li>
+<li>Might like to read</li>
+<li>Music to download</li>
+<li>Travel</li>
+<li>Vacation ideas</li>
+</ul></li>
+
+<li>Tickler
+Same categories as for the Someday items</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline37" class="outline-4">
+<h4 id="orgheadline37"><span class="section-number-4">5.1.5</span> Upcoming events</h4>
+</div>
+
+<div id="outline-container-orgheadline38" class="outline-4">
+<h4 id="orgheadline38"><span class="section-number-4">5.1.6</span> Email, calendars &amp; contacts</h4>
+</div>
+
+<div id="outline-container-orgheadline39" class="outline-4">
+<h4 id="orgheadline39"><span class="section-number-4">5.1.7</span> Contexts</h4>
+<div class="outline-text-4" id="text-5-1-7">
+<ul class="org-ul">
+<li>Agenda</li>
+<li>Calls</li>
+<li>Computer</li>
+<li>Errand</li>
+<li>Home</li>
+<li>Office</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline40" class="outline-4">
+<h4 id="orgheadline40"><span class="section-number-4">5.1.8</span> Areas</h4>
+<div class="outline-text-4" id="text-5-1-8">
+<ul class="org-ul">
+<li>Personal</li>
+<li>Work</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline41" class="outline-4">
+<h4 id="orgheadline41"><span class="section-number-4">5.1.9</span> View of a Project</h4>
+<div class="outline-text-4" id="text-5-1-9">
+<ul class="org-ul">
+<li>Project Info
+<ul class="org-ul">
+<li>Short Description</li>
+<li>Status</li>
+<li>Tags</li>
+<li>Start Date</li>
+<li>Due Date</li>
+<li>Priority</li>
+</ul></li>
+<li>Notes</li>
+<li>Actions</li>
+<li>Email</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline48" class="outline-2">
+<h2 id="orgheadline48"><span class="section-number-2">6</span> Tools with Someday + Waiting</h2>
+<div class="outline-text-2" id="text-6">
+</div><div id="outline-container-orgheadline47" class="outline-3">
+<h3 id="orgheadline47"><span class="section-number-3">6.1</span> Vitalist</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+<a href="http://www.vitalist.com/">http://www.vitalist.com/</a>
+</p>
+</div>
+
+<div id="outline-container-orgheadline44" class="outline-4">
+<h4 id="orgheadline44"><span class="section-number-4">6.1.1</span> Views</h4>
+<div class="outline-text-4" id="text-6-1-1">
+<ul class="org-ul">
+<li>Inbox</li>
+<li>Actions</li>
+<li>Waiting</li>
+<li>Someday</li>
+<li>Ticklers</li>
+<li>Reference</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline45" class="outline-4">
+<h4 id="orgheadline45"><span class="section-number-4">6.1.2</span> Date filter</h4>
+<div class="outline-text-4" id="text-6-1-2">
+<ul class="org-ul">
+<li>Overdue</li>
+<li>Today</li>
+<li>This week</li>
+<li>Next week</li>
+<li>Later</li>
+<li>[No date]</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline46" class="outline-4">
+<h4 id="orgheadline46"><span class="section-number-4">6.1.3</span> Contexts</h4>
+<div class="outline-text-4" id="text-6-1-3">
+<ul class="org-ul">
+<li><b>computer</b></li>
+<li>email</li>
+<li>errands</li>
+<li><b>home</b></li>
+<li>phone</li>
+<li><b>work</b></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline49" class="outline-2">
+<h2 id="orgheadline49"><span class="section-number-2">7</span> Tools with Scheduled</h2>
+</div>
+
+<div id="outline-container-orgheadline52" class="outline-2">
+<h2 id="orgheadline52"><span class="section-number-2">8</span> Tools with Assigned to me</h2>
+<div class="outline-text-2" id="text-8">
+</div><div id="outline-container-orgheadline51" class="outline-3">
+<h3 id="orgheadline51"><span class="section-number-3">8.1</span> DoneDesk</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+<a href="https://donedesk.com/">https://donedesk.com/</a>
+</p>
+
+<p>
+(Closed on October 1st, 2014)
+</p>
+</div>
+
+<div id="outline-container-orgheadline50" class="outline-4">
+<h4 id="orgheadline50"><span class="section-number-4">8.1.1</span> Hierarchical tasks or subtasks</h4>
+<div class="outline-text-4" id="text-8-1-1">
+<p>
+Implement hierarchical tasks the way Trog Bar does (&ldquo;Natural Project
+Management&rdquo;): any task becomes a project just by adding subtasks to it. These
+projects should be a hybrid between tasks and workspaces, offering control
+over dates, deadlines, delegation structure, etc. (like a task) while also
+allowing you to manage a list of tasks and participants in the project (like a
+workspace).
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline121" class="outline-2">
+<h2 id="orgheadline121"><span class="section-number-2">9</span> All unsorted tools</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+<a href="https://en.wikipedia.org/wiki/List_of_personal_information_managers">https://en.wikipedia.org/wiki/List_of_personal_information_managers</a>
+</p>
+</div>
+
+<div id="outline-container-orgheadline56" class="outline-3">
+<h3 id="orgheadline56"><span class="section-number-3">9.1</span> Producteev</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+<a href="http://www.producteev.com/">http://www.producteev.com/</a>
+</p>
+
+<ul class="org-ul">
+<li><code>+</code> to quickly <b>assign</b> a task</li>
+<li><code>@</code> to add <b>followers</b></li>
+<li><code>#</code> to add <b>labels</b></li>
+<li><code>*</code> to set a <b>priority</b> (-&gt; starred)</li>
+<li><code>!</code> to set a <b>deadline</b></li>
+</ul>
+
+<p>
+Tasks views:
+</p>
+
+<ul class="org-ul">
+<li><b>Active</b></li>
+
+<li><b>Starred</b> (= with an explicit priority)</li>
+
+<li><b>Completed</b></li>
+
+<li><b>Due today</b> (only today)</li>
+
+<li>Due this week (only for current week: from Monday to Sunday included)</li>
+
+<li><b>Late</b> (all overdue + today)</li>
+
+<li><b>All</b> (= Active + Completed?)</li>
+
+<li>Assigned to me</li>
+
+<li>Created by me</li>
+
+<li>With files attached</li>
+</ul>
+
+<p>
+Sorted by:
+</p>
+<ul class="org-ul">
+<li>Creation date</li>
+<li>Last changed (= default)</li>
+<li>Project</li>
+<li>Creator</li>
+<li>Deadline</li>
+<li>Priority</li>
+<li>Title</li>
+</ul>
+
+<p>
+Ordered by:
+</p>
+<ul class="org-ul">
+<li>Ascending</li>
+<li>Descending (= default)</li>
+</ul>
+</div>
+
+<div id="outline-container-orgheadline53" class="outline-4">
+<h4 id="orgheadline53"><span class="section-number-4">9.1.1</span> Highlights</h4>
+<div class="outline-text-4" id="text-9-1-1">
+<ul class="org-ul">
+<li>Bulk actions</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline54" class="outline-4">
+<h4 id="orgheadline54"><span class="section-number-4">9.1.2</span> Documentation</h4>
+<div class="outline-text-4" id="text-9-1-2">
+<p>
+<a href="http://blog.producteev.com/post/38326716677/gtd-up-close-part-i-labeling-your-workspace">http://blog.producteev.com/post/38326716677/gtd-up-close-part-i-labeling-your-workspace</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline55" class="outline-4">
+<h4 id="orgheadline55"><span class="section-number-4">9.1.3</span> Email Reminder</h4>
+<div class="outline-text-4" id="text-9-1-3">
+<p>
+1 email per task whose deadline is today
+</p>
+<ul class="org-ul">
+<li>Subject: Deadline reached for: TASK NAME</li>
+<li>Body: The deadline for this task is set to DATE</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline59" class="outline-3">
+<h3 id="orgheadline59"><span class="section-number-3">9.2</span> Nirvana</h3>
+<div class="outline-text-3" id="text-9-2">
+<p>
+All list show:
+</p>
+
+<ul class="org-ul">
+<li>Focus</li>
+<li>Entry name</li>
+<li>Deadline (&ldquo;X days late&rdquo;, &ldquo;due today&rdquo;, &ldquo;due tomorrow&rdquo;, &ldquo;due in X days&rdquo; where
+X &lt;= 6, &ldquo;due MM-DD&rdquo;)</li>
+</ul>
+
+<p>
+When editing an action:
+</p>
+<ul class="org-ul">
+<li>State (Inbox, Next, Waiting for + contact, Scheduled + start date, Someday)</li>
+<li>Time</li>
+<li>Energy</li>
+<li>Due date</li>
+<li><b>Standalone</b> or belong to <b>Active project</b></li>
+</ul>
+</div>
+
+<div id="outline-container-orgheadline57" class="outline-4">
+<h4 id="orgheadline57"><span class="section-number-4">9.2.1</span> Collect</h4>
+<div class="outline-text-4" id="text-9-2-1">
+<dl class="org-dl">
+<dt>Inbox</dt><dd></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgheadline58" class="outline-4">
+<h4 id="orgheadline58"><span class="section-number-4">9.2.2</span> Actions</h4>
+<div class="outline-text-4" id="text-9-2-2">
+<dl class="org-dl">
+<dt>Next</dt><dd></dd>
+
+
+<dt>Waiting</dt><dd></dd>
+
+
+<dt>Scheduled</dt><dd></dd>
+
+
+<dt>Someday</dt><dd></dd>
+
+
+<dt>Focus</dt><dd>(Subset of other lists)</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline63" class="outline-3">
+<h3 id="orgheadline63"><span class="section-number-3">9.3</span> Mijura</h3>
+<div class="outline-text-3" id="text-9-3">
+</div><div id="outline-container-orgheadline60" class="outline-4">
+<h4 id="orgheadline60"><span class="section-number-4">9.3.1</span> Marketing team dashboard</h4>
+<div class="outline-text-4" id="text-9-3-1">
+<ul class="org-ul">
+<li>Team activity + my notifications</li>
+<li>Recent meetings + my meetings</li>
+<li>Team members + my priorities</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline61" class="outline-4">
+<h4 id="orgheadline61"><span class="section-number-4">9.3.2</span> Tasks worked-on report</h4>
+</div>
+
+<div id="outline-container-orgheadline62" class="outline-4">
+<h4 id="orgheadline62"><span class="section-number-4">9.3.3</span> Hightlights</h4>
+<div class="outline-text-4" id="text-9-3-3">
+<p>
+Take rich meeting minutes with Mijura, add attendees and annotate actions with
+your colleagues names. Actions are automatically turned into tasks and
+assigned to the right people.
+</p>
+
+<p>
+Who worked on what, when
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline64" class="outline-3">
+<h3 id="orgheadline64"><span class="section-number-3">9.4</span> Somethngs</h3>
+<div class="outline-text-3" id="text-9-4">
+<p>
+<a href="http://thn.gs/">http://thn.gs/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline70" class="outline-3">
+<h3 id="orgheadline70"><span class="section-number-3">9.5</span> Get It Done</h3>
+<div class="outline-text-3" id="text-9-5">
+<p>
+<a href="http://getitdone.uservoice.com/">http://getitdone.uservoice.com/</a>
+</p>
+</div>
+
+<div id="outline-container-orgheadline65" class="outline-4">
+<h4 id="orgheadline65"><span class="section-number-4">9.5.1</span> Areas of responsibility</h4>
+<div class="outline-text-4" id="text-9-5-1">
+<ul class="org-ul">
+<li>Work</li>
+<li>Home</li>
+<li>Hobby</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline66" class="outline-4">
+<h4 id="orgheadline66"><span class="section-number-4">9.5.2</span> Focus</h4>
+<div class="outline-text-4" id="text-9-5-2">
+<ul class="org-ul">
+<li><b>Inbox</b></li>
+<li><b>Today</b> (when SCHEDULED = today)</li>
+<li><b>Next</b></li>
+<li>Scheduled (sorted by scheduled date)
+<ul class="org-ul">
+<li>Scheduled for [future, SCHEDULED &gt; today] review (these tasks do not repeat):
+&ldquo;I want to review this task at a later date but get it out of my way for now&rdquo;.</li>
+<li>Repeat daily</li>
+<li>Repeat weekly</li>
+<li>Repeat monthly</li>
+<li>Repeat yearly</li>
+<li>Repeat after completion</li>
+</ul></li>
+<li><b>Someday</b></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline67" class="outline-4">
+<h4 id="orgheadline67"><span class="section-number-4">9.5.3</span> Old items</h4>
+<div class="outline-text-4" id="text-9-5-3">
+<ul class="org-ul">
+<li>Completed items</li>
+<li><b>Trash</b>
+  (&ldquo;Clear done&rdquo; = move them to trash?)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline68" class="outline-4">
+<h4 id="orgheadline68"><span class="section-number-4">9.5.4</span> Email &ldquo;Daily Reminder&rdquo; (sent every day at 04:00)</h4>
+<div class="outline-text-4" id="text-9-5-4">
+<p class="verse">
+Here is what is on the agenda for today:<br  />
+<br  />
+<b>Inbox</b><br  />
+<br  />
+- &#x2026;<br  />
+- &#x2026;<br  />
+<br  />
+<b>Today</b><br  />
+<br  />
+- &#x2026;<br  />
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline69" class="outline-4">
+<h4 id="orgheadline69"><span class="section-number-4">9.5.5</span> Documentation</h4>
+<div class="outline-text-4" id="text-9-5-5">
+<p>
+&ldquo;We try to follow the book Getting Things Done as close as possible so <b>we do
+not allow sorting by task name or due date</b>, we only allow sorting by dragging
+and dropping the tasks. We also sort by Scheduled Date if you drag a task in
+to the scheduled folder. We think that you should sort your tasks manually and
+then drag the tasks into &rdquo;Today&ldquo; that you want to do today.&rdquo;
+</p>
+
+<p>
+What is the difference between Scheduled and Due Dates?
+</p>
+
+<ul class="org-ul">
+<li><p>
+Scheduled (for review)
+</p>
+
+<p>
+Think of Scheduled as &ldquo;I want to review this task at a later date but get it
+out of my way for now&rdquo;. When you schedule a task, it will remain in the
+scheduled folder until the date you&rsquo;ve specified. On that date, it will be
+moved into your &ldquo;Today&rdquo; folder. This is a great way to declutter your
+&ldquo;Today&rdquo; folder of tasks you don&rsquo;t want to do today but need to do it the
+next day or a specific day.
+</p>
+
+<p>
+To schedule a task for future review, just drag the task into the
+&ldquo;Scheduled&rdquo; category under your focus group on the left of your screen. You
+will see the following screen where you can specify when you want to see
+this task again:
+</p></li>
+
+<li><p>
+Due Dates
+</p>
+
+<p>
+Due dates are a way for you to visually see how long you have until the task
+is due. To set a due date, just click on &ldquo;no due date&rdquo; to the right of your
+task. This will pop up a dialog for you to set a due date:
+</p>
+
+<p>
+After you set due dates for your tasks, you can quickly see when all your
+tasks are due.
+</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline77" class="outline-3">
+<h3 id="orgheadline77"><span class="section-number-3">9.6</span> Things</h3>
+<div class="outline-text-3" id="text-9-6">
+<p>
+<b>Daily Review, Don't let anything fall through the cracks.</b>
+</p>
+
+<p>
+<a href="http://culturedcode.com/things/">http://culturedcode.com/things/</a>
+</p>
+
+<p>
+It&rsquo;s happened before - you want to do something important, but there&rsquo;s just no
+time for it. Not today. So you decide to do it next week, or in two weeks. But
+when the time comes, you have either forgotten about it, or you remember too
+late.
+</p>
+
+<p>
+With Things, all to-dos that are scheduled for today automatically appear at
+the top of your Today list, together with all to-dos that have become due. We
+call it Daily Review. It&rsquo;s a way for you to easily review which tasks you want
+to start today, and which ones you want to postpone until later.
+</p>
+</div>
+
+<div id="outline-container-orgheadline71" class="outline-4">
+<h4 id="orgheadline71"><span class="section-number-4">9.6.1</span> Areas</h4>
+<div class="outline-text-4" id="text-9-6-1">
+<ul class="org-ul">
+<li>Family</li>
+<li>Work</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline72" class="outline-4">
+<h4 id="orgheadline72"><span class="section-number-4">9.6.2</span> Collect</h4>
+<div class="outline-text-4" id="text-9-6-2">
+<ul class="org-ul">
+<li>Inbox</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline73" class="outline-4">
+<h4 id="orgheadline73"><span class="section-number-4">9.6.3</span> Focus</h4>
+<div class="outline-text-4" id="text-9-6-3">
+<ul class="org-ul">
+<li>Today</li>
+<li>Next</li>
+<li>Scheduled</li>
+<li>Someday</li>
+<li>Projects</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline74" class="outline-4">
+<h4 id="orgheadline74"><span class="section-number-4">9.6.4</span> Active projects</h4>
+</div>
+
+<div id="outline-container-orgheadline75" class="outline-4">
+<h4 id="orgheadline75"><span class="section-number-4">9.6.5</span> Others (no label)</h4>
+<div class="outline-text-4" id="text-9-6-5">
+<ul class="org-ul">
+<li>Logbook</li>
+<li>Trash</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline76" class="outline-4">
+<h4 id="orgheadline76"><span class="section-number-4">9.6.6</span> Tags</h4>
+<div class="outline-text-4" id="text-9-6-6">
+<ul class="org-ul">
+<li>work (w)</li>
+<li>home (h)</li>
+<li>errand (e)</li>
+<li>phone</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline81" class="outline-3">
+<h3 id="orgheadline81"><span class="section-number-3">9.7</span> Plancake</h3>
+<div class="outline-text-3" id="text-9-7">
+</div><div id="outline-container-orgheadline78" class="outline-4">
+<h4 id="orgheadline78"><span class="section-number-4">9.7.1</span> Tags</h4>
+<div class="outline-text-4" id="text-9-7-1">
+<ul class="org-ul">
+<li>home</li>
+<li>errands</li>
+<li>computer</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline79" class="outline-4">
+<h4 id="orgheadline79"><span class="section-number-4">9.7.2</span> Star</h4>
+<div class="outline-text-4" id="text-9-7-2">
+<p>
+= tasks that are important or require extra attention.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline80" class="outline-4">
+<h4 id="orgheadline80"><span class="section-number-4">9.7.3</span> Calendar (= Org agenda)</h4>
+<div class="outline-text-4" id="text-9-7-3">
+<p>
+allows you to quickly see tasks due this week, or browse to any other point in time.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline83" class="outline-3">
+<h3 id="orgheadline83"><span class="section-number-3">9.8</span> 5pm</h3>
+<div class="outline-text-3" id="text-9-8">
+<p>
+<a href="http://www.5pmweb.com/">http://www.5pmweb.com/</a>
+</p>
+</div>
+
+<div id="outline-container-orgheadline82" class="outline-4">
+<h4 id="orgheadline82"><span class="section-number-4">9.8.1</span> Email to 5pm</h4>
+<div class="outline-text-4" id="text-9-8-1">
+<ul class="org-ul">
+<li>project name</li>
+<li>start date</li>
+<li>end date = deadline</li>
+<li>hide (from client) = noexport?</li>
+<li>notify (by email)</li>
+<li>state (open, on hold, done)</li>
+<li>priority (low, normal, high, urgent)</li>
+<li>progress</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline84" class="outline-3">
+<h3 id="orgheadline84"><span class="section-number-3">9.9</span> Wrike</h3>
+<div class="outline-text-3" id="text-9-9">
+<p>
+<a href="http://www.wrike.com/">http://www.wrike.com/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline85" class="outline-3">
+<h3 id="orgheadline85"><span class="section-number-3">9.10</span> Do (from Salesforce)</h3>
+<div class="outline-text-3" id="text-9-10">
+<p>
+<a href="https://do.com/">https://do.com/</a>
+</p>
+
+<ol class="org-ol">
+<li>Tasks (assigned to you), sorted by:
+<ul class="org-ul">
+<li>Section (= default)</li>
+<li>Project</li>
+<li>Due Date</li>
+</ul></li>
+<li>Projects (and tasks assigned to others)</li>
+<li>Notes (capture minutes, thoughts, ideas)</li>
+<li>Contacts</li>
+<li>Deals (worth $123): LEAD, QUALIFIED, QUOTE, NEGOTIATE, CLOSE</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline86" class="outline-3">
+<h3 id="orgheadline86"><span class="section-number-3">9.11</span> BugNET</h3>
+</div>
+
+<div id="outline-container-orgheadline87" class="outline-3">
+<h3 id="orgheadline87"><span class="section-number-3">9.12</span> Kinkless</h3>
+<div class="outline-text-3" id="text-9-12">
+<p>
+<a href="http://www.youtube.com/watch?v=6YW-c9-az7Y">http://www.youtube.com/watch?v=6YW-c9-az7Y</a>
+</p>
+<ul class="org-ul">
+<li>Twin button to switch betwen &ldquo;context view&rdquo; and &ldquo;project view&rdquo;</li>
+<li>Archive when DONE since 1+ day</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline88" class="outline-3">
+<h3 id="orgheadline88"><span class="section-number-3">9.13</span> Midgnight Inbox</h3>
+<div class="outline-text-3" id="text-9-13">
+<p>
+<a href="http://www.midnightbeep.com/">http://www.midnightbeep.com/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline89" class="outline-3">
+<h3 id="orgheadline89"><span class="section-number-3">9.14</span> Smartytask for GTD</h3>
+<div class="outline-text-3" id="text-9-14">
+<p>
+<a href="http://www.smartytask.com/tour/">http://www.smartytask.com/tour/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline90" class="outline-3">
+<h3 id="orgheadline90"><span class="section-number-3">9.15</span> Jume.in</h3>
+<div class="outline-text-3" id="text-9-15">
+<p>
+When creating new things to do, add your tasks to the sentence &ldquo;I want to&#x2026;&rdquo;.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline91" class="outline-3">
+<h3 id="orgheadline91"><span class="section-number-3">9.16</span> ThinkingRock</h3>
+<div class="outline-text-3" id="text-9-16">
+<p>
+Processing thoughts&#x2026;
+</p>
+
+<p>
+See <a href="http://sourceforge.net/project/screenshots.php?group_id=194713&amp;ssid=61682">http://sourceforge.net/project/screenshots.php?group_id=194713&ssid=61682</a>
+</p>
+
+<p>
+When processing thoughts (= description + category), if actionable, we should
+add:
+</p>
+
+<ul class="org-ul">
+<li>context</li>
+<li>[status (do ASAP, &#x2026;)]</li>
+<li>time estimate</li>
+<li>energy</li>
+<li>priority (must, &#x2026;)</li>
+<li>due date</li>
+</ul>
+
+<p>
+and refile it to a project.
+</p>
+
+<p>
+See <a href="http://sourceforge.net/project/screenshots.php?group_id=194713&amp;ssid=61681">http://sourceforge.net/project/screenshots.php?group_id=194713&ssid=61681</a>
+</p>
+
+<p>
+If not actionable,
+</p>
+
+<ul class="org-ul">
+<li>delete it</li>
+<li>record it as future (tickle date)</li>
+<li>record it as information.</li>
+</ul>
+
+<p>
+See <a href="http://www.trgtd.com.au/demo/RASetUp.htm">http://www.trgtd.com.au/demo/RASetUp.htm</a>: 5 tabs come with the default
+installation:
+</p>
+<ul class="org-ul">
+<li>Do ASAP</li>
+<li>Scheduled</li>
+<li>Delegated</li>
+<li>All Actions</li>
+<li>Done</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline92" class="outline-3">
+<h3 id="orgheadline92"><span class="section-number-3">9.17</span> OmniFocus</h3>
+<div class="outline-text-3" id="text-9-17">
+<p>
+I have OmniFocus set up with the following <b>areas</b> (contexts):
+</p>
+
+<ul class="org-ul">
+<li>Inbox</li>
+<li>General</li>
+<li>Mind</li>
+<li>Body</li>
+<li>Spirit</li>
+<li>Home</li>
+<li>Office</li>
+<li>Car</li>
+<li>Objects</li>
+<li>Monthly</li>
+<li>Quarterly</li>
+<li>Annually</li>
+<li>Lifestyle</li>
+<li>Incubate</li>
+<li>Done</li>
+</ul>
+
+<p>
+From the page <a href="http://www.davidco.com/forum/showthread.php?8781-Omnifocus/page4">Omnifocus</a>
+<span class="timestamp-wrapper"><span class="timestamp">[2010-04-28 Wed]</span></span>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline93" class="outline-3">
+<h3 id="orgheadline93"><span class="section-number-3">9.18</span> TaskPaper</h3>
+<div class="outline-text-3" id="text-9-18">
+<p>
+Inside Projects, you have:
+</p>
+<ul class="org-ul">
+<li>Tasks (actions that you must take to complete project)</li>
+<li>Notes (extra information related to a project or task)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline94" class="outline-3">
+<h3 id="orgheadline94"><span class="section-number-3">9.19</span> Tracks</h3>
+<div class="outline-text-3" id="text-9-19">
+<p>
+See <img src="http://getontracks.org/images/uploads/tracks_project_page.png" alt="tracks_project_page.png" />
+for inspiration about colors, etc.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline95" class="outline-3">
+<h3 id="orgheadline95"><span class="section-number-3">9.20</span> Basecamp</h3>
+<div class="outline-text-3" id="text-9-20">
+<p>
+<a href="https://basecamp.com/help">https://basecamp.com/help</a>
+</p>
+
+<p>
+Headings:
+</p>
+<ul class="org-ul">
+<li>Overview</li>
+<li>Messages</li>
+<li>To-Dos</li>
+<li>Calendar</li>
+<li>Writeboards</li>
+<li>Chat</li>
+<li>Time</li>
+<li>Files</li>
+</ul>
+
+<p>
+On the right side:
+</p>
+<ul class="org-ul">
+<li>People &amp; Permissions</li>
+<li>Search</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline102" class="outline-3">
+<h3 id="orgheadline102"><span class="section-number-3">9.21</span> TiddlyWiki based GTD systems</h3>
+<div class="outline-text-3" id="text-9-21">
+<p>
+<a href="http://www.tiddlywiki.com/">http://www.tiddlywiki.com/</a>
+</p>
+</div>
+
+<div id="outline-container-orgheadline96" class="outline-4">
+<h4 id="orgheadline96"><span class="section-number-4">9.21.1</span> GTD TiddlyWiki</h4>
+</div>
+
+<div id="outline-container-orgheadline97" class="outline-4">
+<h4 id="orgheadline97"><span class="section-number-4">9.21.2</span> MPTW (MonkeyPirateTiddlyWiki)</h4>
+<div class="outline-text-4" id="text-9-21-2">
+<p>
+<a href="http://mptw.tiddlyspot.com/">http://mptw.tiddlyspot.com/</a>
+</p>
+
+<dl class="org-dl">
+<dt>project</dt><dd>A series of actions to realise a <b>goal</b>.
+<ul class="org-ul">
+<li>do <b>not</b> have a <i>context</i>.</li>
+<li>have a <i>status</i>.</li>
+<li>have zero or more <i>actions</i>.</li>
+<li>have zero or more <i>subprojects</i> (each one is a <i>project</i> on its own).</li>
+</ul></dd>
+
+<dt>actions</dt><dd>Something tangible, you can do it.
+
+<ul class="org-ul">
+<li>need one out of a list of allowable <i>contexts</i> to be done.</li>
+<li>have a status.</li>
+</ul></dd>
+
+<dt>status</dt><dd><ul class="org-ul">
+<li>One of <b>next</b>, <b>wait for</b> or <b>done</b> for <i>actions.</i></li>
+<li>One of <b>completed</b> or <b>someday/maybe</b> for <i>projects</i>.</li>
+</ul></dd>
+
+<dt>context</dt><dd>Is an environment that allow/prevent you to do some kind of
+<i>actions</i>.</dd>
+
+<dt>area</dt><dd>Is a short for &rsquo;area of responsibility&rsquo;.</dd>
+
+<dt>realm</dt><dd>Is a way to group/select all related <i>projects</i> and <i>actions</i> in one
+go.</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgheadline98" class="outline-4">
+<h4 id="orgheadline98"><span class="section-number-4">9.21.3</span> mGSD</h4>
+<div class="outline-text-4" id="text-9-21-3">
+<ul class="org-ul">
+<li><a href="http://mgsd.tiddlyspot.com/demo3.html">http://mgsd.tiddlyspot.com/demo3.html</a></li>
+<li><a href="http://thinkcreatesolve.biz/mGSDEnhancements.html">http://thinkcreatesolve.biz/mGSDEnhancements.html</a></li>
+</ul>
+
+<p>
+I <b>like</b> the menus &ldquo;Work&rdquo;, &ldquo;Review&rdquo; and &ldquo;Process&rdquo; in the left sidebar. They
+contain different views for easily doing tasks related to the GTD review, or
+the GTD do phase, or &#x2026;
+</p>
+
+<p>
+Contexts:
+</p>
+<ul class="org-ul">
+<li>call</li>
+<li>email</li>
+<li>errand</li>
+<li>home</li>
+<li>low energy</li>
+<li>office</li>
+<li>offline</li>
+<li>reading</li>
+<li>weekend</li>
+</ul>
+
+<p>
+Areas:
+</p>
+<ul class="org-ul">
+<li>Customer Relations</li>
+<li>Home Maintenance</li>
+<li>Recreation</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline99" class="outline-4">
+<h4 id="orgheadline99"><span class="section-number-4">9.21.4</span> D-cubed</h4>
+</div>
+
+<div id="outline-container-orgheadline100" class="outline-4">
+<h4 id="orgheadline100"><span class="section-number-4">9.21.5</span> tbGTD</h4>
+<div class="outline-text-4" id="text-9-21-5">
+<p>
+<a href="http://tbgtd.tiddlyspot.com/">http://tbgtd.tiddlyspot.com/</a>
+</p>
+
+<p>
+Action (#):
+</p>
+<ul class="org-ul">
+<li>done</li>
+<li>future</li>
+<li>next</li>
+<li>queued</li>
+<li>waiting</li>
+</ul>
+
+<p>
+Priority (^):
+</p>
+<ul class="org-ul">
+<li>high</li>
+<li>medium</li>
+<li>low</li>
+</ul>
+
+<p>
+Context (@):
+</p>
+<ul class="org-ul">
+<li>call</li>
+<li>dev</li>
+<li>diy</li>
+<li>errand</li>
+<li>find</li>
+<li>goto</li>
+<li>mail</li>
+<li>read</li>
+</ul>
+
+<p>
+Project ($):
+</p>
+<ul class="org-ul">
+<li>active</li>
+<li>completed</li>
+<li>maybe</li>
+<li>someday</li>
+</ul>
+
+<p>
+Stage:
+</p>
+<ol class="org-ol">
+<li>kickoff</li>
+<li>define</li>
+<li>estimate</li>
+<li>prepare</li>
+<li>model</li>
+<li>test</li>
+<li>analyze</li>
+<li>decide</li>
+<li>realize</li>
+<li>control</li>
+</ol>
+
+<p>
+area (&amp;):
+</p>
+<ul class="org-ul">
+<li>family</li>
+<li>friends</li>
+<li>science</li>
+<li>sports</li>
+<li>tech</li>
+</ul>
+
+<p>
+realm (-):
+</p>
+<ul class="org-ul">
+<li>private</li>
+<li>work</li>
+</ul>
+
+<p>
+contact (?):
+</p>
+<ul class="org-ul">
+<li>comp</li>
+<li>friend</li>
+<li>social</li>
+<li>tech</li>
+<li>work</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline101" class="outline-4">
+<h4 id="orgheadline101"><span class="section-number-4">9.21.6</span> TeamTasks</h4>
+<div class="outline-text-4" id="text-9-21-6">
+<p>
+<a href="http://teamtasks.tiddlyspace.com/">http://teamtasks.tiddlyspace.com/</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline103" class="outline-3">
+<h3 id="orgheadline103"><span class="section-number-3">9.22</span> Nozbe</h3>
+<div class="outline-text-3" id="text-9-22">
+<p>
+They have projects at level-1.
+At level-2:
+</p>
+<ul class="org-ul">
+<li>Actions (to-do tasks)</li>
+<li>Notes</li>
+<li>Files</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline104" class="outline-3">
+<h3 id="orgheadline104"><span class="section-number-3">9.23</span> DGT Task Manager</h3>
+<div class="outline-text-3" id="text-9-23">
+<p>
+See <a href="http://www.dgtale.ch/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=61">http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61</a>
+</p>
+
+<ul class="org-ul">
+<li>See Hotlist</li>
+<li>In all lists, you see the number of items overdue and the total number of
+items: 3/27</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline105" class="outline-3">
+<h3 id="orgheadline105"><span class="section-number-3">9.24</span> 2Do</h3>
+<div class="outline-text-3" id="text-9-24">
+<p>
+<a href="http://www.2doapp.com/">http://www.2doapp.com/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline106" class="outline-3">
+<h3 id="orgheadline106"><span class="section-number-3">9.25</span> Podio.com</h3>
+<div class="outline-text-3" id="text-9-25">
+<p>
+<a href="https://podio.com/">https://podio.com/</a>
+</p>
+
+<p>
+<a href="https://help.podio.com/hc/en-us/articles/201020248-Quick-Start-Guide-to-Project-Management">https://help.podio.com/hc/en-us/articles/201020248-Quick-Start-Guide-to-Project-Management</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline107" class="outline-3">
+<h3 id="orgheadline107"><span class="section-number-3">9.26</span> Trello</h3>
+<div class="outline-text-3" id="text-9-26">
+<p>
+Pas mal&#x2026;
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline115" class="outline-3">
+<h3 id="orgheadline115"><span class="section-number-3">9.27</span> Atlassian</h3>
+<div class="outline-text-3" id="text-9-27">
+</div><div id="outline-container-orgheadline110" class="outline-4">
+<h4 id="orgheadline110"><span class="section-number-4">9.27.1</span> Confluence</h4>
+<div class="outline-text-4" id="text-9-27-1">
+<p>
+<a href="http://www.atlassian.com/software/confluence/overview">http://www.atlassian.com/software/confluence/overview</a>
+</p>
+
+<p>
+Global Spaces &amp; Categories:
+</p>
+<ul class="org-ul">
+<li>Development</li>
+<li>HR / Human Resources</li>
+<li>Marketing (Team)</li>
+<li>Sales (Team)</li>
+<li>PM (4:03)</li>
+</ul>
+
+<p>
+Status (0:52, 1:04):
+</p>
+<ul class="org-ul">
+<li>NOT STARTED (in Red)</li>
+<li>PENDING (in Yellow, #FCFBDB and #EBE2B0)</li>
+<li>COMPLETE (in Green)</li>
+</ul>
+
+<p>
+What&rsquo;s Shipping? / JIRA Issue:
+</p>
+<ul class="org-ul">
+<li>OPEN (in Gray, 1:25)</li>
+<li>IN PROGRESS (in Gray, #EFEFEF and #E7E7E7)</li>
+<li>REOPENED (from Jira&rsquo;s Overview)</li>
+<li>RESOLVED (from Jira&rsquo;s Overiew)</li>
+<li>CLOSED (from Jira&rsquo;s Overiew)</li>
+</ul>
+
+<p>
+Graphs (0:57)
+</p>
+<ul class="org-ul">
+<li>Team Workload
+This chart shows the average number of days issues were unresolved for over
+a given period. Period: last <b>30</b> days (grouped <b>Monthly</b>)</li>
+<li>Created vs. Resolved</li>
+</ul>
+
+<p>
+Typical &ldquo;<b>Meeting Notes</b> - &lt;date&gt;&rdquo;
+</p>
+<ul class="org-ul">
+<li>Attendees</li>
+<li>Status of Action Items from Last Week</li>
+<li>Meeting Agenda</li>
+<li>Actions Items for Next Week</li>
+</ul>
+</div>
+
+<div id="outline-container-orgheadline108" class="outline-5">
+<h5 id="orgheadline108"><span class="section-number-5">9.27.1.1</span> Advanced topics</h5>
+<div class="outline-text-5" id="text-9-27-1-1">
+<ul class="org-ul">
+<li>Creating pages and linking</li>
+<li>Formatting content</li>
+<li>Searching Confluence content</li>
+<li>Creating a task list</li>
+<li>Creating a thumbnail gallery</li>
+<li>Re-ordering pages</li>
+<li>Working with RSS</li>
+<li>Integrating with JIRA</li>
+<li>Displaying source code</li>
+<li>Archiving email</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline109" class="outline-5">
+<h5 id="orgheadline109"><span class="section-number-5">9.27.1.2</span> Videos</h5>
+<div class="outline-text-5" id="text-9-27-1-2">
+<p>
+<a href="http://quickstart.atlassian.com/ondemand/confluence/ninja-training/confluence-ninja/black-belt/">http://quickstart.atlassian.com/ondemand/confluence/ninja-training/confluence-ninja/black-belt/</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline111" class="outline-4">
+<h4 id="orgheadline111"><span class="section-number-4">9.27.2</span> Jira</h4>
+<div class="outline-text-4" id="text-9-27-2">
+<p>
+<a href="http://www.youtube.com/embed/MTvEudE4WWA?autoplay=1&amp;rel=0&amp;wmode=transparent">http://www.youtube.com/embed/MTvEudE4WWA?autoplay=1&rel=0&wmode=transparent</a>
+</p>
+
+<p>
+Graph: see <b>at 1:55</b>
+</p>
+<ul class="org-ul">
+<li>Issues: <b>Created vs. Resolved</b></li>
+<li>Sprint progress at 3:51</li>
+</ul>
+
+<p>
+Project Progress at 3:12 and 3:37:
+</p>
+<ul class="org-ul">
+<li>To Do (red)</li>
+<li>In Progress (yellow)</li>
+<li>Done (green)</li>
+</ul>
+
+<p>
+Session (at 4:34):
+</p>
+<ul class="org-ul">
+<li>Created</li>
+<li>Started (Orange)</li>
+<li>Completed (Green)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline112" class="outline-4">
+<h4 id="orgheadline112"><span class="section-number-4">9.27.3</span> GreenHopper</h4>
+<div class="outline-text-4" id="text-9-27-3">
+<p>
+<a href="http://www.atlassian.com/software/greenhopper/overview">http://www.atlassian.com/software/greenhopper/overview</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline113" class="outline-4">
+<h4 id="orgheadline113"><span class="section-number-4">9.27.4</span> Conclusions</h4>
+<div class="outline-text-4" id="text-9-27-4">
+<p>
+What&rsquo;s clear is that TODO color must be different from STARTED&#x2026;
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline114" class="outline-4">
+<h4 id="orgheadline114"><span class="section-number-4">9.27.5</span> Jira and Greenhopper (from Peter Ross)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="mail">mail</span></span></h4>
+<div class="outline-text-4" id="text-9-27-5">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">[2013-01-31 Thu 06:01]</span></span>
+</p>
+
+<p class="verse">
+I&rsquo;ve been using jira for task tracking and greenhopper for doing<br  />
+sprint based development.<br  />
+<br  />
+<a href="http://www.atlassian.com/software/jira/overview">http://www.atlassian.com/software/jira/overview</a><br  />
+<a href="http://www.atlassian.com/software/greenhopper/overview">http://www.atlassian.com/software/greenhopper/overview</a><br  />
+<br  />
+They&rsquo;re quite nice tools, especially in conjunction with greenhopper<br  />
+used to prioritise which tasks need to be done.<br  />
+<br  />
+You can purchase them for $10 for up to 10 users.<br  />
+</p>
+
+<p>
+From <a href="nnimap%2Bmc:INBOX.mc#CAOotw2%3DE69_vt31KxUrfWtV6WTo0iFiE12d9cmPMMN3t8iAwPA@mail.gmail.com">Email from Peter Ross: {mct} jira and grasshopper</a>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline116" class="outline-3">
+<h3 id="orgheadline116"><span class="section-number-3">9.28</span> <a href="http://www.mylifeorganized.net/">MyLifeOrganized</a></h3>
+</div>
+
+<div id="outline-container-orgheadline117" class="outline-3">
+<h3 id="orgheadline117"><span class="section-number-3">9.29</span> <a href="http://taskcoach.org/">Task Coach</a></h3>
+</div>
+
+<div id="outline-container-orgheadline118" class="outline-3">
+<h3 id="orgheadline118"><span class="section-number-3">9.30</span> LiquidPlanner</h3>
+<div class="outline-text-3" id="text-9-30">
+<p>
+<a href="http://www.liquidplanner.com/support/videos/5-minute-crash-course/">http://www.liquidplanner.com/support/videos/5-minute-crash-course/</a>
+</p>
+
+<p>
+<b>Properties</b>:
+</p>
+
+<ul class="org-ul">
+<li>Client</li>
+<li>Project</li>
+<li>Folder</li>
+<li>Package (&ldquo;ASAP&rdquo;, etc.)</li>
+<li>Location</li>
+<li>Team</li>
+<li>Contract Value</li>
+<li>Created On &lt;date&gt;</li>
+<li>Created By &lt;user&gt;</li>
+<li>Deadline</li>
+<li>Delay Until</li>
+<li>Max Effort</li>
+<li>Logged (= CLOCKSUM, task timer)</li>
+<li>Remaining Effort = (Remaining Est. Low, Remaining Est. High)</li>
+<li>Remaining [E] (where &ldquo;E&rdquo; = EXPECTED)
+= (Remaining Est. Low + Remaining Est. High) / 2</li>
+<li>Total [E]</li>
+<li>Finish [E]</li>
+</ul>
+
+<p>
+Note that:
+</p>
+<ul class="org-ul">
+<li>Logged + Remaining [E] = Total [E]</li>
+<li>Logged / Total [E] = % Complete</li>
+</ul>
+
+<p>
+<a href="http://www.liquidplanner.com/support/videos/daily-task-management/">http://www.liquidplanner.com/support/videos/daily-task-management/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline119" class="outline-3">
+<h3 id="orgheadline119"><span class="section-number-3">9.31</span> FengOffice</h3>
+<div class="outline-text-3" id="text-9-31">
+<p>
+Structure of an Org file &#x2013; from online demo&#x2026;
+</p>
+
+<p>
+Clients &amp; Projects:
+</p>
+
+<ol class="org-ol">
+<li>Active Clients</li>
+<li>Leads &amp; Prospects</li>
+<li>Inactive Clients</li>
+</ol>
+
+<p>
+Workspaces:
+</p>
+
+<ol class="org-ol">
+<li>General Organization
+<ol class="org-ol">
+<li>Welcome to the Agency</li>
+<li>Company Policies</li>
+<li>Interesting Articles</li>
+<li>Team</li>
+</ol></li>
+<li>Products &amp; Services</li>
+<li>Customer Success
+<ol class="org-ol">
+<li>Support</li>
+<li>FAQs</li>
+<li>Metrics</li>
+</ol></li>
+<li>Sales &amp; Marketing
+<ol class="org-ol">
+<li>Welcome to Sales &amp; Marketing</li>
+</ol></li>
+<li>Systems D+I
+<ol class="org-ol">
+<li>Website Development</li>
+<li>Infrastructure</li>
+</ol></li>
+<li>Administration
+<ol class="org-ol">
+<li>Incomes</li>
+<li>Payments</li>
+<li>Taxes</li>
+<li>Human Resources
+<ol class="org-ol">
+<li>CVs</li>
+<li>Vacations</li>
+<li>Headhunting</li>
+</ol></li>
+</ol></li>
+<li>Board of Directors</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline120" class="outline-3">
+<h3 id="orgheadline120"><span class="section-number-3">9.32</span> YouTRACK</h3>
+<div class="outline-text-3" id="text-9-32">
+<p>
+Outil de suivi des incidents et de gestion de projets (gratuit pour
+10 utilisateurs).
+</p>
+
+<p>
+<a href="https://www.jetbrains.com/youtrack/specials/youtrack/fr/birds_eye_view_on_your_projects.jsp">https://www.jetbrains.com/youtrack/specials/youtrack/fr/birds_eye_view_on_your_projects.jsp</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Fabrice Niessen</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
