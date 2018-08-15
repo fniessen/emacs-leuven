@@ -11,9 +11,9 @@
 #+SETUPFILE: ~/.dotfiles/org/theme-readtheorg.setup
 
 * Example
-  :PROPERTIES:
-  :header-args: :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
-  :END:
+:PROPERTIES:
+:header-args: :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
+:END:
 
 The usual method to find a problem while avoiding to disturb a running Emacs
 instance is to run a separate Emacs in batch mode: that will avoid any
@@ -128,9 +128,9 @@ Here is such a minimal Emacs config file.
 #+end_src
 
 ** Variable part
-   :PROPERTIES:
-   :header-args: :tangle no
-   :END:
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 
 #+begin_src emacs-lisp :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
 ;;* --[ Variable part Under Test ]--------------------------------------------
