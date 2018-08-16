@@ -1,9 +1,0 @@
-# name: Create database user
-# --
-CREATE USER ${1:UserName}$0
-FOR /* FROM */ LOGIN /* login_name */
---	CERTIFICATE certificate_name
---	ASYMMETRIC KEY key_name
---	WITHOUT LOGIN
---	WITH DEFAULT_SCHEMA = schema_name
-GO

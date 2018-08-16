@@ -23,7 +23,7 @@ a code you are typing by pressing the TAB key.
 
 *** [fixme] Add // FIXME
 
-#+begin_src java :tangle snippets/java-mode/fixme.yasnippet
+#+begin_src java :tangle ~/.emacs.d/snippets/java-mode/fixme.yasnippet
 # name: Add // FIXME
 # --
 // FIXME: `(format-time-string "%Y-%m-%d")` ${1:todo} $0
@@ -31,7 +31,7 @@ a code you are typing by pressing the TAB key.
 
 *** [todo] Add // TODO
 
-#+begin_src java :tangle snippets/java-mode/todo.yasnippet
+#+begin_src java :tangle ~/.emacs.d/snippets/java-mode/todo.yasnippet
 # name: Add // TODO
 # --
 // TODO: `(format-time-string "%Y-%m-%d")` ${1:todo} $0
@@ -53,6 +53,6 @@ a code you are typing by pressing the TAB key.
 
 *** [logm] Log method name and its arguments
 
-#+begin_src java :tangle snippets/java-mode/logm.yasnippet
+#+begin_src java :tangle ~/.emacs.d/snippets/java-mode/logm.yasnippet
 android.util.Log.d(TAG, "archiveTable() called with: " + "context = [" + context + "], table_name = [" + table_name + "], wo_id = [" + wo_id + "], wr_id = [" + wr_id + "]");
 #+end_src
