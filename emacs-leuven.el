@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180724.0956
+;; Version: 20180822.1524
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180724.0956"
+(defconst leuven--emacs-version "20180822.1524"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -778,7 +778,7 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info).
-  (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
+  ;; (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
 
   (with-eval-after-load "info"
     ;; List of directories to search for Info documentation files (in the order
@@ -807,7 +807,7 @@ These packages are neither built-in nor already installed nor ignored."
     )
 
   ;; Get a Unix manual page of the item under point.
-  (global-set-key (kbd "<S-f1>") #'man-follow)
+  ;; (global-set-key (kbd "<S-f1>") #'man-follow)
 
   (with-eval-after-load "man"
     ;; Make the manpage the current buffer in the current window.
@@ -959,7 +959,7 @@ These packages are neither built-in nor already installed nor ignored."
         (open-line 1)
         (insert line-text))))
 
-  (global-set-key (kbd "C-c d") #'duplicate-current-line)
+  (global-set-key (kbd "C-S-d") #'duplicate-current-line)
 
 ;;** 12.2 (info "(emacs)Yanking")
 
@@ -1027,6 +1027,9 @@ These packages are neither built-in nor already installed nor ignored."
 
       ;; Show the bookmark list just for bookmarks for the current file/buffer.
       (global-set-key (kbd "<M-f2>") #'bmkp-this-file/buffer-bmenu-list))
+
+    (when (fboundp 'helm-bookmarks)
+      (global-set-key (kbd "<M-f2>") #'helm-bookmarks))
 
     (with-eval-after-load "bookmark+"
 
@@ -1410,7 +1413,7 @@ Should be selected from `fringe-bitmaps'.")
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
-    (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
+    ;; (with-eval-after-load "smartparens"  (diminish 'smartparens-mode)) ;; Don't hide it, as it impacts perf on big files (must see it!)
     (with-eval-after-load "which-key"    (diminish 'which-key-mode)))
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
 
@@ -2018,9 +2021,19 @@ Should be selected from `fringe-bitmaps'.")
 (defun leuven--make-large-file-read-only ()
   "If a file is over a given size, make the buffer read only."
   (when (> (buffer-size) (* 1 1024 1024))
+    (message "[File is big...  Will be opened in Fundamental mode and read-only]")
     (setq buffer-read-only t)
     (buffer-disable-undo)
-    (fundamental-mode)))
+    (fundamental-mode)
+
+    ;; Disable smartparens.
+    ;; (setq smartparens-mode nil)
+    ;; (smartparens-mode -1)
+    (show-smartparens-mode -1) ; TODO: DOES NOT WORK.
+
+    ;; Disable Global-Anzu mode.
+    (anzu-mode -1)
+    ))
 
 (add-hook 'find-file-hook #'leuven--make-large-file-read-only)
 
@@ -2693,8 +2706,8 @@ Should be selected from `fringe-bitmaps'.")
       ;; Search with Ag from project root.
       (global-set-key (kbd "C-S-r") #'helm-do-ag-project-root)
 
-      ;; Search with Ag.  Ask for directory first.
-      (global-set-key (kbd "C-S-d") 'helm-do-ag)
+      ;; ;; Search with Ag.  Ask for directory first.
+      ;; (global-set-key (kbd "C-S-d") 'helm-do-ag)
 
       ;; Search with Ag this file (like Swoop).
       (global-set-key (kbd "C-S-f") #'helm-ag-this-file)
@@ -3000,9 +3013,7 @@ all of the sources."
   (leuven--section "19.5 (emacs)Several Buffers")
 
   ;; Put the current buffer at the end of the list of all buffers.
-  (global-set-key (kbd "<f12>") #'bury-buffer)
-                                        ; Conflict when GDB'ing Emacs under
-                                        ; Win32.
+  (global-set-key (kbd "<M-f12>") #'bury-buffer)
 
 ;;** 19.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
 
@@ -3413,15 +3424,15 @@ cycle through all windows on current frame."
 (defun leuven-cleanup-accent-iso-latin-1-to-utf-8 ()
   "Replace non-UTF-8 characters."
   (interactive)
-  (leuven-do-accent '(("\200" . "EUR")
+  (leuven-do-accent '(("\200" . "EUR")  ;; \342\202\254
                       ("\205" . "...")
-                      ("\222" . "'")
+                      ("\222" . "'")    ;; \342\200\231
                       ("\223" . "\"")
                       ("\224" . "\"")
                       ("\226" . "-")
                       ("\227" . "--")
                       ("\234" . "oe")
-                      ("\240" . " ")
+                      ("\240" . " ")    ;; \302\240
                       ("\251" . "©")
                       ("\253" . "«")
                       ("\272" . "°")
@@ -3429,20 +3440,23 @@ cycle through all windows on current frame."
                       ("\300" . "À")
                       ("\307" . "Ç")
                       ("\311" . "É")
-                      ("\340" . "à")
-                      ("\341" . "a") ;; XXX Spanish a with accent.
-                      ("\342" . "â")
+                      ("\340" . "à")    ;; \303\240
+                      ("\341" . "a")    ;; XXX Spanish a with accent 341. \303\241
+                      ("\342" . "â")    ;; \303\242
                       ("\344" . "ä")
                       ("\347" . "ç")
-                      ("\350" . "è")
-                      ("\351" . "é")
+                      ("\350" . "è")    ;; \303\250
+                      ("\351" . "é")    ;; \303\251
                       ("\352" . "ê")
                       ("\353" . "ë")
                       ("\356" . "î")
                       ("\357" . "ï")
-                      ("\364" . "ô")
+                      ("\363" . "o")    ;; XXX Spanish o with accent 363. \303\263
+                      ("\364" . "ô")    ;; \303\264
                       ("\371" . "ù")
-                      ("\373" . "û"))))
+                      ("\373" . "û")    ;; \303\273
+                      ("\374" . "ü")    ;; \303\274
+                      )))
 
 ;;** 22.7 (info "(emacs)Specify Coding") System of a File
 
@@ -5303,10 +5317,10 @@ From the address <%a>"
                                ""
                                (0800 1000 1200 1400 1600 1800 2000)))
 
-  ;; ;; Recent Org-mode.
-  ;; (setq org-agenda-time-grid '((daily today remove-match)
-  ;;                               (0800 1000 1200 1400 1600 1800 2000)
-  ;;                               "...... " ""))
+  ;; Recent Org-mode.
+  (setq org-agenda-time-grid '((daily today remove-match)
+                                (0800 1000 1200 1400 1600 1800 2000)
+                                "...... " ""))
 
   ;; String for the current time marker in the agenda.
   (setq org-agenda-current-time-string "Right now")
@@ -7095,6 +7109,8 @@ this with to-do items than with projects or headings."
     (define-key web-mode-map (kbd "C-M-a") #'web-mode-element-previous)
     (define-key web-mode-map (kbd "C-M-e") #'web-mode-element-end)
 
+;; XXX What about Fold Tag Attributes?
+
 ;; C-M-a           c-beginning-of-defun
 ;; C-M-e           c-end-of-defun
 ;; C-M-h           c-mark-function
@@ -7248,20 +7264,20 @@ this with to-do items than with projects or headings."
               (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)))
                                         ; Sublime Text and js2-refactor.
 
-  (defun leuven-scroll-up-one-line ()
+  (defun leuven-scroll-line-up ()
     "Scroll text of current window upward 1 line."
     (interactive)
     (scroll-up 1))
 
-  (defun leuven-scroll-down-one-line ()
+  (defun leuven-scroll-line-down ()
     "Scroll text of current window downward 1 line."
     (interactive)
     (scroll-down 1))
 
   (add-hook 'prog-mode-hook
             (lambda ()
-              (local-set-key (kbd "<C-up>") #'leuven-scroll-up-one-line)
-              (local-set-key (kbd "<C-down>") #'leuven-scroll-down-one-line)))
+              (local-set-key (kbd "<C-up>") #'leuven-scroll-line-up)
+              (local-set-key (kbd "<C-down>") #'leuven-scroll-line-down)))
                                         ; Sublime Text + SQL Management Studio
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
@@ -7271,6 +7287,9 @@ this with to-do items than with projects or headings."
 ;;** 26.2 Top-Level Definitions, or (info "(emacs)Defuns")
 
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
+
+  (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a
+  (global-set-key (kbd "<M-down>") #'end-of-defun) ; C-M-e
 
   ;; Making buffer indexes as menus.
   (try-require 'imenu)                  ; Awesome!
@@ -8210,6 +8229,9 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 
   (with-eval-after-load "grep"
+    ;; Files to ignore for MEPLA.
+    (add-to-list 'grep-find-ignored-files "archive-contents")
+
     (add-to-list 'grep-find-ignored-files "*-min.js")
     (add-to-list 'grep-find-ignored-files "*.min.js")
 
@@ -8699,6 +8721,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (with-eval-after-load "dumb-jump-autoloads"
 
+    ;; ;; Use Helm as selector when there are multiple choices.
+    ;; (setq dumb-jump-selector 'helm)
+
     ;; Prefer to use `rg' over `ag'.
     (setq dumb-jump-prefer-searcher 'rg)
 
@@ -8706,15 +8731,28 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; ag and config.
     (setq dumb-jump-max-find-time 5)
 
-    (global-set-key (kbd "C-M-g") #'dumb-jump-go)
-    (global-set-key (kbd "C-c S") #'dumb-jump-go)
+    (global-set-key (kbd "M-g j") #'dumb-jump-go)
+    (global-set-key (kbd "<f12>") #'dumb-jump-go)
+                                        ; Conflict when GDB'ing Emacs under
+                                        ; Win32.
+    (global-set-key (kbd "M-g o") #'dumb-jump-go-other-window)
+    (global-set-key (kbd "M-g x") #'dumb-jump-go-prefer-external)
+    (global-set-key (kbd "M-g z") #'dumb-jump-go-prefer-external-other-window)
 
+    ;; (global-set-key (kbd "C-M-g") #'dumb-jump-go)
+    ;; (global-set-key (kbd "C-c S") #'dumb-jump-go)
     ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
 
+    (global-set-key (kbd "M-g P") #'dumb-jump-back)
     (global-set-key (kbd "C-M-p") #'dumb-jump-back)
 
     ;; (define-key prog-mode-map (kbd "C-M-q") nil)
-    (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look))
+
+    (global-set-key (kbd "M-g y") #'dumb-jump-quick-look)
+    (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look)
+
+    (dumb-jump-mode)
+)
 
 ;;** 28.4 (info "(emacs)EDE")
 
@@ -8851,6 +8889,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Turn on projectile mode by default for all file types
     (projectile-mode)
 
+    ;; Add keymap prefix.
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
 
@@ -8882,8 +8923,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
 
-(add-to-list 'projectile-other-file-alist '("axvw" "js")) ; Switch from AXVW -> JS.
-(add-to-list 'projectile-other-file-alist '("js" "axvw")) ; Switch from JS -> AXVW.
+    ;; For ARCHIBUS.
+    (add-to-list 'projectile-other-file-alist '("axvw" "js")) ; Switch from AXVW -> JS.
+    (add-to-list 'projectile-other-file-alist '("js" "axvw")) ; Switch from JS -> AXVW.
   )
 
 ;;* 29 (info "(emacs)Abbrevs")

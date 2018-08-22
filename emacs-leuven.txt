@@ -1420,7 +1420,7 @@ In a manual, these key bindings will make your life easier:
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info).
-  (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
+  ;; (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
 #+end_src
 
 When Info is called, the variable ~Info-directory-list~ is populated from:
@@ -1487,7 +1487,7 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
 
 #+begin_src emacs-lisp
   ;; Get a Unix manual page of the item under point.
-  (global-set-key (kbd "<S-f1>") #'man-follow)
+  ;; (global-set-key (kbd "<S-f1>") #'man-follow)
 
   (with-eval-after-load "man"
     ;; Make the manpage the current buffer in the current window.
@@ -1772,6 +1772,10 @@ what they normally do: kill or copy it.
   (advice-add 'kill-ring-save :before #'kill-ring-save--slick-copy)
 #+end_src
 
+| Command        | Emacs | Sublime Text | TextMate |
+|----------------+-------+--------------+----------|
+| Duplicate line | C-S-d | C-S-d        | C-S-d    |
+
 #+begin_src emacs-lisp
   (defun duplicate-current-line ()
     "Duplicate the line containing point."
@@ -1788,7 +1792,7 @@ what they normally do: kill or copy it.
         (open-line 1)
         (insert line-text))))
 
-  (global-set-key (kbd "C-c d") #'duplicate-current-line)
+  (global-set-key (kbd "C-S-d") #'duplicate-current-line)
 #+end_src
 
 In Emacs 24.4+, the cleanest way to *uniquify lines* (~uniq-lines~) is the
@@ -2028,10 +2032,18 @@ With *Bookmark+* (which offers quite a bit more than =bm.el=):
   You can use tags to, in effect, merge projects, split projects, define
   subprojects, and so on.
 
-Key bindings:
+Key shortcuts:
+
+| Command              | Shortcut (Sublime Text) |
+|----------------------+-------------------------|
+| Toggle bookmark      | C-F2                    |
+| Next bookmark        | F2                      |
+| Previous bookmark    | S-F2                    |
+| Clear bookmarks      | C-S-F2                  |
+| Select all bookmarks | M-F2                    |
 
 - ~C-x p RET~ (~C-F2~ in Emacs-Leuven, Sublime Text and TextMate) ::
-     Toggle (*set* or delete) an *ANONYMOUS bookmark* at point.
+     *Toggle* (*set* or delete) an *ANONYMOUS bookmark* at point.
 
 - M-x bmkp-set-autonamed-regexp-buffer ::
      Set *ANONYMOUS bookmarks* at matches for REGEXP in the buffer.
@@ -2072,6 +2084,9 @@ Annotating bookmarks.
 
       ;; Show the bookmark list just for bookmarks for the current file/buffer.
       (global-set-key (kbd "<M-f2>") #'bmkp-this-file/buffer-bmenu-list))
+
+    (when (fboundp 'helm-bookmarks)
+      (global-set-key (kbd "<M-f2>") #'helm-bookmarks))
 
     (with-eval-after-load "bookmark+"
 
@@ -2762,7 +2777,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
     (with-eval-after-load "glasses"      (diminish 'glasses-mode))
     ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
-    (with-eval-after-load "smartparens"  (diminish 'smartparens-mode))
+    ;; (with-eval-after-load "smartparens"  (diminish 'smartparens-mode)) ;; Don't hide it, as it impacts perf on big files (must see it!)
     (with-eval-after-load "which-key"    (diminish 'which-key-mode)))
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
 #+end_src
@@ -3746,9 +3761,19 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 (defun leuven--make-large-file-read-only ()
   "If a file is over a given size, make the buffer read only."
   (when (> (buffer-size) (* 1 1024 1024))
+    (message "[File is big...  Will be opened in Fundamental mode and read-only]")
     (setq buffer-read-only t)
     (buffer-disable-undo)
-    (fundamental-mode)))
+    (fundamental-mode)
+
+    ;; Disable smartparens.
+    ;; (setq smartparens-mode nil)
+    ;; (smartparens-mode -1)
+    (show-smartparens-mode -1) ; TODO: DOES NOT WORK.
+
+    ;; Disable Global-Anzu mode.
+    (anzu-mode -1)
+    ))
 
 (add-hook 'find-file-hook #'leuven--make-large-file-read-only)
 #+end_src
@@ -5165,8 +5190,8 @@ or if you use ~helm-do-ag~, you can use ~C-u~ prefix for specifying extension.
       ;; Search with Ag from project root.
       (global-set-key (kbd "C-S-r") #'helm-do-ag-project-root)
 
-      ;; Search with Ag.  Ask for directory first.
-      (global-set-key (kbd "C-S-d") 'helm-do-ag)
+      ;; ;; Search with Ag.  Ask for directory first.
+      ;; (global-set-key (kbd "C-S-d") 'helm-do-ag)
 
       ;; Search with Ag this file (like Swoop).
       (global-set-key (kbd "C-S-f") #'helm-ag-this-file)
@@ -5680,9 +5705,7 @@ Get EXIF data with ~image-dired-get-exif-data~.
   (leuven--section "19.5 (emacs)Several Buffers")
 
   ;; Put the current buffer at the end of the list of all buffers.
-  (global-set-key (kbd "<f12>") #'bury-buffer)
-                                        ; Conflict when GDB'ing Emacs under
-                                        ; Win32.
+  (global-set-key (kbd "<M-f12>") #'bury-buffer)
 #+end_src
 
 ** Convenience Features and Customization of Buffer Handling
@@ -6308,15 +6331,15 @@ XXX Declare PDF files as binary
 (defun leuven-cleanup-accent-iso-latin-1-to-utf-8 ()
   "Replace non-UTF-8 characters."
   (interactive)
-  (leuven-do-accent '(("\200" . "EUR")
+  (leuven-do-accent '(("\200" . "EUR")  ;; \342\202\254
                       ("\205" . "...")
-                      ("\222" . "'")
+                      ("\222" . "'")    ;; \342\200\231
                       ("\223" . "\"")
                       ("\224" . "\"")
                       ("\226" . "-")
                       ("\227" . "--")
                       ("\234" . "oe")
-                      ("\240" . " ")
+                      ("\240" . " ")    ;; \302\240
                       ("\251" . "©")
                       ("\253" . "«")
                       ("\272" . "°")
@@ -6324,20 +6347,23 @@ XXX Declare PDF files as binary
                       ("\300" . "À")
                       ("\307" . "Ç")
                       ("\311" . "É")
-                      ("\340" . "à")
-                      ("\341" . "a") ;; XXX Spanish a with accent.
-                      ("\342" . "â")
+                      ("\340" . "à")    ;; \303\240
+                      ("\341" . "a")    ;; XXX Spanish a with accent 341. \303\241
+                      ("\342" . "â")    ;; \303\242
                       ("\344" . "ä")
                       ("\347" . "ç")
-                      ("\350" . "è")
-                      ("\351" . "é")
+                      ("\350" . "è")    ;; \303\250
+                      ("\351" . "é")    ;; \303\251
                       ("\352" . "ê")
                       ("\353" . "ë")
                       ("\356" . "î")
                       ("\357" . "ï")
-                      ("\364" . "ô")
+                      ("\363" . "o")    ;; XXX Spanish o with accent 363. \303\263
+                      ("\364" . "ô")    ;; \303\264
                       ("\371" . "ù")
-                      ("\373" . "û"))))
+                      ("\373" . "û")    ;; \303\273
+                      ("\374" . "ü")    ;; \303\274
+                      )))
 #+end_src
 
 ** Specifying a File's Coding System
@@ -6506,7 +6532,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
       (indent-region (point-min) (point-max) nil)))
 #+end_src
 
-*Code alignment* (align declarations):
+*Code alignment* (align declarations).
 
 #+begin_src emacs-lisp
   (defun leuven-align-code (begin end)
@@ -6521,6 +6547,18 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
   (global-set-key (kbd "C-x \\") #'leuven-align-code)
   (global-set-key (kbd "C-c =") #'leuven-align-code)
 #+end_src
+
+#+begin_example
+var first = 3,
+    second = "oh my god!",
+    last = "but not least";
+#+end_example
+
+#+begin_example
+var first  = 3,
+    second = "oh my god!",
+    last   = "but not least";
+#+end_example
 
 #+begin_src emacs-lisp :tangle no
   ;; Minor mode to aggressively keep your code always indented.
@@ -9182,10 +9220,10 @@ for today's date:
                                ""
                                (0800 1000 1200 1400 1600 1800 2000)))
 
-  ;; ;; Recent Org-mode.
-  ;; (setq org-agenda-time-grid '((daily today remove-match)
-  ;;                               (0800 1000 1200 1400 1600 1800 2000)
-  ;;                               "...... " ""))
+  ;; Recent Org-mode.
+  (setq org-agenda-time-grid '((daily today remove-match)
+                                (0800 1000 1200 1400 1600 1800 2000)
+                                "...... " ""))
 
   ;; String for the current time marker in the agenda.
   (setq org-agenda-current-time-string "Right now")
@@ -12017,6 +12055,8 @@ blocks (client/server side).
     (define-key web-mode-map (kbd "C-M-a") #'web-mode-element-previous)
     (define-key web-mode-map (kbd "C-M-e") #'web-mode-element-end)
 
+;; XXX What about Fold Tag Attributes?
+
 ;; C-M-a           c-beginning-of-defun
 ;; C-M-e           c-end-of-defun
 ;; C-M-h           c-mark-function
@@ -12222,7 +12262,14 @@ Some key bindings:
 (leuven--chapter leuven-load-chapter-26-programs "26 Editing Programs"
 #+end_src
 
-Move the current line up or down.
+Keyboard shortcuts:
+
+| Command          | Emacs    | Sublime Text | TextMate | Visual Studio |
+|------------------+----------+--------------+----------+---------------|
+| Move line up     | C-S-up   | C-S-up       |          | M-up          |
+| Move line down   | C-S-down | C-S-down     |          | M-down        |
+| Scroll line up   | C-up     |              |          | C-up          |
+| Scroll line down | C-down   |              |          | C-down        |
 
 #+begin_src emacs-lisp
   ;; Swap the current and next line.
@@ -12248,20 +12295,20 @@ Move the current line up or down.
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun leuven-scroll-up-one-line ()
+  (defun leuven-scroll-line-up ()
     "Scroll text of current window upward 1 line."
     (interactive)
     (scroll-up 1))
 
-  (defun leuven-scroll-down-one-line ()
+  (defun leuven-scroll-line-down ()
     "Scroll text of current window downward 1 line."
     (interactive)
     (scroll-down 1))
 
   (add-hook 'prog-mode-hook
             (lambda ()
-              (local-set-key (kbd "<C-up>") #'leuven-scroll-up-one-line)
-              (local-set-key (kbd "<C-down>") #'leuven-scroll-down-one-line)))
+              (local-set-key (kbd "<C-up>") #'leuven-scroll-line-up)
+              (local-set-key (kbd "<C-down>") #'leuven-scroll-line-down)))
                                         ; Sublime Text + SQL Management Studio
 #+end_src
 
@@ -12293,17 +12340,27 @@ Also =who-calls.el=
 :ID:       ea687cd8-fff0-461f-999e-c9fbc84b5901
 :END:
 
-Imenu is a great tool allowing you to *go to a function definition* (by name), but
-only if the definition is *in the buffer you are currently editing* (it won't jump
-and open another file).
-
-XXX Autoloaded?
-
 #+begin_src emacs-lisp
 ;;** 26.2 Top-Level Definitions, or (info "(emacs)Defuns")
 
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
 #+end_src
+
+Keyboard shortcuts:
+
+| Command                 | Emacs |
+|-------------------------+-------|
+| Move beginning of defun | C-M-a |
+| Move end of defun       | C-M-e |
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a
+  (global-set-key (kbd "<M-down>") #'end-of-defun) ; C-M-e
+#+end_src
+
+Imenu is a great tool allowing you to *go to a function definition* (by name), but
+only if the definition is *in the buffer you are currently editing* (it won't jump
+and open another file).
 
 ~font-lock-mode-hook~ is run after entering a major mode. You can make use of this
 to add an Imenu index to the menu bar in any mode that supports Imenu.
@@ -12714,7 +12771,7 @@ New minor mode ~global-eldoc-mode~ is enabled by default in Emacs 25.
   ;; (global-eldoc-mode)                 ; In Emacs 25.
 #+end_src
 
-** Hideshow minor mode
+** Hideshow minor mode (code folding)
 :PROPERTIES:
 :ID:       a36b1dbd-1d05-4ff2-b19a-167e50c4f1f7
 :END:
@@ -12728,6 +12785,18 @@ many programming modes.
 [[id:42ad895e-c049-4710-a877-5014a7f6acfc][outline-minor-mode]] as well.
 
 And the pretty awesome ~hideshow-org~.  Folding made useful.
+
+Keyboard shortcuts:
+
+| Command                         | Emacs | Sublime Text | Visual Studio |
+|---------------------------------+-------+--------------+---------------|
+| Fold (collapse) region          |       | C-S-[        | C-S-[         |
+| Unfold (uncollapse) region      |       | C-S-]        | C-S-]         |
+|---------------------------------+-------+--------------+---------------|
+| Fold (collpase) All regions     |       |              | C-k C-0       |
+| Unfold (uncollapse) All regions |       | C-k C-j      |               |
+|---------------------------------+-------+--------------+---------------|
+| Fold (collapse) Tag Attributes  |       | C-k C-t      |               |
 
 #+begin_src emacs-lisp
 ;;** 26.7 (info "(emacs)Hideshow") minor mode
@@ -14144,6 +14213,9 @@ To exclude files from ~lgrep~ and ~rgrep~ results (if you use ~rgrep~ instead of
 
 #+begin_src emacs-lisp
   (with-eval-after-load "grep"
+    ;; Files to ignore for MEPLA.
+    (add-to-list 'grep-find-ignored-files "archive-contents")
+
     (add-to-list 'grep-find-ignored-files "*-min.js")
     (add-to-list 'grep-find-ignored-files "*.min.js")
 
@@ -15243,22 +15315,34 @@ Go to source code for symbol at point:
 *** dump-jump (goto definition)
 
 With this package, you can jump to a definition (of the symbol at point) for
-multiple languages without any setup (e.g. no =TAGS= file is needed).
+multiple languages without any setup (e.g. *no =TAGS= file is needed anymore*).
 
-Dumb Jump uses ripgrep ~rg~ (the best ~grep~ alternative), The Silver Searcher ~ag~,
-or falls back to ~grep~ to find potential definitions of a function or variable
-under point.  It uses a set of regular expressions based on the file extension,
-or ~major-mode~, of the current buffer.
+Dumb Jump uses
+- ripgrep ~rg~ (the best ~grep~ alternative),
+- The Silver Searcher ~ag~, or
+- falls back to ~grep~
+to find potential definitions of a function or variable under point.
+
+It uses a set of regular expressions based on the file extension, or ~major-mode~,
+of the current buffer.
 
 See https://github.com/jacktasia/dumb-jump.
 
-| C-M-g | goto definition                     |
-| C-M-p | back (can be called multiple times) |
-|-------+-------------------------------------|
-| C-M-y | quick look                          |
+Keyboard shortcuts:
+
+| Command                             | Emacs | Sublime Text | Visual Studio |
+|-------------------------------------+-------+--------------+---------------|
+| Go to definition                    | C-M-g | F12          | F12           |
+| Back (can be called multiple times) | C-M-p |              |               |
+| Open definition to the side         |       |              | C-k F12       |
+|-------------------------------------+-------+--------------+---------------|
+| Quick look                          | C-M-y |              |               |
 
 #+begin_src emacs-lisp
   (with-eval-after-load "dumb-jump-autoloads"
+
+    ;; ;; Use Helm as selector when there are multiple choices.
+    ;; (setq dumb-jump-selector 'helm)
 
     ;; Prefer to use `rg' over `ag'.
     (setq dumb-jump-prefer-searcher 'rg)
@@ -15267,15 +15351,28 @@ See https://github.com/jacktasia/dumb-jump.
     ;; ag and config.
     (setq dumb-jump-max-find-time 5)
 
-    (global-set-key (kbd "C-M-g") #'dumb-jump-go)
-    (global-set-key (kbd "C-c S") #'dumb-jump-go)
+    (global-set-key (kbd "M-g j") #'dumb-jump-go)
+    (global-set-key (kbd "<f12>") #'dumb-jump-go)
+                                        ; Conflict when GDB'ing Emacs under
+                                        ; Win32.
+    (global-set-key (kbd "M-g o") #'dumb-jump-go-other-window)
+    (global-set-key (kbd "M-g x") #'dumb-jump-go-prefer-external)
+    (global-set-key (kbd "M-g z") #'dumb-jump-go-prefer-external-other-window)
 
+    ;; (global-set-key (kbd "C-M-g") #'dumb-jump-go)
+    ;; (global-set-key (kbd "C-c S") #'dumb-jump-go)
     ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
 
+    (global-set-key (kbd "M-g P") #'dumb-jump-back)
     (global-set-key (kbd "C-M-p") #'dumb-jump-back)
 
     ;; (define-key prog-mode-map (kbd "C-M-q") nil)
-    (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look))
+
+    (global-set-key (kbd "M-g y") #'dumb-jump-quick-look)
+    (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look)
+
+    (dumb-jump-mode)
+)
 #+end_src
 
 #+begin_note
@@ -15643,6 +15740,9 @@ Projectile's features.
     ;; Turn on projectile mode by default for all file types
     (projectile-mode)
 
+    ;; Add keymap prefix.
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
 
@@ -15674,8 +15774,9 @@ Projectile's features.
 
     (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
 
-(add-to-list 'projectile-other-file-alist '("axvw" "js")) ; Switch from AXVW -> JS.
-(add-to-list 'projectile-other-file-alist '("js" "axvw")) ; Switch from JS -> AXVW.
+    ;; For ARCHIBUS.
+    (add-to-list 'projectile-other-file-alist '("axvw" "js")) ; Switch from AXVW -> JS.
+    (add-to-list 'projectile-other-file-alist '("js" "axvw")) ; Switch from JS -> AXVW.
   )
 #+end_src
 
@@ -16370,7 +16471,7 @@ completions and filter as well.
              ;; Auto indent.
              (local-set-key (kbd "RET") 'newline-and-indent)
 
-             ;; Disabled smartparens in web-mode.
+             ;; Disable smartparens in web-mode.
              (setq smartparens-mode nil)))
 #+end_src
 
