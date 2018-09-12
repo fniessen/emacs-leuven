@@ -3762,6 +3762,7 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
   "If a file is over a given size, make the buffer read only."
   (when (> (buffer-size) (* 1 1024 1024))
     (message "[File is big...  Will be opened in Fundamental mode and read-only]")
+    (sit-for 1.5)
     (setq buffer-read-only t)
     (buffer-disable-undo)
     (fundamental-mode)
@@ -7713,8 +7714,8 @@ To control visibility when revealing a location, see ~org-show-context-detail~:
 #+begin_src emacs-lisp
     (when (boundp 'org-show-context-detail)
       ;; (setq org-show-context-detail '((default . local)))
-      (add-to-list 'org-show-context-detail '(tags-tree . minimal))
-      (add-to-list 'org-show-context-detail '(occur-tree . minimal))))
+      (add-to-list 'org-show-context-detail '(tags-tree . ancestors))
+      (add-to-list 'org-show-context-detail '(occur-tree . ancestors))))
 #+end_src
 
 *** Plain lists

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180822.1524
+;; Version: 20180912.1201
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180822.1524"
+(defconst leuven--emacs-version "20180912.1201"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2022,6 +2022,7 @@ Should be selected from `fringe-bitmaps'.")
   "If a file is over a given size, make the buffer read only."
   (when (> (buffer-size) (* 1 1024 1024))
     (message "[File is big...  Will be opened in Fundamental mode and read-only]")
+    (sit-for 1.5)
     (setq buffer-read-only t)
     (buffer-disable-undo)
     (fundamental-mode)
@@ -4297,8 +4298,8 @@ cycle through all windows on current frame."
 
     (when (boundp 'org-show-context-detail)
       ;; (setq org-show-context-detail '((default . local)))
-      (add-to-list 'org-show-context-detail '(tags-tree . minimal))
-      (add-to-list 'org-show-context-detail '(occur-tree . minimal))))
+      (add-to-list 'org-show-context-detail '(tags-tree . ancestors))
+      (add-to-list 'org-show-context-detail '(occur-tree . ancestors))))
 
 ;;** (info "(org)Plain lists")
 
