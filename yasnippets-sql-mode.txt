@@ -67,7 +67,7 @@ END
 
 CLOSE $1
 DEALLOCATE $1
-GO
+go
 #+end_src
 
 ** Database
@@ -80,14 +80,14 @@ Create database.
 # name: Create database
 # --
 USE master
-GO
+go
 
 -- Drop the database if it already exists
 IF EXISTS (SELECT name
         FROM sys.databases
         WHERE name = N'${1:database_name}')
     DROP DATABASE $1
-GO
+go
 
 CREATE DATABASE $1
 ON
@@ -111,7 +111,7 @@ LOG ON
 --  NEW_BROKER
 --  ERROR_BROKER_CONVERSATIONS
 --FOR ATTACH_REBUILD_LOG
-GO
+go
 #+end_src
 
 *** [cdbsnap] Create DataBase Snapshot
@@ -122,21 +122,21 @@ Create snapshot.
 # name: Create database sna...
 # --
 USE master
-GO
+go
 
 -- Drop snapshot database if it already exists
 IF EXISTS (SELECT name
         FROM sys.databases
         WHERE name = N'${1:source_database}_${2:snapshot_id}')
     DROP DATABASE $1_$2
-GO
+go
 
 -- Create the snapshot database
 CREATE DATABASE $1_$2 ON
 ( NAME = $1_$2_data,
   FILENAME = '$1_$2.ss')
 AS SNAPSHOT OF $1;
-GO$0
+go$0
 #+end_src
 
 *** [dd] Drop Database
@@ -145,14 +145,14 @@ GO$0
 # name: Drop database
 # --
 USE master
-GO
+go
 
 -- Drop the database if it already exists
 IF EXISTS (SELECT name
         FROM sys.databases
         WHERE name = N'${1:database_name}')
     DROP DATABASE $1
-GO
+go
 #+end_src
 
 *** Database Backup
@@ -170,7 +170,7 @@ WITH
     NAME = N'$1-Full Database Backup',
     SKIP,
     STATS = 10;
-GO
+go
 #+end_src
 
 *** Database Restore
@@ -181,7 +181,7 @@ Restore database.
 # name: Restore database
 # --
 USE master
-GO
+go
 
 RESTORE DATABASE ${1:database_name}
     FROM DISK = N'Backup_Path/$1.bak'
@@ -190,7 +190,7 @@ WITH
     NOUNLOAD,
     REPLACE,
     STATS = 10
-GO
+go
 #+end_src
 
 ** Fragment
@@ -354,7 +354,7 @@ WITH ${1:cte_name} AS
 -- Statement that executes the common table expression
 SELECT $0
 FROM $1;
-GO
+go
 #+end_src
 
 ** Function
@@ -369,14 +369,14 @@ Creates an inline table function.
 # name: Create inline table-va...
 # --
 IF OBJECT_ID (N'${1:[schema].[inline_function_name]}', N'IF') IS NOT NULL
-    DROP FUNCTION $1;  
-GO
+    DROP FUNCTION $1;
+go
 
 -- ================================================
 SET ANSI_NULLS ON
-GO
+go
 SET QUOTED_IDENTIFIER ON
-GO
+go
 -- =============================================
 -- Author:      /* Author */
 -- Create date: /* Create Date */
@@ -392,7 +392,7 @@ RETURN
     SELECT @$2 AS c1
     $0
 );
-GO
+go
 
 -- =============================================
 -- Example to execute function
@@ -400,7 +400,7 @@ GO
 SELECT *
 FROM $1 /* owner.inline_function_name */
     (/* value_for_@parameter_name */)
-GO
+go
 #+end_src
 
 *** [ctf] Create Multi-Statement Table Function
@@ -411,8 +411,8 @@ Creates a multi-statement table function.
 # name: Create multi-stateme...
 # --
 IF OBJECT_ID (N'${1:[schema].[table_function_name]}', N'TF') IS NOT NULL
-    DROP FUNCTION $1;  
-GO
+    DROP FUNCTION $1;
+go
 
 CREATE FUNCTION $1 (@{2:parameter_name} ${3:parameter_data_type})
 RETURNS @${4:return_variable_name} TABLE
@@ -428,14 +428,14 @@ BEGIN
     SELECT 1
     RETURN
 END;
-GO
+go
 
 -- =============================================
 -- Example to execute function
 -- =============================================
 SELECT * FROM $1 /* owner.table_function_name */
     (/* value_for_@parameter_name */)
-GO
+go
 #+end_src
 
 *** [csf] Create Scalar Function
@@ -446,14 +446,14 @@ Creates a scalar function.
 # name: Create scalar function
 # --
 IF OBJECT_ID (N'${1:[schema].[scalar_function_name]}', N'FN') IS NOT NULL
-    DROP FUNCTION $1;  
-GO
+    DROP FUNCTION $1;
+go
 
 -- =============================================
 SET ANSI_NULLS ON
-GO
+go
 SET QUOTED_IDENTIFIER ON
-GO
+go
 -- =============================================
 -- Author:      /* Author */
 -- Create date: /* Create Date */
@@ -471,21 +471,21 @@ BEGIN
 --  SELECT @v_ret = /* scalar expression */
 --  RETURN @v_ret$0
 END;
-GO
+go
 
 -- =============================================
 -- Example to execute function
 -- =============================================
 SELECT $1 /* owner.scalar_function_name */
     (/* value_for_@parameter_name */)
-GO
+go
 #+end_src
 
 *** [af] Alter Function
 
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/af.yasnippet
 # name: ALTER FUNCTION fr...
-# --    
+# --
 ALTER FUNCTION $0
 #+end_src
 
@@ -506,9 +506,9 @@ Creates a basic, non-clustered index.
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/cni.yasnippet
 # name: Create non-unique n...
 # --
-IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')  
+IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')
     DROP INDEX $3 ON ${1:[schema].[owner_name]};
-GO
+go
 
 CREATE NONCLUSTERED INDEX $3
 ON $1 (${2:column})
@@ -519,7 +519,7 @@ ON $1 (${2:column})
 --    | STATISTICS_NORECOMPUTE
 --    | SORT_IN_TEMPDB, .. as required
 -- ON filegroup
-GO
+go
 $0
 #+end_src
 
@@ -530,9 +530,9 @@ Creates a unique, non-clustered index.
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/cuni.yasnippet
 # name: Create unique nonclu...
 # --
-IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')  
+IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')
     DROP INDEX $3 ON ${1:[schema].[owner_name]};
-GO
+go
 
 CREATE UNIQUE NONCLUSTERED INDEX $3
 ON $1 (${2:column})
@@ -544,7 +544,7 @@ ON $1 (${2:column})
 --    STATISTICS_NORECOMPUTE,
 --    SORT_IN_TEMPDB = OFF, .. as required
 ON ${3:filegroup_name}
-GO
+go
 $0
 #+end_src
 
@@ -553,9 +553,9 @@ $0
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/cci.yasnippet
 # name: Create non-unique cl...
 # --
-IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')  
+IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')
     DROP INDEX $3 ON ${1:[schema].[owner_name]};
-GO
+go
 
 CREATE CLUSTERED INDEX $3
 ON $1 (${2:column})
@@ -566,7 +566,7 @@ ON $1 (${2:column})
 --    | STATISTICS_NORECOMPUTE
 --    | SORT_IN_TEMPDB, .. as required
 -- ON filegroup
-GO
+go
 $0
 #+end_src
 
@@ -577,9 +577,9 @@ Create index full syntax.
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/cuci.yasnippet
 # name: Create unique cluster...
 # --
-IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')  
+IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'${3:index_name}')
     DROP INDEX $3 ON ${1:[schema].[owner_name]};
-GO
+go
 
 CREATE UNIQUE CLUSTERED INDEX $3
 ON $1 (${2:column})
@@ -591,7 +591,7 @@ DROP_EXISTING,
 STATISTICS_NORECOMPUTE
 --    | SORT_IN_TEMPDB, .. as required
 ON ${4:filegroup_name}
-GO
+go
 $0
 #+end_src
 
@@ -694,7 +694,7 @@ WITH PASSWORD = N'${2:Strong_P@ssword}'$0 /* HASHED */ /* MUST_CHANGE */
 --  SID = sid
 --  CHECK_EXPIRATION = ON | OFF
 --  CREDENTIAL = credential_name
-GO
+go
 #+end_src
 
 *** Create Windows Authentication Login
@@ -711,7 +711,7 @@ DEFAULT_DATABASE = ${2:default_database}
 --  DEFAULT_LANGUAGE = language
 --  CERTIFICATE certificate_name
 --  ASYMMETRIC KEY key_name
-GO
+go
 #+end_src
 
 *** [dl] Drop Login
@@ -722,7 +722,7 @@ Drop login.
 # name: Drop login
 # --
 DROP LOGIN ${1:SQL_login_name}
-GO
+go
 #+end_src
 
 ** Role
@@ -733,10 +733,10 @@ Create Database Role.
 
 #+begin_src sql :tangle no
 USE ${1:database_name}
-GO
+go
 
 CREATE ROLE ${2:role_name}$0
-GO
+go
 #+end_src
 
 ** Schema
@@ -787,15 +787,15 @@ Create a simple stored procedure with output parameter.
 # name: Create stored proced...
 # --
 -- Drop stored procedure if it already exists
-IF OBJECT_ID ('${1:[schema].[procedure_name]}', 'P') IS NOT NULL   
-    DROP PROCEDURE $1;  
-GO
+IF OBJECT_ID ('${1:[schema].[procedure_name]}', 'P') IS NOT NULL
+    DROP PROCEDURE $1;
+go
 
 -- =============================================
 SET ANSI_NULLS ON
-GO
+go
 SET QUOTED_IDENTIFIER ON
-GO
+go
 -- =============================================
 -- Author:      /* Author */
 -- Create date: /* Create Date */
@@ -815,11 +815,11 @@ BEGIN
     -- Insert statements for procedure here
     SELECT @$2$0
 END
-GO
+go
 
 --SET QUOTED_IDENTIFIER ON|OFF
 --SET ANSI_NULLS ON|OFF
---GO
+--go
 
 -- =============================================
 -- Example to execute the stored procedure
@@ -829,7 +829,7 @@ DECLARE @${7:variable_for_output_parameter} $6
 EXECUTE $1 /* value_for_parameter_1 */, $7 OUTPUT
 
 SELECT $7
-GO
+go
 #+end_src
 
 *** [crlp] Create CLR Procedure
@@ -839,7 +839,7 @@ GO
 # --
 --SET QUOTED_IDENTIFIER ON|OFF
 --SET ANSI_NULLS ON|OFF
---GO
+--go
 
 CREATE PROCEDURE ${1:[schema].[procedure_name]}
 (
@@ -847,18 +847,18 @@ CREATE PROCEDURE ${1:[schema].[procedure_name]}
 )
 -- WITH EXECUTE AS CALLER|SELF|OWNER| 'user_name'
 AS EXTERNAL NAME ${4:[assembly].[class].[method]};
-GO
+go
 
 --SET QUOTED_IDENTIFIER ON|OFF
 --SET ANSI_NULLS ON|OFF
---GO$0
+--go$0
 #+end_src
 
 *** [ap] Alter Procedure
 
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/ap.yasnippet
 # name: ALTER PROCEDURE
-# --    
+# --
 ALTER PROCEDURE $0
 #+end_src
 
@@ -879,7 +879,7 @@ Creates a synonym.
 #+begin_src sql :tangle no
 CREATE SYNONYM ${1:[schema].[synonym_name]}
 FOR ${2:[schema].[object_name]};
-GO$0
+go$0
 #+end_src
 
 ** Table
@@ -893,7 +893,7 @@ Creates a table (and drop previous one with the same name).
 # --
 IF OBJECT_ID ('${1:[schema].[table_name]}', 'U') IS NOT NULL
     DROP TABLE $1;
-GO
+go
 
 CREATE TABLE $1
 (
@@ -901,14 +901,14 @@ CREATE TABLE $1
     ${5:column_2} ${6:data_type_2} ${5:column_nullability_2},$0
     CONSTRAINT /* contraint_name */ PRIMARY KEY (/* columns_in_primary_key */)
 );
-GO
+go
 #+end_src
 
 *** [at] Alter Table fragment
 
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/at.yasnippet
 # name: ALTER TABLE fragm...
-# --    
+# --
 ALTER TABLE $0
 #+end_src
 
@@ -918,7 +918,7 @@ ALTER TABLE $0
 # name: Add column
 # --
 ALTER TABLE ${1:[schema].[table_name]} ADD [${2:column_name}] ${3:data_type} ${4:column_nullability};
-GO$0
+go$0
 #+end_src
 
 *** [atac] modify Column
@@ -933,16 +933,16 @@ column being changed to *nullable*, if it is already not.
 # --
 -- WARNING: If the column is not nullable, specify attribute NOT NULL.
 ALTER TABLE ${1:[schema].[table_name]} ALTER COLUMN $0;
-GO
+go
 #+end_src
 
 *** [atd] Drop column
 
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/atd.yasnippet
 # name: Drop column
-# --    
+# --
 ALTER TABLE ${1:[schema].[table_name]} DROP COLUMN $0;
-GO
+go
 #+end_src
 
 *** Add Constraint
@@ -952,7 +952,7 @@ GO
 # --
 ALTER TABLE ${1:[schema].[table_name]}
 ADD CONSTRAINT ${2:constraint_name};
-GO
+go
 #+end_src
 
 *** [atdc] Drop Constraint
@@ -962,7 +962,7 @@ GO
 # --
 ALTER TABLE ${1:[schema].[table_name]}
 DROP CONSTRAINT ${2:constraint_name};
-GO
+go
 #+end_src
 
 *** [dt] Drop Table
@@ -978,7 +978,7 @@ IF EXISTS (SELECT *
             WHERE sys.schemas.name = N'${1:schema}'
               AND sys.tables.name = N'${2:table}')
     DROP TABLE $1.$2
-GO
+go
 #+end_src
 
 ** Transaction
@@ -1018,13 +1018,13 @@ Creates a trigger.
 # --
 IF OBJECT_ID ('${1:trigger_name}', 'TR') IS NOT NULL
     DROP TRIGGER $1;
-GO
+go
 
 -- =============================================
 SET ANSI_NULLS ON
-GO
+go
 SET QUOTED_IDENTIFIER ON
-GO
+go
 -- =============================================
 -- Author:      /* Author */
 -- Create date: /* Create Date */
@@ -1043,7 +1043,7 @@ BEGIN
     RAISERROR (50009, 16, 10)
     $0
 END;
-GO
+go
 #+end_src
 
 *** Enable Trigger
@@ -1062,7 +1062,7 @@ Enable all triggers on table.
 # name: Enable all triggers on...
 # --
 ALTER TABLE ${1:[schema].[table_name]}$0 ENABLE TRIGGER ALL;
-GO
+go
 #+end_src
 
 *** Disable Trigger
@@ -1081,7 +1081,7 @@ Disable all triggers on table.
 # name: Disable all triggers on...
 # --
 ALTER TABLE ${1:[schema].[table_name]}$0 DISABLE TRIGGER ALL;
-GO
+go
 #+end_src
 
 ** User
@@ -1095,11 +1095,11 @@ Creates a database user.
 # --
 CREATE USER ${1:UserName}$0
 FOR /* FROM */ LOGIN /* login_name */
---	CERTIFICATE certificate_name
---	ASYMMETRIC KEY key_name
---	WITHOUT LOGIN
---	WITH DEFAULT_SCHEMA = schema_name
-GO
+--  CERTIFICATE certificate_name
+--  ASYMMETRIC KEY key_name
+--  WITHOUT LOGIN
+--  WITH DEFAULT_SCHEMA = schema_name
+go
 #+end_src
 
 *** [du] Drop User
@@ -1108,7 +1108,7 @@ GO
 # name: Drop user
 # --
 DROP USER ${1:user_name}
-GO
+go
 #+end_src
 
 ** User Defined Data Type
@@ -1134,7 +1134,7 @@ CREATE TYPE ${1:[schema].[my_table_type]} AS TABLE
     ${2:column_1} ${3:data_type_1},
     ${4:column_2} ${5:data_type_2}
 );
-GO$0
+go$0
 #+end_src
 
 ** User Defined Type
@@ -1146,7 +1146,7 @@ Creates a CLR integration user-defined type.
 #+begin_src sql :tangle no
 CREATE TYPE ${1:Utf8String}
 EXTERNAL NAME ${2:utf8string}.${3:[Microsoft.Samples.SqlServer.utf8string]};
-GO$0
+go$0
 #+end_src
 
 ** View
@@ -1158,9 +1158,9 @@ Creates a view.
 #+begin_src sql :tangle ~/.emacs.d/snippets/sql-mode/cv.yasnippet
 # name: Create view
 # --
-IF OBJECT_ID ('${1:[schema].[view_name]}', 'V') IS NOT NULL  
-    DROP VIEW $1;  
-GO
+IF OBJECT_ID ('${1:[schema].[view_name]}', 'V') IS NOT NULL
+    DROP VIEW $1;
+go
 
 CREATE VIEW $1
 --WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA
@@ -1169,7 +1169,7 @@ AS
     FROM ${2:[schema].[sample_table]}
     $0
 -- WITH CHECK OPTION
-GO
+go
 #+end_src
 
 *** [dv] Drop View
