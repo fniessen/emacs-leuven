@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20180912.1201
+;; Version: 20181113.1510
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20180912.1201"
+(defconst leuven--emacs-version "20181113.1510"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1156,8 +1156,8 @@ These packages are neither built-in nor already installed nor ignored."
   ;; Enable the use of the command `narrow-to-region' without confirmation.
   (put 'narrow-to-region 'disabled nil)
 
-  (with-eval-after-load "fancy-narrow-autoloads"
-    (fancy-narrow-mode))
+  ;; (with-eval-after-load "fancy-narrow-autoloads"
+  ;;   (fancy-narrow-mode)) ; perf problems when calling `helm-for-files' from a big file?
 
 ;;** 14.12 (info "(emacs)Font Lock")
 
@@ -1284,11 +1284,13 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Jump to next hunk (also on `C-x v ]').
     (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
-    (define-key diff-hl-mode-map (kbd "M-g <down>") #'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd "M-g <down>") #'diff-hl-next-hunk) ;; Next Change.
+    (define-key diff-hl-mode-map (kbd "<C-M-S-down>") #'diff-hl-next-hunk) ;; IntelliJ IDEA.
 
     ;; Jump to previous hunk (also on `C-x v [').
     (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
-    (define-key diff-hl-mode-map (kbd "M-g <up>") #'diff-hl-previous-hunk)
+    (define-key diff-hl-mode-map (kbd "M-g <up>") #'diff-hl-previous-hunk) ;; Previous Change.
+    (define-key diff-hl-mode-map (kbd "<C-M-S-up>") #'diff-hl-next-hunk) ;; IntelliJ IDEA.
 
     ;; Popup current diff.
     (define-key diff-hl-mode-map (kbd "C-x v =") #'diff-hl-diff-goto-hunk)
@@ -2020,7 +2022,7 @@ Should be selected from `fringe-bitmaps'.")
 ;; View large files.
 (defun leuven--make-large-file-read-only ()
   "If a file is over a given size, make the buffer read only."
-  (when (> (buffer-size) (* 1 1024 1024))
+  (when (> (buffer-size) (* 512 1024 1024)) ; 512 MB.
     (message "[File is big...  Will be opened in Fundamental mode and read-only]")
     (sit-for 1.5)
     (setq buffer-read-only t)
@@ -2706,12 +2708,14 @@ Should be selected from `fringe-bitmaps'.")
 
       ;; Search with Ag from project root.
       (global-set-key (kbd "C-S-r") #'helm-do-ag-project-root)
+      (global-set-key (kbd "C-S-f") #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
+      (global-set-key (kbd "C-M-S-f") #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
 
       ;; ;; Search with Ag.  Ask for directory first.
       ;; (global-set-key (kbd "C-S-d") 'helm-do-ag)
 
       ;; Search with Ag this file (like Swoop).
-      (global-set-key (kbd "C-S-f") #'helm-ag-this-file)
+      (global-set-key (kbd "C-S-f") #'helm-ag-this-file) ;; Find in current file.
       (global-set-key (kbd "M-g >") #'helm-ag-this-file)
 
       ;; Search with Ag in current projectile project.
@@ -3415,7 +3419,7 @@ cycle through all windows on current frame."
                                         ; via Org-Babel.
 
 ;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
-(defun leuven-do-accent (subst-list)
+(defun leuven--do-accent (subst-list)
   "Utility cleanup function."
   (dolist (pair subst-list)
     (save-excursion
@@ -3425,39 +3429,39 @@ cycle through all windows on current frame."
 (defun leuven-cleanup-accent-iso-latin-1-to-utf-8 ()
   "Replace non-UTF-8 characters."
   (interactive)
-  (leuven-do-accent '(("\200" . "EUR")  ;; \342\202\254
-                      ("\205" . "...")
-                      ("\222" . "'")    ;; \342\200\231
-                      ("\223" . "\"")
-                      ("\224" . "\"")
-                      ("\226" . "-")
-                      ("\227" . "--")
-                      ("\234" . "oe")
-                      ("\240" . " ")    ;; \302\240
-                      ("\251" . "©")
-                      ("\253" . "«")
-                      ("\272" . "°")
-                      ("\273" . "»")
-                      ("\300" . "À")
-                      ("\307" . "Ç")
-                      ("\311" . "É")
-                      ("\340" . "à")    ;; \303\240
-                      ("\341" . "a")    ;; XXX Spanish a with accent 341. \303\241
-                      ("\342" . "â")    ;; \303\242
-                      ("\344" . "ä")
-                      ("\347" . "ç")
-                      ("\350" . "è")    ;; \303\250
-                      ("\351" . "é")    ;; \303\251
-                      ("\352" . "ê")
-                      ("\353" . "ë")
-                      ("\356" . "î")
-                      ("\357" . "ï")
-                      ("\363" . "o")    ;; XXX Spanish o with accent 363. \303\263
-                      ("\364" . "ô")    ;; \303\264
-                      ("\371" . "ù")
-                      ("\373" . "û")    ;; \303\273
-                      ("\374" . "ü")    ;; \303\274
-                      )))
+  (leuven--do-accent '(("\200" . "EUR")  ;; \342\202\254
+                       ("\205" . "...")
+                       ("\222" . "'")    ;; \342\200\231
+                       ("\223" . "\"")
+                       ("\224" . "\"")
+                       ("\226" . "-")
+                       ("\227" . "--")
+                       ("\234" . "oe")
+                       ("\240" . " ")    ;; \302\240
+                       ("\251" . "©")
+                       ("\253" . "«")
+                       ("\272" . "°")
+                       ("\273" . "»")
+                       ("\300" . "À")
+                       ("\307" . "Ç")
+                       ("\311" . "É")
+                       ("\340" . "à")    ;; \303\240
+                       ("\341" . "a")    ;; XXX Spanish a with accent 341. \303\241
+                       ("\342" . "â")    ;; \303\242
+                       ("\344" . "ä")
+                       ("\347" . "ç")
+                       ("\350" . "è")    ;; \303\250
+                       ("\351" . "é")    ;; \303\251
+                       ("\352" . "ê")
+                       ("\353" . "ë")
+                       ("\356" . "î")
+                       ("\357" . "ï")
+                       ("\363" . "o")    ;; XXX Spanish o with accent 363. \303\263
+                       ("\364" . "ô")    ;; \303\264
+                       ("\371" . "ù")
+                       ("\373" . "û")    ;; \303\273
+                       ("\374" . "ü")    ;; \303\274
+                       )))
 
 ;;** 22.7 (info "(emacs)Specify Coding") System of a File
 
