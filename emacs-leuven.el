@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20181113.1510
+;; Version: 20181123.1654
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20181113.1510"
+(defconst leuven--emacs-version "20181123.1654"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -829,8 +829,11 @@ These packages are neither built-in nor already installed nor ignored."
   (with-eval-after-load "back-button-autoloads"
     (back-button-mode 1)
 
-    (global-set-key (kbd "<M-left>") #'back-button-global-backward) ; Vs left-word.
-    (global-set-key (kbd "<M-right>") #'back-button-global-forward)) ; Vs right-word.
+    (global-set-key (kbd "<M-left>") #'back-button-local-backward) ; Vs left-word. XXX
+    (global-set-key (kbd "<C-M-left>") #'back-button-global-backward) ; IntelliJ IDEA.
+
+    (global-set-key (kbd "<M-right>") #'back-button-local-forward) ; Vs left-word. XXX
+    (global-set-key (kbd "<C-M-right>") #'back-button-global-forward)) ; IntelliJ IDEA.
 
   ;; Goto last (buffer-local) change.
   (with-eval-after-load "goto-chg-autoloads"
@@ -1403,7 +1406,7 @@ Should be selected from `fringe-bitmaps'.")
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
     (with-eval-after-load "color-identifiers-mode" (diminish 'color-identifiers-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
-    ;; (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
+    (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
     (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
@@ -2019,26 +2022,49 @@ Should be selected from `fringe-bitmaps'.")
   ;; Visit a file.
   (global-set-key (kbd "<f3>") #'find-file)
 
-;; View large files.
-(defun leuven--make-large-file-read-only ()
-  "If a file is over a given size, make the buffer read only."
-  (when (> (buffer-size) (* 512 1024 1024)) ; 512 MB.
-    (message "[File is big...  Will be opened in Fundamental mode and read-only]")
-    (sit-for 1.5)
+  ;; Get rid of the "File xxx is large, really open? (y or n)" annoying message.
+  (setq large-file-warning-threshold (* 512 1024 1024)) ; 512 MB.
+
+  ;; Maximum buffer size for which line number should be displayed.
+  (setq line-number-display-limit large-file-warning-threshold)
+                                        ; 14.18 Optional Mode Line Features.
+
+  (defun leuven--is-file-large-p ()
+    "File is too big and might cause performance issue."
+    (> (buffer-size) large-file-warning-threshold))
+
+  ;; View large files.
+  (defun leuven--view-large-file ()
+    "Fix performance issues in Emacs when viewing large files."
     (setq buffer-read-only t)
+    (setq-local bidi-display-reordering nil) ; Default local setting.
+    (jit-lock-mode nil)
     (buffer-disable-undo)
-    (fundamental-mode)
+    (set (make-variable-buffer-local 'global-hl-line-mode) nil)
+    (set (make-variable-buffer-local 'line-number-mode) nil)
+    (set (make-variable-buffer-local 'column-number-mode) nil)
 
-    ;; Disable smartparens.
-    ;; (setq smartparens-mode nil)
-    ;; (smartparens-mode -1)
-    (show-smartparens-mode -1) ; TODO: DOES NOT WORK.
+    ;; Disable costly modes.
+    (when (boundp 'smartparens-mode)
+      (smartparens-mode -1))              ; XXX: DOES NOT WORK.
+    (when (boundp 'anzu-mode)
+      (anzu-mode -1)))
 
-    ;; Disable Global-Anzu mode.
-    (anzu-mode -1)
-    ))
+  (define-derived-mode leuven-large-file-mode fundamental-mode "LvnLargeFile"
+    "Fix performance issues in Emacs for large files."
+    (leuven--view-large-file))
 
-(add-hook 'find-file-hook #'leuven--make-large-file-read-only)
+  (add-to-list 'magic-mode-alist (cons #'leuven--is-file-large-p #'leuven-large-file-mode))
+
+  (defun leuven-find-large-file-conservatively (filename)
+    (interactive
+     (list (read-file-name
+            "Find file conservatively: " nil default-directory
+            (confirm-nonexistent-file-or-buffer))))
+    (let ((auto-mode-alist nil))
+      (find-file filename)
+      (fundamental-mode)
+      (leuven--view-large-file)))
 
 ;;** 18.3 (info "(emacs)Saving") Files
 
@@ -2195,7 +2221,7 @@ Should be selected from `fringe-bitmaps'.")
                  ;; No need to warn if buffer is auto-saved under the name of
                  ;; the visited file.
                  (not (and buffer-file-name
-                           auto-save-visited-file-name))
+                           auto-save-visited-mode)) ; Emacs 26.1
                  (file-newer-than-file-p (or buffer-auto-save-file-name
                                              (make-auto-save-file-name))
                                          buffer-file-name))
@@ -2557,10 +2583,6 @@ Should be selected from `fringe-bitmaps'.")
 
     (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings)
 
-    (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
-    ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
-    (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
-
     ;; (global-set-key (kbd "M-5") #'helm-etags-select)
 
     (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
@@ -2673,11 +2695,7 @@ Should be selected from `fringe-bitmaps'.")
   ;; This set Helm to open files using designated programs.
   (setq helm-external-programs-associations
         '(("rmvb" . "smplayer")
-          ("mp4" . "smplayer")))
-
-  ;; Set the warning threshold to 576 MB, which will get ride of "File xxx is
-  ;; large (xxxM), really open? (y or n)" annoying message.
-  (setq large-file-warning-threshold (* 576 1024 1024))
+          ("mp4"  . "smplayer")))
 
   ;; A convenient `describe-bindings' with `helm'.
   (with-eval-after-load "helm-descbinds"
@@ -2766,6 +2784,11 @@ Should be selected from `fringe-bitmaps'.")
   ;;
   ;;   ;; Don't save history information to file.
   ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
+
+  (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
+
+  ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+  (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
 
   ;; kill-ring, mark-ring, and register browsers for Helm.
   (with-eval-after-load "helm-ring"
@@ -3745,8 +3768,8 @@ cycle through all windows on current frame."
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
 
-    (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
-    (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
+    (key-chord-define-global "<<" #'(lambda () (interactive) (insert "«")))
+    (key-chord-define-global ">>" #'(lambda () (interactive) (insert "»")))
 
     ;; (key-chord-define-global "hb" #'describe-bindings) ; dashboard.
     (key-chord-define-global "hf" #'describe-function)
@@ -3789,8 +3812,8 @@ cycle through all windows on current frame."
     ;; (key-chord-define-global "ac" #'align-current)
     ;; (key-chord-define-global "fc" #'flycheck-mode)
     ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
-    ;; (global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))
-    ;; (global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))
+    ;; (global-set-key (kbd "M-3") #'(lambda () (interactive) (highlight-symbol-jump -1)))
+    ;; (global-set-key (kbd "M-4") #'(lambda () (interactive) (highlight-symbol-jump 1)))
     ;; (key-chord-define-global "vg" #'vc-git-grep)
 
     ;; (key-chord-define-global "''" "`'\C-b")
@@ -7264,10 +7287,13 @@ this with to-do items than with projects or headings."
     (forward-line -2))
 
   (add-hook 'prog-mode-hook
-            (lambda ()
+            #'(lambda ()
               (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
-              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)))
+              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
                                         ; Sublime Text and js2-refactor.
+              (local-set-key (kbd "<M-S-down>") #'leuven-move-line-down)
+              (local-set-key (kbd "<M-S-up>") #'leuven-move-line-up)))
+                                        ; IntelliJ IDEA.
 
   (defun leuven-scroll-line-up ()
     "Scroll text of current window upward 1 line."
@@ -7306,7 +7332,7 @@ this with to-do items than with projects or headings."
     ;; Add Imenu to the menu bar in any mode that supports it.
     (defun try-to-add-imenu ()
       (condition-case nil
-          (imenu-add-to-menubar "Outline") ;; Imenu index.
+          (imenu-add-to-menubar "Outline") ; Imenu index.
         (error nil)))
     (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
@@ -8195,11 +8221,11 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;; (setq compilation-auto-jump-to-first-error t)
 
   ;; Display the next compiler error message.
-  (global-set-key (kbd "<f10>") #'next-error)
+  (global-set-key (kbd "<f10>") #'next-error) ; C-M-down in IntelliJ IDEA.
                                         ; Also on `M-g n', `M-g M-n' and `C-x `'.
 
   ;; Display the previous compiler error message.
-  (global-set-key (kbd "<S-f10>") #'previous-error)
+  (global-set-key (kbd "<S-f10>") #'previous-error) ; C-M-up in IntelliJ IDEA.
                                         ; Also on `M-g p' and `M-g M-p'.
 
   ;; Display the first compiler error message.
@@ -8893,9 +8919,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Turn on projectile mode by default for all file types
     (projectile-mode)
+    ;; (projectile-global-mode) ??
 
     ;; Add keymap prefix.
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+    (define-key projectile-mode-map (kbd "C-c p g") 'projectile-grep)
 
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
@@ -10432,7 +10461,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; (setq ps-header-font-size 11)
     (setq ps-header-title-font-size 11)
     (defun ps-time-stamp-yyyy-mm-dd-aaa ()
-      "Return date as \"2001-06-18 Mon\" (ISO date + day of week)."
+      "Return date as \"yyyy-MM-dd ddd\" (ISO 8601 date + day of week)."
       (format-time-string "%Y-%m-%d %a"))
     (setq ps-right-header '(ps-time-stamp-yyyy-mm-dd-aaa))
 

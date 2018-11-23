@@ -67,7 +67,7 @@ Automatically debug and bisect your init (=.emacs=) file!
 #+end_src
 
 ** TODO Re: Goto last edit location -- explanation provided!!! (from l. david andersson)
-   [2015-06-24 Wed 18:53]
+[2015-06-24 Wed 18:53]
 
 #+begin_verse
 > In fact, there is an easy solution, provided by Kevin Rodgers himself,
@@ -1542,20 +1542,23 @@ Visual navigation through mark rings.
   (with-eval-after-load "back-button-autoloads"
     (back-button-mode 1)
 
-    (global-set-key (kbd "<M-left>") #'back-button-global-backward) ; Vs left-word.
-    (global-set-key (kbd "<M-right>") #'back-button-global-forward)) ; Vs right-word.
+    (global-set-key (kbd "<M-left>") #'back-button-local-backward) ; Vs left-word. XXX
+    (global-set-key (kbd "<C-M-left>") #'back-button-global-backward) ; IntelliJ IDEA.
+
+    (global-set-key (kbd "<M-right>") #'back-button-local-forward) ; Vs left-word. XXX
+    (global-set-key (kbd "<C-M-right>") #'back-button-global-forward)) ; IntelliJ IDEA.
 #+end_src
 
-- C-x C-<left> (or M-left in Emacs Leuven) ::
+- C-x C-<left> (or C-M-left in Emacs Leuven) ::
      Go back in ~global-mark-ring~.
 
-- C-x C-<right> (or M-right in Emacs Leuven) ::
+- C-x C-<right> (or C-M-right in Emacs Leuven) ::
      Go forward in ~global-mark-ring~.
 
-- C-x <left> ::
+- C-x <left> (or M-left in Emacs Leuven) ::
      Go back in (buffer-local) ~mark-ring~.
 
-- C-x <right> ::
+- C-x <right> (or M-right in Emacs Leuven) ::
      Go forward in (buffer-local) ~mark-ring~.
 
 When the ~smartrep~ package is installed, the ~C-x~ prefix need not be used for
@@ -2767,7 +2770,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
     (with-eval-after-load "color-identifiers-mode" (diminish 'color-identifiers-mode))
     (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
-    ;; (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
+    (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
     (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
     (with-eval-after-load "google-this"  (diminish 'google-this-mode))
     (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
@@ -3759,27 +3762,63 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 #+end_src
 
 #+begin_src emacs-lisp
-;; View large files.
-(defun leuven--make-large-file-read-only ()
-  "If a file is over a given size, make the buffer read only."
-  (when (> (buffer-size) (* 512 1024 1024)) ; 512 MB.
-    (message "[File is big...  Will be opened in Fundamental mode and read-only]")
-    (sit-for 1.5)
-    (setq buffer-read-only t)
-    (buffer-disable-undo)
-    (fundamental-mode)
+  ;; Get rid of the "File xxx is large, really open? (y or n)" annoying message.
+  (setq large-file-warning-threshold (* 512 1024 1024)) ; 512 MB.
 
-    ;; Disable smartparens.
-    ;; (setq smartparens-mode nil)
-    ;; (smartparens-mode -1)
-    (show-smartparens-mode -1) ; TODO: DOES NOT WORK.
-
-    ;; Disable Global-Anzu mode.
-    (anzu-mode -1)
-    ))
-
-(add-hook 'find-file-hook #'leuven--make-large-file-read-only)
+  ;; Maximum buffer size for which line number should be displayed.
+  (setq line-number-display-limit large-file-warning-threshold)
+                                        ; 14.18 Optional Mode Line Features.
 #+end_src
+
+Knowing this kind of behaviour, and especially when trying to guard myself
+against reading a log which spits out a long line, I often do something like
+~tail -f /some/file | fold -s~ in a shell buffer. This isn't good for editing,
+obviously, but helps a lot with reading.
+
+#+begin_src emacs-lisp
+  (defun leuven--is-file-large-p ()
+    "File is too big and might cause performance issue."
+    (> (buffer-size) large-file-warning-threshold))
+
+  ;; View large files.
+  (defun leuven--view-large-file ()
+    "Fix performance issues in Emacs when viewing large files."
+    (setq buffer-read-only t)
+    (setq-local bidi-display-reordering nil) ; Default local setting.
+    (jit-lock-mode nil)
+    (buffer-disable-undo)
+    (set (make-variable-buffer-local 'global-hl-line-mode) nil)
+    (set (make-variable-buffer-local 'line-number-mode) nil)
+    (set (make-variable-buffer-local 'column-number-mode) nil)
+
+    ;; Disable costly modes.
+    (when (boundp 'smartparens-mode)
+      (smartparens-mode -1))              ; XXX: DOES NOT WORK.
+    (when (boundp 'anzu-mode)
+      (anzu-mode -1)))
+
+  (define-derived-mode leuven-large-file-mode fundamental-mode "LvnLargeFile"
+    "Fix performance issues in Emacs for large files."
+    (leuven--view-large-file))
+
+  (add-to-list 'magic-mode-alist (cons #'leuven--is-file-large-p #'leuven-large-file-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun leuven-find-large-file-conservatively (filename)
+    (interactive
+     (list (read-file-name
+            "Find file conservatively: " nil default-directory
+            (confirm-nonexistent-file-or-buffer))))
+    (let ((auto-mode-alist nil))
+      (find-file filename)
+      (fundamental-mode)
+      (leuven--view-large-file)))
+#+end_src
+
+The *SoLong* package is a workaround for the issue of large "minified" files of
+programming code bringing Emacs to its knees on account of the relevant modes
+not being optimised for that use-case.
 
 ** Saving Files
 
@@ -3996,7 +4035,7 @@ Make the message "/FILENAME has auto save data/" unmissable:
                  ;; No need to warn if buffer is auto-saved under the name of
                  ;; the visited file.
                  (not (and buffer-file-name
-                           auto-save-visited-file-name))
+                           auto-save-visited-mode)) ; Emacs 26.1
                  (file-newer-than-file-p (or buffer-auto-save-file-name
                                              (make-auto-save-file-name))
                                          buffer-file-name))
@@ -4921,12 +4960,6 @@ XXX Look at helm-dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
-    ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
-    (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
-#+end_src
-
-#+begin_src emacs-lisp
     ;; (global-set-key (kbd "M-5") #'helm-etags-select)
 #+end_src
 
@@ -5118,11 +5151,7 @@ enter. All in once nice package.
   ;; This set Helm to open files using designated programs.
   (setq helm-external-programs-associations
         '(("rmvb" . "smplayer")
-          ("mp4" . "smplayer")))
-
-  ;; Set the warning threshold to 576 MB, which will get ride of "File xxx is
-  ;; large (xxxM), really open? (y or n)" annoying message.
-  (setq large-file-warning-threshold (* 576 1024 1024))
+          ("mp4"  . "smplayer")))
 #+end_src
 
 See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-or-instant-search-for-emacs][Sublime Text 2's "Goto Anything" (or instant search) for Emacs?]]
@@ -5225,7 +5254,7 @@ See https://github.com/dingmingxin/dotfiles/blob/master/config_emacs/config/cust
 **** Helm M-x (search for a command)
 
 There's no denying it: it's really difficult to remember all of these various
-commands. Rather than falling back to using the mouse and menu selections,
+commands.  Rather than falling back to using the mouse and menu selections,
 instead type ~M-x~.
 
 This will bring up a Helm menu, where you can then search for your desired
@@ -5301,8 +5330,17 @@ You can also use the ~@~ prefix to *search buffer contents*.
 **** Helm ring
 
 By pressing ~M-y~, you will see the *clipboard history* (list of all previous
-clippings) and can pick the one you want to paste using arrow keys.  Use ~RET~ to
-insert it.
+clipboard contents) and can pick the one you want to paste into the text using
+arrow keys.  Use ~RET~ to insert it.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+  (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
+#+end_src
 
 ~helm-all-mark-rings~ allows you to view the content of the both the *local and
 global mark rings* in a friendly interface, so you can always jump back to where
@@ -6822,8 +6860,8 @@ tangling* of this file by a giga-mega-huge factor!?
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
 
-    (key-chord-define-global "<<" (lambda () (interactive) (insert "«")))
-    (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
+    (key-chord-define-global "<<" #'(lambda () (interactive) (insert "«")))
+    (key-chord-define-global ">>" #'(lambda () (interactive) (insert "»")))
 
     ;; (key-chord-define-global "hb" #'describe-bindings) ; dashboard.
     (key-chord-define-global "hf" #'describe-function)
@@ -6866,8 +6904,8 @@ tangling* of this file by a giga-mega-huge factor!?
     ;; (key-chord-define-global "ac" #'align-current)
     ;; (key-chord-define-global "fc" #'flycheck-mode)
     ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
-    ;; (global-set-key (kbd "M-3") (lambda () (interactive) (highlight-symbol-jump -1)))
-    ;; (global-set-key (kbd "M-4") (lambda () (interactive) (highlight-symbol-jump 1)))
+    ;; (global-set-key (kbd "M-3") #'(lambda () (interactive) (highlight-symbol-jump -1)))
+    ;; (global-set-key (kbd "M-4") #'(lambda () (interactive) (highlight-symbol-jump 1)))
     ;; (key-chord-define-global "vg" #'vc-git-grep)
 
     ;; (key-chord-define-global "''" "`'\C-b")
@@ -12269,12 +12307,12 @@ Some key bindings:
 
 Keyboard shortcuts:
 
-| Command          | Emacs    | Sublime Text | TextMate | Visual Studio |
-|------------------+----------+--------------+----------+---------------|
-| Move line up     | C-S-up   | C-S-up       |          | M-up          |
-| Move line down   | C-S-down | C-S-down     |          | M-down        |
-| Scroll line up   | C-up     |              |          | C-up          |
-| Scroll line down | C-down   |              |          | C-down        |
+| Command          | Emacs    | Sublime Text | IntelliJ IDEA | TextMate | Visual Studio |
+|------------------+----------+--------------+---------------+----------+---------------|
+| Move line up     | C-S-up   | C-S-up       | M-S-up        |          | M-up          |
+| Move line down   | C-S-down | C-S-down     | M-S-down      |          | M-down        |
+| Scroll line up   | C-up     |              |               |          | C-up          |
+| Scroll line down | C-down   |              |               |          | C-down        |
 
 #+begin_src emacs-lisp
   ;; Swap the current and next line.
@@ -12293,10 +12331,13 @@ Keyboard shortcuts:
     (forward-line -2))
 
   (add-hook 'prog-mode-hook
-            (lambda ()
+            #'(lambda ()
               (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
-              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)))
+              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
                                         ; Sublime Text and js2-refactor.
+              (local-set-key (kbd "<M-S-down>") #'leuven-move-line-down)
+              (local-set-key (kbd "<M-S-up>") #'leuven-move-line-up)))
+                                        ; IntelliJ IDEA.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12353,10 +12394,12 @@ Also =who-calls.el=
 
 Keyboard shortcuts:
 
-| Command                 | Emacs |
-|-------------------------+-------|
-| Move beginning of defun | C-M-a |
-| Move end of defun       | C-M-e |
+| Command                 | Emacs | Leuven | IntelliJ IDEA |
+|-------------------------+-------+--------+---------------|
+| Move beginning of defun | C-M-a | M-up   | M-up          |
+| Move end of defun       | C-M-e | M-down | M-down        |
+
+Use ~M-up~ and ~M-down~ keys to quickly move between functions in the editor.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a
@@ -12381,7 +12424,7 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
     ;; Add Imenu to the menu bar in any mode that supports it.
     (defun try-to-add-imenu ()
       (condition-case nil
-          (imenu-add-to-menubar "Outline") ;; Imenu index.
+          (imenu-add-to-menubar "Outline") ; Imenu index.
         (error nil)))
     (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
@@ -14155,11 +14198,11 @@ variable ~next-error-highlight~.
   ;; (setq compilation-auto-jump-to-first-error t)
 
   ;; Display the next compiler error message.
-  (global-set-key (kbd "<f10>") #'next-error)
+  (global-set-key (kbd "<f10>") #'next-error) ; C-M-down in IntelliJ IDEA.
                                         ; Also on `M-g n', `M-g M-n' and `C-x `'.
 
   ;; Display the previous compiler error message.
-  (global-set-key (kbd "<S-f10>") #'previous-error)
+  (global-set-key (kbd "<S-f10>") #'previous-error) ; C-M-up in IntelliJ IDEA.
                                         ; Also on `M-g p' and `M-g M-p'.
 
   ;; Display the first compiler error message.
@@ -15674,7 +15717,7 @@ Projectile's features.
 
 **** Running grep and occur
 
-- C-c p s g ::
+- C-c p s g (or C-c p g in Emacs-Leuven) ::
      Run *~grep~* on the files in the project.
 
 - C-c p s s ::
@@ -15713,8 +15756,8 @@ Projectile's features.
      *Switch between files* with *same name* but *different extensions* (e.g. =.h= <->
      =.c= / =.cpp=).
 
-- C-c p g ::
-     *Jump to file at point* in project.
+# - C-c p g ::
+#      *Jump to file at point* in project.
 
 **** Running VC
 
@@ -15744,9 +15787,12 @@ Projectile's features.
 
     ;; Turn on projectile mode by default for all file types
     (projectile-mode)
+    ;; (projectile-global-mode) ??
 
     ;; Add keymap prefix.
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+    (define-key projectile-mode-map (kbd "C-c p g") 'projectile-grep)
 
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
@@ -18938,7 +18984,7 @@ printing on Windows.
     ;; (setq ps-header-font-size 11)
     (setq ps-header-title-font-size 11)
     (defun ps-time-stamp-yyyy-mm-dd-aaa ()
-      "Return date as \"2001-06-18 Mon\" (ISO date + day of week)."
+      "Return date as \"yyyy-MM-dd ddd\" (ISO 8601 date + day of week)."
       (format-time-string "%Y-%m-%d %a"))
     (setq ps-right-header '(ps-time-stamp-yyyy-mm-dd-aaa))
 
