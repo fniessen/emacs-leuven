@@ -1,10 +1,10 @@
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2017 Fabrice Niessen
+;; Copyright (C) 2004-2018 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20170812.1337
+;; Version: 20181120.0927
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -196,7 +196,7 @@
 
   ;; Remove the binding of `C-c C-x', used by Org clocking commands.
   (add-hook 'gnus-topic-mode-hook
-            (lambda ()
+            #'(lambda ()
               (define-key gnus-topic-mode-map
                 (kbd "C-c C-x") nil)))
 
@@ -205,7 +205,7 @@
   ;; Turn off the column number in the group buffer, and remove the binding
   ;; of `C-c C-x', used by Org clocking commands.
   (add-hook 'gnus-group-mode-hook
-            (lambda ()
+            #'(lambda ()
               (progn
                 (set (make-local-variable 'column-number-mode) nil)
                 (define-key gnus-group-mode-map
@@ -467,7 +467,7 @@
     "print the #rgb color of the background, dimmed according to intensity"
     (interactive "nIntensity of the shade : ")
     (apply 'format "#%02x%02x%02x"
-           (mapcar (lambda (x)
+           (mapcar #'(lambda (x)
                      (if (> (lsh x -8) intensity)
                          (- (lsh x -8) intensity)
                        0))
@@ -498,7 +498,7 @@
 
   ;; Activate the stripes for the mail buffers only.
   (add-hook 'gnus-summary-prepare-hook
-            (lambda ()
+            #'(lambda ()
               (with-current-buffer gnus-summary-buffer
                 ;; (unless (gnus-news-group-p gnus-newsgroup-name)
                 (stripe-alternate))))
@@ -830,7 +830,7 @@
 ;;*** 2.11 (info "(message)Spelling")
 
  (add-hook 'message-setup-hook          ; or message-mode-hook?
-           (lambda ()
+           #'(lambda ()
              (flyspell-mode 1)))
 
 ;;** 3 (info "(message)Variables")
@@ -865,7 +865,7 @@
 
   ;; Remove the binding of `C-c C-v', used by Org-Babel commands.
   (add-hook 'message-mode-hook
-            (lambda ()
+            #'(lambda ()
               (define-key message-mode-map
                 (kbd "C-c C-v") nil)))
 
@@ -932,7 +932,7 @@
               (to "foo@bar\\.com" "list.foo")
 
               ;; Invoke BBDB.
-              (: (lambda ()
+              (: #'(lambda ()
                    (car (bbdb/gnus-split-method))))
 
               ;; Catch spam.

@@ -27,7 +27,7 @@ http://koldfront.dk/text/gnus-email-basic-usage.html
 #+begin_src emacs-lisp :noweb yes
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2017 Fabrice Niessen
+;; Copyright (C) 2004-2018 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
@@ -411,7 +411,7 @@ Cleanup all Gnus buffers on exit.
 
   ;; Remove the binding of `C-c C-x', used by Org clocking commands.
   (add-hook 'gnus-topic-mode-hook
-            (lambda ()
+            #'(lambda ()
               (define-key gnus-topic-mode-map
                 (kbd "C-c C-x") nil)))
 #+end_src
@@ -426,7 +426,7 @@ Cleanup all Gnus buffers on exit.
   ;; Turn off the column number in the group buffer, and remove the binding
   ;; of `C-c C-x', used by Org clocking commands.
   (add-hook 'gnus-group-mode-hook
-            (lambda ()
+            #'(lambda ()
               (progn
                 (set (make-local-variable 'column-number-mode) nil)
                 (define-key gnus-group-mode-map
@@ -860,13 +860,13 @@ replies to an article before younger replies.
 
   ;; Turn off the column number in the group buffer.
   (add-hook 'gnus-summary-mode-hook
-            (lambda ()
+            #'(lambda ()
               (set (make-local-variable 'column-number-mode) nil)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
   (add-hook 'gnus-summary-mode-hook
-            (lambda ()
+            #'(lambda ()
               (local-set-key "D" 'delete-then-read-next)
               (local-set-key "d" 'gnus-summary-put-mark-as-expirable-next)
               (local-set-key "u" 'gnus-summary-clear-mark-forward)
@@ -891,7 +891,7 @@ stripe background is superimposed on my "read" background.
     "print the #rgb color of the background, dimmed according to intensity"
     (interactive "nIntensity of the shade : ")
     (apply 'format "#%02x%02x%02x"
-           (mapcar (lambda (x)
+           (mapcar #'(lambda (x)
                      (if (> (lsh x -8) intensity)
                          (- (lsh x -8) intensity)
                        0))
@@ -922,7 +922,7 @@ stripe background is superimposed on my "read" background.
 
   ;; Activate the stripes for the mail buffers only.
   (add-hook 'gnus-summary-prepare-hook
-            (lambda ()
+            #'(lambda ()
               (with-current-buffer gnus-summary-buffer
                 ;; (unless (gnus-news-group-p gnus-newsgroup-name)
                 (stripe-alternate))))
@@ -1489,7 +1489,7 @@ XXX Look at Gnushush to automatically *obfuscate email*, Message-ID, etc.
 ;;*** 2.11 (info "(message)Spelling")
 
  (add-hook 'message-setup-hook          ; or message-mode-hook?
-           (lambda ()
+           #'(lambda ()
              (flyspell-mode 1)))
 #+end_src
 
@@ -1549,7 +1549,7 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
 
   ;; Remove the binding of `C-c C-v', used by Org-Babel commands.
   (add-hook 'message-mode-hook
-            (lambda ()
+            #'(lambda ()
               (define-key message-mode-map
                 (kbd "C-c C-v") nil)))
 
@@ -1670,7 +1670,7 @@ Newsgroups in which I'm interested:
               (to "foo@bar\\.com" "list.foo")
 
               ;; Invoke BBDB.
-              (: (lambda ()
+              (: #'(lambda ()
                    (car (bbdb/gnus-split-method))))
 
               ;; Catch spam.
@@ -1708,7 +1708,7 @@ Newsgroups in which I'm interested:
 
   ;; ;; Email pre-expiry period according to group.
   ;; (setq nnmail-expiry-wait-function
-  ;;       (lambda (group)
+  ;;       #'(lambda (group)
   ;;         (cond ((string= group "Gmail")      90)
   ;;               ((string= group "moley")      30)
   ;;               ((string= group "blackhole") 'immediate)
