@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20181123.1654
+;; Version: 20181127.1415
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20181123.1654"
+(defconst leuven--emacs-version "20181127.1416"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1032,6 +1032,7 @@ These packages are neither built-in nor already installed nor ignored."
       (global-set-key (kbd "<M-f2>") #'bmkp-this-file/buffer-bmenu-list))
 
     (when (fboundp 'helm-bookmarks)
+      ;; Show all bookmarks.
       (global-set-key (kbd "<M-f2>") #'helm-bookmarks))
 
     (with-eval-after-load "bookmark+"
@@ -1137,7 +1138,7 @@ These packages are neither built-in nor already installed nor ignored."
       "Like scroll-up, but moves a fixed amount of lines." t)
 
     (global-set-key (kbd "<prior>") #'pager-page-up)
-    (global-set-key (kbd "<next>") #'pager-page-down))
+    (global-set-key (kbd "<next>")  #'pager-page-down))
 
 ;;** 14.3 (info "(emacs)Auto Scrolling")
 
@@ -1215,13 +1216,13 @@ These packages are neither built-in nor already installed nor ignored."
 Should be selected from `fringe-bitmaps'.")
 
     (defun hilit-chg-make-ov--add-fringe ()
-      (mapc (lambda (ov)
-              (if (overlay-get ov 'hilit-chg)
-                  (let ((fringe-anchor (make-string 1 ?x)))
-                    (put-text-property 0 1 'display
-                                       (list 'left-fringe highlight-fringe-mark)
-                                       fringe-anchor)
-                    (overlay-put ov 'before-string fringe-anchor))))
+      (mapc #'(lambda (ov)
+                (if (overlay-get ov 'hilit-chg)
+                    (let ((fringe-anchor (make-string 1 ?x)))
+                      (put-text-property 0 1 'display
+                                         (list 'left-fringe highlight-fringe-mark)
+                                         fringe-anchor)
+                      (overlay-put ov 'before-string fringe-anchor))))
             (overlays-at (ad-get-arg 1))))
     (advice-add 'hilit-chg-make-ov :after #'hilit-chg-make-ov--add-fringe))
 
@@ -1257,8 +1258,8 @@ Should be selected from `fringe-bitmaps'.")
     (setq ahs-idle-interval 0.2) ; 0.35.
 
     ;; Add major modes Auto-Highlight-Symbol can run on.
-    (mapc (lambda (mode)
-            (add-to-list 'ahs-modes mode t))
+    (mapc #'(lambda (mode)
+              (add-to-list 'ahs-modes mode t))
           '(js2-mode
             ess-mode))                  ; R.
 
@@ -1786,15 +1787,15 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Grep all same extension files from inside Isearch.
   (define-key isearch-mode-map (kbd "C-M-o")
-    (lambda ()
-      (interactive)
-      (grep-compute-defaults)
-      (lgrep (if isearch-regexp isearch-string (regexp-quote isearch-string))
-             (if (file-name-extension (buffer-file-name))
-              (format "*.%s" (file-name-extension (buffer-file-name)))
-              "*")
-             default-directory)
-      (isearch-abort)))
+    #'(lambda ()
+        (interactive)
+        (grep-compute-defaults)
+        (lgrep (if isearch-regexp isearch-string (regexp-quote isearch-string))
+               (if (file-name-extension (buffer-file-name))
+                   (format "*.%s" (file-name-extension (buffer-file-name)))
+                 "*")
+               default-directory)
+        (isearch-abort)))
 
 )                                       ; Chapter 15 ends here.
 
@@ -1842,20 +1843,20 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Comments in programs should always be in English.
     (add-hook 'prog-mode-hook
-              (lambda ()
-                (setq ispell-dictionary "american")))
+              #'(lambda ()
+                  (setq ispell-dictionary "american")))
 
     ;; Enable on-the-fly spell checking.
     (add-hook 'org-mode-hook
-              (lambda ()
-                (if (or (eq (aref (buffer-name) 0) ?\s)
+              #'(lambda ()
+                  (if (or (eq (aref (buffer-name) 0) ?\s)
                                         ; Buffer starting with " *".
-                        (and (boundp 'org-babel-exp-reference-buffer)
-                             org-babel-exp-reference-buffer))
+                          (and (boundp 'org-babel-exp-reference-buffer)
+                               org-babel-exp-reference-buffer))
                                         ; Export buffer.
-                    (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
-                  (message "[Turning on Flyspell mode in `%s']" (buffer-name))
-                  (flyspell-mode))))
+                      (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
+                    (message "[Turning on Flyspell mode in `%s']" (buffer-name))
+                    (flyspell-mode))))
 
     ;; Prevent Flyspell from finding mistakes in the code, well in comments and
     ;; strings.
@@ -2125,11 +2126,11 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Update the copyright notice to indicate the current year.
   (add-hook 'before-save-hook
-            (lambda ()                  ; Except for ...
-              (unless (derived-mode-p 'diff-mode)
+            #'(lambda ()                  ; Except for ...
+                (unless (derived-mode-p 'diff-mode)
                                         ; ... where the patch file can't be
                                         ; changed!
-                (copyright-update))))
+                  (copyright-update))))
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
 
@@ -2255,9 +2256,9 @@ Should be selected from `fringe-bitmaps'.")
                 (ediff-files file2 file1)
               (ediff-files file1 file2))
             (add-hook 'ediff-after-quit-hook-internal
-                      (lambda ()
-                        (setq ediff-after-quit-hook-internal nil)
-                        (set-window-configuration wnd))))
+                      #'(lambda ()
+                          (setq ediff-after-quit-hook-internal nil)
+                          (set-window-configuration wnd))))
         (error "no more than 2 files should be marked"))))
 
   (with-eval-after-load "dired"
@@ -2289,11 +2290,11 @@ Should be selected from `fringe-bitmaps'.")
                 (diff-refine-hunk)))    ; ... when this does it.
           (error nil))
         (run-at-time 0.0 nil
-                     (lambda ()
-                       (if (derived-mode-p 'diff-mode)
-                           ;; Put back the cursor only if still in a Diff buffer
-                           ;; after the delay.
-                           (goto-char (point-min)))))))
+                     #'(lambda ()
+                         (if (derived-mode-p 'diff-mode)
+                             ;; Put back the cursor only if still in a Diff buffer
+                             ;; after the delay.
+                             (goto-char (point-min)))))))
 
     (defun vc-diff--diff-make-fine-diffs-if-necessary (buffer messages)
       "Auto-refine only the regions of 14,000 bytes or less."
@@ -2339,10 +2340,10 @@ Should be selected from `fringe-bitmaps'.")
     ;; Split the window (horizontally or vertically) depending on the frame
     ;; width.
     (setq ediff-split-window-function
-          (lambda (&optional arg)
-            (if (> (frame-width) split-width-threshold)
-                (split-window-horizontally arg)
-              (split-window-vertically arg))))
+          #'(lambda (&optional arg)
+              (if (> (frame-width) split-width-threshold)
+                  (split-window-horizontally arg)
+                (split-window-vertically arg))))
 
     ;; (setq ediff-merge-split-window-function 'split-window-vertically)
 
@@ -2627,8 +2628,8 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; Default function used for splitting window.
     (setq helm-split-window-preferred-function
-          (lambda (window)
-            (split-window-sensibly)))
+          #'(lambda (window)
+              (split-window-sensibly)))
 
     ;; ;; Move to end or beginning of source when reaching top or bottom of
     ;; ;; source.
@@ -2888,10 +2889,10 @@ Should be selected from `fringe-bitmaps'.")
     ;; Don't save each buffer you edit when editing is complete.
     (setq helm-multi-swoop-edit-save nil))
 
-(defun ublt/helm-should-use-variable-pitch? (sources)
+(defun leuven--helm-should-use-variable-pitch? (sources)
   "Determine whether all of SOURCES should use variable-pitch
 font (fixed-pitch is still preferable)."
-  (every (lambda (x)
+  (every #'(lambda (x)
            (member x '(;; helm-c-source-ffap-line
                        ;; helm-c-source-ffap-guesser
                        ;; helm-c-source-buffers-list
@@ -2913,17 +2914,17 @@ font (fixed-pitch is still preferable)."
                        )))
          sources))
 
-(defun ublt/helm-tweak-appearance ()
+(defun leuven--helm-tweak-appearance ()
   "Use `variable-pitch' font for helm if it's suitable for
 all of the sources."
   (with-current-buffer helm-buffer
-    (when (ublt/helm-should-use-variable-pitch? helm-sources)
+    (when (leuven--helm-should-use-variable-pitch? helm-sources)
       (variable-pitch-mode +1))
     (setq line-spacing 0.2)
     ;; (text-scale-increase 1)
     ))
 
-(add-hook 'helm-after-initialize-hook 'ublt/helm-tweak-appearance)
+;; (add-hook 'helm-after-initialize-hook 'leuven--helm-tweak-appearance)
 
   (leuven--section "Image mode")
 
@@ -3015,8 +3016,8 @@ all of the sources."
                   (mode . Man-mode))))))
 
     (add-hook 'ibuffer-mode-hook
-              (lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default")))
+              #'(lambda ()
+                  (ibuffer-switch-to-saved-filter-groups "default")))
 
     ;; Order the groups so the order is: [Default], [agenda], [emacs].
     (defadvice ibuffer-generate-filter-groups
@@ -3420,9 +3421,9 @@ cycle through all windows on current frame."
     (interactive "sRegexp (default \".*\"): ")
     (let* ((regexp (or regexp ".*"))
            (case-fold-search t)
-           (cmp (lambda (x y) (< (cdr x) (cdr y))))
+           (cmp #'(lambda (x y) (< (cdr x) (cdr y))))
            ;; alist like ("name" . code-point).
-           (char-alist (sort (cl-remove-if-not (lambda (x) (string-match regexp (car x)))
+           (char-alist (sort (cl-remove-if-not #'(lambda (x) (string-match regexp (car x)))
                                                (ucs-names))
                              cmp)))
       (with-help-window "*Unicode characters*"
@@ -3831,7 +3832,7 @@ cycle through all windows on current frame."
   (leuven--section "25.6 (emacs)Case Conversion Commands")
 
   ;; Enable the use of some commands without confirmation.
-  (mapc (lambda (command)
+  (mapc #'(lambda (command)
           (put command 'disabled nil))
         ;; Disabled commands.
         '(downcase-region
@@ -3853,7 +3854,7 @@ cycle through all windows on current frame."
     ;; (try-require 'outline-magic)
     ;; (with-eval-after-load "outline-magic"
     ;;   (add-hook 'outline-minor-mode-hook
-    ;;             (lambda ()
+    ;;             #'(lambda ()
     ;;               (define-key outline-minor-mode-map
     ;;                 (kbd "<S-tab>") #'outline-cycle)
     ;;               (define-key outline-minor-mode-map
@@ -3921,12 +3922,12 @@ cycle through all windows on current frame."
     )
 
     (add-hook 'outline-minor-mode-hook
-              (lambda ()
-                (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
-                  (hide-sublevels 1000))))
+              #'(lambda ()
+                  (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
+                    (hide-sublevels 1000))))
 
   ;; (add-hook 'outline-minor-mode-hook
-  ;;   (lambda ()
+  ;;   #'(lambda ()
   ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
   ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
 
@@ -3973,11 +3974,11 @@ cycle through all windows on current frame."
 
   ;; 25.8.2
   (global-set-key (kbd "<M-f6>")
-                  (lambda (&optional arg)
-                    (interactive (list (or current-prefix-arg 'toggle)))
-                    (if (derived-mode-p 'prog-mode)
-                        (hs-show-all)
-                      (visible-mode arg))))
+                  #'(lambda (&optional arg)
+                      (interactive (list (or current-prefix-arg 'toggle)))
+                      (if (derived-mode-p 'prog-mode)
+                          (hs-show-all)
+                        (visible-mode arg))))
 
 ;;** (info "(emacs-goodies-el)boxquote")
 
@@ -4099,24 +4100,24 @@ cycle through all windows on current frame."
   (add-to-list 'org-modules 'org-info)
 
   (add-hook 'org-mode-hook
-            (lambda ()
-              ;; ;; Create a binding for `org-show-subtree'.
-              ;; (local-set-key (kbd "C-c C-S-s") #'org-show-subtree)
-              ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
+            #'(lambda ()
+                ;; ;; Create a binding for `org-show-subtree'.
+                ;; (local-set-key (kbd "C-c C-S-s") #'org-show-subtree)
+                ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
 
-              ;; (local-set-key (kbd "C-c h") #'hide-other) ; XXX Helm
+                ;; (local-set-key (kbd "C-c h") #'hide-other) ; XXX Helm
 
-              ;; Table.
-              (local-set-key (kbd "C-M-w") #'org-table-copy-region)
-              (local-set-key (kbd "C-M-y") #'org-table-paste-rectangle)
+                ;; Table.
+                (local-set-key (kbd "C-M-w") #'org-table-copy-region)
+                (local-set-key (kbd "C-M-y") #'org-table-paste-rectangle)
 
-              ;; Remove some bindings.
-              (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
-              (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
-              ;; (local-unset-key (kbd "C-c %")) ; XXX
-              ;; (local-unset-key (kbd "C-c &")) ; XXX
+                ;; Remove some bindings.
+                (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
+                (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
+                ;; (local-unset-key (kbd "C-c %")) ; XXX
+                ;; (local-unset-key (kbd "C-c &")) ; XXX
 
-              ))
+                ))
 
   (with-eval-after-load "org"
     (message "[... Org Introduction]")
@@ -4192,7 +4193,7 @@ cycle through all windows on current frame."
     ;;           (when tags
     ;;             (concat "&nbsp;&nbsp;&nbsp;"
     ;;                     "<span class=\"tag\">"
-    ;;                     (mapconcat (lambda (tag)
+    ;;                     (mapconcat #'(lambda (tag)
     ;;                                  (concat "<span class= \"" tag "\">" tag
     ;;                                          "</span>"))
     ;;                                tags
@@ -4282,10 +4283,10 @@ cycle through all windows on current frame."
   ;; Outline-node based navigation similar to the behavior of paredit-mode in
   ;; Lisp files.
   (add-hook 'org-mode-hook
-            (lambda ()
-              ;; (local-set-key (kbd "M-n") #'outline-next-visible-heading)
-              ;; (local-set-key (kbd "M-p") #'outline-previous-visible-heading)
-              ;;
+            #'(lambda ()
+                ;; (local-set-key (kbd "M-n") #'outline-next-visible-heading)
+                ;; (local-set-key (kbd "M-p") #'outline-previous-visible-heading)
+                ;;
  ;;             (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
    ;;           (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
      ;;         (local-set-key (kbd "C-M-u") #'outline-up-heading)
@@ -4612,19 +4613,19 @@ cycle through all windows on current frame."
   (setq org-tags-column -80)
 
   ;; 6.2 List of tags ("contexts") allowed in Org mode files.
-  (setq org-tag-alist '((:startgroup . nil)
-                         ("work"      . ?w)
-                         ("personal"  . ?p)
-                        (:endgroup . nil)
+  (setq org-tag-alist '((:startgroup  . nil)
+                         ("work"       . ?w)
+                         ("personal"   . ?p)
+                        (:endgroup    . nil)
                         ("call"        . ?c)
                         ("errands"     . ?e)
                         ("finance"     . ?f)
                         ("mail"        . ?m)
 
                         ("notbillable" . ?B)
-                        ;; ("reading" . ?r)
-                        ;; ("proj" . ?P)
-                        ;; ("now" . XXX)
+                        ;; ("reading"  . ?r)
+                        ;; ("proj"     . ?P)
+                        ;; ("now"      . XXX)
 
                         ("ARCHIVE"     . ?a) ; speed command + action in task list
                         ("crypt"       . ?C)
@@ -4665,18 +4666,18 @@ cycle through all windows on current frame."
     (when (derived-mode-p 'org-mode)
       (save-excursion
         (org-map-entries
-         (lambda ()
-           (let ((alltags (split-string
-                           (or (org-entry-get (point) "ALLTAGS") "")
-                           ":"))
-                 local inherited tag)
-             (dolist (tag alltags)
-               (if (get-text-property 0 'inherited tag)
-                   (push tag inherited)
-                 (push tag local)))
-             (dolist (tag local)
-               (when (member tag inherited)
-                 (org-toggle-tag tag 'off)))))
+         #'(lambda ()
+             (let ((alltags (split-string
+                             (or (org-entry-get (point) "ALLTAGS") "")
+                             ":"))
+                   local inherited tag)
+               (dolist (tag alltags)
+                 (if (get-text-property 0 'inherited tag)
+                     (push tag inherited)
+                   (push tag local)))
+               (dolist (tag local)
+                 (when (member tag inherited)
+                   (org-toggle-tag tag 'off)))))
          t nil))))
 
   ;; ;; Always offer completion for all tags of all agenda files.
@@ -4786,10 +4787,10 @@ cycle through all windows on current frame."
 
   ;; XXX Under test!
   (add-hook 'org-mode-hook
-            (lambda ()
-              (require 'org-clock)
-              (setq org-clock-persist t)
-              (org-clock-persistence-insinuate)))
+            #'(lambda ()
+                (require 'org-clock)
+                (setq org-clock-persist t)
+                (org-clock-persistence-insinuate)))
 
   (with-eval-after-load "org-clock"
 
@@ -5586,15 +5587,15 @@ From the address <%a>"
       (recenter))
 
     (add-hook 'org-agenda-finalize-hook
-              (lambda ()
-                (remove-text-properties (point-min) (point-max)
-                                        '(mouse-face t))))
+              #'(lambda ()
+                  (remove-text-properties (point-min) (point-max)
+                                          '(mouse-face t))))
 
     (add-hook 'org-agenda-finalize-hook
-              (lambda ()
-                (let ((inhibit-read-only t))
-                  (goto-char (point-min))
-                  (org-do-emphasis-faces (point-max)))))
+              #'(lambda ()
+                  (let ((inhibit-read-only t))
+                    (goto-char (point-min))
+                    (org-do-emphasis-faces (point-max)))))
 
     (defun leuven-org-agenda-mark-done-and-add-followup ()
       "Mark the current TODO as done and add another task after it.
@@ -5911,11 +5912,11 @@ this with to-do items than with projects or headings."
         (when (org-export-derived-backend-p backend 'html)
           (replace-regexp-in-string
            "\\`.*\\(<code>\\[\\(X\\|&#xa0;\\|-\\)\\]</code>\\).*$"
-           (lambda (rep)
-             (let ((check (match-string 2 rep)))
-               (cond ((equal check "X") "&#x2611;")
-                     ((equal check "-") "&#x2610;")
-                     (t "&#x2610;"))))
+           #'(lambda (rep)
+               (let ((check (match-string 2 rep)))
+                 (cond ((equal check "X") "&#x2611;")
+                       ((equal check "-") "&#x2610;")
+                       (t "&#x2610;"))))
            item
            nil nil 1)))
       (add-to-list 'org-export-filter-item-functions
@@ -6138,25 +6139,25 @@ this with to-do items than with projects or headings."
     contents and promoting any children headlines to the level of the
     parent."
       (org-element-map data 'headline
-        (lambda (object)
-          (when (member "ignore" (org-element-property :tags object))
-            (let ((level-top (org-element-property :level object))
-                  level-diff)
-              (mapc (lambda (el)
-                      ;; Recursively promote all nested headlines.
-                      (org-element-map el 'headline
-                        (lambda (el)
-                          (when (equal 'headline (org-element-type el))
-                            (unless level-diff
-                              (setq level-diff (- (org-element-property :level el)
-                                                  level-top)))
-                            (org-element-put-property el
-                              :level (- (org-element-property :level el)
-                                        level-diff)))))
-                      ;; Insert back into parse tree.
-                      (org-element-insert-before el object))
-                    (org-element-contents object)))
-            (org-element-extract-element object)))
+        #'(lambda (object)
+            (when (member "ignore" (org-element-property :tags object))
+              (let ((level-top (org-element-property :level object))
+                    level-diff)
+                (mapc #'(lambda (el)
+                          ;; Recursively promote all nested headlines.
+                          (org-element-map el 'headline
+                            #'(lambda (el)
+                                (when (equal 'headline (org-element-type el))
+                                  (unless level-diff
+                                    (setq level-diff (- (org-element-property :level el)
+                                                        level-top)))
+                                  (org-element-put-property el
+                                                            :level (- (org-element-property :level el)
+                                                                      level-diff)))))
+                          ;; Insert back into parse tree.
+                          (org-element-insert-before el object))
+                      (org-element-contents object)))
+              (org-element-extract-element object)))
         info nil)
       data)
 
@@ -6211,7 +6212,7 @@ this with to-do items than with projects or headings."
     ;; execution.
 
     ;; (add-hook 'org-babel-after-execute-hook
-    ;;           (lambda ()
+    ;;           #'(lambda ()
     ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
     ;;                                     ; More efficient with refresh == t.
 
@@ -6272,7 +6273,7 @@ this with to-do items than with projects or headings."
 
   ;; ;; with-eval-after-load...
   ;; (add-hook 'org-src-mode-hook
-  ;;           (lambda ()
+  ;;           #'(lambda ()
   ;;             (define-key org-src-mode-map (kbd "<f2>") #'org-edit-src-save)))
 
   (defvar only-code-overlays nil
@@ -6289,10 +6290,10 @@ this with to-do items than with projects or headings."
         (while (re-search-forward org-babel-src-block-regexp nil t)
           (push (match-beginning 5) begs)
           (push (match-end 5)       ends))
-        (map 'list (lambda (beg end)
-                     (let ((ov (make-overlay beg end)))
-                       (push ov only-code-overlays)
-                       (overlay-put ov 'invisible 'non-code)))
+        (map 'list #'(lambda (beg end)
+                       (let ((ov (make-overlay beg end)))
+                         (push ov only-code-overlays)
+                         (overlay-put ov 'invisible 'non-code)))
              (cons (point-min) (reverse ends))
              (append (reverse begs) (list (point-max)))))))
 
@@ -6366,10 +6367,8 @@ this with to-do items than with projects or headings."
     (add-to-list 'org-babel-load-languages '(makefile . t))
     (add-to-list 'org-babel-load-languages '(org      . t))
     (add-to-list 'org-babel-load-languages '(python   . t))
-    (if (locate-library "ob-shell")     ; ob-sh renamed on 2013-12-13
-        (add-to-list 'org-babel-load-languages '(shell . t))
-      (add-to-list 'org-babel-load-languages '(sh . t)))
-    (add-to-list 'org-babel-load-languages '(sql . t))
+    (add-to-list 'org-babel-load-languages '(shell    . t)) ; Org mode 8.2 (Emacs 26.1).
+    (add-to-list 'org-babel-load-languages '(sql      . t))
 
     (org-babel-do-load-languages        ; Loads org, gnus-sum, etc...
      'org-babel-load-languages org-babel-load-languages)
@@ -6390,27 +6389,27 @@ this with to-do items than with projects or headings."
       (interactive)
       (org-element-map (org-element-parse-buffer)
         '(src-block inline-src-block)
-        (lambda (sb)
-          (let ((language (org-element-property :language sb)))
-            (cond ((null language)
-                   (error "Missing language at line %d in %s"
-                          (line-number-at-pos
-                           (org-element-property :post-affiliated sb))
-                          (buffer-name)))
-                  ;; ((and (not (assoc-string language org-babel-load-languages))
-                  ;;       (not (assoc-string language org-src-lang-modes))
-                  ;;       ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
-                  ;;       )
-                  ;;                       ; XXX This should be stricter: must be
-                  ;;                       ; in org-babel-load-languages for
-                  ;;                       ; evaluated code blocks. Must be in both
-                  ;;                       ; other cases for edited code blocks.
-                  ;;  (error "Unknown language `%s' at line %d in `%s'"
-                  ;;         language
-                  ;;         (line-number-at-pos
-                  ;;          (org-element-property :post-affiliated sb))
-                  ;;         (buffer-name)))
-                  ))))
+        #'(lambda (sb)
+            (let ((language (org-element-property :language sb)))
+              (cond ((null language)
+                     (error "Missing language at line %d in %s"
+                            (line-number-at-pos
+                             (org-element-property :post-affiliated sb))
+                            (buffer-name)))
+                    ;; ((and (not (assoc-string language org-babel-load-languages))
+                    ;;       (not (assoc-string language org-src-lang-modes))
+                    ;;       ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
+                    ;;       )
+                    ;;                       ; XXX This should be stricter: must be
+                    ;;                       ; in org-babel-load-languages for
+                    ;;                       ; evaluated code blocks. Must be in both
+                    ;;                       ; other cases for edited code blocks.
+                    ;;  (error "Unknown language `%s' at line %d in `%s'"
+                    ;;         language
+                    ;;         (line-number-at-pos
+                    ;;          (org-element-property :post-affiliated sb))
+                    ;;         (buffer-name)))
+                    ))))
 
       ;; (message "[Source blocks checked in %s]"
       ;;          (buffer-name (buffer-base-buffer)))
@@ -6464,13 +6463,13 @@ this with to-do items than with projects or headings."
   (defun org-check-property-drawers ()
     (interactive)
     (org-element-map (org-element-parse-buffer 'element) 'headline
-      (lambda (h)
-        (and (org-element-map h 'drawer
-               (lambda (d) (equal (org-element-property :name d) "PROPERTIES"))
-               nil t 'headline)
-             (let ((begin (org-element-property :begin h)))
-               (message "[Entry with erroneous properties drawer at %d]" begin)
-               begin)))))
+      #'(lambda (h)
+          (and (org-element-map h 'drawer
+                 #'(lambda (d) (equal (org-element-property :name d) "PROPERTIES"))
+                 nil t 'headline)
+               (let ((begin (org-element-property :begin h)))
+                 (message "[Entry with erroneous properties drawer at %d]" begin)
+                 begin)))))
 
   (defun org-repair-property-drawers ()
     "Fix properties drawers in current buffer.
@@ -6483,24 +6482,24 @@ this with to-do items than with projects or headings."
                              (concat (org-inlinetask-outline-regexp)
                                      "END[ \t]*$"))))
          (org-map-entries
-          (lambda ()
-            (unless (and inline-re (org-looking-at-p inline-re))
-              (save-excursion
-                (let ((end (save-excursion (outline-next-heading) (point))))
-                  (forward-line)
-                  (when (org-looking-at-p org-planning-line-re) ; Org-8.3.
-                    (forward-line))
-                  (when (and (< (point) end)
-                             (not (org-looking-at-p org-property-drawer-re))
-                             (save-excursion
-                               (and (re-search-forward org-property-drawer-re end t)
-                                    (eq (org-element-type
-                                         (save-match-data (org-element-at-point)))
-                                        'drawer))))
-                    (insert (delete-and-extract-region
-                             (match-beginning 0)
-                             (min (1+ (match-end 0)) end)))
-                    (unless (bolp) (insert "\n"))))))))))))
+          #'(lambda ()
+              (unless (and inline-re (org-looking-at-p inline-re))
+                (save-excursion
+                  (let ((end (save-excursion (outline-next-heading) (point))))
+                    (forward-line)
+                    (when (org-looking-at-p org-planning-line-re) ; Org-8.3.
+                      (forward-line))
+                    (when (and (< (point) end)
+                               (not (org-looking-at-p org-property-drawer-re))
+                               (save-excursion
+                                 (and (re-search-forward org-property-drawer-re end t)
+                                      (eq (org-element-type
+                                           (save-match-data (org-element-at-point)))
+                                          'drawer))))
+                      (insert (delete-and-extract-region
+                               (match-beginning 0)
+                               (min (1+ (match-end 0)) end)))
+                      (unless (bolp) (insert "\n"))))))))))))
 
   (when (boundp 'org-planning-line-re)
     (add-hook 'org-mode-hook #'org-repair-property-drawers))
@@ -6537,9 +6536,9 @@ this with to-do items than with projects or headings."
     (message "[... Org Easy Templates]")
 
     ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
-    (mapc (lambda (asc)
-            (let ((org-sce-dc (downcase (nth 1 asc))))
-              (setf (nth 1 asc) org-sce-dc)))
+    (mapc #'(lambda (asc)
+              (let ((org-sce-dc (downcase (nth 1 asc))))
+                (setf (nth 1 asc) org-sce-dc)))
           org-structure-template-alist)
 
     (add-to-list 'org-structure-template-alist
@@ -6640,19 +6639,19 @@ this with to-do items than with projects or headings."
       (org-element-map tree
           '(code comment comment-block example-block fixed-width keyword link
             node-property plain-text verbatim)
-        (lambda (obj)
-          (cl-case (org-element-type obj)
-            ((code comment comment-block example-block fixed-width keyword
-              node-property verbatim)
-             (let ((value (org-element-property :value obj)))
-               (org-element-put-property
-                obj :value (replace-regexp-in-string "[[:alnum:]]" "x" value))))
-            (link
-             (unless (string= (org-element-property :type obj) "radio")
-               (org-element-put-property obj :raw-link "http://orgmode.org")))
-            (plain-text
-             (org-element-set-element
-              obj (replace-regexp-in-string "[[:alnum:]]" "x" obj)))))
+        #'(lambda (obj)
+            (cl-case (org-element-type obj)
+              ((code comment comment-block example-block fixed-width keyword
+                     node-property verbatim)
+               (let ((value (org-element-property :value obj)))
+                 (org-element-put-property
+                  obj :value (replace-regexp-in-string "[[:alnum:]]" "x" value))))
+              (link
+               (unless (string= (org-element-property :type obj) "radio")
+                 (org-element-put-property obj :raw-link "http://orgmode.org")))
+              (plain-text
+               (org-element-set-element
+                obj (replace-regexp-in-string "[[:alnum:]]" "x" obj)))))
         nil nil nil t)
       (let ((buffer (get-buffer-create "*Scrambled text*")))
         (with-current-buffer buffer
@@ -6693,15 +6692,15 @@ this with to-do items than with projects or headings."
           ;; (while (re-search-forward (concat ":" tag ":") nil t)
           ;; (delete-region (point-at-bol) (point-at-eol)))
           (org-map-entries
-           (lambda ()
-             (delete-region (point-at-bol) (point-at-eol)))
+           #'(lambda ()
+               (delete-region (point-at-bol) (point-at-eol)))
            (concat ":" tag ":"))))
       (when (eq org-export-current-backend 'html)
         ;; set custom css style class based on matched tag
         (let* ((match "Qn"))
           (org-map-entries
-           (lambda ()
-             (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
+           #'(lambda ()
+               (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
            match)))))
 
   (add-hook 'org-export-preprocess-hook #'leuven--org-export-preprocess-hook)
@@ -6738,8 +6737,8 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org-mime"
 
     (add-hook 'org-mode-hook
-              (lambda ()
-                (local-set-key (kbd "C-c m") #'org-mime-subtree)))
+              #'(lambda ()
+                  (local-set-key (kbd "C-c m") #'org-mime-subtree)))
 
     (defun leuven-mail-subtree ()
       (interactive)
@@ -6747,14 +6746,14 @@ this with to-do items than with projects or headings."
       (org-mime-subtree))
 
     (add-hook 'org-agenda-mode-hook
-              (lambda ()
-                (local-set-key (kbd "C-c m") #'leuven-mail-subtree)))
+              #'(lambda ()
+                  (local-set-key (kbd "C-c m") #'leuven-mail-subtree)))
 
     ;; Add a `mail_composed' property with the current time when
     ;; `org-mime-subtree' is called.
     (add-hook 'org-mime-send-subtree-hook
-              (lambda ()
-                (org-entry-put (point) "mail_composed" (current-time-string)))))
+              #'(lambda ()
+                  (org-entry-put (point) "mail_composed" (current-time-string)))))
 
 ;;** A.3 (info "(org)Adding hyperlink types")
 
@@ -6765,30 +6764,31 @@ this with to-do items than with projects or headings."
     ;; any LaTeX command.
     (org-add-link-type
      "latex" nil
-     (lambda (path desc format)
-       (cond
-        ((eq format 'html)
-         (format "<span class=\"%s\">%s</span>" path desc))
-        ((eq format 'latex)
-         (format "\\%s{%s}" path desc)))))
+     #'(lambda (path desc format)
+         (cond
+          ((eq format 'html)
+           (format "<span class=\"%s\">%s</span>" path desc))
+          ((eq format 'latex)
+           (format "\\%s{%s}" path desc)))))
 
     ;; Add background color by using custom links like [[bgcolor:red][Warning!]].
     (org-add-link-type
       "bgcolor" nil
-      (lambda (path desc format)
-       (cond
-        ((eq format 'html)
-         (format "<span style=\"background-color:%s;\">%s</span>" path desc))
-        ((eq format 'latex)
-         (format "\\colorbox{%s}{%s}" path desc))
-        (t
-         (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
+      #'(lambda (path desc format)
+          (cond
+           ((eq format 'html)
+            (format "<span style=\"background-color:%s;\">%s</span>" path desc))
+           ((eq format 'latex)
+            (format "\\colorbox{%s}{%s}" path desc))
+           (t
+            (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
 
   (defun leuven-org-send-all-buffer-tables ()
     "Export all Org tables of the LaTeX document to their corresponding LaTeX tables."
      (interactive)
      (org-table-map-tables
-        (lambda () (orgtbl-send-table 'maybe))))
+        #'(lambda ()
+            (orgtbl-send-table 'maybe))))
 
 ;;** A.6 (info "(org)Dynamic blocks")
 
@@ -6826,7 +6826,7 @@ this with to-do items than with projects or headings."
   ;;   (with-eval-after-load "org-effectiveness"
   ;;
   ;;     (add-hook 'org-mode-hook
-  ;;               (lambda ()
+  ;;               #'(lambda ()
   ;;                 (org-effectiveness-count-todo)
   ;;                 (sit-for 0.2)))))
 
@@ -6883,7 +6883,7 @@ this with to-do items than with projects or headings."
 
     ;; ;; LaTeX-sensitive spell checking
     ;; (add-hook 'tex-mode-hook
-    ;;           (lambda ()
+    ;;           #'(lambda ()
     ;;             (make-local-variable 'ispell-parser)
     ;;             (setq ispell-parser 'tex)))
 
@@ -7112,30 +7112,33 @@ this with to-do items than with projects or headings."
                                         ; Alias for `nxml-mode'.
 
   (with-eval-after-load "web-mode-autoloads"
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.aspx\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.axvw\\'" . web-mode)) ; ARCHIBUS view
-  )
+    (add-to-list 'auto-mode-alist '("\\.aspx\\'"   . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.axvw\\'"   . web-mode)) ; ARCHIBUS view.
+    (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsp\\'"    . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.x[ms]l\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . web-mode)))
 
   ;; Major mode for editing web templates.
   (with-eval-after-load "web-mode"
 
-    (define-key web-mode-map (kbd "M-<up>")   #'web-mode-element-previous)
-    (define-key web-mode-map (kbd "M-<down>") #'web-mode-element-next)
     (define-key web-mode-map (kbd "C--")      #'web-mode-fold-or-unfold)
     (define-key web-mode-map (kbd "C-+")      #'web-mode-fold-or-unfold)
     (define-key web-mode-map (kbd "C-M-u")    #'web-mode-element-parent)
     (define-key web-mode-map (kbd "C-M-d")    #'web-mode-element-child)
     (define-key web-mode-map (kbd "M-(")      #'web-mode-element-wrap)
 
-    (define-key web-mode-map (kbd "M-h")   #'web-mode-mark-and-expand)
-    (define-key web-mode-map (kbd "M-n")   #'web-mode-tag-next)
-    (define-key web-mode-map (kbd "M-p")   #'web-mode-tag-previous)
-    (define-key web-mode-map (kbd "C-M-p") #'web-mode-tag-previous)
-    (define-key web-mode-map (kbd "C-M-u") #'web-mode-element-parent)
-    (define-key web-mode-map (kbd "C-M-a") #'web-mode-element-previous)
-    (define-key web-mode-map (kbd "C-M-e") #'web-mode-element-end)
+    (define-key web-mode-map (kbd "M-h")      #'web-mode-mark-and-expand)
+
+    (define-key web-mode-map (kbd "M-n")      #'web-mode-tag-next)
+    (define-key web-mode-map (kbd "M-p")      #'web-mode-tag-previous)
+    (define-key web-mode-map (kbd "C-M-p")    #'web-mode-tag-previous)
+
+    (define-key web-mode-map (kbd "C-M-a")    #'web-mode-element-previous)
+    (define-key web-mode-map (kbd "M-<up>")   #'web-mode-element-sibling-previous)
+
+    (define-key web-mode-map (kbd "C-M-e")    #'web-mode-element-end)
+    (define-key web-mode-map (kbd "M-<down>") #'web-mode-element-sibling-next) ;; end or next? XXX
 
 ;; XXX What about Fold Tag Attributes?
 
@@ -7164,7 +7167,7 @@ this with to-do items than with projects or headings."
     (setq-default web-mode-attr-indent-offset
                   (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
 
-    ;; Code (javascript, php, etc.) indentation level.
+    ;; Code (JavaScript, php, etc.) indentation level.
     (setq-default web-mode-code-indent-offset
                   (if (and (boundp 'standard-indent) standard-indent) standard-indent 4))
                                         ; XXX Check out ab-pm-cf-wr-newother.axvw.
@@ -7256,7 +7259,7 @@ this with to-do items than with projects or headings."
   ;; TODO: Handle media queries
   ;; TODO: Handle wrapped lines
   ;; TODO: Ignore vendor prefixes
-  (defun sort-css-properties ()
+  (defun leuven-sort-css-properties ()
     "Sort CSS properties alphabetically."
     (interactive)
     (let ((start (search-forward "{"))
@@ -7288,11 +7291,11 @@ this with to-do items than with projects or headings."
 
   (add-hook 'prog-mode-hook
             #'(lambda ()
-              (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
-              (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
+                (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
                                         ; Sublime Text and js2-refactor.
-              (local-set-key (kbd "<M-S-down>") #'leuven-move-line-down)
-              (local-set-key (kbd "<M-S-up>") #'leuven-move-line-up)))
+                (local-set-key (kbd "<M-S-down>") #'leuven-move-line-down)
+                (local-set-key (kbd "<M-S-up>") #'leuven-move-line-up)))
                                         ; IntelliJ IDEA.
 
   (defun leuven-scroll-line-up ()
@@ -7306,9 +7309,9 @@ this with to-do items than with projects or headings."
     (scroll-down 1))
 
   (add-hook 'prog-mode-hook
-            (lambda ()
-              (local-set-key (kbd "<C-up>") #'leuven-scroll-line-up)
-              (local-set-key (kbd "<C-down>") #'leuven-scroll-line-down)))
+            #'(lambda ()
+                (local-set-key (kbd "<C-up>") #'leuven-scroll-line-up)
+                (local-set-key (kbd "<C-down>") #'leuven-scroll-line-down)))
                                         ; Sublime Text + SQL Management Studio
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
@@ -7320,7 +7323,14 @@ this with to-do items than with projects or headings."
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
 
   (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a
-  (global-set-key (kbd "<M-down>") #'end-of-defun) ; C-M-e
+
+  (defun leuven-beginning-of-next-defun ()
+    "Move forward to the beginning of next defun."
+    (interactive)
+    (let ((current-prefix-arg -1))
+      (call-interactively 'beginning-of-defun)))
+
+  (global-set-key (kbd "<M-down>") #'leuven-beginning-of-next-defun)
 
   ;; Making buffer indexes as menus.
   (try-require 'imenu)                  ; Awesome!
@@ -7388,9 +7398,9 @@ mouse-3: go to end") "]")))
     ;; Auto-indentation: automatically jump to the "correct" column when the RET
     ;; key is pressed while editing a program (act as if you pressed `C-j').
     (add-hook 'prog-mode-hook
-              (lambda ()
-                (local-set-key (kbd "<RET>") #'newline-and-indent)
-                (local-set-key (kbd "C-j") #'newline)))
+              #'(lambda ()
+                  (local-set-key (kbd "<RET>") #'newline-and-indent)
+                  (local-set-key (kbd "C-j") #'newline)))
 
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
@@ -7416,11 +7426,11 @@ mouse-3: go to end") "]")))
   ;; Check for unbalanced parentheses in the current buffer.
   (dolist (mode '(emacs-lisp clojure js2 js))
     (add-hook (intern (format "%s-mode-hook" mode))
-              (lambda ()
-                (add-hook 'after-save-hook 'check-parens nil t))))
+              #'(lambda ()
+                  (add-hook 'after-save-hook 'check-parens nil t))))
 
   ;; Move cursor to offscreen open-paren when close-paren is inserted.
-  (setq blink-matching-paren 'jump-offscreen) ; Doesn't work when
+  (setq blink-matching-paren 'jump-offscreen) ; XXX Doesn't work when
                                               ; `show-paren-mode' is enabled.
 
   ;; Highlight matching paren.
@@ -7431,27 +7441,14 @@ mouse-3: go to end") "]")))
 (setq show-paren-when-point-inside-paren t)
 (setq show-paren-when-point-in-periphery t)
 
-  ;; Highlight (nearest) surrounding parentheses (abd brackets).
-  (with-eval-after-load "highlight-parentheses"
-
-    (define-globalized-minor-mode global-highlight-parentheses-mode
-      highlight-parentheses-mode
-      (lambda ()
-        (highlight-parentheses-mode t)))
-
-    (setq hl-paren-colors '("red"))
-    (setq hl-paren-background-colors '("white"))
-
-    (global-highlight-parentheses-mode t))
-
   ;; Jump to matching parenthesis.
-  (defun leuven-match-paren (arg)
+  (defun leuven-goto-matching-paren (arg)
     "Go to the matching parenthesis, if on a parenthesis."
     (interactive "p")
     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
           ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
 
-  (global-set-key (kbd "C-)") #'leuven-match-paren)
+  (global-set-key (kbd "C-)") #'leuven-goto-matching-paren)
 
   ;; Enable automatic parens pairing (Electric Pair mode).
   (electric-pair-mode 1)
@@ -7556,22 +7553,22 @@ mouse-3: go to end") "]")))
       (save-excursion (hs-show-block)))
 
     ;; Change those really awkward key bindings with `@' in the middle.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>") #'hs-hide-block)
-    (define-key hs-minor-mode-map (kbd "C-c <left>") #'hs-hide-block)
-    (define-key hs-minor-mode-map (kbd "C--") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C-c <left>")        #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C--")               #'hs-hide-block)
                                         ; `C-c @ C-h' (collapse current fold)
 
-    (define-key hs-minor-mode-map (kbd "<C-kp-add>") #'hs-show-block)
-    (define-key hs-minor-mode-map (kbd "C-c <right>") #'hs-show-block)
-    (define-key hs-minor-mode-map (kbd "C-+") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-c <right>")       #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-+")               #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold)
 
     (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
-    (define-key hs-minor-mode-map (kbd "C-c <up>") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "C-c <up>")          #'hs-hide-all)
                                         ; `C-c @ C-M-h' (collapse all folds)
 
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>") #'hs-show-all)
-    (define-key hs-minor-mode-map (kbd "C-c <down>") #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "C-c <down>")        #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds)
 
     (defcustom hs-face 'hs-face
@@ -7602,9 +7599,9 @@ mouse-3: go to end") "]")))
 
   (leuven--section "26.9 (emacs)Glasses minor mode")
 
-  (add-hook 'ess-mode-hook #'glasses-mode)
+  (add-hook 'ess-mode-hook          #'glasses-mode)
   (add-hook 'inferior-ess-mode-hook #'glasses-mode)
-  (add-hook 'java-mode-hook #'glasses-mode)
+  (add-hook 'java-mode-hook         #'glasses-mode)
 
   (with-eval-after-load "glasses"
 
@@ -7905,7 +7902,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
 
     ;; (add-hook 'js2-mode-hook
-    ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
+    ;;           #'(lambda () (flycheck-select-checker "javascript-eslint")))
 
   (add-hook 'js2-mode-hook
             (defun leuven--js2-mode-setup ()
@@ -7948,7 +7945,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 ;;       "<f1> s" 'jquery-doc)))
 
     (when (executable-find "tern")
-      (add-hook 'js-mode-hook #'tern-mode)
+      (add-hook 'js-mode-hook  #'tern-mode)
       (add-hook 'js2-mode-hook #'tern-mode)
       (add-hook 'web-mode-hook #'tern-mode))
 
@@ -8204,7 +8201,8 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
                                          'leuven--ant-command-history))))))
 
   (add-hook 'java-mode-hook
-            (lambda () (local-set-key "<f9>" 'leuven-ant)))
+            #'(lambda ()
+                (local-set-key "<f9>" 'leuven-ant)))
 
   ;; Use Java for class files decompiled with Jad.
   (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
@@ -8345,7 +8343,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;; Modern on-the-fly syntax checking.
   (with-eval-after-load "flycheck-autoloads"
 
-    ;; Enable Flycheck mode in all programming modes.
+    ;; Enable Flycheck mode in all programming modes. XXX Should not in Java?
     (add-hook 'prog-mode-hook #'flycheck-mode)
 
     (add-hook 'LaTeX-mode-hook #'flycheck-mode)
@@ -8441,9 +8439,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     "If you're saving an elisp file, likely the .elc is no longer valid."
     (make-local-variable 'after-save-hook)
     (add-hook 'after-save-hook
-              (lambda ()
-                (if (file-exists-p (concat buffer-file-name "c"))
-                    (delete-file (concat buffer-file-name "c"))))))
+              #'(lambda ()
+                  (if (file-exists-p (concat buffer-file-name "c"))
+                      (delete-file (concat buffer-file-name "c"))))))
 
   (add-hook 'emacs-lisp-mode-hook #'remove-elc-on-save)
 
@@ -8535,8 +8533,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Turn off save-place.
     (add-hook 'git-commit-setup-hook
-              (lambda ()
-                (toggle-save-place 0))))
+              #'(lambda ()
+                  (toggle-save-place 0))))
 
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
 
@@ -8587,14 +8585,14 @@ a clean buffer we're an order of magnitude laxer about checking."
   (global-set-key (kbd "<C-f9>") #'leuven-vc-jump)
 
   (add-hook 'vc-dir-mode-hook
-            (lambda ()
-              ;; Hide up-to-date and unregistered files.
-              (define-key vc-dir-mode-map
-                (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
-              (define-key vc-dir-mode-map
-                (kbd "E") #'vc-ediff)
-              (define-key vc-dir-mode-map
-                (kbd "#") #'vc-ediff-ignore-whitespace)
+            #'(lambda ()
+                ;; Hide up-to-date and unregistered files.
+                (define-key vc-dir-mode-map
+                  (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
+                (define-key vc-dir-mode-map
+                  (kbd "E") #'vc-ediff)
+                (define-key vc-dir-mode-map
+                  (kbd "#") #'vc-ediff-ignore-whitespace)
                                         ; ediff-windows-wordwise?
               ))
 
@@ -8671,16 +8669,16 @@ a clean buffer we're an order of magnitude laxer about checking."
     (interactive "P")
     (call-interactively
      (cond (arg
-            (lambda ()
-              (interactive)
-              (vc-diff nil)))
+            #'(lambda ()
+                (interactive)
+                (vc-diff nil)))
            (t
-            (lambda ()
-              (interactive)
-              (leuven--ediff-revision (buffer-file-name)
-                                      (read-string "revision? "
-                                                   "HEAD" nil "HEAD")
-                                      ""))))))
+            #'(lambda ()
+                (interactive)
+                (leuven--ediff-revision (buffer-file-name)
+                                        (read-string "revision? "
+                                                     "HEAD" nil "HEAD")
+                                        ""))))))
 
   (define-key vc-prefix-map (kbd "=") #'leuven-vc-diff)
 
@@ -8823,7 +8821,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             ;; Enable Semantic-Highlight-Func mode.
             global-semantic-highlight-func-mode ; [excessive-code-helpers]
 
-            ;; Turn on all active decorations.
+            ;; Turn on all active decorations.  Show Method Separators.
             global-semantic-decoration-mode ; [gaudy-code-helpers]
             ))
 
@@ -9013,12 +9011,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Don't expand when you are typing in a string or comment.
     (add-hook 'prog-mode-hook
-              (lambda ()
-                (setq yas-buffer-local-condition
-                      '(if (nth 8 (syntax-ppss))
+              #'(lambda ()
+                  (setq yas-buffer-local-condition
+                        '(if (nth 8 (syntax-ppss))
                                         ; Non-nil if in a string or comment.
-                           '(require-snippet-condition . force-in-comment)
-                         t))))
+                             '(require-snippet-condition . force-in-comment)
+                           t))))
 
     ;; UI for selecting snippet when there are multiple candidates.
     (setq yas-prompt-functions '(yas-dropdown-prompt))
@@ -9059,8 +9057,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (global-set-key [mouse-3] #'leuven-popup-contextual-menu)
 
     (add-hook 'snippet-mode-hook
-              (lambda ()
-                (setq require-final-newline nil)))
+              #'(lambda ()
+                  (setq require-final-newline nil)))
 
     ;; ;; Make the "yas-minor-mode"'s expansion behavior to take input word
     ;; ;; including hyphen.
@@ -9347,9 +9345,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     )
 
   (add-hook 'js2-mode-hook
-            (lambda ()
-              (set (make-local-variable 'company-backends)
-                   '((company-dabbrev-code company-yasnippet)))))
+            #'(lambda ()
+                (set (make-local-variable 'company-backends)
+                     '((company-dabbrev-code company-yasnippet)))))
 
   (when (executable-find "tern")
 
@@ -9465,8 +9463,8 @@ a clean buffer we're an order of magnitude laxer about checking."
       Windows tool."
         (interactive "P")
         (mapcar
-         (lambda (file)
-           (w32-shell-execute "open" (convert-standard-filename file)))
+         #'(lambda (file)
+             (w32-shell-execute "open" (convert-standard-filename file)))
          (dired-get-marked-files nil arg)))
 
       ;; ;; Bind it to `E' in Dired mode.
@@ -9475,11 +9473,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (with-eval-after-load "dired"
       (define-key dired-mode-map (kbd "C-c v")
-         (lambda ()
-      "Ask a WWW browser to load ARCHIBUS View file."
-           (interactive)
-           (let ((archibus-prefix "http://localhost:8080/archibus/"))
-             (browse-url (concat archibus-prefix (dired-get-filename 'no-dir t)))))))
+         #'(lambda ()
+             "Ask a WWW browser to load ARCHIBUS View file."
+             (interactive)
+             (let ((archibus-prefix "http://localhost:8080/archibus/"))
+               (browse-url (concat archibus-prefix (dired-get-filename 'no-dir t)))))))
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()
@@ -9625,9 +9623,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Fix foolish calendar-mode scrolling after loading `calendar.el'.
   (add-hook 'calendar-load-hook
-            (lambda ()
-              (define-key calendar-mode-map (kbd ">") #'calendar-scroll-left)
-              (define-key calendar-mode-map (kbd "<") #'calendar-scroll-right)))
+            #'(lambda ()
+                (define-key calendar-mode-map (kbd ">") #'calendar-scroll-left)
+                (define-key calendar-mode-map (kbd "<") #'calendar-scroll-right)))
 
 ;;** 31.7 Times of (info "(emacs)Sunrise/Sunset")
 
@@ -9722,7 +9720,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; ;; Add today's appointments (found in `org-agenda-files') each time
       ;; ;; such a file is saved.
       ;; (add-hook 'after-save-hook          ; VERY TIME CONSUMING (~ 30 s) at each save...
-      ;;           (lambda ()
+      ;;           #'(lambda ()
       ;;             (when (and (derived-mode-p 'org-mode) ; ... of an Org
       ;;                        (org-agenda-file-p)) ; agenda file...
       ;;               (org-agenda-to-appt))))
@@ -9833,9 +9831,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 (leuven--chapter leuven-load-chapter-34-gnus "34 Gnus"
 
   (global-set-key (kbd "C-c n")
-    (lambda ()
-      (interactive)
-      (switch-or-start 'gnus "*Group*")))
+    #'(lambda ()
+        (interactive)
+        (switch-or-start 'gnus "*Group*")))
 
   ;; Directory beneath which additional per-user Gnus-specific files are placed.
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
@@ -9885,8 +9883,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Ensure `~/.bbdb' never becomes non utf-8 again (it is defined with
     ;; `defconst', so it is reset whenever `bbdb.el' is loaded).
     (add-hook 'bbdb-load-hook
-              (lambda ()
-                (setq bbdb-file-coding-system 'utf-8)))
+              #'(lambda ()
+                  (setq bbdb-file-coding-system 'utf-8)))
 
     ;; Enable the various package-specific BBDB functions.
     (bbdb-initialize 'gnus 'message)
@@ -10175,10 +10173,10 @@ a clean buffer we're an order of magnitude laxer about checking."
     (rename-buffer (concat "*shell " default-directory "*")))
 
   (add-hook 'shell-mode-hook
-            (lambda ()
-              (leuven--rename-buffer-to-curdir)
-              (add-hook 'comint-output-filter-functions
-                        #'leuven--rename-buffer-to-curdir nil t)))
+            #'(lambda ()
+                (leuven--rename-buffer-to-curdir)
+                (add-hook 'comint-output-filter-functions
+                          #'leuven--rename-buffer-to-curdir nil t)))
                                         ; Local to Shell comint.
 
 ;;** 38.7 Options
@@ -10214,9 +10212,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Toggle to and from the `*shell*' buffer.
   (global-set-key (kbd "C-!")
-    (lambda ()
-      (interactive)
-      (switch-or-start 'shell "*shell*")))
+    #'(lambda ()
+        (interactive)
+        (switch-or-start 'shell "*shell*")))
 
 ;;** 38.10 Remote Host Shell
 
@@ -10819,7 +10817,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Define "-" as part of a word.
   ;; (add-hook 'emacs-lisp-mode-hook
-  ;;           (lambda ()
+  ;;           #'(lambda ()
   ;;             (modify-syntax-entry ?- "w")))
 
 )                                       ; Chapter 49 ends here.
@@ -10894,8 +10892,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 (when leuven-verbose-loading
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar (lambda (el)                  ; FIXME Use `mapc' or `dolist'.
-            (message el))
+  (mapcar #'(lambda (el)                  ; FIXME Use `mapc' or `dolist'.
+              (message el))
           (nreverse leuven--load-times-list))
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
