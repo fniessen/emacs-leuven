@@ -1188,7 +1188,7 @@ Visual feedback on some operations (~undo~, ~yank~, etc.).
     (define-key undo-tree-map (kbd "C-/") nil)
 
     ;; (defalias 'redo 'undo-tree-redo)
-    (global-set-key (kbd "C-S-z") #'undo-tree-redo)
+    (global-set-key (kbd "C-S-z")   #'undo-tree-redo)
     (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
 #+end_src
 
@@ -1292,7 +1292,7 @@ functions and documentation.
      Look up documentation on broad Emacs Lisp topics (in the indices of the
      Emacs Lisp Reference Manual).
 
-- ~info-lookup-symbol~ (~C-h S~, or ~C-f1~ in Emacs-Leuven) ::
+- ~info-lookup-symbol~ (~C-h S~, or ~C-<F1>~ in Emacs-Leuven) ::
      *Bring the relevant section from the manual, which describes the topic in
      more detail.*
 
@@ -1498,7 +1498,10 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
 
   ;; Decode and browse Unix man-pages "W.o. (without) Man".
   (with-eval-after-load "woman"
-    (defalias 'man 'woman))
+    (defalias 'man 'woman)
+
+    ;; WoMan adds a Contents menu to the menubar.
+    (setq woman-imenu t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1536,43 +1539,51 @@ afterwards.
 So, after using ~C-s~ to go somewhere, you can easily jump back again.
 #+end_tip
 
-Visual navigation through mark rings.
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "back-button-autoloads"
-    (back-button-mode 1)
-
-    (global-set-key (kbd "<M-left>") #'back-button-local-backward) ; Vs left-word. XXX
-    (global-set-key (kbd "<C-M-left>") #'back-button-global-backward) ; IntelliJ IDEA.
-
-    (global-set-key (kbd "<M-right>") #'back-button-local-forward) ; Vs left-word. XXX
-    (global-set-key (kbd "<C-M-right>") #'back-button-global-forward)) ; IntelliJ IDEA.
-#+end_src
-
-- C-x C-<left> (or C-M-left in Emacs Leuven) ::
-     Go back in ~global-mark-ring~.
-
-- C-x C-<right> (or C-M-right in Emacs Leuven) ::
-     Go forward in ~global-mark-ring~.
-
-- C-x <left> (or M-left in Emacs Leuven) ::
-     Go back in (buffer-local) ~mark-ring~.
-
-- C-x <right> (or M-right in Emacs Leuven) ::
-     Go forward in (buffer-local) ~mark-ring~.
-
-When the ~smartrep~ package is installed, the ~C-x~ prefix need not be used for
-consecutive ~back-button~ commands.
+*** Navigating to Previous Change
 
 *Go to* the *place* where you *last changed* something ("last edit location"):
 
 #+begin_src emacs-lisp
-  ;; Goto last (buffer-local) change.
+  ;; Go to last (buffer-local) edit location.
   (with-eval-after-load "goto-chg-autoloads"
     (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 #+end_src
 
 It moves point through ~buffer-undo-list~ positions.
+
+*** Navigating to Navigated Items
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "back-button-autoloads"
+    (back-button-mode 1)
+#+end_src
+
+You can go back and forth along the items that have been marked.
+
+- C-x <left> ::
+     Go back in buffer-local ~mark-ring~.
+
+- C-x <right> ::
+     Go forward in buffer-local ~mark-ring~.
+
+- C-x C-<left> (or <C-M-left> in Emacs Leuven) ::
+     Go back in ~global-mark-ring~.
+
+- C-x C-<right> (or <C-M-right> in Emacs Leuven) ::
+     Go forward in ~global-mark-ring~.
+
+When the ~smartrep~ package is installed, the ~C-x~ prefix need not be used for
+consecutive ~back-button~ commands.
+
+You can also use keyboard shortcuts ~C-M-left~, or ~C-M-right~:
+
+#+begin_src emacs-lisp
+    ;; Navigate backward.
+    (global-set-key (kbd "<C-M-left>")  #'back-button-global-backward) ; IntelliJ IDEA.
+
+    ;; Navigate forward.
+    (global-set-key (kbd "<C-M-right>") #'back-button-global-forward)) ; IntelliJ IDEA.
+#+end_src
 
 ** Commands to Mark Textual Objects
 
@@ -1651,7 +1662,9 @@ Done.
     (global-set-key (kbd "C-M->") #'mc/skip-to-next-like-this)
     (global-set-key (kbd "C-M-<") #'mc/skip-to-previous-like-this)
 
-    (global-set-key (kbd "C-S-<mouse-1>") #'mc/add-cursor-on-click)
+    ;; Add or remove caret.
+    (global-set-key (kbd "<C-S-mouse-1>") #'mc/add-cursor-on-click)
+    (global-set-key (kbd "<M-mouse-1>")   #'mc/add-cursor-on-click) ;; XXX DOES NOT WORK.
 #+end_src
 
 *** Find All
@@ -1957,11 +1970,11 @@ highlighting.  Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
 *Registers:*
 
 - ~C-x r SPC~ ::
-     ~point-to-register~.  Type any character to specify a register when
-     prompted.
+     ~point-to-register~.  Store point in a register.  Type any character to
+     specify a register when prompted.
 
 - ~C-x r j~ ::
-     ~jump-to-register~.
+     ~jump-to-register~.  Jump to a point stored in a register.
 
 Setup registers for files I commonly edit.
 
@@ -1979,16 +1992,23 @@ Setup registers for files I commonly edit.
 *** Bookmark
 
 If you need to *move to somewhere in your document* and want a *quick way to
-return*, you can create a *bookmark WITH MNEMONICS* on the current line by pressing
-~C-x r m RET~ or ~C-x r m BOOKMARK RET~ (~M-x bookmark-set~).
+return*, you can create a *bookmark WITH MNEMONIC* on the current line.
 
 #+begin_note
-We bookmarks positions, not (just) lines!
+Emacs bookmarks positions, not (just) lines!
 #+end_note
 
-When you want to return to a bookmark, you can press ~C-x r b~
-(~M-x bookmark-jump~).  You'll be prompted for the bookmark name, and it will open
-that file or directory.
+*Bookmarks:*
+
+- C-x r m ::
+     ~C-x r m RET~ or ~C-x r m BOOKMARK RET~ (~M-x bookmark-set~).  Save a named
+     bookmark.
+
+- C-x r b ::
+     ~bookmark-jump~.  Jump to a named bookmark.
+
+- C-x r l ::
+     List all bookmarks.
 
 #+begin_note
 Bookmarks are *persistent* across sessions and they have *names*; not /markers/.
@@ -2038,24 +2058,25 @@ With *Bookmark+* (which offers quite a bit more than =bm.el=):
 
 Key shortcuts:
 
-| Command              | Shortcut (Sublime Text) |
-|----------------------+-------------------------|
-| Toggle bookmark      | C-F2                    |
-| Next bookmark        | F2                      |
-| Previous bookmark    | S-F2                    |
-| Clear bookmarks      | C-S-F2                  |
-| Select all bookmarks | M-F2                    |
+| Command                       | Sublime Text | IntelliJ | Atom   | Webstorm |
+|-------------------------------+--------------+----------+--------+----------|
+| View All bookmarks            | M-F2         | S-F11    | C-F2   | S-F11    |
+| Toggle bookmark               | C-F2         | F11      | C-M-F2 | F11      |
+| Toggle bookmark with mnemonic |              | C-F11    |        | C-S-F11  |
+| Jump to Next bookmark         | F2           | -        | F2     |          |
+| Jump to Previous bookmark     | S-F2         | -        | S-F2   |          |
+| Clear All Bookmarks           | C-S-F2       |          |        |          |
 
-- ~C-x p RET~ (~C-F2~ in Emacs-Leuven, Sublime Text and TextMate) ::
+- ~C-x p RET~ (~C-<F2>~ in Emacs-Leuven, Sublime Text and TextMate) ::
      *Toggle* (*set* or delete) an *ANONYMOUS bookmark* at point.
 
 - M-x bmkp-set-autonamed-regexp-buffer ::
      Set *ANONYMOUS bookmarks* at matches for REGEXP in the buffer.
 
-- ~C-x p C-down~ (~S-F2~ in Emacs-Leuven, ~F2~ in Sublime Text and TextMate) ::
+- ~C-x p C-down~ (~S-<F2>~ in Emacs-Leuven, ~F2~ in Sublime Text and TextMate) ::
      Navigate to the *next bookmark* within the current buffer.
 
-- ~C-x p C-up~ (~S-F2~ in Sublime Text and TextMate) ::
+- ~C-x p C-up~ (~S-<F2>~ in Sublime Text and TextMate) ::
      Navigate to the *previous bookmark* within the current buffer.
 
 - ~C-x j h~ ::
@@ -2067,7 +2088,7 @@ Key shortcuts:
 - C-x p DEL ::
      *Delete bookmark* (*ANONYMOUS* or *WITH MNEMONICS*) *at point*.
 
-- ~C-S-F2~ (in Emacs-Leuven) ::
+- ~C-S-<F2>~ (in Emacs-Leuven) ::
      *Delete all ANONYMOUS bookmarks* for the current file/buffer.
 
 Buffer-local nature of the bookmarks.
@@ -2084,13 +2105,10 @@ Annotating bookmarks.
       (global-set-key (kbd "<S-f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
 
       ;; Delete all ANONYMOUS bookmarks in a buffer.
-      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer)
-
-      ;; Show the bookmark list just for bookmarks for the current file/buffer.
-      (global-set-key (kbd "<M-f2>") #'bmkp-this-file/buffer-bmenu-list))
+      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
 
     (when (fboundp 'helm-bookmarks)
-      ;; Show all bookmarks.
+      ;; View all bookmarks.
       (global-set-key (kbd "<M-f2>") #'helm-bookmarks))
 
     (with-eval-after-load "bookmark+"
@@ -2126,7 +2144,6 @@ Annotating bookmarks.
       (setq bmkp-last-as-first-bookmark-file nil)
 
       ;; Name ANONYMOUS bookmarks with buffer name and line number.
-      ;; (setq bmkp-autoname-format "^%B:[0-9]+ (%s)")
       (setq bmkp-autoname-format "^%B:[0-9]+: %s")
 
       (setq bmkp-autoname-bookmark-function #'leuven-bmkp-autoname-line)
@@ -2148,8 +2165,8 @@ jumping onto them...
 
 #+begin_src emacs-lisp
     (with-eval-after-load "helm-autoloads"
+      ;; Helm for bookmarks (filtered by category).
       (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks))
-                                        ; Instead of `bookmark-jump'.
 #+end_src
 
 ** Avy (alternative to Ace Jump)
@@ -2165,7 +2182,7 @@ jumping onto them...
 
     ;; Jump during Isearch to one of the current candidates.
     (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
-    (define-key isearch-mode-map (kbd "@") 'avy-isearch))
+    (define-key isearch-mode-map (kbd "@")   'avy-isearch))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2553,15 +2570,15 @@ utility...
 Jump between changes:
 
 #+begin_src emacs-lisp
-    ;; Jump to next hunk (also on `C-x v ]').
-    (define-key diff-hl-mode-map (kbd "C-x v >") #'diff-hl-next-hunk)
-    (define-key diff-hl-mode-map (kbd "M-g <down>") #'diff-hl-next-hunk) ;; Next Change.
+    ;; Move to Next Change (also on `C-x v ]').
+    (define-key diff-hl-mode-map (kbd "C-x v >")      #'diff-hl-next-hunk)
+    (define-key diff-hl-mode-map (kbd "M-g <down>")   #'diff-hl-next-hunk)
     (define-key diff-hl-mode-map (kbd "<C-M-S-down>") #'diff-hl-next-hunk) ;; IntelliJ IDEA.
 
-    ;; Jump to previous hunk (also on `C-x v [').
-    (define-key diff-hl-mode-map (kbd "C-x v <") #'diff-hl-previous-hunk)
-    (define-key diff-hl-mode-map (kbd "M-g <up>") #'diff-hl-previous-hunk) ;; Previous Change.
-    (define-key diff-hl-mode-map (kbd "<C-M-S-up>") #'diff-hl-next-hunk) ;; IntelliJ IDEA.
+    ;; Move to Previous Change (also on `C-x v [').
+    (define-key diff-hl-mode-map (kbd "C-x v <")      #'diff-hl-previous-hunk)
+    (define-key diff-hl-mode-map (kbd "M-g <up>")     #'diff-hl-previous-hunk)
+    (define-key diff-hl-mode-map (kbd "<C-M-S-up>")   #'diff-hl-previous-hunk) ;; IntelliJ IDEA.
 #+end_src
 
 Act on changes:
@@ -2682,7 +2699,7 @@ characters over the default mechanism of ~nobreak-char-display~ and
 
   (with-eval-after-load "whitespace"
 
-    ;; Which kind of blank is visualized.
+    ;; Which kind of blank is visualized (Show Invisibles).
     (setq whitespace-style
           '(face
             trailing
@@ -3221,7 +3238,7 @@ the user see truly invisible matches before replacing them.
     (global-anzu-mode 1)
 
     ;; Override binding for `query-replace'.
-    (global-set-key (kbd "M-%") #'anzu-query-replace)
+    (global-set-key (kbd "M-%")   #'anzu-query-replace)
     (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
 
     ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
@@ -3667,20 +3684,20 @@ https://github.com/Silex/elmacro.
 
 ** Basic Use
 
-- ~<S-f8>~ ::
+- ~S-<F8>~ ::
      Start recording your keyboard macro.
 
-- ~<S-f8>~ again ::
+- ~S-<F8>~ again ::
      Stop recording it.
 
-- ~<f8>~ ::
+- ~<F8>~ ::
      Call the keyboard macro.
 
-If you want to check the result each time before repeating, type ~<f8> e e...~.
+If you want to check the result each time before repeating, type ~<F8> e e...~.
 
-If you want to repeat only N times, type ~C-u N <f8>~.
+If you want to repeat only N times, type ~C-u N <F8>~.
 
-If you want to repeat forever or until error, type ~C-u 0 <f8>~.
+If you want to repeat forever or until error, type ~C-u 0 <F8>~.
 
 #+begin_src emacs-lisp
 ;;** 17.1 (info "(emacs)Basic Keyboard Macro") Use
@@ -3708,7 +3725,7 @@ If you want to repeat forever or until error, type ~C-u 0 <f8>~.
 
 ** Naming and Saving Keyboard Macros
 
-- ~<C-f8>~ ::
+- ~C-<F8>~ ::
      Give the keyboard macro a name (to invoke it under that name).
 
 Assign the last macro to a free key binding of your choice with
@@ -4392,7 +4409,7 @@ Hotkeys supported:
 - ~D~ key to delete current file or directory
 - ~v~ key to quick view the current file
 - ~r~ initiates the rescan/refresh of current file or subdirectory
-- ~F5~ forces the full rescan.
+- ~<F5>~ forces the full rescan.
 
 ** Miscellaneous File Operations
 
@@ -4830,9 +4847,9 @@ to happen.  Now look for substitute for ~TAB~.  Something not ~TAB~ can be ~C-z~
 
 #+begin_src emacs-lisp :tangle no
 (define-key helm-find-files-map (kbd "<C-tab>") #'helm-select-action)
-(define-key helm-find-files-map (kbd "<SPC>") #'helm-select-action)
-(define-key helm-find-files-map (kbd "<RET>") #'helm-confirm-and-exit-minibuffer)
-(define-key helm-find-files-map (kbd "^") #'helm-find-files-up-one-level)
+(define-key helm-find-files-map (kbd "<SPC>")   #'helm-select-action)
+(define-key helm-find-files-map (kbd "<RET>")   #'helm-confirm-and-exit-minibuffer)
+(define-key helm-find-files-map (kbd "^")       #'helm-find-files-up-one-level)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -4913,7 +4930,7 @@ XXX Look at helm-dictionary.
 #+begin_src emacs-lisp
     ;; Better version of `occur'.
 ;;    (global-set-key [remap occur] #'helm-occur) ; helm-regexp.el
-    (global-set-key (kbd "C-o") #'helm-occur) ; helm-regexp.el
+    (global-set-key (kbd "C-o")   #'helm-occur) ; helm-regexp.el
     (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
 #+end_src
 
@@ -5001,7 +5018,7 @@ before running helm-flycheck"
     (if flycheck-mode
         (call-interactively 'helm-flycheck)
       (flycheck-mode)
-      (message "[Just turned flycheck on, wait a bit for errors to appear ...]")
+      (message "[Just turned FlyCheck on, wait a bit for errors to appear...]")
       (run-with-idle-timer 1 nil #'helm-flycheck))))
 #+end_src
 
@@ -5014,17 +5031,19 @@ before running helm-flycheck"
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Rebind TAB to do persistent action.
+    ;;! Rebind TAB to do persistent action
     (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
-    (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
+    (define-key helm-map (kbd "C-i")   #'helm-execute-persistent-action)
                                         ; Make TAB works in terminal.
 
     ;; List available actions using C-z.
-    (define-key helm-map (kbd "C-z") #'helm-select-action)
+    ;; (define-key helm-map (kbd "C-z")       #'helm-select-action)
+    (define-key helm-map (kbd "<backtab>") #'helm-select-action)
 #+end_src
 
 #+begin_src emacs-lisp
     (define-key helm-map (kbd "C-M-n") #'helm-next-source)
+
     (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
 
     ;; @ reserved for searching inside buffers! (See C-h m)
@@ -5070,31 +5089,6 @@ before running helm-flycheck"
     ;; ;; `completing-read' or `read-file-name' and friends).
     ;; (helm-mode 1)
     )
-#+end_src
-
-#+begin_src emacs-lisp
-(eval-after-load 'helm
-  '(progn
-     (set-face-attribute 'helm-source-header nil :height 1.0 :background nil)
-     (helm-autoresize-mode)
-     (defvar helm-source-header-default-background (face-attribute 'helm-source-header :background))
-     (defvar helm-source-header-default-foreground (face-attribute 'helm-source-header :foreground))
-     (defvar helm-source-header-default-box (face-attribute 'helm-source-header :box))
-     (defun helm-toggle-header-line ()
-       (if (> (length helm-sources) 1)
-           (set-face-attribute 'helm-source-header
-                               nil
-                               :foreground helm-source-header-default-foreground
-                               :background helm-source-header-default-background
-                               :box helm-source-header-default-box
-                               :height 1.0)
-         (set-face-attribute 'helm-source-header
-                             nil
-                             :foreground (face-attribute 'helm-selection :background)
-                             :background (face-attribute 'helm-selection :background)
-                             :box nil
-                             :height 0.1)))
-     (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)))
 #+end_src
 
 **** Helm find files
@@ -5174,7 +5168,7 @@ make your life much easier with million Emacs keys.
     (setq helm-descbinds-window-style 'split-window))
 #+end_src
 
-**** Grep (Find in project)
+**** Grep (Find in Project)
 
 Launchable from ~current-buffer~ or from ~helm-find-files~.
 
@@ -5187,12 +5181,10 @@ Launchable from ~current-buffer~ or from ~helm-find-files~.
       (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
                                         ; Or `C-c p s s' (Helm-projectile ag?)
       (setq helm-grep-ag-command "rg --color=always --colors 'match:fg:black' --colors 'match:bg:yellow' --smart-case --no-heading --line-number %s %s %s")
-      (setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'"))
+      (setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'")) ; #CDCD00
 
       )
 #+end_src
-
-Keymap:
 
 ~helm-ag-map~ and ~helm-do-ag-map~ are inherited by ~helm-map~.
 
@@ -5223,16 +5215,14 @@ or if you use ~helm-do-ag~, you can use ~C-u~ prefix for specifying extension.
       (global-set-key (kbd "C-c s") #'helm-ag)
       (global-set-key (kbd "M-s s") #'helm-ag)
 
-      ;; Search with Ag from project root.
-      (global-set-key (kbd "C-S-r") #'helm-do-ag-project-root)
-      (global-set-key (kbd "C-S-f") #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
+      ;; Find in Project with Ag (from project root).
+      (global-set-key (kbd "C-S-f")   #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
       (global-set-key (kbd "C-M-S-f") #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
 
       ;; ;; Search with Ag.  Ask for directory first.
       ;; (global-set-key (kbd "C-S-d") 'helm-do-ag)
 
       ;; Search with Ag this file (like Swoop).
-      (global-set-key (kbd "C-S-f") #'helm-ag-this-file) ;; Find in current file.
       (global-set-key (kbd "M-g >") #'helm-ag-this-file)
 
       ;; Search with Ag in current projectile project.
@@ -5370,7 +5360,7 @@ you were.
   (with-eval-after-load "helm-ls-git-autoloads"
 
     ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
-    (global-set-key (kbd "M-+") #'helm-ls-git-ls)
+    (global-set-key (kbd "M-+")    #'helm-ls-git-ls)
     (global-set-key (kbd "<S-f3>") #'helm-ls-git-ls)
 
     ;; Browse files and see status of project with its VCS.
@@ -5510,7 +5500,7 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
   (with-eval-after-load "helm-swoop-autoloads"
 
     ;; Better version of `(helm-)occur'.
-    (global-set-key (kbd "C-o") #'helm-swoop)
+    (global-set-key (kbd "C-o")   #'helm-swoop)
     (global-set-key (kbd "M-s o") #'helm-swoop)
     ;; (global-set-key (kbd "M-i") #'helm-swoop)
     ;; (global-set-key (kbd "M-I") #'helm-swoop-back-to-last-point)
@@ -5551,45 +5541,6 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
 
     ;; Don't save each buffer you edit when editing is complete.
     (setq helm-multi-swoop-edit-save nil))
-#+end_src
-
-#+begin_src emacs-lisp
-(defun leuven--helm-should-use-variable-pitch? (sources)
-  "Determine whether all of SOURCES should use variable-pitch
-font (fixed-pitch is still preferable)."
-  (every #'(lambda (x)
-           (member x '(;; helm-c-source-ffap-line
-                       ;; helm-c-source-ffap-guesser
-                       ;; helm-c-source-buffers-list
-                       helm-source-bookmarks
-                       ;; helm-source-recentf
-                       ;; helm-source-file-cache
-                       ;; helm-source-filelist
-                       ;; helm-source-files-in-current-dir+
-                       ;; helm-source-files-in-all-dired
-                       ;; helm-source-locate
-                       helm-source-emacs-process
-                       helm-source-org-headline
-                       helm-source-emms-streams
-                       helm-source-emms-files
-                       helm-source-emms-dired
-                       ;; helm-source-google-suggest
-                       helm-source-apt
-                       ;; helm-source-helm-commands
-                       )))
-         sources))
-
-(defun leuven--helm-tweak-appearance ()
-  "Use `variable-pitch' font for helm if it's suitable for
-all of the sources."
-  (with-current-buffer helm-buffer
-    (when (leuven--helm-should-use-variable-pitch? helm-sources)
-      (variable-pitch-mode +1))
-    (setq line-spacing 0.2)
-    ;; (text-scale-increase 1)
-    ))
-
-;; (add-hook 'helm-after-initialize-hook 'leuven--helm-tweak-appearance)
 #+end_src
 
 *** Image mode
@@ -5844,10 +5795,10 @@ two (or more) windows displayed, act like ~C-x 1~.
   nothing to do.
 
   Do you want to see the last file you were visiting?  Simply
-  bury the current buffer (f12).
+  bury the current buffer (M-<F12>).
 
   Do you want to go back to the first window?  Switch to
-  it (f6)."
+  it (<F6>)."
     (interactive)
     (cond ((one-window-p t)
            (select-window
@@ -6084,43 +6035,24 @@ one.
 
 ** Frame Commands
 
-- ~toggle-frame-fullscreen~ (f11 by default) ::
-     Toggle fullscreen mode of the selected frame.  *Ignore window manager
-     screen decorations.*
-
-- ~toggle-frame-maximized~ (M-f10 by default) ::
+- ~toggle-frame-maximized~ (M-<F10> by default) ::
      Toggle maximization state of the selected frame.  Respect window manager
      screen decorations.
+
+- ~toggle-frame-fullscreen~ (<F11> by default) ::
+     Toggle fullscreen mode of the selected frame.  *Hide window manager screen
+     decorations*, giving slightly more screen space to Emacs itself.
 
 #+begin_src emacs-lisp
 ;;** 21.7 (info "(emacs)Frame Commands")
 
   (leuven--section "21.7 (emacs)Frame Commands")
 
-  (defun leuven-maximize-frame ()
-    "Maximize the current frame."
-    (interactive)
-    (cond ((or leuven--win32-p leuven--cygwin-p)
-           (w32-send-sys-command 61488))
-          (leuven--x-window-p
-           (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                                  '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
-    (global-set-key (kbd "C-c z") #'leuven-restore-frame))
-
-  (defun leuven-restore-frame ()
-    "Restore a minimized frame."
-    (interactive)
-    (cond ((or leuven--win32-p leuven--cygwin-p)
-           (w32-send-sys-command 61728))
-          (leuven--x-window-p
-           (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
-                                  '(2 "_NET_WM_STATE_FULLSCREEN" 0))))
-    (global-set-key (kbd "C-c z") #'leuven-maximize-frame))
-
-  (global-set-key (kbd "C-c z") #'leuven-maximize-frame)
-
   ;; Maximize Emacs frame by default.
   (modify-all-frames-parameters '((fullscreen . maximized)))
+
+  ;; Full screen.
+  (global-set-key (kbd "<C-S-f12>") #'toggle-frame-fullscreen)
 #+end_src
 
 ** Speedbar Frames
@@ -6149,7 +6081,7 @@ one.
 
     ;; Bind the arrow keys in the speedbar tree.
     (define-key speedbar-mode-map (kbd "<right>") #'speedbar-expand-line)
-    (define-key speedbar-mode-map (kbd "<left>") #'speedbar-contract-line)
+    (define-key speedbar-mode-map (kbd "<left>")  #'speedbar-contract-line)
 
     ;; Parameters to use when creating the speedbar frame in Emacs.
     (setq speedbar-frame-parameters '((width . 30)
@@ -6592,7 +6524,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 
   ;; Align your code in a pretty way.
   (global-set-key (kbd "C-x \\") #'leuven-align-code)
-  (global-set-key (kbd "C-c =") #'leuven-align-code)
+  (global-set-key (kbd "C-c =")  #'leuven-align-code)
 #+end_src
 
 #+begin_example
@@ -7692,12 +7624,13 @@ full outline path.
   ;; Lisp files.
   (add-hook 'org-mode-hook
             #'(lambda ()
-                ;; (local-set-key (kbd "M-n") #'outline-next-visible-heading)
-                ;; (local-set-key (kbd "M-p") #'outline-previous-visible-heading)
-                ;;
- ;;             (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
-   ;;           (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
-     ;;         (local-set-key (kbd "C-M-u") #'outline-up-heading)
+                ;; (local-set-key (kbd "M-n")   #'outline-next-visible-heading)
+                ;; (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
+
+                ;; (local-set-key (kbd "M-p")   #'outline-previous-visible-heading)
+                ;; (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
+
+                ;; (local-set-key (kbd "C-M-u") #'outline-up-heading)
 ))
 #+end_src
 
@@ -8252,7 +8185,7 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
             :foreground "#5C88D3"))     ; :background "#BBDDFF"
           ("FLAGGED"
            (:weight bold :slant italic
-            :foreground "white" :background "#DB2D27")) ; :background "#EDC6C8"
+            :foreground "#FF0000" :background "#FFFF00")) ; :background "#EDC6C8"
           ("now"
            (:slant italic
             :foreground "#000000"))     ; :background "#FFEA80"
@@ -12088,21 +12021,23 @@ blocks (client/server side).
 
     (define-key web-mode-map (kbd "C--")      #'web-mode-fold-or-unfold)
     (define-key web-mode-map (kbd "C-+")      #'web-mode-fold-or-unfold)
-    (define-key web-mode-map (kbd "C-M-u")    #'web-mode-element-parent)
-    (define-key web-mode-map (kbd "C-M-d")    #'web-mode-element-child)
     (define-key web-mode-map (kbd "M-(")      #'web-mode-element-wrap)
 
     (define-key web-mode-map (kbd "M-h")      #'web-mode-mark-and-expand)
 
+    ;; Moving.
     (define-key web-mode-map (kbd "M-n")      #'web-mode-tag-next)
+    (define-key web-mode-map (kbd "C-M-e")    #'web-mode-element-end)
+    (define-key web-mode-map (kbd "M-<down>") #'web-mode-element-sibling-next) ;; end or next? XXX
+
     (define-key web-mode-map (kbd "M-p")      #'web-mode-tag-previous)
     (define-key web-mode-map (kbd "C-M-p")    #'web-mode-tag-previous)
-
     (define-key web-mode-map (kbd "C-M-a")    #'web-mode-element-previous)
     (define-key web-mode-map (kbd "M-<up>")   #'web-mode-element-sibling-previous)
 
-    (define-key web-mode-map (kbd "C-M-e")    #'web-mode-element-end)
-    (define-key web-mode-map (kbd "M-<down>") #'web-mode-element-sibling-next) ;; end or next? XXX
+    (define-key web-mode-map (kbd "C-M-u")    #'web-mode-element-parent)
+
+    (define-key web-mode-map (kbd "C-M-d")    #'web-mode-element-child)
 
 ;; XXX What about Fold Tag Attributes?
 
@@ -12153,7 +12088,13 @@ blocks (client/server side).
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; ARCHIBUS Imenu
+    ;; (flycheck-add-mode 'html-tidy 'web-mode)
+#+end_src
+
+Show XML path on the modeline or in an header?
+
+#+begin_src emacs-lisp
+    ;; ARCHIBUS Imenu.
     (add-to-list 'web-mode-imenu-regexp-list
                  '("\\(dataSource\\) id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
     (add-to-list 'web-mode-imenu-regexp-list
@@ -12179,21 +12120,9 @@ blocks (client/server side).
             ))
 
     (add-hook 'web-mode-hook
-              (lambda ()
-                (setq imenu-generic-expression
-                      web-mode-imenu-generic-expression)))
-#+end_src
-
-#+begin_src emacs-lisp
-    ;; A list of additional snippets.
-    (setq web-mode-extra-snippets
-      '((nil . (("input" . ("\t<input type=\"" . "\"/>"))
-                ("a" . ("\t<a href=\"#\">" . "</a>"))
-                ("img" . ("\t<img src=\"" . "\">"))
-                ("div" . ("\t<div>" . "</div>"))
-                ))))
-
-    ;; (flycheck-add-mode 'html-tidy 'web-mode)
+              #'(lambda ()
+                  (setq imenu-generic-expression
+                        web-mode-imenu-generic-expression)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12218,11 +12147,11 @@ nXML mode (default for editing XML files, since GNU Emacs 23.2) does:
 
 Some key bindings:
 
-- ~C-M-p~ ::
-     Move backward over one element (~nxml-backward-element~).
-
 - ~C-M-n~ ::
      Move forward over one element (~nxml-forward-element~).
+
+- ~C-M-p~ ::
+     Move backward over one element (~nxml-backward-element~).
 
 - ~C-M-u~ ::
      Move up the element structure (~nxml-backward-up-element~).
@@ -12269,18 +12198,18 @@ Some key bindings:
   (with-eval-after-load "hl-tags-mode"
 
     (add-hook 'html-mode-hook
-              (lambda ()
-                (require 'sgml-mode)
-                ;; When `html-mode-hook' is called from `html-helper-mode'.
-                (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
+              #'(lambda ()
+                  (require 'sgml-mode)
+                  ;; When `html-mode-hook' is called from `html-helper-mode'.
+                  (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
 
     (add-hook 'nxml-mode-hook
-              (lambda ()
-                (when (> (buffer-size) (* 1024 1024)) ; View large files.
-                  (hl-tags-mode 1))))
+              #'(lambda ()
+                  (when (< (buffer-size) large-file-warning-threshold) ; View large files.
+                    (hl-tags-mode 1))))
 
     ;; (add-hook 'web-mode-hook #'hl-tags-mode)
-)
+    )
 #+end_src
 
 ** CSS
@@ -12313,12 +12242,12 @@ Some key bindings:
 
 Keyboard shortcuts:
 
-| Command          | Emacs    | Sublime Text | IntelliJ IDEA | TextMate | Visual Studio |
-|------------------+----------+--------------+---------------+----------+---------------|
-| Move line up     | C-S-up   | C-S-up       | M-S-up        |          | M-up          |
-| Move line down   | C-S-down | C-S-down     | M-S-down      |          | M-down        |
-| Scroll line up   | C-up     |              |               |          | C-up          |
-| Scroll line down | C-down   |              |               |          | C-down        |
+| Command          | Emacs    | Sublime Text | IntelliJ IDEA | TextMate | Visual Studio | Atom   | Webstorm |
+|------------------+----------+--------------+---------------+----------+---------------+--------+----------|
+| Move line up     | C-S-up   | C-S-up       | M-S-up        |          | M-up          | C-up   | M-S-up   |
+| Move line down   | C-S-down | C-S-down     | M-S-down      |          | M-down        | C-down | M-S-down |
+| Scroll line up   | C-up     |              |               |          | C-up          |        |          |
+| Scroll line down | C-down   |              |               |          | C-down        |        |          |
 
 #+begin_src emacs-lisp
   ;; Swap the current and next line.
@@ -12339,10 +12268,10 @@ Keyboard shortcuts:
   (add-hook 'prog-mode-hook
             #'(lambda ()
                 (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
-                (local-set-key (kbd "<C-S-up>") #'leuven-move-line-up)
+                (local-set-key (kbd "<C-S-up>")   #'leuven-move-line-up)
                                         ; Sublime Text and js2-refactor.
                 (local-set-key (kbd "<M-S-down>") #'leuven-move-line-down)
-                (local-set-key (kbd "<M-S-up>") #'leuven-move-line-up)))
+                (local-set-key (kbd "<M-S-up>")   #'leuven-move-line-up)))
                                         ; IntelliJ IDEA.
 #+end_src
 
@@ -12359,7 +12288,7 @@ Keyboard shortcuts:
 
   (add-hook 'prog-mode-hook
             #'(lambda ()
-                (local-set-key (kbd "<C-up>") #'leuven-scroll-line-up)
+                (local-set-key (kbd "<C-up>")   #'leuven-scroll-line-up)
                 (local-set-key (kbd "<C-down>") #'leuven-scroll-line-down)))
                                         ; Sublime Text + SQL Management Studio
 #+end_src
@@ -12588,6 +12517,12 @@ http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/.
 *** Navigating to Parentheses
 
 #+begin_src emacs-lisp
+  ;; XXX Navigate to the code block start.
+  (global-set-key (kbd "C-)") #'forward-sexp)
+  (global-set-key (kbd "C-(") #'backward-sexp)
+#+end_src
+
+#+begin_src emacs-lisp
   ;; Jump to matching parenthesis.
   (defun leuven-goto-matching-paren (arg)
     "Go to the matching parenthesis, if on a parenthesis."
@@ -12595,7 +12530,8 @@ http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/.
     (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
           ((looking-at "\\s\)") (forward-char 1) (backward-list 1))))
 
-  (global-set-key (kbd "C-)") #'leuven-goto-matching-paren)
+  (global-set-key (kbd "C-S-)") #'leuven-goto-matching-paren)
+  (global-set-key (kbd "C-°")   #'leuven-goto-matching-paren)
 #+end_src
 
 *** Matching Parentheses
@@ -12839,15 +12775,15 @@ And the pretty awesome ~hideshow-org~.  Folding made useful.
 
 Keyboard shortcuts:
 
-| Command                         | Emacs | Sublime Text | Visual Studio |
-|---------------------------------+-------+--------------+---------------|
-| Fold (collapse) region          |       | C-S-[        | C-S-[         |
-| Unfold (uncollapse) region      |       | C-S-]        | C-S-]         |
-|---------------------------------+-------+--------------+---------------|
-| Fold (collpase) All regions     |       |              | C-k C-0       |
-| Unfold (uncollapse) All regions |       | C-k C-j      |               |
-|---------------------------------+-------+--------------+---------------|
-| Fold (collapse) Tag Attributes  |       | C-k C-t      |               |
+| Command                         | Emacs | Sublime Text | Visual Studio | Webstorm |
+|---------------------------------+-------+--------------+---------------+----------|
+| Fold (collapse) region          |       | C-S-[        | C-S-[         | C--      |
+| Unfold (uncollapse) region      |       | C-S-]        | C-S-]         | C-+      |
+|---------------------------------+-------+--------------+---------------+----------|
+| Fold (collpase) All regions     |       |              | C-k C-0       | C-S--    |
+| Unfold (uncollapse) All regions |       | C-k C-j      |               | C-S-+    |
+|---------------------------------+-------+--------------+---------------+----------|
+| Fold (collapse) Tag Attributes  |       | C-k C-t      |               |          |
 
 #+begin_src emacs-lisp
 ;;** 26.7 (info "(emacs)Hideshow") minor mode
@@ -12869,22 +12805,18 @@ Keyboard shortcuts:
       (save-excursion (hs-show-block)))
 
     ;; Change those really awkward key bindings with `@' in the middle.
+
+    ;; Collapse code block.
     (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
-    (define-key hs-minor-mode-map (kbd "C-c <left>")        #'hs-hide-block)
-    (define-key hs-minor-mode-map (kbd "C--")               #'hs-hide-block)
                                         ; `C-c @ C-h' (collapse current fold)
-
+    ;; Expand code block.
     (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
-    (define-key hs-minor-mode-map (kbd "C-c <right>")       #'hs-show-block)
-    (define-key hs-minor-mode-map (kbd "C-+")               #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold)
-
+    ;; Collapse all.
     (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
-    (define-key hs-minor-mode-map (kbd "C-c <up>")          #'hs-hide-all)
                                         ; `C-c @ C-M-h' (collapse all folds)
-
+    ;; Expand all.
     (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)
-    (define-key hs-minor-mode-map (kbd "C-c <down>")        #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds)
 
     (defcustom hs-face 'hs-face
@@ -13572,8 +13504,8 @@ http://www.wilfred.me.uk/blog/2014/09/27/the-definitive-guide-to-syntax-highligh
 
 #+begin_src emacs-lisp
     ;; JS-comint.
-    ;; (define-key js2-mode-map (kbd "C-c b") 'js-send-buffer)
-    ;; (define-key js2-mode-map (kbd "C-c C-b") 'js-send-buffer-and-go)
+    ;; (define-key js2-mode-map (kbd "C-c b")   #'js-send-buffer)
+    ;; (define-key js2-mode-map (kbd "C-c C-b") #'js-send-buffer-and-go)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -14204,7 +14136,7 @@ variable ~next-error-highlight~.
   ;; (setq compilation-auto-jump-to-first-error t)
 
   ;; Display the next compiler error message.
-  (global-set-key (kbd "<f10>") #'next-error) ; C-M-down in IntelliJ IDEA.
+  (global-set-key (kbd "<f10>")   #'next-error) ; C-M-down in IntelliJ IDEA.
                                         ; Also on `M-g n', `M-g M-n' and `C-x `'.
 
   ;; Display the previous compiler error message.
@@ -14484,7 +14416,7 @@ Navigate:
   (with-eval-after-load "flycheck-autoloads"
 
     ;; Enable Flycheck mode in all programming modes. XXX Should not in Java?
-    (add-hook 'prog-mode-hook #'flycheck-mode)
+    (add-hook 'prog-mode-hook  #'flycheck-mode)
 
     (add-hook 'LaTeX-mode-hook #'flycheck-mode)
 
@@ -15384,13 +15316,13 @@ See https://github.com/jacktasia/dumb-jump.
 
 Keyboard shortcuts:
 
-| Command                             | Emacs | Sublime Text | Visual Studio |
-|-------------------------------------+-------+--------------+---------------|
-| Go to definition                    | C-M-g | F12          | F12           |
-| Back (can be called multiple times) | C-M-p |              |               |
-| Open definition to the side         |       |              | C-k F12       |
-|-------------------------------------+-------+--------------+---------------|
-| Quick look                          | C-M-y |              |               |
+| Command                             | Leuven | Sublime Text | Visual Studio |
+|-------------------------------------+--------+--------------+---------------|
+| Go to definition                    | C-M-g  | F12          | F12           |
+| Back (can be called multiple times) |        |              |               |
+| Open definition to the side         |        |              | C-k F12       |
+|-------------------------------------+--------+--------------+---------------|
+| Quick look                          | C-M-y  |              |               |
 
 #+begin_src emacs-lisp
   (with-eval-after-load "dumb-jump-autoloads"
@@ -15409,16 +15341,16 @@ Keyboard shortcuts:
     (global-set-key (kbd "<f12>") #'dumb-jump-go)
                                         ; Conflict when GDB'ing Emacs under
                                         ; Win32.
+    ;; (global-set-key (kbd "C-M-g") #'dumb-jump-go)
+    ;; (global-set-key (kbd "C-c S") #'dumb-jump-go)
+
     (global-set-key (kbd "M-g o") #'dumb-jump-go-other-window)
+    ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
+
     (global-set-key (kbd "M-g x") #'dumb-jump-go-prefer-external)
     (global-set-key (kbd "M-g z") #'dumb-jump-go-prefer-external-other-window)
 
-    ;; (global-set-key (kbd "C-M-g") #'dumb-jump-go)
-    ;; (global-set-key (kbd "C-c S") #'dumb-jump-go)
-    ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
-
     (global-set-key (kbd "M-g P") #'dumb-jump-back)
-    (global-set-key (kbd "C-M-p") #'dumb-jump-back)
 
     ;; (define-key prog-mode-map (kbd "C-M-q") nil)
 
@@ -15796,9 +15728,9 @@ Projectile's features.
     ;; (projectile-global-mode) ??
 
     ;; Add keymap prefix.
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-c p")   #'projectile-command-map)
 
-    (define-key projectile-mode-map (kbd "C-c p g") 'projectile-grep)
+    (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
 
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
@@ -16317,13 +16249,13 @@ Other operations are enabled temporarily *once the completion is started*:
 - ~<C-up>~ or ~C-M-p~ (~ac-quick-help-scroll-up~) ::
      Scroll up quick help.
 
-- ~<f1>~ (or ~C-?~, ~ac-help~) ::
+- ~<F1>~ (or ~C-?~, ~ac-help~) ::
      Show additional *help* (for functions, arguments and objects) in *temporary
      buffer*.
 
      Use ~C-M-v~ (or ~C-M-S-v~) to scroll down (or up).
 
-- ~<M-f1>~ (or ~C-M-?~, ~ac-persist-help~) ::
+- ~M-<F1>~ (or ~C-M-?~, ~ac-persist-help~) ::
      Show additional *help* in *persistent buffer*.
 
 Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-complete-work-with-yasnippet-and-abbrev][How to make auto-complete work with yasnippet and abbrev?]]
@@ -16403,7 +16335,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
 
     ;; Abort.
-    (define-key ac-completing-map (kbd "C-g") #'ac-stop)
+    (define-key ac-completing-map (kbd "C-g")    #'ac-stop)
     (define-key ac-completing-map (kbd "<left>") #'ac-stop)
 
     ;; 11.1 Avoid Flyspell processes when auto completion is being started.
@@ -16505,7 +16437,7 @@ completions and filter as well.
     (global-company-mode 1)
 
     (global-set-key (kbd "<C-tab>") #'company-complete)
-    (global-set-key (kbd "C-/") #'company-complete)
+    (global-set-key (kbd "C-/")     #'company-complete)
     ;; (global-set-key (kbd "C-/") #'helm-company) ; ?
 
     (global-set-key (kbd "C-c y") #'company-yasnippet)
@@ -16591,30 +16523,48 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
 
     ;; Temporarily show the documentation buffer for the selection.
-    (define-key company-active-map (kbd "<f1>") #'company-show-doc-buffer)
-    (define-key company-active-map (kbd "C-?") #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "<f1>")    #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-?")     #'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
-    (define-key company-active-map (kbd "M-?") #'company-show-doc-buffer)
+    (define-key company-active-map (kbd "M-?")     #'company-show-doc-buffer)
 
     ;;! Temporarily display a buffer showing the selected candidate in context.
     (define-key company-active-map (kbd "M-.") #'company-show-location) ; XXX
 
     ;; Abort.
-    (define-key company-active-map (kbd "C-g") #'company-abort)
+    (define-key company-active-map (kbd "C-g")    #'company-abort)
     (define-key company-active-map (kbd "<left>") #'company-abort)
+
+
+ (setq company-auto-complete
+       #'(lambda ()
+           (and (company-tooltip-visible-p)
+                (company-explicit-action-p))))
+
+ (setq company-continue-commands
+   '(not save-buffer
+         save-some-buffers
+         save-buffers-kill-terminal
+         save-buffers-kill-emacs
+         comint-previous-matching-input-from-input
+         comint-next-matching-input-from-input))
+ (setq company-require-match nil)
+
+
+
 #+end_src
 
 #+begin_src emacs-lisp
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
     (advice-add 'company-complete-number :around
-     (lambda (fun n)
-       (let ((cand (nth (+ (1- n) company-tooltip-offset)
-                        company-candidates)))
-         (if (string-match-p "[0-9]" cand)
-             (let ((last-command-event (+ ?0 n)))
-               (self-insert-command 1))
-           (funcall fun n))))
+     #'(lambda (fun n)
+         (let ((cand (nth (+ (1- n) company-tooltip-offset)
+                          company-candidates)))
+           (if (string-match-p "[0-9]" cand)
+               (let ((last-command-event (+ ?0 n)))
+                 (self-insert-command 1))
+             (funcall fun n))))
      '((name . "Don't complete numbers")))
 #+end_src
 
@@ -16724,10 +16674,10 @@ altering the keymaps of company and yas-minor modes.
   "Binds tab to tab-indent-or-complete, overwritting yas and company bindings"
   (interactive)
   ;;overwrite yas and company tab mappings
-  (define-key yas-minor-mode-map (kbd "<tab>") 'tab-indent-or-complete)
-  (define-key yas-minor-mode-map (kbd "TAB") 'tab-indent-or-complete)
-  (define-key company-active-map [tab] 'tab-indent-or-complete)
-  (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete))
+  (define-key yas-minor-mode-map (kbd "<tab>") #'tab-indent-or-complete)
+  (define-key yas-minor-mode-map (kbd "TAB")   #'tab-indent-or-complete)
+  (define-key company-active-map [tab]         #'tab-indent-or-complete)
+  (define-key company-active-map (kbd "TAB")   #'tab-indent-or-complete))
 
 (add-hook 'company-mode-hook 'bind-tab-properly)
 #+end_src
@@ -17144,7 +17094,7 @@ For those under Windows:
       (eww-open-file (file-name-sans-versions (dired-get-filename) t)))
 
     ;; Add a binding "W" -> `dired-open-with-eww' to Dired.
-    (define-key dired-mode-map (kbd "W") 'dired-open-with-eww)
+    (define-key dired-mode-map (kbd "W") #'dired-open-with-eww)
 #+end_src
 
 ** Operating on Files
@@ -19631,7 +19581,7 @@ Those bindings are global and repeatable, e.g. ~C-x C-+ C-+ C-+~.
 Zoom in/out with Ctrl + Scroll wheel on the mouse:
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "<C-wheel-up>") #'text-scale-increase)
+  (global-set-key (kbd "<C-wheel-up>")   #'text-scale-increase)
   (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
 #+end_src
 
