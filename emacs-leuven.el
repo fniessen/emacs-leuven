@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20181128.2022
+;; Version: 20181128.2042
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -77,7 +77,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20181128.2022"
+(defconst leuven--emacs-version "20181128.2042"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -883,6 +883,8 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Mark all parts of the buffer that matches the current region.
     (global-set-key (kbd "C-c C-<") #'mc/mark-all-like-this) ;!
 
+    (global-set-key (kbd "C-!") #'mc/mark-next-symbol-like-this)
+
     ;; (global-set-key (kbd "<C-RET>") #'mc/mark-more-like-this-extended) ; useful for completion
 
     (global-set-key (kbd "C-S-SPC") #'set-rectangular-region-anchor)
@@ -1098,8 +1100,8 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "C-c C-SPC") #'avy-pop-mark)
 
     ;; Jump during Isearch to one of the current candidates.
-    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
-    (define-key isearch-mode-map (kbd "@")   'avy-isearch))
+    (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)
+    (define-key isearch-mode-map (kbd "@")   #'avy-isearch))
 
   ;; Jump to things.
   (with-eval-after-load "avy"
@@ -2710,7 +2712,7 @@ Should be selected from `fringe-bitmaps'.")
       (global-set-key (kbd "C-M-S-f") #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
 
       ;; ;; Search with Ag.  Ask for directory first.
-      ;; (global-set-key (kbd "C-S-d") 'helm-do-ag)
+      ;; (global-set-key (kbd "C-S-d") #'helm-do-ag)
 
       ;; Search with Ag this file (like Swoop).
       (global-set-key (kbd "M-g >") #'helm-ag-this-file)
@@ -3970,7 +3972,7 @@ cycle through all windows on current frame."
     (define-key org-mode-map (kbd "<C-S-up>") nil)
 
     ;; Double-clicking on the fringe cycles the corresponding subtree.
-    (define-key org-mode-map (kbd "<left-fringe> <double-mouse-1>") 'org-cycle))
+    (define-key org-mode-map (kbd "<left-fringe> <double-mouse-1>") #'org-cycle))
 
   ;; These variables need to be set before org.el is loaded...
 
@@ -4300,8 +4302,8 @@ cycle through all windows on current frame."
   (with-eval-after-load "org"
     (message "[... Hyperlinks]")
 
-    ;; Open non-existing files.
-    (setq org-open-non-existing-files t)
+    ;; ;; Open non-existing files.
+    ;; (setq org-open-non-existing-files t)
 
     ;; Function and arguments to call for following `mailto' links.
     (setq org-link-mailto-program '(compose-mail "%a" "%s")))
@@ -7031,9 +7033,6 @@ this with to-do items than with projects or headings."
     ;; Invoke html-helper-mode automatically on .jsp files.
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 
-  (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
-                                        ; Alias for `nxml-mode'.
-
   (with-eval-after-load "web-mode-autoloads"
     (add-to-list 'auto-mode-alist '("\\.aspx\\'"   . web-mode))
     (add-to-list 'auto-mode-alist '("\\.axvw\\'"   . web-mode)) ; ARCHIBUS view.
@@ -7441,7 +7440,7 @@ mouse-3: go to end") "]")))
 
   (with-eval-after-load "smart-comment-autoloads-XXX"
 
-    (global-set-key (kbd "M-;") 'smart-comment))
+    (global-set-key (kbd "M-;") #'smart-comment))
 
 ;;** 26.6 (info "(emacs)Documentation") Lookup
 
@@ -7830,7 +7829,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
               ))
   )
 
-    ;; (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
+    ;; (define-key js2-mode-map (kbd "C-c d") #'my/insert-or-flush-debug)
 
     (defvar my/debug-counter 1)
     (defun my/insert-or-flush-debug (&optional reset beg end)
@@ -8266,7 +8265,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
     (add-hook 'LaTeX-mode-hook #'flycheck-mode)
 
-    (global-set-key (kbd "M-g l") 'flycheck-list-errors))
+    (global-set-key (kbd "M-g l") #'flycheck-list-errors))
 
   (with-eval-after-load "flycheck"
 

@@ -1682,6 +1682,10 @@ Done.
 #+end_src
 
 #+begin_src emacs-lisp
+    (global-set-key (kbd "C-!") #'mc/mark-next-symbol-like-this)
+#+end_src
+
+#+begin_src emacs-lisp
     ;; (global-set-key (kbd "<C-RET>") #'mc/mark-more-like-this-extended) ; useful for completion
 #+end_src
 
@@ -2181,8 +2185,8 @@ jumping onto them...
     (global-set-key (kbd "C-c C-SPC") #'avy-pop-mark)
 
     ;; Jump during Isearch to one of the current candidates.
-    (define-key isearch-mode-map (kbd "C-'") 'avy-isearch)
-    (define-key isearch-mode-map (kbd "@")   'avy-isearch))
+    (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)
+    (define-key isearch-mode-map (kbd "@")   #'avy-isearch))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4072,6 +4076,13 @@ XXX Add explanation about what to do when a file is opened in red background!
 
 *** Diff
 
+If you want a Magit diff buffer for the current file, you can call
+magit-diff-buffer-file directly, or use the "diff" option (d) in
+magit-file-popup. e.g.:
+
+(global-set-key (kbd "C-c m d") #'magit-diff-buffer-file)
+(global-set-key (kbd "C-c m f") #'magit-file-popup)
+
 #+begin_src emacs-lisp
 ;;** 18.9 (info "(emacs)Comparing Files")
 
@@ -5220,7 +5231,7 @@ or if you use ~helm-do-ag~, you can use ~C-u~ prefix for specifying extension.
       (global-set-key (kbd "C-M-S-f") #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
 
       ;; ;; Search with Ag.  Ask for directory first.
-      ;; (global-set-key (kbd "C-S-d") 'helm-do-ag)
+      ;; (global-set-key (kbd "C-S-d") #'helm-do-ag)
 
       ;; Search with Ag this file (like Swoop).
       (global-set-key (kbd "M-g >") #'helm-ag-this-file)
@@ -7235,7 +7246,7 @@ work and tasks with Org mode.
     (define-key org-mode-map (kbd "<C-S-up>") nil)
 
     ;; Double-clicking on the fringe cycles the corresponding subtree.
-    (define-key org-mode-map (kbd "<left-fringe> <double-mouse-1>") 'org-cycle))
+    (define-key org-mode-map (kbd "<left-fringe> <double-mouse-1>") #'org-cycle))
 #+end_src
 
 These variables need to be set before Org mode is loaded.
@@ -7782,8 +7793,8 @@ has the equal signs escaped, unless you have:
   (with-eval-after-load "org"
     (message "[... Hyperlinks]")
 
-    ;; Open non-existing files.
-    (setq org-open-non-existing-files t)
+    ;; ;; Open non-existing files.
+    ;; (setq org-open-non-existing-files t)
 
     ;; Function and arguments to call for following `mailto' links.
     (setq org-link-mailto-program '(compose-mail "%a" "%s")))
@@ -11985,7 +11996,7 @@ tags around a region you've specified.
 [[id:786a2051-476a-4277-82df-d8ebf8ba0e99][nXML]] seems to be the most recommended mode to view and edit well-formed *XHTML*
 (reformulation of HTML as an XML application).
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . xml-mode))
                                         ; Alias for `nxml-mode'.
 #+end_src
@@ -12731,7 +12742,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
   (with-eval-after-load "smart-comment-autoloads-XXX"
 
-    (global-set-key (kbd "M-;") 'smart-comment))
+    (global-set-key (kbd "M-;") #'smart-comment))
 #+end_src
 
 ** Documentation Lookup
@@ -13518,7 +13529,7 @@ http://www.wilfred.me.uk/blog/2014/09/27/the-definitive-guide-to-syntax-highligh
     ;;       (if (looking-back "^\s*")
     ;;           (back-to-indentation)))))
     ;;
-    ;; (define-key js2-mode-map (kbd "TAB") 'js2-tab-properly)
+    ;; (define-key js2-mode-map (kbd "TAB") #'js2-tab-properly)
 #+end_src
 
 There are 4 popular JavaScript Linting tools:
@@ -13571,7 +13582,7 @@ Install ESLint (globally) using ~npm~:
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; (define-key js2-mode-map (kbd "C-c d") 'my/insert-or-flush-debug)
+    ;; (define-key js2-mode-map (kbd "C-c d") #'my/insert-or-flush-debug)
 
     (defvar my/debug-counter 1)
     (defun my/insert-or-flush-debug (&optional reset beg end)
@@ -14420,7 +14431,7 @@ Navigate:
 
     (add-hook 'LaTeX-mode-hook #'flycheck-mode)
 
-    (global-set-key (kbd "M-g l") 'flycheck-list-errors))
+    (global-set-key (kbd "M-g l") #'flycheck-list-errors))
 
   (with-eval-after-load "flycheck"
 
@@ -16457,11 +16468,11 @@ completions and filter as well.
                                               company-web-jade
                                               company-yasnippet))))
 
-             ;; Auto indent.
-             (local-set-key (kbd "RET") 'newline-and-indent)
+              ;; Auto indent.
+              (local-set-key (kbd "RET") #'newline-and-indent)
 
-             ;; Disable smartparens in web-mode.
-             (setq smartparens-mode nil)))
+              ;; Disable smartparens in web-mode.
+              (setq smartparens-mode nil)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -16814,7 +16825,7 @@ In the other modes, Company will pass control to other back-ends
 
 XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 
-**** Company-quickhelp
+**** Company-quickhelp frontend
 
 #+begin_src emacs-lisp
   (with-eval-after-load "company-quickhelp-autoloads"
