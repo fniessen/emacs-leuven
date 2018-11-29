@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20181128.2042
+;; Version: 20181129.1608
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -71,13 +71,20 @@
   "Value of `current-time' before loading the Emacs-Leuven library.")
 
 ;; Speed up things by preventing garbage collections.
-(setq gc-cons-threshold (* 30 1024 1024)) ; 30 MB.
+(setq gc-cons-threshold most-positive-fixnum)
+(add-hook 'after-init-hook
+          #'(lambda ()
+              (garbage-collect)
+(message "XXX Set GC back to initial value XXX")
+(sit-for 2)
+              (setq gc-cons-threshold
+                    (car (get 'gc-cons-threshold 'standard-value)))))
 
 ;; Don't display messages at start and end of garbage collection (as it hides
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20181128.2042"
+(defconst leuven--emacs-version "20181129.1608"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1129,6 +1136,10 @@ These packages are neither built-in nor already installed nor ignored."
   ;; (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
   ;; (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
 
+  ;; When scrolling, point preserves the cursor position in the buffer if the
+  ;; original position is still visible.
+  (setq scroll-preserve-screen-position t)
+
   ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place).
   (with-eval-after-load "pager-autoloads"
@@ -2142,6 +2153,11 @@ Should be selected from `fringe-bitmaps'.")
   ;; Time between Auto-Revert Mode file checks.
   (setq auto-revert-interval 1)         ; [Default: 5]
 
+  ;; ;; But if, for instance, a new version is checked in from outside the current
+  ;; ;; Emacs session, the version control number in the mode line, as well as
+  ;; ;; other version control related information, may not be properly updated
+  ;; (setq auto-revert-check-vc-info t)
+
   ;; Replace current buffer text with the text of the visited file on disk.
   (defun leuven-revert-buffer-without-query ()
     "Unconditionally revert current buffer."
@@ -2805,16 +2821,6 @@ Should be selected from `fringe-bitmaps'.")
   (setq helm-projectile-fuzzy-match nil)
 
   ;; (global-set-key (kbd "C-;") #'helm-projectile)
-
-  (with-eval-after-load "projectile"
-    (setq projectile-mode-line
-          '(:eval (list " P[" ;; (propertize
-                               (projectile-project-name)
-                              ;; 'face '(:foreground "gray75"))
-                        "]")))
-
-    ;; Always ignore .class files.
-    (add-to-list 'projectile-globally-ignored-file-suffixes ".class"))
 
   ;; Lisp complete.
   (define-key lisp-interaction-mode-map
@@ -7605,6 +7611,14 @@ mouse-3: go to end") "]")))
     ;; The '+' will be inserted at the end of the line.
     (setq js2-concat-multiline-strings 'eol)
 
+    ;; (setq js2-mode-show-parse-errors nil)
+
+    ;; Don't emit Ecma strict-mode warnings.
+    (setq js2-mode-show-strict-warnings nil)
+
+    ;; Let Flycheck handle parse errors.
+    (setq js2-strict-missing-semi-warning nil)
+
     ;; ;; List of any extern names you'd like to consider always declared.
     ;; (setq js2-global-externs '("View")) ; ARCHIBUS.
 
@@ -7614,9 +7628,6 @@ mouse-3: go to end") "]")))
     ;; Augment the default indent-line behavior with cycling among several
     ;; computed alternatives.
     (setq js2-bounce-indent-p t)
-
-    ;; Let Flycheck handle parse errors.
-    (setq js2-strict-missing-semi-warning nil)
 
   (with-eval-after-load "js2-refactor-autoloads"
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
@@ -7827,6 +7838,19 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
               ;; (when (executable-find "eslint")
               ;;   (flycheck-select-checker 'javascript-eslint))
               ))
+
+  ;; (setq flycheck-display-errors-function
+  ;;       'flycheck-display-error-messages-unless-error-list)
+  ;;
+  ;; ;; (setq flycheck-standard-error-navigation nil)
+  ;;
+  ;; (setq flycheck-global-modes '(not erc-mode
+  ;;                                   message-mode
+  ;;                                   git-commit-mode
+  ;;                                   view-mode
+  ;;                                   outline-mode
+  ;;                                   text-mode
+  ;;                                   org-mode))
   )
 
     ;; (define-key js2-mode-map (kbd "C-c d") #'my/insert-or-flush-debug)
@@ -8043,8 +8067,11 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;; Scroll the `*compilation*' buffer window to follow output as it appears.
   (setq compilation-scroll-output t)
 
-  ;; Number of lines in a compilation window.
-  (setq compilation-window-height 8)
+  ;; ;; Number of lines in a compilation window.
+  ;; (setq compilation-window-height 8)
+
+  ;; Always kill a running compilation process before starting a new one.
+  (setq compilation-always-kill t)
 
   (defun compile-hide-window-if-successful (cur-buffer msg)
     (if (string-match "exited abnormally" msg)
@@ -8423,7 +8450,12 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1 (emacs)Version Control")
 
-;; (setq vc-follow-symlinks t)
+  ;; (setq vc-follow-symlinks t)
+  ;; (setq vc-follow-symlinks nil)
+
+  ;; (setq vc-allow-async-revert t)
+
+  ;; (setq vc-git-diff-switches '("-w" "-U3")) ;; XXX What about mnemonicprefix=true?
 
 ;; ;; When opening a file that is a symbolic link, don't ask whether I
 ;; ;; want to follow the link. Just do it
@@ -8864,17 +8896,48 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Action invoked AFTER SWITCHING PROJECTS with `C-c p p'.
     (setq projectile-switch-project-action 'helm-projectile-find-file)
+                                        ;; 'projectile-dired
                                         ;; 'projectile-find-file ; Default.
                                         ;; 'projectile-find-file-in-known-projects
                                         ;; 'projectile-find-file-dwim
-                                        ;; 'projectile-dired
                                         ;; 'projectile-find-dir
 
+    ;; Don't echo messages that are not errors.
+    (setq projectile-verbose nil)
+
+    ;; Always ignore .class files.
+    (add-to-list 'projectile-globally-ignored-file-suffixes ".class")
+
+    ;; Ignore remote projects.
+    (setq projectile-ignored-project-function 'file-remote-p)
+
+    ;; Mode line lighter for Projectile.
+    (setq projectile-mode-line
+          '(:eval (list " P[" ;; (propertize
+                               (projectile-project-name)
+                              ;; 'face '(:foreground "gray75"))
+                        "]")))
+    (setq projectile-mode-line
+          '(:eval (if (and (projectile-project-p)
+                           (not (file-remote-p default-directory)))
+                      (format " P[%s]" (projectile-project-name))
+                    "")))
+
+    ;; Command to use with ‘projectile-run-project’.
     (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
 
     ;; For ARCHIBUS.
     (add-to-list 'projectile-other-file-alist '("axvw" "js")) ; Switch from AXVW -> JS.
     (add-to-list 'projectile-other-file-alist '("js" "axvw")) ; Switch from JS -> AXVW.
+
+    (defun leuven-find-file-archibus-log ()
+      (interactive)
+      (when-let ((root (projectile-project-root))
+                 (logfile "WEB-INF/config/archibus.log"))
+          (if (file-exists-p (expand-file-name logfile root))
+              (find-file (expand-file-name logfile root))
+            (user-error "You’re not in an ARCHIBUS project"))))
+    (define-key projectile-mode-map (kbd "C-c p A") #'leuven-find-file-archibus-log)
   )
 
 ;;* 29 (info "(emacs)Abbrevs")
