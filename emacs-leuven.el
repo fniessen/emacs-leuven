@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20181129.1608
+;; Version: 20181129.1742
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20181129.1608"
+(defconst leuven--emacs-version "20181129.1742"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1131,10 +1131,6 @@ These packages are neither built-in nor already installed nor ignored."
 ;;** 14.1 (info "(emacs)Scrolling")
 
   (leuven--section "14.1 (emacs)Scrolling")
-
-  ;; ;; Scroll window up/down by one line.
-  ;; (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
-  ;; (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
 
   ;; When scrolling, point preserves the cursor position in the buffer if the
   ;; original position is still visible.
@@ -7220,21 +7216,15 @@ this with to-do items than with projects or headings."
                 (local-set-key (kbd "<M-S-up>")   #'leuven-move-line-up)))
                                         ; IntelliJ IDEA.
 
-  (defun leuven-scroll-line-up ()
-    "Scroll text of current window upward 1 line."
-    (interactive)
-    (scroll-up 1))
-
-  (defun leuven-scroll-line-down ()
-    "Scroll text of current window downward 1 line."
-    (interactive)
-    (scroll-down 1))
-
+  ;; Move caret down and up in the editor.
   (add-hook 'prog-mode-hook
             #'(lambda ()
-                (local-set-key (kbd "<C-up>")   #'leuven-scroll-line-up)
-                (local-set-key (kbd "<C-down>") #'leuven-scroll-line-down)))
-                                        ; Sublime Text + SQL Management Studio
+                ;; Scroll text of current window upward by one line.
+                (local-set-key (kbd "<C-up>")   (kbd "C-u 1 C-v"))
+
+                ;; Scroll text of current window downward by one line.
+                (local-set-key (kbd "<C-down>") (kbd "C-u 1 M-v"))))
+                                        ; Sublime Text + SQL Management Studio + IntelliJ IDEA.
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
 
@@ -9211,17 +9201,11 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Enable Company mode in all buffers ....
     (global-company-mode 1)
 
-    (global-set-key (kbd "<C-tab>") #'company-complete)
-    (global-set-key (kbd "C-/")     #'company-complete)
-    ;; (global-set-key (kbd "C-/") #'helm-company) ; ?
-
     (global-set-key (kbd "C-c y") #'company-yasnippet)
                                         ; Better than `helm-yas-complete' as
                                         ; `company-yasnippet' shows both the key
                                         ; and the replacement.
     )
-
-;; See web-mode-imenu-regexp-list.
 
   (with-eval-after-load "company"
 
@@ -9240,9 +9224,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Align annotations to the right tooltip border.
     (setq company-tooltip-align-annotations t)
 
-    ;; Flip the tooltip when it's above the current line.
-    (setq company-tooltip-flip-when-above t)
-
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 1)
 
@@ -9255,30 +9236,24 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Selecting item before first or after last wraps around.
     (setq company-selection-wrap-around t)
 
-    ;; Use `C-n/C-p' to select candidates (only when completion menu is
-    ;; displayed).
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    ;; Abort.
+    ;; (define-key company-active-map (kbd "<right>") #'company-abort)
+    ;; (define-key company-active-map (kbd "<left>")  #'company-abort)
 
-    ;; Unbind some keys (inconvenient in Comint buffers).
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
+    ;; Ignore some keys (inconvenient in Comint buffers).
+    (define-key company-active-map (kbd "M-n")     nil)
+    (define-key company-active-map (kbd "M-p")     nil)
 
     ;; Completion by TAB (insert the selected candidate).
-    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
+    (define-key company-active-map (kbd "<tab>")   #'company-complete-selection)
 
-    ;; Temporarily show the documentation buffer for the selection.
-    (define-key company-active-map (kbd "<f1>")    #'company-show-doc-buffer)
+    ;; Temporarily show the documentation buffer for the selection.  Also on F1 or C-h.
     (define-key company-active-map (kbd "C-?")     #'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
     (define-key company-active-map (kbd "M-?")     #'company-show-doc-buffer)
 
     ;;! Temporarily display a buffer showing the selected candidate in context.
-    (define-key company-active-map (kbd "M-.") #'company-show-location) ; XXX
-
-    ;; Abort.
-    (define-key company-active-map (kbd "C-g")    #'company-abort)
-    (define-key company-active-map (kbd "<left>") #'company-abort)
+    (define-key company-active-map (kbd "M-.")     #'company-show-location) ; XXX Also on C-w.
 
 
  (setq company-auto-complete
@@ -9307,27 +9282,10 @@ a clean buffer we're an order of magnitude laxer about checking."
              (funcall fun n))))
      '((name . "Don't complete numbers")))
 
-    ;; Avoid `fci-mode' and `company' popups.
-    (defvar-local company-fci-mode-on-p nil)
-
-    (defun company-turn-off-fci (&rest ignore)
-      (when (boundp 'fci-mode)
-        (setq company-fci-mode-on-p fci-mode)
-        (when fci-mode
-          (turn-off-fci-mode))))
-
-    (defun company-maybe-turn-on-fci (&rest ignore)
-      (when company-fci-mode-on-p
-        (turn-on-fci-mode)))
-
-    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
-    (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
-
     )                                   ; with-eval-after-load "company".
 
   ;; Dabbrev-like company-mode back-end for code.
-  (with-eval-after-load "company-dabbrev-code-XXX"
+  (with-eval-after-load "company-dabbrev-code"
 
     ;; ;; Search all other buffers
     ;; (setq company-dabbrev-code-other-buffers 'all)
@@ -9337,6 +9295,9 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; ;; Ignore case when collecting completion candidates.
     ;; (setq company-dabbrev-code-ignore-case t)
+
+    (when (locate-library "web-mode")
+      (add-to-list 'company-dabbrev-code-modes 'web-mode))
     )
 
   (add-hook 'js2-mode-hook
@@ -9362,6 +9323,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Don't downcase the returned candidates.
     (setq company-dabbrev-downcase nil)
+    ;; Fix problem with lowercased completions in comments and strings, in many
+    ;; programming modes.
 
     ;; Skip invisible text (Org drawers, etc.).
     (setq company-dabbrev-ignore-invisible t))

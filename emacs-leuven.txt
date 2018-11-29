@@ -2229,10 +2229,6 @@ jumping onto them...
 
   (leuven--section "14.1 (emacs)Scrolling")
 
-  ;; ;; Scroll window up/down by one line.
-  ;; (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
-  ;; (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
-
   ;; When scrolling, point preserves the cursor position in the buffer if the
   ;; original position is still visible.
   (setq scroll-preserve-screen-position t)
@@ -12297,21 +12293,15 @@ Keyboard shortcuts:
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun leuven-scroll-line-up ()
-    "Scroll text of current window upward 1 line."
-    (interactive)
-    (scroll-up 1))
-
-  (defun leuven-scroll-line-down ()
-    "Scroll text of current window downward 1 line."
-    (interactive)
-    (scroll-down 1))
-
+  ;; Move caret down and up in the editor.
   (add-hook 'prog-mode-hook
             #'(lambda ()
-                (local-set-key (kbd "<C-up>")   #'leuven-scroll-line-up)
-                (local-set-key (kbd "<C-down>") #'leuven-scroll-line-down)))
-                                        ; Sublime Text + SQL Management Studio
+                ;; Scroll text of current window upward by one line.
+                (local-set-key (kbd "<C-up>")   (kbd "C-u 1 C-v"))
+
+                ;; Scroll text of current window downward by one line.
+                (local-set-key (kbd "<C-down>") (kbd "C-u 1 M-v"))))
+                                        ; Sublime Text + SQL Management Studio + IntelliJ IDEA.
 #+end_src
 
 *************** TODO Add "move view" up/down on C-up/down
@@ -16486,30 +16476,23 @@ comparison* between both.
 
 Completion will start automatically after you type a few letters.
 
-- Use ~M-n~ and ~M-p~ to select,
-- ~RET~ or ~TAB~ to complete with the current selection
-  (~company-complete-selection~).
-- *Search through the completions* with ~C-s~, ~C-r~ and ~C-o~.
-- Press ~M-(digit)~ to quickly complete with one of the first 10 candidates.
-
-#+begin_note
-- ~company-complete-common~ inserts the common part of all candidates.
-- ~company-complete~ inserts the common part of all candidates or the current
-  selection.
-- ~company-complete-selection~ inserts the selected candidate.
-#+end_note
-
-Type ~M-x company-complete~ to initiate completion manually. Bind this command to
-a key combination of your choice.
-
-When the completion candidates are shown, press
-- ~<f1>~ to *display the full documentation* for the selected symbol, or
-- ~C-w~ to *show its definition*.
-Not all back-ends support this.
-
 Company mode has a unique take on auto-completion where it will reject
 keystrokes if it doesn't match any possibilities.  It can also search available
 completions and filter as well.
+
+When the menu (with completion candidates) is displayed, press:
+
+- ~up~ and ~down~ to select,
+- ~RET~ or ~TAB~ to complete with the current selection
+  (~company-complete-selection~).
+- *Search through the completions* with ~C-s~, ~C-r~ and ~C-o~.
+- Filter with C-M-s.
+- ~M-(digit)~ to quickly complete with one of the first 10 candidates.
+- ~<right>~ to cancel completion.
+- ~<F1>~ or C-h to *display the full documentation* for the selected symbol, or
+- ~C-w~ to *show its definition*.
+
+Not all back-ends support these last 2 commands.
 
 #+begin_src emacs-lisp
   ;; Modular text completion framework.
@@ -16518,10 +16501,6 @@ completions and filter as well.
     ;; Enable Company mode in all buffers ....
     (global-company-mode 1)
 
-    (global-set-key (kbd "<C-tab>") #'company-complete)
-    (global-set-key (kbd "C-/")     #'company-complete)
-    ;; (global-set-key (kbd "C-/") #'helm-company) ; ?
-
     (global-set-key (kbd "C-c y") #'company-yasnippet)
                                         ; Better than `helm-yas-complete' as
                                         ; `company-yasnippet' shows both the key
@@ -16529,24 +16508,22 @@ completions and filter as well.
     )
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-;; Hooks
-(add-hook 'web-mode-hook
-          #'(lambda ()
-              ;; Add ‘company-mode’ backend for ‘yasnippet’.
-              (set (make-local-variable 'company-backends)
-                   (append company-backends '((company-yasnippet))))
-
-              ;; Auto indent.
-              (local-set-key (kbd "RET") #'newline-and-indent)
-
-              ;; Disable smartparens in web-mode.
-              (setq smartparens-mode nil)))
-#+end_src
-
-#+begin_src emacs-lisp
-;; See web-mode-imenu-regexp-list.
-#+end_src
+# #+begin_src emacs-lisp :tangle no
+# ;; Hooks
+# (add-hook 'web-mode-hook
+#           #'(lambda ()
+#               ;; Add ‘company-mode’ backend for ‘yasnippet’.
+#               (set (make-local-variable 'company-backends)
+#                    (append company-backends '((company-yasnippet))))
+#
+#               ;; Auto indent.
+#               (local-set-key (kbd "RET") #'newline-and-indent)
+#
+#               ;; Disable smartparens in web-mode.
+#               (setq smartparens-mode nil)))
+#
+# ;; See web-mode-imenu-regexp-list.
+# #+end_src
 
 **** Common
 
@@ -16562,7 +16539,7 @@ completions and filter as well.
 #+end_src
 
 By default, the list of candidates is sorted alphabetically, unless the backend
-(or we) chooses to sort them in a different way.
+(or we) choose(s) to sort them in a different way.
 
 #+begin_src emacs-lisp
     ;; ;; Sort candidates according to their occurrences.
@@ -16574,9 +16551,6 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 #+begin_src emacs-lisp
     ;; Align annotations to the right tooltip border.
     (setq company-tooltip-align-annotations t)
-
-    ;; Flip the tooltip when it's above the current line.
-    (setq company-tooltip-flip-when-above t)
 
     ;; Minimum prefix length for idle completion.
     (setq company-minimum-prefix-length 1)
@@ -16590,30 +16564,24 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     ;; Selecting item before first or after last wraps around.
     (setq company-selection-wrap-around t)
 
-    ;; Use `C-n/C-p' to select candidates (only when completion menu is
-    ;; displayed).
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    ;; Abort.
+    ;; (define-key company-active-map (kbd "<right>") #'company-abort)
+    ;; (define-key company-active-map (kbd "<left>")  #'company-abort)
 
-    ;; Unbind some keys (inconvenient in Comint buffers).
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
+    ;; Ignore some keys (inconvenient in Comint buffers).
+    (define-key company-active-map (kbd "M-n")     nil)
+    (define-key company-active-map (kbd "M-p")     nil)
 
     ;; Completion by TAB (insert the selected candidate).
-    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
+    (define-key company-active-map (kbd "<tab>")   #'company-complete-selection)
 
-    ;; Temporarily show the documentation buffer for the selection.
-    (define-key company-active-map (kbd "<f1>")    #'company-show-doc-buffer)
+    ;; Temporarily show the documentation buffer for the selection.  Also on F1 or C-h.
     (define-key company-active-map (kbd "C-?")     #'company-show-doc-buffer)
     (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
     (define-key company-active-map (kbd "M-?")     #'company-show-doc-buffer)
 
     ;;! Temporarily display a buffer showing the selected candidate in context.
-    (define-key company-active-map (kbd "M-.") #'company-show-location) ; XXX
-
-    ;; Abort.
-    (define-key company-active-map (kbd "C-g")    #'company-abort)
-    (define-key company-active-map (kbd "<left>") #'company-abort)
+    (define-key company-active-map (kbd "M-.")     #'company-show-location) ; XXX Also on C-w.
 
 
  (setq company-auto-complete
@@ -16629,9 +16597,6 @@ By default, the list of candidates is sorted alphabetically, unless the backend
          comint-previous-matching-input-from-input
          comint-next-matching-input-from-input))
  (setq company-require-match nil)
-
-
-
 #+end_src
 
 #+begin_src emacs-lisp
@@ -16648,26 +16613,24 @@ By default, the list of candidates is sorted alphabetically, unless the backend
      '((name . "Don't complete numbers")))
 #+end_src
 
-#+begin_src emacs-lisp
-    ;; Avoid `fci-mode' and `company' popups.
-    (defvar-local company-fci-mode-on-p nil)
-
-    (defun company-turn-off-fci (&rest ignore)
-      (when (boundp 'fci-mode)
-        (setq company-fci-mode-on-p fci-mode)
-        (when fci-mode
-          (turn-off-fci-mode))))
-
-    (defun company-maybe-turn-on-fci (&rest ignore)
-      (when company-fci-mode-on-p
-        (turn-on-fci-mode)))
-
-    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
-    (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
-#+end_src
-
-If you press ~<right>~ when the menu is displayed, it will cancel completion.
+# #+begin_src emacs-lisp
+#     ;; Avoid `fci-mode' and `company' popups.
+#     (defvar-local company-fci-mode-on-p nil)
+#
+#     (defun company-turn-off-fci (&rest ignore)
+#       (when (boundp 'fci-mode)
+#         (setq company-fci-mode-on-p fci-mode)
+#         (when fci-mode
+#           (turn-off-fci-mode))))
+#
+#     (defun company-maybe-turn-on-fci (&rest ignore)
+#       (when company-fci-mode-on-p
+#         (turn-on-fci-mode)))
+#
+#     (add-hook 'company-completion-started-hook 'company-turn-off-fci)
+#     (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+#     (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
+# #+end_src
 
 *First* run the *indent* function, then try *completion* only if it didn't change
 anything.
@@ -16714,7 +16677,7 @@ See also https://github.com/company-mode/company-mode/issues/123.
 
 **** Tab
 
-So, Company mode and YASnippet step on each other toes. So These functions are
+So, Company mode and YASnippet step on each other toes. So these functions are
 to help TAB have the behaviour I expect. Attempt these actions, and do the first
 one that works.
 
@@ -16783,7 +16746,7 @@ will -- by default -- complete only symbols, not text in comments or strings.
 
 #+begin_src emacs-lisp
   ;; Dabbrev-like company-mode back-end for code.
-  (with-eval-after-load "company-dabbrev-code-XXX"
+  (with-eval-after-load "company-dabbrev-code"
 
     ;; ;; Search all other buffers
     ;; (setq company-dabbrev-code-other-buffers 'all)
@@ -16793,6 +16756,9 @@ will -- by default -- complete only symbols, not text in comments or strings.
 
     ;; ;; Ignore case when collecting completion candidates.
     ;; (setq company-dabbrev-code-ignore-case t)
+
+    (when (locate-library "web-mode")
+      (add-to-list 'company-dabbrev-code-modes 'web-mode))
     )
 #+end_src
 
@@ -16887,6 +16853,8 @@ In the other modes, Company will pass control to other back-ends
 
     ;; Don't downcase the returned candidates.
     (setq company-dabbrev-downcase nil)
+    ;; Fix problem with lowercased completions in comments and strings, in many
+    ;; programming modes.
 
     ;; Skip invisible text (Org drawers, etc.).
     (setq company-dabbrev-ignore-invisible t))
