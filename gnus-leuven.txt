@@ -27,7 +27,7 @@ http://koldfront.dk/text/gnus-email-basic-usage.html
 #+begin_src emacs-lisp :noweb yes
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2018 Fabrice Niessen
+;; Copyright (C) 2004-2019 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
@@ -1568,7 +1568,8 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
     (turn-on-orgtbl)
 
     ;; Turn on (the enhanced version of) orgstruct-mode.
-    (turn-on-orgstruct++)
+    (when (fboundp 'turn-on-orgstruct++)
+      (turn-on-orgstruct++))
 
     (when (try-require 'org-footnote)
       ;; Default style used for footnoting is local to the Message being

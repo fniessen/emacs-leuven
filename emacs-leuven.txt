@@ -314,7 +314,7 @@ Citations:
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2018 Fabrice Niessen
+;; Copyright (C) 1999-2019 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -999,7 +999,7 @@ These packages are neither built-in nor already installed nor ignored."
 
         (when (or leuven-install-all-missing-elpa-packages
                   (yes-or-no-p
-                   (format "Install the %s missing ELPA packages without confirming each? "
+                   (format "Install the %s missing ELPA package(s) without confirming each? "
                            (length missing-elpa-packages))))
           (setq leuven-install-all-missing-elpa-packages t))
 
@@ -1697,7 +1697,6 @@ Done.
 #+end_src
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-S-SPC") #'set-rectangular-region-anchor)
     (global-set-key (kbd "C-M-=") #'mc/insert-numbers)
   )
 #+end_src
@@ -6343,6 +6342,7 @@ XXX Declare PDF files as binary
                        ("\300" . "À")
                        ("\307" . "Ç")
                        ("\311" . "É")
+                       ("\312" . "Ê")
                        ("\340" . "à")    ;; \303\240
                        ("\341" . "a")    ;; XXX Spanish a with accent 341. \303\241
                        ("\342" . "â")    ;; \303\242
@@ -6354,6 +6354,7 @@ XXX Declare PDF files as binary
                        ("\353" . "ë")
                        ("\356" . "î")
                        ("\357" . "ï")
+                       ("\361" . "n")    ;; n tilde
                        ("\363" . "o")    ;; XXX Spanish o with accent 363. \303\263
                        ("\364" . "ô")    ;; \303\264
                        ("\371" . "ù")
@@ -6692,6 +6693,8 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
   ;; M-q.
   (global-set-key [remap fill-paragraph] #'leuven-fill-or-unfill-paragraph)
+  (with-eval-after-load "org"
+    (define-key org-mode-map (kbd "M-q") #'leuven-fill-or-unfill-paragraph))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -6865,7 +6868,7 @@ tangling* of this file by a giga-mega-huge factor!?
     ;; (key-chord-define-global "dq" "\"\"\C-b")
     ;; (key-chord-define-global ";d" #'dired-jump-other-window)
     ;; (key-chord-define-global "jk" #'dabbrev-expand)
-    ;; (key-chord-define-global "JJ" #'find-tag)
+    ;; (key-chord-define-global "JJ" #'xref-find-definitions)
     ;; (key-chord-define-global ",." "<>\C-b")
     ;; (key-chord-define-global "''" "`'\C-b")
     ;; (key-chord-define-global ",," #'indent-for-comment)
@@ -8428,14 +8431,7 @@ Alternative to requiring org-clock in every Emacs session.
 
     ;; 8.4.2 Format string used when creating CLOCKSUM lines and when generating
     ;; a time duration (avoid showing days).
-    (setq org-time-clocksum-format
-          '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
-                                        ; Some clocktable functions cannot
-                                        ; digest day formats (e.g.,
-                                        ; org-clock-time%).
-
-    ;; ;; 8.4.2 Use fractional times.
-    ;; (setq org-time-clocksum-use-fractional t)
+    (setq org-duration-format 'h:mm)    ; Introduced in Emacs 26.1 / Org 9.1.
 
     ;; Format string for the total time cells.
     (setq org-clock-total-time-cell-format "%s")
@@ -8959,7 +8955,7 @@ header under which the entry will be placed.
 
 #+begin_src emacs-lisp
     ;; ;; Speed up agenda by avoiding to update some text properties.
-    ;; (setq org-agenda-ignore-drawer-properties '(effort category)) ; org.el
+    ;; (setq org-agenda-ignore-properties '(effort category)) ; org.el
 #+end_src
 
 #+begin_src emacs-lisp
@@ -10172,7 +10168,8 @@ capabilities.
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; (setq org-latex-create-formula-image-program 'imagemagick)
+    ;; Default process to convert LaTeX fragments to image files.
+    ;; (setq org-preview-latex-default-process 'imagemagick)
 #+end_src
 
 Look at the variable ~org-latex-remove-logfiles~, which controls whether some
@@ -10928,14 +10925,14 @@ Find all entries where :PROPERTIES: is not the first item listed.
                                      "END[ \t]*$"))))
          (org-map-entries
           #'(lambda ()
-              (unless (and inline-re (org-looking-at-p inline-re))
+              (unless (and inline-re (looking-at-p inline-re))
                 (save-excursion
                   (let ((end (save-excursion (outline-next-heading) (point))))
                     (forward-line)
-                    (when (org-looking-at-p org-planning-line-re) ; Org-8.3.
+                    (when (looking-at-p org-planning-line-re) ; Org-8.3.
                       (forward-line))
                     (when (and (< (point) end)
-                               (not (org-looking-at-p org-property-drawer-re))
+                               (not (looking-at-p org-property-drawer-re))
                                (save-excursion
                                  (and (re-search-forward org-property-drawer-re end t)
                                       (eq (org-element-type
@@ -11002,11 +10999,11 @@ Lower-case in ~BEGIN_SRC~ and other keywords: do not stand out!
   (with-eval-after-load "org"
     (message "[... Org Easy Templates]")
 
-    ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
-    (mapc #'(lambda (asc)
-              (let ((org-sce-dc (downcase (nth 1 asc))))
-                (setf (nth 1 asc) org-sce-dc)))
-          org-structure-template-alist)
+    ;; ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
+    ;; (mapc #'(lambda (asc)
+    ;;           (let ((org-sce-dc (downcase (nth 1 asc))))
+    ;;             (setf (nth 1 asc) org-sce-dc)))
+    ;;       org-structure-template-alist)
 
     (add-to-list 'org-structure-template-alist
                  '("n" "#+begin_note\n?\n#+end_note"))
@@ -11023,7 +11020,8 @@ Lower-case in ~BEGIN_SRC~ and other keywords: do not stand out!
     (add-to-list 'org-structure-template-alist
                  '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
 
-    ;; (setq org-babel-uppercase-example-markers nil)
+    ;; Begin/end example markers will be inserted in lower case.
+    (setq org-babel-uppercase-example-markers nil)
     )
 #+end_src
 
@@ -11415,31 +11413,31 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 #+begin_src emacs-lisp
 ;;** A.3 (info "(org)Adding hyperlink types")
 
-  (with-eval-after-load "org"
-    (message "[... Org Adding hyperlink types]")
-
-    ;; Define a new link type (`latex') whose path argument can hold the name of
-    ;; any LaTeX command.
-    (org-add-link-type
-     "latex" nil
-     #'(lambda (path desc format)
-         (cond
-          ((eq format 'html)
-           (format "<span class=\"%s\">%s</span>" path desc))
-          ((eq format 'latex)
-           (format "\\%s{%s}" path desc)))))
-
-    ;; Add background color by using custom links like [[bgcolor:red][Warning!]].
-    (org-add-link-type
-      "bgcolor" nil
-      #'(lambda (path desc format)
-          (cond
-           ((eq format 'html)
-            (format "<span style=\"background-color:%s;\">%s</span>" path desc))
-           ((eq format 'latex)
-            (format "\\colorbox{%s}{%s}" path desc))
-           (t
-            (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
+  ;; (with-eval-after-load "org"
+  ;;   (message "[... Org Adding hyperlink types]")
+  ;;
+  ;;   ;; Define a new link type (`latex') whose path argument can hold the name of
+  ;;   ;; any LaTeX command.
+  ;;   (org-link-set-parameters
+  ;;    "latex" nil
+  ;;    #'(lambda (path desc format)
+  ;;        (cond
+  ;;         ((eq format 'html)
+  ;;          (format "<span class=\"%s\">%s</span>" path desc))
+  ;;         ((eq format 'latex)
+  ;;          (format "\\%s{%s}" path desc)))))
+  ;;
+  ;;   ;; Add background color by using custom links like [[bgcolor:red][Warning!]].
+  ;;   (org-link-set-parameters
+  ;;     "bgcolor" nil
+  ;;     #'(lambda (path desc format)
+  ;;         (cond
+  ;;          ((eq format 'html)
+  ;;           (format "<span style=\"background-color:%s;\">%s</span>" path desc))
+  ;;          ((eq format 'latex)
+  ;;           (format "\\colorbox{%s}{%s}" path desc))
+  ;;          (t
+  ;;           (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
 #+end_src
 
 ** A.5 Tables and lists in arbitrary syntax
@@ -12816,7 +12814,7 @@ Keyboard shortcuts:
     (defadvice goto-line (after expand-after-goto-line activate compile)
       (save-excursion (hs-show-block)))
 
-    (defadvice find-tag (after expand-after-find-tag activate compile)
+    (defadvice xref-find-definitions (after expand-after-xref-find-definitions activate compile)
       (save-excursion (hs-show-block)))
 
     ;; Change those really awkward key bindings with `@' in the middle.
@@ -15228,43 +15226,17 @@ New package Xref replaces Etags's front-end and UI.
 The new package Xref provides a generic framework and new commands to
 find and move to definitions of functions, macros, data structures
 etc., as well as go back to the location where you were before moving
-to a definition.  It supersedes and obsoletes many Etags commands,
-while still using the etags.el code that reads the TAGS tables as one
-of its back-ends.
-
-The command 'xref-find-definitions' replaces 'find-tag' and provides
-an interface to pick one definition among several.
-'tags-loop-continue' is now unbound.  'xref-pop-marker-stack' replaces
-'pop-tag-mark', but has a keybinding ('M-,') different from the one
-'pop-tag-mark' used.
-
-'xref-find-definitions-other-window' replaces 'find-tag-other-window'.
-'xref-find-definitions-other-frame' replaces 'find-tag-other-frame'.
-'xref-find-apropos' replaces 'find-tag-regexp'.
-
-As a result of this, the following commands are now obsolete:
-'find-tag-other-window', 'find-tag-other-frame', 'find-tag-regexp',
-'tags-apropos'.
-
-'tags-loop-continue' is not obsolete because it's still useful in
-'tags-search' and 'tags-query-replace', for which there are no direct
-replacements yet.
+to a definition.  It supersedes and obsoletes many Etags commands.
 #+end_note
 
 You can *go to* the first *definition* of a tag (matching your regexp) -- *according*
-*to TAGS file* -- by using ~M-x find-tag~ (bound to ~M-.~).  The default tag is the
-identifier under the cursor.
+*to TAGS file* -- by using ~M-x xref-find-definitions~ (bound to ~M-.~).  The default
+tag is the identifier under the cursor.
 
 If ~M-.~ brings up the wrong method, you can type ~C-u M-.~ to continue searching
 for the *next definition* with the same name.
 
-#+begin_src emacs-lisp
-  (defun find-next-tag ()
-    (interactive)
-    (find-tag nil t))
-#+end_src
-
-Use ~M-*~ (~M-x pop-tag-mark~) to *jump back* to where you last invoked ~M-.~.
+Use ~M-,~ (~M-x xref-pop-marker-stack~) to *jump back* to where you last invoked ~M-.~.
 
 XXX See http://marmalade-repo.org/packages/jump-dls to jump to the source of the
 symbol at point using a number of possible methods, such as semantic, tags, etc.
@@ -15273,9 +15245,6 @@ symbol at point using a number of possible methods, such as semantic, tags, etc.
 
 You can search for *occurrences* of tags that match you regexp on all files in
 the TAGS table, by using ~M-x tags-search RET~.
-
-To continue searching for next match (or to *pop back* to where ~M-.~ was last
-invoked??), use "M-,".
 
 #+begin_src emacs-lisp
   ;; (with-eval-after-load "etags"
@@ -15328,7 +15297,7 @@ Go to source code for symbol at point:
     (defun leuven-goto-lisp-symbol-at-point ()
       "Go to the definition of the Emacs Lisp symbol at point."
       (interactive)
-      (require 'thingatpt)              ; XXX use find-tag instead?
+      (require 'thingatpt)              ; XXX use xref-find-definitions instead?
       (let ((sym (symbol-at-point)))    ; or (find-tag-default) or (current-word)?
         (funcall (pcase sym
                    ((pred facep)           'find-face)
@@ -15339,7 +15308,7 @@ Go to source code for symbol at point:
     (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 #+end_src
 
-*** dump-jump (goto definition)
+*** dump-jump (go to definition)
 
 With this package, you can jump to a definition (of the symbol at point) for
 multiple languages without any setup (e.g. *no =TAGS= file is needed anymore*).
@@ -15366,6 +15335,10 @@ Keyboard shortcuts:
 | Quick look                          | C-M-y  |              |               |
 
 #+begin_src emacs-lisp
+;; XXX IntelliJ IDEA:
+;; C-f1
+;; Quick Definition View: C-S-i
+;; Quick Documentation View: C-q
   (with-eval-after-load "dumb-jump-autoloads"
 
     ;; ;; Use Helm as selector when there are multiple choices.
@@ -16342,7 +16315,8 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
   (with-eval-after-load "auto-complete-autoloads-XXX"
     (idle-require 'auto-complete-config)
 
-    (global-set-key (kbd "C-/") #'auto-complete))
+    (global-set-key (kbd "C-/")     #'auto-complete)
+    (global-set-key (kbd "C-S-SPC") #'auto-complete))
 
   (with-eval-after-load "auto-complete-config"
 
@@ -16353,19 +16327,30 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
   (with-eval-after-load "auto-complete"
                                         ; Required by ESS.
 
-    ;; 5.4 Completion will be started automatically by inserting 2 characters.
+    ;; 5.4 Completion will be started automatically by inserting 1 character.
     (setq ac-auto-start 1)              ; Also applies on arguments after
                                         ; opening parenthesis in ESS.
 
     ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
     (setq ac-use-menu-map t)
-    (define-key ac-menu-map (kbd "C-n") #'ac-next)
-    (define-key ac-menu-map (kbd "C-p") #'ac-previous)
+
+    ;; Completion by TAB.
+    (define-key ac-completing-map (kbd "<tab>")   #'ac-complete)
+
+    ;; ;; Completion by RET.
+    ;; (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
 
     ;; Unbind some keys (inconvenient in Comint buffers).
-    (define-key ac-completing-map (kbd "M-n") nil)
-    (define-key ac-completing-map (kbd "M-p") nil)
+    (define-key ac-completing-map (kbd "M-n")     nil)
+    (define-key ac-completing-map (kbd "M-p")     nil)
+
+    (define-key ac-completing-map (kbd "C-h")     #'ac-help)
+
+    ;; Abort.
+    (define-key ac-completing-map (kbd "C-g")     #'ac-stop)
+    (define-key ac-completing-map (kbd "<left>")  #'ac-stop)
+    ;; (define-key ac-completing-map (kbd "<right>") #'ac-stop)
 
     ;; Add other modes into `ac-modes'.
     (setq ac-modes
@@ -16400,40 +16385,34 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     ;; (setq ac-disable-inline t)
     ;; (setq ac-candidate-menu-min 0)
 
-    ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<tab>") #'ac-complete)
-
-    ;; Completion by RET.
-    (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
-
-    ;; Abort.
-    (define-key ac-completing-map (kbd "C-g")    #'ac-stop)
-    (define-key ac-completing-map (kbd "<left>") #'ac-stop)
-
     ;; 11.1 Avoid Flyspell processes when auto completion is being started.
     (ac-flyspell-workaround)
 #+end_src
 
+# #+begin_src emacs-lisp
+#     ;; Avoid `fci-mode' and `auto-complete' popups.
+#     (defvar sanityinc/fci-mode-suppressed nil)
+#
+#     (defadvice popup-create (before suppress-fci-mode activate)
+#       "Suspend fci-mode while popups are visible"
+#       (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
+#       (when fci-mode
+#         (turn-off-fci-mode)))
+#
+#     (defadvice popup-delete (after restore-fci-mode activate)
+#       "Restore fci-mode when all popups have closed"
+#       (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
+#         (setq sanityinc/fci-mode-suppressed nil)
+#         (turn-on-fci-mode))))
+# #+end_src
+#
+# If you don't like this workaround, instead of using ~fci-mode~, use
+# ~whitespace-mode~ with ~lines-tail~ in whitespace-style.  It provides pretty much the
+# same benefit.
+
 #+begin_src emacs-lisp
-    ;; Avoid `fci-mode' and `auto-complete' popups.
-    (defvar sanityinc/fci-mode-suppressed nil)
-
-    (defadvice popup-create (before suppress-fci-mode activate)
-      "Suspend fci-mode while popups are visible"
-      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
-      (when fci-mode
-        (turn-off-fci-mode)))
-
-    (defadvice popup-delete (after restore-fci-mode activate)
-      "Restore fci-mode when all popups have closed"
-      (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
-        (setq sanityinc/fci-mode-suppressed nil)
-        (turn-on-fci-mode))))
+)
 #+end_src
-
-If you don't like this workaround, instead of using ~fci-mode~, use
-~whitespace-mode~ with ~lines-tail~ in whitespace-style.  It provides pretty much the
-same benefit.
 
 XXX Test the following.
 
@@ -16451,14 +16430,18 @@ The best alternative to Auto-Complete seems to be Company mode.
 
 #+begin_src emacs-lisp
 (defun toggle-auto-complete-company-modes ()
-"Toggle beteen AC and Company modes."
+  "Toggle beteen AC and Company modes."
   (interactive)
   (if auto-complete-mode
       (progn
         (auto-complete-mode -1)
-        (company-mode 1))
+        (company-mode 1)
+        (message "Disable AC.  Enable Company")
+        (sit-for 2))
     (auto-complete-mode 1)
-    (company-mode -1)))
+    (company-mode -1)
+    (message "Disable Company.  Enable AC")
+    (sit-for 2)))
 
 (global-set-key (kbd "<M-f1>") #'toggle-auto-complete-company-modes)
 #+end_src
@@ -16577,8 +16560,6 @@ By default, the list of candidates is sorted alphabetically, unless the backend
 
     ;; Temporarily show the documentation buffer for the selection.  Also on F1 or C-h.
     (define-key company-active-map (kbd "C-?")     #'company-show-doc-buffer)
-    (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
-    (define-key company-active-map (kbd "M-?")     #'company-show-doc-buffer)
 
     ;;! Temporarily display a buffer showing the selected candidate in context.
     (define-key company-active-map (kbd "M-.")     #'company-show-location) ; XXX Also on C-w.

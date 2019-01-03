@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2018 Fabrice Niessen
+;; Copyright (C) 1999-2019 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20181129.1742
+;; Version: 20190103.2139
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20181129.1742"
+(defconst leuven--emacs-version "20190103.2139"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -528,7 +528,7 @@ These packages are neither built-in nor already installed nor ignored."
 
         (when (or leuven-install-all-missing-elpa-packages
                   (yes-or-no-p
-                   (format "Install the %s missing ELPA packages without confirming each? "
+                   (format "Install the %s missing ELPA package(s) without confirming each? "
                            (length missing-elpa-packages))))
           (setq leuven-install-all-missing-elpa-packages t))
 
@@ -894,7 +894,6 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; (global-set-key (kbd "<C-RET>") #'mc/mark-more-like-this-extended) ; useful for completion
 
-    (global-set-key (kbd "C-S-SPC") #'set-rectangular-region-anchor)
     (global-set-key (kbd "C-M-=") #'mc/insert-numbers)
   )
 
@@ -3395,6 +3394,7 @@ cycle through all windows on current frame."
                        ("\300" . "À")
                        ("\307" . "Ç")
                        ("\311" . "É")
+                       ("\312" . "Ê")
                        ("\340" . "à")    ;; \303\240
                        ("\341" . "a")    ;; XXX Spanish a with accent 341. \303\241
                        ("\342" . "â")    ;; \303\242
@@ -3406,6 +3406,7 @@ cycle through all windows on current frame."
                        ("\353" . "ë")
                        ("\356" . "î")
                        ("\357" . "ï")
+                       ("\361" . "n")    ;; n tilde
                        ("\363" . "o")    ;; XXX Spanish o with accent 363. \303\263
                        ("\364" . "ô")    ;; \303\264
                        ("\371" . "ù")
@@ -3594,6 +3595,8 @@ cycle through all windows on current frame."
 
   ;; M-q.
   (global-set-key [remap fill-paragraph] #'leuven-fill-or-unfill-paragraph)
+  (with-eval-after-load "org"
+    (define-key org-mode-map (kbd "M-q") #'leuven-fill-or-unfill-paragraph))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -3747,7 +3750,7 @@ cycle through all windows on current frame."
     ;; (key-chord-define-global "dq" "\"\"\C-b")
     ;; (key-chord-define-global ";d" #'dired-jump-other-window)
     ;; (key-chord-define-global "jk" #'dabbrev-expand)
-    ;; (key-chord-define-global "JJ" #'find-tag)
+    ;; (key-chord-define-global "JJ" #'xref-find-definitions)
     ;; (key-chord-define-global ",." "<>\C-b")
     ;; (key-chord-define-global "''" "`'\C-b")
     ;; (key-chord-define-global ",," #'indent-for-comment)
@@ -4739,14 +4742,7 @@ cycle through all windows on current frame."
 
     ;; 8.4.2 Format string used when creating CLOCKSUM lines and when generating
     ;; a time duration (avoid showing days).
-    (setq org-time-clocksum-format
-          '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
-                                        ; Some clocktable functions cannot
-                                        ; digest day formats (e.g.,
-                                        ; org-clock-time%).
-
-    ;; ;; 8.4.2 Use fractional times.
-    ;; (setq org-time-clocksum-use-fractional t)
+    (setq org-duration-format 'h:mm)    ; Introduced in Emacs 26.1 / Org 9.1.
 
     ;; Format string for the total time cells.
     (setq org-clock-total-time-cell-format "%s")
@@ -5091,7 +5087,7 @@ From the address <%a>"
     (setq org-agenda-restore-windows-after-quit t)
 
     ;; ;; Speed up agenda by avoiding to update some text properties.
-    ;; (setq org-agenda-ignore-drawer-properties '(effort category)) ; org.el
+    ;; (setq org-agenda-ignore-properties '(effort category)) ; org.el
 
     ;; Normally hide the "someday" (nice-to-have) things.
     ;; (setq org-agenda-filter-preset '("-SDAY"))
@@ -5943,7 +5939,8 @@ this with to-do items than with projects or headings."
     ;; Format string for links with unknown path type.
     (setq org-latex-link-with-unknown-path-format "\\colorbox{red}{%s}")
 
-    ;; (setq org-latex-create-formula-image-program 'imagemagick)
+    ;; Default process to convert LaTeX fragments to image files.
+    ;; (setq org-preview-latex-default-process 'imagemagick)
 
     (defun leuven--change-pdflatex-program (backend)
       "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
@@ -6410,14 +6407,14 @@ this with to-do items than with projects or headings."
                                      "END[ \t]*$"))))
          (org-map-entries
           #'(lambda ()
-              (unless (and inline-re (org-looking-at-p inline-re))
+              (unless (and inline-re (looking-at-p inline-re))
                 (save-excursion
                   (let ((end (save-excursion (outline-next-heading) (point))))
                     (forward-line)
-                    (when (org-looking-at-p org-planning-line-re) ; Org-8.3.
+                    (when (looking-at-p org-planning-line-re) ; Org-8.3.
                       (forward-line))
                     (when (and (< (point) end)
-                               (not (org-looking-at-p org-property-drawer-re))
+                               (not (looking-at-p org-property-drawer-re))
                                (save-excursion
                                  (and (re-search-forward org-property-drawer-re end t)
                                       (eq (org-element-type
@@ -6462,11 +6459,11 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "[... Org Easy Templates]")
 
-    ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
-    (mapc #'(lambda (asc)
-              (let ((org-sce-dc (downcase (nth 1 asc))))
-                (setf (nth 1 asc) org-sce-dc)))
-          org-structure-template-alist)
+    ;; ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
+    ;; (mapc #'(lambda (asc)
+    ;;           (let ((org-sce-dc (downcase (nth 1 asc))))
+    ;;             (setf (nth 1 asc) org-sce-dc)))
+    ;;       org-structure-template-alist)
 
     (add-to-list 'org-structure-template-alist
                  '("n" "#+begin_note\n?\n#+end_note"))
@@ -6483,7 +6480,8 @@ this with to-do items than with projects or headings."
     (add-to-list 'org-structure-template-alist
                  '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
 
-    ;; (setq org-babel-uppercase-example-markers nil)
+    ;; Begin/end example markers will be inserted in lower case.
+    (setq org-babel-uppercase-example-markers nil)
     )
 
 ;;** 15.3 (info "(org)Speed keys")
@@ -6684,31 +6682,31 @@ this with to-do items than with projects or headings."
 
 ;;** A.3 (info "(org)Adding hyperlink types")
 
-  (with-eval-after-load "org"
-    (message "[... Org Adding hyperlink types]")
-
-    ;; Define a new link type (`latex') whose path argument can hold the name of
-    ;; any LaTeX command.
-    (org-add-link-type
-     "latex" nil
-     #'(lambda (path desc format)
-         (cond
-          ((eq format 'html)
-           (format "<span class=\"%s\">%s</span>" path desc))
-          ((eq format 'latex)
-           (format "\\%s{%s}" path desc)))))
-
-    ;; Add background color by using custom links like [[bgcolor:red][Warning!]].
-    (org-add-link-type
-      "bgcolor" nil
-      #'(lambda (path desc format)
-          (cond
-           ((eq format 'html)
-            (format "<span style=\"background-color:%s;\">%s</span>" path desc))
-           ((eq format 'latex)
-            (format "\\colorbox{%s}{%s}" path desc))
-           (t
-            (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
+  ;; (with-eval-after-load "org"
+  ;;   (message "[... Org Adding hyperlink types]")
+  ;;
+  ;;   ;; Define a new link type (`latex') whose path argument can hold the name of
+  ;;   ;; any LaTeX command.
+  ;;   (org-link-set-parameters
+  ;;    "latex" nil
+  ;;    #'(lambda (path desc format)
+  ;;        (cond
+  ;;         ((eq format 'html)
+  ;;          (format "<span class=\"%s\">%s</span>" path desc))
+  ;;         ((eq format 'latex)
+  ;;          (format "\\%s{%s}" path desc)))))
+  ;;
+  ;;   ;; Add background color by using custom links like [[bgcolor:red][Warning!]].
+  ;;   (org-link-set-parameters
+  ;;     "bgcolor" nil
+  ;;     #'(lambda (path desc format)
+  ;;         (cond
+  ;;          ((eq format 'html)
+  ;;           (format "<span style=\"background-color:%s;\">%s</span>" path desc))
+  ;;          ((eq format 'latex)
+  ;;           (format "\\colorbox{%s}{%s}" path desc))
+  ;;          (t
+  ;;           (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
 
   (defun leuven-org-send-all-buffer-tables ()
     "Export all Org tables of the LaTeX document to their corresponding LaTeX tables."
@@ -7466,7 +7464,7 @@ mouse-3: go to end") "]")))
     (defadvice goto-line (after expand-after-goto-line activate compile)
       (save-excursion (hs-show-block)))
 
-    (defadvice find-tag (after expand-after-find-tag activate compile)
+    (defadvice xref-find-definitions (after expand-after-xref-find-definitions activate compile)
       (save-excursion (hs-show-block)))
 
     ;; Change those really awkward key bindings with `@' in the middle.
@@ -8655,10 +8653,6 @@ a clean buffer we're an order of magnitude laxer about checking."
           ;; "/usr/share/texmf-texlive/tex/latex/TAGS"
           ))
 
-  (defun find-next-tag ()
-    (interactive)
-    (find-tag nil t))
-
   ;; (with-eval-after-load "etags"
   ;;
   ;;   ;; Select from multiple tags.
@@ -8677,7 +8671,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (defun leuven-goto-lisp-symbol-at-point ()
       "Go to the definition of the Emacs Lisp symbol at point."
       (interactive)
-      (require 'thingatpt)              ; XXX use find-tag instead?
+      (require 'thingatpt)              ; XXX use xref-find-definitions instead?
       (let ((sym (symbol-at-point)))    ; or (find-tag-default) or (current-word)?
         (funcall (pcase sym
                    ((pred facep)           'find-face)
@@ -8687,6 +8681,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 
+;; XXX IntelliJ IDEA:
+;; C-f1
+;; Quick Definition View: C-S-i
+;; Quick Documentation View: C-q
   (with-eval-after-load "dumb-jump-autoloads"
 
     ;; ;; Use Helm as selector when there are multiple choices.
@@ -9097,7 +9095,8 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "auto-complete-autoloads-XXX"
     (idle-require 'auto-complete-config)
 
-    (global-set-key (kbd "C-/") #'auto-complete))
+    (global-set-key (kbd "C-/")     #'auto-complete)
+    (global-set-key (kbd "C-S-SPC") #'auto-complete))
 
   (with-eval-after-load "auto-complete-config"
 
@@ -9108,19 +9107,30 @@ a clean buffer we're an order of magnitude laxer about checking."
   (with-eval-after-load "auto-complete"
                                         ; Required by ESS.
 
-    ;; 5.4 Completion will be started automatically by inserting 2 characters.
+    ;; 5.4 Completion will be started automatically by inserting 1 character.
     (setq ac-auto-start 1)              ; Also applies on arguments after
                                         ; opening parenthesis in ESS.
 
     ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
     ;; displayed).
     (setq ac-use-menu-map t)
-    (define-key ac-menu-map (kbd "C-n") #'ac-next)
-    (define-key ac-menu-map (kbd "C-p") #'ac-previous)
+
+    ;; Completion by TAB.
+    (define-key ac-completing-map (kbd "<tab>")   #'ac-complete)
+
+    ;; ;; Completion by RET.
+    ;; (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
 
     ;; Unbind some keys (inconvenient in Comint buffers).
-    (define-key ac-completing-map (kbd "M-n") nil)
-    (define-key ac-completing-map (kbd "M-p") nil)
+    (define-key ac-completing-map (kbd "M-n")     nil)
+    (define-key ac-completing-map (kbd "M-p")     nil)
+
+    (define-key ac-completing-map (kbd "C-h")     #'ac-help)
+
+    ;; Abort.
+    (define-key ac-completing-map (kbd "C-g")     #'ac-stop)
+    (define-key ac-completing-map (kbd "<left>")  #'ac-stop)
+    ;; (define-key ac-completing-map (kbd "<right>") #'ac-stop)
 
     ;; Add other modes into `ac-modes'.
     (setq ac-modes
@@ -9155,43 +9165,24 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; (setq ac-disable-inline t)
     ;; (setq ac-candidate-menu-min 0)
 
-    ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<tab>") #'ac-complete)
-
-    ;; Completion by RET.
-    (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
-
-    ;; Abort.
-    (define-key ac-completing-map (kbd "C-g")    #'ac-stop)
-    (define-key ac-completing-map (kbd "<left>") #'ac-stop)
-
     ;; 11.1 Avoid Flyspell processes when auto completion is being started.
     (ac-flyspell-workaround)
 
-    ;; Avoid `fci-mode' and `auto-complete' popups.
-    (defvar sanityinc/fci-mode-suppressed nil)
-
-    (defadvice popup-create (before suppress-fci-mode activate)
-      "Suspend fci-mode while popups are visible"
-      (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
-      (when fci-mode
-        (turn-off-fci-mode)))
-
-    (defadvice popup-delete (after restore-fci-mode activate)
-      "Restore fci-mode when all popups have closed"
-      (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
-        (setq sanityinc/fci-mode-suppressed nil)
-        (turn-on-fci-mode))))
+)
 
 (defun toggle-auto-complete-company-modes ()
-"Toggle beteen AC and Company modes."
+  "Toggle beteen AC and Company modes."
   (interactive)
   (if auto-complete-mode
       (progn
         (auto-complete-mode -1)
-        (company-mode 1))
+        (company-mode 1)
+        (message "Disable AC.  Enable Company")
+        (sit-for 2))
     (auto-complete-mode 1)
-    (company-mode -1)))
+    (company-mode -1)
+    (message "Disable Company.  Enable AC")
+    (sit-for 2)))
 
 (global-set-key (kbd "<M-f1>") #'toggle-auto-complete-company-modes)
 
@@ -9249,8 +9240,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Temporarily show the documentation buffer for the selection.  Also on F1 or C-h.
     (define-key company-active-map (kbd "C-?")     #'company-show-doc-buffer)
-    (define-key company-active-map (kbd "C-c C-d") #'company-show-doc-buffer)
-    (define-key company-active-map (kbd "M-?")     #'company-show-doc-buffer)
 
     ;;! Temporarily display a buffer showing the selected candidate in context.
     (define-key company-active-map (kbd "M-.")     #'company-show-location) ; XXX Also on C-w.

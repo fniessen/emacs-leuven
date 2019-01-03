@@ -1,10 +1,10 @@
 ;;; gnus-leuven.el --- my Gnus config file
 
-;; Copyright (C) 2004-2018 Fabrice Niessen
+;; Copyright (C) 2004-2019 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20181120.0927
+;; Version: 20190103.2135
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -884,7 +884,8 @@
     (turn-on-orgtbl)
 
     ;; Turn on (the enhanced version of) orgstruct-mode.
-    (turn-on-orgstruct++)
+    (when (fboundp 'turn-on-orgstruct++)
+      (turn-on-orgstruct++))
 
     (when (try-require 'org-footnote)
       ;; Default style used for footnoting is local to the Message being
