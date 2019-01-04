@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20190103.2135
+;; Version: 20190104.1034
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -55,7 +55,7 @@
       ;; Configure incoming mail.
       (setq gnus-select-method
             '(nnimap "work"
-                     (nnimap-address "pinecone.nocdirect.com")
+                     (nnimap-address "ssl0.ovh.net")
                      (nnimap-server-port "imaps") ; 993
                      (nnimap-stream ssl)
 
@@ -883,9 +883,9 @@
     ;; Turn on the Org mode table editor (in emails).
     (turn-on-orgtbl)
 
-    ;; Turn on (the enhanced version of) orgstruct-mode.
-    (when (fboundp 'turn-on-orgstruct++)
-      (turn-on-orgstruct++))
+    ;; ;; Turn on (the enhanced version of) orgstruct-mode.
+    ;; (when (fboundp 'turn-on-orgstruct++)
+    ;;   (turn-on-orgstruct++))
 
     (when (try-require 'org-footnote)
       ;; Default style used for footnoting is local to the Message being

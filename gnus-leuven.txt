@@ -194,7 +194,7 @@ that it does not interfere with your own configuration...
       ;; Configure incoming mail.
       (setq gnus-select-method
             '(nnimap "work"
-                     (nnimap-address "pinecone.nocdirect.com")
+                     (nnimap-address "ssl0.ovh.net")
                      (nnimap-server-port "imaps") ; 993
                      (nnimap-stream ssl)
 
@@ -1567,9 +1567,9 @@ See http://www.emacswiki.org/emacs/AutoDictionaryMode.
     ;; Turn on the Org mode table editor (in emails).
     (turn-on-orgtbl)
 
-    ;; Turn on (the enhanced version of) orgstruct-mode.
-    (when (fboundp 'turn-on-orgstruct++)
-      (turn-on-orgstruct++))
+    ;; ;; Turn on (the enhanced version of) orgstruct-mode.
+    ;; (when (fboundp 'turn-on-orgstruct++)
+    ;;   (turn-on-orgstruct++))
 
     (when (try-require 'org-footnote)
       ;; Default style used for footnoting is local to the Message being
