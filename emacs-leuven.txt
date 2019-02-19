@@ -691,6 +691,14 @@ If not, just print a message."
 #+end_src
 
 #+begin_src emacs-lisp
+
+    (global-set-key (kbd "<M-right>") #'next-buffer) ; XXX
+    (global-set-key (kbd "<M-left>")  #'previous-buffer) ; XXX
+
+
+#+end_src
+
+#+begin_src emacs-lisp
 )                                       ; Chapter 0-loading-libraries ends here.
 #+end_src
 
@@ -891,13 +899,14 @@ like this into your configuration file:
             dictionary
             diff-hl
             diminish
+            docker-compose-mode
             dumb-jump
             ;; emacs-eclim
             emr
             ess
             expand-region
             fancy-narrow
-            fill-column-indicator
+            ;; fill-column-indicator
             flycheck
             flycheck-color-mode-line
             flycheck-ledger
@@ -1153,21 +1162,20 @@ Show line numbers temporarily -- just when you're going to a line number with
 
 ** Basic Undoing Changes
 
+Shortcuts:
+
+| Command | Emacs | Emacs-Leuven   |
+|---------+-------+----------------|
+| Undo    | C-/   | <f11>          |
+| Redo    |       | C-S-z, <S-f11> |
+
 #+begin_src emacs-lisp
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
 
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
-  ;; Undo some previous changes.
-  (global-set-key (kbd "C-z") #'undo)
+  ;; Undo changes.
   (global-set-key (kbd "<f11>") #'undo)
-#+end_src
-
-Visual feedback on some operations (~undo~, ~yank~, etc.).
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "volatile-highlights-autoloads"
-    (volatile-highlights-mode 1))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1192,11 +1200,16 @@ Visual feedback on some operations (~undo~, ~yank~, etc.).
     ;; Display diff by default in undo-tree visualizer.
     (setq undo-tree-visualizer-diff t)  ; Toggle the diff display using `d'.
 
-    (define-key undo-tree-map (kbd "C-/") nil)
-
-    ;; (defalias 'redo 'undo-tree-redo)
+    ;; Redo changes.
     (global-set-key (kbd "C-S-z")   #'undo-tree-redo)
     (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
+#+end_src
+
+Visual feedback on some operations (~undo~, ~yank~, etc.).
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "volatile-highlights-autoloads"
+    (volatile-highlights-mode 1))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1601,6 +1614,13 @@ You can also use keyboard shortcuts ~C-M-left~, or ~C-M-right~:
      Set mark after end of following *balanced expression* (~mark-sexp~) without
      moving point.
 
+Shortcuts:
+
+| Command          | Emacs-Leuven |
+|------------------+--------------|
+| Extend Selection | C-M-w        |
+| Shrink Selection | C-S-w        |
+
 #+begin_src emacs-lisp
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
@@ -1608,12 +1628,9 @@ You can also use keyboard shortcuts ~C-M-left~, or ~C-M-right~:
     ;; ;; Key to use after an initial expand/contract to undo.
     ;; (setq expand-region-reset-fast-key "<escape> <escape>")
 
-    (global-set-key (kbd "C-+") #'er/expand-region) ; See key-chord `hh'.
-    (global-set-key (kbd "C--") #'er/contract-region)) ; See key-chord `HH'.
+    (global-set-key (kbd "C-M-w") #'er/expand-region)    ; See key-chord `hh'.
+    (global-set-key (kbd "C-S-w") #'er/contract-region)) ; See key-chord `HH'.
 #+end_src
-
-*************** TODO Those key bindings are overridden by ~hs-hide/show-all~
-*************** END
 
 ** Operating on the Region
 
@@ -2511,6 +2528,12 @@ point, the highlighting goes away.
 #+begin_src emacs-lisp
   ;; Automatic highlighting occurrences of the current symbol under cursor.
   (when (try-require 'auto-highlight-symbol)
+
+
+          (define-key auto-highlight-symbol-mode-map (kbd "M-<left>")  nil) ; XXX
+          (define-key auto-highlight-symbol-mode-map (kbd "M-<right>") nil) ; XXX
+
+
 
     ;; Number of seconds to wait before highlighting the current symbol.
     (setq ahs-idle-interval 0.2) ; 0.35.
@@ -5354,6 +5377,7 @@ clipboard contents) and can pick the one you want to paste into the text using
 arrow keys.  Use ~RET~ to insert it.
 
 #+begin_src emacs-lisp
+  ;; Paste from History.
   (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
 #+end_src
 
@@ -6326,6 +6350,8 @@ XXX Declare PDF files as binary
 (defun leuven-cleanup-accent-iso-latin-1-to-utf-8 ()
   "Replace non-UTF-8 characters."
   (interactive)
+  ;; See https://www.fileformat.info/info/charset/UTF-8/list.htm, then type
+  ;; C-x 8 RET and then the number, followed by RET.
   (leuven--do-accent '(("\200" . "EUR")  ;; \342\202\254
                        ("\205" . "...")
                        ("\222" . "'")    ;; \342\200\231
@@ -6344,7 +6370,7 @@ XXX Declare PDF files as binary
                        ("\311" . "É")
                        ("\312" . "Ê")
                        ("\340" . "à")    ;; \303\240
-                       ("\341" . "a")    ;; XXX Spanish a with accent 341. \303\241
+                       ("\341" . "á")    ;; \303\241
                        ("\342" . "â")    ;; \303\242
                        ("\344" . "ä")
                        ("\347" . "ç")
@@ -6354,10 +6380,13 @@ XXX Declare PDF files as binary
                        ("\353" . "ë")
                        ("\356" . "î")
                        ("\357" . "ï")
-                       ("\361" . "n")    ;; n tilde
-                       ("\363" . "o")    ;; XXX Spanish o with accent 363. \303\263
+                       ("\361" . "ñ")
+                       ("\363" . "ó")    ;; \303\263
                        ("\364" . "ô")    ;; \303\264
+                       ("\365" . "õ")
+                       ("\366" . "ö")
                        ("\371" . "ù")
+                       ("\372" . "ú")
                        ("\373" . "û")    ;; \303\273
                        ("\374" . "ü")    ;; \303\274
                        )))
@@ -6707,7 +6736,7 @@ Show column guideline (right margin):
 
 #+begin_src emacs-lisp
   ;; Graphically indicate the fill column.
-  (try-require 'fill-column-indicator)
+  (try-require 'fill-column-indicator-XXX) ; Abandoned by the author.
   (with-eval-after-load "fill-column-indicator"
 
     ;; Color used to draw the fill-column rule.
@@ -7383,10 +7412,6 @@ interface).
                 ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
 
                 ;; (local-set-key (kbd "C-c h") #'hide-other) ; XXX Helm
-
-                ;; Table.
-                (local-set-key (kbd "C-M-w") #'org-table-copy-region)
-                (local-set-key (kbd "C-M-y") #'org-table-paste-rectangle)
 
                 ;; Remove some bindings.
                 (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
@@ -12054,6 +12079,53 @@ blocks (client/server side).
 
     (define-key web-mode-map (kbd "C-M-d")    #'web-mode-element-child)
 
+
+(defun web-mode-edit-element-elements-end-inside ()
+  (interactive)
+  (web-mode-element-end)
+  (backward-char))
+
+(defun web-mode-edit-element-utils-x-position (fx)
+  (save-excursion
+    (funcall fx)
+    (point)))
+
+(defun web-mode-edit-element-utils-fnil (val f)
+  (if val val
+    (funcall f)))
+
+(defun web-mode-edit-element-elements-sibling-next-p ()
+  (let ((parent-position
+         (web-mode-edit-element-utils-fnil
+          (save-excursion
+            (web-mode-element-beginning)
+            (web-mode-element-parent-position))
+          'point))
+        (tag-next-position
+         (web-mode-edit-element-utils-x-position
+          (lambda ()
+            (web-mode-edit-element-elements-end-inside)
+            (web-mode-tag-next)
+            (web-mode-element-beginning)))))
+    (not (= parent-position tag-next-position))))
+
+
+
+
+(defun web-mode-edit-element-elements-sibling-next-or-next-parent ()
+  (interactive)
+  (if (web-mode-edit-element-elements-sibling-next-p)
+      (web-mode-element-sibling-next)
+    (web-mode-element-parent)
+    (web-mode-element-sibling-next)))
+
+
+    (define-key web-mode-map (kbd "M-<down>") #'web-mode-edit-element-elements-sibling-next-or-next-parent)
+
+
+
+
+
 ;; XXX What about Fold Tag Attributes?
 
 ;; C-M-a           c-beginning-of-defun
@@ -15610,10 +15682,7 @@ Keyboard navigation:
 
     ;; ;; Toggle activation of ECB (between `ecb-activate' and `ecb-deactivate').
     ;; (global-set-key (kbd "C-c e") #'ecb-minor-mode)
-
-    ;; (global-set-key (kbd "<M-left>") #'ecb-goto-window-methods)
-    ;; (global-set-key (kbd "<M-right>") #'ecb-goto-window-edit1)
-    )
+  )
 #+end_src
 
 If you've installed CEDET and ECB, EmacsAssist is worth trying out:
@@ -15822,10 +15891,12 @@ Projectile's features.
     (define-key prog-mode-map (kbd "M-RET") #'emr-show-refactor-menu))
 #+end_src
 
-* Abbrevs (Auto Replacements)
+* Abbrevs (Snippets, Auto Replacements, or live Code templates)
 
 An "abbrev" is a *word* which has been defined (in a fixed list) to "expand"
 into a specified *expansion*.
+
+It allows you to write frequently used text more quickly.
 
 #+begin_src emacs-lisp
 ;;* 29 (info "(emacs)Abbrevs")
@@ -15835,12 +15906,13 @@ into a specified *expansion*.
   ;; See (info "(autotype)") as well
 #+end_src
 
-** Controlling Abbrev Expansion (live Code templates)
+** Controlling Abbrev Expansion
 
-Inspired by [[http://macromates.com/][TextMate]].  In fact, many editors support snippets: Eclipse,
+Inspired by [[http://macromates.com/][TextMate]].  In fact, many editors support *snippets*: Eclipse,
 Notepad++, etc.
 
-TODO Add rv for "REVIEW[who] text" https://www.jetbrains.com/help/idea/using-live-templates-in-todo-comments.html
+*************** TODO Add rv for "REVIEW[who] text" https://www.jetbrains.com/help/idea/using-live-templates-in-todo-comments.html
+*************** END
 
 For complex templates, I use ~YASnippet~.  For example, new file templates (where
 it's Lisp evaluation is handy), class and function templates with docblocks,

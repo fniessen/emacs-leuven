@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190103.2139
+;; Version: 20190219.1411
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190103.2139"
+(defconst leuven--emacs-version "20190219.1411"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -292,6 +292,9 @@ If not, just print a message."
           (bury-buffer)
         (find-file file))))
 
+    (global-set-key (kbd "<M-right>") #'next-buffer) ; XXX
+    (global-set-key (kbd "<M-left>")  #'previous-buffer) ; XXX
+
 )                                       ; Chapter 0-loading-libraries ends here.
 
 ;;* Environment
@@ -420,13 +423,14 @@ If not, just print a message."
             dictionary
             diff-hl
             diminish
+            docker-compose-mode
             dumb-jump
             ;; emacs-eclim
             emr
             ess
             expand-region
             fancy-narrow
-            fill-column-indicator
+            ;; fill-column-indicator
             flycheck
             flycheck-color-mode-line
             flycheck-ledger
@@ -643,12 +647,8 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
-  ;; Undo some previous changes.
-  (global-set-key (kbd "C-z") #'undo)
+  ;; Undo changes.
   (global-set-key (kbd "<f11>") #'undo)
-
-  (with-eval-after-load "volatile-highlights-autoloads"
-    (volatile-highlights-mode 1))
 
   ;; Treat undo history as a tree.
   (with-eval-after-load "undo-tree-autoloads"
@@ -671,11 +671,12 @@ These packages are neither built-in nor already installed nor ignored."
     ;; Display diff by default in undo-tree visualizer.
     (setq undo-tree-visualizer-diff t)  ; Toggle the diff display using `d'.
 
-    (define-key undo-tree-map (kbd "C-/") nil)
-
-    ;; (defalias 'redo 'undo-tree-redo)
+    ;; Redo changes.
     (global-set-key (kbd "C-S-z")   #'undo-tree-redo)
     (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
+
+  (with-eval-after-load "volatile-highlights-autoloads"
+    (volatile-highlights-mode 1))
 
 )                                       ; Chapter 7 ends here.
 
@@ -855,8 +856,8 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ;; Key to use after an initial expand/contract to undo.
     ;; (setq expand-region-reset-fast-key "<escape> <escape>")
 
-    (global-set-key (kbd "C-+") #'er/expand-region) ; See key-chord `hh'.
-    (global-set-key (kbd "C--") #'er/contract-region)) ; See key-chord `HH'.
+    (global-set-key (kbd "C-M-w") #'er/expand-region)    ; See key-chord `hh'.
+    (global-set-key (kbd "C-S-w") #'er/contract-region)) ; See key-chord `HH'.
 
   ;; Inserting text while the mark is active causes the text in the region to be
   ;; deleted first.
@@ -1262,6 +1263,12 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
   (when (try-require 'auto-highlight-symbol)
+
+
+          (define-key auto-highlight-symbol-mode-map (kbd "M-<left>")  nil) ; XXX
+          (define-key auto-highlight-symbol-mode-map (kbd "M-<right>") nil) ; XXX
+
+
 
     ;; Number of seconds to wait before highlighting the current symbol.
     (setq ahs-idle-interval 0.2) ; 0.35.
@@ -2777,6 +2784,7 @@ Should be selected from `fringe-bitmaps'.")
   ;;   ;; Don't save history information to file.
   ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
 
+  ;; Paste from History.
   (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
 
   ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
@@ -3378,6 +3386,8 @@ cycle through all windows on current frame."
 (defun leuven-cleanup-accent-iso-latin-1-to-utf-8 ()
   "Replace non-UTF-8 characters."
   (interactive)
+  ;; See https://www.fileformat.info/info/charset/UTF-8/list.htm, then type
+  ;; C-x 8 RET and then the number, followed by RET.
   (leuven--do-accent '(("\200" . "EUR")  ;; \342\202\254
                        ("\205" . "...")
                        ("\222" . "'")    ;; \342\200\231
@@ -3396,7 +3406,7 @@ cycle through all windows on current frame."
                        ("\311" . "É")
                        ("\312" . "Ê")
                        ("\340" . "à")    ;; \303\240
-                       ("\341" . "a")    ;; XXX Spanish a with accent 341. \303\241
+                       ("\341" . "á")    ;; \303\241
                        ("\342" . "â")    ;; \303\242
                        ("\344" . "ä")
                        ("\347" . "ç")
@@ -3406,10 +3416,13 @@ cycle through all windows on current frame."
                        ("\353" . "ë")
                        ("\356" . "î")
                        ("\357" . "ï")
-                       ("\361" . "n")    ;; n tilde
-                       ("\363" . "o")    ;; XXX Spanish o with accent 363. \303\263
+                       ("\361" . "ñ")
+                       ("\363" . "ó")    ;; \303\263
                        ("\364" . "ô")    ;; \303\264
+                       ("\365" . "õ")
+                       ("\366" . "ö")
                        ("\371" . "ù")
+                       ("\372" . "ú")
                        ("\373" . "û")    ;; \303\273
                        ("\374" . "ü")    ;; \303\274
                        )))
@@ -3605,7 +3618,7 @@ cycle through all windows on current frame."
   (add-hook 'text-mode-hook #'auto-fill-mode)
 
   ;; Graphically indicate the fill column.
-  (try-require 'fill-column-indicator)
+  (try-require 'fill-column-indicator-XXX) ; Abandoned by the author.
   (with-eval-after-load "fill-column-indicator"
 
     ;; Color used to draw the fill-column rule.
@@ -4035,10 +4048,6 @@ cycle through all windows on current frame."
                 ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
 
                 ;; (local-set-key (kbd "C-c h") #'hide-other) ; XXX Helm
-
-                ;; Table.
-                (local-set-key (kbd "C-M-w") #'org-table-copy-region)
-                (local-set-key (kbd "C-M-y") #'org-table-paste-rectangle)
 
                 ;; Remove some bindings.
                 (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
@@ -7063,6 +7072,53 @@ this with to-do items than with projects or headings."
     (define-key web-mode-map (kbd "C-M-u")    #'web-mode-element-parent)
 
     (define-key web-mode-map (kbd "C-M-d")    #'web-mode-element-child)
+
+
+(defun web-mode-edit-element-elements-end-inside ()
+  (interactive)
+  (web-mode-element-end)
+  (backward-char))
+
+(defun web-mode-edit-element-utils-x-position (fx)
+  (save-excursion
+    (funcall fx)
+    (point)))
+
+(defun web-mode-edit-element-utils-fnil (val f)
+  (if val val
+    (funcall f)))
+
+(defun web-mode-edit-element-elements-sibling-next-p ()
+  (let ((parent-position
+         (web-mode-edit-element-utils-fnil
+          (save-excursion
+            (web-mode-element-beginning)
+            (web-mode-element-parent-position))
+          'point))
+        (tag-next-position
+         (web-mode-edit-element-utils-x-position
+          (lambda ()
+            (web-mode-edit-element-elements-end-inside)
+            (web-mode-tag-next)
+            (web-mode-element-beginning)))))
+    (not (= parent-position tag-next-position))))
+
+
+
+
+(defun web-mode-edit-element-elements-sibling-next-or-next-parent ()
+  (interactive)
+  (if (web-mode-edit-element-elements-sibling-next-p)
+      (web-mode-element-sibling-next)
+    (web-mode-element-parent)
+    (web-mode-element-sibling-next)))
+
+
+    (define-key web-mode-map (kbd "M-<down>") #'web-mode-edit-element-elements-sibling-next-or-next-parent)
+
+
+
+
 
 ;; XXX What about Fold Tag Attributes?
 
