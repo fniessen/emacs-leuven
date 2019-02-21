@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190219.1411
+;; Version: 20190221.1341
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190219.1411"
+(defconst leuven--emacs-version "20190221.1341"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -837,7 +837,7 @@ These packages are neither built-in nor already installed nor ignored."
 
 (leuven--chapter leuven-load-chapter-11-mark "11 The Mark and the Region"
 
-  ;; Go to last (buffer-local) edit location.
+  ;; Go to Last (buffer-local) Edit Location.
   (with-eval-after-load "goto-chg-autoloads"
     (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 
@@ -874,6 +874,12 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "C->") #'mc/mark-next-like-this) ;!
     (global-set-key (kbd "C-<") #'mc/mark-previous-like-this) ;!
 
+    ;; Add Selection for Next Occurrence.
+    (global-set-key (kbd "M-j") #'mc/mark-next-like-this) ; IntelliJ.
+
+    ;; Unselect Occurrence. XXX
+    ;; (global-set-key (kbd "M-J") #'mc/unmark-next-like-this) ; IntelliJ.
+
     ;; Skip the current one and select the next/previous part of the buffer that
     ;; matches the current region.
     (global-set-key (kbd "C-M->") #'mc/skip-to-next-like-this)
@@ -883,8 +889,11 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "<C-S-mouse-1>") #'mc/add-cursor-on-click)
     (global-set-key (kbd "<M-mouse-1>")   #'mc/add-cursor-on-click) ;; XXX DOES NOT WORK.
 
+    ;; Select All Occurrences.
+    (global-set-key (kbd "C-M-S-j") #'mc/mark-all-like-this-dwim) ;! IntelliJ.
+
     ;; Tries to guess what you want to mark all of.
-    (global-set-key (kbd "C-;") #'mc/mark-all-like-this-dwim) ;! Like Iedit.
+    (global-set-key (kbd "C-;")     #'mc/mark-all-like-this-dwim) ;! Like Iedit.
     ;; (global-set-key (kbd "C-c C-w") #'mc/mark-all-like-this-dwim)
     ;; (global-set-key (kbd "C-x C-;") #'mc/mark-all-like-this-dwim)
 
@@ -895,6 +904,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; (global-set-key (kbd "<C-RET>") #'mc/mark-more-like-this-extended) ; useful for completion
 
+    ;; Insert increasing numbers for each cursor.
     (global-set-key (kbd "C-M-=") #'mc/insert-numbers)
   )
 
@@ -1250,34 +1260,48 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Highlight symbols, selections, enclosing parens and more.
   (with-eval-after-load "hl-anything-autoloads"
+
+    (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
+    ;; See the very good hl-paren-mode.
+
+    ;; Don't save and restore highlight.
+    (setq hl-highlight-save-file nil)
+
     ;; Emulation of Vim's `*' search.
-    (global-set-key (kbd "C-*") #'hl-highlight-thingatpt-global)
-    (global-set-key (kbd "C-<f4>") #'hl-find-next-thing)
-    (global-set-key (kbd "S-<f4>") #'hl-find-prev-thing)
-    (global-set-key (kbd "C-M-*") #'hl-unhighlight-all-global))
+    (global-set-key (kbd "C-*")      #'hl-highlight-thingatpt-global)
+    (global-set-key (kbd "C-<f4>")   #'hl-find-next-thing)
+    (global-set-key (kbd "S-<f4>")   #'hl-find-prev-thing)
+    (global-set-key (kbd "C-M-*")    #'hl-unhighlight-all-global))
 
-(setq hl-highlight-save-file nil)
-
-;; (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
-;; See the very good hl-paren-mode.
+    ;; ;; Find Next / Move to Next Occurrence.
+    ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
+    ;;
+    ;; ;; Find Previous / Move to Previous Occurrence.
+    ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
+    ;;
+    ;; ;; Find Word at Caret.
+    ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
+    ;;
+    ;; ;; Highlight Usages in File.
+    ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
   (when (try-require 'auto-highlight-symbol)
-
-
-          (define-key auto-highlight-symbol-mode-map (kbd "M-<left>")  nil) ; XXX
-          (define-key auto-highlight-symbol-mode-map (kbd "M-<right>") nil) ; XXX
-
-
-
-    ;; Number of seconds to wait before highlighting the current symbol.
-    (setq ahs-idle-interval 0.2) ; 0.35.
 
     ;; Add major modes Auto-Highlight-Symbol can run on.
     (mapc #'(lambda (mode)
               (add-to-list 'ahs-modes mode t))
           '(js2-mode
             ess-mode))                  ; R.
+
+    ;; Number of seconds to wait before highlighting the current symbol.
+    (setq ahs-idle-interval 0.2) ; 0.35.
+
+    ;; Unset AHS key bindings that override Org key bindings.
+    (define-key auto-highlight-symbol-mode-map (kbd "<M-left>")    nil)
+    (define-key auto-highlight-symbol-mode-map (kbd "<M-right>")   nil)
+    (define-key auto-highlight-symbol-mode-map (kbd "<M-S-left>")  nil)
+    (define-key auto-highlight-symbol-mode-map (kbd "<M-S-right>") nil)
 
     ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
     ;; (global-auto-highlight-symbol-mode t)
@@ -2176,8 +2200,9 @@ Should be selected from `fringe-bitmaps'.")
                                         ; remove the background color.
     (message "[Buffer is up to date with file on disk]"))
 
-  ;; Key binding.
-  (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
+  ;; Synchronize.
+  (global-set-key (kbd "C-S-y") #'leuven-revert-buffer-without-query)
+  ;; (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
 
   (when leuven--cygwin-p                ; Cygwin Emacs uses gfilenotify (based
                                         ; on GLib) and there are performance
@@ -2204,8 +2229,8 @@ Should be selected from `fringe-bitmaps'.")
   ;; Auto-save every 100 input events.
   (setq auto-save-interval 100)         ; [Default: 300].
 
-  ;; Auto-save after 10 seconds idle time.
-  (setq auto-save-timeout 10)           ; [Default: 30].
+  ;; Save files automatically if application is idle for 15 sec.
+  (setq auto-save-timeout 15)           ; [Default: 30].
 
   (define-minor-mode sensitive-mode
     "For sensitive files like password lists.
@@ -2804,7 +2829,7 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
     (global-set-key (kbd "M-+")    #'helm-ls-git-ls)
-    (global-set-key (kbd "<S-f3>") #'helm-ls-git-ls)
+    ;; (global-set-key (kbd "<S-f3>") #'helm-ls-git-ls)
 
     ;; Browse files and see status of project with its VCS.
     (global-set-key (kbd "C-x C-d") #'helm-browse-project))
@@ -5480,8 +5505,8 @@ From the address <%a>"
       (message "[%s...]" org-agenda-overriding-header)
       (org-todo-list)))
 
-  ;; "TODO list" without asking for a directory.
-  (global-set-key (kbd "<C-f3>") #'leuven-org-todo-list-current-dir)
+  ;; ;; "TODO list" without asking for a directory.
+  ;; (global-set-key (kbd "<C-f3>") #'leuven-org-todo-list-current-dir)
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
@@ -7288,15 +7313,17 @@ this with to-do items than with projects or headings."
 
   (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
 
-  (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a
-
   (defun leuven-beginning-of-next-defun ()
     "Move forward to the beginning of next defun."
     (interactive)
     (let ((current-prefix-arg -1))
       (call-interactively 'beginning-of-defun)))
 
+  ;; Next Method.
   (global-set-key (kbd "<M-down>") #'leuven-beginning-of-next-defun)
+
+  ;; Previous Method.
+  (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a
 
   ;; Making buffer indexes as menus.
   (try-require 'imenu)                  ; Awesome!
@@ -8255,6 +8282,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     ;; Files to ignore for ARCHIBUS.
     (add-to-list 'grep-find-ignored-files "ab-core.js")
     (add-to-list 'grep-find-ignored-files "ab-pgnav.js")
+    (add-to-list 'grep-find-ignored-files "ab-view.js")
     (add-to-list 'grep-find-ignored-files "app.js")
     ;; (add-to-list 'grep-find-ignored-files "cordova.js")
     (add-to-list 'grep-find-ignored-files "dx.archibus.js")
@@ -8955,17 +8983,14 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Ignore remote projects.
     (setq projectile-ignored-project-function 'file-remote-p)
 
-    ;; Mode line lighter for Projectile.
-    (setq projectile-mode-line
-          '(:eval (list " P[" ;; (propertize
-                               (projectile-project-name)
-                              ;; 'face '(:foreground "gray75"))
-                        "]")))
-    (setq projectile-mode-line
-          '(:eval (if (and (projectile-project-p)
-                           (not (file-remote-p default-directory)))
-                      (format " P[%s]" (projectile-project-name))
-                    "")))
+    ;; Mode line lighter prefix for Projectile.
+    (setq projectile-mode-line-prefix " P")
+    ;; (setq projectile-mode-line-function
+    ;;       '(lambda ()
+    ;;          (if (and (projectile-project-p)
+    ;;                   (not (file-remote-p default-directory)))
+    ;;              (format " P[%s]" (projectile-project-name))
+    ;;            "")))
 
     ;; Command to use with ‘projectile-run-project’.
     (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
