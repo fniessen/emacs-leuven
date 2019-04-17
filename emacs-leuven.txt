@@ -17,8 +17,6 @@
 :header-args: :tangle no
 :END:
 
-** TODO Emacs hl-line derrière C-*
-
 ** TODO Add Imenu regexp for AXVW files
 
 ** TODO Check out features of IntelliJ IDEA
@@ -957,6 +955,7 @@ like this into your configuration file:
             ;; redshank
             skewer-mode
             sqlup-mode
+            symbol-overlay
             tern
             tidy
             smart-comment
@@ -1892,10 +1891,14 @@ ones.
 ;;** 12.2 (info "(emacs)Yanking")
 
   (leuven--section "12.2 (emacs)Yanking")
+#+end_src
 
-  ;; Auto-indentation of pasted code in the programming modes (fall back to
-  ;; default, non-indented yanking by preceding the yanking command `C-y' with
-  ;; `C-u').
+Auto-indent on paste.
+
+#+begin_src emacs-lisp
+  ;; Auto-indentation of pasted code in the programming modes
+  ;; (fall back to default, non-indented, yanking by preceding the yanking
+  ;; command `C-y' with `C-u').
   (dolist (command '(yank
                      yank-pop))
     (eval `(defadvice ,command (after leuven-indent-region activate)
@@ -2339,7 +2342,7 @@ Prior to running their own mode hooks,
 - all text-based major modes run ~text-mode-hook~, and
 - all programming language modes run ~prog-mode-hook~.
 
-Add font locking for:
+Add font locking for the following patterns in upper case:
 
 - ~TODO~,
 - ~FIXME~,
@@ -2350,6 +2353,7 @@ to all modes except Diff mode and Org mode.
 
 #+begin_note
 In Eclipse, they are all *case in-sensitive* by default.
+In IntelliJ IDEA, the are recognized in both lower and upper case.
 #+end_note
 
 #+begin_example
@@ -2397,6 +2401,13 @@ See doc of ~font-lock-keywords~ and ~font-lock-add-keywords~.
 
 Check out ~log4j-mode~ instead?  And nice colors at
 https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "<M-f6>")
+                  #'(lambda ()
+                      (interactive)
+                      (occur "TODO\\|FIXME\\|XXX\\|BUG")))
+#+end_src
 
 #+begin_src emacs-lisp
   ;; Just-in-time fontification.
@@ -2465,6 +2476,7 @@ throughout a buffer.
      letters case-insensitive, before highlighting with ~hi-lock-set-pattern~.
 
      ~highlight-phrase~ is just a bit of sugar around ~highlight-regexp~ that
+
      ignores case and translates a space in the regex to match arbitrary
      whitespace. Handy.
 
@@ -2498,6 +2510,12 @@ It is complementary to the features of the library *Hl-anything*.
   all times, and thus have higher priority over ~hl-line~ (because shorter
   overlays have an implicitly higher priority, given the same value of
   priority).
+
+  *Use highlighting that is produced by an overlay!*
+
+  + Highlight from Drew Adams
+  + highlight-symbol from Nicolas
+  + Symbol-overlay from Wolray
   #+end_note
 
 - Hi Lock and Hl-anything both *highlight new text* as you type it.
@@ -2515,32 +2533,41 @@ such a background behind or underneath the text.  Think of a marker pen
 #+end_note
 
 #+begin_src emacs-lisp
-  ;; Highlight symbols, selections, enclosing parens and more.
-  (with-eval-after-load "hl-anything-autoloads"
+  ;; ;; Highlight symbols, selections, enclosing parens and more.
+  ;; (with-eval-after-load "hl-anything-autoloads"
+  ;;
+  ;;   (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
+  ;;   ;; See the very good hl-paren-mode.
+  ;;
+  ;;   ;; Don't save and restore highlight.
+  ;;   (setq hl-highlight-save-file nil)
+  ;;
+  ;;   ;; Emulation of Vim's `*' search.
+  ;;   (global-set-key (kbd "C-*")      #'hl-highlight-thingatpt-global)
+  ;;   (global-set-key (kbd "C-<f4>")   #'hl-find-next-thing)
+  ;;   (global-set-key (kbd "S-<f4>")   #'hl-find-prev-thing)
+  ;;   (global-set-key (kbd "C-M-*")    #'hl-unhighlight-all-global))
+  ;;
+  ;;   ;; ;; Find Next / Move to Next Occurrence.
+  ;;   ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
+  ;;   ;;
+  ;;   ;; ;; Find Previous / Move to Previous Occurrence.
+  ;;   ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
+  ;;   ;;
+  ;;   ;; ;; Find Word at Caret.
+  ;;   ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
+  ;;   ;;
+  ;;   ;; ;; Highlight Usages in File.
+  ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
 
-    (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
-    ;; See the very good hl-paren-mode.
 
-    ;; Don't save and restore highlight.
-    (setq hl-highlight-save-file nil)
-
-    ;; Emulation of Vim's `*' search.
-    (global-set-key (kbd "C-*")      #'hl-highlight-thingatpt-global)
-    (global-set-key (kbd "C-<f4>")   #'hl-find-next-thing)
-    (global-set-key (kbd "S-<f4>")   #'hl-find-prev-thing)
-    (global-set-key (kbd "C-M-*")    #'hl-unhighlight-all-global))
-
-    ;; ;; Find Next / Move to Next Occurrence.
-    ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
-    ;;
-    ;; ;; Find Previous / Move to Previous Occurrence.
-    ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
-    ;;
-    ;; ;; Find Word at Caret.
-    ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
-    ;;
-    ;; ;; Highlight Usages in File.
-    ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
+(when (try-require 'symbol-overlay)
+  (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
+  (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
+  (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
+  ;; (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+  ;; (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
+  )
 #+end_src
 
 Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
@@ -2548,7 +2575,7 @@ Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
 point, the highlighting goes away.
 
 #+begin_tip
-~ahs~ can find the *definition* of a symbol, and color it differently!
+~ahs~ can find the *definition* of a symbol, and colors it differently!
 #+end_tip
 
 #+begin_src emacs-lisp
@@ -3110,14 +3137,17 @@ Highlight the current line:
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
   (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
 
-  ;; Extensions to hl-line.el.
-  (with-eval-after-load "hl-line+-autoloads"
+  ;; ;; Extensions to hl-line.el.
+  ;; (with-eval-after-load "hl-line+-autoloads"
+  ;;
+  ;;   ;; Disable Global Hl-Line mode.
+  ;;   (global-hl-line-mode -1)
+  ;;
+  ;;   ;; Turn on `global-hl-line-mode' only when Emacs is idle.
+  ;;   (toggle-hl-line-when-idle))
 
-    ;; Disable Global Hl-Line mode.
-    (global-hl-line-mode -1)
-
-    ;; Turn on `global-hl-line-mode' only when Emacs is idle.
-    (toggle-hl-line-when-idle))
+;; hl-line-overlay-priority
+  ;; (require 'hl-line+) ; Load this file (it will load `hl-line.el')
 #+end_src
 
 ** Truncation of Lines
@@ -4003,12 +4033,13 @@ Update time stamps (and copyright notice) automatically.
   ;; ;; other version control related information, may not be properly updated
   ;; (setq auto-revert-check-vc-info t)
 
-  ;; Replace current buffer text with the text of the visited file on disk.
+  ;; Synchronize.  Reload the file from disk (replacing current buffer text with
+  ;; the text of the visited file on disk).
   (defun leuven-revert-buffer-without-query ()
     "Unconditionally revert current buffer."
     (interactive)
     (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
-    ;; Remove less important overlays
+    ;; Remove highlights.
     (dolist (o (overlays-in (window-start) (window-end)))
       (when (or (equal (overlay-get o 'face) 'recover-this-file)
                 (equal (overlay-get o 'face) 'highlight-changes)
@@ -4019,9 +4050,7 @@ Update time stamps (and copyright notice) automatically.
                                         ; remove the background color.
     (message "[Buffer is up to date with file on disk]"))
 
-  ;; Synchronize.
   (global-set-key (kbd "C-S-y") #'leuven-revert-buffer-without-query)
-  ;; (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
 #+end_src
 
 Turn on auto-revert mode globally.
@@ -5040,8 +5069,10 @@ XXX Look at helm-dictionary.
 
 **** Navigating with Structure Views
 
+Popup structure of the current file for quick navigation:
+
 #+begin_src emacs-lisp
-    (defun leuven-helm-org-prog-menu (arg)
+    (defun leuven-helm-file-structure (arg)
       "Jump to a place in the buffer using an Index menu.
     For Org mode buffers, show Org headlines.
     For programming mode buffers, show functions, variables, etc."
@@ -5050,7 +5081,8 @@ XXX Look at helm-dictionary.
             ((derived-mode-p 'tex-mode) (helm-imenu))
             (t (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
-    (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
+    (global-set-key (kbd "<C-f12>") #'leuven-helm-file-structure) ; Awesome.
+    ;; (global-set-key (kbd "<f4>") #'leuven-helm-file-structure)
                                         ; And `C-c =' (like in RefTeX)?
 
     (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings)
@@ -7181,12 +7213,15 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 #+begin_src emacs-lisp
   ;; 25.8.2
-  (global-set-key (kbd "<M-f6>")
-                  #'(lambda (&optional arg)
-                      (interactive (list (or current-prefix-arg 'toggle)))
-                      (if (derived-mode-p 'prog-mode)
-                          (hs-show-all)
-                        (visible-mode arg))))
+  ;; Toggle display of invisible text.
+  (defun leuven-toggle-show-everything (&optional arg)
+    "Show all invisible text."
+    (interactive (list (or current-prefix-arg 'toggle)))
+    (if (derived-mode-p 'prog-mode)
+        (hs-show-all)
+      (visible-mode arg)))
+
+  (global-set-key (kbd "M-A") #'leuven-toggle-show-everything) ; `M-S-a'.
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -9039,6 +9074,20 @@ at the end of your =.emacs= file.
                   (local-unset-key (kbd "C-c ]"))))
 #+end_example
 
+Otherwise, through this hook, every org file is automatically "filed" and any to
+do items inside will be found by the org-mode agenda builder.
+
+#+begin_src emacs-lisp :tangle no
+    ;; Add Org files to the agenda when we save them.
+    (defun to-agenda-on-save-org-mode-file()
+      (when (string= (message "%s" major-mode) "org-mode")
+        (org-agenda-file-to-front)))
+
+    (add-hook 'after-save-hook 'to-agenda-on-save-org-mode-file)
+#+end_src
+
+This does mean that when files are deleted or moved the org agenda complains.
+
 *** The agenda dispatcher
 
 #+begin_src emacs-lisp
@@ -9556,7 +9605,7 @@ Commands:
                                         ; with-eval-after-load "org-agenda" ends here.
 #+end_src
 
-*** Display all active tasks from the current directory
+*** Display all TODO items from the current directory
 
 The function ~leuven-org-todo-list-current-dir~ will display your tasks from the
 current directory (including from local files =TODO.org= and =BUGS.org=, for
@@ -9577,13 +9626,13 @@ example).
            (org-agenda-files (directory-files dname t "\\.\\(org\\|txt\\)$"))
            (org-agenda-sorting-strategy '(todo-state-up priority-down))
            (org-agenda-overriding-header
-            (format "List of TODO items restricted to directory\n%s" dname))
+            (format "TODO items in directory: %s" dname))
            (org-agenda-sticky nil))
       (message "[%s...]" org-agenda-overriding-header)
       (org-todo-list)))
 
-  ;; ;; "TODO list" without asking for a directory.
-  ;; (global-set-key (kbd "<C-f3>") #'leuven-org-todo-list-current-dir)
+  ;; "TODO list" without asking for a directory.
+  (global-set-key (kbd "<M-S-f6>") #'leuven-org-todo-list-current-dir)
 #+end_src
 
 *** Exporting Agenda Views
@@ -11072,6 +11121,21 @@ Lower-case in ~BEGIN_SRC~ and other keywords: do not stand out!
     (add-to-list 'org-structure-template-alist
                  '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
 
+    ;; :PROPERTIES: template.
+    (add-to-list 'org-structure-template-alist
+                 (list "p"              ; `list' (vs quote list) to evaluate
+                                        ; `concat'.
+                       (concat ":PROPERTIES:\n"
+                               "?\n"
+                               ":END:")))
+
+    ;; HTML export options template.
+    (add-to-list 'org-structure-template-alist
+                 (list "eh"
+                       (concat ":EXPORT_FILE_NAME: ?\n"
+                               ":EXPORT_TITLE:\n"
+                               ":EXPORT_OPTIONS: toc:nil html-postamble:nil num:nil")))
+
     ;; Begin/end example markers will be inserted in lower case.
     (setq org-babel-uppercase-example-markers nil)
     )
@@ -12529,8 +12593,9 @@ is often more convenient as you don't have to explicitly build the ~etags~ table
     ;; Keybinding to quickly jump to a symbol in buffer.
     (global-set-key [remap imenu] #'helm-imenu)
 
-    ;; Helm Imenu tag selection across all buffers (with the same mode).
-    (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers))
+    ;; ;; Helm Imenu tag selection across all buffers (with the same mode).
+    ;; (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers)
+  )
 
   ;; Helm interface for Imenu.
   (with-eval-after-load "helm-imenu"
@@ -12920,18 +12985,18 @@ Keyboard shortcuts:
 
     ;; Change those really awkward key bindings with `@' in the middle.
 
-    ;; Collapse code block.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
-                                        ; `C-c @ C-h' (collapse current fold)
-    ;; Expand code block.
+    ;; Folding / Expand block.
     (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold)
-    ;; Collapse all.
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
-                                        ; `C-c @ C-M-h' (collapse all folds)
-    ;; Expand all.
+    ;; Folding / Collapse block.
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
+                                        ; `C-c @ C-h' (collapse current fold)
+    ;; Folding / Expand All.
     (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds)
+    ;; Folding / Collapse All.
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
+                                        ; `C-c @ C-M-h' (collapse all folds)
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
@@ -19219,6 +19284,13 @@ Pick up where you left off.
 
 ** Google search
 
+*************** TODO Use engine-mode
+I use Google (on C-c / g) and Github (on C-c / h), but the engine-mode readme
+explains how to set it up with DuckDuckGo, stack overflow, etc.  It's
+configurable, but results can be displayed in eww, Emacs' built-in text-based
+web browser.
+*************** END
+
 #+begin_src emacs-lisp
 ;;** Web search
 
@@ -19308,12 +19380,11 @@ bind it to a key:
   (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
 #+end_src
 
-** How do I?
+** How do I?  (StackOverflow)
 
 Instant coding answers via Emacs.
 
 #+begin_src emacs-lisp :tangle no
-  ;; A set of functions and bindings to Google under point.
   (with-eval-after-load "howdoi-autoloads"
 
     ;; XXX Key sequence starts with non-prefix key C-c h. Conflict with Helm!
@@ -19872,11 +19943,11 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
     (interactive)
     (circe "irc.freenode.net" "6667" "freenode"))
 
-  ;; ... upon hitting `C-c i'.
-  (global-set-key (kbd "C-c i")
-    #'(lambda ()
-        (interactive)
-        (switch-or-start 'leuven-irc-connect "irc.freenode.net:6667")))
+  ;; ... upon hitting `M-x leuven-start-irc'.
+  (defun leuven-start-irc ()
+    "Start IRC."
+    (interactive)
+    (switch-or-start 'leuven-irc-connect "irc.freenode.net:6667"))
 
   (with-eval-after-load "circe"
 
@@ -19959,23 +20030,116 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  ;; Jabber (GTalk).
-  (try-require 'jabber-autoloads-XXX)
-  (with-eval-after-load "jabber-autoloads-XXX"
-    (setq jabber-account-list '(("johndoe@example.com"
-                                 (:network-server . "talk.google.com")
-                                 (:connection-type . ssl)
-                                 (:port . 443))))
+(use-package erc
+  :commands (erc erc-tls)
+  :bind (:map erc-mode-map
+              ("C-c r" . reset-erc-track-mode))
+  :preface
+  (defun irc (&optional arg)
+    (interactive "P")
+    (if arg
+        (pcase-dolist (`(,server . ,nick)
+                       '(("irc.freenode.net"     . "johnw")
+                         ("irc.gitter.im"        . "jwiegley")
+                         ;; ("irc.oftc.net"         . "johnw")
+                         ))
+          (erc-tls :server server :port 6697 :nick (concat nick "_")
+                   :password (lookup-password server nick 6697)))
+      (let ((pass (lookup-password "irc.freenode.net" "johnw" 6697)))
+        (when (> (length pass) 32)
+          (error "Failed to read ZNC password"))
+        (erc :server "127.0.0.1" :port 6697 :nick "johnw"
+             :password (concat "johnw/gitter:" pass))
+        (sleep-for 5)
+        (erc :server "127.0.0.1" :port 6697 :nick "johnw"
+             :password (concat "johnw/freenode:" pass)))))
 
-    (setq jabber-history-enabled t)
+  (defun reset-erc-track-mode ()
+    (interactive)
+    (setq erc-modified-channels-alist nil)
+    (erc-modified-channels-update)
+    (erc-modified-channels-display)
+    (force-mode-line-update))
 
-    (setq jabber-use-global-history nil)
+  (defun setup-irc-environment ()
+    (set (make-local-variable 'scroll-conservatively) 100)
+    (setq erc-timestamp-only-if-changed-flag nil
+          erc-timestamp-format "%H:%M "
+          erc-fill-prefix "          "
+          erc-fill-column 78
+          erc-insert-timestamp-function 'erc-insert-timestamp-left
+          ivy-use-virtual-buffers nil))
 
-    (setq jabber-history-dir (concat user-emacs-directory "jabber"))
+  (defcustom erc-foolish-content '()
+    "Regular expressions to identify foolish content.
+    Usually what happens is that you add the bots to
+    `erc-ignore-list' and the bot commands to this list."
+    :group 'erc
+    :type '(repeat regexp))
 
-    (setq jabber-vcard-avatars-retrieve nil)
+  (defun erc-foolish-content (msg)
+    "Check whether MSG is foolish."
+    (erc-list-match erc-foolish-content msg))
 
-    (setq jabber-chat-buffer-show-avatar nil))
+  :init
+  (add-hook 'erc-mode-hook #'setup-irc-environment)
+  (when alternate-emacs
+    (add-hook 'emacs-startup-hook 'irc))
+
+  (eval-after-load 'erc-identd
+    '(defun erc-identd-start (&optional port)
+       "Start an identd server listening to port 8113.
+  Port 113 (auth) will need to be redirected to port 8113 on your
+  machine -- using iptables, or a program like redir which can be
+  run from inetd. The idea is to provide a simple identd server
+  when you need one, without having to install one globally on
+  your system."
+       (interactive (list (read-string "Serve identd requests on port: " "8113")))
+       (unless port (setq port erc-identd-port))
+       (when (stringp port)
+         (setq port (string-to-number port)))
+       (when erc-identd-process
+         (delete-process erc-identd-process))
+       (setq erc-identd-process
+	     (make-network-process :name "identd"
+			           :buffer nil
+			           :host 'local :service port
+			           :server t :noquery t
+			           :filter 'erc-identd-filter))
+       (set-process-query-on-exit-flag erc-identd-process nil)))
+
+  :config
+  (erc-track-minor-mode 1)
+  (erc-track-mode 1)
+
+  (add-hook 'erc-insert-pre-hook
+            #'(lambda (s)
+                (when (erc-foolish-content s)
+                  (setq erc-insert-this nil)))))
+
+(use-package erc-alert
+  :disabled t
+  :after erc)
+
+(use-package erc-highlight-nicknames
+  :after erc)
+
+(use-package erc-macros
+  :after erc)
+
+(use-package erc-patch
+  :disabled t
+  :after erc)
+
+(use-package erc-question
+  :disabled t
+  :after erc)
+
+(use-package erc-yank
+  :load-path "lisp/erc-yank"
+  :after erc
+  :bind (:map erc-mode-map
+              ("C-y" . erc-yank )))
 #+end_src
 
 * Emacs and Microsoft Windows/MS-DOS
@@ -20027,6 +20191,9 @@ calls to message), set the variable ~debug-on-message~.
   (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
 
   (setq debug-on-entry 'user-error))
+
+;; (use-package ert
+;;   :bind ("C-c e t" . ert-run-tests-interactively))
 #+end_src
 
 #+begin_src emacs-lisp

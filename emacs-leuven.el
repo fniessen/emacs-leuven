@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190221.1341
+;; Version: 20190417.1559
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190221.1341"
+(defconst leuven--emacs-version "20190417.1559"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -481,6 +481,7 @@ If not, just print a message."
             ;; redshank
             skewer-mode
             sqlup-mode
+            symbol-overlay
             tern
             tidy
             smart-comment
@@ -992,9 +993,9 @@ These packages are neither built-in nor already installed nor ignored."
 
   (leuven--section "12.2 (emacs)Yanking")
 
-  ;; Auto-indentation of pasted code in the programming modes (fall back to
-  ;; default, non-indented yanking by preceding the yanking command `C-y' with
-  ;; `C-u').
+  ;; Auto-indentation of pasted code in the programming modes
+  ;; (fall back to default, non-indented, yanking by preceding the yanking
+  ;; command `C-y' with `C-u').
   (dolist (command '(yank
                      yank-pop))
     (eval `(defadvice ,command (after leuven-indent-region activate)
@@ -1214,6 +1215,11 @@ These packages are neither built-in nor already installed nor ignored."
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 
+  (global-set-key (kbd "<M-f6>")
+                  #'(lambda ()
+                      (interactive)
+                      (occur "TODO\\|FIXME\\|XXX\\|BUG")))
+
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
 
@@ -1258,32 +1264,41 @@ Should be selected from `fringe-bitmaps'.")
   ;; ;; Enable Hi Lock mode for all buffers.
   ;; (global-hi-lock-mode 1)
 
-  ;; Highlight symbols, selections, enclosing parens and more.
-  (with-eval-after-load "hl-anything-autoloads"
+  ;; ;; Highlight symbols, selections, enclosing parens and more.
+  ;; (with-eval-after-load "hl-anything-autoloads"
+  ;;
+  ;;   (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
+  ;;   ;; See the very good hl-paren-mode.
+  ;;
+  ;;   ;; Don't save and restore highlight.
+  ;;   (setq hl-highlight-save-file nil)
+  ;;
+  ;;   ;; Emulation of Vim's `*' search.
+  ;;   (global-set-key (kbd "C-*")      #'hl-highlight-thingatpt-global)
+  ;;   (global-set-key (kbd "C-<f4>")   #'hl-find-next-thing)
+  ;;   (global-set-key (kbd "S-<f4>")   #'hl-find-prev-thing)
+  ;;   (global-set-key (kbd "C-M-*")    #'hl-unhighlight-all-global))
+  ;;
+  ;;   ;; ;; Find Next / Move to Next Occurrence.
+  ;;   ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
+  ;;   ;;
+  ;;   ;; ;; Find Previous / Move to Previous Occurrence.
+  ;;   ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
+  ;;   ;;
+  ;;   ;; ;; Find Word at Caret.
+  ;;   ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
+  ;;   ;;
+  ;;   ;; ;; Highlight Usages in File.
+  ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
 
-    (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
-    ;; See the very good hl-paren-mode.
 
-    ;; Don't save and restore highlight.
-    (setq hl-highlight-save-file nil)
-
-    ;; Emulation of Vim's `*' search.
-    (global-set-key (kbd "C-*")      #'hl-highlight-thingatpt-global)
-    (global-set-key (kbd "C-<f4>")   #'hl-find-next-thing)
-    (global-set-key (kbd "S-<f4>")   #'hl-find-prev-thing)
-    (global-set-key (kbd "C-M-*")    #'hl-unhighlight-all-global))
-
-    ;; ;; Find Next / Move to Next Occurrence.
-    ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
-    ;;
-    ;; ;; Find Previous / Move to Previous Occurrence.
-    ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
-    ;;
-    ;; ;; Find Word at Caret.
-    ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
-    ;;
-    ;; ;; Highlight Usages in File.
-    ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
+(when (try-require 'symbol-overlay)
+  (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
+  (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
+  (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
+  ;; (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+  ;; (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
+  )
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
   (when (try-require 'auto-highlight-symbol)
@@ -1663,14 +1678,17 @@ Should be selected from `fringe-bitmaps'.")
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
   (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
 
-  ;; Extensions to hl-line.el.
-  (with-eval-after-load "hl-line+-autoloads"
+  ;; ;; Extensions to hl-line.el.
+  ;; (with-eval-after-load "hl-line+-autoloads"
+  ;;
+  ;;   ;; Disable Global Hl-Line mode.
+  ;;   (global-hl-line-mode -1)
+  ;;
+  ;;   ;; Turn on `global-hl-line-mode' only when Emacs is idle.
+  ;;   (toggle-hl-line-when-idle))
 
-    ;; Disable Global Hl-Line mode.
-    (global-hl-line-mode -1)
-
-    ;; Turn on `global-hl-line-mode' only when Emacs is idle.
-    (toggle-hl-line-when-idle))
+;; hl-line-overlay-priority
+  ;; (require 'hl-line+) ; Load this file (it will load `hl-line.el')
 
 ;;** 14.21 (info "(emacs)Line Truncation")
 
@@ -2184,12 +2202,13 @@ Should be selected from `fringe-bitmaps'.")
   ;; ;; other version control related information, may not be properly updated
   ;; (setq auto-revert-check-vc-info t)
 
-  ;; Replace current buffer text with the text of the visited file on disk.
+  ;; Synchronize.  Reload the file from disk (replacing current buffer text with
+  ;; the text of the visited file on disk).
   (defun leuven-revert-buffer-without-query ()
     "Unconditionally revert current buffer."
     (interactive)
     (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
-    ;; Remove less important overlays
+    ;; Remove highlights.
     (dolist (o (overlays-in (window-start) (window-end)))
       (when (or (equal (overlay-get o 'face) 'recover-this-file)
                 (equal (overlay-get o 'face) 'highlight-changes)
@@ -2200,9 +2219,7 @@ Should be selected from `fringe-bitmaps'.")
                                         ; remove the background color.
     (message "[Buffer is up to date with file on disk]"))
 
-  ;; Synchronize.
   (global-set-key (kbd "C-S-y") #'leuven-revert-buffer-without-query)
-  ;; (global-set-key (kbd "<C-f12>") #'leuven-revert-buffer-without-query)
 
   (when leuven--cygwin-p                ; Cygwin Emacs uses gfilenotify (based
                                         ; on GLib) and there are performance
@@ -2616,7 +2633,7 @@ Should be selected from `fringe-bitmaps'.")
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
     ;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
 
-    (defun leuven-helm-org-prog-menu (arg)
+    (defun leuven-helm-file-structure (arg)
       "Jump to a place in the buffer using an Index menu.
     For Org mode buffers, show Org headlines.
     For programming mode buffers, show functions, variables, etc."
@@ -2625,7 +2642,8 @@ Should be selected from `fringe-bitmaps'.")
             ((derived-mode-p 'tex-mode) (helm-imenu))
             (t (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
-    (global-set-key (kbd "<f4>") #'leuven-helm-org-prog-menu) ; Awesome.
+    (global-set-key (kbd "<C-f12>") #'leuven-helm-file-structure) ; Awesome.
+    ;; (global-set-key (kbd "<f4>") #'leuven-helm-file-structure)
                                         ; And `C-c =' (like in RefTeX)?
 
     (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings)
@@ -3940,12 +3958,15 @@ cycle through all windows on current frame."
   ;; (try-require 'fold-dwim-org)
 
   ;; 25.8.2
-  (global-set-key (kbd "<M-f6>")
-                  #'(lambda (&optional arg)
-                      (interactive (list (or current-prefix-arg 'toggle)))
-                      (if (derived-mode-p 'prog-mode)
-                          (hs-show-all)
-                        (visible-mode arg))))
+  ;; Toggle display of invisible text.
+  (defun leuven-toggle-show-everything (&optional arg)
+    "Show all invisible text."
+    (interactive (list (or current-prefix-arg 'toggle)))
+    (if (derived-mode-p 'prog-mode)
+        (hs-show-all)
+      (visible-mode arg)))
+
+  (global-set-key (kbd "M-A") #'leuven-toggle-show-everything) ; `M-S-a'.
 
 ;;** (info "(emacs-goodies-el)boxquote")
 
@@ -5500,13 +5521,13 @@ From the address <%a>"
            (org-agenda-files (directory-files dname t "\\.\\(org\\|txt\\)$"))
            (org-agenda-sorting-strategy '(todo-state-up priority-down))
            (org-agenda-overriding-header
-            (format "List of TODO items restricted to directory\n%s" dname))
+            (format "TODO items in directory: %s" dname))
            (org-agenda-sticky nil))
       (message "[%s...]" org-agenda-overriding-header)
       (org-todo-list)))
 
-  ;; ;; "TODO list" without asking for a directory.
-  ;; (global-set-key (kbd "<C-f3>") #'leuven-org-todo-list-current-dir)
+  ;; "TODO list" without asking for a directory.
+  (global-set-key (kbd "<M-S-f6>") #'leuven-org-todo-list-current-dir)
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
@@ -6514,6 +6535,21 @@ this with to-do items than with projects or headings."
     (add-to-list 'org-structure-template-alist
                  '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
 
+    ;; :PROPERTIES: template.
+    (add-to-list 'org-structure-template-alist
+                 (list "p"              ; `list' (vs quote list) to evaluate
+                                        ; `concat'.
+                       (concat ":PROPERTIES:\n"
+                               "?\n"
+                               ":END:")))
+
+    ;; HTML export options template.
+    (add-to-list 'org-structure-template-alist
+                 (list "eh"
+                       (concat ":EXPORT_FILE_NAME: ?\n"
+                               ":EXPORT_TITLE:\n"
+                               ":EXPORT_OPTIONS: toc:nil html-postamble:nil num:nil")))
+
     ;; Begin/end example markers will be inserted in lower case.
     (setq org-babel-uppercase-example-markers nil)
     )
@@ -7368,8 +7404,9 @@ mouse-3: go to end") "]")))
     ;; Keybinding to quickly jump to a symbol in buffer.
     (global-set-key [remap imenu] #'helm-imenu)
 
-    ;; Helm Imenu tag selection across all buffers (with the same mode).
-    (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers))
+    ;; ;; Helm Imenu tag selection across all buffers (with the same mode).
+    ;; (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers)
+  )
 
   ;; Helm interface for Imenu.
   (with-eval-after-load "helm-imenu"
@@ -7552,18 +7589,18 @@ mouse-3: go to end") "]")))
 
     ;; Change those really awkward key bindings with `@' in the middle.
 
-    ;; Collapse code block.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
-                                        ; `C-c @ C-h' (collapse current fold)
-    ;; Expand code block.
+    ;; Folding / Expand block.
     (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
                                         ; `C-c @ C-s' (expand current fold)
-    ;; Collapse all.
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
-                                        ; `C-c @ C-M-h' (collapse all folds)
-    ;; Expand all.
+    ;; Folding / Collapse block.
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
+                                        ; `C-c @ C-h' (collapse current fold)
+    ;; Folding / Expand All.
     (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)
                                         ; `C-c @ C-M-s' (expand all folds)
+    ;; Folding / Collapse All.
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
+                                        ; `C-c @ C-M-h' (collapse all folds)
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
@@ -10911,6 +10948,9 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq debug-on-quit nil)              ; Was set to `t' at beginning of file.
 
   (setq debug-on-entry 'user-error))
+
+;; (use-package ert
+;;   :bind ("C-c e t" . ert-run-tests-interactively))
 
 (when (and (string-match "GNU Emacs" (version))
            leuven-verbose-loading)
