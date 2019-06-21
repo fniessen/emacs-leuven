@@ -894,7 +894,6 @@ like this into your configuration file:
             company-tern
             company-quickhelp
             csv-mode
-            dictionary
             diff-hl
             diminish
             docker-compose-mode
@@ -904,7 +903,6 @@ like this into your configuration file:
             ess
             expand-region
             fancy-narrow
-            ;; fill-column-indicator
             flycheck
             flycheck-color-mode-line
             flycheck-ledger
@@ -923,7 +921,6 @@ like this into your configuration file:
             helm-projectile ; Obsolete package?
             helm-swoop
             hide-lines
-            hideshowvis
             highlight-numbers
             hl-anything                 ; Better than `highlight-symbol'.
             howdoi
@@ -957,7 +954,6 @@ like this into your configuration file:
             sqlup-mode
             symbol-overlay
             tern
-            tidy
             smart-comment
             smartparens
             sql-indent
@@ -1052,7 +1048,7 @@ cancelable; hence, we put it out of a "chapter".
 
 #+begin_src emacs-lisp
   ;; Load elisp libraries while Emacs is idle.
-  (try-require 'idle-require)
+  (try-require 'idle-require) ;XXX
 
   ;; Fail-safe for `idle-require'.
   (if (not (featurep 'idle-require))
@@ -2139,7 +2135,7 @@ Annotating bookmarks.
 
 #+begin_src emacs-lisp
     ;; Extensions to standard library `bookmark.el'.
-    (when (try-require 'bookmark+)
+    (when (try-require 'bookmark+);XXX + needs bookmark+-mac
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
       (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
@@ -2561,7 +2557,7 @@ such a background behind or underneath the text.  Think of a marker pen
   ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
 
 
-(when (try-require 'symbol-overlay)
+(when (try-require 'symbol-overlay) ;XXX
   (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
   (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
   (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
@@ -2580,7 +2576,7 @@ point, the highlighting goes away.
 
 #+begin_src emacs-lisp
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol)
+  (when (try-require 'auto-highlight-symbol) ;XXX
 
     ;; Add major modes Auto-Highlight-Symbol can run on.
     (mapc #'(lambda (mode)
@@ -3720,46 +3716,6 @@ of possible corrections for misspelled word before point.
      (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 #+end_src
 
-I need often bilingual dictionaries like the excellent leo.org and dict.cc;
-dict.el with the dict servers is not really an option.  At the moment I'm using
-mostly my mobile phone as portable dictionary but I'd rather want do this within
-Emacs.
-
-There seem to be at least 3 solutions:
-
-- x-dict.el, http://www.xsteve.at/prg/python/
-- r-dict.el, https://github.com/tsdh/rdictcc
-- eww, but leo.org and dict.cc are barely readable in eww
-
-What is working for you?
-
-  I use eedic and dict/dictd running on my own computer.
-
-  s-d looks up the word under the cursor and displays the result in a second window.
-
-  s-n finds any singleword anagrams of the word under the cursor.
-
-  s-w uses Wordplay by Evans Crisswell to list all words that can be
-  made from the letters in the current word as well as multiword
-  anagrams.
-
-#+begin_src emacs-lisp
-  ;; Client for rfc2229 dictionary servers.
-  (try-require "dictionary-autoloads")
-  (with-eval-after-load "dictionary-autoloads"
-
-    (global-set-key (kbd "C-c C-d s") #'dictionary-search)
-    (global-set-key (kbd "C-c C-d l") #'dictionary-lookup-definition)
-    (global-set-key (kbd "C-c C-d m") #'dictionary-match-words))
-
-  (with-eval-after-load "dictionary"
-
-    ;; Enable/disable the tooltip support for all buffers.
-    (if leuven--console-p
-        (global-dictionary-tooltip-mode 0)
-      (global-dictionary-tooltip-mode 1)))
-#+end_src
-
 #+begin_src emacs-lisp
 )                                       ; Chapter 16 ends here.
 #+end_src
@@ -4885,7 +4841,7 @@ We cannot change ~helm-command-prefix-key~ once ~helm-config~ is loaded.
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   ;; Open Helm (QuickSilver-like candidate-selection framework).
-  (when (try-require 'helm-config)      ; [default `helm-command-prefix-key']
+  (when (try-require 'helm-config);XXX  ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
 
@@ -6424,6 +6380,7 @@ XXX Declare PDF files as binary
                        ("\253" . "«")
                        ("\272" . "°")
                        ("\273" . "»")
+                       ("\277" . "¿")
                        ("\300" . "À")
                        ("\307" . "Ç")
                        ("\311" . "É")
@@ -6437,6 +6394,7 @@ XXX Declare PDF files as binary
                        ("\351" . "é")    ;; \303\251
                        ("\352" . "ê")
                        ("\353" . "ë")
+                       ("\355" . "í")
                        ("\356" . "î")
                        ("\357" . "ï")
                        ("\361" . "ñ")
@@ -6790,32 +6748,6 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   ;; Activate Auto Fill for all text mode buffers.
   (add-hook 'text-mode-hook #'auto-fill-mode)
 #+end_src
-
-Show column guideline (right margin):
-
-#+begin_src emacs-lisp
-  ;; Graphically indicate the fill column.
-  (try-require 'fill-column-indicator-XXX) ; Abandoned by the author.
-  (with-eval-after-load "fill-column-indicator"
-
-    ;; Color used to draw the fill-column rule.
-    (setq fci-rule-color "#E0E0E0")
-
-    ;; Show the fill-column rule as a solid line.
-    (setq fci-rule-use-dashes nil)
-
-    ;; Ratio of dash length to line height.
-    (setq fci-dash-pattern 0.5)
-
-    ;; Enable fci-mode in programming, message and Org modes.
-    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 x Unicode char E001 added at the end of every line when exporting code blocks to HTML!!!
-    (add-hook 'message-mode-hook #'fci-mode))
-#+end_src
-
-#+begin_warning
-Enabling ~fci-mode~ as a global minor mode (hence in Org as well) *slows down the
-tangling* of this file by a giga-mega-huge factor!?
-#+end_warning
 
 #+begin_src emacs-lisp
   (defun leuven-replace-nbsp-by-spc ()
@@ -10111,30 +10043,6 @@ To get a start for your CSS file, use the command
     ;; (setq org-html-head-include-default-style nil)
 #+end_src
 
-[[http://tidy.sourceforge.net/][HTML Tidy]] is a HTML linter.  Please see [[http://www.htmlpedia.org/wiki/HTML_Tidy][List of the Tidy errors]].
-
-#+begin_src emacs-lisp
-    ;; Check that `tidy' is in PATH, and that configuration file exists.
-    (when (and (executable-find "tidy")
-               (file-exists-p "~/.tidyrc")) ; tidy-config
-
-      (defun leuven--export-html-final-filter (contents backend info)
-        (if (not (eq backend 'html)) contents
-          (message "[Tidy'fying...]")
-          (let* ((new-contents
-                  (with-temp-buffer
-                    (insert contents)
-                    (shell-command-on-region (point-min) (point-max)
-                                             "tidy -config ~/.tidyrc"
-                                             t t "*Tidy errors*")
-                    (buffer-string))))
-            (message "[Tidy'fying... Done]")
-            new-contents)))
-
-      (add-to-list 'org-export-filter-final-output-functions
-                   'leuven--export-html-final-filter))
-#+end_src
-
 #+begin_src emacs-lisp
       ;; HTML checkbox output.
       (defun leuven--checkbox-filter (item backend info)
@@ -11100,41 +11008,10 @@ Lower-case in ~BEGIN_SRC~ and other keywords: do not stand out!
   (with-eval-after-load "org"
     (message "[... Org Easy Templates]")
 
-    ;; ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
-    ;; (mapc #'(lambda (asc)
-    ;;           (let ((org-sce-dc (downcase (nth 1 asc))))
-    ;;             (setf (nth 1 asc) org-sce-dc)))
-    ;;       org-structure-template-alist)
-
-    (add-to-list 'org-structure-template-alist
-                 '("n" "#+begin_note\n?\n#+end_note"))
-
-    (add-to-list 'org-structure-template-alist
-                 '("w" "#+begin_warning\n?\n#+end_warning"))
-
-    (add-to-list 'org-structure-template-alist
-                 '("t" "#+begin_tip\n?\n#+end_tip"))
-
-    (add-to-list 'org-structure-template-alist
-                 '("C" "#+begin_comment\n?\n#+end_comment"))
-
-    (add-to-list 'org-structure-template-alist
-                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
-
-    ;; :PROPERTIES: template.
-    (add-to-list 'org-structure-template-alist
-                 (list "p"              ; `list' (vs quote list) to evaluate
-                                        ; `concat'.
-                       (concat ":PROPERTIES:\n"
-                               "?\n"
-                               ":END:")))
-
-    ;; HTML export options template.
-    (add-to-list 'org-structure-template-alist
-                 (list "eh"
-                       (concat ":EXPORT_FILE_NAME: ?\n"
-                               ":EXPORT_TITLE:\n"
-                               ":EXPORT_OPTIONS: toc:nil html-postamble:nil num:nil")))
+    ;; New format in Org 9.2.
+    (add-to-list 'org-structure-template-alist '("n" . "note"))
+    (add-to-list 'org-structure-template-alist '("w" . "warning"))
+    (add-to-list 'org-structure-template-alist '("t" . "tip"))
 
     ;; Begin/end example markers will be inserted in lower case.
     (setq org-babel-uppercase-example-markers nil)
@@ -11738,7 +11615,7 @@ aliases ~(la)tex-mode~ to ~(La)TeX-mode~.
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  (try-require 'tex-site)
+  (try-require 'tex-site);XXX
 
   ;; Support for LaTeX documents.
   (with-eval-after-load "latex"
@@ -11798,6 +11675,11 @@ file, AUCTeX gives you a ~Command~ menu.
     ;; Add a command to execute on the LaTeX document.
     (add-to-list 'TeX-command-list
                  '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+
+    (add-to-list 'TeX-command-list
+                 '("latexmk" "(run-latexmk)"
+                   TeX-run-function nil t :help "Run latexmk") t)
+    (setq TeX-command-default "latexmk"))
 
     (defun leuven--LaTeX-mode-hook ()
 
@@ -12055,30 +11937,6 @@ works quite well for editing HTML4 documents (whose tags don't have to close).
 
 - ~C-M-i~ ::
      ~ispell-complete-word~.
-
-Plug [[http://tidy.sourceforge.net/][HTML Tidy]] with ~tidy.el~.
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "tidy-autoloads"
-    (when (executable-find "tidy")
-
-      (defun leuven--html-mode-hook ()
-        "Customize html(-helper)-mode."
-
-        ;; Set up a "tidy" menu in the menu bar.
-        (when (boundp 'html-mode-map)
-          (tidy-build-menu html-mode-map))
-        (when (boundp 'html-helper-mode-map)
-          (tidy-build-menu html-helper-mode-map))
-
-        ;; Bind the key sequence `C-c C-c' to `tidy-buffer'.
-        (local-set-key (kbd "C-c C-c") #'tidy-buffer)
-
-        (setq sgml-validate-command "tidy"))
-
-      ;; Also run from `html-helper-mode'.
-      (add-hook 'html-mode-hook #'leuven--html-mode-hook)))
-#+end_src
 
 *** html-helper-mode
 
@@ -12420,12 +12278,12 @@ Some key bindings:
 
 Keyboard shortcuts:
 
-| Command          | Emacs    | Sublime Text | IntelliJ IDEA | TextMate | Visual Studio | Atom   | Webstorm |
-|------------------+----------+--------------+---------------+----------+---------------+--------+----------|
-| Move line up     | C-S-up   | C-S-up       | M-S-up        |          | M-up          | C-up   | M-S-up   |
-| Move line down   | C-S-down | C-S-down     | M-S-down      |          | M-down        | C-down | M-S-down |
-| Scroll line up   | C-up     |              |               |          | C-up          |        |          |
-| Scroll line down | C-down   |              |               |          | C-down        |        |          |
+| Command          | Emacs    | Sublime Text | IntelliJ IDEA | TextMate | Atom   | Webstorm |
+|------------------+----------+--------------+---------------+----------+--------+----------|
+| Move line up     | C-S-up   | C-S-up       | M-S-up        |          | C-up   | M-S-up   |
+| Move line down   | C-S-down | C-S-down     | M-S-down      |          | C-down | M-S-down |
+| Scroll line up   | C-up     |              |               |          |        |          |
+| Scroll line down | C-down   |              |               |          |        |          |
 
 #+begin_src emacs-lisp
   ;; Swap the current and next line.
@@ -12509,7 +12367,7 @@ Keyboard shortcuts:
 | Move end of defun            | C-M-e |        |               |
 | Move beginning of next defun |       | M-down | M-down        |
 
-Use ~M-up~ and ~M-down~ keys to quickly move to the previous or next function.
+Use ~M-up~ and ~M-down~ keys to quickly move to the *previous* or *next function*.
 
 #+begin_src emacs-lisp
   (defun leuven-beginning-of-next-defun ()
@@ -13017,55 +12875,6 @@ Keyboard shortcuts:
     ;; ;; Hide all top level blocks.
     ;; (add-hook 'find-file-hook #'hs-hide-all)
 )
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  ;; If Hideshowvis is not installed, do not attempt to configure it, as this
-  ;; will prevent packages (including hideshowvis itself) from compiling.
-  (when (display-graphic-p)
-    (with-eval-after-load "hideshowvis-autoloads"
-
-(setq hideshowvis-ignore-same-line nil)
-
-      ;; Enable hideshowvis for programming modes.
-      (add-hook 'prog-mode-hook
-                #'(lambda ()
-                    ;; (require 'fold-dwim)  ; More syntax definitions.
-                    (hideshowvis-enable)))
-
-      ;; (defface hs-fringe-face
-      ;;   '((t :box (:line-width 2 :color "#808080" :style released-button)
-      ;;        :foreground "#999999"))
-      ;;   "Face used to highlight the fringe on folded regions"
-      ;;   :group 'hideshow)
-
-      (defun hs-display-code-line-counts (ov)
-        (when (eq 'code (overlay-get ov 'hs))
-          (let* ((marker-string "*fringe-dummy*")
-                 (marker-length (length marker-string))
-                 (display-string "..."))
-            (overlay-put ov 'help-echo "Hidden text. C-c,= to show")
-            (put-text-property 0 marker-length
-                               'display (list 'left-fringe
-                                              'hs-marker
-                                              'hs-fringe-face)
-                               marker-string)
-            (overlay-put ov 'before-string marker-string)
-            (put-text-property 0 (length display-string)
-                               'face 'hs-face display-string)
-            (overlay-put ov 'display display-string))))
-
-      (setq hs-set-up-overlay 'hs-display-code-line-counts)))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (dolist (hook '(emacs-lisp-mode-hook c++-mode-hook))
-    (add-hook hook 'hideshowvis-enable))
-
-  (defun hideshowvis-enable-immediately ()
-    (run-at-time "0 seconds" nil 'hideshowvis-enable))
-
-  (add-hook 'js2-mode-hook 'hideshowvis-enable-immediately)
 #+end_src
 
 ** Completion for Symbol Names
@@ -14912,6 +14721,9 @@ Systems) in a generic way -- a real timesaver.
 - ~C-x v r~ (or ~M-!~ ?) ::
      Switch Git branches.
 
+- ~C-x v +~ ::
+     vc-update.
+
 #+begin_src emacs-lisp
 ;;** 28.1 (info "(emacs)Version Control")
 
@@ -15027,7 +14839,7 @@ the other on the *repository* as a whole (entire project).
 - ~n~ and ~p~ to move between commits.
 - ~f~ to visit the file as of the commit at point.
 
-The command ~vc-region-history~ shows the *log+diff of the active region*.
+The command ~vc-region-history~ shows the *log + diff of the active region*.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-x v H") #'vc-region-history)
@@ -15983,7 +15795,7 @@ Projectile's features.
     (define-key prog-mode-map (kbd "M-RET") #'emr-show-refactor-menu))
 #+end_src
 
-* Abbrevs (Snippets, Auto Replacements, or live Code templates)
+* Abbrevs (Snippets, Auto Replacements, or live Code Templates)
 
 An "abbrev" is a *word* which has been defined (in a fixed list) to "expand"
 into a specified *expansion*.
@@ -16553,27 +16365,6 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     (ac-flyspell-workaround)
 #+end_src
 
-# #+begin_src emacs-lisp
-#     ;; Avoid `fci-mode' and `auto-complete' popups.
-#     (defvar sanityinc/fci-mode-suppressed nil)
-#
-#     (defadvice popup-create (before suppress-fci-mode activate)
-#       "Suspend fci-mode while popups are visible"
-#       (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
-#       (when fci-mode
-#         (turn-off-fci-mode)))
-#
-#     (defadvice popup-delete (after restore-fci-mode activate)
-#       "Restore fci-mode when all popups have closed"
-#       (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
-#         (setq sanityinc/fci-mode-suppressed nil)
-#         (turn-on-fci-mode))))
-# #+end_src
-#
-# If you don't like this workaround, instead of using ~fci-mode~, use
-# ~whitespace-mode~ with ~lines-tail~ in whitespace-style.  It provides pretty much the
-# same benefit.
-
 #+begin_src emacs-lisp
 )
 #+end_src
@@ -16757,25 +16548,6 @@ By default, the list of candidates is sorted alphabetically, unless the backend
              (funcall fun n))))
      '((name . "Don't complete numbers")))
 #+end_src
-
-# #+begin_src emacs-lisp
-#     ;; Avoid `fci-mode' and `company' popups.
-#     (defvar-local company-fci-mode-on-p nil)
-#
-#     (defun company-turn-off-fci (&rest ignore)
-#       (when (boundp 'fci-mode)
-#         (setq company-fci-mode-on-p fci-mode)
-#         (when fci-mode
-#           (turn-off-fci-mode))))
-#
-#     (defun company-maybe-turn-on-fci (&rest ignore)
-#       (when company-fci-mode-on-p
-#         (turn-on-fci-mode)))
-#
-#     (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-#     (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
-#     (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
-# #+end_src
 
 *First* run the *indent* function, then try *completion* only if it didn't change
 anything.
@@ -17498,7 +17270,7 @@ a Dired buffer.  They are thus similar to the default global bindings ~C-x d~ an
 
   (leuven--section "30.XX Dired+")
 
-  (when (try-require 'dired+)
+  (when (try-require 'dired+) ;XXX
 
     ;; Don't hide details in Dired.
     (setq diredp-hide-details-initially-flag nil)

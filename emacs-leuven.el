@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190417.1559
+;; Version: 20190621.2359
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190417.1559"
+(defconst leuven--emacs-version "20190621.2359"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -420,7 +420,6 @@ If not, just print a message."
             company-tern
             company-quickhelp
             csv-mode
-            dictionary
             diff-hl
             diminish
             docker-compose-mode
@@ -430,7 +429,6 @@ If not, just print a message."
             ess
             expand-region
             fancy-narrow
-            ;; fill-column-indicator
             flycheck
             flycheck-color-mode-line
             flycheck-ledger
@@ -449,7 +447,6 @@ If not, just print a message."
             helm-projectile ; Obsolete package?
             helm-swoop
             hide-lines
-            hideshowvis
             highlight-numbers
             hl-anything                 ; Better than `highlight-symbol'.
             howdoi
@@ -483,7 +480,6 @@ If not, just print a message."
             sqlup-mode
             symbol-overlay
             tern
-            tidy
             smart-comment
             smartparens
             sql-indent
@@ -569,7 +565,7 @@ These packages are neither built-in nor already installed nor ignored."
 )                                       ; Chapter 48 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
-  (try-require 'idle-require)
+  (try-require 'idle-require) ;XXX
 
   ;; Fail-safe for `idle-require'.
   (if (not (featurep 'idle-require))
@@ -1043,7 +1039,7 @@ These packages are neither built-in nor already installed nor ignored."
     (setq bookmark-save-flag 1)
 
     ;; Extensions to standard library `bookmark.el'.
-    (when (try-require 'bookmark+)
+    (when (try-require 'bookmark+);XXX + needs bookmark+-mac
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
       (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
@@ -1292,7 +1288,7 @@ Should be selected from `fringe-bitmaps'.")
   ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
 
 
-(when (try-require 'symbol-overlay)
+(when (try-require 'symbol-overlay) ;XXX
   (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
   (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
   (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
@@ -1301,7 +1297,7 @@ Should be selected from `fringe-bitmaps'.")
   )
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol)
+  (when (try-require 'auto-highlight-symbol) ;XXX
 
     ;; Add major modes Auto-Highlight-Symbol can run on.
     (mapc #'(lambda (mode)
@@ -2009,21 +2005,6 @@ Should be selected from `fringe-bitmaps'.")
      ;; faces corresponding to text in programming-mode buffers).
      (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 
-  ;; Client for rfc2229 dictionary servers.
-  (try-require "dictionary-autoloads")
-  (with-eval-after-load "dictionary-autoloads"
-
-    (global-set-key (kbd "C-c C-d s") #'dictionary-search)
-    (global-set-key (kbd "C-c C-d l") #'dictionary-lookup-definition)
-    (global-set-key (kbd "C-c C-d m") #'dictionary-match-words))
-
-  (with-eval-after-load "dictionary"
-
-    ;; Enable/disable the tooltip support for all buffers.
-    (if leuven--console-p
-        (global-dictionary-tooltip-mode 0)
-      (global-dictionary-tooltip-mode 1)))
-
 )                                       ; Chapter 16 ends here.
 
 ;;* 17 (info "(emacs)Keyboard Macros")
@@ -2587,7 +2568,7 @@ Should be selected from `fringe-bitmaps'.")
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   ;; Open Helm (QuickSilver-like candidate-selection framework).
-  (when (try-require 'helm-config)      ; [default `helm-command-prefix-key']
+  (when (try-require 'helm-config);XXX  ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
 
@@ -3444,6 +3425,7 @@ cycle through all windows on current frame."
                        ("\253" . "«")
                        ("\272" . "°")
                        ("\273" . "»")
+                       ("\277" . "¿")
                        ("\300" . "À")
                        ("\307" . "Ç")
                        ("\311" . "É")
@@ -3457,6 +3439,7 @@ cycle through all windows on current frame."
                        ("\351" . "é")    ;; \303\251
                        ("\352" . "ê")
                        ("\353" . "ë")
+                       ("\355" . "í")
                        ("\356" . "î")
                        ("\357" . "ï")
                        ("\361" . "ñ")
@@ -3659,23 +3642,6 @@ cycle through all windows on current frame."
 
   ;; Activate Auto Fill for all text mode buffers.
   (add-hook 'text-mode-hook #'auto-fill-mode)
-
-  ;; Graphically indicate the fill column.
-  (try-require 'fill-column-indicator-XXX) ; Abandoned by the author.
-  (with-eval-after-load "fill-column-indicator"
-
-    ;; Color used to draw the fill-column rule.
-    (setq fci-rule-color "#E0E0E0")
-
-    ;; Show the fill-column rule as a solid line.
-    (setq fci-rule-use-dashes nil)
-
-    ;; Ratio of dash length to line height.
-    (setq fci-dash-pattern 0.5)
-
-    ;; Enable fci-mode in programming, message and Org modes.
-    ;; (add-hook 'prog-mode-hook #'fci-mode) ; 3 x Unicode char E001 added at the end of every line when exporting code blocks to HTML!!!
-    (add-hook 'message-mode-hook #'fci-mode))
 
   (defun leuven-replace-nbsp-by-spc ()
     "Replace all nbsp by normal spaces."
@@ -5865,26 +5831,6 @@ this with to-do items than with projects or headings."
     ;; ;; 12.5.9 Turn inclusion of the default CSS style off.
     ;; (setq org-html-head-include-default-style nil)
 
-    ;; Check that `tidy' is in PATH, and that configuration file exists.
-    (when (and (executable-find "tidy")
-               (file-exists-p "~/.tidyrc")) ; tidy-config
-
-      (defun leuven--export-html-final-filter (contents backend info)
-        (if (not (eq backend 'html)) contents
-          (message "[Tidy'fying...]")
-          (let* ((new-contents
-                  (with-temp-buffer
-                    (insert contents)
-                    (shell-command-on-region (point-min) (point-max)
-                                             "tidy -config ~/.tidyrc"
-                                             t t "*Tidy errors*")
-                    (buffer-string))))
-            (message "[Tidy'fying... Done]")
-            new-contents)))
-
-      (add-to-list 'org-export-filter-final-output-functions
-                   'leuven--export-html-final-filter))
-
       ;; HTML checkbox output.
       (defun leuven--checkbox-filter (item backend info)
         (when (org-export-derived-backend-p backend 'html)
@@ -6514,41 +6460,10 @@ this with to-do items than with projects or headings."
   (with-eval-after-load "org"
     (message "[... Org Easy Templates]")
 
-    ;; ;; Modify `org-structure-template-alist' to keep lower-case easy templates.
-    ;; (mapc #'(lambda (asc)
-    ;;           (let ((org-sce-dc (downcase (nth 1 asc))))
-    ;;             (setf (nth 1 asc) org-sce-dc)))
-    ;;       org-structure-template-alist)
-
-    (add-to-list 'org-structure-template-alist
-                 '("n" "#+begin_note\n?\n#+end_note"))
-
-    (add-to-list 'org-structure-template-alist
-                 '("w" "#+begin_warning\n?\n#+end_warning"))
-
-    (add-to-list 'org-structure-template-alist
-                 '("t" "#+begin_tip\n?\n#+end_tip"))
-
-    (add-to-list 'org-structure-template-alist
-                 '("C" "#+begin_comment\n?\n#+end_comment"))
-
-    (add-to-list 'org-structure-template-alist
-                 '("E" "\\begin\{equation\}\n?\n\\end\{equation\}" ""))
-
-    ;; :PROPERTIES: template.
-    (add-to-list 'org-structure-template-alist
-                 (list "p"              ; `list' (vs quote list) to evaluate
-                                        ; `concat'.
-                       (concat ":PROPERTIES:\n"
-                               "?\n"
-                               ":END:")))
-
-    ;; HTML export options template.
-    (add-to-list 'org-structure-template-alist
-                 (list "eh"
-                       (concat ":EXPORT_FILE_NAME: ?\n"
-                               ":EXPORT_TITLE:\n"
-                               ":EXPORT_OPTIONS: toc:nil html-postamble:nil num:nil")))
+    ;; New format in Org 9.2.
+    (add-to-list 'org-structure-template-alist '("n" . "note"))
+    (add-to-list 'org-structure-template-alist '("w" . "warning"))
+    (add-to-list 'org-structure-template-alist '("t" . "tip"))
 
     ;; Begin/end example markers will be inserted in lower case.
     (setq org-babel-uppercase-example-markers nil)
@@ -6871,7 +6786,7 @@ this with to-do items than with projects or headings."
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  (try-require 'tex-site)
+  (try-require 'tex-site);XXX
 
   ;; Support for LaTeX documents.
   (with-eval-after-load "latex"
@@ -6915,6 +6830,11 @@ this with to-do items than with projects or headings."
     ;; Add a command to execute on the LaTeX document.
     (add-to-list 'TeX-command-list
                  '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+
+    (add-to-list 'TeX-command-list
+                 '("latexmk" "(run-latexmk)"
+                   TeX-run-function nil t :help "Run latexmk") t)
+    (setq TeX-command-default "latexmk"))
 
     (defun leuven--LaTeX-mode-hook ()
 
@@ -7068,26 +6988,6 @@ this with to-do items than with projects or headings."
 ;;** 25.12 (info "(emacs)HTML Mode")
 
   (leuven--section "25.12 (emacs)HTML Mode")
-
-  (with-eval-after-load "tidy-autoloads"
-    (when (executable-find "tidy")
-
-      (defun leuven--html-mode-hook ()
-        "Customize html(-helper)-mode."
-
-        ;; Set up a "tidy" menu in the menu bar.
-        (when (boundp 'html-mode-map)
-          (tidy-build-menu html-mode-map))
-        (when (boundp 'html-helper-mode-map)
-          (tidy-build-menu html-helper-mode-map))
-
-        ;; Bind the key sequence `C-c C-c' to `tidy-buffer'.
-        (local-set-key (kbd "C-c C-c") #'tidy-buffer)
-
-        (setq sgml-validate-command "tidy"))
-
-      ;; Also run from `html-helper-mode'.
-      (add-hook 'html-mode-hook #'leuven--html-mode-hook)))
 
   (when (locate-library "html-helper-mode")
 
@@ -9628,7 +9528,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "30.XX Dired+")
 
-  (when (try-require 'dired+)
+  (when (try-require 'dired+) ;XXX
 
     ;; Don't hide details in Dired.
     (setq diredp-hide-details-initially-flag nil)
