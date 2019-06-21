@@ -191,6 +191,7 @@ Global key bindings.
 | Shortcut | What it runs |
 |----------+--------------|
 | <f11>    | undo         |
+| C-S-z    | redo         |
 | <S-f11>  | redo         |
 
 ** Windows
