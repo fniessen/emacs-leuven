@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190621.2359
+;; Version: 20190622.0953
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190621.2359"
+(defconst leuven--emacs-version "20190622.0953"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6831,10 +6831,10 @@ this with to-do items than with projects or headings."
     (add-to-list 'TeX-command-list
                  '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
 
-    (add-to-list 'TeX-command-list
-                 '("latexmk" "(run-latexmk)"
-                   TeX-run-function nil t :help "Run latexmk") t)
-    (setq TeX-command-default "latexmk"))
+    ;; (add-to-list 'TeX-command-list
+    ;;              '("latexmk" "(run-latexmk)"
+    ;;                TeX-run-function nil t :help "Run latexmk") t)
+    ;; (setq TeX-command-default "latexmk")
 
     (defun leuven--LaTeX-mode-hook ()
 

@@ -11676,10 +11676,10 @@ file, AUCTeX gives you a ~Command~ menu.
     (add-to-list 'TeX-command-list
                  '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
 
-    (add-to-list 'TeX-command-list
-                 '("latexmk" "(run-latexmk)"
-                   TeX-run-function nil t :help "Run latexmk") t)
-    (setq TeX-command-default "latexmk"))
+    ;; (add-to-list 'TeX-command-list
+    ;;              '("latexmk" "(run-latexmk)"
+    ;;                TeX-run-function nil t :help "Run latexmk") t)
+    ;; (setq TeX-command-default "latexmk")
 
     (defun leuven--LaTeX-mode-hook ()
 
