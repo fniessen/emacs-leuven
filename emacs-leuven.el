@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190622.0953
+;; Version: 20190814.1024
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190622.0953"
+(defconst leuven--emacs-version "20190814.1024"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -444,6 +444,7 @@ If not, just print a message."
             helm-ag
             helm-descbinds
             helm-ls-git
+            helm-org
             helm-projectile ; Obsolete package?
             helm-swoop
             hide-lines

@@ -918,6 +918,7 @@ like this into your configuration file:
             helm-ag
             helm-descbinds
             helm-ls-git
+            helm-org
             helm-projectile ; Obsolete package?
             helm-swoop
             hide-lines
