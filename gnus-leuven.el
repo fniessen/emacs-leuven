@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20190104.1034
+;; Version: 20190827.2100
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -920,33 +920,22 @@
 
 ;;*** 6.4.6 (info "(gnus)Fancy Mail Splitting")
 
-  ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file.
-  (when (try-require 'bbdb-gnus)
+  ;; Specify how to split mail.
+  (setq nnmail-split-fancy
+        '(|                             ; Split to the *first* match.
 
-    ;; Specify how to split mail.
-    (setq nnmail-split-fancy
-          '(|                           ; Split to the *first* match.
+            ;; (: nnmail-split-fancy-with-parent)
 
-              ;; (: nnmail-split-fancy-with-parent)
+            ;; Mailing lists (in To: or Cc:).
+            (to "foo@bar\\.com" "list.foo")
 
-              ;; Mailing lists (in To: or Cc:).
-              (to "foo@bar\\.com" "list.foo")
+            ;; Catch spam.
+            ("X-Spam-Status" "[Yy]es"
+             "INBOX.Spam")
 
-              ;; Invoke BBDB.
-              (: #'(lambda ()
-                   (car (bbdb/gnus-split-method))))
-
-              ;; Catch spam.
-              ("X-Spam-Status" "[Yy]es"
-               "INBOX.Spam")
-
-              ;; ;; Unmatched mail goes to the catch-all group (default mailbox).
-              ;; "INBOX"
-              ))                 ; Undecided.
-
-    ;; For records which don't have `gnus-private' set, the rules in
-    ;; `split-fancy' are invoked.
-    (setq bbdb/gnus-split-default-group nil))
+            ;; ;; Unmatched mail goes to the catch-all group (default mailbox).
+            ;; "INBOX"
+            ))                          ; Undecided.
 
 ;;*** 6.4.11 (info "(gnus)Duplicates")
 

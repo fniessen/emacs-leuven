@@ -1658,33 +1658,22 @@ Newsgroups in which I'm interested:
 #+begin_src emacs-lisp
 ;;*** 6.4.6 (info "(gnus)Fancy Mail Splitting")
 
-  ;; BBDB (Big Brother DataBase) is loaded from my `.emacs' file.
-  (when (try-require 'bbdb-gnus)
+  ;; Specify how to split mail.
+  (setq nnmail-split-fancy
+        '(|                             ; Split to the *first* match.
 
-    ;; Specify how to split mail.
-    (setq nnmail-split-fancy
-          '(|                           ; Split to the *first* match.
+            ;; (: nnmail-split-fancy-with-parent)
 
-              ;; (: nnmail-split-fancy-with-parent)
+            ;; Mailing lists (in To: or Cc:).
+            (to "foo@bar\\.com" "list.foo")
 
-              ;; Mailing lists (in To: or Cc:).
-              (to "foo@bar\\.com" "list.foo")
+            ;; Catch spam.
+            ("X-Spam-Status" "[Yy]es"
+             "INBOX.Spam")
 
-              ;; Invoke BBDB.
-              (: #'(lambda ()
-                   (car (bbdb/gnus-split-method))))
-
-              ;; Catch spam.
-              ("X-Spam-Status" "[Yy]es"
-               "INBOX.Spam")
-
-              ;; ;; Unmatched mail goes to the catch-all group (default mailbox).
-              ;; "INBOX"
-              ))                 ; Undecided.
-
-    ;; For records which don't have `gnus-private' set, the rules in
-    ;; `split-fancy' are invoked.
-    (setq bbdb/gnus-split-default-group nil))
+            ;; ;; Unmatched mail goes to the catch-all group (default mailbox).
+            ;; "INBOX"
+            ))                          ; Undecided.
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
