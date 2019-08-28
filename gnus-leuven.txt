@@ -346,7 +346,7 @@ directly afterward...
     (if (> (gnus-range-length (cdr (assq 'tick gnus-tmp-marked))) 0)
         (concat (int-to-string
                  (gnus-range-length (cdr (assq 'tick gnus-tmp-marked))))
-                " Ticked")
+                " Starred")
       ""))
 
   ;; Create some faces.

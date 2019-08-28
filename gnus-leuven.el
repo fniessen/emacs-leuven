@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20190827.2100
+;; Version: 20190828.1658
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -145,7 +145,7 @@
     (if (> (gnus-range-length (cdr (assq 'tick gnus-tmp-marked))) 0)
         (concat (int-to-string
                  (gnus-range-length (cdr (assq 'tick gnus-tmp-marked))))
-                " Ticked")
+                " Starred")
       ""))
 
   ;; Create some faces.
