@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190814.1024
+;; Version: 20190901.1603
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190814.1024"
+(defconst leuven--emacs-version "20190901.1603"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -10810,6 +10810,10 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (global-set-key (kbd "<C-wheel-up>")   #'text-scale-increase)
   (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
+
+  ;; For Linux.
+  (global-set-key (kbd "<C-mouse-4>")    #'text-scale-increase)
+  (global-set-key (kbd "<C-mouse-5>")    #'text-scale-decrease)
 
 )
 

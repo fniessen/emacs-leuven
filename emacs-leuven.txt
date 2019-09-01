@@ -19550,11 +19550,16 @@ There are a few commands to adjust the font sizes:
 
 Those bindings are global and repeatable, e.g. ~C-x C-+ C-+ C-+~.
 
-Zoom in/out with Ctrl + Scroll wheel on the mouse:
+Zoom in/out (increase/decrease the font size) with ~Ctrl~ key and scroll wheel on
+the mouse:
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "<C-wheel-up>")   #'text-scale-increase)
   (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
+
+  ;; For Linux.
+  (global-set-key (kbd "<C-mouse-4>")    #'text-scale-increase)
+  (global-set-key (kbd "<C-mouse-5>")    #'text-scale-decrease)
 #+end_src
 
 #+begin_src emacs-lisp
