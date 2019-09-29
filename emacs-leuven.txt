@@ -908,6 +908,7 @@ like this into your configuration file:
             flycheck-ledger
             fuzzy
             git-commit
+            ;; git-commit-insert-issue
             git-messenger
             git-timemachine
             google-this
@@ -6370,7 +6371,7 @@ XXX Declare PDF files as binary
   ;; C-x 8 RET and then the number, followed by RET.
   (leuven--do-accent '(("\200" . "EUR")  ;; \342\202\254
                        ("\205" . "...")
-                       ("\222" . "'")    ;; \342\200\231
+                       ("\222" . "’")    ;; \342\200\231
                        ("\223" . "\"")
                        ("\224" . "\"")
                        ("\226" . "-")
@@ -6379,6 +6380,7 @@ XXX Declare PDF files as binary
                        ("\240" . " ")    ;; \302\240
                        ("\251" . "©")
                        ("\253" . "«")
+                       ("\260" . "°")
                        ("\272" . "°")
                        ("\273" . "»")
                        ("\277" . "¿")

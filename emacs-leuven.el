@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190902.1543
+;; Version: 20190929.1743
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190902.1543"
+(defconst leuven--emacs-version "20190929.1743"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -434,6 +434,7 @@ If not, just print a message."
             flycheck-ledger
             fuzzy
             git-commit
+            ;; git-commit-insert-issue
             git-messenger
             git-timemachine
             google-this
@@ -3415,7 +3416,7 @@ cycle through all windows on current frame."
   ;; C-x 8 RET and then the number, followed by RET.
   (leuven--do-accent '(("\200" . "EUR")  ;; \342\202\254
                        ("\205" . "...")
-                       ("\222" . "'")    ;; \342\200\231
+                       ("\222" . "’")    ;; \342\200\231
                        ("\223" . "\"")
                        ("\224" . "\"")
                        ("\226" . "-")
@@ -3424,6 +3425,7 @@ cycle through all windows on current frame."
                        ("\240" . " ")    ;; \302\240
                        ("\251" . "©")
                        ("\253" . "«")
+                       ("\260" . "°")
                        ("\272" . "°")
                        ("\273" . "»")
                        ("\277" . "¿")
