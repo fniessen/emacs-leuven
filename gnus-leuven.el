@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20190828.1658
+;; Version: 20191030.2001
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -79,9 +79,9 @@
 
 ;;** 1.4 (info "(gnus)New Groups")
 
-  ;; ;; Gnus will not check for new newsgroups at startup.
-  ;; (setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when
-  ;;                                       ; you do the `g' command.
+  ;; Gnus will not check for new newsgroups at startup.
+  (setq gnus-check-new-newsgroups nil)  ; Save you some time at startup and when
+                                        ; you do the `g' command.
 
   ;; Gnus will ask you to auto-subscribe on *all* new IMAP groups.
   (setq gnus-subscribe-newsgroup-method #'gnus-subscribe-interactively)
@@ -131,14 +131,14 @@
         (concat gnus-tmp-number-of-unread " Unread")
       ""))
 
-  (defun gnus-user-format-function-U (headers)
-    "Return string for count of unseen articles."
-    (if (> (gnus-number-of-unseen-articles-in-group gnus-tmp-group) 0)
-        ;; Found in gnus-group.el.
-        (concat (int-to-string
-                 (gnus-number-of-unseen-articles-in-group
-                  gnus-tmp-group)) " Unseen")
-      ""))
+  ;; (defun gnus-user-format-function-U (headers)
+  ;;   "Return string for count of unseen articles."
+  ;;   (if (> (gnus-number-of-unseen-articles-in-group gnus-tmp-group) 0)
+  ;;       ;; Found in gnus-group.el.
+  ;;       (concat (int-to-string
+  ;;                (gnus-number-of-unseen-articles-in-group
+  ;;                 gnus-tmp-group)) " Unseen")
+  ;;     ""))
 
   (defun gnus-user-format-function-T (headers)
     "Return string for count of ticked articles."
@@ -149,14 +149,14 @@
       ""))
 
   ;; Create some faces.
-  (defface leuven-gnus-unseen '((t (:weight normal :foreground "#FC7202")))
-    "Face for count of unread articles.")
+  ;; (defface leuven-gnus-unseen '((t (:weight normal :foreground "#FC7202")))
+  ;;   "Face for count of unread articles.")
   ;; (defface leuven-gnus-total '((t (:foreground "#2EAE2C")))
   ;;   "Face for size of article in summary buffer.")
 
   (setq gnus-face-1 'gnus-summary-normal-ticked)
   (setq gnus-face-2 'gnus-summary-normal-unread)
-  (setq gnus-face-3 'leuven-gnus-unseen)
+  ;; (setq gnus-face-3 'leuven-gnus-unseen)
   ;; (setq gnus-face-4 'leuven-gnus-total)
 
   ;; Format of the group buffer.
@@ -165,7 +165,7 @@
                                        "  "
                                        "%(%-42,42g%) "
                                        "%2{%10uy%} "
-                                       "%3{%10uU%} "
+                                       ;; "%3{%10uU%} "
                                        "%1{%10uT%} "
                                        ;; "%4{%6t Total%}"
                                        "\n"))
