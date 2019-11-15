@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20190929.1743
+;; Version: 20191115.1118
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20190929.1743"
+(defconst leuven--emacs-version "20191115.1118"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -434,7 +434,7 @@ If not, just print a message."
             flycheck-ledger
             fuzzy
             git-commit
-            ;; git-commit-insert-issue
+            git-commit-insert-issue
             git-messenger
             git-timemachine
             google-this
@@ -7262,7 +7262,7 @@ this with to-do items than with projects or headings."
   (global-set-key (kbd "<M-down>") #'leuven-beginning-of-next-defun)
 
   ;; Previous Method.
-  (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a
+  (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a.
 
   ;; Making buffer indexes as menus.
   (try-require 'imenu)                  ; Awesome!

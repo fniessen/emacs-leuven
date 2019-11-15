@@ -908,7 +908,7 @@ like this into your configuration file:
             flycheck-ledger
             fuzzy
             git-commit
-            ;; git-commit-insert-issue
+            git-commit-insert-issue
             git-messenger
             git-timemachine
             google-this
@@ -12370,7 +12370,7 @@ Keyboard shortcuts:
 | Move end of defun            | C-M-e |        |               |
 | Move beginning of next defun |       | M-down | M-down        |
 
-Use ~M-up~ and ~M-down~ keys to quickly move to the *previous* or *next function*.
+Use ~M-up~ and ~M-down~ keys to quickly jump to the *previous* or *next function*.
 
 #+begin_src emacs-lisp
   (defun leuven-beginning-of-next-defun ()
@@ -12383,7 +12383,7 @@ Use ~M-up~ and ~M-down~ keys to quickly move to the *previous* or *next function
   (global-set-key (kbd "<M-down>") #'leuven-beginning-of-next-defun)
 
   ;; Previous Method.
-  (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a
+  (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a.
 #+end_src
 
 Imenu is a great tool allowing you to *go to a function definition* (by name), but
@@ -14801,6 +14801,13 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
 Or use Tig?  See http://blogs.atlassian.com/2013/05/git-tig/.
 
 *** Examining And Comparing Old Revisions
+
+VC can show you the *history of changes* to a *particular line of code*:
+
+1. Run the command ~vc-annotate~ (with either ~M-x vc-annotate~ or ~C-x v g~).
+2. Each line will show up with its revision, like a normal ~blame~.
+3. Pressing ~a~ (~vc-annotate-revision-previous-to-line~) will navigate to the
+   revision before the revision at the line you're on.
 
 #+begin_src emacs-lisp
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
