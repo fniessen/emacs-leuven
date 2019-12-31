@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20191115.1118
+;; Version: 20191231.1437
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20191115.1118"
+(defconst leuven--emacs-version "20191231.1437"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -420,6 +420,7 @@ If not, just print a message."
             company-tern
             company-quickhelp
             csv-mode
+            dashboard
             diff-hl
             diminish
             docker-compose-mode
@@ -2704,10 +2705,11 @@ Should be selected from `fringe-bitmaps'.")
     ;; (helm-mode 1)
     )
 
+  ;; Disable fuzzy matching.
+  (setq helm-ff-fuzzy-matching nil)
+
   (with-eval-after-load "helm-files"
 
-    ;; Disable fuzzy matching.
-    (setq helm-ff-fuzzy-matching nil)
 
     ;; Don't show only basename of candidates in `helm-find-files'.
     (setq helm-ff-transformer-show-only-basename nil)
@@ -3663,26 +3665,26 @@ cycle through all windows on current frame."
           (adaptive-fill-function nil))
       (fill-paragraph)))
 
-  (defun leuven-smart-punctuation-apostrophe ()
-    "Replace second apostrophe by backquote in front of symbol."
-    (interactive)
-    (cond
-     ((or (bolp) (not (looking-back "'")))
-      ;; Insert just one '.
-      (self-insert-command 1))
-     ((save-excursion
-        (backward-char)
-        ;; Skip symbol backwards.
-        (and (not (zerop (skip-syntax-backward "w_.")))
-             (not (looking-back "`"))
-             (or (insert-and-inherit "`") t))))
-     (t
-      ;; Insert `' around following symbol.
-      (delete-char -1)
-      (unless (looking-back "`") (insert-and-inherit "`"))
-      (save-excursion
-        (skip-syntax-forward "w_.")
-        (unless (looking-at "'") (insert-and-inherit "'"))))))
+  ;; (defun leuven-smart-punctuation-apostrophe ()
+  ;;   "Replace second apostrophe by backquote in front of symbol."
+  ;;   (interactive)
+  ;;   (cond
+  ;;    ((or (bolp) (not (looking-back "'")))
+  ;;     ;; Insert just one '.
+  ;;     (self-insert-command 1))
+  ;;    ((save-excursion
+  ;;       (backward-char)
+  ;;       ;; Skip symbol backwards.
+  ;;       (and (not (zerop (skip-syntax-backward "w_.")))
+  ;;            (not (looking-back "`"))
+  ;;            (or (insert-and-inherit "`") t))))
+  ;;    (t
+  ;;     ;; Insert `' around following symbol.
+  ;;     (delete-char -1)
+  ;;     (unless (looking-back "`") (insert-and-inherit "`"))
+  ;;     (save-excursion
+  ;;       (skip-syntax-forward "w_.")
+  ;;       (unless (looking-at "'") (insert-and-inherit "'"))))))
 
   (defun leuven-smart-punctuation-quotation-mark ()
     "Replace two following double quotes by French quotes."
@@ -3711,7 +3713,7 @@ cycle through all windows on current frame."
 
   (defun leuven--smart-punctuation ()
     "Replace second apostrophe or quotation mark."
-    (local-set-key [39] #'leuven-smart-punctuation-apostrophe)
+    ;; (local-set-key [39] #'leuven-smart-punctuation-apostrophe)
     (local-set-key "\"" #'leuven-smart-punctuation-quotation-mark))
 
   (add-hook 'text-mode-hook #'leuven--smart-punctuation)
@@ -10877,6 +10879,25 @@ a clean buffer we're an order of magnitude laxer about checking."
                                           leuven--start-time))))
   (message "[Loaded %s in %.2f s]" load-file-name elapsed))
 (sit-for 0.3)
+
+;; (use-package dashboard
+;;   :if (< (length command-line-args) 2)
+;;   :preface
+  (defun my/dashboard-banner ()
+    "Sets a dashboard banner including information on package initialization
+     time and garbage collections."
+    (setq dashboard-banner-logo-title
+          (format "Emacs ready in %.2f seconds with %d garbage collections."
+                  (float-time
+                   (time-subtract after-init-time before-init-time)) gcs-done)))
+  ;; :init
+  (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+  (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
+  ;; :custom
+  ;; (dashboard-startup-banner 'logo)
+  ;; :config
+  (dashboard-setup-startup-hook)
+;; )
 
 (add-hook 'after-init-hook
           #'(lambda ()

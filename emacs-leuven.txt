@@ -64,6 +64,10 @@ Automatically debug and bisect your init (=.emacs=) file!
        nil)
 #+end_src
 
+** TODO Check out other configs
+
+https://alhassy.github.io/init/
+
 ** TODO Re: Goto last edit location -- explanation provided!!! (from l. david andersson)
 [2015-06-24 Wed 18:53]
 
@@ -894,6 +898,7 @@ like this into your configuration file:
             company-tern
             company-quickhelp
             csv-mode
+            dashboard
             diff-hl
             diminish
             docker-compose-mode
@@ -1846,6 +1851,9 @@ what they normally do: kill or copy it.
 
   (global-set-key (kbd "C-S-d") #'duplicate-current-line)
 #+end_src
+
+To *highlight duplicate lines*, see
+https://emacs.stackexchange.com/questions/13092/how-can-i-highlight-duplicate-lines
 
 In Emacs 24.4+, the cleanest way to *uniquify lines* (~uniq-lines~) is the
 ~delete-duplicate-lines~ function.
@@ -5161,8 +5169,8 @@ before running helm-flycheck"
 
 ~helm-find-files~ is powerful because:
 
-- It has *fuzzy matching* by default (enabled by default, but reverted as soon as
-  you add a space in the pattern).
+- It has *fuzzy matching* by default (enabled by default, but *disabled* as soon as
+  you *add a space* in the pattern).
 
 - It has highlighting on candidates depend on types: directory has a color,
   plain file has a color, executable has a color, shell script has a color.
@@ -5195,10 +5203,11 @@ enter. All in once nice package.
      Delete the last segment of a file name (in the minibuffer).
 
 #+begin_src emacs-lisp
+  ;; Disable fuzzy matching.
+  (setq helm-ff-fuzzy-matching nil)
+
   (with-eval-after-load "helm-files"
 
-    ;; Disable fuzzy matching.
-    (setq helm-ff-fuzzy-matching nil)
 
     ;; Don't show only basename of candidates in `helm-find-files'.
     (setq helm-ff-transformer-show-only-basename nil)
@@ -6777,26 +6786,26 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 *************** END
 
 #+begin_src emacs-lisp
-  (defun leuven-smart-punctuation-apostrophe ()
-    "Replace second apostrophe by backquote in front of symbol."
-    (interactive)
-    (cond
-     ((or (bolp) (not (looking-back "'")))
-      ;; Insert just one '.
-      (self-insert-command 1))
-     ((save-excursion
-        (backward-char)
-        ;; Skip symbol backwards.
-        (and (not (zerop (skip-syntax-backward "w_.")))
-             (not (looking-back "`"))
-             (or (insert-and-inherit "`") t))))
-     (t
-      ;; Insert `' around following symbol.
-      (delete-char -1)
-      (unless (looking-back "`") (insert-and-inherit "`"))
-      (save-excursion
-        (skip-syntax-forward "w_.")
-        (unless (looking-at "'") (insert-and-inherit "'"))))))
+  ;; (defun leuven-smart-punctuation-apostrophe ()
+  ;;   "Replace second apostrophe by backquote in front of symbol."
+  ;;   (interactive)
+  ;;   (cond
+  ;;    ((or (bolp) (not (looking-back "'")))
+  ;;     ;; Insert just one '.
+  ;;     (self-insert-command 1))
+  ;;    ((save-excursion
+  ;;       (backward-char)
+  ;;       ;; Skip symbol backwards.
+  ;;       (and (not (zerop (skip-syntax-backward "w_.")))
+  ;;            (not (looking-back "`"))
+  ;;            (or (insert-and-inherit "`") t))))
+  ;;    (t
+  ;;     ;; Insert `' around following symbol.
+  ;;     (delete-char -1)
+  ;;     (unless (looking-back "`") (insert-and-inherit "`"))
+  ;;     (save-excursion
+  ;;       (skip-syntax-forward "w_.")
+  ;;       (unless (looking-at "'") (insert-and-inherit "'"))))))
 
   (defun leuven-smart-punctuation-quotation-mark ()
     "Replace two following double quotes by French quotes."
@@ -6825,7 +6834,7 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 
   (defun leuven--smart-punctuation ()
     "Replace second apostrophe or quotation mark."
-    (local-set-key [39] #'leuven-smart-punctuation-apostrophe)
+    ;; (local-set-key [39] #'leuven-smart-punctuation-apostrophe)
     (local-set-key "\"" #'leuven-smart-punctuation-quotation-mark))
 
   (add-hook 'text-mode-hook #'leuven--smart-punctuation)
@@ -20008,6 +20017,31 @@ calls to message), set the variable ~debug-on-message~.
                                           leuven--start-time))))
   (message "[Loaded %s in %.2f s]" load-file-name elapsed))
 (sit-for 0.3)
+
+#+end_src
+
+See https://github.com/emacs-dashboard/emacs-dashboard/issues/57 (very nice
+dashboard):
+
+#+begin_src emacs-lisp
+;; (use-package dashboard
+;;   :if (< (length command-line-args) 2)
+;;   :preface
+  (defun my/dashboard-banner ()
+    "Sets a dashboard banner including information on package initialization
+     time and garbage collections."
+    (setq dashboard-banner-logo-title
+          (format "Emacs ready in %.2f seconds with %d garbage collections."
+                  (float-time
+                   (time-subtract after-init-time before-init-time)) gcs-done)))
+  ;; :init
+  (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+  (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
+  ;; :custom
+  ;; (dashboard-startup-banner 'logo)
+  ;; :config
+  (dashboard-setup-startup-hook)
+;; )
 #+end_src
 
 #+begin_src emacs-lisp
