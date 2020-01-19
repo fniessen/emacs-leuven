@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2019 Fabrice Niessen
+;; Copyright (C) 1999-2020 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20191231.1437
+;; Version: 20200119.1501
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20191231.1437"
+(defconst leuven--emacs-version "20200119.1501"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -402,7 +402,6 @@ If not, just print a message."
     ;; dependencies).
     (setq package-selected-packages
           '(ag
-            ;; aggressive-indent
             ant
             anzu
             auctex
@@ -8947,7 +8946,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                  (logfile "WEB-INF/config/archibus.log"))
           (if (file-exists-p (expand-file-name logfile root))
               (find-file (expand-file-name logfile root))
-            (user-error "You’re not in an ARCHIBUS project"))))
+            (user-error "You're not in an ARCHIBUS project"))))
     (define-key projectile-mode-map (kbd "C-c p A") #'leuven-find-file-archibus-log)
   )
 
@@ -9421,6 +9420,15 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;;** (info "(emacs)Dired Visiting")
 
     (leuven--section "30.5 (emacs)Dired Visiting")
+
+    (defun browse-file-directory ()
+      "Open the current file's directory however the OS would."
+      (interactive)
+      (if default-directory
+          (browse-url-of-file (expand-file-name default-directory))
+        (error "No `default-directory' to open")))
+
+    (global-set-key (kbd "C-c r") #'browse-file-directory)
 
     ;; In Dired, ask a WWW browser to display the file named on this line.
     (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?

@@ -316,7 +316,7 @@ Citations:
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2019 Fabrice Niessen
+;; Copyright (C) 1999-2020 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -880,7 +880,6 @@ like this into your configuration file:
     ;; dependencies).
     (setq package-selected-packages
           '(ag
-            ;; aggressive-indent
             ant
             anzu
             auctex
@@ -6603,11 +6602,15 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
   (global-set-key (kbd "C-c =")  #'leuven-align-code)
 #+end_src
 
+For example,
+
 #+begin_example
 var first = 3,
     second = "oh my god!",
     last = "but not least";
 #+end_example
+
+gets reindented like this:
 
 #+begin_example
 var first  = 3,
@@ -6615,18 +6618,10 @@ var first  = 3,
     last   = "but not least";
 #+end_example
 
-#+begin_src emacs-lisp :tangle no
-  ;; Minor mode to aggressively keep your code always indented.
-  (with-eval-after-load "aggressive-indent-autoloads"
-
-    ;; Enable aggressive indent mode everywhere.
-    (aggressive-indent-global-mode))
-#+end_src
-
-#+begin_warning
-If we enable ~aggressive-indent-mode~, then the tangled Emacs Lisp code (from this
-file) is beginning at column 0.
-#+end_warning
+#+begin_tip
+For *filling code* (*pretty-format*'ting it, auto-inserting newlines, indents,
+etc.), see ~uncrustify~.
+#+end_tip
 
 #+begin_src emacs-lisp
   ;; Show vertical lines to guide indentation.
@@ -15801,7 +15796,7 @@ Projectile's features.
                  (logfile "WEB-INF/config/archibus.log"))
           (if (file-exists-p (expand-file-name logfile root))
               (find-file (expand-file-name logfile root))
-            (user-error "You’re not in an ARCHIBUS project"))))
+            (user-error "You're not in an ARCHIBUS project"))))
     (define-key projectile-mode-map (kbd "C-c p A") #'leuven-find-file-archibus-log)
   )
 #+end_src
@@ -17006,6 +17001,19 @@ appropriate viewer:
                                 (dired-get-marked-files t current-prefix-arg))))
 
     (define-key dired-mode-map (kbd "F") #'dired-open)
+#+end_src
+
+Reveal active file in Explorer:
+
+#+begin_src emacs-lisp
+    (defun browse-file-directory ()
+      "Open the current file's directory however the OS would."
+      (interactive)
+      (if default-directory
+          (browse-url-of-file (expand-file-name default-directory))
+        (error "No `default-directory' to open")))
+
+    (global-set-key (kbd "C-c r") #'browse-file-directory)
 #+end_src
 
 **** Ask a WWW browser to display file
