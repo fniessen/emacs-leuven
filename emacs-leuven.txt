@@ -4560,7 +4560,7 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
   (with-eval-after-load "epa-file"
 
     ;; Stop EasyPG from asking for the recipient used for encrypting files.
-    (setq epa-file-encrypt-to "johndoe@example.com")
+    (setq epa-file-encrypt-to "john.doe@example.com")
                                         ; If no one is selected (""), symmetric
                                         ; encryption will always be performed.
 
@@ -17627,7 +17627,7 @@ Minimal configuration for sending a bug report, for example.
 
   ;; Full mailing address of this user
   ;; (used in MAIL envelope FROM, and to select the default personality ID).
-  (setq user-mail-address "johndoe@example.com")
+  (setq user-mail-address "john.doe@example.com")
 
   ;; Sending mail.
   (setq send-mail-function 'smtpmail-send-it)
