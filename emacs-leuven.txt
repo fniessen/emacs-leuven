@@ -20032,24 +20032,24 @@ See https://github.com/emacs-dashboard/emacs-dashboard/issues/57 (very nice
 dashboard):
 
 #+begin_src emacs-lisp
-;; (use-package dashboard
-;;   :if (< (length command-line-args) 2)
-;;   :preface
-  (defun my/dashboard-banner ()
-    "Sets a dashboard banner including information on package initialization
-     time and garbage collections."
-    (setq dashboard-banner-logo-title
-          (format "Emacs ready in %.2f seconds with %d garbage collections."
-                  (float-time
-                   (time-subtract after-init-time before-init-time)) gcs-done)))
-  ;; :init
-  (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-  (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
-  ;; :custom
-  ;; (dashboard-startup-banner 'logo)
-  ;; :config
-  (dashboard-setup-startup-hook)
-;; )
+;; ;; (use-package dashboard
+;; ;;   :if (< (length command-line-args) 2)
+;; ;;   :preface
+;;   (defun my/dashboard-banner ()
+;;     "Sets a dashboard banner including information on package initialization
+;;      time and garbage collections."
+;;     (setq dashboard-banner-logo-title
+;;           (format "Emacs ready in %.2f seconds with %d garbage collections."
+;;                   (float-time
+;;                    (time-subtract after-init-time before-init-time)) gcs-done)))
+;;   ;; :init
+;;   (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+;;   (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
+;;   ;; :custom
+;;   ;; (dashboard-startup-banner 'logo)
+;;   ;; :config
+;;   (dashboard-setup-startup-hook)
+;; ;; )
 #+end_src
 
 #+begin_src emacs-lisp

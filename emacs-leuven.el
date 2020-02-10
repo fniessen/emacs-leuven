@@ -2787,7 +2787,7 @@ Should be selected from `fringe-bitmaps'.")
   ;; (with-eval-after-load "helm-autoloads"
   ;;   (global-set-key [remap locate] #'helm-locate))
 
-  (with-eval-after-load "helm-locate"
+  (with-eval-after-load "helm-locate-XXX"
 
     (when (and (or leuven--win32-p leuven--cygwin-p)
                (executable-find "es"))
@@ -10888,24 +10888,24 @@ a clean buffer we're an order of magnitude laxer about checking."
   (message "[Loaded %s in %.2f s]" load-file-name elapsed))
 (sit-for 0.3)
 
-;; (use-package dashboard
-;;   :if (< (length command-line-args) 2)
-;;   :preface
-  (defun my/dashboard-banner ()
-    "Sets a dashboard banner including information on package initialization
-     time and garbage collections."
-    (setq dashboard-banner-logo-title
-          (format "Emacs ready in %.2f seconds with %d garbage collections."
-                  (float-time
-                   (time-subtract after-init-time before-init-time)) gcs-done)))
-  ;; :init
-  (add-hook 'after-init-hook 'dashboard-refresh-buffer)
-  (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
-  ;; :custom
-  ;; (dashboard-startup-banner 'logo)
-  ;; :config
-  (dashboard-setup-startup-hook)
-;; )
+;; ;; (use-package dashboard
+;; ;;   :if (< (length command-line-args) 2)
+;; ;;   :preface
+;;   (defun my/dashboard-banner ()
+;;     "Sets a dashboard banner including information on package initialization
+;;      time and garbage collections."
+;;     (setq dashboard-banner-logo-title
+;;           (format "Emacs ready in %.2f seconds with %d garbage collections."
+;;                   (float-time
+;;                    (time-subtract after-init-time before-init-time)) gcs-done)))
+;;   ;; :init
+;;   (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+;;   (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
+;;   ;; :custom
+;;   ;; (dashboard-startup-banner 'logo)
+;;   ;; :config
+;;   (dashboard-setup-startup-hook)
+;; ;; )
 
 (add-hook 'after-init-hook
           #'(lambda ()
