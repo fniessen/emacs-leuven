@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20200119.1501
+;; Version: 20200210.1947
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20200119.1501"
+(defconst leuven--emacs-version "20200210.1947"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2431,7 +2431,7 @@ Should be selected from `fringe-bitmaps'.")
   (with-eval-after-load "epa-file"
 
     ;; Stop EasyPG from asking for the recipient used for encrypting files.
-    (setq epa-file-encrypt-to "johndoe@example.com")
+    (setq epa-file-encrypt-to "john.doe@example.com")
                                         ; If no one is selected (""), symmetric
                                         ; encryption will always be performed.
 
@@ -2787,7 +2787,7 @@ Should be selected from `fringe-bitmaps'.")
   ;; (with-eval-after-load "helm-autoloads"
   ;;   (global-set-key [remap locate] #'helm-locate))
 
-  (with-eval-after-load "helm-locate-XXX"
+  (with-eval-after-load "helm-locate"
 
     (when (and (or leuven--win32-p leuven--cygwin-p)
                (executable-find "es"))
@@ -4864,9 +4864,8 @@ cycle through all windows on current frame."
   ;; 9.1.2 Directory with Org files.
   (setq org-directory
         (directory-file-name            ; This function removes the final slash.
-         (cond ((file-directory-p "~/.dotfiles/local/org/") "~/.dotfiles/local/org/")
-               ((file-directory-p "~/4-Admin/") "~/4-Admin/")
-               ((file-directory-p "~/org/") "~/org/")
+         (cond ((file-directory-p "~/org/") "~/org/")
+               ((file-directory-p "~/org-files/") "~/org-files/")
                (t "~/"))))
 
   ;; 9.1.2 Default target for storing notes.
@@ -9787,7 +9786,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Full mailing address of this user
   ;; (used in MAIL envelope FROM, and to select the default personality ID).
-  (setq user-mail-address "johndoe@example.com")
+  (setq user-mail-address "john.doe@example.com")
 
   ;; Sending mail.
   (setq send-mail-function 'smtpmail-send-it)
