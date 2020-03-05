@@ -1,0 +1,58 @@
+## .mailcap -- MIME Viewer configuration file
+
+# Copyright (C) 2004-2016 Fabrice Niessen
+
+# Author: Fabrice Niessen <fni@missioncriticalit.com>
+# Keywords: mailcap, dotfile
+
+#* Commentary:
+
+# There should also be a system-wide setting in `/etc/mailcap'...
+#
+# `%s' means "put the datafile name here when the viewer is executed"
+#
+# `test=test -n "$DISPLAY"' is used to determine if the current session is
+# X-capable (by checking for the existence of a DISPLAY environment
+# variable) -- DOES NOT WORK IN CYGWIN!?
+#
+# `copiousoutput' indicates that the output of the command may be
+# *voluminous*; hence, requiring a pager (such as `more' or `less') or a
+# scrolling window.
+
+#* Code:
+
+application/pdf;                cygstart "%s"
+text/html;                      cygstart "%s"
+application/vnd.ms-excel;       cygstart "%s"
+application/vnd.ms-powerpoint;  cygstart "%s"
+video/*;                        cygstart "%s"
+
+application/ms-tnef;            tnef -w "%s"
+application/msword;             "c:/Program Files (x86)/LibreOffice 4/program/soffice.exe" -writer "%s"; test=sh -c 'test $DISPLAY'
+application/msword;             "C:/Program Files/Microsoft Office/OFFICE11/WINWORD.EXE" /n /dde "%s"
+# application/msword;           strings "%s" | more; needsterminal
+application/rtf;                "C:/Program Files/Microsoft Office/OFFICE11/WINWORD.EXE" /n /dde "%s"
+application/vnd.ms-excel;       soffice -calc "%s"; test=sh -c 'test $DISPLAY'
+application/vnd.ms-excel;        "C:/Program Files/Microsoft Office/OFFICE11/EXCEL.EXE" /e "%s"
+application/vnd.ms-powerpoint;  soffice -impress "%s"; test=sh -c 'test $DISPLAY'
+application/vnd.ms-powerpoint;  "C:/Program Files/Microsoft Office/OFFICE11/POWERPNT.EXE" "%s"
+application/postscript;         ghostview "%s"; test=sh -c 'test $DISPLAY'
+application/postscript;         gsview32 "%s"
+application/postscript;         ps2ascii "%s"; copiousoutput
+application/zip;                "C:/Program Files/7-Zip/7zFM.exe" "%s"
+application/octet-stream;       "C:/Program Files/Mozilla Firefox/firefox.exe" "%s"
+audio/*;                        totem "%s"; test=sh -c 'test $DISPLAY'
+audio/*;                        "C:/Program Files/Windows Media Player/wmplayer.exe" "%s"
+image/*;                        display "%s"; test=sh -c 'test $DISPLAY'
+image/*;                        "C:/Program Files/Mozilla Firefox/firefox.exe" "%s"
+text/*;                         cat; copiousoutput; edit=$EDITOR "%s"
+
+# This is for the sake of Emacs.
+# Local Variables:
+# comment-start: "#"
+# mode: sh
+# mode: outline-minor
+# ispell-local-dictionary: "american"
+# End:
+
+## .mailcap ends here
