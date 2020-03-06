@@ -8,7 +8,7 @@
 
 #+PROPERTY:  header-args :tangle yes :padline yes :eval no
 
-#+SETUPFILE: ./bigblow-pirilampo.setup
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 
 * Extra
 

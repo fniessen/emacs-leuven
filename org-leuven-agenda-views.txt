@@ -8,7 +8,7 @@
 
 #+PROPERTY:  header-args :tangle org-leuven-agenda-views.el :padline yes :eval no
 
-#+SETUPFILE: ~/src/org-html-themes/setup/theme-readtheorg.setup
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 
 * Tasks                                                               :noexport:
 

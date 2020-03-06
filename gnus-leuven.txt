@@ -8,7 +8,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
-#+SETUPFILE: ~/.dotfiles/org/theme-bigblow.setup
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 
 * Overview
 
