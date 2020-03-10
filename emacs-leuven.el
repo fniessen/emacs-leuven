@@ -2788,13 +2788,14 @@ Should be selected from `fringe-bitmaps'.")
   ;; (with-eval-after-load "helm-autoloads"
   ;;   (global-set-key [remap locate] #'helm-locate))
 
-  (with-eval-after-load "helm-locate"
-
-    (when (and (or leuven--win32-p leuven--cygwin-p)
-               (executable-find "es"))
-
-      ;; Sort locate results by full path.
-      (setq helm-locate-command "es -s %s %s")))
+  ;; XXX Problems since Cygwin update (beginning of 2020-02).
+  ;; (with-eval-after-load "helm-locate"
+  ;;
+  ;;   (when (and (or leuven--win32-p leuven--cygwin-p)
+  ;;              (executable-find "es"))
+  ;;
+  ;;     ;; Sort locate results by full path.
+  ;;     (setq helm-locate-command "es -s %s %s")))
 
   (with-eval-after-load "helm-buffers"
 
@@ -6820,8 +6821,10 @@ this with to-do items than with projects or headings."
 
     (leuven--section "2.8 (auctex)Indenting")
 
-    ;; Leave the `tikzpicture' code unfilled when doing `M-q'.
-    (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
+    ;; Leave some environments un-indented when doing `M-q'.
+    (add-to-list 'LaTeX-indent-environment-list '("tikzpicture" current-indentation))
+    (add-to-list 'LaTeX-indent-environment-list '("comment"     current-indentation))
+    (add-to-list 'LaTeX-indent-environment-list '("sverbatim"   current-indentation))
 
     ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
     ;; a local key binding to `RET' in the `LaTeX-mode-hook').
