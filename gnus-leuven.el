@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven-theme
-;; Version: 20200310.0937
+;; Version: 20191030.2001
 ;; Keywords: emacs, gnus, dotfile, config
 
 ;;; Code:
@@ -883,9 +883,9 @@
     ;; Turn on the Org mode table editor (in emails).
     (turn-on-orgtbl)
 
-    ;; Turn on Org-like lists in non-Org buffers.
-    (when (fboundp 'orgstruct-mode)
-      (orgalist-mode 1))
+    ;; ;; Turn on (the enhanced version of) orgstruct-mode.
+    ;; (when (fboundp 'turn-on-orgstruct++)
+    ;;   (turn-on-orgstruct++))
 
     (when (try-require 'org-footnote)
       ;; Default style used for footnoting is local to the Message being
