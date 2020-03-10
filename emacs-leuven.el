@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20200210.1947
+;; Version: 20200310.0957
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20200210.1947"
+(defconst leuven--emacs-version "20200310.0957"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -471,6 +471,7 @@ If not, just print a message."
             multiple-cursors
             ;; multi-term
             org-plus-contrib
+            orgalist
             pager
             ;; paredit
             ;; pdf-tools
@@ -7163,6 +7164,9 @@ this with to-do items than with projects or headings."
                                         ; XXX Normally bound to
                                         ; `rng-validate-mode'.
 
+;; causes entire elements (with children) to be treated as sexps.
+(setq nxml-sexp-element-flag t)
+
     ;; Fix XML folding.
     (add-to-list 'hs-special-modes-alist
                  '(nxml-mode
@@ -8462,8 +8466,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; (setq vc-follow-symlinks t)
-  ;; (setq vc-follow-symlinks nil)
+  ;; Always follow symlinks to files under source-control.  Don't ask.
+  (setq vc-follow-symlinks t)
 
   ;; (setq vc-allow-async-revert t)
 
@@ -9408,6 +9412,9 @@ a clean buffer we're an order of magnitude laxer about checking."
       (dired-next-line -1))
 
     (define-key dired-mode-map [remap end-of-buffer] #'dired-jump-to-bottom)
+
+    ;; Search in filenames (instead of in everything).
+    (define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)
 
 ;;** (info "(emacs)Dired Deletion")
 

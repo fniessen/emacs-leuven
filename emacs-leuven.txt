@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
-#+SETUPFILE: ~/.dotfiles/org/theme-readtheorg.setup
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 
 * Tasks                                                               :noexport:
 :PROPERTIES:
@@ -284,6 +284,23 @@ tests.
 #+begin_note
 You can use ESUP - Emacs Start Up Profiler
 #+end_note
+
+** Emacs Key Bindings for Atom Editor
+
+https://github.com/dvorka/atom-editor-emacs-key-bindings
+
+* Evaluating the current setup
+
+To evaluate the current setup you'll need to launch Emacs in a special way.
+Do so by issuing the following commands:
+
+#+begin_src shell :tangle no
+git clone https://github.com/fniessen/emacs-leuven
+cd emacs-leuven
+emacs -Q -l ./emacs-leuven.el
+#+end_src
+
+You are now running my "improved" Emacs default experience.
 
 * Description
 
@@ -949,6 +966,7 @@ like this into your configuration file:
             multiple-cursors
             ;; multi-term
             org-plus-contrib
+            orgalist
             pager
             ;; paredit
             ;; pdf-tools
@@ -7090,7 +7108,8 @@ demotion* functionality.
 > Experienced users use outline-minor-mode - It takes time to getting used to
 > it.
 
-You can also use ~orgstruct-mode~, a minor mode that comes with ~org-mode~.
+You can also use ~orgalist~, a package that provides Org mode's plain lists in
+non-Org buffers?
 
 ~org-global-cycle~ (!= ~org-cycle-global~) now works fine in buffers using
 ~orgstruct-mode~.
@@ -12220,6 +12239,11 @@ Some key bindings:
 #+end_src
 
 #+begin_src emacs-lisp
+;; causes entire elements (with children) to be treated as sexps.
+(setq nxml-sexp-element-flag t)
+#+end_src
+
+#+begin_src emacs-lisp
     ;; Fix XML folding.
     (add-to-list 'hs-special-modes-alist
                  '(nxml-mode
@@ -14735,8 +14759,8 @@ Systems) in a generic way -- a real timesaver.
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; (setq vc-follow-symlinks t)
-  ;; (setq vc-follow-symlinks nil)
+  ;; Always follow symlinks to files under source-control.  Don't ask.
+  (setq vc-follow-symlinks t)
 
   ;; (setq vc-allow-async-revert t)
 
@@ -16897,6 +16921,11 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
       (dired-next-line -1))
 
     (define-key dired-mode-map [remap end-of-buffer] #'dired-jump-to-bottom)
+#+end_src
+
+#+begin_src emacs-lisp
+    ;; Search in filenames (instead of in everything).
+    (define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)
 #+end_src
 
 ** Deleting Files with Dired
