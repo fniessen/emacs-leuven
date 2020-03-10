@@ -883,9 +883,9 @@
     ;; Turn on the Org mode table editor (in emails).
     (turn-on-orgtbl)
 
-    ;; ;; Turn on (the enhanced version of) orgstruct-mode.
-    ;; (when (fboundp 'turn-on-orgstruct++)
-    ;;   (turn-on-orgstruct++))
+    ;; Turn on Orgalist.
+    (when (fboundp 'orgalist-mode)
+      (orgalist-mode 1))
 
     (when (try-require 'org-footnote)
       ;; Default style used for footnoting is local to the Message being
