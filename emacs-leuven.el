@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20200310.0957
+;; Version: 20200408.1542
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20200310.0957"
+(defconst leuven--emacs-version "20200408.1542"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7395,8 +7395,8 @@ mouse-3: go to end") "]")))
   (global-set-key (kbd "C-S-)") #'leuven-goto-matching-paren)
   (global-set-key (kbd "C-°")   #'leuven-goto-matching-paren)
 
-  ;; Enable automatic parens pairing (Electric Pair mode).
-  (electric-pair-mode 1)
+  ;; ;; Enable automatic parens pairing (Electric Pair mode).
+  ;; (electric-pair-mode 1)
 
   (defvar org-electric-pairs
     '(
@@ -7415,7 +7415,7 @@ mouse-3: go to end") "]")))
 
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
   ;; pairs.
-  (with-eval-after-load "smartparens-autoloads"
+  (with-eval-after-load "smartparens-autoloads-XXX"
 
     ;; Default configuration for smartparens package.
     (require 'smartparens-config)       ; Keybinding management, markdown-mode,

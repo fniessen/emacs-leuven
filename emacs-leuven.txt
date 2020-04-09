@@ -5376,13 +5376,14 @@ interface ~es.exe~.
   ;; (with-eval-after-load "helm-autoloads"
   ;;   (global-set-key [remap locate] #'helm-locate))
 
-  (with-eval-after-load "helm-locate"
-
-    (when (and (or leuven--win32-p leuven--cygwin-p)
-               (executable-find "es"))
-
-      ;; Sort locate results by full path.
-      (setq helm-locate-command "es -s %s %s")))
+  ;; XXX Problems since Cygwin update (beginning of 2020-02).
+  ;; (with-eval-after-load "helm-locate"
+  ;;
+  ;;   (when (and (or leuven--win32-p leuven--cygwin-p)
+  ;;              (executable-find "es"))
+  ;;
+  ;;     ;; Sort locate results by full path.
+  ;;     (setq helm-locate-command "es -s %s %s")))
 #+end_src
 
 **** Helm for buffers
@@ -11684,8 +11685,10 @@ file, AUCTeX gives you a ~Command~ menu.
 
     (leuven--section "2.8 (auctex)Indenting")
 
-    ;; Leave the `tikzpicture' code unfilled when doing `M-q'.
-    (add-to-list 'LaTeX-indent-environment-list '("tikzpicture"))
+    ;; Leave some environments un-indented when doing `M-q'.
+    (add-to-list 'LaTeX-indent-environment-list '("tikzpicture" current-indentation))
+    (add-to-list 'LaTeX-indent-environment-list '("comment"     current-indentation))
+    (add-to-list 'LaTeX-indent-environment-list '("sverbatim"   current-indentation))
 
     ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
     ;; a local key binding to `RET' in the `LaTeX-mode-hook').
@@ -12604,7 +12607,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 - autopair
 
 #+begin_src emacs-lisp :tangle no
-  (with-eval-after-load "autopair-autoloads"
+  (with-eval-after-load "autopair-autoloads-XXX"
 
     ;; Attempts to wrap the selected region.
     (setq autopair-autowrap t)
@@ -12625,8 +12628,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
     sensible things
 
 #+begin_src emacs-lisp
-  ;; Enable automatic parens pairing (Electric Pair mode).
-  (electric-pair-mode 1)
+  ;; ;; Enable automatic parens pairing (Electric Pair mode).
+  ;; (electric-pair-mode 1)
 
   (defvar org-electric-pairs
     '(
@@ -12656,7 +12659,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
 #+begin_src emacs-lisp :tangle no
   ;; Minor mode for editing parentheses.
-  (with-eval-after-load "paredit-autoloads"
+  (with-eval-after-load "paredit-autoloads-XXX"
 
     (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
 
@@ -12723,7 +12726,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 #+begin_src emacs-lisp
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
   ;; pairs.
-  (with-eval-after-load "smartparens-autoloads"
+  (with-eval-after-load "smartparens-autoloads-XXX"
 
     ;; Default configuration for smartparens package.
     (require 'smartparens-config)       ; Keybinding management, markdown-mode,
