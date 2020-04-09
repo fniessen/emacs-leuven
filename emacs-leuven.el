@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20200408.1542
+;; Version: 20200409.1347
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20200408.1542"
+(defconst leuven--emacs-version "20200409.1347"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2551,7 +2551,7 @@ Should be selected from `fringe-bitmaps'.")
   (with-eval-after-load "recentf"
 
     ;; Maximum number of items that will be saved.
-    (setq recentf-max-saved-items 100)  ; Just 20 is too recent.
+    (setq recentf-max-saved-items 300)  ; Just 20 is too recent.
 
     ;; File to save the recent list into.
     (setq recentf-save-file (concat user-emacs-directory ".recentf"))

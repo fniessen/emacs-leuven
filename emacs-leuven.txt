@@ -4823,7 +4823,7 @@ email, including several trace information for analysis.
   (with-eval-after-load "recentf"
 
     ;; Maximum number of items that will be saved.
-    (setq recentf-max-saved-items 100)  ; Just 20 is too recent.
+    (setq recentf-max-saved-items 300)  ; Just 20 is too recent.
 
     ;; File to save the recent list into.
     (setq recentf-save-file (concat user-emacs-directory ".recentf"))
