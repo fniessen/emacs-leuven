@@ -12627,7 +12627,9 @@ Balanced editing: inserting two matching parentheses at once, etc.
   + in a mixed parenthesis situation with ~[]~'s and ~()~'s, it tries to do
     sensible things
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
+  ;; XXX Enable iff electric-pair-mode is enabled!
+
   ;; ;; Enable automatic parens pairing (Electric Pair mode).
   ;; (electric-pair-mode 1)
 

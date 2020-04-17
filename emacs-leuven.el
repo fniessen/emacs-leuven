@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20200409.1347
+;; Version: 20200417.1009
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20200409.1347"
+(defconst leuven--emacs-version "20200417.1009"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7394,24 +7394,6 @@ mouse-3: go to end") "]")))
 
   (global-set-key (kbd "C-S-)") #'leuven-goto-matching-paren)
   (global-set-key (kbd "C-°")   #'leuven-goto-matching-paren)
-
-  ;; ;; Enable automatic parens pairing (Electric Pair mode).
-  ;; (electric-pair-mode 1)
-
-  (defvar org-electric-pairs
-    '(
-      ;; (?\* . ?\*)
-      ;; (?/ . ?/)
-      ;; (?_ . ?_)
-      ;; (?= . ?=)                      ; Too much used in code blocks.
-      (?~ . ?~))
-    "Electric pairs for Org mode.")     ; See `org-emphasis-alist'.
-
-  (defun leuven--org-add-electric-pairs ()
-    (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
-    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
-
-  (add-hook 'org-mode-hook #'leuven--org-add-electric-pairs)
 
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
   ;; pairs.
