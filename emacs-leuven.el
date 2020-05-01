@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20200417.1009
+;; Version: 20200501.1556
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20200417.1009"
+(defconst leuven--emacs-version "20200501.1556"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -178,7 +178,7 @@ Save execution times in the global list `leuven--load-times-list'."
      (let (before-chapter-time
            this-chapter-time)
        (when leuven-verbose-loading
-         (message "** %s" ,chaptername))
+         (message "[** %s]" ,chaptername))
        (setq before-chapter-time (float-time))
        (setq leuven--before-section-time (float-time)) ; Init section time.
        (progn ,@body)
@@ -201,7 +201,7 @@ Last time is saved in global variable `leuven--before-section-time'."
     (when leuven-verbose-loading
       (when (not (equal this-section-time 0.00))
         (message "[    Section time: %.2f s]" this-section-time))
-      (unless end-of-chapter (message "*** %s" sectionname)))
+      (unless end-of-chapter (message "[*** %s]" sectionname)))
     ;; For next one.
     (setq leuven--before-section-time (float-time))))
 
@@ -467,9 +467,8 @@ If not, just print a message."
             leuven-theme
             ;; magit
             markdown-mode
-            multi-term
-            multiple-cursors
             ;; multi-term
+            multiple-cursors
             org-plus-contrib
             orgalist
             pager
@@ -477,16 +476,16 @@ If not, just print a message."
             ;; pdf-tools
             powerline
             rainbow-delimiters
-            rainbow-mode
+            ;; rainbow-mode
             ;; redshank
             skewer-mode
+            smart-comment
+            smartparens
+            ;; sql-indent
             sqlup-mode
             symbol-overlay
             tern
-            smart-comment
-            smartparens
-            sql-indent
-            undo-tree
+            ;; undo-tree
             volatile-highlights
             web-mode
             which-key
