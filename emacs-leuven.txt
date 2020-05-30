@@ -4150,6 +4150,8 @@ XXX Add explanation about what to do when a file is opened in red background!
 
 ** Comparing Files
 
+See https://www.diffchecker.com/diff for an online solution.
+
 *** Diff
 
 If you want a Magit diff buffer for the current file, you can call
@@ -4532,7 +4534,7 @@ file.  It is a *symbolic link to ~gzip~*; you can verify this by
 Since *GNU Emacs does not understand Cygwin's symbolic links*, it cannot execute
 ~gunzip~.  The solution is to replace ~gunzip~ with ~gzip -d~.
 
-#+begin_src shell :tangle ~/.dotfiles/winbin/gunzip :padline no
+#+begin_src shell :tangle ~/winbin/gunzip :padline no
 #!/bin/sh
 # gunzip -- gunzip solution on Windows
 
@@ -4575,9 +4577,14 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
 #+begin_src emacs-lisp
   ;; The EasyPG Assistant, transparent file encryption.
   (with-eval-after-load "epa-file"
+    (custom-set-variables '(epg-gpg-program "gpg2"))
+                                        ; If you have issues, try uninstalling
+                                        ; gnupg, keeping only gnupg2!
 
     ;; Stop EasyPG from asking for the recipient used for encrypting files.
-    (setq epa-file-encrypt-to "john.doe@example.com")
+    (setq epa-file-encrypt-to (if (boundp 'user-mail-address)
+                                  user-mail-address
+                                '("john.doe@example.com")))
                                         ; If no one is selected (""), symmetric
                                         ; encryption will always be performed.
 
@@ -4589,9 +4596,13 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
                                         ; symmetric encryption.  `gpg-agent' is
                                         ; the preferred way to do this.
 
-    ;; Prompt for the password in the Emacs minibuffer (instead of using a
-    ;; graphical password prompt for GPG).
-    (setenv "GPG_AGENT_INFO" nil))
+    ;; Query passphrase through the minibuffer, instead of using an external
+    ;; Pinentry program.
+    (setenv "GPG_AGENT_INFO" nil)
+    (setq epa-pinentry-mode 'loopback)
+
+    ;; Enable `epa-file'.
+    (epa-file-enable))
 #+end_src
 
 ** Remote Files
@@ -14811,6 +14822,7 @@ it into the commit buffer. So there is no need to "write the same thing twice".
 #+end_src
 
 #+begin_src emacs-lisp
+  (autoload 'vc-git-root "vc-git")
   (with-eval-after-load "vc-git"
 
     ;; Major mode for editing git commit messages.

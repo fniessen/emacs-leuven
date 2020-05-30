@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20200501.1556
+;; Version: 20200530.1818
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20200501.1556"
+(defconst leuven--emacs-version "20200530.1818"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2429,9 +2429,14 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; The EasyPG Assistant, transparent file encryption.
   (with-eval-after-load "epa-file"
+    (custom-set-variables '(epg-gpg-program "gpg2"))
+                                        ; If you have issues, try uninstalling
+                                        ; gnupg, keeping only gnupg2!
 
     ;; Stop EasyPG from asking for the recipient used for encrypting files.
-    (setq epa-file-encrypt-to "john.doe@example.com")
+    (setq epa-file-encrypt-to (if (boundp 'user-mail-address)
+                                  user-mail-address
+                                '("john.doe@example.com")))
                                         ; If no one is selected (""), symmetric
                                         ; encryption will always be performed.
 
@@ -2443,9 +2448,13 @@ Should be selected from `fringe-bitmaps'.")
                                         ; symmetric encryption.  `gpg-agent' is
                                         ; the preferred way to do this.
 
-    ;; Prompt for the password in the Emacs minibuffer (instead of using a
-    ;; graphical password prompt for GPG).
-    (setenv "GPG_AGENT_INFO" nil))
+    ;; Query passphrase through the minibuffer, instead of using an external
+    ;; Pinentry program.
+    (setenv "GPG_AGENT_INFO" nil)
+    (setq epa-pinentry-mode 'loopback)
+
+    ;; Enable `epa-file'.
+    (epa-file-enable))
 
 ;;** 18.14 (info "(emacs)Remote Files")
 
@@ -8470,6 +8479,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (add-hook 'vc-log-mode-hook #'leuven--vc-log-mode-setup)
 
+  (autoload 'vc-git-root "vc-git")
   (with-eval-after-load "vc-git"
 
     ;; Major mode for editing git commit messages.
