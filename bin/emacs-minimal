@@ -1,0 +1,17 @@
+#!/bin/sh
+TESTEL=
+TESTFILE=~/test.el
+if test -e $TESTFILE # file exists
+then
+    TESTEL="-l $TESTFILE"
+fi
+
+EMACS="emacs"
+
+# No init file.
+cmd="$EMACS -q -l ~/.emacs.d/lisp/emacs-minimal.el $TESTEL"
+
+echo "Launching '$cmd'..."
+eval "$cmd"
+
+echo "Exit status: $?"

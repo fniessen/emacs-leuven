@@ -12,7 +12,7 @@
 
 * Example
 :PROPERTIES:
-:header-args: :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
+:header-args: :tangle ../.emacs.d/lisp/emacs-minimal.el
 :END:
 
 The usual method to find a problem while avoiding to disturb a running Emacs
@@ -132,13 +132,13 @@ Here is such a minimal Emacs config file.
 :header-args: :tangle no
 :END:
 
-#+begin_src emacs-lisp :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
+#+begin_src emacs-lisp :tangle ../.emacs.d/lisp/emacs-minimal.el
 ;;* --[ Variable part Under Test ]--------------------------------------------
 #+end_src
 
 *** Sandbox
 
-#+begin_src emacs-lisp :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
+#+begin_src emacs-lisp :tangle ../.emacs.d/lisp/emacs-minimal.el
 ;; Place your test code here.
 
 #+end_src
@@ -265,7 +265,7 @@ You can *get backtraces* at each stopping point by Edebugging =foobar= and
 
 ** Footer
 
-#+begin_src emacs-lisp :tangle ~/.dotfiles/home/.emacs.d/lisp/emacs-minimal.el
+#+begin_src emacs-lisp :tangle ../.emacs.d/lisp/emacs-minimal.el
 ;;* --[ Constant part ]-------------------------------------------------------
 
 (message "Loading Minimal Emacs... Done (in %.2f s)"
@@ -384,7 +384,7 @@ use the ~-P~ option of =emacs-helm.sh= to use another Emacs executable file.
 
 *Call this script emacs-q?*
 
-#+begin_src shell :tangle ~/.dotfiles/bin/emacs-minimal :padline no :shebang #!/bin/sh
+#+begin_src shell :tangle ../bin/emacs-minimal :padline no :shebang #!/bin/sh
 TESTEL=
 TESTFILE=~/test.el
 if test -e $TESTFILE # file exists
