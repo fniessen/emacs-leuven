@@ -835,7 +835,7 @@ Identity, but don't actually use it (just return it)"
 
       ;; if we found anything, find out if it's valid
       (when (and identity
-                 (not (assoc-ignore-case
+                 (not (assoc-string
                        identity gnus-alias-identity-alist)))
 
         (gnus-alias-debug 2 "[GADI] Unknown Identity found:\n")
@@ -924,7 +924,7 @@ if ABBREVIATION is not in the alist.
 SEEN is a variable used in recursive calls to this function, and
 should not be set by an external caller."
 
-  (let ((rv (assoc-ignore-case abbreviation gnus-alias-lookup-abbrev-cache))
+  (let ((rv (assoc-string abbreviation gnus-alias-lookup-abbrev-cache))
         (first-in (not seen))
         header-list lookup elem match recurse)
 
@@ -932,7 +932,7 @@ should not be set by an external caller."
       (setq rv (list))
 
       ;; lookup abbreviation
-      (setq lookup (assoc-ignore-case abbreviation gnus-alias-lookup-abbrev-alist))
+      (setq lookup (assoc-string abbreviation gnus-alias-lookup-abbrev-alist))
       (when lookup
         (setq header-list (split-string (cadr lookup))))
 
@@ -983,7 +983,7 @@ should not be set by an external caller."
   (let ((completion-ignore-case t)
         rv)
     (setq rv (car
-              (assoc-ignore-case
+              (assoc-string
                (completing-read "Identity: " gnus-alias-identity-alist nil t)
                gnus-alias-identity-alist)))
 
@@ -1036,7 +1036,7 @@ it's not, simply position the field at the end of the header list (not
 the beginning as is normal)."
   (let ((afters (car-safe
                  (cdr-safe
-                  (assoc-ignore-case header gnus-alias-extra-header-pos-alist)
+                  (assoc-string header gnus-alias-extra-header-pos-alist)
                   ))))
 
     ;; adjust it a little
@@ -1069,7 +1069,7 @@ significantly from that found in 'gnus-pers').
 SUPPRESS-ERROR will cause the function to silently fail under the
 above circumstances rather then generate an error."
   ;; lookup Identity
-  (let ((ID (assoc-ignore-case identity gnus-alias-identity-alist))
+  (let ((ID (assoc-string identity gnus-alias-identity-alist))
         reference from org extras body sig extras-list current-extra
         extra-hdr extra-val afters)
     ;; is IDENTITY valid?
@@ -1212,7 +1212,7 @@ responsible for the subsequent mess)."
 
   ;; only proceed when non-nil
   (when identity
-    (let ((ID (assoc-ignore-case identity gnus-alias-identity-alist))
+    (let ((ID (assoc-string identity gnus-alias-identity-alist))
           from org extras body sig extras-list current-extra extra-hdr)
       (if (not ID)
           (gnus-alias-error "Unknown Identity: <%s>" identity)
@@ -1268,7 +1268,7 @@ responsible for the subsequent mess)."
 (defun gnus-alias-remove-current-body ()
   "Find and remove current Identity's body."
   (when gnus-alias-current-identity
-    (let* ((ID (assoc-ignore-case gnus-alias-current-identity
+    (let* ((ID (assoc-string gnus-alias-current-identity
                                   gnus-alias-identity-alist))
            (current-body (when ID (gnus-alias-get-body ID)))
            start end)
