@@ -4605,6 +4605,14 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
     (epa-file-enable))
 #+end_src
 
+Password free
+
+Otherwise:
+
+#+begin_src shell :tangle no
+gpgconf kill gpg-agent
+#+end_src
+
 ** Remote Files
 
 #+begin_src emacs-lisp
@@ -6420,6 +6428,9 @@ XXX Declare PDF files as binary
                        ("\260" . "°")
                        ("\272" . "°")
                        ("\273" . "»")
+                       ("\274" . "1/4")
+                       ("\275" . "1/2")
+                       ("\276" . "3/4")
                        ("\277" . "¿")
                        ("\300" . "À")
                        ("\307" . "Ç")

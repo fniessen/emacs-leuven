@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20200530.1818
+;; Version: 20200930.1617
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20200530.1818"
+(defconst leuven--emacs-version "20200930.1617"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3439,6 +3439,9 @@ cycle through all windows on current frame."
                        ("\260" . "°")
                        ("\272" . "°")
                        ("\273" . "»")
+                       ("\274" . "1/4")
+                       ("\275" . "1/2")
+                       ("\276" . "3/4")
                        ("\277" . "¿")
                        ("\300" . "À")
                        ("\307" . "Ç")
