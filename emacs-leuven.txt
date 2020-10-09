@@ -2728,6 +2728,8 @@ http://stackoverflow.com/questions/16114700/is-it-possible-to-replace-fringe-bit
   (setq-default indicate-buffer-boundaries '((top . left) (t . right)))
 #+end_src
 
+XXX display-fill-column-indicator-mode in Emacs 27
+
 ** Useless Whitespace
 
 #+begin_src emacs-lisp
@@ -6423,6 +6425,7 @@ XXX Declare PDF files as binary
                        ("\227" . "--")
                        ("\234" . "oe")
                        ("\240" . " ")    ;; \302\240
+                       ("\246" . "|")
                        ("\251" . "©")
                        ("\253" . "«")
                        ("\260" . "°")
@@ -6433,6 +6436,7 @@ XXX Declare PDF files as binary
                        ("\276" . "3/4")
                        ("\277" . "¿")
                        ("\300" . "À")
+                       ("\304" . "Ä")
                        ("\307" . "Ç")
                        ("\311" . "É")
                        ("\312" . "Ê")
