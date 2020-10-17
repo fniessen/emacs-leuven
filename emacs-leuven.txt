@@ -2393,7 +2393,7 @@ In IntelliJ IDEA, the are recognized in both lower and upper case.
 
 #+begin_src emacs-lisp
   (defface leuven-todo-patterns-face
-    '((t :weight bold :foreground "#FF3125" :background "#FFFF88"))
+    '((t :weight bold :box "#FF3125" :foreground "#FF3125" :background "#FFFF88"))
     "Face for making TODO items stand out.")
 
   ;; Highlight tasks.
@@ -15105,14 +15105,16 @@ can use the following keys to navigate historic versions of the file:
     ;; Add the file's version number to the change log entry.
     (setq change-log-version-info-enabled t)
 
-    (add-hook 'change-log-mode-hook
-              (add-to-list
-               'change-log-font-lock-keywords
-               '("^[0-9-]+:? +\\|^\\(Sun\\|Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\) [A-z][a-z][a-z] [0-9:+ ]+"
-                 (0 'change-log-date-face)
-                 ("\\([^<(]+?\\)[   ]*[(<]\\([[:alnum:]_.+-]+@[[:alnum:]_.-]+\\)[>)]" nil nil
-                  (1 'change-log-name)
-                  (2 'change-log-email))))))
+    ;; Remove 'Invalid function' in Emacs 27
+    ;; (add-hook 'change-log-mode-hook
+    ;;           (add-to-list
+    ;;            'change-log-font-lock-keywords
+    ;;            '("^[0-9-]+:? +\\|^\\(Sun\\|Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\) [A-z][a-z][a-z] [0-9:+ ]+"
+    ;;              (0 'change-log-date-face)
+    ;;              ("\\([^<(]+?\\)[   ]*[(<]\\([[:alnum:]_.+-]+@[[:alnum:]_.-]+\\)[>)]" nil nil
+    ;;               (1 'change-log-name)
+    ;;               (2 'change-log-email)))))
+  )
 #+end_src
 
 ** Tags Tables (navigating code)

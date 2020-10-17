@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201017.1437
+;; Version: 20201017.1523
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201017.1437"
+(defconst leuven--emacs-version "20201017.1523"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1188,7 +1188,7 @@ These packages are neither built-in nor already installed nor ignored."
   (leuven--section "14.12 (emacs)Font Lock")
 
   (defface leuven-todo-patterns-face
-    '((t :weight bold :foreground "#FF3125" :background "#FFFF88"))
+    '((t :weight bold :box "#FF3125" :foreground "#FF3125" :background "#FFFF88"))
     "Face for making TODO items stand out.")
 
   ;; Highlight tasks.
@@ -8661,14 +8661,16 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Add the file's version number to the change log entry.
     (setq change-log-version-info-enabled t)
 
-    (add-hook 'change-log-mode-hook
-              (add-to-list
-               'change-log-font-lock-keywords
-               '("^[0-9-]+:? +\\|^\\(Sun\\|Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\) [A-z][a-z][a-z] [0-9:+ ]+"
-                 (0 'change-log-date-face)
-                 ("\\([^<(]+?\\)[   ]*[(<]\\([[:alnum:]_.+-]+@[[:alnum:]_.-]+\\)[>)]" nil nil
-                  (1 'change-log-name)
-                  (2 'change-log-email))))))
+    ;; Remove 'Invalid function' in Emacs 27
+    ;; (add-hook 'change-log-mode-hook
+    ;;           (add-to-list
+    ;;            'change-log-font-lock-keywords
+    ;;            '("^[0-9-]+:? +\\|^\\(Sun\\|Mon\\|Tue\\|Wed\\|Thu\\|Fri\\|Sat\\) [A-z][a-z][a-z] [0-9:+ ]+"
+    ;;              (0 'change-log-date-face)
+    ;;              ("\\([^<(]+?\\)[   ]*[(<]\\([[:alnum:]_.+-]+@[[:alnum:]_.-]+\\)[>)]" nil nil
+    ;;               (1 'change-log-name)
+    ;;               (2 'change-log-email)))))
+  )
 
 ;;** 28.3 (info "(emacs)Tags")
 
