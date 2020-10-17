@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201009.1232
+;; Version: 20201017.1437
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201009.1232"
+(defconst leuven--emacs-version "20201017.1437"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -493,9 +493,10 @@ If not, just print a message."
             yasnippet
             ztree))
 
-    ;; Load the latest version of all installed packages, and activate them.
-    (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
-                                        ; and load `<pkg>-autoloads.el'.
+    ;; Unnecessary call to 'package-initialize' in init file (for Emacs 27)
+    ;; ;; Load the latest version of all installed packages, and activate them.
+    ;; (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
+    ;;                                     ; and load `<pkg>-autoloads.el'.
 
     ;; (when (fboundp 'package-install-selected-packages) ; Emacs-v25
     ;;   (package-install-selected-packages))
@@ -3427,6 +3428,7 @@ cycle through all windows on current frame."
   ;; C-x 8 RET and then the number, followed by RET.
   (leuven--do-accent '(("\200" . "EUR")  ;; \342\202\254
                        ("\205" . "...")
+                       ("\221" . "‘")
                        ("\222" . "’")    ;; \342\200\231
                        ("\223" . "\"")
                        ("\224" . "\"")
