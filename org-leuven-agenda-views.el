@@ -649,10 +649,10 @@
                  ((org-agenda-overriding-header "Refile stuff"))) t)
 
   ;; Create a sparse tree (current buffer only) with all entries containing the
-  ;; word `TODO', `FIXME' or `XXX'.
+  ;; word `TODO', `FIXME', `XXX' or `BUG'.
   (add-to-list 'org-agenda-custom-commands
                '("1" "Task markers (in current buffer)"
-                 ((occur-tree "\\<TODO\\|FIXME\\|XXX\\>"))) t)
+                 ((occur-tree "\\<TODO\\|FIXME\\|XXX\\|BUG\\>"))) t)
 
 (provide 'org-leuven-agenda-views)
 

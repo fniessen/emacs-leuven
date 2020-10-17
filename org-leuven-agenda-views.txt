@@ -1217,9 +1217,9 @@ If you want to show TODO items neither *scheduled* nor *deadline*'d, you can use
 #+end_note
 
 ** Future
-   :PROPERTIES:
-   :header-args+: :tangle no
-   :END:
+:PROPERTIES:
+:header-args+: :tangle no
+:END:
 
 FIXME C'est scheduled qu'il faut checker, plutôt que deadline ?
 
@@ -1595,16 +1595,16 @@ Search any word or regexp within your task name or in the note field:
 
 #+begin_src emacs-lisp
   ;; Create a sparse tree (current buffer only) with all entries containing the
-  ;; word `TODO', `FIXME' or `XXX'.
+  ;; word `TODO', `FIXME', `XXX' or `BUG'.
   (add-to-list 'org-agenda-custom-commands
                '("1" "Task markers (in current buffer)"
-                 ((occur-tree "\\<TODO\\|FIXME\\|XXX\\>"))) t)
+                 ((occur-tree "\\<TODO\\|FIXME\\|XXX\\|BUG\\>"))) t)
 #+end_src
 
 * Buggy commands
-  :PROPERTIES:
-  :header-args+: :tangle no
-  :END:
+:PROPERTIES:
+:header-args+: :tangle no
+:END:
 
 #+begin_src emacs-lisp
   (add-to-list 'org-agenda-custom-commands
@@ -1756,9 +1756,9 @@ Search any word or regexp within your task name or in the note field:
 - Entries with "timed" dates
 
 * Org mode
-  :PROPERTIES:
-  :header-args+: :tangle no
-  :END:
+:PROPERTIES:
+:header-args+: :tangle no
+:END:
 
 ** Lists
 
