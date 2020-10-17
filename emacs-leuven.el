@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201017.1842
+;; Version: 20201017.1850
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201017.1842"
+(defconst leuven--emacs-version "20201017.1850"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -281,19 +281,6 @@ If not, just print a message."
       (if (get-buffer buffer)
           (switch-to-buffer buffer)
         (funcall function))))
-
-  (defun switch-or-find-file (file)
-    "If the FILE is current, bury it.  If there is a buffer with that name,
-  switch to it; otherwise, open it."
-    (when (file-exists-p file)
-      (if (and (buffer-file-name)
-               (string= (expand-file-name file)
-                        (expand-file-name (buffer-file-name))))
-          (bury-buffer)
-        (find-file file))))
-
-    (global-set-key (kbd "<M-right>") #'next-buffer) ; XXX
-    (global-set-key (kbd "<M-left>")  #'previous-buffer) ; XXX
 
 )                                       ; Chapter 0-loading-libraries ends here.
 
@@ -493,11 +480,6 @@ If not, just print a message."
             yasnippet
             ztree))
 
-    ;; Unnecessary call to 'package-initialize' in init file (for Emacs 27)
-    ;; ;; Load the latest version of all installed packages, and activate them.
-    ;; (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
-    ;;                                     ; and load `<pkg>-autoloads.el'.
-
     ;; (when (fboundp 'package-install-selected-packages) ; Emacs-v25
     ;;   (package-install-selected-packages))
 
@@ -545,8 +527,7 @@ These packages are neither built-in nor already installed nor ignored."
           (if (or leuven-install-all-missing-elpa-packages
                   (yes-or-no-p (format "Install ELPA package `%s'? " pkg)))
               (ignore-errors
-                (package-install pkg))  ; Must be run after initializing
-                                        ; `package-initialize'.
+                (package-install pkg))
             (message (concat "[Customize Emacs-Leuven to ignore the `%s' package next times...]") pkg)
             (sit-for 1.5)))))
 

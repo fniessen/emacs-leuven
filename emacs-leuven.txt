@@ -697,24 +697,6 @@ If not, just print a message."
       (if (get-buffer buffer)
           (switch-to-buffer buffer)
         (funcall function))))
-
-  (defun switch-or-find-file (file)
-    "If the FILE is current, bury it.  If there is a buffer with that name,
-  switch to it; otherwise, open it."
-    (when (file-exists-p file)
-      (if (and (buffer-file-name)
-               (string= (expand-file-name file)
-                        (expand-file-name (buffer-file-name))))
-          (bury-buffer)
-        (find-file file))))
-#+end_src
-
-#+begin_src emacs-lisp
-
-    (global-set-key (kbd "<M-right>") #'next-buffer) ; XXX
-    (global-set-key (kbd "<M-left>")  #'previous-buffer) ; XXX
-
-
 #+end_src
 
 #+begin_src emacs-lisp
@@ -828,12 +810,6 @@ See function ~--find-program~ at http://www.visualco.de/src/elisp/.emacs.el.html
 :PROPERTIES:
 :ID:       8c71fa50-b62e-49ae-bcbb-2ed1ee7a5d65
 :END:
-
-Another *first thing* in your init script should be ~(package-initialize)~ so that
-customization of Org variables (for example) doesn't auto-load the old version
-that came with Emacs.
-
-If you require something from Org mode, it must be after ~package-initialize~.
 
 ** The Package Menu Buffer
 
@@ -988,11 +964,6 @@ like this into your configuration file:
             yasnippet
             ztree))
 
-    ;; Unnecessary call to 'package-initialize' in init file (for Emacs 27)
-    ;; ;; Load the latest version of all installed packages, and activate them.
-    ;; (package-initialize)                ; Add ALL ELPA subdirs to `load-path'
-    ;;                                     ; and load `<pkg>-autoloads.el'.
-
     ;; (when (fboundp 'package-install-selected-packages) ; Emacs-v25
     ;;   (package-install-selected-packages))
 
@@ -1040,8 +1011,7 @@ These packages are neither built-in nor already installed nor ignored."
           (if (or leuven-install-all-missing-elpa-packages
                   (yes-or-no-p (format "Install ELPA package `%s'? " pkg)))
               (ignore-errors
-                (package-install pkg))  ; Must be run after initializing
-                                        ; `package-initialize'.
+                (package-install pkg))
             (message (concat "[Customize Emacs-Leuven to ignore the `%s' package next times...]") pkg)
             (sit-for 1.5)))))
 
@@ -1067,8 +1037,7 @@ These packages are neither built-in nor already installed nor ignored."
 )                                       ; Chapter 48 ends here.
 #+end_src
 
-~Idle-require~ must be loaded *after* ~package-initialize~, and should not be
-cancelable; hence, we put it out of a "chapter".
+~Idle-require~ should not be cancelable; hence, we put it out of a "chapter".
 
 #+begin_src emacs-lisp
   ;; Load elisp libraries while Emacs is idle.
