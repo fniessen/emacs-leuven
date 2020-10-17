@@ -10,16 +10,6 @@
 
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 
-* Tasks                                                               :noexport:
-
-** TODO Look at Podio for nice colors for the agenda buffer
-
-** TODO [#C] Organize your tasks, your team and your files
-
-http://manageitapp.com/ (nice look for Web site as well)
-
-* Private Notes                                                       :noexport:
-
 At the beginning, we've put way to many tasks either as scheduled or deadline
 because the unique interaction with Org mode was via the agenda view, and we
 did not want to loose some tasks out of our view.
@@ -34,97 +24,6 @@ A *deadline* is a ultimate finish date. It can have a custom *reminder* to recei
 alerts for approaching due dates (in the *warning period*); it /must be updated
 every time we want to snooze the reminder/ (once a day, week, month). We can do
 such an update via ~C-u C-u C-c C-d~.
-
-** Only show the REFILE section if items are there
-
-https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html
-
-** Count of items
-
-"3 of 6"
-
-Overall count: 6 projects.
-
-** See Jira workflows
-
-https://www.idalko.com/jira-workflow-best-practices/
-
-** JIRA Priority Definition for Bugs
-
-Use this guideline to setup the mandatory "JIRA Priority" field.
-
-- Highest ::
-
-     Catastrophic defect that causes total failure of the software or
-     unrecoverable data loss with no available workaround. Complete shut-down of
-     the process, nothing can proceed further. Blocks testing of the product
-     / feature.
-
-     Must be fixed in the next build.
-
-- High ::
-
-     Severely impaired functionality. Erratic performance and reduced system
-     availability. It may cause major components or features of the system to be
-     unavailable although certain parts of the system remain
-     functional. A workaround may exist but its use is unsatisfactory or at
-     a high time cost (manual intervention required).
-
-     Must be fixed in any of the upcoming builds and should be included in the
-     current release.
-
-- Medium ::
-
-     Failure of non-critical aspects of the system but results in an
-     inconvenient situation. It causes some undesirable behavior, but the system
-     is still functional. There is a reasonably satisfactory workaround. It is
-     still a valid defect that should be corrected
-
-     May be fixed after the release or in the next release.
-
-- Low ::
-
-     It won't cause any major break-down of the system. It does not result in
-     the termination of services, does not impact usability of the system and
-     the desired results can be easily obtained by a workaround.
-
-     Fix can be deferred until after more serious defect have been fixed.
-
-- Lowest ::
-
-     No impact to the functionality. More related to the enhancement of the
-     system.
-
-     May or may not be fixed at all
-
-* Tasks                                                               :noexport:
-
-** TODO Check interesting stuff from LiquidPlanner
-
-http://www.liquidplanner.com/support/videos/daily-task-management/
-
-** TODO Convert <+0d> into <today>
-
-Check first that all the correct tasks are shown, the ones with a time part and
-the ones without...
-
-** TODO Si restriction à un fichier (TODO-Org.org), f7 montre les tâches comme venant du collectbox!
-
-** TODO Voir s'il faut montrer les tâches quel que soit leur niveau
-
-Éventuellement, ne montrer que les tâches de niveau <= 2.
-
-Dans ce cas, il faudrait que des tâches de niveau 3 ou plus qui aient un
-~SCHEDULE~ ou un ~DEADLINE~ rendent leur tâche parent visible dans l'agenda !
-
-Cela permettrait de garder des status TODO sur les sous-tâches (ce qui
-bloquerait une fermeture trop aisée de la tâche parent, comme avec des [ ]),
-tout en ne polluant pas trop les agendas (et les comptes de tâches).
-
-** TODO Add limits to number of items in TODO views
-
-See Scrum + Kanban = Scrumban at
-https://dzone.com/articles/scrum-kanban-scrumban.
 
 * Key bindings
 
@@ -2096,3 +1995,100 @@ So, for example: to hide TODO keywords from the agenda:
       '(("a" agenda ""
          ((org-agenda-todo-keyword-format "")))))
 #+end_src
+
+* Tasks                                                               :noexport:
+
+** Only show the REFILE section if items are there
+
+https://lists.gnu.org/archive/html/emacs-orgmode/2015-06/msg00266.html
+
+** Count of items
+
+"3 of 6"
+
+Overall count: 6 projects.
+
+** See Jira workflows
+
+https://www.idalko.com/jira-workflow-best-practices/
+
+** JIRA Priority Definition for Bugs
+
+Use this guideline to setup the mandatory "JIRA Priority" field.
+
+- Highest ::
+
+     Catastrophic defect that causes total failure of the software or
+     unrecoverable data loss with no available workaround. Complete shut-down of
+     the process, nothing can proceed further. Blocks testing of the product
+     / feature.
+
+     Must be fixed in the next build.
+
+- High ::
+
+     Severely impaired functionality. Erratic performance and reduced system
+     availability. It may cause major components or features of the system to be
+     unavailable although certain parts of the system remain
+     functional. A workaround may exist but its use is unsatisfactory or at
+     a high time cost (manual intervention required).
+
+     Must be fixed in any of the upcoming builds and should be included in the
+     current release.
+
+- Medium ::
+
+     Failure of non-critical aspects of the system but results in an
+     inconvenient situation. It causes some undesirable behavior, but the system
+     is still functional. There is a reasonably satisfactory workaround. It is
+     still a valid defect that should be corrected
+
+     May be fixed after the release or in the next release.
+
+- Low ::
+
+     It won't cause any major break-down of the system. It does not result in
+     the termination of services, does not impact usability of the system and
+     the desired results can be easily obtained by a workaround.
+
+     Fix can be deferred until after more serious defect have been fixed.
+
+- Lowest ::
+
+     No impact to the functionality. More related to the enhancement of the
+     system.
+
+     May or may not be fixed at all
+
+** TODO Look at Podio for nice colors for the agenda buffer
+
+** TODO [#C] Organize your tasks, your team and your files
+
+http://manageitapp.com/ (nice look for Web site as well)
+
+** TODO Check interesting stuff from LiquidPlanner
+
+http://www.liquidplanner.com/support/videos/daily-task-management/
+
+** TODO Convert <+0d> into <today>
+
+Check first that all the correct tasks are shown, the ones with a time part and
+the ones without...
+
+** TODO Si restriction à un fichier (TODO-Org.org), f7 montre les tâches comme venant du collectbox!
+
+** TODO Voir s'il faut montrer les tâches quel que soit leur niveau
+
+Éventuellement, ne montrer que les tâches de niveau <= 2.
+
+Dans ce cas, il faudrait que des tâches de niveau 3 ou plus qui aient un
+~SCHEDULE~ ou un ~DEADLINE~ rendent leur tâche parent visible dans l'agenda !
+
+Cela permettrait de garder des status TODO sur les sous-tâches (ce qui
+bloquerait une fermeture trop aisée de la tâche parent, comme avec des [ ]),
+tout en ne polluant pas trop les agendas (et les comptes de tâches).
+
+** TODO Add limits to number of items in TODO views
+
+See Scrum + Kanban = Scrumban at
+https://dzone.com/articles/scrum-kanban-scrumban.
