@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201017.1523
+;; Version: 20201017.1842
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201017.1523"
+(defconst leuven--emacs-version "20201017.1842"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -8875,7 +8875,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (defun leuven--semantic-imenu ()
       (imenu-add-to-menubar "TAGS"))
 
-    (add-hook 'semantic-init-hooks #'leuven--semantic-imenu)
+    (add-hook 'semantic-init-hook #'leuven--semantic-imenu)
 
     )
 

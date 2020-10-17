@@ -15609,7 +15609,7 @@ The commands to display *symbol references* are:
     (defun leuven--semantic-imenu ()
       (imenu-add-to-menubar "TAGS"))
 
-    (add-hook 'semantic-init-hooks #'leuven--semantic-imenu)
+    (add-hook 'semantic-init-hook #'leuven--semantic-imenu)
 
     )
 #+end_src
