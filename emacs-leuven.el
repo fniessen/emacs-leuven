@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201017.1850
+;; Version: 20201018.1005
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201017.1850"
+(defconst leuven--emacs-version "20201018.1005"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -549,7 +549,7 @@ These packages are neither built-in nor already installed nor ignored."
 )                                       ; Chapter 48 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
-  (try-require 'idle-require) ;XXX
+  (try-require 'idle-require) ; XXX
 
   ;; Fail-safe for `idle-require'.
   (if (not (featurep 'idle-require))
@@ -868,7 +868,7 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Add or remove caret.
     (global-set-key (kbd "<C-S-mouse-1>") #'mc/add-cursor-on-click)
-    (global-set-key (kbd "<M-mouse-1>")   #'mc/add-cursor-on-click) ;; XXX DOES NOT WORK.
+    (global-set-key (kbd "<M-mouse-1>")   #'mc/add-cursor-on-click) ; XXX DOES NOT WORK.
 
     ;; Select All Occurrences.
     (global-set-key (kbd "C-M-S-j") #'mc/mark-all-like-this-dwim) ;! IntelliJ.
@@ -1023,7 +1023,7 @@ These packages are neither built-in nor already installed nor ignored."
     (setq bookmark-save-flag 1)
 
     ;; Extensions to standard library `bookmark.el'.
-    (when (try-require 'bookmark+);XXX + needs bookmark+-mac
+    (when (try-require 'bookmark+) ; XXX + needs bookmark+-mac
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
       (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
@@ -1272,7 +1272,7 @@ Should be selected from `fringe-bitmaps'.")
   ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
 
 
-(when (try-require 'symbol-overlay) ;XXX
+(when (try-require 'symbol-overlay) ; XXX
   (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
   (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
   (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
@@ -1281,7 +1281,7 @@ Should be selected from `fringe-bitmaps'.")
   )
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol) ;XXX
+  (when (try-require 'auto-highlight-symbol) ; XXX
 
     ;; Add major modes Auto-Highlight-Symbol can run on.
     (mapc #'(lambda (mode)
@@ -2561,7 +2561,8 @@ Should be selected from `fringe-bitmaps'.")
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   ;; Open Helm (QuickSilver-like candidate-selection framework).
-  (when (try-require 'helm-config);XXX  ; [default `helm-command-prefix-key']
+  (when (try-require 'helm-config)      ; XXX
+                                        ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
 
@@ -3993,10 +3994,6 @@ cycle through all windows on current frame."
     (sit-for 1.5))
 
   (with-eval-after-load "org"
-    ;; ;; Display the Org mode manual in Info mode.
-    ;; (global-set-key (kbd "C-h o") #'org-info) ; In Emacs 25: describe-symbol.
-    ;;                                     ; XXX Not autoloaded.
-
     ;; Unbind `C-j' and `C-''.
     (define-key org-mode-map (kbd "C-j") nil)
     (define-key org-mode-map (kbd "C-'") nil) ; `org-cycle-agenda-files'.
@@ -4010,7 +4007,7 @@ cycle through all windows on current frame."
 
   ;; ;; Face to be used by `font-lock' for highlighting in Org mode Emacs
   ;; ;; buffers, and tags to be used to convert emphasis fontifiers for HTML
-  ;; ;; export. XXX Format changed! XXX
+  ;; ;; export. XXX Format changed!
   ;; (setq org-emphasis-alist              ; Remove the strike-through emphasis.
   ;;       '(("*" bold "<b>" "</b>")
   ;;         ("/" italic "<i>" "</i>")
@@ -4094,7 +4091,7 @@ cycle through all windows on current frame."
 
       ;; Face.
       (set-face-attribute 'org-ellipsis nil
-                          :box '(:line-width 1 :color "#999999") ; #929490
+                          :box "#999999"
                           :foreground "#999999" :background "#FFF8C0"
                           :underline nil)
 
@@ -4105,7 +4102,7 @@ cycle through all windows on current frame."
 
   ;; Blank lines.
   (setq org-blank-before-new-entry
-        '(;; Insert  a blank line before new heading.
+        '(;; Insert a blank line before new heading.
           (heading . t)
 
           ;; Try to make an intelligent decision whether to insert a
@@ -4116,7 +4113,7 @@ cycle through all windows on current frame."
 
   (leuven--section "2.2 (org)Headlines")
 
-  ;; ;; `C-a' and `C-e' behave specially in headlines and items.
+  ;; `C-a' and `C-e' behave specially in headlines and items.
   (setq org-special-ctrl-a/e 'reversed)
 
   (with-eval-after-load "org"
@@ -4453,54 +4450,54 @@ cycle through all windows on current frame."
 
     ;; Org standard faces.
     (set-face-attribute 'org-todo nil
-                        :weight 'bold :box '(:line-width 1 :color "#D8ABA7")
+                        :weight 'bold :box "#D8ABA7"
                         :foreground "#D8ABA7" :background "#FFE6E4")
 
     (set-face-attribute 'org-done nil
-                        :weight 'bold :box '(:line-width 1 :color "#BBBBBB")
+                        :weight 'bold :box "#BBBBBB"
                         :foreground "#BBBBBB" :background "#F0F0F0")
 
     ;; Org non-standard faces.
     (defface leuven-org-created-kwd
-      '((t :weight bold :box (:line-width 1 :color "#1F8DD6")
+      '((t :weight bold :box "#1F8DD6"
            :foreground "#1F8DD6" :background "#FFEE62"))
       "Face used to display state NEW.")
     (defface leuven-org-in-progress-kwd
-      '((t :weight bold :box (:line-width 1 :color "#D9D14A")
+      '((t :weight bold :box "#D9D14A"
            :foreground "#D9D14A" :background "#FCFCDC"))
       "Face used to display state STRT.")
     (defface leuven-org-waiting-for-kwd
-      '((t :weight bold :box (:line-width 1 :color "#89C58F")
+      '((t :weight bold :box "#89C58F"
            :foreground "#89C58F" :background "#E2FEDE"))
       "Face used to display state WAIT.")
     (defface leuven-org-someday-kwd
-      '((t :weight bold :box (:line-width 1 :color "#9EB6D4")
+      '((t :weight bold :box "#9EB6D4"
            :foreground "#9EB6D4" :background "#E0EFFF"))
       "Face used to display state SDAY.")
 
     (defface leuven-org-quote-kwd
-      '((t :weight bold :box (:line-width 1 :color "#FC5158")
+      '((t :weight bold :box "#FC5158"
            :foreground "#FC5158" :background "#FED5D7"))
       "Face used to display .")
     (defface leuven-org-quoted-kwd
-      '((t :weight bold :box (:line-width 1 :color "#55BA80")
+      '((t :weight bold :box "#55BA80"
            :foreground "#55BA80" :background "#DFFFDF"))
       "Face used to display .")
     (defface leuven-org-approved-kwd
-      '((t :weight bold :box (:line-width 1 :color "#969696")
+      '((t :weight bold :box "#969696"
            :foreground "#969696" :background "#F2F2EE"))
       "Face used to display .")
     (defface leuven-org-rejected-kwd
-      '((t :weight bold :box (:line-width 1 :color "#42B5FF")
+      '((t :weight bold :box "#42B5FF"
            :foreground "#42B5FF" :background "#D3EEFF"))
       "Face used to display state REJECTED.")
 
     (defface leuven-org-openpo-kwd
-      '((t :weight bold :box (:line-width 1 :color "#FC5158")
+      '((t :weight bold :box "#FC5158"
            :foreground "#FC5158" :background "#FED5D7"))
       "Face used to display OPEN purchase order.")
     (defface leuven-org-closedpo-kwd
-      '((t :weight bold :box (:line-width 1 :color "#969696")
+      '((t :weight bold :box "#969696"
            :foreground "#969696" :background "#F2F2EE"))
       "Face used to display CLOSED purchase order."))
 
@@ -5379,11 +5376,11 @@ From the address <%a>"
           :gap-ok-around ("4:00")
           :default-face
           ((:weight bold
-            :box (:line-width 1 :color "#AAEE77")
+            :box "#AAEE77"
             :foreground "black" :background "#BFFA9E"))
           :gap-face
           ((:weight bold
-            :box (:line-width 1 :color "#BBDDFF")
+            :box "#BBDDFF"
             :foreground "black" :background "#D0EDFF"))))
 
   ;; 10.5 Text prepended to the entry text in agenda buffers.
@@ -6787,7 +6784,7 @@ this with to-do items than with projects or headings."
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  (try-require 'tex-site);XXX
+  (try-require 'tex-site) ; XXX
 
   ;; Support for LaTeX documents.
   (with-eval-after-load "latex"
@@ -7496,7 +7493,7 @@ mouse-3: go to end") "]")))
       :group 'hideshow)
 
     (defface hs-face
-      '((t :box (:line-width 1 :color "#777777") :foreground "#9A9A6A" :background "#F3F349"))
+      '((t :box "#777777" :foreground "#9A9A6A" :background "#F3F349"))
       "Face to hightlight the \"...\" area of hidden regions"
       :group 'hideshow)
 
@@ -9531,7 +9528,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "30.XX Dired+")
 
-  (when (try-require 'dired+) ;XXX
+  (when (try-require 'dired+) ; XXX
 
     ;; Don't hide details in Dired.
     (setq diredp-hide-details-initially-flag nil)
