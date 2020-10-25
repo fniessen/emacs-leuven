@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201018.1005
+;; Version: 20201025.1559
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201018.1005"
+(defconst leuven--emacs-version "20201025.1559"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -458,6 +458,7 @@ If not, just print a message."
             multiple-cursors
             org-plus-contrib
             orgalist
+            ox-jira
             pager
             ;; paredit
             ;; pdf-tools
@@ -3410,8 +3411,8 @@ cycle through all windows on current frame."
   ;; C-x 8 RET and then the number, followed by RET.
   (leuven--do-accent '(("\200" . "EUR")  ;; \342\202\254
                        ("\205" . "...")
-                       ("\221" . "‘")
-                       ("\222" . "’")    ;; \342\200\231
+                       ("\221" . "`")
+                       ("\222" . "'")    ;; \342\200\231
                        ("\223" . "\"")
                        ("\224" . "\"")
                        ("\226" . "-")
@@ -3421,6 +3422,7 @@ cycle through all windows on current frame."
                        ("\246" . "|")
                        ("\251" . "©")
                        ("\253" . "«")
+                       ("\256" . "®")
                        ("\260" . "°")
                        ("\272" . "°")
                        ("\273" . "»")
