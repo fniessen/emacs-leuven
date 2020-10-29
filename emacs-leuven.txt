@@ -8417,7 +8417,7 @@ Remove scheduling date with ~C-u C-c C-s~.
   (setq org-todo-repeat-to-state "TODO")
 #+end_src
 
-*** Clocking work time (Time tracking)
+*** Clocking work time (Time tracking, Log work)
 
 *************** TODO Resume clocks when opening the first Org file
 Alternative to requiring org-clock in every Emacs session.
