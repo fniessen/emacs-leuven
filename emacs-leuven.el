@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201109.2045
+;; Version: 20201109.2132
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201109.2045"
+(defconst leuven--emacs-version "20201109.2132"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1097,7 +1097,8 @@ These packages are neither built-in nor already installed nor ignored."
 
     ;; Jump during Isearch to one of the current candidates.
     (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)
-    (define-key isearch-mode-map (kbd "@")   #'avy-isearch))
+    ;; (define-key isearch-mode-map (kbd "@")   #'avy-isearch)
+  )
 
   ;; Jump to things.
   (with-eval-after-load "avy"
@@ -2307,7 +2308,7 @@ Should be selected from `fringe-bitmaps'.")
     (defun leuven-diff-make-fine-diffs ()
       "Enable Diff Auto-Refine mode."
       (interactive)
-      (let (diff-auto-refine-mode)      ; Avoid refining the hunks redundantly ...
+      (let (diff-refine)                ; Avoid refining the hunks redundantly ...
         (condition-case nil
             (save-excursion
               (goto-char (point-min))

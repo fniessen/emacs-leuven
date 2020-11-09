@@ -1939,7 +1939,8 @@ jumping onto them...
 
     ;; Jump during Isearch to one of the current candidates.
     (define-key isearch-mode-map (kbd "C-'") #'avy-isearch)
-    (define-key isearch-mode-map (kbd "@")   #'avy-isearch))
+    ;; (define-key isearch-mode-map (kbd "@")   #'avy-isearch)
+  )
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2951,6 +2952,10 @@ Since Emacs 24.3:
 - ~M-s _~ starts a symbol (identifier) incremental search.
 - ~M-s _~ in Isearch toggles symbol search mode.
 - ~M-s c~ in Isearch toggles search case-sensitivity.
+
+Since Emacs 27.1, to *go to the first/last occurrence of the current search
+string* is possible with new commands ~isearch-beginning-of-buffer~ and
+~isearch-end-of-buffer~ bound to ~M-s M-<~ and ~M-s M->~ in Isearch.
 
 #+begin_src emacs-lisp
 ;;** 15.1 (info "(emacs)Incremental Search")
@@ -4032,7 +4037,7 @@ You can also decide to revert a change: *select a hunk and apply it (in reverse)
     (defun leuven-diff-make-fine-diffs ()
       "Enable Diff Auto-Refine mode."
       (interactive)
-      (let (diff-auto-refine-mode)      ; Avoid refining the hunks redundantly ...
+      (let (diff-refine)                ; Avoid refining the hunks redundantly ...
         (condition-case nil
             (save-excursion
               (goto-char (point-min))
@@ -17734,15 +17739,6 @@ certificates are marked in red.
 (define-key eww-mode-map (kbd "f") #'eww-lnum-follow)
 (define-key eww-mode-map (kbd "F") #'eww-lnum-universal)
 *************** END
-
-#+begin_tip
-The ~M-s M-w~ key binding (new in Emacs 25) uses ~eww~ to search the web for the
-text in the region.  It is super handy for quick Google and documentation
-searches and this will only make it more useful.
-
-The search engine to use for this is specified by the customizable variable
-~eww-search-prefix~.
-#+end_tip
 
 * Running Shell Commands from Emacs
 
