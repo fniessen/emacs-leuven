@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201025.1559
+;; Version: 20201109.2045
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,13 +84,10 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201025.1559"
+(defconst leuven--emacs-version "20201109.2045"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
-
-;; Turn on Common Lisp support.
-(eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
 
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
@@ -8118,7 +8115,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   (defvar leuven--ant-command-history nil
     "Ant command history variable")
 
-  (defun leuven-ant(&optional args)
+  (defun leuven-ant (&optional args)
     "Runs ant in the current project. Starting at the directory
      where the file being visited resides, a search is made for
      build.xml recursively. A maven command is made from the first

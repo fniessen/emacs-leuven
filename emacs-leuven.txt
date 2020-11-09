@@ -170,9 +170,6 @@ If you have a modern machine, I encourage you to add the following:
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
-
-;; Turn on Common Lisp support.
-(eval-when-compile (require 'cl))       ; Provide useful things like `setf'.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -6088,6 +6085,14 @@ In GNU Emacs, when you specify the coding explicitly in the file via an explicit
 
 XXX Declare PDF files as binary
 
+#+begin_note
+*ISO-8859-1* (also called Latin-1) is *identical to Windows-1252* (also called
+CP1252) *except for the code points 128-159* (0x80-0x9F). ISO-8859-1 assigns
+several control codes in this range. Windows-1252 has several characters,
+punctuation, arithmetic and business symbols assigned to these code points.
+https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
+#+end_note
+
 #+begin_src emacs-lisp
 ;;** 22.6 (info "(emacs)Recognize Coding") Systems
 
@@ -11111,6 +11116,8 @@ the mail message:
 - ~MAIL_FMT~ -> determines the format of the email (e.g., ~org~ by default, ~ascii~
   or ~html~)
 
+XXX org-mime missing
+
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
     (message "[... Org Mime]")
@@ -13842,7 +13849,7 @@ Compile within Emacs using ~ant~.
   (defvar leuven--ant-command-history nil
     "Ant command history variable")
 
-  (defun leuven-ant(&optional args)
+  (defun leuven-ant (&optional args)
     "Runs ant in the current project. Starting at the directory
      where the file being visited resides, a search is made for
      build.xml recursively. A maven command is made from the first
