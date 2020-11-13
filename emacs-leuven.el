@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201109.2132
+;; Version: 20201113.1555
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201109.2132"
+(defconst leuven--emacs-version "20201113.1555"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -4563,45 +4563,40 @@ cycle through all windows on current frame."
   (setq org-tags-column -80)
 
   ;; 6.2 List of tags ("contexts") allowed in Org mode files.
-  (setq org-tag-alist '((:startgroup  . nil)
+  (setq org-tag-alist '(("FLAGGED"     . ??) ; = ASAP.
+                        (:startgroup  . nil)
                          ("work"       . ?w)
                          ("personal"   . ?p)
                         (:endgroup    . nil)
+                        ;; ("now"      . XXX)
+                        ("notbillable" . ?B)
+
                         ("call"        . ?c)
                         ("errands"     . ?e)
                         ("finance"     . ?f)
                         ("mail"        . ?m)
 
-                        ("notbillable" . ?B)
                         ;; ("reading"  . ?r)
                         ;; ("proj"     . ?P)
-                        ;; ("now"      . XXX)
 
-                        ("ARCHIVE"     . ?a) ; speed command + action in task list
+                        ("ARCHIVE"     . ?a) ; Speed command + action in task list.
                         ("crypt"       . ?C)
-                        ("FLAGGED"     . ??) ; = ASAP
                         ))
 
   ;; Faces for specific tags.
   (setq org-tag-faces
-        '(("refile"
-           (:slant italic
-            :foreground "#A9876E"))     ; :background "#FCEEB3"
+        '(("FLAGGED"                    ; Important.
+           (:slant italic :foreground "#FF0000"))
           ("work"
-           (:slant italic
-            :foreground "#699761"))     ; :background "#C1D996"
+           (:slant italic :foreground "#FF9900"))
           ("personal"
-           (:slant italic
-            :foreground "#5C88D3"))     ; :background "#BBDDFF"
-          ("FLAGGED"
-           (:weight bold :slant italic
-            :foreground "#FF0000" :background "#FFFF00")) ; :background "#EDC6C8"
-          ("now"
-           (:slant italic
-            :foreground "#000000"))     ; :background "#FFEA80"
+           (:slant italic :foreground "#009900"))
+          ("now"                        ; To do.
+           (:slant italic :foreground "#3333FF"))
+          ("refile"                     ; Later.
+           (:slant italic :foreground "#993399"))
           ("notbillable"
-           (:slant italic
-            :foreground "#8774AF"))     ; :background "#DED0EA"
+           (:slant italic :foreground "#A9876E"))
           ))
 
   ;; 6.2 Exit fast tag selection after first change (toggle this with `C-c').
