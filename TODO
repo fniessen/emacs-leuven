@@ -1,5 +1,7 @@
 # Hey Emacs, this is a -*- org -*- file ...
-#+TITLE:     Tasks
+#+TITLE:     TODO
+
+* Tasks
 
 - [ ] https://www.jetbrains.com/help/rider/Navigation_and_Search__Navigating_Between_To_do_Items.html
   (Emacs, Dev, TODO Lists)
@@ -283,3 +285,68 @@ You can use ESUP - Emacs Start Up Profiler
 
 https://github.com/dvorka/atom-editor-emacs-key-bindings
 
+* Notes
+
+** Learning GNU Emacs
+
+Yes, there is.  It's called Learning Gnu Emacs and is published by
+O'Reilly press.  Worth every cent if you're serious about Emacs.
+
+** Dribble file in Emacs
+
+The precise commands we need to type to reproduce the bug.  If at
+all possible, give a full recipe for an Emacs started with the
+`-Q' option (*note Initial Options::).  This bypasses your
+`.emacs' customizations.
+
+One way to record the input to Emacs precisely is to write a
+dribble file.  To start the file, execute the Lisp expression
+
+     (open-dribble-file "~/dribble")
+
+using `M-:' or from the `*scratch*' buffer just after starting
+Emacs.  From then on, Emacs copies all your input to the specified
+dribble file until the Emacs process is killed.
+
+** Why Emacs?
+
+Personally, my first love with Emacs was when someone showed =M-q= to me
+and the most uglily indented text aligned nicely between the margins.
+
+** Emacs replace by upcase version
+
+You can force a matched regex text pattern to upper case by entering
+=C-M-% your_regexp RET \,(upcase \num_of_match)=.
+
+** A better Java mode for Emacs
+
+https://github.com/espenhw/malabar-mode
+
+** Gnu.emacs.bug: Always reply by email! (from Glenn Morris)              :mail:
+[2013-01-27 Sun 20:54]
+
+#+begin_verse
+I'm not sure what S W does; but basically always reply by mail, never by
+usenet. Thanks!
+#+end_verse
+
+From [[http://groups.google.com/groups/search?as_umsgid%3Dmailman.18446.1359316485.855.bug-gnu-emacs%2540gnu.org][Email from Glenn Morris: bug#13546: 24.2.92; Error(s) w]]
+
+** Execute R, LaTeX, JavaScript, etc. online!
+
+See http://www.compileonline.com/.
+
+Even with the Emacs editor!!
+
+** Colors (Emacs theme)
+
+http://www.colorhexa.com/
+
+** How do I use emacsclient to connect to a remote emacs instance?
+
+https://emacs.stackexchange.com/questions/371/how-do-i-use-emacsclient-to-connect-to-a-remote-emacs-instance
+
+- SSH port forwarding
+- TRAMP* Design
+
+- http://www.slideshare.net/UserStudio/1-facture-6-heures-2-cocas-1-visualisation-11204436
