@@ -8,7 +8,7 @@
 
 #+PROPERTY:  header-args :eval no
 
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
 * Example
 :PROPERTIES:
