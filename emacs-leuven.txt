@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
 * Evaluating the current setup
 
@@ -7808,8 +7808,8 @@ Extra status for invoices:
 
     ;; Org non-standard faces.
     (defface leuven-org-created-kwd
-      '((t :weight bold :box "#1F8DD6"
-           :foreground "#1F8DD6" :background "#FFEE62"))
+      '((t :weight bold :box "#FFE8A3"
+           :foreground "#1F8DD6" :background "#FFFFFF"))
       "Face used to display state NEW.")
     (defface leuven-org-in-progress-kwd
       '((t :weight bold :box "#D9D14A"
@@ -7949,17 +7949,23 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
   (setq org-tags-column -80)
 
   ;; 6.2 List of tags ("contexts") allowed in Org mode files.
-  (setq org-tag-alist '(("FLAGGED"     . ??) ; = ASAP.
+  (setq org-tag-alist '(("FLAGGED"     . ?1) ; = ASAP.
                         (:startgroup  . nil)
-                         ("work"       . ?w)
-                         ("personal"   . ?p)
+                         ("work"       . ?2)
+                         ("personal"   . ?3)
                         (:endgroup    . nil)
                         ;; ("now"      . XXX)
+
                         ("notbillable" . ?B)
 
                         ("call"        . ?c)
                         ("errands"     . ?e)
-                        ("finance"     . ?f)
+                        ;; childcare
+                        ;; event
+                        ("finance"     . ?f) ; = Bills, statements, receipts.
+                        ;; shopping
+                        ;; family
+                        ;; friends
                         ("mail"        . ?m)
 
                         ;; ("reading"  . ?r)
@@ -15117,6 +15123,9 @@ Keyboard shortcuts:
 
     ;; (define-key prog-mode-map (kbd "C-M-q") nil)
 
+;; XXX ‘dumb-jump-quick-look’ is an obsolete command (as of 2020-06-26);
+;; XXX ‘dumb-jump-quick-look’ has been obsoleted by the xref interface.
+
     (global-set-key (kbd "M-g y") #'dumb-jump-quick-look)
     (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look)
 
@@ -18848,8 +18857,11 @@ web browser.
   (leuven--section "Web search")
 #+end_src
 
-- ~C-c g SPC~ ::
-     ~google-this-region~
+- ~C-c g SPC~ (~google-this-region~) ::
+     Search selected text.
+
+- ~C-c g RET~ (~google-this-search~) (could be bound to ~C-S-g~?) ::
+     Search user's input.
 
 - ~C-c g n~ ::
      ~google-this-noconfirm~

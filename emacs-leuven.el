@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201113.1555
+;; Version: 20201116.2044
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201113.1555"
+(defconst leuven--emacs-version "20201116.2044"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -4459,8 +4459,8 @@ cycle through all windows on current frame."
 
     ;; Org non-standard faces.
     (defface leuven-org-created-kwd
-      '((t :weight bold :box "#1F8DD6"
-           :foreground "#1F8DD6" :background "#FFEE62"))
+      '((t :weight bold :box "#FFE8A3"
+           :foreground "#1F8DD6" :background "#FFFFFF"))
       "Face used to display state NEW.")
     (defface leuven-org-in-progress-kwd
       '((t :weight bold :box "#D9D14A"
@@ -4563,17 +4563,23 @@ cycle through all windows on current frame."
   (setq org-tags-column -80)
 
   ;; 6.2 List of tags ("contexts") allowed in Org mode files.
-  (setq org-tag-alist '(("FLAGGED"     . ??) ; = ASAP.
+  (setq org-tag-alist '(("FLAGGED"     . ?1) ; = ASAP.
                         (:startgroup  . nil)
-                         ("work"       . ?w)
-                         ("personal"   . ?p)
+                         ("work"       . ?2)
+                         ("personal"   . ?3)
                         (:endgroup    . nil)
                         ;; ("now"      . XXX)
+
                         ("notbillable" . ?B)
 
                         ("call"        . ?c)
                         ("errands"     . ?e)
-                        ("finance"     . ?f)
+                        ;; childcare
+                        ;; event
+                        ("finance"     . ?f) ; = Bills, statements, receipts.
+                        ;; shopping
+                        ;; family
+                        ;; friends
                         ("mail"        . ?m)
 
                         ;; ("reading"  . ?r)
@@ -8717,6 +8723,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     (global-set-key (kbd "M-g P") #'dumb-jump-back)
 
     ;; (define-key prog-mode-map (kbd "C-M-q") nil)
+
+;; XXX ‘dumb-jump-quick-look’ is an obsolete command (as of 2020-06-26);
+;; XXX ‘dumb-jump-quick-look’ has been obsoleted by the xref interface.
 
     (global-set-key (kbd "M-g y") #'dumb-jump-quick-look)
     (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look)
