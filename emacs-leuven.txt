@@ -15490,8 +15490,9 @@ Projectile's features.
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
 
-    ;; Turn on Helm bindings for projectile
-    (helm-projectile-on)
+    ;; Turn on Helm key bindings for projectile.
+    (when (locate-library "helm-projectile")
+      (helm-projectile-on))
 
     ;; ;; For large projects.
     ;; (setq helm-projectile-sources-list

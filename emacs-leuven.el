@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201129.1409
+;; Version: 20201129.1859
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201129.1409"
+(defconst leuven--emacs-version "20201129.1859"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -8870,8 +8870,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     (setq projectile-completion-system 'helm)
     (setq projectile-completion-system 'helm-comp-read)
 
-    ;; Turn on Helm bindings for projectile
-    (helm-projectile-on)
+    ;; Turn on Helm key bindings for projectile.
+    (when (locate-library "helm-projectile")
+      (helm-projectile-on))
 
     ;; ;; For large projects.
     ;; (setq helm-projectile-sources-list
