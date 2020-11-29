@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201116.2044
+;; Version: 20201129.1409
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201116.2044"
+(defconst leuven--emacs-version "20201129.1409"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3429,6 +3429,7 @@ cycle through all windows on current frame."
                        ("\276" . "3/4")
                        ("\277" . "¿")
                        ("\300" . "À")
+                       ("\302" . "Â")
                        ("\304" . "Ä")
                        ("\307" . "Ç")
                        ("\311" . "É")
@@ -8654,14 +8655,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;;** 28.3 (info "(emacs)Tags")
 
   (leuven--section "28.3 (emacs)Tags Tables")
-
-  ;; List of file names of tags tables to search.
-  (setq tags-table-list
-        '(
-          "~/TAGS"
-          ;; "/usr/local/lib/emacs/src/TAGS"
-          ;; "/usr/share/texmf-texlive/tex/latex/TAGS"
-          ))
 
   ;; (with-eval-after-load "etags"
   ;;
