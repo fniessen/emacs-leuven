@@ -531,6 +531,9 @@ See function ~--find-program~ at http://www.visualco.de/src/elisp/.emacs.el.html
 :ID:       8c71fa50-b62e-49ae-bcbb-2ed1ee7a5d65
 :END:
 
+Installed packages are now activated *before* loading the init file.
+-- https://github.com/emacs-mirror/emacs/blob/master/etc/NEWS.27
+
 ** The Package Menu Buffer
 
 #+begin_src emacs-lisp
