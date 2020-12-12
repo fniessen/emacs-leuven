@@ -657,7 +657,6 @@ like this into your configuration file:
             litable
             idle-require
             interaction-log
-            ledger-mode
             leuven-theme
             ;; magit
             markdown-mode
@@ -2899,6 +2898,9 @@ Highlight the current line:
 
 Display pressed keyboard shortcuts on screen during presentations or
 screencasts.
+
+XXX command-log-mode
+XXX view-lossage
 
 #+begin_src emacs-lisp
   ;; Exhaustive log of interactions with Emacs (display keystrokes, etc.).
@@ -6248,38 +6250,6 @@ Instead of superseding the binding in ~auto-mode-alist~, you can replace it
   ;; Major mode for fontifiying ssh config files.
   (autoload 'ssh-config-mode "ssh-config-mode"
     "Major mode for fontifiying ssh config files." t)
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; Helper code for use with the "ledger" command-line tool.
-  (add-to-list 'auto-mode-alist '("\\.dat\\'" . ledger-mode))
-  (add-to-list 'auto-mode-alist '("\\.journal\\'" . ledger-mode))
-  (add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
-
-  (with-eval-after-load "ledger-commodities"
-
-    ;; Default commodity for use in target calculations in ledger reconcile.
-    (setq ledger-reconcile-default-commodity "EUR")) ; "€"
-
-  ;; Provide custom fontification for ledger-mode.
-  (with-eval-after-load "ledger-fontify"
-
-    ;; If t, the highlight entire xact with state.
-    (setq ledger-fontify-xact-state-overrides nil))
-                                        ; Don't override the highlighting of
-                                        ; each posted item in a xact if it is
-                                        ; cleared/pending. XXX
-
-  (with-eval-after-load "ledger-init"
-
-    ;; (setq ledger-default-date-format "%Y-%m-%d")
-    (setq ledger-default-date-format "%Y/%m/%d")
-    )
-
-  (with-eval-after-load "flycheck"
-
-    ;; Flycheck integration for ledger files.
-    (try-require 'flycheck-ledger))
 #+end_src
 
 #+begin_src emacs-lisp
