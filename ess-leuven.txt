@@ -21,8 +21,6 @@ See:
 ** 2 Installing ESS on your system
 
 #+begin_src emacs-lisp
-(leuven--section "Utilities -- ESS")
-
 ;; ESS: Emacs Speaks Statistics
 (autoload 'R "ess-site"
   "Call 'R', the 'GNU S' system from the R Foundation." t)

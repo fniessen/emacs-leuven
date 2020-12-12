@@ -1,5 +1,3 @@
-(leuven--section "Utilities -- ESS")
-
 ;; ESS: Emacs Speaks Statistics
 (autoload 'R "ess-site"
   "Call 'R', the 'GNU S' system from the R Foundation." t)
