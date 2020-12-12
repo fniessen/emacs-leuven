@@ -100,6 +100,11 @@
 
               ))
 
+(add-to-list 'package-selected-packages 'helm-org)
+(add-to-list 'package-selected-packages 'org-plus-contrib)
+(add-to-list 'package-selected-packages 'orgalist)
+(add-to-list 'package-selected-packages 'ox-jira)
+
 (with-eval-after-load "org"
   (message "[... Org Introduction]")
 

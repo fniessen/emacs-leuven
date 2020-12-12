@@ -636,7 +636,6 @@ like this into your configuration file:
             helm-ag
             helm-descbinds
             helm-ls-git
-            helm-org
             helm-projectile ; Obsolete package?
             helm-swoop
             hide-lines
@@ -659,9 +658,6 @@ like this into your configuration file:
             markdown-mode
             ;; multi-term
             multiple-cursors
-            org-plus-contrib
-            orgalist
-            ox-jira
             pager
             ;; paredit
             ;; pdf-tools

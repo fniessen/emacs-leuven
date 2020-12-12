@@ -426,7 +426,6 @@ If not, just print a message."
             helm-ag
             helm-descbinds
             helm-ls-git
-            helm-org
             helm-projectile ; Obsolete package?
             helm-swoop
             hide-lines
@@ -449,9 +448,6 @@ If not, just print a message."
             markdown-mode
             ;; multi-term
             multiple-cursors
-            org-plus-contrib
-            orgalist
-            ox-jira
             pager
             ;; paredit
             ;; pdf-tools
