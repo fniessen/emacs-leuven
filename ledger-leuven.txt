@@ -52,3 +52,25 @@
   ;; Flycheck integration for ledger files.
   (try-require 'flycheck-ledger))
 #+end_src
+
+* Feature
+
+#+begin_src emacs-lisp
+(provide 'ledger-leuven)
+#+end_src
+
+* File Local Variables
+
+#+begin_src emacs-lisp
+;; This is for the sake of Emacs.
+;; Local Variables:
+;; coding: utf-8-unix
+;; flycheck-emacs-lisp-initialize-packages: t
+;; flycheck-mode: nil
+;; ispell-local-dictionary: "american"
+;; End:
+
+;;; ledger-leuven.el ends here
+#+end_src
+
+# ledgr-leuven.txt ends here
