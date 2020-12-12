@@ -1,0 +1,265 @@
+# Hey Emacs, this is a -*- org -*- file ...
+#+TITLE:     ESS-Leuven
+#+AUTHOR:    Fabrice Niessen
+#+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
+#+DESCRIPTION:
+#+KEYWORDS:  emacs, dotfile, config
+#+LANGUAGE:  en
+#+OPTIONS:   H:4 num:nil toc:2
+#+EXCLUDE_TAGS: noexport
+
+#+PROPERTY:  header-args :eval never :padline yes :tangle yes
+
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+
+* Emacs Speaks Statistics (ESS)
+
+See:
+- http://ess.r-project.org/Manual/ess.html,
+- http://www.emacswiki.org/emacs/EmacsSpeaksStatistics.
+
+** 2 Installing ESS on your system
+
+#+begin_src emacs-lisp
+(leuven--section "Utilities -- ESS")
+
+;; ESS: Emacs Speaks Statistics
+(autoload 'R "ess-site"
+  "Call 'R', the 'GNU S' system from the R Foundation." t)
+
+(autoload 'R-mode "ess-site"
+  "Major mode for editing R source." t)
+
+(add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
+#+end_src
+
+** 3 Interacting with statistical programs
+
+Start an R session with ~M-x R~.
+
+#+begin_note
+To run statistical processes under ESS, Windows users will need to make sure
+that the directories for ~R~ or ~Rterm~ (see ~inferior-R-program-name~) are in their
+~PATH~ environment variable.
+#+end_note
+
+*Customize* variables for ESS (set these variables *before* loading ~ess-site~).
+
+#+begin_src emacs-lisp
+;; Start R in current working directory, don't ask user.
+(setq ess-ask-for-ess-directory nil)
+
+;; New inferior ESS process appears in another window in the current frame.
+(setq inferior-ess-same-window nil)
+#+end_src
+
+#+begin_src emacs-lisp
+(when leuven--cygwin-p                  ; Using R from Cygwin.
+
+  ;; Safe 8.3 name for 32-bit programs.
+  (setq ess-program-files "c:/PROGRA~2")
+
+  ;; Safe 8.3 name for 64-bit programs.
+  (setq ess-program-files-64 "c:/PROGRA~1")
+
+  ;; Program name for invoking an inferior ESS with `M-x R'.
+  (setq inferior-R-program-name "R")) ; [Default: Rterm].
+#+end_src
+
+#+begin_src emacs-lisp
+;; Accented characters on graphics.
+(add-to-list 'process-coding-system-alist
+             '("R.*" . iso-latin-1))
+#+end_src
+
+** 4 Interacting with the ESS process
+
+- ~inferior-ess-mode-map~ for R console only
+- ~comint-mode-map~ for Shell console as well
+
+** 5 Sending code to the ESS process
+
+#+begin_src emacs-lisp
+;; ;; Display input commands in the process buffer.
+;; (setq ess-eval-visibly 'nowait)      ; But avoid Emacs hanging on large
+;;                                      ; evaluations.
+#+end_src
+
+** 7 Editing objects and functions
+
+Smart underscore:
+- Pressing underscore once inserts ~<-~.
+- Pressing underscore twice inserts a literal underscore.
+
+#+begin_src emacs-lisp
+;; Default ESS indentation style.
+(setq ess-default-style 'DEFAULT)
+#+end_src
+
+*** Code folding
+
+#+begin_src emacs-lisp
+(with-eval-after-load "ess-site"
+
+  ;; Code folding in ESS mode.
+  (add-hook 'ess-mode-hook #'hs-minor-mode)
+#+end_src
+
+** 9 Completion
+
+*** Integration with auto-complete package
+
+#+begin_note
+R docs are not in Info format.  Though, they are available via the quick help of
+Auto-Complete.
+#+end_note
+
+#+begin_src emacs-lisp
+  ;; Suffix appended by `ac-source-R-args' to candidates.
+  (setq ess-ac-R-argument-suffix "=")
+#+end_src
+
+XXX Switch to ~company-ess~, which does auto-start completion of function
+arguments with 0 characters.
+
+On [2014-11-13 Thu], Vitalie Spinu wrote that he will add native Company support
+in ESS in the near future.
+
+** 10 Developing with ESS
+
+See
+- http://code.google.com/p/ess-tracebug/
+- http://code.google.com/p/ess-tracebug/wiki/GettingStarted.
+
+#+begin_src emacs-lisp :tangle no
+  ;; Activate ess-tracebug every time r session starts.
+  (add-hook 'ess-post-run-hook #'ess-tracebug)
+#+end_src
+
+** 11 Other ESS features and tools
+
+*** Describe object at point
+
+Get info for object at point, and display it in an electric buffer with the
+command ~ess-describe-object-at-point~ (bound to ~C-c C-d C-e~, repeat ~C-e~ or ~e~ to
+cycle between ~str()~, ~head()~, ~tail()~ and ~summary()~).
+
+Use ~other-window~ to switch to ~*ess-describe*~ window.
+
+It was inspired by Erik Iverson's ~ess-R-object-tooltip~.
+
+*** ElDoc
+
+Since ESS v12.02, ElDoc functionality (to report R function arguments) has been
+moved into the core, and is active by default; so you don't need to configure
+anything...
+
+When you visit a R mode, ElDoc will be turned on.  However, you will *first need
+to associate the R buffer with an R process* so that args can be looked up --
+otherwise, ElDoc will silently not report anything.
+
+So, e.g. try:
+1. ~C-x C-f somefile.R~
+2. ~M-x R~ (so that =somefile.R= is associated with ~*R*~)
+3. ElDoc should then work.
+
+*** Highlighting
+
+#+begin_src emacs-lisp
+  ;; Font-lock keywords for the R mode.
+  (setq ess-R-font-lock-keywords
+        '((ess-R-fl-keyword:modifiers . t) ; Default.
+          (ess-R-fl-keyword:fun-defs . t) ; Default.
+          (ess-R-fl-keyword:keywords . t) ; Default.
+          (ess-R-fl-keyword:assign-ops . t) ; Default.
+          (ess-R-fl-keyword:constants . t) ; Default.
+          (ess-fl-keyword:fun-calls . t)
+          (ess-fl-keyword:numbers . t)
+          (ess-fl-keyword:operators . t)
+          (ess-fl-keyword:delimiters . t)
+          (ess-fl-keyword:= . t)
+          (ess-R-fl-keyword:F&T . t)))
+
+  ;; Font-lock patterns used in inferior-R-mode buffers.
+  (setq inferior-R-font-lock-keywords
+        '((ess-S-fl-keyword:prompt . t) ; Default.
+          (ess-R-fl-keyword:messages . t) ; Default.
+          (ess-R-fl-keyword:modifiers . t) ; Default.
+          (ess-R-fl-keyword:fun-defs . t) ; Default.
+          (ess-R-fl-keyword:keywords . t) ; Default.
+          (ess-R-fl-keyword:assign-ops . t) ; Default.
+          (ess-R-fl-keyword:constants . t) ; Default.
+          (ess-fl-keyword:matrix-labels . t) ; Default.
+          (ess-fl-keyword:fun-calls . t)
+          (ess-fl-keyword:numbers . t)
+          (ess-fl-keyword:operators . t)
+          (ess-fl-keyword:delimiters . t)
+          (ess-fl-keyword:= . t)
+          (ess-R-fl-keyword:F&T . t)))
+#+end_src
+
+*** Rdired
+
+With your point on the line of a variable,
+
+- ~p~ will plot the object,
+- ~v~ will view it, and
+- ~d~ will mark the object for deletion (~x~ will actually perform the deletion).
+
+#+begin_src emacs-lisp
+  ;; Prototype object browser for R, looks like dired mode.
+  (autoload 'ess-rdired "ess-rdired"
+    "View *R* objects in a dired-like buffer." t)
+#+end_src
+
+You could prefer to have the ~*R dired*~ buffer in a separate frame.  Check out
+~special-display-buffer-names~.
+
+Or have it dedicated in a window.  Check out
+https://github.com/emacsmirror/dedicated.
+
+*** Interaction with Org mode
+
+For anyone who wants to try it, after cloning into =~/elisp/polymode=, I only
+needed to add this in my init (ESS was already in my init).
+
+#+begin_src emacs-lisp :tangle no
+  (setq load-path
+         (append '("~/elisp/polymode"  "~/elisp/polymode/modes")
+                 load-path))
+  (require 'poly-org)
+  (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
+#+end_src
+
+When point is inside a src-block the local mode prevails. So, ~C-c C-n~ inside an
+R src block sends the line point is on to the R process. ~C-c C-c~ sends the
+region (or function or paragraph) to the process when point is in the body. To
+execute ~org-ctrl-c-ctrl-c~ on the src block with the ~C-c C-c~ keying, it is
+necessary to move point to before or after the body.
+
+#+begin_src emacs-lisp
+  )
+#+end_src
+
+* Feature
+
+#+begin_src emacs-lisp
+(provide 'ess-leuven)
+#+end_src
+
+* File Local Variables
+
+#+begin_src emacs-lisp
+;; This is for the sake of Emacs.
+;; Local Variables:
+;; coding: utf-8-unix
+;; eval: (when (require 'rainbow-mode nil t) (rainbow-mode))
+;; flycheck-emacs-lisp-initialize-packages: t
+;; flycheck-mode: nil
+;; ispell-local-dictionary: "american"
+;; End:
+
+;;; ess-leuven.el ends here
+#+end_src
+
+# ess-leuven.txt ends here
