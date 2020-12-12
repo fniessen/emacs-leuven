@@ -414,7 +414,6 @@ If not, just print a message."
             fancy-narrow
             flycheck
             flycheck-color-mode-line
-            flycheck-ledger
             fuzzy
             git-commit
             git-commit-insert-issue

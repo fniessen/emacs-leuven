@@ -17,6 +17,7 @@
 #+begin_src emacs-lisp
 ;; Packages to be installed by the user.
 (add-to-list 'package-selected-packages 'ledger-mode)
+(add-to-list 'package-selected-packages 'flycheck-ledger)
 #+end_src
 
 * Major modes

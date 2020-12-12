@@ -1,5 +1,6 @@
 ;; Packages to be installed by the user.
 (add-to-list 'package-selected-packages 'ledger-mode)
+(add-to-list 'package-selected-packages 'flycheck-ledger)
 
 ;; Helper code for use with the "ledger" command-line tool.
 (add-to-list 'auto-mode-alist '("\\.dat\\'"     . ledger-mode))

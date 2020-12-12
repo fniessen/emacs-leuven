@@ -624,7 +624,6 @@ like this into your configuration file:
             fancy-narrow
             flycheck
             flycheck-color-mode-line
-            flycheck-ledger
             fuzzy
             git-commit
             git-commit-insert-issue
@@ -14771,7 +14770,6 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
              "#emacs"
              ;; "#gnus"
              ;; "#latex"
-             ;; "#ledger"
              "#org-mode"
              ;; "#stumpwm"
              ;; "#zsh"
