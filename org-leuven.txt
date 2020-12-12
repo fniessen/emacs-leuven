@@ -12,7 +12,7 @@
 
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
-* Org Mode
+* XXX
 :PROPERTIES:
 :ID:       737b836b-ac1f-4120-94ca-c9e0282268f0
 :END:
@@ -207,7 +207,7 @@ See ~(define-key flyspell-mode-map (kbd "C-;") nil))~ for an alternative manner 
 unsetting local keys?
 #+end_note
 
-*** Activation
+* Activation
 
 #+begin_src emacs-lisp
 (with-eval-after-load "org"
@@ -221,7 +221,7 @@ unsetting local keys?
   (setq org-insert-mode-line-in-empty-file t))
 #+end_src
 
-** Document Structure
+* Document Structure
 
 #+begin_src emacs-lisp
 ;;* 2 (info "(org)Document Structure")
@@ -256,7 +256,7 @@ unsetting local keys?
         (plain-list-item . auto)))
 #+end_src
 
-*** Headlines
+** Headlines
 
 ~C-e~ goes *right before* the end of the invisible region and ~TAB~ will unfold as
 expected, both in a folded subtree or in a folded drawer.
@@ -412,7 +412,7 @@ options.
 
 *************** TODO Have a solution for base article, report, book (w/o todonotes)
 
-*** Visibility cycling
+** Visibility cycling
 
 #+begin_src emacs-lisp
 ;;** (info "(org)Visibility cycling")
@@ -438,7 +438,7 @@ options.
 Note that *Imenu* does display the current *Org subtree* in the mode line, not the
 full outline path.
 
-*** 2.4 Motion
+** 2.4 Motion
 
 #+begin_src emacs-lisp
 ;;** (info "(org)Motion")
@@ -486,7 +486,7 @@ vs ~C-u C-c C-j~
 
 See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior when revealing a location.
 
-*** Structure editing
+** Structure editing
 
 #+begin_src emacs-lisp
 ;;** (info "(org)Structure editing")
@@ -500,7 +500,7 @@ See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior 
 ;; (setq org-M-RET-may-split-line nil)
 #+end_src
 
-*** Sparse trees
+** Sparse trees
 :PROPERTIES:
 :ID:       a9fe61b7-cdbd-478e-a4af-da9e122fb2d9
 :END:
@@ -522,7 +522,7 @@ To control visibility when revealing a location, see ~org-show-context-detail~:
     (add-to-list 'org-show-context-detail '(occur-tree . ancestors))))
 #+end_src
 
-*** Plain lists
+** Plain lists
 
 An empty line does not end all plain list levels: if you need to separate
 consecutive lists with blank lines, always use two of them.
@@ -541,7 +541,7 @@ consecutive lists with blank lines, always use two of them.
 ;; (setq org-cycle-separator-lines -2)
 #+end_src
 
-*** Footnotes 
+** Footnotes 
 
 #+begin_src emacs-lisp
 ;;** (info "(org)Footnotes")
@@ -553,7 +553,7 @@ consecutive lists with blank lines, always use two of them.
 (global-set-key (kbd "C-c C-x f") #'org-footnote-action)
 #+end_src
 
-** Tables
+* Tables
 
 See [[http://orgmode.org/worg/org-tutorials/org-spreadsheet-intro.html][Org as a spreadsheet system: a short introduction]].
 
@@ -586,7 +586,7 @@ If you have dependencies in both directions, to iterate all tables in a file,
 in order to converge table-to-table dependencies, use
 ~org-table-iterate-buffer-tables~.
 
-** Hyperlinks
+* Hyperlinks
 
 #+begin_src emacs-lisp
 ;;* 4 (info "(org)Hyperlinks")
@@ -601,7 +601,7 @@ has the equal signs escaped, unless you have:
 (setq org-url-hexify-p nil)
 #+end_src
 
-*** External links
+** External links
 
 #+begin_src emacs-lisp
 (with-eval-after-load "org"
@@ -622,7 +622,7 @@ has the equal signs escaped, unless you have:
   (setq org-gnus-prefer-web-links t))
 #+end_src
 
-*** Handling links
+** Handling links
 
 #+begin_src emacs-lisp
 ;; Global identifiers for Org mode entries.
@@ -670,7 +670,7 @@ This makes ID links quasi-bidirectional."
       (org-search-view nil (org-entry-get nil "ID" t))))
 #+end_src
 
-*** Link abbreviations
+** Link abbreviations
 
 Link abbreviations provide a quick way of linking to resources that are
 frequently referenced, so that you can type just the key term instead of the
@@ -703,13 +703,13 @@ http://www.google.com/search?q=searchterms, you can just type
            "http://fr.wikipedia.org/wiki/%s"))))
 #+end_src
 
-** "TODO" Items
+* "TODO" Items
 
 #+begin_src emacs-lisp
 ;;* 5 (info "(org)TODO Items")
 #+end_src
 
-*** Basic TODO functionality
+** Basic TODO functionality
 
 #+begin_src emacs-lisp
 ;;** 5.1 (info "(org)TODO basics") functionality
@@ -723,7 +723,7 @@ http://www.google.com/search?q=searchterms, you can just type
 (setq org-loop-over-headlines-in-active-region 'start-level)
 #+end_src
 
-*** Extended use of TODO keywords
+** Extended use of TODO keywords
 
 We use statuses to *create a workflow* for tasks.
 
@@ -898,7 +898,7 @@ Extra status for invoices:
 (setq org-enforce-todo-checkbox-dependencies t)
 #+end_src
 
-*** Progress logging
+** Progress logging
 
 #+begin_src emacs-lisp
 ;;** 5.3 (info "(org)Progress logging")
@@ -940,7 +940,7 @@ on the format of these entries."
   (setq org-habit-today-glyph ?\u250B))
 #+end_src
 
-*** Breaking down tasks
+** Breaking down tasks
 
 #+begin_src emacs-lisp
 ;;** 5.5 (info "(org)Breaking down tasks")
@@ -956,7 +956,7 @@ on the format of these entries."
 (add-hook 'org-after-todo-statistics-hook #'leuven--org-summary-todo)
 #+end_src
 
-** Tags
+* Tags
 
 Context (place, time or particular resources for doing a task) and people are
 something best implemented with tags.
@@ -1056,7 +1056,7 @@ a parent headline."
 ;; (setq org-complete-tags-always-offer-all-agenda-tags t)
 #+end_src
 
-** Properties and Columns
+* Properties and Columns
 
 By convention, *user-defined properties are capitalized*; built-in properties with
 special meaning are written with all capitals.
@@ -1077,7 +1077,7 @@ special meaning are written with all capitals.
          )))
 #+end_src
 
-** Dates and Times
+* Dates and Times
 
 #+begin_src emacs-lisp
 ;;* 8 (info "(org)Dates and Times")
@@ -1091,7 +1091,7 @@ special meaning are written with all capitals.
   (try-require 'appt))
 #+end_src
 
-*** Creating time stamps
+** Creating time stamps
 
 #+begin_src emacs-lisp
 ;;** 8.2 (info "(org)Creating timestamps")
@@ -1115,7 +1115,7 @@ special meaning are written with all capitals.
 (setq org-time-stamp-rounding-minutes '(1 1))
 #+end_src
 
-*** Deadlines and scheduling
+** Deadlines and scheduling
 
 #+begin_src emacs-lisp
 ;;** 8.3 (info "(org)Deadlines and scheduling")
@@ -1131,7 +1131,7 @@ special meaning are written with all capitals.
 (setq org-log-redeadline 'time)
 #+end_src
 
-**** Inserting deadline/schedule
+*** Inserting deadline/schedule
 
 Schedule it with ~C-c C-s~:
 
@@ -1173,14 +1173,14 @@ Remove scheduling date with ~C-u C-c C-s~.
 ;; (setq org-timeline-show-empty-dates t)
 #+end_src
 
-**** Repeated tasks
+*** Repeated tasks
 
 #+begin_src emacs-lisp
 ;; TODO state to which a repeater should return the repeating task.
 (setq org-todo-repeat-to-state "TODO")
 #+end_src
 
-*** Clocking work time (Time tracking, Log work)
+** Clocking work time (Time tracking, Log work)
 
 *************** TODO Resume clocks when opening the first Org file
 Alternative to requiring org-clock in every Emacs session.
@@ -1311,7 +1311,7 @@ This is a useful function for adding to `kill-emacs-query-functions'."
   )                                   ; with-eval-after-load "org-clock" ends here.
 #+end_src
 
-*** Effort estimates
+** Effort estimates
 
 If you have an ~Effort~ property defined, the *estimated time* is also shown in
 the mode line, against the *actual time* spent (reported through *time clocking*).
@@ -1342,9 +1342,9 @@ XXX We could forbid an empty answer to the effort estimate question!
 XXX When clocking out, show the remaining effort (allows to re-estimate for
 a better schedule).
 
-** Capture - Refile - Archive
+* Capture - Refile - Archive
 
-*** Capture
+** Capture
 
 The ultimate capture tool to *quickly add* tasks or notes.
 
@@ -1448,7 +1448,7 @@ Use ~:jump-to-captured~ to tell capture to jump to the note after storing it.
   ;; TODO Prompt only for date, not time...
 #+end_src
 
-**** TODO Ask for refile location
+*** TODO Ask for refile location
 
 Find a location for refiling on capture.
 
@@ -1467,7 +1467,7 @@ Find a location for refiling on capture.
     (org-forward-heading-same-level 1))
 #+end_src
 
-**** TODO Email-to-task
+*** TODO Email-to-task
 
 Instantly *create tasks* and notes *from emails*, with a *link* back *to the emails*.
 
@@ -1636,7 +1636,7 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
   )                                   ; with-eval-after-load "org-capture" ends here.
 #+end_src
 
-*** Attachments
+** Attachments
 
 Use the following for conveniently accessing your data.
 
@@ -1652,7 +1652,7 @@ Instead of modifying ~org-link-abbrev-alist~, you can also use
 
 in your Org buffers.
 
-*** Protocols for external access
+** Protocols for external access
 
 Open Org source (and Capture) from Firefox.
 
@@ -1673,7 +1673,7 @@ Have a look at [[http://vimeo.com/5662410][Store links in Emacs Org using org-pr
                  :working-directory "~/Public/Repositories/worg/") t))
 #+end_src
 
-*** Refile and copy
+** Refile and copy
 
 Once a date has been scheduled, *move the task to the appropriate project*, by
 using the *refile* command ~C-c C-w~.  This lets me select (with completion) the
@@ -1725,7 +1725,7 @@ header under which the entry will be placed.
   (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+end_src
 
-*** Archiving
+** Archiving
 
 #+begin_src emacs-lisp
   (leuven--section "9.6 (org)Archiving")
@@ -1736,7 +1736,7 @@ header under which the entry will be placed.
   )
 #+end_src
 
-** Agenda Views
+* Agenda Views
 
 #+begin_src emacs-lisp
 (leuven--section "10 (org)Agenda Views")
@@ -1766,7 +1766,7 @@ header under which the entry will be placed.
   ;; (setq org-agenda-filter-preset '("-SDAY"))
 #+end_src
 
-*** Agenda files
+** Agenda files
 
 #+begin_src emacs-lisp
   ;;** 10.1 (info "(org)Agenda files")
@@ -1805,7 +1805,7 @@ do items inside will be found by the org-mode agenda builder.
 
 This does mean that when files are deleted or moved the org agenda complains.
 
-*** The agenda dispatcher
+** The agenda dispatcher
 
 #+begin_src emacs-lisp
   ;;** 10.2 (info "(org)Agenda dispatcher")
@@ -1817,7 +1817,7 @@ This does mean that when files are deleted or moved the org agenda complains.
   (setq org-agenda-sticky t)
 #+end_src
 
-*** The Built-in agenda views
+** The Built-in agenda views
 
 #+begin_src emacs-lisp
   ;;** 10.3 The (info "(org)Built-in agenda views")
@@ -1877,7 +1877,7 @@ arrives -- at which point it will be in all lists.
   (setq org-agenda-tags-todo-honor-ignore-options t)
 #+end_src
 
-**** Advanced Search
+*** Advanced Search
 
 #+begin_src emacs-lisp
   ;; 10.3.5 List of extra files to be searched by text search commands
@@ -1906,7 +1906,7 @@ arrives -- at which point it will be in all lists.
           nil ""))                    ; Tags, regexp.
 #+end_src
 
-*** Presentation and sorting
+** Presentation and sorting
 
 See
 http://www.dgtale.ch/index.php?option=com_content&view=article&id=52&Itemid=61
@@ -2093,7 +2093,7 @@ will restore the default sort order for the buffer:
     (org-agenda-redo)))
 #+end_src
 
-*** Agenda commands
+** Agenda commands
 
 #+begin_src emacs-lisp
 ;;** 10.5 (info "(org)Agenda commands")
@@ -2279,7 +2279,7 @@ Currently: 08:00-21:59."
   view...
 *************** END
 
-*** Custom agenda views
+** Custom agenda views
 
 #+begin_src emacs-lisp
 ;; Make the block agenda more compact (no agenda span name, no week number, no
@@ -2324,7 +2324,7 @@ Commands:
                                         ; with-eval-after-load "org-agenda" ends here.
 #+end_src
 
-*** Display all TODO items from the current directory
+** Display all TODO items from the current directory
 
 The function ~leuven-org-todo-list-current-dir~ will display your tasks from the
 current directory (including from local files =TODO.org= and =BUGS.org=, for
@@ -2354,7 +2354,7 @@ example).
 (global-set-key (kbd "<M-S-f6>") #'leuven-org-todo-list-current-dir)
 #+end_src
 
-*** Exporting Agenda Views
+** Exporting Agenda Views
 
 #+begin_src emacs-lisp
 ;;** 10.7 (info "(org)Exporting Agenda Views")
@@ -2372,7 +2372,7 @@ example).
 
 *************** TODO htmlize-output-type is duplicated lots of times!
 
-*** Agenda column view
+** Agenda column view
 
 #+begin_src emacs-lisp
 ;;** 10.8 (info "(org)Agenda column view")
@@ -2392,7 +2392,7 @@ example).
 (setq enable-local-eval t)
 #+end_src
 
-*** Not sorted
+** Not sorted
 
 #+begin_src emacs-lisp
 (with-eval-after-load "org-agenda"
@@ -2405,7 +2405,7 @@ example).
     (recenter))
 #+end_src
 
-**** Mouse cursor doesn't highlight agenda lines
+*** Mouse cursor doesn't highlight agenda lines
 
 XXX Does this work?
 
@@ -2418,7 +2418,7 @@ XXX Does this work?
 
 *************** TODO Adding ":tangle yes" on the above code block results in partial tangling!
 
-**** Emphasize items in agenda
+*** Emphasize items in agenda
 
 #+begin_src emacs-lisp
   (add-hook 'org-agenda-finalize-hook
@@ -2428,7 +2428,7 @@ XXX Does this work?
                   (org-do-emphasis-faces (point-max)))))
 #+end_src
 
-**** Mark a task as DONE and create a follow-up task
+*** Mark a task as DONE and create a follow-up task
 
 #+begin_src emacs-lisp
   (defun leuven-org-agenda-mark-done-and-add-followup ()
@@ -2446,7 +2446,7 @@ this with to-do items than with projects or headings."
 
 Source: Sacha Chua.
 
-**** Capture something based on the agenda
+*** Capture something based on the agenda
 
 #+begin_src emacs-lisp
   (defun leuven-org-agenda-new ()
@@ -2467,7 +2467,7 @@ this with to-do items than with projects or headings."
 
 Source: Sacha Chua.
 
-** Markup for rich export
+* Markup for rich export
 
 #+begin_src emacs-lisp
 ;;* 11 (info "(org)Markup")
@@ -2490,7 +2490,7 @@ Source: Sacha Chua.
   (setq org-hide-emphasis-markers t)  ; Impact on table alignment!
 #+end_src
 
-*** Images and Tables
+** Images and Tables
 
 Automatic screenshot insertion.
 
@@ -2524,7 +2524,7 @@ or added into the given directory, defaulting to the current one."
     (org-display-inline-images))
 #+end_src
 
-*** Macro replacement
+** Macro replacement
 
 #+begin_src emacs-lisp
   ;; Hide the brackets marking macro calls.
@@ -2543,7 +2543,7 @@ or added into the given directory, defaulting to the current one."
       (when pos (goto-char pos)))))
 #+end_src
 
-*** Embedded LaTeX
+** Embedded LaTeX
 
 To get one entity in the middle of a word, use ~{}~, i.e. some ~w\entity{}rd~ (new
 exporter only).
@@ -2590,7 +2590,7 @@ To list all available entities, run ~M-x org-entities-help~.
 ;; (setq org-pretty-entities-include-sub-superscripts nil)
 #+end_src
 
-** Exporting
+* Exporting
 
 #+begin_src emacs-lisp
 ;;* 12 (info "(org)Exporting")
@@ -2720,7 +2720,7 @@ Before exporting...
 ~(org-babel-map-inline-src-blocks nil (org-babel-remove-inline-result))~
 *************** END
 
-*** Export options
+** Export options
 
 #+begin_src emacs-lisp
 ;;** 12.2 (info "(org)Export options")
@@ -2783,7 +2783,7 @@ SVG image on HTML export and insert TikZ "as is" on PDF export):
 See [[http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-LaTeX.html#sec-4-3][Backend dependent execution -- conditionally export tikz to SVG on HTML export]]
 for more information.
 
-*** Export settings
+** Export settings
 
 #+begin_src emacs-lisp
 ;;** 12.3 Export settings
@@ -2791,7 +2791,7 @@ for more information.
 (setq org-export-exclude-tags '("noexport" "crypt"))
 #+end_src
 
-*** HTML export
+** HTML export
 
 To get a start for your CSS file, use the command
 ~M-x org-export-htmlize-generate-css~ to extract class definitions.
@@ -2924,7 +2924,7 @@ This adds a Quick Print option to your menu bar (under File).
 Now, you can print from the browser in (complete) Unicode, using your system's
 capabilities.
 
-*** LaTeX and PDF export
+** LaTeX and PDF export
 
 #+begin_src emacs-lisp
 ;;** 12.6 (info "(org)LaTeX and PDF export")
@@ -3167,7 +3167,7 @@ vs. XeLaTeX) when exporting When exporting to LaTeX."
   (setq org-latex-default-figure-position "!htbp")
 #+end_src
 
-*** "Ignore heading + promote children" tag
+** "Ignore heading + promote children" tag
 
 The actual contents of an abstract can be rather large.
 
@@ -3241,7 +3241,7 @@ headline.  This is useful to support structures like the following:
   )                                   ; with-eval-after-load "ox-latex" ends here.
 #+end_src
 
-*** LaTeX Beamer and PDF export
+** LaTeX Beamer and PDF export
 
 #+begin_src emacs-lisp
 ;; 12.6.6 Beamer class export.
@@ -3252,7 +3252,7 @@ headline.  This is useful to support structures like the following:
   (setq org-beamer-outline-frame-title "Plan")) ; [default: "Outline"]
 #+end_src
 
-*** OpenDocument Text (ODT)
+** OpenDocument Text (ODT)
 
 ODT export is not loaded by default.  You will have to load it explicitly or to
 add it to ~org-export-backends~.
@@ -3273,7 +3273,7 @@ With the amazing ~ox-pandoc~, you can *export to ~.docx~ directly*.  No need to 
 through LaTeX!
 #+end_tip
 
-*** Markdown
+** Markdown
 
 #+begin_src emacs-lisp
 ;; major mode for editing Markdown-formatted text.
@@ -4023,7 +4023,7 @@ C-r~ (fits nicely with the meaning of "reveal").
   (setq org-tags-exclude-from-inheritance '("crypt")))
 #+end_src
 
-** Other
+* Other
 
 Anonymize Org contents (sanitize the sensitive data).
 
@@ -4196,7 +4196,7 @@ XXX org-mime missing
                 (org-entry-put (point) "mail_composed" (current-time-string)))))
 #+end_src
 
-** A.3 Adding hyperlink types
+* A.3 Adding hyperlink types
 
 For more flexibility, you can use a URL-like syntax which could then export
 conditionally on the output format.
@@ -4233,7 +4233,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 ;;           (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
 #+end_src
 
-** A.5 Tables and lists in arbitrary syntax
+* A.5 Tables and lists in arbitrary syntax
 
 #+begin_src emacs-lisp
 (defun leuven-org-send-all-buffer-tables ()
@@ -4244,7 +4244,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
        (orgtbl-send-table 'maybe))))
 #+end_src
 
-** A.6 Dynamic blocks
+* A.6 Dynamic blocks
 
 #+begin_note
 For some (yet) unknown reason, ~leuven--org-update-buffer-before-save~ gets added
@@ -4283,9 +4283,9 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 (add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)
 #+end_src
 
-** Org-contrib
+* Org-contrib
 
-*** Org-effectiveness
+** Org-effectiveness
 
 #+begin_src emacs-lisp
 ;; (with-eval-after-load "org"
@@ -4300,11 +4300,11 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 ;;                 (sit-for 0.2)))))
 #+end_src
 
-*** Org-notmuch
+** Org-notmuch
 
 Link emails from Org files.
 
-*** Google Weather
+** Google Weather
 :PROPERTIES:
 :CATEGORY: Weather
 :END:
