@@ -116,7 +116,7 @@
   (message "[... Org Document Structure]")
 
   ;; Ellipsis to use in the Org mode outline.
-  (if (char-displayable-p ?\u25BA)    ; This test takes ~ 0.40s hence,
+  (if (char-displayable-p ?\u25BA)      ; This test takes ~ 0.40s hence,
                                         ; wrapped in `with-eval-after-load'.
       ;; String (black right-pointing pointer).
       (setq org-ellipsis " \u25BA")
@@ -282,7 +282,7 @@
 
   (defun leuven-org-reveal (&optional all-siblings)
     "Show all siblings of current level.
-    `C-u C-c C-r' does the same as default Org mode: show all hidden siblings."
+`C-u C-c C-r' does the same as default Org mode: show all hidden siblings."
     (interactive "P")
     (if all-siblings
         (org-reveal t)
@@ -386,13 +386,13 @@
 
   ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on 320px
   ;; width if none is found.
-  ;;    (setq org-image-actual-width '(320)) ; crashes Emacs with Org 9?
+  ;; (setq org-image-actual-width '(320)) ; crashes Emacs with Org 9?
 
   (defun leuven-org-search-backlinks ()
     "Show all entries that point to the current node.  Also show the current
-    node itself.
+node itself.
 
-    This makes ID links quasi-bidirectional."
+This makes ID links quasi-bidirectional."
     (interactive)
     (let ((org-agenda-files
            (add-to-list 'org-agenda-files (buffer-file-name))))
@@ -438,23 +438,23 @@
 ;; List of TODO entry keyword sequences (+ fast access keys and specifiers
 ;; for state change logging).
 (setq org-todo-keywords
-      '((sequence "NEW(n!)"           ; Proposal, idea (under review), to be
+      '((sequence "NEW(n!)"             ; Proposal, idea (under review), to be
                                         ; prioritized.
-                  "TODO(t!)"          ; Open, not (yet) started.
-                  "STRT(s!)"          ; In progress, working on, doing.
-                  "WAIT(w!)"          ; On hold, to be discussed, assigned,
+                  "TODO(t!)"            ; Open, not (yet) started.
+                  "STRT(s!)"            ; In progress, working on, doing.
+                  "WAIT(w!)"            ; On hold, to be discussed, assigned,
                                         ; feedback.
-                  "SDAY(y!)"          ; Someday, maybe, perhaps, wish.
+                  "SDAY(y!)"            ; Someday, maybe, perhaps, wish.
                   "|"
-                  "DONE(d!)"          ; Completed, closed, fixed, resolved,
+                  "DONE(d!)"            ; Completed, closed, fixed, resolved,
                                         ; verified.
-                  "CANX(x!)")         ; Wontfix, rejected, ignored.
+                  "CANX(x!)")           ; Wontfix, rejected, ignored.
 
-        (sequence "QTE(q!)"           ; Planning.
-                  "QTD(Q!)"           ; Awaiting approval.
+        (sequence "QTE(q!)"             ; Planning.
+                  "QTD(Q!)"             ; Awaiting approval.
                   "|"
-                  "APP(A!)"           ; Approved.
-                  "REJ(R!)")          ; Rejected.
+                  "APP(A!)"             ; Approved.
+                  "REJ(R!)")            ; Rejected.
 
         (sequence "OPENPO(O!)"
                   "|"
@@ -643,8 +643,8 @@
 ;; Remove redundant tags of headlines (from David Maus).
 (defun leuven-org-remove-redundant-tags ()
   "Remove redundant tags of headlines in current buffer.
-  A tag is considered redundant if it is local to a headline and inherited by
-  a parent headline."
+A tag is considered redundant if it is local to a headline and inherited by
+a parent headline."
   (interactive)
   (when (derived-mode-p 'org-mode)
     (save-excursion
@@ -765,7 +765,7 @@
          (list (cons "Clock into task" #'leuven-helm-org-clock-in))))
 
 ;; The time clocking code for Org mode.
-;; (require 'org-clock)               ;! needed for trying to automatically
+;; (require 'org-clock)                 ;! needed for trying to automatically
                                         ;! re-clock at Emacs startup
 
 ;; XXX Under test!
@@ -820,7 +820,7 @@
 
   (defun leuven--org-switch-to-started (kwd)
     "Switch task state to STRT.
-    Skip normal headlines and capture tasks."
+Skip normal headlines and capture tasks."
     (if (and kwd
              (not (string-equal kwd "STRT"))
              (not (and (boundp 'org-capture-mode) org-capture-mode)))
@@ -857,7 +857,7 @@
   ;; Ask the user if they wish to clock out before killing Emacs.
   (defun leuven--org-query-clock-out ()
     "Ask the user before clocking out.
-    This is a useful function for adding to `kill-emacs-query-functions'."
+This is a useful function for adding to `kill-emacs-query-functions'."
     (if (and (featurep 'org-clock)
              (funcall 'org-clocking-p)
              (y-or-n-p "You are currently clocking time, clock out? "))
@@ -897,7 +897,7 @@
              (t "~/"))))
 
 ;; 9.1.2 Default target for storing notes.
-(setq org-default-notes-file          ; Inbox for collecting
+(setq org-default-notes-file            ; Inbox for collecting
                                         ; [Default: "~/.notes"].
       (if (file-exists-p (concat org-directory "/0-refile.org"))
           (concat org-directory "/0-refile.org")
@@ -1382,7 +1382,7 @@ From the address <%a>"
 ;; Format string for displaying dates in the daily/weekly agenda
 ;; and in the timeline.
 (setq org-agenda-format-date
-      (concat                         ; "\n"
+      (concat                           ; "\n"
        "%Y-%m-%d" " %a "
        ;; (make-string (1- (window-width)) (string-to-char "_"))))
        (make-string 65 (string-to-char " "))
@@ -1441,7 +1441,7 @@ From the address <%a>"
 
 (defun leuven--working-p ()
   "Return t if current time is inside normal working hours.
-  Currently: 08:30-12:30 and 13:30-17:30."
+Currently: 08:30-12:30 and 13:30-17:30."
   (let* ((time (decode-time))
          (hour (nth 2 time))
          (mins (nth 1 time)))
@@ -1455,11 +1455,12 @@ From the address <%a>"
 
 (defun leuven--calling-hours-p ()
   "Return t if current time is inside normal calling hours.
-  Currently: 08:00-21:59."
+Currently: 08:00-21:59."
   (let* ((hour (nth 2 (decode-time))))
     (and (<= 8 hour) (<= hour 21))))
 
 (defun leuven--org-auto-exclude-function (tag)
+  "XXX"
   (and (cond
         ((string= tag "personal")
          (with-temp-buffer
@@ -1474,6 +1475,7 @@ From the address <%a>"
 
 ;;! Ensure that `:refile:' tags never will be excluded!
 (defun leuven--org-auto-exclude-function (tag)
+  "XXX"
   (and (cond
         ((string= tag "personal")
          (leuven--working-p))
@@ -1618,8 +1620,8 @@ this with to-do items than with projects or headings."
 
   (defun leuven-org-insert-image-or-take-screenshot (name)
     "Insert a link to an already existing image, or else to a screenshot.
-    The screenshot is either taken to the given non-existing file name,
-    or added into the given directory, defaulting to the current one."
+The screenshot is either taken to the given non-existing file name,
+or added into the given directory, defaulting to the current one."
     ;; FIXME: Should limit to '("pdf" "jpeg" "jpg" "png" "ps" "eps")
     ;; which is org-export-latex-inline-image-extensions.
     (interactive "GImage name? ")
@@ -1648,6 +1650,7 @@ this with to-do items than with projects or headings."
   (setq org-hide-macro-markers t)
 
   (defun org-macro-insert ()
+    "XXX"
     (interactive)
     (let* ((macros (org-macro--collect-macros))
            (macro (completing-read "Insert macro: " (mapcar 'car macros)))
@@ -1714,7 +1717,7 @@ this with to-do items than with projects or headings."
            (htmlfile (concat base-name ".html"))
            (texfile (concat base-name ".tex"))
            (pdffile (concat base-name ".pdf")))
-      (save-buffer)                   ; See other commands in
+      (save-buffer)                     ; See other commands in
                                         ; `before-save-hook':
                                         ; `org-update-all-dblocks'
                                         ; `org-table-iterate-buffer-tables'.
@@ -1864,6 +1867,7 @@ this with to-do items than with projects or headings."
 
   ;; HTML checkbox output.
   (defun leuven--checkbox-filter (item backend info)
+    "XXX"
     (when (org-export-derived-backend-p backend 'html)
       (replace-regexp-in-string
        "\\`.*\\(<code>\\[\\(X\\|&#xa0;\\|-\\)\\]</code>\\).*$"
@@ -1899,9 +1903,9 @@ this with to-do items than with projects or headings."
   ;; XXX Override output type `inline-css' used for htmlizing a region.
   (defun htmlize-region-for-paste (beg end)
     "Htmlize the region and return just the HTML as a string.
-    This forces the `css' style and only returns the HTML body, but without the
-    BODY tag.  This should make it useful for inserting the text to another HTML
-    buffer."
+This forces the `css' style and only returns the HTML body, but without the
+BODY tag.  This should make it useful for inserting the text to another HTML
+buffer."
     (let* ((htmlize-output-type 'css)  ; Was `inline-css'.
            (htmlbuf (htmlize-region beg end)))
       (unwind-protect
@@ -1992,7 +1996,7 @@ this with to-do items than with projects or headings."
                      "latexmk")
                     (t
                      (file-name-base org-latex-pdf-engine-full-path))))
-                                        ; "xelatex" or "pdflatex".
+                                          ; "xelatex" or "pdflatex".
 
              (latex-file
               (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
@@ -2048,7 +2052,7 @@ this with to-do items than with projects or headings."
 
   (defun leuven--change-pdflatex-packages (backend)
     "Automatically select the LaTeX packages to include (depending on PDFLaTeX
-    vs. XeLaTeX) when exporting When exporting to LaTeX."
+vs. XeLaTeX) when exporting When exporting to LaTeX."
 
     ;; Unconditionally remove `inputenc' from all the default packages.
     (setq org-latex-packages-alist
@@ -2091,9 +2095,9 @@ this with to-do items than with projects or headings."
 
   (defun leuven--org-export-ignore-headlines (data backend info)
     "Remove headlines tagged \"ignore\" retaining contents and promoting children.
-    Each headline tagged \"ignore\" will be removed retaining its
-    contents and promoting any children headlines to the level of the
-    parent."
+Each headline tagged \"ignore\" will be removed retaining its
+contents and promoting any children headlines to the level of the
+parent."
     (org-element-map data 'headline
       #'(lambda (object)
           (when (member "ignore" (org-element-property :tags object))
@@ -2157,6 +2161,7 @@ this with to-do items than with projects or headings."
 
   ;; 13.4 Force publishing all files.
   (defun leuven-org-publish-all-force ()
+    "XXX"
     (interactive)
     (org-publish-all t)))
 
@@ -2170,7 +2175,7 @@ this with to-do items than with projects or headings."
   ;; (add-hook 'org-babel-after-execute-hook
   ;;           #'(lambda ()
   ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
-  ;;                                     ; More efficient with refresh == t.
+  ;;                                       ; More efficient with refresh == t.
 
   (add-hook 'org-babel-after-execute-hook #'org-display-inline-images))
 
@@ -2192,6 +2197,7 @@ this with to-do items than with projects or headings."
 
 ;; FIXME Bind this to the correct keys.
 (defun leuven-org-babel-expand-src-block ()
+  "XXX"
   (interactive)
   (let ((org-src-window-setup 'reorganize-frame))
     (org-babel-expand-src-block)))
@@ -2200,7 +2206,7 @@ this with to-do items than with projects or headings."
 (setq org-edit-src-content-indentation 2)
 
 ;; Fontify code in code blocks (highlight syntax in the Org buffer).
-(setq org-src-fontify-natively t)     ;! Create overlay
+(setq org-src-fontify-natively t)       ;! Create overlay
                                         ;! `org-block-background' and remove
                                         ;! text property `org-block'.
 
@@ -2342,6 +2348,7 @@ this with to-do items than with projects or headings."
 
   ;; Check for the support of (inline) source block languages.
   (defun org-src-block-check ()
+    "XXX"
     (interactive)
     (org-element-map (org-element-parse-buffer)
         '(src-block inline-src-block)
@@ -2417,6 +2424,7 @@ this with to-do items than with projects or headings."
     (if contents (insert contents))))
 
 (defun org-check-property-drawers ()
+  "XXX"
   (interactive)
   (org-element-map (org-element-parse-buffer 'element) 'headline
     #'(lambda (h)
@@ -2429,7 +2437,7 @@ this with to-do items than with projects or headings."
 
 (defun org-repair-property-drawers ()
   "Fix properties drawers in current buffer.
-  Ignore non Org buffers."
+Ignore non Org buffers."
   (when (derived-mode-p 'org-mode)
     (org-with-wide-buffer
      (goto-char (point-min))
@@ -2575,6 +2583,7 @@ this with to-do items than with projects or headings."
   (setq org-tags-exclude-from-inheritance '("crypt")))
 
 (defun leuven-org-scramble-contents ()
+  "XXX"
   (interactive)
   (let ((tree (org-element-parse-buffer)))
     (org-element-map tree
@@ -2647,6 +2656,7 @@ this with to-do items than with projects or headings."
 (add-hook 'org-export-preprocess-hook #'leuven--org-export-preprocess-hook)
 
 (defun insert-one-equal-or-two ()
+  "XXX"
   (interactive)
   (cond
    ((or (bolp) (not (looking-back "=")))
@@ -2682,6 +2692,7 @@ this with to-do items than with projects or headings."
                 (local-set-key (kbd "C-c m") #'org-mime-subtree)))
 
   (defun leuven-mail-subtree ()
+    "XXX"
     (interactive)
     (org-agenda-goto)
     (org-mime-subtree))
@@ -2739,7 +2750,7 @@ this with to-do items than with projects or headings."
     (message "[Update Org buffer %s]"
              (file-name-nondirectory (buffer-file-name)))
     ;; (sit-for 1.5)
-    (let ((cache-long-scans nil)      ; Make `forward-line' much faster and
+    (let ((cache-long-scans nil)        ; Make `forward-line' much faster and
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
           (fly-state (and (boundp 'flyspell-mode)
