@@ -6991,6 +6991,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Reading mail with Gnus.
     (setq read-mail-command 'gnus))
 
+)                                       ; Chapter 34 ends here.
+
 ;;* 36 (info "(emacs)Document View")
 
 (leuven--chapter leuven-load-chapter-36-document-view "36 Document Viewing"

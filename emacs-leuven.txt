@@ -13092,6 +13092,8 @@ Minimal configuration for sending a bug report, for example.
 
     ;; Reading mail with Gnus.
     (setq read-mail-command 'gnus))
+
+)                                       ; Chapter 34 ends here.
 #+end_src
 
 * Document Viewing
