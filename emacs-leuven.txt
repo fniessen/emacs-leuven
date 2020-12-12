@@ -619,7 +619,6 @@ like this into your configuration file:
             dumb-jump
             ;; emacs-eclim
             emr
-            ess
             expand-region
             fancy-narrow
             flycheck

@@ -409,7 +409,6 @@ If not, just print a message."
             dumb-jump
             ;; emacs-eclim
             emr
-            ess
             expand-region
             fancy-narrow
             flycheck

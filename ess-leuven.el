@@ -1,4 +1,6 @@
 ;; ESS: Emacs Speaks Statistics
+(add-to-list 'package-selected-packages 'ess)
+
 (autoload 'R "ess-site"
   "Call 'R', the 'GNU S' system from the R Foundation." t)
 
