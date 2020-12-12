@@ -1,7 +1,3 @@
-;;** Insidious bbdb
-
-(leuven--section "Insidious bbdb")
-
 ;;* (info "(bbdb)Installation")
 
 (unless (ignore-errors (load-library "bbdb-autoloads")) ; "hand-made"
@@ -150,8 +146,6 @@
                                    "\\([ \t\n]+\\([^ \t\n]+\\)\\)?")
                            'face
                            "\\1\\3\\5\\7")))))
-
-)                                       ; Chapter 34 ends here.
 
 (provide 'bbdb-leuven)
 
