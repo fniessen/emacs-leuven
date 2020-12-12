@@ -16,9 +16,9 @@
 
   ;; If t, the highlight entire xact with state.
   (setq ledger-fontify-xact-state-overrides nil))
-                                      ; Don't override the highlighting of
-                                      ; each posted item in a xact if it is
-                                      ; cleared/pending. XXX
+                                        ; Don't override the highlighting of
+                                        ; each posted item in a xact if it is
+                                        ; cleared/pending. XXX
 
 (with-eval-after-load "ledger-init"
 
