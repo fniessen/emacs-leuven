@@ -13595,7 +13595,7 @@ Basic config for MS SQL.
   (add-to-list 'process-coding-system-alist '("sqlcmd" . cp850-dos))
   (add-to-list 'process-coding-system-alist '("osql" . cp850-dos))
 
-  ;; (setq sql-ms-options (quote ("-w" "65535" "-h" "20000" )))
+  ;; (setq sql-ms-options '("-w" "65535" "-h" "20000" ))
   (setq sql-ms-options '("-w" "65535"))
 #+end_src
 
