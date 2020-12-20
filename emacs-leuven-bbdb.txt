@@ -190,7 +190,7 @@ which interface with Skype to make a phone call.
 * Feature
 
 #+begin_src emacs-lisp
-(provide 'bbdb-leuven)
+(provide 'emacs-leuven-bbdb)
 #+end_src
 
 * File Local Variables

@@ -246,7 +246,7 @@ necessary to move point to before or after the body.
 * Feature
 
 #+begin_src emacs-lisp
-(provide 'ess-leuven)
+(provide 'emacs-leuven-ess)
 #+end_src
 
 * File Local Variables

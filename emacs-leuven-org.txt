@@ -4413,7 +4413,7 @@ Link emails from Org files.
 * Feature
 
 #+begin_src emacs-lisp
-(provide 'org-leuven)
+(provide 'emacs-leuven-org)
 #+end_src
 
 * File Local Variables

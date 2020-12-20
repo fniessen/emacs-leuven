@@ -32,7 +32,7 @@
   ;; Flycheck integration for ledger files.
   (try-require 'flycheck-ledger))
 
-(provide 'ledger-leuven)
+(provide 'emacs-leuven-ledger)
 
 ;; This is for the sake of Emacs.
 ;; Local Variables:

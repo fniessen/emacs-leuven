@@ -147,7 +147,7 @@
                            'face
                            "\\1\\3\\5\\7")))))
 
-(provide 'bbdb-leuven)
+(provide 'emacs-leuven-bbdb)
 
 ;; This is for the sake of Emacs.
 ;; Local Variables:

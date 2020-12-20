@@ -2814,7 +2814,7 @@ Ignore non Org buffers."
   ;; Add the city.
   (setq org-google-weather-format "%C %i %c, %l°-%h°"))
 
-(provide 'org-leuven)
+(provide 'emacs-leuven-org)
 
 ;; This is for the sake of Emacs.
 ;; Local Variables:

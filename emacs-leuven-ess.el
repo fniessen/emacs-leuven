@@ -82,7 +82,7 @@
 
   )
 
-(provide 'ess-leuven)
+(provide 'emacs-leuven-ess)
 
 ;; This is for the sake of Emacs.
 ;; Local Variables:

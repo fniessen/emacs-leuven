@@ -57,7 +57,7 @@
 * Feature
 
 #+begin_src emacs-lisp
-(provide 'ledger-leuven)
+(provide 'emacs-leuven-ledger)
 #+end_src
 
 * File Local Variables
