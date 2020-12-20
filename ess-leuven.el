@@ -15,7 +15,7 @@
 ;; New inferior ESS process appears in another window in the current frame.
 (setq inferior-ess-same-window nil)
 
-(when leuven--cygwin-p                  ; Using R from Cygwin.
+(when (eq system-type 'cygwin)          ; Running a Cygwin version of Emacs.
 
   ;; Safe 8.3 name for 32-bit programs.
   (setq ess-program-files "c:/PROGRA~2")

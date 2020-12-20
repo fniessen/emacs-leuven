@@ -56,7 +56,7 @@ that the directories for ~R~ or ~Rterm~ (see ~inferior-R-program-name~) are in t
 #+end_src
 
 #+begin_src emacs-lisp
-(when leuven--cygwin-p                  ; Using R from Cygwin.
+(when (eq system-type 'cygwin)          ; Running a Cygwin version of Emacs.
 
   ;; Safe 8.3 name for 32-bit programs.
   (setq ess-program-files "c:/PROGRA~2")
