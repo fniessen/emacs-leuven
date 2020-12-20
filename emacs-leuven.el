@@ -6113,12 +6113,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Add root directories that store the snippets.
     (let ((leuven-snippets              ; Additional YASnippets.
-           (concat leuven--directory "snippets"))
-          (org-snippets
-           (concat leuven--local-repos-directory "yasnippet-org-mode")))
-
-      (when (file-directory-p org-snippets)
-        (add-to-list 'yas-snippet-dirs org-snippets))
+           (concat leuven--directory "snippets")))
 
       (when (file-directory-p leuven-snippets)
         (add-to-list 'yas-snippet-dirs leuven-snippets)))
@@ -6304,7 +6299,7 @@ a clean buffer we're an order of magnitude laxer about checking."
           (append ac-modes
                   '(change-log-mode
                     latex-mode
-                    org-mode
+                    ;; org-mode
                     prog-mode           ; Programming modes.
                     snippet-mode
                     sql-mode
@@ -6842,14 +6837,6 @@ a clean buffer we're an order of magnitude laxer about checking."
                                           ;! files it opened itself -- as they
                                           ;! weren't already opened), to be
                                           ;! finally re-opened!
-
-      ;; ;; Add today's appointments (found in `org-agenda-files') each time
-      ;; ;; such a file is saved.
-      ;; (add-hook 'after-save-hook          ; VERY TIME CONSUMING (~ 30 s) at each save...
-      ;;           #'(lambda ()
-      ;;             (when (and (derived-mode-p 'org-mode) ; ... of an Org
-      ;;                        (org-agenda-file-p)) ; agenda file...
-      ;;               (org-agenda-to-appt))))
       )
 
     )                                   ; with-eval-after-load "appt" ends here.

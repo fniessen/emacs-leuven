@@ -37,6 +37,39 @@
     (advice-add 'org-export-as :around #'org-export-as--org-export-as-around)
 #+end_src
 
+#+begin_src emacs-lisp :tangle no
+  ;; XXX Enable iff electric-pair-mode is enabled!
+
+  ;; ;; Enable automatic parens pairing (Electric Pair mode).
+  ;; (electric-pair-mode 1)
+
+  (defvar org-electric-pairs
+    '(
+      ;; (?\* . ?\*)
+      ;; (?/ . ?/)
+      ;; (?_ . ?_)
+      ;; (?= . ?=)                      ; Too much used in code blocks.
+      (?~ . ?~))
+    "Electric pairs for Org mode.")     ; See `org-emphasis-alist'.
+
+  (defun leuven--org-add-electric-pairs ()
+    (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
+
+  (add-hook 'org-mode-hook #'leuven--org-add-electric-pairs)
+#+end_src
+
+  Alternatives: http://emacs.stackexchange.com/questions/17284/adding-tilde-to-electric-pairs-in-org-mode/17341#17341
+
+#+begin_src emacs-lisp
+    ;; Add root directories that store the snippets.
+    (let ((org-snippets
+           (concat leuven--local-repos-directory "yasnippet-org-mode")))
+
+      (when (file-directory-p org-snippets)
+        (add-to-list 'yas-snippet-dirs org-snippets))
+#+end_src
+
 * XXX
 :PROPERTIES:
 :ID:       737b836b-ac1f-4120-94ca-c9e0282268f0

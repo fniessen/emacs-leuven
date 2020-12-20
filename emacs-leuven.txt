@@ -34,7 +34,7 @@ But -- that's the joy of Emacs -- nearly everything can be adjusted!  Hence,
 this set of customizations (from one pathological Emacs tweaker) to "short-cut"
 that initial process.
 
-Citations:
+Quotations:
 
 - "Show me your ~/.emacs and I will tell you who you are." \\
   -- Bogdan Maryniuk
@@ -7996,30 +7996,6 @@ Balanced editing: inserting two matching parentheses at once, etc.
   + in a mixed parenthesis situation with ~[]~'s and ~()~'s, it tries to do
     sensible things
 
-#+begin_src emacs-lisp :tangle no
-  ;; XXX Enable iff electric-pair-mode is enabled!
-
-  ;; ;; Enable automatic parens pairing (Electric Pair mode).
-  ;; (electric-pair-mode 1)
-
-  (defvar org-electric-pairs
-    '(
-      ;; (?\* . ?\*)
-      ;; (?/ . ?/)
-      ;; (?_ . ?_)
-      ;; (?= . ?=)                      ; Too much used in code blocks.
-      (?~ . ?~))
-    "Electric pairs for Org mode.")     ; See `org-emphasis-alist'.
-
-  (defun leuven--org-add-electric-pairs ()
-    (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
-    (setq-local electric-pair-text-pairs electric-pair-pairs)) ; In comments.
-
-  (add-hook 'org-mode-hook #'leuven--org-add-electric-pairs)
-#+end_src
-
-  Alternatives: http://emacs.stackexchange.com/questions/17284/adding-tilde-to-electric-pairs-in-org-mode/17341#17341
-
   As of Emacs 24.4, this mode is greatly improved and matches autopair.el in
   functionality (also recommended by the autopair author).
 
@@ -11275,12 +11251,7 @@ Load additional snippets.
 #+begin_src emacs-lisp
     ;; Add root directories that store the snippets.
     (let ((leuven-snippets              ; Additional YASnippets.
-           (concat leuven--directory "snippets"))
-          (org-snippets
-           (concat leuven--local-repos-directory "yasnippet-org-mode")))
-
-      (when (file-directory-p org-snippets)
-        (add-to-list 'yas-snippet-dirs org-snippets))
+           (concat leuven--directory "snippets")))
 
       (when (file-directory-p leuven-snippets)
         (add-to-list 'yas-snippet-dirs leuven-snippets)))
@@ -11740,7 +11711,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
           (append ac-modes
                   '(change-log-mode
                     latex-mode
-                    org-mode
+                    ;; org-mode
                     prog-mode           ; Programming modes.
                     snippet-mode
                     sql-mode
@@ -12902,14 +12873,6 @@ Or better look at the ~alert~ package?
                                           ;! files it opened itself -- as they
                                           ;! weren't already opened), to be
                                           ;! finally re-opened!
-
-      ;; ;; Add today's appointments (found in `org-agenda-files') each time
-      ;; ;; such a file is saved.
-      ;; (add-hook 'after-save-hook          ; VERY TIME CONSUMING (~ 30 s) at each save...
-      ;;           #'(lambda ()
-      ;;             (when (and (derived-mode-p 'org-mode) ; ... of an Org
-      ;;                        (org-agenda-file-p)) ; agenda file...
-      ;;               (org-agenda-to-appt))))
       )
 #+end_src
 
