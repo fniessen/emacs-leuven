@@ -12,6 +12,31 @@
 
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
+* To move
+
+#+begin_src emacs-lisp
+    ;; Enable on-the-fly spell checking.
+    (add-hook 'org-mode-hook
+              #'(lambda ()
+                  (if (or (eq (aref (buffer-name) 0) ?\s)
+                                        ; Buffer starting with " *".
+                          (and (boundp 'org-babel-exp-reference-buffer)
+                               org-babel-exp-reference-buffer))
+                                        ; Export buffer.
+                      (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
+                    (message "[Turning on Flyspell mode in `%s']" (buffer-name))
+                    (flyspell-mode))))
+#+end_src
+
+
+#+begin_src emacs-lisp :tangle no
+    (defun org-export-as--org-export-as-around (orig-fun &rest args)
+      "Turn off Text mode hooks (Flyspell, etc.) when exporting current Org buffer."
+      (let ((text-mode-hook nil))
+        (apply orig-fun args)))
+    (advice-add 'org-export-as :around #'org-export-as--org-export-as-around)
+#+end_src
+
 * XXX
 :PROPERTIES:
 :ID:       737b836b-ac1f-4120-94ca-c9e0282268f0

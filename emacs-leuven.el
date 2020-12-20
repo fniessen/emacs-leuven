@@ -924,7 +924,7 @@ These packages are neither built-in nor already installed nor ignored."
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
   ;; Add the ability to cut the current line without marking it (no selection).
-  (defun kill-region--slick-cut (beg end)
+  (defun kill-region--slick-cut (beg end &optional region)
     "When called with no active region, kill the current line instead."
     (interactive
      (if (use-region-p)
@@ -933,7 +933,7 @@ These packages are neither built-in nor already installed nor ignored."
   (advice-add 'kill-region :before #'kill-region--slick-cut)
 
   ;; Add the ability to copy the current line without marking it (no selection).
-  (defun kill-ring-save--slick-copy (beg end)
+  (defun kill-ring-save--slick-copy (beg end &optional region)
     "When called with no active region, copy the current line instead."
     (interactive
      (if (use-region-p)
@@ -1874,18 +1874,6 @@ Should be selected from `fringe-bitmaps'.")
     (add-hook 'prog-mode-hook
               #'(lambda ()
                   (setq ispell-dictionary "american")))
-
-    ;; Enable on-the-fly spell checking.
-    (add-hook 'org-mode-hook
-              #'(lambda ()
-                  (if (or (eq (aref (buffer-name) 0) ?\s)
-                                        ; Buffer starting with " *".
-                          (and (boundp 'org-babel-exp-reference-buffer)
-                               org-babel-exp-reference-buffer))
-                                        ; Export buffer.
-                      (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
-                    (message "[Turning on Flyspell mode in `%s']" (buffer-name))
-                    (flyspell-mode))))
 
     ;; Prevent Flyspell from finding mistakes in the code, well in comments and
     ;; strings.
@@ -7743,6 +7731,8 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; allow any scalable font
   (setq scalable-fonts-allowed t)
 
+  ;; (global-set-key (kbd "C-+")            #'text-scale-increase)
+  ;; (global-set-key (kbd "C--")            #'text-scale-decrease)
   (global-set-key (kbd "<C-wheel-up>")   #'text-scale-increase)
   (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
 

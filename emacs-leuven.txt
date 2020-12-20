@@ -1514,7 +1514,7 @@ what they normally do: kill or copy it.
 
 #+begin_src emacs-lisp
   ;; Add the ability to cut the current line without marking it (no selection).
-  (defun kill-region--slick-cut (beg end)
+  (defun kill-region--slick-cut (beg end &optional region)
     "When called with no active region, kill the current line instead."
     (interactive
      (if (use-region-p)
@@ -1523,7 +1523,7 @@ what they normally do: kill or copy it.
   (advice-add 'kill-region :before #'kill-region--slick-cut)
 
   ;; Add the ability to copy the current line without marking it (no selection).
-  (defun kill-ring-save--slick-copy (beg end)
+  (defun kill-ring-save--slick-copy (beg end &optional region)
     "When called with no active region, copy the current line instead."
     (interactive
      (if (use-region-p)
@@ -3261,20 +3261,6 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
                   (setq ispell-dictionary "american")))
 #+end_src
 
-#+begin_src emacs-lisp
-    ;; Enable on-the-fly spell checking.
-    (add-hook 'org-mode-hook
-              #'(lambda ()
-                  (if (or (eq (aref (buffer-name) 0) ?\s)
-                                        ; Buffer starting with " *".
-                          (and (boundp 'org-babel-exp-reference-buffer)
-                               org-babel-exp-reference-buffer))
-                                        ; Export buffer.
-                      (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
-                    (message "[Turning on Flyspell mode in `%s']" (buffer-name))
-                    (flyspell-mode))))
-#+end_src
-
 *************** TODO Enable Flyspell in other modes deriving from Text (HTML, etc.)
 
 #+begin_src emacs-lisp :tangle no
@@ -3283,12 +3269,6 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
               #'(lambda ()
                   (message "[Turning on Flyspell mode in `%s']" (buffer-name))
                   (flyspell-mode)))
-
-    (defun org-export-as--org-export-as-around (orig-fun &rest args)
-      "Turn off Text mode hooks (Flyspell, etc.) when exporting current Org buffer."
-      (let ((text-mode-hook nil))
-        (apply orig-fun args)))
-    (advice-add 'org-export-as :around #'org-export-as--org-export-as-around)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -14582,6 +14562,8 @@ Zoom in/out (increase/decrease the font size) with ~Ctrl~ key and scroll wheel o
 the mouse:
 
 #+begin_src emacs-lisp
+  ;; (global-set-key (kbd "C-+")            #'text-scale-increase)
+  ;; (global-set-key (kbd "C--")            #'text-scale-decrease)
   (global-set-key (kbd "<C-wheel-up>")   #'text-scale-increase)
   (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
 
