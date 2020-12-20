@@ -1,3 +1,20 @@
+;; Require a feature/library if available; if not, fail silently.
+(unless (fboundp 'try-require)
+  (defun try-require (feature)
+    "Attempt to load a FEATURE (or library).
+Return true if the library given as argument is successfully loaded.
+If not, just print a message."
+    (condition-case err
+        (progn
+          (if (stringp feature)
+              (load-library feature)
+            (require feature))
+          t)                            ; Necessary for correct behavior in
+                                        ; conditional expressions.
+      (file-error
+       (message "[Requiring `%s'... missing]" feature)
+       nil))))
+
 ;; (info "(org)Top") outline-based notes management and organizer
 
 ;;* 1 (info "(org)Introduction")
@@ -110,7 +127,7 @@
 
   ;;** 1.3 (info "(org)Activation")
 
-  (leuven--section "1.3 (org)Activation")
+  (message "1.3 (org)Activation")
 
   ;; Insert the first line setting Org mode in empty files.
   (setq org-insert-mode-line-in-empty-file t))
@@ -148,7 +165,7 @@
 
 ;;** (info "(org)Headlines")
 
-(leuven--section "2.2 (org)Headlines")
+(message "2.2 (org)Headlines")
 
 ;; `C-a' and `C-e' behave specially in headlines and items.
 (setq org-special-ctrl-a/e 'reversed)
@@ -247,7 +264,7 @@
 
 ;;** (info "(org)Visibility cycling")
 
-(leuven--section "2.3 (org)Visibility cycling")
+(message "2.3 (org)Visibility cycling")
 
 ;; Switch to OVERVIEW (fold all) at startup.
 (setq org-startup-folded t)
@@ -264,7 +281,7 @@
 
 ;;** (info "(org)Motion")
 
-(leuven--section "2.4 (org)Motion")
+(message "2.4 (org)Motion")
 
 ;; Outline-node based navigation similar to the behavior of paredit-mode in
 ;; Lisp files.
@@ -297,7 +314,7 @@
 
 ;;** (info "(org)Structure editing")
 
-(leuven--section "2.5 (org)Structure editing")
+(message "2.5 (org)Structure editing")
 
 ;; Don't adapt indentation to outline node level.
 (setq org-adapt-indentation nil)
@@ -307,7 +324,7 @@
 
 ;;** (info "(org)Sparse trees")
 
-(leuven--section "2.6 (org)Sparse trees")
+(message "2.6 (org)Sparse trees")
 
 (with-eval-after-load "org"
 
@@ -318,7 +335,7 @@
 
 ;;** (info "(org)Plain lists")
 
-(leuven--section "2.7 (org)Plain lists")
+(message "2.7 (org)Plain lists")
 
 ;; Maximum indentation for the second line of a description list.
 (setq org-description-max-indent 3)
@@ -330,7 +347,7 @@
 
 ;;** (info "(org)Footnotes")
 
-(leuven--section "2.10 (org)Footnotes")
+(message "2.10 (org)Footnotes")
 
 ;; Use `C-c C-x f' to add a footnote, to go back to the message
 ;; *and* to go to a footnote.
@@ -342,14 +359,14 @@
 
 ;;** 3.1 The (info "(org)Built-in table editor")
 
-(leuven--section "3.1 The (org)Built-in table editor")
+(message "3.1 The (org)Built-in table editor")
 
 ;; Default export parameters for `org-table-export'.
 (setq org-table-export-default-format "orgtbl-to-csv")
 
 ;;** 3.5 (info "(org)The spreadsheet")
 
-(leuven--section "3.5 (org)The spreadsheet")
+(message "3.5 (org)The spreadsheet")
 
 (with-eval-after-load "org-table"
   ;; Some Calc mode settings for use in `calc-eval' for table formulas.
@@ -428,7 +445,7 @@ This makes ID links quasi-bidirectional."
 
 ;;** 5.1 (info "(org)TODO basics") functionality
 
-(leuven--section "5.1 (org)TODO basics functionality")
+(message "5.1 (org)TODO basics functionality")
 
 ;; 5.1 Select a TODO state and bypass any logging associated with that.
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
@@ -438,7 +455,7 @@ This makes ID links quasi-bidirectional."
 
 ;;** 5.2 Use of (info "(org)TODO extensions")
 
-(leuven--section "5.2 Use of (org)TODO extensions")
+(message "5.2 Use of (org)TODO extensions")
 
 ;; List of TODO entry keyword sequences (+ fast access keys and specifiers
 ;; for state change logging).
@@ -552,7 +569,7 @@ This makes ID links quasi-bidirectional."
 
 ;;** 5.3 (info "(org)Progress logging")
 
-(leuven--section "5.3 (org)Progress logging")
+(message "5.3 (org)Progress logging")
 
 ;; ;; 5.3.1 Don't insert a CLOSED time stamp each time a TODO entry is marked DONE.
 ;; (setq org-log-done nil)
@@ -584,7 +601,7 @@ This makes ID links quasi-bidirectional."
 
 ;;** 5.5 (info "(org)Breaking down tasks")
 
-(leuven--section "5.5 (org)Breaking down tasks")
+(message "5.5 (org)Breaking down tasks")
 
 ;; Automatically change a TODO entry to DONE when all children are done.
 (defun leuven--org-summary-todo (n-done n-not-done)
@@ -675,7 +692,7 @@ a parent headline."
 
 ;;** 7.1 (info "(org)Property syntax")
 
-(leuven--section "7.1 (org)Property syntax")
+(message "7.1 (org)Property syntax")
 
 ;; List of property/value pairs that can be inherited by any entry.
 (setq org-global-properties
@@ -687,7 +704,7 @@ a parent headline."
 
 ;;* 8 (info "(org)Dates and Times")
 
-(leuven--section "8 (org)Dates and Times")
+(message "8 (org)Dates and Times")
 
 ;; Insinuate appt if Org mode is loaded.
 (with-eval-after-load "org"
@@ -697,7 +714,7 @@ a parent headline."
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
-(leuven--section "8.2 (org)Creating time stamps")
+(message "8.2 (org)Creating time stamps")
 
 ;; Prefer the future for incomplete dates.
 (setq org-read-date-prefer-future 'time)
@@ -717,7 +734,7 @@ a parent headline."
 
 ;;** 8.3 (info "(org)Deadlines and scheduling")
 
-(leuven--section "8.3 (org)Deadlines and scheduling")
+(message "8.3 (org)Deadlines and scheduling")
 
 ;; Information to record when the scheduling date is modified.
 (setq org-log-reschedule nil)
@@ -752,7 +769,7 @@ a parent headline."
 
 ;;** 8.4 (info "(org)Clocking work time")
 
-(leuven--section "8.4 (org)Clocking work time")
+(message "8.4 (org)Clocking work time")
 
 (global-set-key (kbd "C-c C-x C-i") #'org-clock-in)
 (global-set-key (kbd "C-c C-x C-j") #'org-clock-goto)
@@ -875,7 +892,7 @@ This is a useful function for adding to `kill-emacs-query-functions'."
 
 ;;** 8.5 (info "(org)Effort estimates")
 
-(leuven--section "8.5 (org)Effort estimates")
+(message "8.5 (org)Effort estimates")
 
 ;; Add an effort estimate on the fly when clocking in.
 (defun leuven--org-ask-effort ()
@@ -892,7 +909,7 @@ This is a useful function for adding to `kill-emacs-query-functions'."
 
 ;;* 9 (info "(org)Capture - Refile - Archive")
 
-(leuven--section "9.1 (org)Capture")
+(message "9.1 (org)Capture")
 
 ;; 9.1.2 Directory with Org files.
 (setq org-directory
@@ -1065,7 +1082,7 @@ From the address <%a>"
 ;; ;; 4.6 Shortcut links.
 ;; (add-to-list 'org-link-abbrev-alist '(("att" . org-attach-expand-link)))
 
-(leuven--section "9.4 (org)Protocols")
+(message "9.4 (org)Protocols")
 
 ;; 9.4 Capture from Firefox (to store links and text).
 (with-eval-after-load "org-protocol"
@@ -1120,14 +1137,14 @@ From the address <%a>"
 
   (setq org-refile-target-verify-function 'bh/verify-refile-target)
 
-  (leuven--section "9.6 (org)Archiving")
+  (message "9.6 (org)Archiving")
 
   ;; 9.6.1 Subtrees should be archived in the current file.
   (setq org-archive-location "::* Archive")
 
   )
 
-(leuven--section "10 (org)Agenda Views")
+(message "10 (org)Agenda Views")
 
 ;;* 10 (info "(org)Agenda Views")
 
@@ -1151,7 +1168,7 @@ From the address <%a>"
 
   ;;** 10.1 (info "(org)Agenda files")
 
-  (leuven--section "10.1 (org)Agenda files")
+  (message "10.1 (org)Agenda files")
 
   (when (boundp 'org-agenda-files)
     (message "[Found %s entries in `org-agenda-files']"
@@ -1161,7 +1178,7 @@ From the address <%a>"
 
   ;;** 10.2 (info "(org)Agenda dispatcher")
 
-  (leuven--section "10.2 (org)Agenda dispatcher")
+  (message "10.2 (org)Agenda dispatcher")
 
   ;; Enable sticky agenda: `q' key will bury agenda buffers (instead of
   ;; killing).
@@ -1169,7 +1186,7 @@ From the address <%a>"
 
   ;;** 10.3 The (info "(org)Built-in agenda views")
 
-  (leuven--section "10.3 (org)Built-in agenda views")
+  (message "10.3 (org)Built-in agenda views")
 
   ;; Default duration for appointments that only have a starting time.
   (setq org-agenda-default-appointment-duration nil)
@@ -1228,7 +1245,7 @@ From the address <%a>"
 
   ;;** 10.4 (info "(org)Presentation and sorting")
 
-  (leuven--section "10.4 (org)Presentation and sorting")
+  (message "10.4 (org)Presentation and sorting")
 
   ;; 10.4 Format specifications for the prefix of items in the agenda views.
   (setq org-agenda-prefix-format
@@ -1358,7 +1375,7 @@ From the address <%a>"
 
 ;;** 10.5 (info "(org)Agenda commands")
 
-(leuven--section "10.5 (org)Agenda commands")
+(message "10.5 (org)Agenda commands")
 
 ;; Get a compact view during follow mode in the agenda.
 (defun leuven--compact-follow ()
@@ -1504,7 +1521,7 @@ Currently: 08:00-21:59."
 
 ;;** 10.6 (info "(org)Custom agenda views")
 
-(leuven--section "10.6 (org)Custom agenda views")
+(message "10.6 (org)Custom agenda views")
 
 (with-eval-after-load "org-agenda"
   (let ((leuven-org-agenda-views
@@ -1535,7 +1552,7 @@ Currently: 08:00-21:59."
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
-(leuven--section "10.7 (org)Exporting Agenda Views")
+(message "10.7 (org)Exporting Agenda Views")
 
 ;; 10.7 Alist of variable/value pairs that should be active during agenda
 ;; export.
@@ -1547,7 +1564,7 @@ Currently: 08:00-21:59."
 
 ;;** 10.8 (info "(org)Agenda column view")
 
-(leuven--section "10.8 (org)Agenda column view")
+(message "10.8 (org)Agenda column view")
 
 ;; 10.8 Default column format, if no other format has been defined.
 (setq org-columns-default-format
@@ -1606,7 +1623,7 @@ this with to-do items than with projects or headings."
 
 ;;* 11 (info "(org)Markup")
 
-(leuven--section "11 (org)Markup")
+(message "11 (org)Markup")
 
 (with-eval-after-load "org-faces"
 
@@ -1785,7 +1802,7 @@ or added into the given directory, defaulting to the current one."
 
 ;;** 12.2 (info "(org)Export options")
 
-(leuven--section "12.2 (org)Export options")
+(message "12.2 (org)Export options")
 
 ;; Org generic export engine.
 (with-eval-after-load "ox"
@@ -1890,7 +1907,7 @@ or added into the given directory, defaulting to the current one."
 
 ;;** (info "(emacs-goodies-el)htmlize")
 
-(leuven--section "(emacs-goodies-el)htmlize")
+(message "(emacs-goodies-el)htmlize")
 
 ;; HTML-ize font-lock buffers.
 (autoload 'htmlize-buffer "htmlize"
@@ -1947,7 +1964,7 @@ buffer."
 
 ;;** 12.6 (info "(org)LaTeX and PDF export")
 
-(leuven--section "12.6 (org)LaTeX and PDF export")
+(message "12.6 (org)LaTeX and PDF export")
 
 ;; LaTeX back-end.
 (with-eval-after-load "ox-latex"
@@ -2001,7 +2018,7 @@ buffer."
                      "latexmk")
                     (t
                      (file-name-base org-latex-pdf-engine-full-path))))
-                                          ; "xelatex" or "pdflatex".
+                                        ; "xelatex" or "pdflatex".
 
              (latex-file
               (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
@@ -2153,7 +2170,7 @@ parent."
 
 ;;* 13 (info "(org)Publishing")
 
-(leuven--section "13 (org)Publishing")
+(message "13 (org)Publishing")
 
 (with-eval-after-load "ox-publish"
 
@@ -2186,7 +2203,7 @@ parent."
 
 ;;** 14.2 (info "(org)Editing source code")
 
-(leuven--section "14.2 (org)Editing source code")
+(message "14.2 (org)Editing source code")
 
 (with-eval-after-load "org-src"
 
@@ -2290,7 +2307,7 @@ parent."
 
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
-(leuven--section "14.5 (org)Evaluating code blocks")
+(message "14.5 (org)Evaluating code blocks")
 
 ;; I don't want to execute code blocks with `C-c C-c' (evaluate code
 ;; block only with `C-c C-v e').
@@ -2315,7 +2332,7 @@ parent."
 
 ;;** 14.7 (info "(org)Languages")
 
-(leuven--section "14.7 (org)Languages")
+(message "14.7 (org)Languages")
 
 ;; FIXME Test executable-find (of Rterm, gnuplot, ruby, etc.) before
 ;; setting language to yes...
@@ -2391,7 +2408,7 @@ parent."
 
 ;;** 14.6 (info "(org)Library of Babel")
 
-(leuven--section "14.6 (org)Library of Babel")
+(message "14.6 (org)Library of Babel")
 
 (with-eval-after-load "org"
 
@@ -2402,7 +2419,7 @@ parent."
     (when (file-exists-p lob-file)
       (org-babel-lob-ingest lob-file))))
 
-(leuven--section "14.11 (org)Key bindings and useful functions")
+(message "14.11 (org)Key bindings and useful functions")
 
 (with-eval-after-load "ob-core"
 
@@ -2499,7 +2516,7 @@ Ignore non Org buffers."
 
 ;;** 15.2 (info "(org)Easy Templates")
 
-(leuven--section "15.2 (org)Easy Templates")
+(message "15.2 (org)Easy Templates")
 
 (with-eval-after-load "org"
   (message "[... Org Easy Templates]")
@@ -2515,7 +2532,7 @@ Ignore non Org buffers."
 
 ;;** 15.3 (info "(org)Speed keys")
 
-(leuven--section "15.3 (org)Speed keys")
+(message "15.3 (org)Speed keys")
 
 (with-eval-after-load "org"
   (message "[... Org Speek keys]")
@@ -2553,7 +2570,7 @@ Ignore non Org buffers."
 
 ;;** 15.4 (info "(org)Code evaluation security") issues
 
-(leuven--section "15.4 (org)Code evaluation security issues")
+(message "15.4 (org)Code evaluation security issues")
 
 (with-eval-after-load "ob-core"
 
@@ -2570,7 +2587,7 @@ Ignore non Org buffers."
 
 ;;** 15.10 (info "(org)Interaction")
 
-(leuven--section "15.10 (org)Interaction")
+(message "15.10 (org)Interaction")
 
 ;; Keep my encrypted data (like account passwords) in my Org mode files with
 ;; a special tag instead.
