@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+SETUPFILE: ~/org/theme-readtheorg.setup
 
 * Tasks                                                               :noexport:
   :PROPERTIES:
@@ -185,7 +185,7 @@ Citations:
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2017 Fabrice Niessen
+;; Copyright (C) 1999-2021 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven

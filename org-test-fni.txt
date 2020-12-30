@@ -8,7 +8,7 @@
 
 #+PROPERTY:  header-args :tangle yes :padline yes :eval no
 
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+SETUPFILE: ~/org/theme-readtheorg.setup
 
 * Extra
 

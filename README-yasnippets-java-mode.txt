@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline no :tangle yes
 
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+SETUPFILE: ~/org/theme-readtheorg.setup
 
 * Overview
 
