@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+SETUPFILE: ~/org/theme-readtheorg.setup
 
 * Evaluating the current setup
 
@@ -11499,12 +11499,14 @@ SumatraPDF as your PDF viewer.
       (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
       "Path to the SumatraPDF executable.")
 
-    ;; Use a saner PDF viewer (evince, SumatraPDF).
-    (setcdr (assoc "^pdf$" TeX-output-view-style)
-            (cond ((or leuven--win32-p leuven--cygwin-p)
-                   `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
-                  (t
-                   '("." "evince %o"))))
+    ;; Incompatible with TeX 13. Viewer configuration is now only supported via
+    ;; TeX-view-program-selection.
+    ;; ;; Use a saner PDF viewer (evince, SumatraPDF).
+    ;; (setcdr (assoc "^pdf$" TeX-output-view-style)
+    ;;         (cond ((or leuven--win32-p leuven--cygwin-p)
+    ;;                `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
+    ;;               (t
+    ;;                '("." "evince %o"))))
 
     ;; For AUCTeX 11.86+.
     (when (or leuven--win32-p leuven--cygwin-p)
@@ -14573,7 +14575,11 @@ Or use Tig?  See http://blogs.atlassian.com/2013/05/git-tig/.
 VC can show you the *history of changes* to a *particular line of code*:
 
 1. Run the command ~vc-annotate~ (with either ~M-x vc-annotate~ or ~C-x v g~).
-2. Each line will show up with its revision, like a normal ~blame~.
+2. Each line will show up with its *revision*, like a normal ~blame~, and a *heatmap*.
+
+*************** TODO Customize vc-annotate colors to be cold after 90 days
+*************** END
+
 3. Pressing ~a~ (~vc-annotate-revision-previous-to-line~) will navigate to the
    revision before the revision at the line you're on.
 

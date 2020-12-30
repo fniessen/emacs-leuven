@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20201129.1859
+;; Version: 20201230.1143
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20201129.1859"
+(defconst leuven--emacs-version "20201230.1143"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6883,12 +6883,14 @@ this with to-do items than with projects or headings."
       (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
       "Path to the SumatraPDF executable.")
 
-    ;; Use a saner PDF viewer (evince, SumatraPDF).
-    (setcdr (assoc "^pdf$" TeX-output-view-style)
-            (cond ((or leuven--win32-p leuven--cygwin-p)
-                   `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
-                  (t
-                   '("." "evince %o"))))
+    ;; Incompatible with TeX 13. Viewer configuration is now only supported via
+    ;; TeX-view-program-selection.
+    ;; ;; Use a saner PDF viewer (evince, SumatraPDF).
+    ;; (setcdr (assoc "^pdf$" TeX-output-view-style)
+    ;;         (cond ((or leuven--win32-p leuven--cygwin-p)
+    ;;                `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
+    ;;               (t
+    ;;                '("." "evince %o"))))
 
     ;; For AUCTeX 11.86+.
     (when (or leuven--win32-p leuven--cygwin-p)
