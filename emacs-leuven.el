@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210207.1046
+;; Version: 20210207.1050
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210207.1046"
+(defconst leuven--emacs-version "20210207.1050"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -5791,6 +5791,19 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ""))))))
 
   (define-key vc-prefix-map (kbd "=") #'leuven-vc-diff)
+
+(setq vc-annotate-display-mode nil)
+
+;; http://www.onerussian.com/Linux/.files/dot_emacs
+(setq vc-annotate-background "seashell")
+(setq vc-annotate-very-old-color "black")
+
+(setq vc-annotate-color-map
+  '((  1.0 . "#FFCCCC") ; red
+    (  7.0 . "#FFE4CC") ; orange
+    ( 30.0 . "#DEFFCC") ; green
+    ( 90.0 . "#CCE4FF") ; blue
+    (360.0 . "#C9C9C9"))) ; white
 
 ;;** 28.2 (info "(emacs)Change Log")
 

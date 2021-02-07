@@ -10417,6 +10417,32 @@ can use the following keys to navigate historic versions of the file:
   (define-key vc-prefix-map (kbd "=") #'leuven-vc-diff)
 #+end_src
 
+Today I learned that it is also interactive. I can cycle through revisions using
+p and n, open the file at a specified revision with f, view the log with l, and
+show a diff with d or changeset diff with D. (Unfortunately, the diff is ugly
+and not in color.)
+
+
+The best command in vc-annotate is "a": Reruns annotate from the revision _prior_
+to the revision that last changed the current line, so you can dig deeper into
+that line's raison d'etre, skipping uninteresting commits like whitespace
+changes.
+
+#+begin_src emacs-lisp
+(setq vc-annotate-display-mode nil)
+
+;; http://www.onerussian.com/Linux/.files/dot_emacs
+(setq vc-annotate-background "seashell")
+(setq vc-annotate-very-old-color "black")
+
+(setq vc-annotate-color-map
+  '((  1.0 . "#FFCCCC") ; red
+    (  7.0 . "#FFE4CC") ; orange
+    ( 30.0 . "#DEFFCC") ; green
+    ( 90.0 . "#CCE4FF") ; blue
+    (360.0 . "#C9C9C9"))) ; white
+#+end_src
+
 *************** TODO Customize `vc-annotate-background' (and future `vc-annotate-foreground')
 *************** END
 
