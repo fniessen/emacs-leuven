@@ -9898,10 +9898,31 @@ mode line on bottom.  Make it blue!
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(define-key jde-mode-map [f8]   'jdibug-step-over)
-(define-key jde-mode-map [M-f8] 'jdibug-step-into)
-(define-key jde-mode-map [f7]   'jdibug-step-out)
-(define-key jde-mode-map [M-f7] 'jdibug-resume)
+  (define-key jde-mode-map [f8]   'jdibug-step-over)
+  (define-key jde-mode-map [M-f8] 'jdibug-step-into)
+  (define-key jde-mode-map [f7]   'jdibug-step-out)
+  (define-key jde-mode-map [M-f7] 'jdibug-resume)
+#+end_src
+
+Highlight the current GUD line in GDB/Emacs:
+
+#+begin_src emacs-lisp
+  (defvar gud-overlay
+    (let* ((ov (make-overlay (point-min) (point-min))))
+      (overlay-put ov 'face '(:background "#F6FECD"))
+                                        ; Color for Leuven theme
+                                        ; (highlight-yellow).
+      ov)
+    "Overlay variable for GUD highlighting.")
+
+  (defadvice gud-display-line (after my-gud-highlight act)
+    "Highlight current line."
+    (let* ((ov gud-overlay)
+           (bf (gud-find-file true-file)))
+      (save-excursion
+        (set-buffer bf)
+        (move-overlay ov (line-beginning-position) (line-end-position)
+                      (current-buffer)))))
 #+end_src
 
 ** Debugging Lisp programs

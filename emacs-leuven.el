@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210207.1050
+;; Version: 20210207.1723
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210207.1050"
+(defconst leuven--emacs-version "20210207.1723"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -5511,6 +5511,23 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Enable Gdb-Many-Windows mode.
     (setq gdb-many-windows t))          ; The only important parameter for GDB.
+
+  (defvar gud-overlay
+    (let* ((ov (make-overlay (point-min) (point-min))))
+      (overlay-put ov 'face '(:background "#F6FECD"))
+                                        ; Color for Leuven theme
+                                        ; (highlight-yellow).
+      ov)
+    "Overlay variable for GUD highlighting.")
+
+  (defadvice gud-display-line (after my-gud-highlight act)
+    "Highlight current line."
+    (let* ((ov gud-overlay)
+           (bf (gud-find-file true-file)))
+      (save-excursion
+        (set-buffer bf)
+        (move-overlay ov (line-beginning-position) (line-end-position)
+                      (current-buffer)))))
 
 ;;** Debugging Lisp programs
 
