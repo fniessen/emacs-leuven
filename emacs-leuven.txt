@@ -609,7 +609,6 @@ like this into your configuration file:
             circe
             color-identifiers-mode
             company
-            company-tern
             company-quickhelp
             csv-mode
             dashboard
@@ -6131,6 +6130,7 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
                        ("\276" . "3/4")
                        ("\277" . "¿")
                        ("\300" . "À")
+                       ;; ("\301" . "") ;; caps spanish a ("facil")
                        ("\302" . "Â")
                        ("\304" . "Ä")
                        ("\307" . "Ç")
@@ -12170,7 +12170,6 @@ return the same ~prefix~).
 
 **** Tern
 
-- https://github.com/proofit404/company-tern
 - http://stackoverflow.com/questions/18102833/could-not-start-tern-server-in-emacs?rq=1
 - https://github.com/syl20bnr/spacemacs/issues/5733
 - https://github.com/ternjs/tern/issues/256
@@ -12183,14 +12182,6 @@ return the same ~prefix~).
 Installing https://github.com/angelozerr/tern.java/wiki/Installation-Update-Site.
 
 https://nodejs.org/download/release/latest/win-x64/
-
-#+begin_src emacs-lisp
-  (when (executable-find "tern")
-
-    (with-eval-after-load "company-tern-autoloads"
-
-      (add-to-list 'company-backends 'company-tern)))
-#+end_src
 
 **** Text modes
 
