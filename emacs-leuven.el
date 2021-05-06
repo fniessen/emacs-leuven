@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210424.1725
+;; Version: 20210506.1005
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210424.1725"
+(defconst leuven--emacs-version "20210506.1005"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -891,7 +891,7 @@ These packages are neither built-in nor already installed nor ignored."
             js2-mode-show-node
             just-one-space
             kill-region
-            leuven-fill-paragraph
+            leuven-fill-or-unfill-paragraph
             leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
@@ -3591,7 +3591,9 @@ cycle through all windows on current frame."
                  (progn (setq this-command nil)
                         (point-max))
                fill-column))))
-      (fill-paragraph)))
+      (if (derived-mode-p 'org-mode)
+          (org-fill-paragraph)
+        (fill-paragraph))))
 
   ;; M-q.
   (global-set-key [remap fill-paragraph] #'leuven-fill-or-unfill-paragraph)

@@ -1455,7 +1455,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
             js2-mode-show-node
             just-one-space
             kill-region
-            leuven-fill-paragraph
+            leuven-fill-or-unfill-paragraph
             leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
@@ -6457,7 +6457,9 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
                  (progn (setq this-command nil)
                         (point-max))
                fill-column))))
-      (fill-paragraph)))
+      (if (derived-mode-p 'org-mode)
+          (org-fill-paragraph)
+        (fill-paragraph))))
 
   ;; M-q.
   (global-set-key [remap fill-paragraph] #'leuven-fill-or-unfill-paragraph)
