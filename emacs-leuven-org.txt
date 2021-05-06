@@ -191,19 +191,16 @@ If you use ~org-emphasis-alist~ to do simple highlighting, you should better use
 #+end_src
 
 Original value was:
-- ~org-bbdb~
-- ~org-bibtex~
-- ~org-docview~
-- ~org-gnus~
-- ~org-info~
-- ~org-jsinfo~
-- ~org-irc~
-- ~org-mew~
-- ~org-mhe~
-- ~org-rmail~
-- ~org-vm~
-- ~org-w3m~
-- ~org-wl~
+- ~ol-w3m~
+- ~ol-bbdb~
+- ~ol-bibtex~
+- ~ol-docview~
+- ~ol-gnus~
+- ~ol-info~
+- ~ol-irc~
+- ~ol-mhe~
+- ~ol-rmail~
+- ~ol-eww~
 
 When you have ~org-id~ in ~org-modules~, unique *ID's* are generated when you link
 to a task (using ~org-id-get-create~) --- instead of links containing *headline
@@ -235,17 +232,17 @@ interface).
 
 #+begin_src emacs-lisp
 ;; Support for links to Gnus groups and messages from within Org mode.
-(add-to-list 'org-modules 'org-gnus)
+(add-to-list 'org-modules 'ol-gnus)
 #+end_src
 
 #+begin_src emacs-lisp
-;; Habit tracking code for Org mode.
-(add-to-list 'org-modules 'org-habit)
+;; ;; Habit tracking code for Org mode.
+;; (add-to-list 'org-modules 'org-habit)
 #+end_src
 
 #+begin_src emacs-lisp
-;; Make sure to turn `org-info' on in order to link to info nodes.
-(add-to-list 'org-modules 'org-info)
+;; Make sure to turn `ol-info' on in order to link to info nodes.
+(add-to-list 'org-modules 'ol-info)
 #+end_src
 
 *************** TODO Look at other modules

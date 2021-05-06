@@ -15,6 +15,25 @@ If not, just print a message."
        (message "[Requiring `%s'... missing]" feature)
        nil))))
 
+    ;; Enable on-the-fly spell checking.
+    (add-hook 'org-mode-hook
+              #'(lambda ()
+                  (if (or (eq (aref (buffer-name) 0) ?\s)
+                                        ; Buffer starting with " *".
+                          (and (boundp 'org-babel-exp-reference-buffer)
+                               org-babel-exp-reference-buffer))
+                                        ; Export buffer.
+                      (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
+                    (message "[Turning on Flyspell mode in `%s']" (buffer-name))
+                    (flyspell-mode))))
+
+    ;; Add root directories that store the snippets.
+    (let ((org-snippets
+           (concat leuven--local-repos-directory "yasnippet-org-mode")))
+
+      (when (file-directory-p org-snippets)
+        (add-to-list 'yas-snippet-dirs org-snippets))
+
 ;; (info "(org)Top") outline-based notes management and organizer
 
 ;;* 1 (info "(org)Introduction")
@@ -93,13 +112,13 @@ If not, just print a message."
 (add-to-list 'org-modules 'org-id)
 
 ;; Support for links to Gnus groups and messages from within Org mode.
-(add-to-list 'org-modules 'org-gnus)
+(add-to-list 'org-modules 'ol-gnus)
 
-;; Habit tracking code for Org mode.
-(add-to-list 'org-modules 'org-habit)
+;; ;; Habit tracking code for Org mode.
+;; (add-to-list 'org-modules 'org-habit)
 
-;; Make sure to turn `org-info' on in order to link to info nodes.
-(add-to-list 'org-modules 'org-info)
+;; Make sure to turn `ol-info' on in order to link to info nodes.
+(add-to-list 'org-modules 'ol-info)
 
 (add-hook 'org-mode-hook
           #'(lambda ()
@@ -2018,7 +2037,7 @@ buffer."
                      "latexmk")
                     (t
                      (file-name-base org-latex-pdf-engine-full-path))))
-                                        ; "xelatex" or "pdflatex".
+                                          ; "xelatex" or "pdflatex".
 
              (latex-file
               (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
