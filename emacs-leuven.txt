@@ -598,7 +598,7 @@ like this into your configuration file:
             ant
             anzu
             auctex
-            auto-complete
+            ;; auto-complete
             auto-highlight-symbol
             auto-package-update
             avy
