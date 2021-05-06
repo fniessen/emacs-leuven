@@ -11352,9 +11352,6 @@ Use ~yas-global-mode~ *after* you set yas-snippet-dirs. Otherwise you have to us
     (with-eval-after-load "diminish-autoloads"
       (diminish 'yas-minor-mode " y"))
 
-    ;; ;; No need to be so verbose.
-    ;; (setq yas-verbosity 1)
-
     ;; Load the snippet tables.
     (yas-reload-all)
 

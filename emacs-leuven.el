@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210506.1149
+;; Version: 20210506.1215
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210506.1149"
+(defconst leuven--emacs-version "20210506.1215"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6168,9 +6168,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (with-eval-after-load "diminish-autoloads"
       (diminish 'yas-minor-mode " y"))
-
-    ;; ;; No need to be so verbose.
-    ;; (setq yas-verbosity 1)
 
     ;; Load the snippet tables.
     (yas-reload-all)
