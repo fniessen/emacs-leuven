@@ -15,25 +15,6 @@ If not, just print a message."
        (message "[Requiring `%s'... missing]" feature)
        nil))))
 
-    ;; Enable on-the-fly spell checking.
-    (add-hook 'org-mode-hook
-              #'(lambda ()
-                  (if (or (eq (aref (buffer-name) 0) ?\s)
-                                        ; Buffer starting with " *".
-                          (and (boundp 'org-babel-exp-reference-buffer)
-                               org-babel-exp-reference-buffer))
-                                        ; Export buffer.
-                      (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
-                    (message "[Turning on Flyspell mode in `%s']" (buffer-name))
-                    (flyspell-mode))))
-
-    ;; Add root directories that store the snippets.
-    (let ((org-snippets
-           (concat leuven--local-repos-directory "yasnippet-org-mode")))
-
-      (when (file-directory-p org-snippets)
-        (add-to-list 'yas-snippet-dirs org-snippets))
-
 ;; (info "(org)Top") outline-based notes management and organizer
 
 ;;* 1 (info "(org)Introduction")

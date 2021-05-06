@@ -33,7 +33,7 @@ If not, just print a message."
 
 * To move
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; Enable on-the-fly spell checking.
     (add-hook 'org-mode-hook
               #'(lambda ()
@@ -79,13 +79,13 @@ If not, just print a message."
 
 Alternatives: http://emacs.stackexchange.com/questions/17284/adding-tilde-to-electric-pairs-in-org-mode/17341#17341
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; Add root directories that store the snippets.
     (let ((org-snippets
            (concat leuven--local-repos-directory "yasnippet-org-mode")))
 
       (when (file-directory-p org-snippets)
-        (add-to-list 'yas-snippet-dirs org-snippets))
+        (add-to-list 'yas-snippet-dirs org-snippets)))
 #+end_src
 
 * XXX
