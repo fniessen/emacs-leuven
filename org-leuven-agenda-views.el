@@ -195,23 +195,22 @@
                 ;;            ((org-agenda-overriding-header "NO DUE DATE")
                 ;;             (org-agenda-skip-function
                 ;;              '(org-agenda-skip-entry-if 'deadline))))
-                ;; (tags-todo "TODO={STRT}"
-                ;;            ((org-agenda-overriding-header "NO DUE DATE / STARTED")
-                ;;             (org-agenda-skip-function
-                ;;              '(org-agenda-skip-entry-if 'deadline))))
-                ;; (tags-todo "TODO<>{STRT\\|WAIT\\|SDAY}"
-                ;;            ((org-agenda-overriding-header "NO DUE DATE / NEXT")
-                ;;             (org-agenda-skip-function
-                ;;              '(org-agenda-skip-entry-if 'deadline))))
-                ;; (tags-todo "TODO={WAIT}"
-                ;;            ((org-agenda-overriding-header "NO DUE DATE / WAITING FOR")
-                ;;             (org-agenda-skip-function
-                ;;              '(org-agenda-skip-entry-if 'deadline))))
-                ;; (tags-todo "TODO={SDAY}"
-                ;;            ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
-                ;;             (org-agenda-filter-preset '("+SDAY"))
-                ;;             (org-agenda-skip-function
-                ;;              '(org-agenda-skip-entry-if 'deadline))))
+                (tags-todo "TODO={STRT}"
+                           ((org-agenda-overriding-header "NO DUE DATE / STARTED")
+                            (org-agenda-skip-function
+                             '(org-agenda-skip-entry-if 'deadline))))
+                (tags-todo "TODO<>{STRT\\|WAIT\\|SDAY}"
+                           ((org-agenda-overriding-header "NO DUE DATE / NEXT")
+                            (org-agenda-skip-function
+                             '(org-agenda-skip-entry-if 'deadline))))
+                (tags-todo "TODO={WAIT}"
+                           ((org-agenda-overriding-header "NO DUE DATE / WAITING FOR")
+                            (org-agenda-skip-function
+                             '(org-agenda-skip-entry-if 'deadline))))
+                (tags-todo "TODO={SDAY}"
+                           ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
+                            (org-agenda-skip-function
+                             '(org-agenda-skip-entry-if 'deadline))))
                 )
                ((org-agenda-sorting-strategy '(priority-down))
                 (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
