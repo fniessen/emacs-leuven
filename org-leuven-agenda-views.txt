@@ -655,6 +655,8 @@ All *tasks*, grouped by *due date*:
                "~/org___all-tasks-by-due-date.pdf") t)
 #+end_src
 
+[[file:images/agenda-view-rad.png]]
+
 #+begin_src emacs-lisp
 (add-to-list 'org-agenda-custom-commands
              '("ra1" "All Tasks with a due date"
