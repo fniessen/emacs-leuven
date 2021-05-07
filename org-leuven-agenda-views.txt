@@ -599,6 +599,8 @@ All *tasks*, grouped by *due date*:
 - Due later
 - No due date (includes CollectBox)
 
+[[file:images/agenda-view-rad.png]]
+
 **** All tasks (tags view command)
 
 #+begin_src emacs-lisp
@@ -654,8 +656,6 @@ All *tasks*, grouped by *due date*:
                 (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
                "~/org___all-tasks-by-due-date.pdf") t)
 #+end_src
-
-[[file:images/agenda-view-rad.png]]
 
 #+begin_src emacs-lisp
 (add-to-list 'org-agenda-custom-commands
