@@ -3155,6 +3155,16 @@ is not necessary to rebuild index and/or bibliography.
   (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 #+end_src
 
+#+begin_src emacs-lisp
+  ;; XXX To sort out...
+  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
+                                      (code . "\\lstinline|%s|")
+                                      (italic . "\\emph{%s}")
+                                      (strike-through . "\\sout{%s}")
+                                      (underline . "\\uline{%s}")
+                                      (verbatim . "\\verb|%s|")))
+#+end_src
+
 When using the ~utf8~ option to ~inputenc~ (and not ~utf8x~ which should be avoided,
 as it uses ~ucs~ which is no longer maintained), we have 2 solutions to support
 the UTF-8 *no-break space*:

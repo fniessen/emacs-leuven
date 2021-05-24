@@ -2059,6 +2059,14 @@ buffer."
   ;; Include the `xcolor' package for colored source code.
   (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
 
+  ;; XXX To sort out...
+  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
+                                      (code . "\\lstinline|%s|")
+                                      (italic . "\\emph{%s}")
+                                      (strike-through . "\\sout{%s}")
+                                      (underline . "\\uline{%s}")
+                                      (verbatim . "\\verb|%s|")))
+
   ;; Filter for no-break spaces.
   (defun leuven--latex-filter-nbsp (text backend info)
     "Convert no-break spaces when exporting to LaTeX/Beamer."
