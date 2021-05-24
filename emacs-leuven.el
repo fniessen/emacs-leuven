@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210506.1215
+;; Version: 20210524.1525
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210506.1215"
+(defconst leuven--emacs-version "20210524.1525"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3401,6 +3401,7 @@ cycle through all windows on current frame."
                        ("\253" . "«")
                        ("\256" . "®")
                        ("\260" . "°")
+                       ("\265" . "u")
                        ("\272" . "°")
                        ("\273" . "»")
                        ("\274" . "1/4")
@@ -3420,6 +3421,7 @@ cycle through all windows on current frame."
                        ("\324" . "Ô")
                        ("\326" . "Ö")
                        ("\331" . "Ù")
+                       ("\337" . "ss")
                        ("\333" . "Û")
                        ("\340" . "à")    ;; \303\240
                        ("\341" . "á")    ;; \303\241
@@ -6708,7 +6710,15 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (leuven--section "30.XX (dired-x)Top")
 
-    (require 'dired-x))                 ; with-eval-after-load "dired" ends here.
+    (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
+
+
+    (defadvice dired-jump (around leuven-dired-jump activate)
+      "Ask for confirmation for buffers of 14,000 bytes or more."
+      (when (or (< (buffer-size) 14000)
+                (y-or-n-p "Are you sure you want to do this? (This may take time...) "))
+        ad-do-it))
+    )
 
 ;;** Dired+
 

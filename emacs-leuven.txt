@@ -6123,6 +6123,7 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
                        ("\253" . "«")
                        ("\256" . "®")
                        ("\260" . "°")
+                       ("\265" . "u")
                        ("\272" . "°")
                        ("\273" . "»")
                        ("\274" . "1/4")
@@ -6142,6 +6143,7 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
                        ("\324" . "Ô")
                        ("\326" . "Ö")
                        ("\331" . "Ù")
+                       ("\337" . "ss")
                        ("\333" . "Û")
                        ("\340" . "à")    ;; \303\240
                        ("\341" . "á")    ;; \303\241
@@ -12691,7 +12693,15 @@ Extra Dired functionality:
 
     (leuven--section "30.XX (dired-x)Top")
 
-    (require 'dired-x))                 ; with-eval-after-load "dired" ends here.
+    (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
+
+
+    (defadvice dired-jump (around leuven-dired-jump activate)
+      "Ask for confirmation for buffers of 14,000 bytes or more."
+      (when (or (< (buffer-size) 14000)
+                (y-or-n-p "Are you sure you want to do this? (This may take time...) "))
+        ad-do-it))
+    )
 #+end_src
 
 ** Dired+
