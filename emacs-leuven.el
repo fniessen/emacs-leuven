@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210524.1525
+;; Version: 20210527.1515
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210524.1525"
+(defconst leuven--emacs-version "20210527.1515"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6714,8 +6714,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 
     (defadvice dired-jump (around leuven-dired-jump activate)
-      "Ask for confirmation for buffers of 14,000 bytes or more."
-      (when (or (< (buffer-size) 14000)
+      "Ask for confirmation for buffers of 1,400,000 bytes or more."
+      (when (or (< (buffer-size) 1400000)
                 (y-or-n-p "Are you sure you want to do this? (This may take time...) "))
         ad-do-it))
     )
