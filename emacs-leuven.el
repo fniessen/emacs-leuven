@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210527.1515
+;; Version: 20210529.1642
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210527.1515"
+(defconst leuven--emacs-version "20210529.1642"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6470,6 +6470,36 @@ a clean buffer we're an order of magnitude laxer about checking."
                  (self-insert-command 1))
              (funcall fun n))))
      '((name . "Don't complete numbers")))
+
+    ;; From https://github.com/company-mode/company-mode/issues/188
+    (defun leuven-company-quick-access-key (numbered)
+      "Replace default behavior of `company--show-numbers' function.
+This example lists Azerty layout second row keys."
+      (let ((value (mod numbered 10)))
+        (format " %s"
+                (cond ((eql value 1) "a")
+                      ((eql value 2) "z")
+                      ((eql value 3) "e")
+                      ((eql value 4) "r")
+                      ((eql value 5) "t")
+                      ((eql value 6) "y")
+                      ((eql value 7) "u")
+                      ((eql value 8) "i")
+                      ((eql value 9) "o")
+                      (t "p")))))
+
+    (setq company-show-numbers-function #'leuven-company-quick-access-key)
+
+    (define-key company-active-map (kbd "M-a") (kbd "M-1"))
+    (define-key company-active-map (kbd "M-z") (kbd "M-2"))
+    (define-key company-active-map (kbd "M-e") (kbd "M-3"))
+    (define-key company-active-map (kbd "M-r") (kbd "M-4"))
+    (define-key company-active-map (kbd "M-t") (kbd "M-5"))
+    (define-key company-active-map (kbd "M-y") (kbd "M-6"))
+    (define-key company-active-map (kbd "M-u") (kbd "M-7"))
+    (define-key company-active-map (kbd "M-i") (kbd "M-8"))
+    (define-key company-active-map (kbd "M-o") (kbd "M-9"))
+    (define-key company-active-map (kbd "M-p") (kbd "M-0"))
 
     )                                   ; with-eval-after-load "company".
 

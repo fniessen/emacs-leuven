@@ -11865,10 +11865,10 @@ When the menu (with completion candidates) is displayed, press:
 - ~RET~ or ~TAB~ to complete with the current selection
   (~company-complete-selection~).
 - *Search through the completions* with ~C-s~, ~C-r~ and ~C-o~.
-- Filter with C-M-s.
+- Filter with ~C-M-s~.
 - ~M-(digit)~ to quickly complete with one of the first 10 candidates.
 - ~<right>~ to cancel completion.
-- ~<F1>~ or C-h to *display the full documentation* for the selected symbol, or
+- ~<F1>~ or ~C-h~ to *display the full documentation* for the selected symbol, or
 - ~C-w~ to *show its definition*.
 
 Not all back-ends support these last 2 commands.
@@ -12032,6 +12032,42 @@ the first candidate) show up immediately:
 From https://github.com/company-mode/company-mode/issues/87.
 
 See also https://github.com/company-mode/company-mode/issues/123.
+
+**** Quick-access letters
+
+Provide letters as key bindings for completion of strings.
+
+#+begin_src emacs-lisp
+    ;; From https://github.com/company-mode/company-mode/issues/188
+    (defun leuven-company-quick-access-key (numbered)
+      "Replace default behavior of `company--show-numbers' function.
+This example lists Azerty layout second row keys."
+      (let ((value (mod numbered 10)))
+        (format " %s"
+                (cond ((eql value 1) "a")
+                      ((eql value 2) "z")
+                      ((eql value 3) "e")
+                      ((eql value 4) "r")
+                      ((eql value 5) "t")
+                      ((eql value 6) "y")
+                      ((eql value 7) "u")
+                      ((eql value 8) "i")
+                      ((eql value 9) "o")
+                      (t "p")))))
+
+    (setq company-show-numbers-function #'leuven-company-quick-access-key)
+
+    (define-key company-active-map (kbd "M-a") (kbd "M-1"))
+    (define-key company-active-map (kbd "M-z") (kbd "M-2"))
+    (define-key company-active-map (kbd "M-e") (kbd "M-3"))
+    (define-key company-active-map (kbd "M-r") (kbd "M-4"))
+    (define-key company-active-map (kbd "M-t") (kbd "M-5"))
+    (define-key company-active-map (kbd "M-y") (kbd "M-6"))
+    (define-key company-active-map (kbd "M-u") (kbd "M-7"))
+    (define-key company-active-map (kbd "M-i") (kbd "M-8"))
+    (define-key company-active-map (kbd "M-o") (kbd "M-9"))
+    (define-key company-active-map (kbd "M-p") (kbd "M-0"))
+#+end_src
 
 **** Tab
 
