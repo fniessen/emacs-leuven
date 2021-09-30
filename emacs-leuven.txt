@@ -640,7 +640,6 @@ like this into your configuration file:
             hide-lines
             highlight-numbers
             hl-anything                 ; Better than `highlight-symbol'.
-            howdoi
             htmlize
             indent-guide
             ;; jabber
@@ -11262,8 +11261,8 @@ It allows you to write frequently used text more quickly.
 
 ** Controlling Abbrev Expansion
 
-Inspired by [[http://macromates.com/][TextMate]].  In fact, many editors support *snippets*: Eclipse,
-Notepad++, etc.
+Inspired by [[http://macromates.com/][TextMate]].  In fact, many editors support *snippets* (/quick texts/):
+Eclipse, Notepad++, etc.
 
 *************** TODO Add rv for "REVIEW[who] text" https://www.jetbrains.com/help/idea/using-live-templates-in-todo-comments.html
 *************** END
@@ -14221,18 +14220,6 @@ bind it to a key:
 
   (global-set-key (kbd "C-c g G") #'leuven-google-search-active-region-or-word-at-point)
   (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
-#+end_src
-
-** How do I?  (StackOverflow)
-
-Instant coding answers via Emacs.
-
-#+begin_src emacs-lisp :tangle no
-  (with-eval-after-load "howdoi-autoloads"
-
-    ;; XXX Key sequence starts with non-prefix key C-c h. Conflict with Helm!
-    (global-set-key (kbd "C-c h n") #'howdoi-query)
-    (global-set-key (kbd "C-c h d") #'howdoi-query-insert-code-snippet-at-point))
 #+end_src
 
 ** Babel translator

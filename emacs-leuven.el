@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210603.1142
+;; Version: 20210930.0858
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210603.1142"
+(defconst leuven--emacs-version "20210930.0858"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -430,7 +430,6 @@ If not, just print a message."
             hide-lines
             highlight-numbers
             hl-anything                 ; Better than `highlight-symbol'.
-            howdoi
             htmlize
             indent-guide
             ;; jabber
