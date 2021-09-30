@@ -217,9 +217,8 @@ to the Scheduled list and set a date that way.
 #+end_src
 
 #+begin_note
-Puisque l'on peut facilement filter par catégorie, on peut imaginer qu'il est
-*inutile de trier par catégorie* : il suffit de faire ~<~ pour voir toutes les
-tâches d'une catégorie.
+Since we can easily filter by category, we can imagine that it is *useless to
+sort by category*: just do ~<~ to see all the tasks of a category.
 #+end_note
 
 You should be able to work with Org items with the mapping and property APIs:
