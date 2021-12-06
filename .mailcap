@@ -21,11 +21,11 @@
 
 #* Code:
 
-application/pdf;                cygstart "%s"
-text/html;                      cygstart "%s"
-application/vnd.ms-excel;       cygstart "%s"
-application/vnd.ms-powerpoint;  cygstart "%s"
-video/*;                        cygstart "%s"
+# application/pdf;                cygstart "%s"
+# text/html;                      cygstart "%s"
+# application/vnd.ms-excel;       cygstart "%s"
+# application/vnd.ms-powerpoint;  cygstart "%s"
+# video/*;                        cygstart "%s"
 
 application/ms-tnef;            tnef -w "%s"
 application/msword;             "c:/Program Files (x86)/LibreOffice 4/program/soffice.exe" -writer "%s"; test=sh -c 'test $DISPLAY'
