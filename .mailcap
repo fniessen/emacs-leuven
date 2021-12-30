@@ -27,23 +27,20 @@
 # application/vnd.ms-powerpoint;  cygstart "%s"
 # video/*;                        cygstart "%s"
 
+application/*;                  xdg-open "%s"; test=sh -c 'test $DISPLAY'
 application/ms-tnef;            tnef -w "%s"
-application/msword;             libreoffice "%s"; test=sh -c 'test $DISPLAY'
 application/msword;             "C:/Program Files/Microsoft Office/OFFICE11/WINWORD.EXE" /n /dde "%s"
 # application/msword;           strings "%s" | more; needsterminal
 application/rtf;                "C:/Program Files/Microsoft Office/OFFICE11/WINWORD.EXE" /n /dde "%s"
-application/vnd.ms-excel;       libreoffice "%s"; test=sh -c 'test $DISPLAY'
-application/vnd.ms-excel;        "C:/Program Files/Microsoft Office/OFFICE11/EXCEL.EXE" /e "%s"
-application/vnd.ms-powerpoint;  libreoffice "%s"; test=sh -c 'test $DISPLAY'
+application/vnd.ms-excel;       "C:/Program Files/Microsoft Office/OFFICE11/EXCEL.EXE" /e "%s"
 application/vnd.ms-powerpoint;  "C:/Program Files/Microsoft Office/OFFICE11/POWERPNT.EXE" "%s"
-application/postscript;         ghostview "%s"; test=sh -c 'test $DISPLAY'
 application/postscript;         gsview32 "%s"
 application/postscript;         ps2ascii "%s"; copiousoutput
 application/zip;                "C:/Program Files/7-Zip/7zFM.exe" "%s"
 application/octet-stream;       "C:/Program Files/Mozilla Firefox/firefox.exe" "%s"
-audio/*;                        totem "%s"; test=sh -c 'test $DISPLAY'
+audio/*;                        xdg-open "%s"; test=sh -c 'test $DISPLAY'
 audio/*;                        "C:/Program Files/Windows Media Player/wmplayer.exe" "%s"
-image/*;                        display "%s"; test=sh -c 'test $DISPLAY'
+image/*;                        xdg-open "%s"; test=sh -c 'test $DISPLAY'
 image/*;                        "C:/Program Files/Mozilla Firefox/firefox.exe" "%s"
 text/*;                         cat; copiousoutput; edit=$EDITOR "%s"
 
