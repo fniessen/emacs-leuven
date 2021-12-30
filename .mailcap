@@ -1,6 +1,6 @@
 ## .mailcap -- MIME Viewer configuration file
 
-# Copyright (C) 2004-2016 Fabrice Niessen
+# Copyright (C) 2004-2021 Fabrice Niessen
 
 # Author: Fabrice Niessen <fni@missioncriticalit.com>
 # Keywords: mailcap, dotfile
@@ -28,13 +28,13 @@
 # video/*;                        cygstart "%s"
 
 application/ms-tnef;            tnef -w "%s"
-application/msword;             "c:/Program Files (x86)/LibreOffice 4/program/soffice.exe" -writer "%s"; test=sh -c 'test $DISPLAY'
+application/msword;             libreoffice "%s"; test=sh -c 'test $DISPLAY'
 application/msword;             "C:/Program Files/Microsoft Office/OFFICE11/WINWORD.EXE" /n /dde "%s"
 # application/msword;           strings "%s" | more; needsterminal
 application/rtf;                "C:/Program Files/Microsoft Office/OFFICE11/WINWORD.EXE" /n /dde "%s"
-application/vnd.ms-excel;       soffice -calc "%s"; test=sh -c 'test $DISPLAY'
+application/vnd.ms-excel;       libreoffice "%s"; test=sh -c 'test $DISPLAY'
 application/vnd.ms-excel;        "C:/Program Files/Microsoft Office/OFFICE11/EXCEL.EXE" /e "%s"
-application/vnd.ms-powerpoint;  soffice -impress "%s"; test=sh -c 'test $DISPLAY'
+application/vnd.ms-powerpoint;  libreoffice "%s"; test=sh -c 'test $DISPLAY'
 application/vnd.ms-powerpoint;  "C:/Program Files/Microsoft Office/OFFICE11/POWERPNT.EXE" "%s"
 application/postscript;         ghostview "%s"; test=sh -c 'test $DISPLAY'
 application/postscript;         gsview32 "%s"
