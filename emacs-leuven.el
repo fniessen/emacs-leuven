@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20210930.0858
+;; Version: 20220117.1044
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20210930.0858"
+(defconst leuven--emacs-version "20220117.1044"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -460,6 +460,7 @@ If not, just print a message."
             sqlup-mode
             symbol-overlay
             tern
+            toc-org
             ;; undo-tree
             volatile-highlights
             web-mode
@@ -2542,7 +2543,7 @@ Should be selected from `fringe-bitmaps'.")
                                         ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
-
+    (try-require 'helm-mode) ; See https://emacs.stackexchange.com/questions/70122/error-running-timer-void-function-helm-completion-flex-transform-pattern
     (global-unset-key (kbd "C-x c"))
 
     ;; Resume a previous `helm' session.

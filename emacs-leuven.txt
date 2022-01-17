@@ -670,6 +670,7 @@ like this into your configuration file:
             sqlup-mode
             symbol-overlay
             tern
+            toc-org
             ;; undo-tree
             volatile-highlights
             web-mode
@@ -4574,7 +4575,7 @@ We cannot change ~helm-command-prefix-key~ once ~helm-config~ is loaded.
                                         ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
-
+    (try-require 'helm-mode) ; See https://emacs.stackexchange.com/questions/70122/error-running-timer-void-function-helm-completion-flex-transform-pattern
     (global-unset-key (kbd "C-x c"))
 #+end_src
 
