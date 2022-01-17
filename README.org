@@ -1,4 +1,4 @@
-#+TITLE:     Yes, you can get Emacs preset to be more productive!
+#+TITLE:     Yes, you can... get Emacs preset to be more productive!
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DESCRIPTION: Emacs configuration file
@@ -397,7 +397,7 @@ beer and as in speech.
 
 * License
 
-Copyright (C) 1999-2021 Free Software Foundation, Inc.
+Copyright (C) 1999-2022 Free Software Foundation, Inc.
 
 Author: Fabrice Niessen \\
 Keywords: emacs configuration file
