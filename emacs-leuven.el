@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2020 Fabrice Niessen
+;; Copyright (C) 1999-2022 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20220117.1044
+;; Version: 20220131.1640
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20220117.1044"
+(defconst leuven--emacs-version "20220131.1640"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -377,8 +377,7 @@ If not, just print a message."
 
     ;; Archives from which to fetch.
     (setq package-archives
-          (append '(("org"   . "http://orgmode.org/elpa/")
-                    ("melpa" . "http://melpa.org/packages/"))
+          (append '(("melpa" . "http://melpa.org/packages/"))
                   package-archives))
 
     ;; Packages which were installed by the user (as opposed to installed as

@@ -56,7 +56,7 @@ Quotations:
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2020 Fabrice Niessen
+;; Copyright (C) 1999-2022 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -587,8 +587,7 @@ like this into your configuration file:
 
     ;; Archives from which to fetch.
     (setq package-archives
-          (append '(("org"   . "http://orgmode.org/elpa/")
-                    ("melpa" . "http://melpa.org/packages/"))
+          (append '(("melpa" . "http://melpa.org/packages/"))
                   package-archives))
 
     ;; Packages which were installed by the user (as opposed to installed as
