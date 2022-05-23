@@ -1847,7 +1847,7 @@ Annotating bookmarks.
 
 #+begin_src emacs-lisp
     ;; Extensions to standard library `bookmark.el'.
-    (when (try-require 'bookmark+) ; XXX + needs bookmark+-mac
+    (when (try-require 'bookmark+-XXX) ; XXX + needs bookmark+-mac
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
       (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)

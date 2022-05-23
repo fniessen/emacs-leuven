@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20220131.1640
+;; Version: 20220523.2011
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20220131.1640"
+(defconst leuven--emacs-version "20220523.2011"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1011,7 +1011,7 @@ These packages are neither built-in nor already installed nor ignored."
     (setq bookmark-save-flag 1)
 
     ;; Extensions to standard library `bookmark.el'.
-    (when (try-require 'bookmark+) ; XXX + needs bookmark+-mac
+    (when (try-require 'bookmark+-XXX) ; XXX + needs bookmark+-mac
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
       (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
