@@ -12764,7 +12764,7 @@ a Dired buffer.  They are thus similar to the default global bindings ~C-x d~ an
 
   (leuven--section "30.XX Dired+")
 
-  (when (try-require 'dired+) ; XXX
+  (when (try-require 'dired+-XXX) ; XXX
 
     ;; Don't hide details in Dired.
     (setq diredp-hide-details-initially-flag nil)
