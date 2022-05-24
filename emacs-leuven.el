@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20220523.2113
+;; Version: 20220524.2015
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20220523.2113"
+(defconst leuven--emacs-version "20220524.2015"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2197,9 +2197,9 @@ Should be selected from `fringe-bitmaps'.")
 
   With no argument, this command toggles the mode.  Non-null prefix argument
   turns on the mode.  Null prefix argument turns off the mode."
-    nil                                 ; Initial value.
-    " Sensitive"                        ; Indicator for the mode line.
-    nil                                 ; Minor mode bindings.
+    :init-value nil                     ; Initial value.
+    :lighter " Sensitive"               ; Indicator for the mode line.
+    :keymap nil                         ; Minor mode bindings.
     (if (symbol-value sensitive-mode)
         (progn
           ;; Disable backups.

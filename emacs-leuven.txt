@@ -3774,9 +3774,9 @@ Disable backups and auto-save only in the current buffer with
 
   With no argument, this command toggles the mode.  Non-null prefix argument
   turns on the mode.  Null prefix argument turns off the mode."
-    nil                                 ; Initial value.
-    " Sensitive"                        ; Indicator for the mode line.
-    nil                                 ; Minor mode bindings.
+    :init-value nil                     ; Initial value.
+    :lighter " Sensitive"               ; Indicator for the mode line.
+    :keymap nil                         ; Minor mode bindings.
     (if (symbol-value sensitive-mode)
         (progn
           ;; Disable backups.
