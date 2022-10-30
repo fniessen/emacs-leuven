@@ -7116,6 +7116,21 @@ file, AUCTeX gives you a ~Command~ menu.
 
     (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
 
+    (defun leuven--change-dict-to-fr ()
+      "Change the local dictionary to French if babel package is set to French."
+      (interactive)
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "\\(documentclass.*french\\|usepackage.*french.*babel\\)" nil t)
+          (message "Switched dictionary to francais")
+          (sit-for 0.5)
+          (ispell-change-dictionary "francais")
+          (force-mode-line-update)
+          (when flyspell-mode
+            (flyspell-buffer)))))
+
+    (add-hook 'LaTeX-mode-hook #'leuven--change-dict-to-fr)
+
     ;; Don't ask user for permission to save files before starting TeX.
     (setq TeX-save-query nil)
 

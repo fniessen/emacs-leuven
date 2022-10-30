@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20220524.2015
+;; Version: 20221030.1618
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20220524.2015"
+(defconst leuven--emacs-version "20221030.1618"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -4030,6 +4030,21 @@ cycle through all windows on current frame."
       (TeX-fold-mode t))
 
     (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
+
+    (defun leuven--change-dict-to-fr ()
+      "Change the local dictionary to French if babel package is set to French."
+      (interactive)
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "\\(documentclass.*french\\|usepackage.*french.*babel\\)" nil t)
+          (message "Switched dictionary to francais")
+          (sit-for 0.5)
+          (ispell-change-dictionary "francais")
+          (force-mode-line-update)
+          (when flyspell-mode
+            (flyspell-buffer)))))
+
+    (add-hook 'LaTeX-mode-hook #'leuven--change-dict-to-fr)
 
     ;; Don't ask user for permission to save files before starting TeX.
     (setq TeX-save-query nil)
