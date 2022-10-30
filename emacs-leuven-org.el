@@ -2355,7 +2355,6 @@ parent."
   (add-to-list 'org-babel-load-languages '(dot      . t))
   (add-to-list 'org-babel-load-languages '(java     . t))
   (add-to-list 'org-babel-load-languages '(latex    . t)) ; Shouldn't you use #+begin/end_latex blocks instead?
-  (add-to-list 'org-babel-load-languages '(ledger   . t)) ; Requires ledger.
   (add-to-list 'org-babel-load-languages '(makefile . t))
   (add-to-list 'org-babel-load-languages '(org      . t))
   (add-to-list 'org-babel-load-languages '(python   . t))
@@ -2548,12 +2547,12 @@ Ignore non Org buffers."
   ;; Activate single letter commands at beginning of a headline.
   (setq org-use-speed-commands t)
 
-  (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
-  (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
-  (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
-  (add-to-list 'org-speed-commands-user '("N" org-narrow-to-subtree))
-  (add-to-list 'org-speed-commands-user '("W" widen))
-  (add-to-list 'org-speed-commands-user '("k" org-cut-subtree))
+  ;; (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
+  ;; (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
+  ;; (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
+  ;; (add-to-list 'org-speed-commands-user '("N" org-narrow-to-subtree))
+  ;; (add-to-list 'org-speed-commands-user '("W" widen))
+  ;; (add-to-list 'org-speed-commands-user '("k" org-cut-subtree))
 
   ;; Run current line (mapped to H-r).
 
