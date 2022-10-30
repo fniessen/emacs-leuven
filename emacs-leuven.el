@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221030.1647
+;; Version: 20221030.1657
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221030.1647"
+(defconst leuven--emacs-version "20221030.1657"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -4038,15 +4038,16 @@ cycle through all windows on current frame."
     (defun leuven--change-dict-to-fr ()
       "Change the local dictionary to French if babel package is set to French."
       (interactive)
-      (save-excursion
-        (goto-char (point-min))
-        (when (re-search-forward "\\(documentclass.*french\\|usepackage.*french.*babel\\)" nil t)
-          (message "Switched dictionary to francais")
-          (sit-for 0.5)
-          (ispell-change-dictionary "francais")
-          (force-mode-line-update)
-          (when flyspell-mode
-            (flyspell-buffer)))))
+      (when (string-equal (file-name-extension (buffer-file-name)) "tex")
+        (save-excursion
+          (goto-char (point-min))
+          (when (re-search-forward "\\(documentclass.*french\\|usepackage.*french.*babel\\)" nil t)
+            (message "Switched dictionary to francais")
+            (sit-for 0.5)
+            (ispell-change-dictionary "francais")
+            (force-mode-line-update)
+            (when flyspell-mode
+              (flyspell-buffer))))))
 
     (add-hook 'LaTeX-mode-hook #'leuven--change-dict-to-fr)
 

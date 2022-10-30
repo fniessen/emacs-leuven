@@ -7125,15 +7125,16 @@ file, AUCTeX gives you a ~Command~ menu.
     (defun leuven--change-dict-to-fr ()
       "Change the local dictionary to French if babel package is set to French."
       (interactive)
-      (save-excursion
-        (goto-char (point-min))
-        (when (re-search-forward "\\(documentclass.*french\\|usepackage.*french.*babel\\)" nil t)
-          (message "Switched dictionary to francais")
-          (sit-for 0.5)
-          (ispell-change-dictionary "francais")
-          (force-mode-line-update)
-          (when flyspell-mode
-            (flyspell-buffer)))))
+      (when (string-equal (file-name-extension (buffer-file-name)) "tex")
+        (save-excursion
+          (goto-char (point-min))
+          (when (re-search-forward "\\(documentclass.*french\\|usepackage.*french.*babel\\)" nil t)
+            (message "Switched dictionary to francais")
+            (sit-for 0.5)
+            (ispell-change-dictionary "francais")
+            (force-mode-line-update)
+            (when flyspell-mode
+              (flyspell-buffer))))))
 
     (add-hook 'LaTeX-mode-hook #'leuven--change-dict-to-fr)
 
