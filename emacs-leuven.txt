@@ -749,6 +749,11 @@ These packages are neither built-in nor already installed nor ignored."
 #+end_src
 
 #+begin_src emacs-lisp
+  (when (try-require 'paradox)
+    (paradox-enable))
+#+end_src
+
+#+begin_src emacs-lisp
 )                                       ; Chapter 48 ends here.
 #+end_src
 

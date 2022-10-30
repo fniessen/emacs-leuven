@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221030.1641
+;; Version: 20221030.1647
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221030.1641"
+(defconst leuven--emacs-version "20221030.1647"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -534,6 +534,9 @@ These packages are neither built-in nor already installed nor ignored."
     ;; "It looks like there's a problem with your network connection."
     ;; (auto-package-update-maybe)
   )
+
+  (when (try-require 'paradox)
+    (paradox-enable))
 
 )                                       ; Chapter 48 ends here.
 
