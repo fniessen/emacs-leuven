@@ -656,6 +656,7 @@ like this into your configuration file:
             ;; multi-term
             multiple-cursors
             pager
+            paradox
             ;; paredit
             ;; pdf-tools
             powerline
