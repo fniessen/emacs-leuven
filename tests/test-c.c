@@ -1,5 +1,10 @@
 void myFunction()
 {
+  int something     = 0,
+      stuff         = 1,
+      pizza_is_good = 0,
+      i_love_pizza  = 1;
+
   if (something) { //<--- I want to jump to this brace!
     // do lots of stuff
     if (stuff) {
