@@ -6803,6 +6803,9 @@ demotion* functionality.
 *** org
 
 #+begin_src emacs-lisp
+  ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
+  (setq org-cycle-global-at-bob t)
+
   (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+

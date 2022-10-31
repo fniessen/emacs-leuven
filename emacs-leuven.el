@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221030.1657
+;; Version: 20221031.1345
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221030.1657"
+(defconst leuven--emacs-version "20221031.1345"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3850,6 +3850,9 @@ cycle through all windows on current frame."
   ;;   #'(lambda ()
   ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
   ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
+
+  ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
+  (setq org-cycle-global-at-bob t)
 
   (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
