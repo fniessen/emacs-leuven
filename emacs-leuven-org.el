@@ -2547,12 +2547,12 @@ Ignore non Org buffers."
   ;; Activate single letter commands at beginning of a headline.
   (setq org-use-speed-commands t)
 
-  ;; (add-to-list 'org-speed-commands-user '("d" org-todo "DONE"))
-  ;; (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
-  ;; (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
-  ;; (add-to-list 'org-speed-commands-user '("N" org-narrow-to-subtree))
-  ;; (add-to-list 'org-speed-commands-user '("W" widen))
-  ;; (add-to-list 'org-speed-commands-user '("k" org-cut-subtree))
+  (add-to-list 'org-speed-commands '("d" org-todo "DONE"))
+  (add-to-list 'org-speed-commands '("y" org-todo-yesterday "DONE"))
+  (add-to-list 'org-speed-commands '("s" call-interactively 'org-schedule))
+  (add-to-list 'org-speed-commands '("N" org-narrow-to-subtree))
+  (add-to-list 'org-speed-commands '("W" widen))
+  (add-to-list 'org-speed-commands '("k" org-cut-subtree))
 
   ;; Run current line (mapped to H-r).
 
