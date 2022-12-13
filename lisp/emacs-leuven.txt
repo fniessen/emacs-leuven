@@ -4042,7 +4042,7 @@ You can also decide to revert a change: *select a hunk and apply it (in reverse)
                              ;; after the delay.
                              (goto-char (point-min)))))))
 
-    (defun vc-diff--diff-make-fine-diffs-if-necessary (buffer messages)
+    (defun vc-diff--diff-make-fine-diffs-if-necessary (&optional historic not-urgent)
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; Check for auto-refine limit.
       (unless (> (buffer-size) 14000)
@@ -4054,7 +4054,7 @@ You can also decide to revert a change: *select a hunk and apply it (in reverse)
 If you use ~colordiff~ in SVN, you need this:
 
 #+begin_src emacs-lisp
-    (defun vc-diff-finish--handle-color-in-diff-output (buffer messages)
+    (defun vc-diff-finish--handle-color-in-diff-output (buffer messages &optional oldbuf)
       "Run `ansi-color-apply-on-region'."
       (interactive)
       (progn

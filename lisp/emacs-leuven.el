@@ -2305,7 +2305,7 @@ Should be selected from `fringe-bitmaps'.")
                              ;; after the delay.
                              (goto-char (point-min)))))))
 
-    (defun vc-diff--diff-make-fine-diffs-if-necessary (buffer messages)
+    (defun vc-diff--diff-make-fine-diffs-if-necessary (&optional historic not-urgent)
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; Check for auto-refine limit.
       (unless (> (buffer-size) 14000)
@@ -2313,7 +2313,7 @@ Should be selected from `fringe-bitmaps'.")
     ;; Push the auto-refine function after `vc-diff'.
     (advice-add 'vc-diff :after #'vc-diff--diff-make-fine-diffs-if-necessary)
 
-    (defun vc-diff-finish--handle-color-in-diff-output (buffer messages)
+    (defun vc-diff-finish--handle-color-in-diff-output (buffer messages &optional oldbuf)
       "Run `ansi-color-apply-on-region'."
       (interactive)
       (progn
