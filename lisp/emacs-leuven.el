@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221214.1912
+;; Version: 20221214.2204
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221214.1912"
+(defconst leuven--emacs-version "20221214.2204"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2537,7 +2537,8 @@ Should be selected from `fringe-bitmaps'.")
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   ;; Open Helm (QuickSilver-like candidate-selection framework).
-  (when (try-require 'helm-config)      ; XXX
+  (when (or (try-require 'helm-config)
+            (try-require 'helm-autoloads))
                                         ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
@@ -3231,7 +3232,8 @@ cycle through all windows on current frame."
 
   (leuven--section "21.9 (emacs)Speedbar Frames")
 
-  (unless (featurep 'helm-config)       ; Helm is better than speedbar!
+  (unless (or (featurep 'helm-config)       ; Helm is better than speedbar!
+              (featurep 'helm-autoloads))
 
     ;; Jump to speedbar frame.
     (global-set-key (kbd "<f4>") #'speedbar-get-focus))
@@ -3260,6 +3262,7 @@ cycle through all windows on current frame."
 
     ;; Speedbar in the current frame (vs in a new frame).
     (when (and (not (locate-library "helm-config"))
+               (not (locate-library "helm-autoloads"))
                                         ; Helm is better than speedbar!
                (locate-library "sr-speedbar"))
 
@@ -7527,7 +7530,8 @@ This example lists Azerty layout second row keys."
 
   (leuven--section "FFAP")
 
-  (unless (featurep 'helm-config)
+  (unless (or (featurep 'helm-config)
+              (featurep 'helm-autoloads))
 
     ;; Visit a file.
     (global-set-key (kbd "<f3>") #'find-file-at-point))

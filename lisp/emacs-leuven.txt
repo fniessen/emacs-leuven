@@ -4567,7 +4567,8 @@ We cannot change ~helm-command-prefix-key~ once ~helm-config~ is loaded.
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   ;; Open Helm (QuickSilver-like candidate-selection framework).
-  (when (try-require 'helm-config)      ; XXX
+  (when (or (try-require 'helm-config)
+            (try-require 'helm-autoloads))
                                         ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
@@ -5846,7 +5847,8 @@ one.
 
   (leuven--section "21.9 (emacs)Speedbar Frames")
 
-  (unless (featurep 'helm-config)       ; Helm is better than speedbar!
+  (unless (or (featurep 'helm-config)       ; Helm is better than speedbar!
+              (featurep 'helm-autoloads))
 
     ;; Jump to speedbar frame.
     (global-set-key (kbd "<f4>") #'speedbar-get-focus))
@@ -5875,6 +5877,7 @@ one.
 
     ;; Speedbar in the current frame (vs in a new frame).
     (when (and (not (locate-library "helm-config"))
+               (not (locate-library "helm-autoloads"))
                                         ; Helm is better than speedbar!
                (locate-library "sr-speedbar"))
 
@@ -14124,7 +14127,8 @@ Pick up where you left off.
 #+begin_src emacs-lisp
   (leuven--section "FFAP")
 
-  (unless (featurep 'helm-config)
+  (unless (or (featurep 'helm-config)
+              (featurep 'helm-autoloads))
 
     ;; Visit a file.
     (global-set-key (kbd "<f3>") #'find-file-at-point))
