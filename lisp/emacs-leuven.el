@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221214.1824
+;; Version: 20221214.1837
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221214.1824"
+(defconst leuven--emacs-version "20221214.1837"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -226,17 +226,12 @@ Last time is saved in global variable `leuven--before-section-time'."
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (leuven--add-to-load-path
-   (concat leuven--directory "site-lisp"))
-
-  (defvar leuven--local-repos-directory "~/Public/Repositories/"
-    "Directory containing additional Emacs Lisp public repositories.")
-
-  (leuven--add-to-load-path
-   (concat leuven--local-repos-directory "babel"))
-  (leuven--add-to-load-path
-   (concat leuven--local-repos-directory "emacs-bookmark-extension") ; XXX?
-   )
+  (leuven--add-to-load-path leuven--directory)
+  (leuven--add-to-load-path (concat leuven--directory "lisp")) ; XXX
+  (leuven--add-to-load-path (concat leuven--directory "site-lisp")) ; XXX
+  (leuven--add-to-load-path (concat leuven--directory "../site-lisp"))
+  (leuven--add-to-load-path "~/lisp")
+  (leuven--add-to-load-path "~/site-lisp")
 
   (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")

@@ -342,21 +342,12 @@ need to load a single file that define autoloaded functions.
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (leuven--add-to-load-path
-   (concat leuven--directory "site-lisp"))
-#+end_src
-
-~leuven--local-repos-directory~ is where you put Emacs Git/SVN/CSV repositories.
-
-#+begin_src emacs-lisp
-  (defvar leuven--local-repos-directory "~/Public/Repositories/"
-    "Directory containing additional Emacs Lisp public repositories.")
-
-  (leuven--add-to-load-path
-   (concat leuven--local-repos-directory "babel"))
-  (leuven--add-to-load-path
-   (concat leuven--local-repos-directory "emacs-bookmark-extension") ; XXX?
-   )
+  (leuven--add-to-load-path leuven--directory)
+  (leuven--add-to-load-path (concat leuven--directory "lisp")) ; XXX
+  (leuven--add-to-load-path (concat leuven--directory "site-lisp")) ; XXX
+  (leuven--add-to-load-path (concat leuven--directory "../site-lisp"))
+  (leuven--add-to-load-path "~/lisp")
+  (leuven--add-to-load-path "~/site-lisp")
 #+end_src
 
 *************** TODO Specify variables using `defcustom'
