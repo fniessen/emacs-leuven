@@ -14258,6 +14258,8 @@ using ~C-n~ and ~C-p~ key bindings.
           '(("fr" . "en") ("en" . "fr")
             ("fr" . "nl") ("nl" . "fr")
             ("fr" . "es") ("es" . "fr"))))
+
+)                                       ; Chapter 46 ends here.
 #+end_src
 
 * Other Amusements

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221214.1837
+;; Version: 20221214.1912
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221214.1837"
+(defconst leuven--emacs-version "20221214.1912"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7601,6 +7601,8 @@ This example lists Azerty layout second row keys."
           '(("fr" . "en") ("en" . "fr")
             ("fr" . "nl") ("nl" . "fr")
             ("fr" . "es") ("es" . "fr"))))
+
+)                                       ; Chapter 46 ends here.
 
 ;;* 47 Other (info "(emacs)Amusements")
 
