@@ -14247,44 +14247,7 @@ bind it to a key:
   (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
 #+end_src
 
-** Babel translator
-
-#+begin_src emacs-lisp
-;;** Babel
-
-  (leuven--section "Babel")
-
-  ;; Interface to web translation services such as Babelfish.
-  (when (locate-library "babel")
-
-    (autoload 'babel "babel"
-      "Use a web translation service to translate the message MSG." t)
-    (autoload 'babel-region "babel"
-      "Use a web translation service to translate the current region." t)
-    (autoload 'babel-as-string "babel"
-      "Use a web translation service to translate MSG, returning a string." t)
-    (autoload 'babel-buffer "babel"
-      "Use a web translation service to translate the current buffer." t)
-
-    (defun leuven-babel-translate ()
-      "Translate using many online translators."
-      (interactive)
-      (require 'babel)
-      (let (source)
-        (switch-to-buffer "*leuven--translate*")
-        (erase-buffer)
-        (yank)
-        (setq source (buffer-substring-no-properties (point-min) (point-max)))
-        (erase-buffer)
-        (insert "--- Source ---\n\n")
-        (insert source)
-        (insert "\n\n\n--- Translation FR -> EN done by FreeTranslation ---\n\n")
-        (insert (babel-work source "fr" "en" 'babel-free-fetch 'babel-free-wash))
-        (insert "\n\n\n--- Translation EN -> FR done by FreeTranslation ---\n\n")
-        (insert (babel-work source "en" "fr" 'babel-free-fetch 'babel-free-wash)))))
-
-)
-#+end_src
+** Google translate
 
 Switch between different translation directions directly from minibuffer by
 using ~C-n~ and ~C-p~ key bindings.

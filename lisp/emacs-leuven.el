@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221031.1345
+;; Version: 20221214.1824
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221031.1345"
+(defconst leuven--emacs-version "20221214.1824"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7591,41 +7591,6 @@ This example lists Azerty layout second row keys."
 
   (global-set-key (kbd "C-c g G") #'leuven-google-search-active-region-or-word-at-point)
   (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
-
-;;** Babel
-
-  (leuven--section "Babel")
-
-  ;; Interface to web translation services such as Babelfish.
-  (when (locate-library "babel")
-
-    (autoload 'babel "babel"
-      "Use a web translation service to translate the message MSG." t)
-    (autoload 'babel-region "babel"
-      "Use a web translation service to translate the current region." t)
-    (autoload 'babel-as-string "babel"
-      "Use a web translation service to translate MSG, returning a string." t)
-    (autoload 'babel-buffer "babel"
-      "Use a web translation service to translate the current buffer." t)
-
-    (defun leuven-babel-translate ()
-      "Translate using many online translators."
-      (interactive)
-      (require 'babel)
-      (let (source)
-        (switch-to-buffer "*leuven--translate*")
-        (erase-buffer)
-        (yank)
-        (setq source (buffer-substring-no-properties (point-min) (point-max)))
-        (erase-buffer)
-        (insert "--- Source ---\n\n")
-        (insert source)
-        (insert "\n\n\n--- Translation FR -> EN done by FreeTranslation ---\n\n")
-        (insert (babel-work source "fr" "en" 'babel-free-fetch 'babel-free-wash))
-        (insert "\n\n\n--- Translation EN -> FR done by FreeTranslation ---\n\n")
-        (insert (babel-work source "en" "fr" 'babel-free-fetch 'babel-free-wash)))))
-
-)
 
   ;; Emacs interface to Google Translate.
   (with-eval-after-load "google-translate-autoloads"
