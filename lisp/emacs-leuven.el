@@ -7868,7 +7868,7 @@ This example lists Azerty layout second row keys."
 
 (add-hook 'after-init-hook
           #'(lambda ()
-              (message "[Emacs startup time: %.2f; GC done: %S]"
+              (message "[Emacs startup time: %.2f s; GC done: %S]"
                        (string-to-number (emacs-init-time)) gcs-done)
               (sit-for 0.3))
   t)
