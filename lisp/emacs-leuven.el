@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221215.1900
+;; Version: 20221228.1825
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221215.1900"
+(defconst leuven--emacs-version "20221228.1825"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7868,7 +7868,8 @@ This example lists Azerty layout second row keys."
 
 (add-hook 'after-init-hook
           #'(lambda ()
-              (message "[Emacs startup time: %s; GC done: %S]" (emacs-init-time) gcs-done)
+              (message "[Emacs startup time: %.2f; GC done: %S]"
+                       (string-to-number (emacs-init-time)) gcs-done)
               (sit-for 0.3))
   t)
 

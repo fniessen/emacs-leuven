@@ -15072,7 +15072,8 @@ dashboard):
 #+begin_src emacs-lisp
 (add-hook 'after-init-hook
           #'(lambda ()
-              (message "[Emacs startup time: %s; GC done: %S]" (emacs-init-time) gcs-done)
+              (message "[Emacs startup time: %.2f; GC done: %S]"
+                       (string-to-number (emacs-init-time)) gcs-done)
               (sit-for 0.3))
   t)
 #+end_src
