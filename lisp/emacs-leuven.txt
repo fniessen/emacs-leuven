@@ -739,8 +739,9 @@ These packages are neither built-in nor already installed nor ignored."
   )
 #+end_src
 
-#+begin_src emacs-lisp
-  (when (try-require 'paradox)
+#+begin_src emacs-lisp :tangle no
+  (idle-require 'paradox)
+  (with-eval-after-load "paradox"
     (paradox-enable))
 #+end_src
 
@@ -908,7 +909,9 @@ Visual feedback on some operations (~undo~, ~yank~, etc.).
 
 #+begin_src emacs-lisp
   (with-eval-after-load "volatile-highlights-autoloads"
-    (volatile-highlights-mode 1))
+    (idle-require 'volatile-highlights)
+    (with-eval-after-load "volatile-highlights"
+      (volatile-highlights-mode 1)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1276,7 +1279,10 @@ It moves point through ~buffer-undo-list~ positions.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "back-button-autoloads"
-    (back-button-mode 1)
+    (idle-require 'back-button)
+
+    (with-eval-after-load "back-button"
+      (back-button-mode 1)
 #+end_src
 
 You can go back and forth along the items that have been marked.
@@ -1299,11 +1305,11 @@ consecutive ~back-button~ commands.
 You can also use keyboard shortcuts ~C-M-left~, or ~C-M-right~:
 
 #+begin_src emacs-lisp
-    ;; Navigate backward.
-    (global-set-key (kbd "<C-M-left>")  #'back-button-global-backward) ; IntelliJ IDEA.
+      ;; Navigate backward.
+      (global-set-key (kbd "<C-M-left>")  #'back-button-global-backward) ; IntelliJ IDEA.
 
-    ;; Navigate forward.
-    (global-set-key (kbd "<C-M-right>") #'back-button-global-forward)) ; IntelliJ IDEA.
+      ;; Navigate forward.
+      (global-set-key (kbd "<C-M-right>") #'back-button-global-forward))) ; IntelliJ IDEA.
 #+end_src
 
 ** Commands to Mark Textual Objects
@@ -2267,13 +2273,13 @@ such a background behind or underneath the text.  Think of a marker pen
   ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
 
 
-(when (try-require 'symbol-overlay) ; XXX
-  (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
-  (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
-  (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
-  ;; (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
-  ;; (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
-  )
+  (when (try-require 'symbol-overlay) ; XXX
+    (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
+    (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
+    (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
+    ;; (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+    ;; (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
+    )
 #+end_src
 
 Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
@@ -2286,32 +2292,34 @@ point, the highlighting goes away.
 
 #+begin_src emacs-lisp
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol) ; XXX
+  (with-eval-after-load "auto-highlight-symbol-autoloads"
+    (idle-require 'auto-highlight-symbol)
 
-    ;; Add major modes Auto-Highlight-Symbol can run on.
-    (mapc #'(lambda (mode)
-              (add-to-list 'ahs-modes mode t))
-          '(js2-mode
-            ess-mode))                  ; R.
+    (with-eval-after-load "auto-highlight-symbol"
+      ;; Add major modes Auto-Highlight-Symbol can run on.
+      (mapc #'(lambda (mode)
+                (add-to-list 'ahs-modes mode t))
+            '(js2-mode
+              ess-mode))                  ; R.
 
-    ;; Number of seconds to wait before highlighting the current symbol.
-    (setq ahs-idle-interval 0.2) ; 0.35.
+      ;; Number of seconds to wait before highlighting the current symbol.
+      (setq ahs-idle-interval 0.2) ; 0.35.
 
-    ;; Unset AHS key bindings that override Org key bindings.
-    (define-key auto-highlight-symbol-mode-map (kbd "<M-left>")    nil)
-    (define-key auto-highlight-symbol-mode-map (kbd "<M-right>")   nil)
-    (define-key auto-highlight-symbol-mode-map (kbd "<M-S-left>")  nil)
-    (define-key auto-highlight-symbol-mode-map (kbd "<M-S-right>") nil)
+      ;; Unset AHS key bindings that override Org key bindings.
+      (define-key auto-highlight-symbol-mode-map (kbd "<M-left>")    nil)
+      (define-key auto-highlight-symbol-mode-map (kbd "<M-right>")   nil)
+      (define-key auto-highlight-symbol-mode-map (kbd "<M-S-left>")  nil)
+      (define-key auto-highlight-symbol-mode-map (kbd "<M-S-right>") nil)
 
-    ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
-    ;; (global-auto-highlight-symbol-mode t)
+      ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
+      ;; (global-auto-highlight-symbol-mode t)
 
-    ;; Enable Auto-Highlight-Symbol mode in all programming mode buffers.
-    (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
+      ;; Enable Auto-Highlight-Symbol mode in all programming mode buffers.
+      (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
 
-    ;; Enable Auto-Highlight-Symbol mode in LaTeX mode.
-    (add-hook 'latex-mode-hook #'auto-highlight-symbol-mode)
-    )
+      ;; Enable Auto-Highlight-Symbol mode in LaTeX mode.
+      (add-hook 'latex-mode-hook #'auto-highlight-symbol-mode)
+      ))
 #+end_src
 
 XXX Check out ~light-symbol~.
@@ -3719,7 +3727,9 @@ Turn on auto-revert mode globally.
     (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
-  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
+  (idle-require 'autorevert)
+  (with-eval-after-load "autorevert"
+    (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
                                         ; if `auto-revert-remote-files' is set
                                         ; to non-nil.
 #+end_src
@@ -4572,7 +4582,7 @@ We cannot change ~helm-command-prefix-key~ once ~helm-config~ is loaded.
                                         ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
-    (try-require 'helm-mode) ; See https://emacs.stackexchange.com/questions/70122/error-running-timer-void-function-helm-completion-flex-transform-pattern
+    (idle-require 'helm-mode) ; See https://emacs.stackexchange.com/questions/70122/error-running-timer-void-function-helm-completion-flex-transform-pattern
     (global-unset-key (kbd "C-x c"))
 #+end_src
 
@@ -6800,7 +6810,12 @@ demotion* functionality.
   ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
   (setq org-cycle-global-at-bob t)
 
-  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
+  ;; (setq org-cycle-level-after-item/entry-creation nil)
+
+  ;; ‘org-cycle’ should never emulate TAB.
+  (setq org-cycle-emulate-tab nil)
+
+  (global-set-key (kbd "S-<tab>") (kbd "C-u M-x org-cycle")) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -9098,8 +9113,8 @@ Kick things off with ~run-skewer~, and then:
 ;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
 #+end_src
 
-#+begin_src emacs-lisp
-  (with-eval-after-load "skewer-mode-autoloads-XXX" ; Not using it yet.
+#+begin_src emacs-lisp :tangle no
+  (with-eval-after-load "skewer-mode-autoloads" ; Not using it yet.
     (add-hook 'js2-mode-hook 'skewer-mode)
     (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode))
@@ -9148,8 +9163,8 @@ Working with SQL databases.
 
 Server list.
 
-#+begin_src emacs-lisp
-  (require 'sql)
+#+begin_src emacs-lisp :tangle no
+  (idle-require 'sql)
 
   (setq sql-connection-alist
         '((localhost_HQ     (sql-product  'ms)
@@ -9206,7 +9221,7 @@ Server list.
 
 See https://truongtx.me/2014/08/23/setup-emacs-as-an-sql-database-client.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-hook 'sql-mode-hook
             #'(lambda ()
                 (setq truncate-lines t)
@@ -9224,7 +9239,7 @@ See https://truongtx.me/2014/08/23/setup-emacs-as-an-sql-database-client.
 
 Basic config for MS SQL.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Default login parameters to connect to Microsoft procSQL Server.
   (setq sql-ms-login-params
         '((user     :default "afm")
@@ -9233,7 +9248,7 @@ Basic config for MS SQL.
           (port     :default 1433)))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (setq sql-ms-program "sqlcmd")
 
   ;; Force Emacs to use CP 850 for every sqlcmd process (for accents) and
@@ -9245,7 +9260,7 @@ Basic config for MS SQL.
   (setq sql-ms-options '("-w" "65535"))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (setq sql-ms-program "tsql")
 
   (setq sql-ms-options (remove "-n" sql-ms-options))
@@ -9278,7 +9293,7 @@ Basic config for MS SQL.
 
 Basic config for Oracle.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-to-list 'process-coding-system-alist '("sqlplus" . windows-1252))
 #+end_src
 
@@ -9291,7 +9306,7 @@ everything lines up nice. This will add a preceding newline to every comint
 output, even queries run at the prompt - though the extra line isn't too
 noticeable.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (defvar sql-last-prompt-pos 1
     "position of last prompt when added recording started")
   (make-variable-buffer-local 'sql-last-prompt-pos)
@@ -9374,12 +9389,14 @@ The best thing out there is sql-indent.el
 Which doesn't do auto-indenting only on command indentation.
 I have found it pretty useful at times.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (with-eval-after-load "sql-indent"
     (add-hook 'sql-mode-hook 'sqlind-setup))
 #+end_src
 
-*** https://www.emacswiki.org/emacs/SqlBeautify
+*** SQL beautify
+
+https://www.emacswiki.org/emacs/SqlBeautify
 
 *** Word case
 
@@ -11179,29 +11196,30 @@ Projectile's features.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "projectile-autoloads"
+    (idle-require 'projectile)
 
-    ;; Turn on projectile mode by default for all file types
-    (projectile-mode)
-    ;; (projectile-global-mode) ??
+    (with-eval-after-load "projectile"
+      ;; Turn on projectile mode by default for all file types
+      (projectile-mode)
+      ;; (projectile-global-mode) ??
 
-    ;; Add keymap prefix.
-    (define-key projectile-mode-map (kbd "C-c p")   #'projectile-command-map)
+      ;; Add keymap prefix.
+      (define-key projectile-mode-map (kbd "C-c p")   #'projectile-command-map)
 
-    (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
+      (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
 
-    (setq projectile-completion-system 'helm)
-    (setq projectile-completion-system 'helm-comp-read)
+      (setq projectile-completion-system 'helm)
+      (setq projectile-completion-system 'helm-comp-read)
 
-    ;; Turn on Helm key bindings for projectile.
-    (when (locate-library "helm-projectile")
-      (helm-projectile-on))
+      ;; Turn on Helm key bindings for projectile.
+      (when (locate-library "helm-projectile")
+        (helm-projectile-on))
 
-    ;; ;; For large projects.
-    ;; (setq helm-projectile-sources-list
-    ;;       '(helm-source-projectile-projects
-    ;;         helm-source-projectile-files-list))
-
-  )
+      ;; ;; For large projects.
+      ;; (setq helm-projectile-sources-list
+      ;;       '(helm-source-projectile-projects
+      ;;         helm-source-projectile-files-list))
+  ))
 
   (with-eval-after-load "projectile"
 
@@ -11895,15 +11913,16 @@ Not all back-ends support these last 2 commands.
 #+begin_src emacs-lisp
   ;; Modular text completion framework.
   (with-eval-after-load "company-autoloads"
+    (idle-require 'company)
+    (with-eval-after-load "company"
+      ;; Enable Company mode in all buffers ....
+      (global-company-mode 1)
 
-    ;; Enable Company mode in all buffers ....
-    (global-company-mode 1)
-
-    (global-set-key (kbd "C-c y") #'company-yasnippet)
+      (global-set-key (kbd "C-c y") #'company-yasnippet)
                                         ; Better than `helm-yas-complete' as
                                         ; `company-yasnippet' shows both the key
                                         ; and the replacement.
-    )
+      ))
 #+end_src
 
 # #+begin_src emacs-lisp :tangle no
@@ -14812,10 +14831,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
 ;;*** 3.3 Keywords
 
     ;; List of keywords to highlight.
-    (setq lui-highlight-keywords
-          '(
-            ;; "[^<]vauban"
-            "org" "beamer" "ledger" "tikz"))
+    (setq lui-highlight-keywords '("org" "beamer" "ledger" "tikz"))
 
     ;; Add IRC color support to LUI.
     (try-require 'lui-irc-colors)
@@ -14922,11 +14938,11 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
        (when erc-identd-process
          (delete-process erc-identd-process))
        (setq erc-identd-process
-	     (make-network-process :name "identd"
-			           :buffer nil
-			           :host 'local :service port
-			           :server t :noquery t
-			           :filter 'erc-identd-filter))
+             (make-network-process :name "identd"
+                                   :buffer nil
+                                   :host 'local :service port
+                                   :server t :noquery t
+                                   :filter 'erc-identd-filter))
        (set-process-query-on-exit-flag erc-identd-process nil)))
 
   :config

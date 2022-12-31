@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221228.1825
+;; Version: 20221231.1723
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221228.1825"
+(defconst leuven--emacs-version "20221231.1723"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -530,9 +530,6 @@ These packages are neither built-in nor already installed nor ignored."
     ;; (auto-package-update-maybe)
   )
 
-  (when (try-require 'paradox)
-    (paradox-enable))
-
 )                                       ; Chapter 48 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
@@ -644,7 +641,9 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
 
   (with-eval-after-load "volatile-highlights-autoloads"
-    (volatile-highlights-mode 1))
+    (idle-require 'volatile-highlights)
+    (with-eval-after-load "volatile-highlights"
+      (volatile-highlights-mode 1)))
 
 )                                       ; Chapter 7 ends here.
 
@@ -810,13 +809,16 @@ These packages are neither built-in nor already installed nor ignored."
     (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 
   (with-eval-after-load "back-button-autoloads"
-    (back-button-mode 1)
+    (idle-require 'back-button)
 
-    ;; Navigate backward.
-    (global-set-key (kbd "<C-M-left>")  #'back-button-global-backward) ; IntelliJ IDEA.
+    (with-eval-after-load "back-button"
+      (back-button-mode 1)
 
-    ;; Navigate forward.
-    (global-set-key (kbd "<C-M-right>") #'back-button-global-forward)) ; IntelliJ IDEA.
+      ;; Navigate backward.
+      (global-set-key (kbd "<C-M-left>")  #'back-button-global-backward) ; IntelliJ IDEA.
+
+      ;; Navigate forward.
+      (global-set-key (kbd "<C-M-right>") #'back-button-global-forward))) ; IntelliJ IDEA.
 
   ;; Increase selected region by semantic units.
   (with-eval-after-load "expand-region-autoloads"
@@ -1260,41 +1262,43 @@ Should be selected from `fringe-bitmaps'.")
   ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
 
 
-(when (try-require 'symbol-overlay) ; XXX
-  (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
-  (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
-  (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
-  ;; (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
-  ;; (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
-  )
+  (when (try-require 'symbol-overlay) ; XXX
+    (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
+    (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
+    (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
+    ;; (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+    ;; (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
+    )
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (when (try-require 'auto-highlight-symbol) ; XXX
+  (with-eval-after-load "auto-highlight-symbol-autoloads"
+    (idle-require 'auto-highlight-symbol)
 
-    ;; Add major modes Auto-Highlight-Symbol can run on.
-    (mapc #'(lambda (mode)
-              (add-to-list 'ahs-modes mode t))
-          '(js2-mode
-            ess-mode))                  ; R.
+    (with-eval-after-load "auto-highlight-symbol"
+      ;; Add major modes Auto-Highlight-Symbol can run on.
+      (mapc #'(lambda (mode)
+                (add-to-list 'ahs-modes mode t))
+            '(js2-mode
+              ess-mode))                  ; R.
 
-    ;; Number of seconds to wait before highlighting the current symbol.
-    (setq ahs-idle-interval 0.2) ; 0.35.
+      ;; Number of seconds to wait before highlighting the current symbol.
+      (setq ahs-idle-interval 0.2) ; 0.35.
 
-    ;; Unset AHS key bindings that override Org key bindings.
-    (define-key auto-highlight-symbol-mode-map (kbd "<M-left>")    nil)
-    (define-key auto-highlight-symbol-mode-map (kbd "<M-right>")   nil)
-    (define-key auto-highlight-symbol-mode-map (kbd "<M-S-left>")  nil)
-    (define-key auto-highlight-symbol-mode-map (kbd "<M-S-right>") nil)
+      ;; Unset AHS key bindings that override Org key bindings.
+      (define-key auto-highlight-symbol-mode-map (kbd "<M-left>")    nil)
+      (define-key auto-highlight-symbol-mode-map (kbd "<M-right>")   nil)
+      (define-key auto-highlight-symbol-mode-map (kbd "<M-S-left>")  nil)
+      (define-key auto-highlight-symbol-mode-map (kbd "<M-S-right>") nil)
 
-    ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
-    ;; (global-auto-highlight-symbol-mode t)
+      ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
+      ;; (global-auto-highlight-symbol-mode t)
 
-    ;; Enable Auto-Highlight-Symbol mode in all programming mode buffers.
-    (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
+      ;; Enable Auto-Highlight-Symbol mode in all programming mode buffers.
+      (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
 
-    ;; Enable Auto-Highlight-Symbol mode in LaTeX mode.
-    (add-hook 'latex-mode-hook #'auto-highlight-symbol-mode)
-    )
+      ;; Enable Auto-Highlight-Symbol mode in LaTeX mode.
+      (add-hook 'latex-mode-hook #'auto-highlight-symbol-mode)
+      ))
 
 ;; XXX Impact on Org's HTML export?
   ;; (with-eval-after-load "color-identifiers-mode-autoloads"
@@ -2170,7 +2174,9 @@ Should be selected from `fringe-bitmaps'.")
     (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
-  (global-auto-revert-mode 1)           ; Can generate a lot of network traffic
+  (idle-require 'autorevert)
+  (with-eval-after-load "autorevert"
+    (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
                                         ; if `auto-revert-remote-files' is set
                                         ; to non-nil.
 
@@ -2542,7 +2548,7 @@ Should be selected from `fringe-bitmaps'.")
                                         ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
-    (try-require 'helm-mode) ; See https://emacs.stackexchange.com/questions/70122/error-running-timer-void-function-helm-completion-flex-transform-pattern
+    (idle-require 'helm-mode) ; See https://emacs.stackexchange.com/questions/70122/error-running-timer-void-function-helm-completion-flex-transform-pattern
     (global-unset-key (kbd "C-x c"))
 
     ;; Resume a previous `helm' session.
@@ -3852,7 +3858,12 @@ cycle through all windows on current frame."
   ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
   (setq org-cycle-global-at-bob t)
 
-  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
+  ;; (setq org-cycle-level-after-item/entry-creation nil)
+
+  ;; ‘org-cycle’ should never emulate TAB.
+  (setq org-cycle-emulate-tab nil)
+
+  (global-set-key (kbd "S-<tab>") (kbd "C-u M-x org-cycle")) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
@@ -5083,160 +5094,6 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 ;; (require 'css-mode)
 ;; (define-key css-mode-map (kbd "C-c i") #'emr-css-toggle-important)
 
-  (with-eval-after-load "skewer-mode-autoloads-XXX" ; Not using it yet.
-    (add-hook 'js2-mode-hook 'skewer-mode)
-    (add-hook 'css-mode-hook 'skewer-css-mode)
-    (add-hook 'html-mode-hook 'skewer-html-mode))
-
-  (require 'sql)
-
-  (setq sql-connection-alist
-        '((localhost_HQ     (sql-product  'ms)
-                            (sql-port     1433)
-                            (sql-server   "localhost")
-                            (sql-user     "afm")
-                            (sql-password "afm")
-                            (sql-database "ARCHIBUS_23_1_HQ"))
-
-          (localhost_Schema (sql-product  'ms)
-                            (sql-port     1433)
-                            (sql-server   "localhost")
-                            (sql-user     "afm")
-                            (sql-password "afm")
-                            (sql-database "ARCHIBUS_23_1_Schema"))
-
-          (localhost_PFlow  (sql-product  'ms)
-                            (sql-port     1433)
-                            (sql-server   "localhost")
-                            (sql-user     "")
-                            (sql-password "")
-                            (sql-database "PFlowXiphias"))
-
-          (localhost_CSPO   (sql-product  'oracle)
-                            (sql-port     1521)
-                            (sql-server   "localhost")
-                            (sql-user     "afm")
-                            (sql-password "AFM")
-                            (sql-database "CSPOv213"))))
-
-  (defun sql-localhost_HQ ()
-    (interactive)
-    (sql-connect-preset 'localhost_HQ))
-
-  (defun sql-localhost_Schema ()
-    (interactive)
-    (sql-connect-preset 'localhost_Schema))
-
-  (defun sql-localhost_CSPO ()
-    (interactive)
-    (sql-connect-preset 'localhost_CSPO))
-
-  (defun sql-localhost_PFlow ()
-    (interactive)
-    (sql-connect-preset 'localhost_PFlow))
-
-  ;; This makes all it all happen via M-x sql-localhost_HQ, etc.
-  (defun sql-connect-preset (name)
-    "Connect to a predefined SQL connection listed in `sql-connection-alist'"
-    (eval `(let ,(cdr (assoc name sql-connection-alist))
-             (flet ((sql-get-login (&rest what))) ; In sql.el.
-               (sql-product-interactive sql-product)))))
-
-  (add-hook 'sql-mode-hook
-            #'(lambda ()
-                (setq truncate-lines t)
-                (sql-highlight-ms-keywords)
-                (setq sql-send-terminator t)
-                (setq comint-process-echoes t)))
-
-  (add-hook 'sql-interactive-mode-hook
-            #'(lambda ()
-                (setq truncate-lines t)
-                (setq comint-process-echoes t)
-                ;; (text-scale-decrease 1)
-                (setq-local show-trailing-whitespace nil)))
-
-  ;; Default login parameters to connect to Microsoft procSQL Server.
-  (setq sql-ms-login-params
-        '((user     :default "afm")
-          (database :default "ARCHIBUS_23_1_HQ")
-          (server   :default "localhost")
-          (port     :default 1433)))
-
-  (setq sql-ms-program "sqlcmd")
-
-  ;; Force Emacs to use CP 850 for every sqlcmd process (for accents) and
-  ;; force DOS line endings.
-  (add-to-list 'process-coding-system-alist '("sqlcmd" . cp850-dos))
-  (add-to-list 'process-coding-system-alist '("osql" . cp850-dos))
-
-  ;; (setq sql-ms-options '("-w" "65535" "-h" "20000" ))
-  (setq sql-ms-options '("-w" "65535"))
-
-  (setq sql-ms-program "tsql")
-
-  (setq sql-ms-options (remove "-n" sql-ms-options))
-  (setq sql-ms-options nil)
-
-  ;; Redefined.
-  (defun sql-comint-ms (product options)
-    "Create comint buffer and connect to Microsoft SQL Server."
-    ;; Put all parameters to the program (if defined) in a list and call
-    ;; make-comint.
-    (message "[Leuven Options: %s]" options)
-    (let ((params options))
-      (if (not (string= "" sql-server))
-          (setq params (append (list "-S" sql-server) params)))
-      (if (not (string= "" sql-database))
-          (setq params (append (list "-D" sql-database) params)))
-      (if (not (string= "" sql-user))
-          (setq params (append (list "-U" sql-user) params)))
-      (if (not (string= "" sql-password))
-          (setq params (append (list "-P" sql-password) params))
-        (if (string= "" sql-user)
-            ;; if neither user nor password is provided, use system credentials.
-            (setq params (append (list "-E") params))
-          ;; If -P is passed to ISQL as the last argument without a password, it's
-          ;; considered null.
-          (setq params (append params (list "-P")))))
-      (message "[Leuven Params: %s]" params)
-      (sql-comint product params)))
-
-  (add-to-list 'process-coding-system-alist '("sqlplus" . windows-1252))
-
-  (defvar sql-last-prompt-pos 1
-    "position of last prompt when added recording started")
-  (make-variable-buffer-local 'sql-last-prompt-pos)
-  (put 'sql-last-prompt-pos 'permanent-local t)
-
-  (defun sql-add-newline-first (output)
-    "Add newline to beginning of OUTPUT for `comint-preoutput-filter-functions'
-    This fixes up the display of queries sent to the inferior buffer
-    programatically."
-    (let ((begin-of-prompt
-           (or (and comint-last-prompt-overlay
-                    ;; sometimes this overlay is not on prompt
-                    (save-excursion
-                      (goto-char (overlay-start comint-last-prompt-overlay))
-                      (looking-at-p comint-prompt-regexp)
-                      (point)))
-               1)))
-      (if (> begin-of-prompt sql-last-prompt-pos)
-          (progn
-            (setq sql-last-prompt-pos begin-of-prompt)
-            (concat "\n" output))
-        output)))
-
-  (defun sqli-add-hooks ()
-    "Add hooks to `sql-interactive-mode-hook'."
-    (add-hook 'comint-preoutput-filter-functions
-              'sql-add-newline-first))
-
-  (add-hook 'sql-interactive-mode-hook 'sqli-add-hooks)
-
-  (with-eval-after-load "sql-indent"
-    (add-hook 'sql-mode-hook 'sqlind-setup))
-
 )                                       ; Chapter 26 ends here.
 
 ;;* 27 (info "(emacs)Building") Compiling and Testing Programs
@@ -6082,29 +5939,30 @@ a clean buffer we're an order of magnitude laxer about checking."
 )                                       ; Chapter 28 ends here.
 
   (with-eval-after-load "projectile-autoloads"
+    (idle-require 'projectile)
 
-    ;; Turn on projectile mode by default for all file types
-    (projectile-mode)
-    ;; (projectile-global-mode) ??
+    (with-eval-after-load "projectile"
+      ;; Turn on projectile mode by default for all file types
+      (projectile-mode)
+      ;; (projectile-global-mode) ??
 
-    ;; Add keymap prefix.
-    (define-key projectile-mode-map (kbd "C-c p")   #'projectile-command-map)
+      ;; Add keymap prefix.
+      (define-key projectile-mode-map (kbd "C-c p")   #'projectile-command-map)
 
-    (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
+      (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
 
-    (setq projectile-completion-system 'helm)
-    (setq projectile-completion-system 'helm-comp-read)
+      (setq projectile-completion-system 'helm)
+      (setq projectile-completion-system 'helm-comp-read)
 
-    ;; Turn on Helm key bindings for projectile.
-    (when (locate-library "helm-projectile")
-      (helm-projectile-on))
+      ;; Turn on Helm key bindings for projectile.
+      (when (locate-library "helm-projectile")
+        (helm-projectile-on))
 
-    ;; ;; For large projects.
-    ;; (setq helm-projectile-sources-list
-    ;;       '(helm-source-projectile-projects
-    ;;         helm-source-projectile-files-list))
-
-  )
+      ;; ;; For large projects.
+      ;; (setq helm-projectile-sources-list
+      ;;       '(helm-source-projectile-projects
+      ;;         helm-source-projectile-files-list))
+  ))
 
   (with-eval-after-load "projectile"
 
@@ -6409,15 +6267,16 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Modular text completion framework.
   (with-eval-after-load "company-autoloads"
+    (idle-require 'company)
+    (with-eval-after-load "company"
+      ;; Enable Company mode in all buffers ....
+      (global-company-mode 1)
 
-    ;; Enable Company mode in all buffers ....
-    (global-company-mode 1)
-
-    (global-set-key (kbd "C-c y") #'company-yasnippet)
+      (global-set-key (kbd "C-c y") #'company-yasnippet)
                                         ; Better than `helm-yas-complete' as
                                         ; `company-yasnippet' shows both the key
                                         ; and the replacement.
-    )
+      ))
 
   (with-eval-after-load "company"
 
