@@ -1,6 +1,5 @@
 ;; Packages to be installed by the user.
 (add-to-list 'package-selected-packages 'ledger-mode)
-(add-to-list 'package-selected-packages 'flycheck-ledger)
 
 ;; Helper code for use with the "ledger" command-line tool.
 (add-to-list 'auto-mode-alist '("\\.dat\\'"     . ledger-mode))
@@ -24,13 +23,7 @@
 (with-eval-after-load "ledger-init"
 
   ;; (setq ledger-default-date-format "%Y-%m-%d")
-  (setq ledger-default-date-format "%Y/%m/%d")
-  )
-
-(with-eval-after-load "flycheck"
-
-  ;; Flycheck integration for ledger files.
-  (try-require 'flycheck-ledger))
+  (setq ledger-default-date-format "%Y/%m/%d"))
 
 (provide 'emacs-leuven-ledger)
 

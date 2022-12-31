@@ -17,7 +17,6 @@
 #+begin_src emacs-lisp
 ;; Packages to be installed by the user.
 (add-to-list 'package-selected-packages 'ledger-mode)
-(add-to-list 'package-selected-packages 'flycheck-ledger)
 #+end_src
 
 * Major modes
@@ -45,13 +44,7 @@
 (with-eval-after-load "ledger-init"
 
   ;; (setq ledger-default-date-format "%Y-%m-%d")
-  (setq ledger-default-date-format "%Y/%m/%d")
-  )
-
-(with-eval-after-load "flycheck"
-
-  ;; Flycheck integration for ledger files.
-  (try-require 'flycheck-ledger))
+  (setq ledger-default-date-format "%Y/%m/%d"))
 #+end_src
 
 * Feature
