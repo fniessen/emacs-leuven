@@ -6810,12 +6810,7 @@ demotion* functionality.
   ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
   (setq org-cycle-global-at-bob t)
 
-  ;; (setq org-cycle-level-after-item/entry-creation nil)
-
-  ;; ‘org-cycle’ should never emulate TAB.
-  (setq org-cycle-emulate-tab nil)
-
-  (global-set-key (kbd "S-<tab>") (kbd "C-u M-x org-cycle")) ; that works (but on level 1+)
+  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
