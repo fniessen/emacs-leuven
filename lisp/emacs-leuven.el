@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2022 Fabrice Niessen
+;; Copyright (C) 1999-2023 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20221231.1723
+;; Version: 20230115.1422
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20221231.1723"
+(defconst leuven--emacs-version "20230115.1422"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3858,7 +3858,14 @@ cycle through all windows on current frame."
   ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
   (setq org-cycle-global-at-bob t)
 
+  ;; (setq org-cycle-level-after-item/entry-creation nil)
+
+  ;; ;; ‘org-cycle’ should never emulate TAB.
+  ;; (setq org-cycle-emulate-tab nil)
+
   (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
+  ;; (global-set-key (kbd "S-<tab>") (kbd "C-u M-x org-cycle")) ; that works (but on level 1+)
+
   ;; TODO Look at org-cycle-global and local below, they work better, but
   ;; still on level 1+
   ;; TODO Replace it by a function which alternatively does `hide-body' and
