@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230115.1422
+;; Version: 20230115.1441
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230115.1422"
+(defconst leuven--emacs-version "20230115.1441"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -227,11 +227,10 @@ Last time is saved in global variable `leuven--before-section-time'."
     "Directory path of Emacs-Leuven installation.")
 
   (leuven--add-to-load-path leuven--directory)
-  (leuven--add-to-load-path (concat leuven--directory "lisp")) ; XXX
-  (leuven--add-to-load-path (concat leuven--directory "site-lisp")) ; XXX
   (leuven--add-to-load-path (concat leuven--directory "../site-lisp"))
-  (leuven--add-to-load-path "~/lisp")
-  (leuven--add-to-load-path "~/site-lisp")
+
+  ;; (leuven--add-to-load-path "~/lisp")
+  ;; (leuven--add-to-load-path "~/site-lisp")
 
   (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")
@@ -6035,7 +6034,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Add root directories that store the snippets.
     (let ((leuven-snippets              ; Additional YASnippets.
-           (concat leuven--directory "snippets")))
+           (concat leuven--directory "../.emacs.d/snippets")))
 
       (when (file-directory-p leuven-snippets)
         (add-to-list 'yas-snippet-dirs leuven-snippets)))

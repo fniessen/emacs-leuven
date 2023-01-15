@@ -343,11 +343,10 @@ need to load a single file that define autoloaded functions.
     "Directory path of Emacs-Leuven installation.")
 
   (leuven--add-to-load-path leuven--directory)
-  (leuven--add-to-load-path (concat leuven--directory "lisp")) ; XXX
-  (leuven--add-to-load-path (concat leuven--directory "site-lisp")) ; XXX
   (leuven--add-to-load-path (concat leuven--directory "../site-lisp"))
-  (leuven--add-to-load-path "~/lisp")
-  (leuven--add-to-load-path "~/site-lisp")
+
+  ;; (leuven--add-to-load-path "~/lisp")
+  ;; (leuven--add-to-load-path "~/site-lisp")
 #+end_src
 
 *************** TODO Specify variables using `defcustom'
@@ -11356,7 +11355,7 @@ Load additional snippets.
 #+begin_src emacs-lisp
     ;; Add root directories that store the snippets.
     (let ((leuven-snippets              ; Additional YASnippets.
-           (concat leuven--directory "snippets")))
+           (concat leuven--directory "../.emacs.d/snippets")))
 
       (when (file-directory-p leuven-snippets)
         (add-to-list 'yas-snippet-dirs leuven-snippets)))
