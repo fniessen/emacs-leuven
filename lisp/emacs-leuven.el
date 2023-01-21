@@ -4,7 +4,8 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230115.1441
+
+;; Version: 20230121.0427
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +85,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230115.1441"
+(defconst leuven--emacs-version "20230121.0427"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -985,6 +986,27 @@ These packages are neither built-in nor already installed nor ignored."
 
   ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
   (menu-bar-enable-clipboard)
+
+  ;; wsl-copy
+  (defun wsl-copy (start end)
+    (interactive "r")
+    (shell-command-on-region start end "clip.exe")
+    (deactivate-mark))
+
+  ;; Bind wsl-copy to C-c C-c
+  (global-set-key (kbd "C-c C-c") 'wsl-copy)
+
+  ;; wsl-paste
+  (defun wsl-paste ()
+    (interactive)
+    (let ((clipboard
+           (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
+      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
+      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
+      (insert clipboard)))
+
+  ;; Bind wsl-paste to C-c C-v
+  (global-set-key (kbd "C-c C-v") 'wsl-paste)
 
 )                                       ; Chapter 12 ends here.
 

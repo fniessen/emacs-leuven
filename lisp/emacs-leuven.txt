@@ -1643,6 +1643,34 @@ Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
   (menu-bar-enable-clipboard)
 #+end_src
 
+Copy/paste from Windows clipboard in WSL Emacs:
+
+#+begin_src emacs-lisp
+  ;; wsl-copy
+  (defun wsl-copy (start end)
+    (interactive "r")
+    (shell-command-on-region start end "clip.exe")
+    (deactivate-mark))
+
+  ;; Bind wsl-copy to C-c C-c
+  (global-set-key (kbd "C-c C-c") 'wsl-copy)
+
+  ;; wsl-paste
+  (defun wsl-paste ()
+    (interactive)
+    (let ((clipboard
+           (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
+      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
+      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
+      (insert clipboard)))
+
+  ;; Bind wsl-paste to C-c C-v
+  (global-set-key (kbd "C-c C-v") 'wsl-paste)
+#+end_src
+
+See https://emacs.stackexchange.com/questions/39210/copy-paste-from-windows-clipboard-in-wsl-terminal
+and xclip.el?
+
 ** Rectangles
 
 To kill the text of a rectangular area (vertically selected text), use ~C-x r k~
