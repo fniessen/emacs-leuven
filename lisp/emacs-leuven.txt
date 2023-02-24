@@ -14507,22 +14507,10 @@ a buffer.  Syntax table is used for example for:
 
 - commands like ~forward-word~ (~M-f~) or ~backward-kill-word~ (~M-DEL~),
 - spell-checking of words,
-- expansion commands of abbrevs,
-- etc.
+- expansion commands of abbrevs.
 
-Evaluate ~current-word~ and see whether characters such as ~-~ and ~_~ are
-considered part of the word (depending on the current major mode).
-
-#+begin_src emacs-lisp
-;;** 49.5 The (info "(emacs)Syntax") Table
-
-  (leuven--section "49.5 The (emacs)Syntax Table")
-
-  ;; Define "-" as part of a word.
-  ;; (add-hook 'emacs-lisp-mode-hook
-  ;;           #'(lambda ()
-  ;;             (modify-syntax-entry ?- "w")))
-#+end_src
+Evaluate ~current-word~ and see whether characters such as ~-~ and ~_~ are considered
+part of the word (depending on the current major mode).
 
 #+begin_src emacs-lisp
 )                                       ; Chapter 49 ends here.

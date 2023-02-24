@@ -4,8 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-
-;; Version: 20230121.0427
+;; Version: 20230224.1743
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -85,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230121.0427"
+(defconst leuven--emacs-version "20230224.1743"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7627,15 +7626,6 @@ This example lists Azerty layout second row keys."
     ;; Set the maximum length (in characters) for key descriptions (commands or
     ;; prefixes).
     (setq which-key-max-description-length 33))
-
-;;** 49.5 The (info "(emacs)Syntax") Table
-
-  (leuven--section "49.5 The (emacs)Syntax Table")
-
-  ;; Define "-" as part of a word.
-  ;; (add-hook 'emacs-lisp-mode-hook
-  ;;           #'(lambda ()
-  ;;             (modify-syntax-entry ?- "w")))
 
 )                                       ; Chapter 49 ends here.
 
