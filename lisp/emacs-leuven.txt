@@ -12802,7 +12802,7 @@ Extra Dired functionality:
     (defadvice dired-jump (around leuven-dired-jump activate)
       "Ask for confirmation for buffers of 1,400,000 bytes or more."
       (when (or (< (buffer-size) 1400000)
-                (y-or-n-p "Are you sure you want to do this? (This may take time...) "))
+                (y-or-n-p "Are you sure you want to do this? (This may take time... Use `C-x d' instead) "))
         ad-do-it))
     )
 #+end_src

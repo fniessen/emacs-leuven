@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230224.1743
+;; Version: 20230302.1001
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230224.1743"
+(defconst leuven--emacs-version "20230302.1001"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -6648,7 +6648,7 @@ This example lists Azerty layout second row keys."
     (defadvice dired-jump (around leuven-dired-jump activate)
       "Ask for confirmation for buffers of 1,400,000 bytes or more."
       (when (or (< (buffer-size) 1400000)
-                (y-or-n-p "Are you sure you want to do this? (This may take time...) "))
+                (y-or-n-p "Are you sure you want to do this? (This may take time... Use `C-x d' instead) "))
         ad-do-it))
     )
 
