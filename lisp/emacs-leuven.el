@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230317.2329
+;; Version: 20230317.2335
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230317.2329"
+(defconst leuven--emacs-version "20230317.2335"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1644,11 +1644,9 @@ Should be selected from `fringe-bitmaps'.")
     (let* ((read-only-color "purple1")
            (overwrite-color "#7F7F7F")
            (default-color "black")
-           (color (cl-case (cons buffer-read-only overwrite-mode)
-                    ((t . t)  read-only-color)
-                    ((t . nil) read-only-color)
-                    ((nil . t) overwrite-color)
-                    ((nil . nil) default-color)))
+           (color (cond (buffer-read-only read-only-color)
+                        (overwrite-mode overwrite-color)
+                        (t default-color)))
            (type (if (null overwrite-mode) 'bar 'box)))
       (set-cursor-color color)
       (setq cursor-type type)))
