@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230317.2242
+;; Version: 20230317.2254
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230317.2242"
+(defconst leuven--emacs-version "20230317.2254"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -206,20 +206,16 @@ Last time is saved in global variable `leuven--before-section-time'."
 (leuven--chapter leuven-load-chapter-0-loading-libraries "0 Loading Libraries"
 
   ;; Load-path enhancement.
-  (defun leuven--add-to-load-path (this-directory)
-    "Add THIS-DIRECTORY at the beginning of the load-path, if it exists."
-    (when (and this-directory
-               (file-directory-p this-directory))
-      ;; TODO Add warning if directory does not exist.
-      (let* ((this-directory (expand-file-name this-directory)))
-
-        ;; Directories containing a `.nosearch' file (such as
-        ;; `auctex-11.88.6\style') should not made part of `load-path'.
-        ;; TODO `RCS' and `CVS' directories should also be excluded.
-        (unless (file-exists-p (concat this-directory "/.nosearch"))
-          (add-to-list 'load-path this-directory)
+  (defun leuven--add-to-load-path (dir)
+    "Add DIR at the beginning of the `load-path', if it exists and is a directory."
+    (when (and dir (file-directory-p dir))
+      (let ((dir (expand-file-name dir)))
+        (unless (file-exists-p dir)
+          (message "[WARNING: `%s' does not exist.]" dir))
+        (unless (file-exists-p (expand-file-name ".nosearch" dir))
+          (add-to-list 'load-path dir)
           (when leuven-verbose-loading
-            (message "[Added `%s' to `load-path']" this-directory))))))
+            (message "[Added `%s' to `load-path']" dir)))))))
 
   ;; Remember this directory.
   (defconst leuven--directory
