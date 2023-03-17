@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230317.2310
+;; Version: 20230317.2318
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230317.2310"
+(defconst leuven--emacs-version "20230317.2318"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -215,7 +215,7 @@ Last time is saved in global variable `leuven--before-section-time'."
         (unless (file-exists-p (expand-file-name ".nosearch" dir))
           (add-to-list 'load-path dir)
           (when leuven-verbose-loading
-            (message "[Added `%s' to `load-path']" dir)))))))
+            (message "[Added `%s' to `load-path']" dir))))))
 
   ;; Remember this directory.
   (defconst leuven--directory

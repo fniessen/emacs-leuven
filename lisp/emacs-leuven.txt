@@ -329,7 +329,7 @@ need to load a single file that define autoloaded functions.
         (unless (file-exists-p (expand-file-name ".nosearch" dir))
           (add-to-list 'load-path dir)
           (when leuven-verbose-loading
-            (message "[Added `%s' to `load-path']" dir)))))))
+            (message "[Added `%s' to `load-path']" dir))))))
 #+end_src
 
 #+begin_src emacs-lisp
