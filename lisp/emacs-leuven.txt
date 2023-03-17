@@ -14346,20 +14346,20 @@ particular color...
 
   ;; Record safe values for some local variables.
   (setq safe-local-variable-values
-        '((TeX-master . t)
-          (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
-          (flycheck-emacs-lisp-initialize-packages . t)
-          (flycheck-mode . nil)
-          (flyspell-mode . -1)
-          (flyspell-mode . 1)
-          (ispell-local-dictionary . "american")
-          (ispell-local-dictionary . "francais")
-          (org-tags-column . -80)       ; org-issues.org
-          (outline-minor-mode)
+        '((TeX-master . t) ; Tells AUCTeX that the current file is the master document.
+          (ac-sources . (ac-source-words-in-buffer ac-source-dictionary)) ; Specifies auto-complete sources.
+          (flycheck-emacs-lisp-initialize-packages . t) ; Initializes packages for flycheck-mode.
+          (flycheck-mode . nil) ; Disables flycheck-mode by default.
+          (flyspell-mode . -1) ; Disables flyspell-mode by default.
+          (flyspell-mode . 1) ; Enables flyspell-mode by default.
+          (ispell-local-dictionary . "american") ; Specifies the dictionary to use for ispell.
+          (ispell-local-dictionary . "francais") ; Specifies the dictionary to use for ispell.
+          (org-tags-column . -80) ; Sets the column for tags in Org mode.
+          (outline-minor-mode) ; Enables outline-minor-mode.
           (whitespace-style face tabs spaces trailing lines
                             space-before-tab::space newline indentation::space
                             empty space-after-tab::space space-mark tab-mark
-                            newline-mark)))
+                            newline-mark))) ; Sets whitespace style options.
 #+end_src
 
 Have a look at (info "(emacs)Directory Variables").
