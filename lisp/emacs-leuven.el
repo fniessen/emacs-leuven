@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230302.1001
+;; Version: 20230317.2242
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230302.1001"
+(defconst leuven--emacs-version "20230317.2242"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -282,32 +282,25 @@ If not, just print a message."
 
   (leuven--section "Type of OS")
 
-  (defconst leuven--linux-p
-    (eq system-type 'gnu/linux)
-    "Running a GNU/Linux version of Emacs.")
+  (defconst leuven--linux-p (eq system-type 'gnu/linux)
+    "Running Emacs on Linux or WSL.")
 
-  (defconst leuven--mac-p
-    (eq system-type 'darwin)
-    "Running a Mac OS version of Emacs.")
+  (defconst leuven--mac-p (eq system-type 'darwin)
+    "Running Emacs on macOS.")
 
-  (defconst leuven--win32-p
-    (eq system-type 'windows-nt)
-    "Running a native Microsoft Windows version of Emacs.")
+  (defconst leuven--win32-p (eq system-type 'windows-nt)
+    "Running Emacs on native Microsoft Windows.")
 
-  (defconst leuven--cygwin-p
-    (eq system-type 'cygwin)
-    "Running a Cygwin version of Emacs.")
+  (defconst leuven--cygwin-p (eq system-type 'cygwin)
+    "Running Emacs on Cygwin.")
 
 ;;** MS Windows
 
-  (defconst leuven--windows-program-files-dir ; sys-path.
-    (cond (leuven--win32-p
-           (file-name-as-directory (or (getenv "ProgramFiles(x86)")
-                                       (getenv "ProgramFiles"))))
-          (leuven--cygwin-p
-           "/cygdrive/c/Program Files/")
-          (t
-           "/usr/local/bin/"))
+  (defconst leuven--windows-program-files-dir
+    (cond
+      (leuven--win32-p (file-name-as-directory (getenv "ProgramFiles(x86)")))
+      (leuven--cygwin-p "/cygdrive/c/Program Files (x86)/")
+      (t "/usr/local/bin/"))
     "Default Windows Program Files folder.")
 
 ;;** Window system
@@ -2034,8 +2027,8 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "18.2 (emacs)Visiting Files")
 
-  (defadvice find-file (around leuven-find-file activate)
-    "Open the file named FILENAME and report time spent."
+  (defadvice find-file (around leuven-find-file-time activate)
+    "Advice function for `find-file' that reports the time spent."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
       (message "[Finding file %s...]" filename)
@@ -2480,17 +2473,17 @@ Should be selected from `fringe-bitmaps'.")
       (set-buffer (find-file (concat "/sudo::" filename)))
       (leuven--find-file-sudo-header-warning))
 
-    ;; ;; XXX already an existing defadvice around find-file!!
-    ;; (defadvice find-file (around leuven-find-file activate)
-    ;;   "Open FILENAME using tramp's sudo method if it's read-only."
-    ;;   (if (and (file-exists-p (ad-get-arg 0))
-    ;;            (not (file-writable-p (ad-get-arg 0)))
-    ;;            (not (file-remote-p (ad-get-arg 0)))
-    ;;            (y-or-n-p (concat "File "
-    ;;                              (ad-get-arg 0)
-    ;;                              " is read-only.  Open it as root? ")))
-    ;;       (leuven-find-file-sudo (ad-get-arg 0))
-    ;;     ad-do-it))
+    (defadvice find-file (around leuven-find-file-sudo activate)
+      "Advice function for `find-file' that opens FILENAME with root privileges
+using Tramp's sudo method if it's read-only."
+      (if (and (file-exists-p (ad-get-arg 0))
+               (not (file-writable-p (ad-get-arg 0)))
+               (not (file-remote-p (ad-get-arg 0)))
+               (y-or-n-p (concat "File "
+                                 (ad-get-arg 0)
+                                 " is read-only.  Open it as root? ")))
+          (leuven-find-file-sudo (ad-get-arg 0))
+        ad-do-it))
 
     ;; How many seconds passwords are cached.
     (setq password-cache-expiry 60)     ; [Default: 16]
