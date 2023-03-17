@@ -449,12 +449,12 @@ Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
   (leuven--section "Window system")
 
   (defconst leuven--console-p
-    (eq window-system nil)
+    (not window-system)
     "Running a text-only terminal.")
 
   (defconst leuven--x-window-p
     (eq window-system 'x)
-    "Running a X Window system.")
+    "Running an X Window system.")
 
 ;;** Testing file accessibility
 
@@ -3667,10 +3667,13 @@ Customize saving actions.
 Automatically add a newline at the end of the file:
 
 #+begin_src emacs-lisp
-  ;; Ensure newline at the end of file when it is saved.
-  (setq require-final-newline t)
-  ;; TODO Do this only for text and Fundamental modes, because I could
-  ;; edit binary files (see `mode-require-final-newline')
+  ;; Ensure newline at the end of file when it is saved (in Text or Fundamental mode).
+  (defun leuven--text-mode-hook ()
+    "Customize `text-mode' buffers."
+    (setq-local mode-require-final-newline t))
+
+  (add-hook 'text-mode-hook #'leuven--text-mode-hook)
+  (add-hook 'fundamental-mode-hook #'leuven--text-mode-hook)
 #+end_src
 
 Update time stamps (and copyright notice) automatically.

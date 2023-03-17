@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230317.2254
+;; Version: 20230317.2310
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230317.2254"
+(defconst leuven--emacs-version "20230317.2310"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -304,12 +304,12 @@ If not, just print a message."
   (leuven--section "Window system")
 
   (defconst leuven--console-p
-    (eq window-system nil)
+    (not window-system)
     "Running a text-only terminal.")
 
   (defconst leuven--x-window-p
     (eq window-system 'x)
-    "Running a X Window system.")
+    "Running an X Window system.")
 
 ;;** Testing file accessibility
 
@@ -2119,10 +2119,13 @@ Should be selected from `fringe-bitmaps'.")
   ;; Always use copying to create backup files (don't clobber symlinks).
   (setq backup-by-copying t)
 
-  ;; Ensure newline at the end of file when it is saved.
-  (setq require-final-newline t)
-  ;; TODO Do this only for text and Fundamental modes, because I could
-  ;; edit binary files (see `mode-require-final-newline')
+  ;; Ensure newline at the end of file when it is saved (in Text or Fundamental mode).
+  (defun leuven--text-mode-hook ()
+    "Customize `text-mode' buffers."
+    (setq-local mode-require-final-newline t))
+
+  (add-hook 'text-mode-hook #'leuven--text-mode-hook)
+  (add-hook 'fundamental-mode-hook #'leuven--text-mode-hook)
 
   ;; Update time stamps every time you save a buffer.
   (add-hook 'before-save-hook #'time-stamp)
