@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230317.2340
+;; Version: 20230317.2347
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230317.2340"
+(defconst leuven--emacs-version "20230317.2347"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1798,18 +1798,6 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "15.5 (emacs)Regexp Search")
 
-  (defun leuven-buffer-matched-strings ()
-    (interactive)
-    (mapcar 'leuven--buffer-matched-string-nth '(0 1 2 3 4 5 6 7 8 9)))
-
-  (defun leuven--buffer-matched-string-nth (n)
-    "Return the Nth pattern-matched string from the current buffer."
-    (if (and (match-beginning n) (match-end n))
-        (if (> (match-end n) (match-beginning n))
-            (buffer-substring (match-beginning n) (match-end n))
-          "")
-      nil))
-
 ;;** 15.9 (info "(emacs)Search Case")
 
   (leuven--section "15.9 (emacs)Search Case")
@@ -1828,16 +1816,19 @@ Should be selected from `fringe-bitmaps'.")
   (define-key isearch-mode-map (kbd "M-o") #'helm-multi-swoop-all)
 
   ;; Grep all same extension files from inside Isearch.
-  (define-key isearch-mode-map (kbd "C-M-o")
-    #'(lambda ()
-        (interactive)
-        (grep-compute-defaults)
-        (lgrep (if isearch-regexp isearch-string (regexp-quote isearch-string))
-               (if (file-name-extension (buffer-file-name))
-                   (format "*.%s" (file-name-extension (buffer-file-name)))
-                 "*")
-               default-directory)
-        (isearch-abort)))
+  (defun leuven-isearch-grep ()
+    "Start grep using current isearch string."
+    (interactive)
+    (let* ((search-str (if isearch-regexp isearch-string (regexp-quote isearch-string)))
+           (file-pattern (if (buffer-file-name)
+                             (format "*.%s" (file-name-extension (buffer-file-name)))
+                           "*"))
+           (default-dir default-directory))
+      (grep-compute-defaults)
+      (lgrep search-str file-pattern default-dir)
+      (isearch-abort)))
+
+  (define-key isearch-mode-map (kbd "C-M-o") #'leuven-isearch-grep)
 
 )                                       ; Chapter 15 ends here.
 
