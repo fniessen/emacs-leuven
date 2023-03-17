@@ -2131,10 +2131,12 @@ Check out ~log4j-mode~ instead?  And nice colors at
 https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html.
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "<M-f6>")
-                  #'(lambda ()
-                      (interactive)
-                      (occur "TODO\\|FIXME\\|XXX\\|BUG")))
+  (defun leuven-occur-todo ()
+    "Display all lines in the current buffer containing TODO, FIXME, XXX, or BUG."
+    (interactive)
+    (occur "TODO\\|FIXME\\|XXX\\|BUG"))
+
+  (global-set-key (kbd "<M-f6>") #'leuven-occur-todo)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2845,12 +2847,15 @@ Colorize cursor according to state.
   ;; and normal insert modes).
   (defun leuven--set-cursor-according-to-mode ()
     "Change cursor color according to some minor modes."
-    (let ((color (cond (buffer-read-only "purple1")
-                       (overwrite-mode   "#7F7F7F")
-                       (t                "black"))) ; #21BDFF is less visible.
-          (type (if (null overwrite-mode)
-                    'bar
-                  'box)))
+    (let* ((read-only-color "purple1")
+           (overwrite-color "#7F7F7F")
+           (default-color "black")
+           (color (cl-case (cons buffer-read-only overwrite-mode)
+                    ((t . t)  read-only-color)
+                    ((t . nil) read-only-color)
+                    ((nil . t) overwrite-color)
+                    ((nil . nil) default-color)))
+           (type (if (null overwrite-mode) 'bar 'box)))
       (set-cursor-color color)
       (setq cursor-type type)))
 

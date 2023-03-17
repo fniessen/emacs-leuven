@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230317.2318
+;; Version: 20230317.2329
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230317.2318"
+(defconst leuven--emacs-version "20230317.2329"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1194,10 +1194,12 @@ These packages are neither built-in nor already installed nor ignored."
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 
-  (global-set-key (kbd "<M-f6>")
-                  #'(lambda ()
-                      (interactive)
-                      (occur "TODO\\|FIXME\\|XXX\\|BUG")))
+  (defun leuven-occur-todo ()
+    "Display all lines in the current buffer containing TODO, FIXME, XXX, or BUG."
+    (interactive)
+    (occur "TODO\\|FIXME\\|XXX\\|BUG"))
+
+  (global-set-key (kbd "<M-f6>") #'leuven-occur-todo)
 
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
@@ -1639,12 +1641,15 @@ Should be selected from `fringe-bitmaps'.")
   ;; and normal insert modes).
   (defun leuven--set-cursor-according-to-mode ()
     "Change cursor color according to some minor modes."
-    (let ((color (cond (buffer-read-only "purple1")
-                       (overwrite-mode   "#7F7F7F")
-                       (t                "black"))) ; #21BDFF is less visible.
-          (type (if (null overwrite-mode)
-                    'bar
-                  'box)))
+    (let* ((read-only-color "purple1")
+           (overwrite-color "#7F7F7F")
+           (default-color "black")
+           (color (cl-case (cons buffer-read-only overwrite-mode)
+                    ((t . t)  read-only-color)
+                    ((t . nil) read-only-color)
+                    ((nil . t) overwrite-color)
+                    ((nil . nil) default-color)))
+           (type (if (null overwrite-mode) 'bar 'box)))
       (set-cursor-color color)
       (setq cursor-type type)))
 
