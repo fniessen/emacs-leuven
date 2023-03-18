@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230318.1315
+;; Version: 20230318.1324
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,13 +70,17 @@
 (defconst leuven--start-time (current-time)
   "Value of `current-time' before loading the Emacs-Leuven library.")
 
-;; Speed up things by preventing garbage collections.
+;; Increase the garbage collection threshold to speed up initialization.
 (setq gc-cons-threshold most-positive-fixnum)
+
+;; Reset the garbage collection threshold after initialization is complete.
 (add-hook 'after-init-hook
           #'(lambda ()
+              ;; Perform a garbage collection.
               (garbage-collect)
-(message "XXX Set GC back to initial value XXX")
-(sit-for 2)
+              (message "Garbage collection completed.")
+
+              ;; Reset the garbage collection threshold to its default value.
               (setq gc-cons-threshold
                     (car (get 'gc-cons-threshold 'standard-value)))))
 
@@ -84,7 +88,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230318.1315"
+(defconst leuven--emacs-version "20230318.1324"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)

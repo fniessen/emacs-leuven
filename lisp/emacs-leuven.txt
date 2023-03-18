@@ -148,13 +148,17 @@ By default Emacs will initiate GC every 0.76 MB allocated (~gc-cons-threshold~ =
 If you have a modern machine, I encourage you to add the following:
 
 #+begin_src emacs-lisp
-;; Speed up things by preventing garbage collections.
+;; Increase the garbage collection threshold to speed up initialization.
 (setq gc-cons-threshold most-positive-fixnum)
+
+;; Reset the garbage collection threshold after initialization is complete.
 (add-hook 'after-init-hook
           #'(lambda ()
+              ;; Perform a garbage collection.
               (garbage-collect)
-(message "XXX Set GC back to initial value XXX")
-(sit-for 2)
+              (message "Garbage collection completed.")
+
+              ;; Reset the garbage collection threshold to its default value.
               (setq gc-cons-threshold
                     (car (get 'gc-cons-threshold 'standard-value)))))
 
