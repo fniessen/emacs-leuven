@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230318.1249
+;; Version: 20230318.1300
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230318.1249"
+(defconst leuven--emacs-version "20230318.1300"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -467,9 +467,9 @@ If not, just print a message."
       :group 'emacs-leuven
       :type '(repeat (string)))
 
+    ;; Define a function to check if there are any missing ELPA packages.
     (defun leuven--missing-elpa-packages ()
-      "List packages to install for a full blown Leuven installation.
-These packages are neither built-in nor already installed nor ignored."
+      "Return a list of missing ELPA packages for Emacs-Leuven."
       (let (missing-elpa-packages)
         (dolist (pkg package-selected-packages)
           (unless (or (package-installed-p pkg)
@@ -478,22 +478,21 @@ These packages are neither built-in nor already installed nor ignored."
             (push pkg missing-elpa-packages)))
         missing-elpa-packages))
 
-    ;; Propose to install all the packages specified in
-    ;; `package-selected-packages' which are missing and which shouldn't be
-    ;; ignored.
+    ;; Check for missing ELPA packages.
     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
+      ;; If there are missing packages, prompt the user to install them.
       (when missing-elpa-packages
         (setq leuven-install-all-missing-elpa-packages
               (or leuven-install-all-missing-elpa-packages
                   (yes-or-no-p
                    (format "Install the %s missing ELPA package(s) without confirming each? "
                            (length missing-elpa-packages)))))
-
-        ;; ;; Download once the ELPA archive description.
-        ;; (package-refresh-contents)      ; Ensure that the list of packages is
-        ;;                                 ; up-to-date.  Otherwise, new packages
-        ;;                                 ; (not present in the cache of the ELPA
-        ;;                                 ; contents) won't install.
+        ;; Check for internet connection before refreshing package archives.
+        (when (ignore-errors (url-retrieve "http://www.google.com/" '(lambda (retrieved) t)))
+          ;; Refresh package archives.
+          (unless package-archive-contents
+            (package-refresh-contents)))
+        ;; Install missing packages.
         (dolist (pkg (reverse missing-elpa-packages))
           (if leuven-install-all-missing-elpa-packages
               (ignore-errors
