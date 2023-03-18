@@ -689,12 +689,11 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ignored.
     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
       (when missing-elpa-packages
-
-        (when (or leuven-install-all-missing-elpa-packages
+        (setq leuven-install-all-missing-elpa-packages
+              (or leuven-install-all-missing-elpa-packages
                   (yes-or-no-p
                    (format "Install the %s missing ELPA package(s) without confirming each? "
-                           (length missing-elpa-packages))))
-          (setq leuven-install-all-missing-elpa-packages t))
+                           (length missing-elpa-packages)))))
 
         ;; ;; Download once the ELPA archive description.
         ;; (package-refresh-contents)      ; Ensure that the list of packages is
@@ -702,10 +701,12 @@ These packages are neither built-in nor already installed nor ignored."
         ;;                                 ; (not present in the cache of the ELPA
         ;;                                 ; contents) won't install.
         (dolist (pkg (reverse missing-elpa-packages))
-          (if (or leuven-install-all-missing-elpa-packages
-                  (yes-or-no-p (format "Install ELPA package `%s'? " pkg)))
+          (if leuven-install-all-missing-elpa-packages
               (ignore-errors
                 (package-install pkg))
+            (when (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
+              (ignore-errors
+                (package-install pkg)))
             (message (concat "[Customize Emacs-Leuven to ignore the `%s' package next times...]") pkg)
             (sit-for 1.5)))))
 

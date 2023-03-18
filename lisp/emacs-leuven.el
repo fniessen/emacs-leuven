@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230317.2359
+;; Version: 20230318.1249
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230317.2359"
+(defconst leuven--emacs-version "20230318.1249"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -483,12 +483,11 @@ These packages are neither built-in nor already installed nor ignored."
     ;; ignored.
     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
       (when missing-elpa-packages
-
-        (when (or leuven-install-all-missing-elpa-packages
+        (setq leuven-install-all-missing-elpa-packages
+              (or leuven-install-all-missing-elpa-packages
                   (yes-or-no-p
                    (format "Install the %s missing ELPA package(s) without confirming each? "
-                           (length missing-elpa-packages))))
-          (setq leuven-install-all-missing-elpa-packages t))
+                           (length missing-elpa-packages)))))
 
         ;; ;; Download once the ELPA archive description.
         ;; (package-refresh-contents)      ; Ensure that the list of packages is
@@ -496,10 +495,12 @@ These packages are neither built-in nor already installed nor ignored."
         ;;                                 ; (not present in the cache of the ELPA
         ;;                                 ; contents) won't install.
         (dolist (pkg (reverse missing-elpa-packages))
-          (if (or leuven-install-all-missing-elpa-packages
-                  (yes-or-no-p (format "Install ELPA package `%s'? " pkg)))
+          (if leuven-install-all-missing-elpa-packages
               (ignore-errors
                 (package-install pkg))
+            (when (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
+              (ignore-errors
+                (package-install pkg)))
             (message (concat "[Customize Emacs-Leuven to ignore the `%s' package next times...]") pkg)
             (sit-for 1.5)))))
 
