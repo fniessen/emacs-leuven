@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230318.1300
+;; Version: 20230318.1315
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -84,7 +84,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230318.1300"
+(defconst leuven--emacs-version "20230318.1315"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -478,7 +478,7 @@ If not, just print a message."
             (push pkg missing-elpa-packages)))
         missing-elpa-packages))
 
-    ;; Check for missing ELPA packages.
+    ;; Install missing ELPA packages for Emacs-Leuven if any.
     (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
       ;; If there are missing packages, prompt the user to install them.
       (when missing-elpa-packages
@@ -487,20 +487,30 @@ If not, just print a message."
                   (yes-or-no-p
                    (format "Install the %s missing ELPA package(s) without confirming each? "
                            (length missing-elpa-packages)))))
+
         ;; Check for internet connection before refreshing package archives.
         (when (ignore-errors (url-retrieve "http://www.google.com/" '(lambda (retrieved) t)))
           ;; Refresh package archives.
           (unless package-archive-contents
             (package-refresh-contents)))
+
         ;; Install missing packages.
         (dolist (pkg (reverse missing-elpa-packages))
           (if leuven-install-all-missing-elpa-packages
-              (ignore-errors
-                (package-install pkg))
+              (condition-case err
+                  (progn
+                    (package-install pkg)
+                    (message "[Installed package `%s'.]" pkg))
+                (error
+                 (message "[Failed to install package `%s': %s]" pkg (error-message-string err))))
             (when (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
-              (ignore-errors
-                (package-install pkg)))
-            (message (concat "[Customize Emacs-Leuven to ignore the `%s' package next times...]") pkg)
+              (condition-case err
+                  (progn
+                    (package-install pkg)
+                    (message "[Installed package `%s'.]" pkg))
+                (error
+                 (message "[Failed to install package `%s': %s]" pkg (error-message-string err)))))
+            (message "[Customize Emacs-Leuven to ignore the `%s' package next times...]" pkg)
             (sit-for 1.5)))))
 
     )
