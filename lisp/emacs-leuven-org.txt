@@ -1685,12 +1685,6 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
 %a
 
 %i") t)
-
-  (add-to-list 'org-capture-templates
-               `("S" "Secure safe" entry
-                 (file+datetree+prompt "~/.dotfiles/.hide/safe.gpg")
-                 "* %(format-time-string \"%H:%M\") %^{Entry} %^G
-%i%?") t)
 #+end_src
 
 #+begin_src emacs-lisp

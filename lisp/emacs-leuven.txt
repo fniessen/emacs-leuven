@@ -10268,6 +10268,9 @@ See http://whattheemacsd.com/setup-magit.el-01.html.
 
 Or use Tig?  See http://blogs.atlassian.com/2013/05/git-tig/.
 
+TODO: Try again ~git-commit-insert-issue~; In a commit buffer, type "Fixes #" (or
+another keyword) and find the issue from the list.
+
 *** Examining And Comparing Old Revisions
 
 VC can show you the *history of changes* to a *particular line of code*:
