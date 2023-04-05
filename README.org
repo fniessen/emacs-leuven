@@ -46,7 +46,7 @@ Using the Emacs Leuven library is very easy: you just need to...
 
   #+begin_src emacs-lisp
   ;; Make sure `emacs-leuven.el' is in your `load-path'.
-  (add-to-list 'load-path "/path/to/emacs-leuven")
+  (add-to-list 'load-path "/path/to/emacs-leuven/lisp")
 
   ;; Require it as normal.
   (require 'emacs-leuven)
