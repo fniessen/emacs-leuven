@@ -472,15 +472,20 @@ Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
 
 ;;** Testing file accessibility
 
-  (defun leuven--file-exists-and-executable-p (file)
-    "Make sure the file FILE exists and is executable."
-    (if file
-        (if (file-executable-p file)
-            file
-          (message "[WARN- Can't find executable `%s']" file)
-          ;; Sleep 1.5 s so that you can see the warning.
-          (sit-for 1.5))
-      (error "Missing argument to \"leuven--file-exists-and-executable-p\"")))
+  (defun leuven--ensure-file-executable-p (file)
+    "Make sure the file FILE exists and is executable.
+Return FILE if it is executable, otherwise return nil."
+    (unless file
+      (error "Missing argument to `leuven--ensure-file-executable-p'"))
+    (unless (file-exists-p file)
+      (message "[WARN- File `%s' does not exist]" file)
+      (sit-for 1.5)
+      nil)
+    (unless (file-executable-p file)
+      (message "[WARN- File `%s' is not executable]" file)
+      (sit-for 1.5)
+      nil)
+    file)
 
 ;;** Init
 
@@ -7312,7 +7317,7 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
               (t
                (or (executable-find "rungs") ; For Cygwin Emacs.
                    "/usr/bin/gs"))))
-      (leuven--file-exists-and-executable-p preview-gs-command)
+      (leuven--ensure-file-executable-p preview-gs-command)
 
       ;; Scale factor for included previews.
       (setq preview-scale-function 1.2))
@@ -13989,7 +13994,7 @@ printing on Windows.
       (concat leuven--windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
       "Defines the Windows path to the gsview executable.")
 
-    (leuven--file-exists-and-executable-p gsprint-program)
+    (leuven--ensure-file-executable-p gsprint-program)
 
     (if (and gsprint-program
              (executable-find gsprint-program))

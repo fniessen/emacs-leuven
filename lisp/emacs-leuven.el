@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230416.1736
+;; Version: 20230416.1742
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230416.1736"
+(defconst leuven--emacs-version "20230416.1742"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -327,15 +327,20 @@ If not, just print a message."
 
 ;;** Testing file accessibility
 
-  (defun leuven--file-exists-and-executable-p (file)
-    "Make sure the file FILE exists and is executable."
-    (if file
-        (if (file-executable-p file)
-            file
-          (message "[WARN- Can't find executable `%s']" file)
-          ;; Sleep 1.5 s so that you can see the warning.
-          (sit-for 1.5))
-      (error "Missing argument to \"leuven--file-exists-and-executable-p\"")))
+  (defun leuven--ensure-file-executable-p (file)
+    "Make sure the file FILE exists and is executable.
+Return FILE if it is executable, otherwise return nil."
+    (unless file
+      (error "Missing argument to `leuven--ensure-file-executable-p'"))
+    (unless (file-exists-p file)
+      (message "[WARN- File `%s' does not exist]" file)
+      (sit-for 1.5)
+      nil)
+    (unless (file-executable-p file)
+      (message "[WARN- File `%s' is not executable]" file)
+      (sit-for 1.5)
+      nil)
+    file)
 
 ;;** Init
 
@@ -4201,7 +4206,7 @@ cycle through all windows on current frame."
               (t
                (or (executable-find "rungs") ; For Cygwin Emacs.
                    "/usr/bin/gs"))))
-      (leuven--file-exists-and-executable-p preview-gs-command)
+      (leuven--ensure-file-executable-p preview-gs-command)
 
       ;; Scale factor for included previews.
       (setq preview-scale-function 1.2))
@@ -7270,7 +7275,7 @@ This example lists Azerty layout second row keys."
       (concat leuven--windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
       "Defines the Windows path to the gsview executable.")
 
-    (leuven--file-exists-and-executable-p gsprint-program)
+    (leuven--ensure-file-executable-p gsprint-program)
 
     (if (and gsprint-program
              (executable-find gsprint-program))
