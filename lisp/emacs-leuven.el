@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230416.1655
+;; Version: 20230416.1733
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230416.1655"
+(defconst leuven--emacs-version "20230416.1733"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -287,8 +287,8 @@ If not, just print a message."
 
   (defconst leuven--wsl-p
     (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))
-      (or (string-equal kernel-release "WSL")
-          (string-equal kernel-release "microsoft-standard-WSL2")))
+      (or (string-match "WSL" kernel-release)
+          (string-match "microsoft-standard-WSL2" kernel-release)))
     "Running Emacs on WSL or WSL2.")
 
   (defconst leuven--mac-p (eq system-type 'darwin)

@@ -428,8 +428,8 @@ If not, just print a message."
 
   (defconst leuven--wsl-p
     (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))
-      (or (string-equal kernel-release "WSL")
-          (string-equal kernel-release "microsoft-standard-WSL2")))
+      (or (string-match "WSL" kernel-release)
+          (string-match "microsoft-standard-WSL2" kernel-release)))
     "Running Emacs on WSL or WSL2.")
 
   (defconst leuven--mac-p (eq system-type 'darwin)
