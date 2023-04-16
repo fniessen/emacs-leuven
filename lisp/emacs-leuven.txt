@@ -328,16 +328,20 @@ need to load a single file that define autoloaded functions.
 
 #+begin_src emacs-lisp
   ;; Load-path enhancement.
-  (defun leuven--add-to-load-path (dir)
-    "Add DIR at the beginning of the `load-path', if it exists and is a directory."
+  (defun leuven--add-dir-to-load-path (dir)
+    "Add directory DIR to `load-path', if it exists and is a directory.
+Returns t if DIR is added to load-path, nil otherwise."
     (when (and dir (file-directory-p dir))
       (let ((dir (expand-file-name dir)))
         (unless (file-exists-p dir)
-          (message "[WARNING: `%s' does not exist.]" dir))
-        (unless (file-exists-p (expand-file-name ".nosearch" dir))
-          (add-to-list 'load-path dir)
-          (when leuven-verbose-loading
-            (message "[Added `%s' to `load-path']" dir))))))
+          (message "[WARN- `%s' does not exist]" dir)
+          nil)
+        (when (file-exists-p (expand-file-name ".nosearch" dir))
+          nil)
+        (add-to-list 'load-path dir)
+        (when leuven-verbose-loading
+          (message "[Added `%s' to `load-path']" dir))
+        t)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -346,11 +350,11 @@ need to load a single file that define autoloaded functions.
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (leuven--add-to-load-path leuven--directory)
-  (leuven--add-to-load-path (concat leuven--directory "../site-lisp"))
+  (leuven--add-dir-to-load-path leuven--directory)
+  (leuven--add-dir-to-load-path (concat leuven--directory "../site-lisp"))
 
-  ;; (leuven--add-to-load-path "~/lisp")
-  ;; (leuven--add-to-load-path "~/site-lisp")
+  ;; (leuven--add-dir-to-load-path "~/lisp")
+  ;; (leuven--add-dir-to-load-path "~/site-lisp")
 #+end_src
 
 *************** TODO Specify variables using `defcustom'
@@ -366,7 +370,7 @@ distro) without impacting on stuff you have added by hand.
   (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")
 
-  (leuven--add-to-load-path leuven-user-lisp-directory)
+  (leuven--add-dir-to-load-path leuven-user-lisp-directory)
 #+end_src
 
 #+begin_src emacs-lisp
