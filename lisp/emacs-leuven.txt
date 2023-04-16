@@ -1669,7 +1669,7 @@ Copy/paste from Windows clipboard in WSL Emacs:
 
   ;; Override the kill-ring-save command when in WSL config.
   (when leuven--wsl-p
-    (global-set-key (kbd "C-w") 'wsl-copy))
+    (global-set-key (kbd "M-w") 'wsl-copy))
 
   ;; Define the paste command for WSL.
   (defun wsl-paste ()

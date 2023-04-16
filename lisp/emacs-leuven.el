@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230416.1733
+;; Version: 20230416.1736
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230416.1733"
+(defconst leuven--emacs-version "20230416.1736"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1009,7 +1009,7 @@ If not, just print a message."
 
   ;; Override the kill-ring-save command when in WSL config.
   (when leuven--wsl-p
-    (global-set-key (kbd "C-w") 'wsl-copy))
+    (global-set-key (kbd "M-w") 'wsl-copy))
 
   ;; Define the paste command for WSL.
   (defun wsl-paste ()
