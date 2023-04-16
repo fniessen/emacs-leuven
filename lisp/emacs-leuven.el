@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230416.1742
+;; Version: 20230416.1755
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,22 +73,26 @@
 ;; Increase the garbage collection threshold to speed up initialization.
 (setq gc-cons-threshold most-positive-fixnum)
 
+(defun leuven--reset-gc-cons-threshold ()
+  "Reset the garbage collection threshold after initialization is complete."
+  (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
+  (message "[Garbage collection threshold reset to its default value.]"))
+
 ;; Reset the garbage collection threshold after initialization is complete.
-(add-hook 'after-init-hook
-          #'(lambda ()
-              ;; Perform a garbage collection.
-              (garbage-collect)
-              (message "Garbage collection completed.")
+(add-hook 'after-init-hook #'leuven--reset-gc-cons-threshold)
 
-              ;; Reset the garbage collection threshold to its default value.
-              (setq gc-cons-threshold
-                    (car (get 'gc-cons-threshold 'standard-value)))))
+(defun leuven--do-garbage-collection ()
+  "Perform a garbage collection."
+  (garbage-collect)
+  (message "[Garbage collection completed.]"))
 
-;; Don't display messages at start and end of garbage collection (as it hides
-;; too many interesting messages).
+;; Perform a garbage collection.
+(add-hook 'after-init-hook #'leuven--do-garbage-collection)
+
+;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230416.1742"
+(defconst leuven--emacs-version "20230416.1755"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
