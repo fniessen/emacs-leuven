@@ -426,6 +426,12 @@ If not, just print a message."
   (defconst leuven--linux-p (eq system-type 'gnu/linux)
     "Running Emacs on Linux or WSL.")
 
+  (defconst leuven--wsl-p
+    (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))
+      (or (string-equal kernel-release "WSL")
+          (string-equal kernel-release "microsoft-standard-WSL2")))
+    "Running Emacs on WSL or WSL2.")
+
   (defconst leuven--mac-p (eq system-type 'darwin)
     "Running Emacs on macOS.")
 
@@ -437,11 +443,15 @@ If not, just print a message."
 
 ;;** MS Windows
 
+  ;; Set the default Windows Program Files directory depending on the operating
+  ;; system Emacs is running on.
   (defconst leuven--windows-program-files-dir
-    (cond
-      (leuven--win32-p (file-name-as-directory (getenv "ProgramFiles(x86)")))
-      (leuven--cygwin-p "/cygdrive/c/Program Files (x86)/")
-      (t "/usr/local/bin/"))
+    (cond (leuven--win32-p
+           (file-name-as-directory (getenv "ProgramFiles(x86)")))
+          (leuven--cygwin-p
+           "/cygdrive/c/Program Files (x86)/")
+          (t
+           "/usr/local/bin/"))
     "Default Windows Program Files folder.")
 #+end_src
 
@@ -1649,26 +1659,32 @@ Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
 Copy/paste from Windows clipboard in WSL Emacs:
 
 #+begin_src emacs-lisp
-  ;; wsl-copy
+  ;; Define the copy command for WSL.
   (defun wsl-copy (start end)
+    "Copy the selected text to the Windows clipboard in WSL."
     (interactive "r")
     (shell-command-on-region start end "clip.exe")
-    (deactivate-mark))
+    (deactivate-mark)
+    (message "[Copied to Windows clipboard.]"))
 
-  ;; Bind wsl-copy to C-c C-c
-  (global-set-key (kbd "C-c C-c") 'wsl-copy)
+  ;; Override the kill-ring-save command when in WSL config.
+  (when leuven--wsl-p
+    (global-set-key (kbd "C-w") 'wsl-copy))
 
-  ;; wsl-paste
+  ;; Define the paste command for WSL.
   (defun wsl-paste ()
+    "Paste the contents of the Windows clipboard in WSL."
     (interactive)
     (let ((clipboard
            (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
       (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
       (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
-      (insert clipboard)))
+      (insert clipboard))
+    (message "[Pasted from Windows clipboard.]"))
 
-  ;; Bind wsl-paste to C-c C-v
-  (global-set-key (kbd "C-c C-v") 'wsl-paste)
+  ;; Override the yank command when in WSL config.
+  (when leuven--wsl-p
+    (global-set-key (kbd "C-y") 'wsl-paste))
 #+end_src
 
 See https://emacs.stackexchange.com/questions/39210/copy-paste-from-windows-clipboard-in-wsl-terminal
@@ -14150,7 +14166,8 @@ Pick up where you left off.
                                         ; well.
 
   ;; For WSL (Ubuntu on Windows).
-  (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe"))
+  (when leuven--wsl-p
+    (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no

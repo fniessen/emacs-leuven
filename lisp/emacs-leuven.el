@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230318.1324
+;; Version: 20230416.1655
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; too many interesting messages).
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230318.1324"
+(defconst leuven--emacs-version "20230416.1655"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -285,6 +285,12 @@ If not, just print a message."
   (defconst leuven--linux-p (eq system-type 'gnu/linux)
     "Running Emacs on Linux or WSL.")
 
+  (defconst leuven--wsl-p
+    (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))
+      (or (string-equal kernel-release "WSL")
+          (string-equal kernel-release "microsoft-standard-WSL2")))
+    "Running Emacs on WSL or WSL2.")
+
   (defconst leuven--mac-p (eq system-type 'darwin)
     "Running Emacs on macOS.")
 
@@ -296,11 +302,15 @@ If not, just print a message."
 
 ;;** MS Windows
 
+  ;; Set the default Windows Program Files directory depending on the operating
+  ;; system Emacs is running on.
   (defconst leuven--windows-program-files-dir
-    (cond
-      (leuven--win32-p (file-name-as-directory (getenv "ProgramFiles(x86)")))
-      (leuven--cygwin-p "/cygdrive/c/Program Files (x86)/")
-      (t "/usr/local/bin/"))
+    (cond (leuven--win32-p
+           (file-name-as-directory (getenv "ProgramFiles(x86)")))
+          (leuven--cygwin-p
+           "/cygdrive/c/Program Files (x86)/")
+          (t
+           "/usr/local/bin/"))
     "Default Windows Program Files folder.")
 
 ;;** Window system
@@ -989,26 +999,32 @@ If not, just print a message."
   ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
   (menu-bar-enable-clipboard)
 
-  ;; wsl-copy
+  ;; Define the copy command for WSL.
   (defun wsl-copy (start end)
+    "Copy the selected text to the Windows clipboard in WSL."
     (interactive "r")
     (shell-command-on-region start end "clip.exe")
-    (deactivate-mark))
+    (deactivate-mark)
+    (message "[Copied to Windows clipboard.]"))
 
-  ;; Bind wsl-copy to C-c C-c
-  (global-set-key (kbd "C-c C-c") 'wsl-copy)
+  ;; Override the kill-ring-save command when in WSL config.
+  (when leuven--wsl-p
+    (global-set-key (kbd "C-w") 'wsl-copy))
 
-  ;; wsl-paste
+  ;; Define the paste command for WSL.
   (defun wsl-paste ()
+    "Paste the contents of the Windows clipboard in WSL."
     (interactive)
     (let ((clipboard
            (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
       (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
       (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
-      (insert clipboard)))
+      (insert clipboard))
+    (message "[Pasted from Windows clipboard.]"))
 
-  ;; Bind wsl-paste to C-c C-v
-  (global-set-key (kbd "C-c C-v") 'wsl-paste)
+  ;; Override the yank command when in WSL config.
+  (when leuven--wsl-p
+    (global-set-key (kbd "C-y") 'wsl-paste))
 
 )                                       ; Chapter 12 ends here.
 
@@ -7407,7 +7423,8 @@ This example lists Azerty layout second row keys."
                                         ; well.
 
   ;; For WSL (Ubuntu on Windows).
-  (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe"))
+  (when leuven--wsl-p
+    (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
 
   (leuven--section "FFAP")
 
