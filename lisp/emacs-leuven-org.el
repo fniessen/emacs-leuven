@@ -1055,12 +1055,6 @@ From the address <%a>"
 
 %i") t)
 
-  (add-to-list 'org-capture-templates
-               `("S" "Secure safe" entry
-                 (file+datetree+prompt "~/.dotfiles/.hide/safe.gpg")
-                 "* %(format-time-string \"%H:%M\") %^{Entry} %^G
-%i%?") t)
-
   ;;          ("w" "org-protocol" entry
   ;;           (file ,org-default-notes-file)
   ;;           "* TODO Review %c
@@ -2542,12 +2536,13 @@ Ignore non Org buffers."
   ;; Activate single letter commands at beginning of a headline.
   (setq org-use-speed-commands t)
 
-  (add-to-list 'org-speed-commands '("d" org-todo "DONE"))
-  (add-to-list 'org-speed-commands '("y" org-todo-yesterday "DONE"))
-  (add-to-list 'org-speed-commands '("s" call-interactively 'org-schedule))
-  (add-to-list 'org-speed-commands '("N" org-narrow-to-subtree))
-  (add-to-list 'org-speed-commands '("W" widen))
-  (add-to-list 'org-speed-commands '("k" org-cut-subtree))
+  (when (boundp 'org-speed-commands)
+    (add-to-list 'org-speed-commands '("d" org-todo "DONE"))
+    (add-to-list 'org-speed-commands '("y" org-todo-yesterday "DONE"))
+    (add-to-list 'org-speed-commands '("s" call-interactively 'org-schedule))
+    (add-to-list 'org-speed-commands '("N" org-narrow-to-subtree))
+    (add-to-list 'org-speed-commands '("W" widen))
+    (add-to-list 'org-speed-commands '("k" org-cut-subtree)))
 
   ;; Run current line (mapped to H-r).
 
