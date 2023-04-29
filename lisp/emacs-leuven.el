@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230416.1803
+;; Version: 20230429.0927
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230416.1803"
+(defconst leuven--emacs-version "20230429.0927"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7701,17 +7701,6 @@ This example lists Azerty layout second row keys."
   (global-set-key (kbd "<kp-divide>") (kbd "/"))
 
 )                                       ; Chapter G ends here.
-
-;;* Profiler
-
-  (with-eval-after-load "profiler"
-
-    (setq profiler-report-cpu-line-format
-      '((100 left)                      ; The 100 above is increased from the
-                                        ; default of 50 to allow the deeply
-                                        ; nested call tree to be seen.
-        (24 right ((19 right)
-                   (5 right))))))
 
 ;; Recovery from Problems
 

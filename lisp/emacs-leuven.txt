@@ -15031,19 +15031,6 @@ Eventually have a look as well at ~input-decode-map~.
 
 * Profiler
 
-#+begin_src emacs-lisp
-;;* Profiler
-
-  (with-eval-after-load "profiler"
-
-    (setq profiler-report-cpu-line-format
-      '((100 left)                      ; The 100 above is increased from the
-                                        ; default of 50 to allow the deeply
-                                        ; nested call tree to be seen.
-        (24 right ((19 right)
-                   (5 right))))))
-#+end_src
-
 * Reporting Bugs
 
 To get a backtrace when a specific regexp is displayed in the echo area (through
