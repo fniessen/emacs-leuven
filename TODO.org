@@ -9,6 +9,99 @@
   Dev, Search for usages)
 - [ ] http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
 
+** TODO Test, then add leuven-remove-matching-lines-between-buffers
+
+#+begin_src emacs-lisp
+(defun leuven-remove-matching-lines-between-buffers (buffer-a buffer-b)
+  "Remove lines from BUFFER-A that match any lines in BUFFER-B."
+  (interactive "bBuffer A: \nbBuffer B: ")
+  (with-current-buffer buffer-a
+    (let ((patterns (with-current-buffer buffer-b
+                      (sort (split-string (buffer-string) "\n")))))
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((line (buffer-substring (line-beginning-position) (line-end-position))))
+          (when (member line patterns)
+            (delete-region (line-beginning-position) (line-end-position))
+            (beginning-of-line))))
+        (forward-line)))))
+#+end_src
+
+See delete-matching-lines...
+
+** TODO Install Emacs packages that can integrate an online task manager with an Org mode file
+
+There are several Emacs packages available that can integrate an online task
+manager with an Org mode file. Here are a few options:
+
+- Org-capture-Web :: This package allows you to capture tasks and notes from
+  your web browser and save them to an Org mode file. It supports popular online
+  task managers like *Trello*, *Asana*, and *JIRA*.
+- Orgzly :: This is an *Android app* that can sync with your Org mode files and
+  online task managers like *Todoist*, *Trello*, and *Google Tasks*. You can use it to
+  manage your tasks on the go and then sync them back to your Emacs setup.
+- Org-sync-trello :: This package lets you synchronize your *Trello* boards with
+  your Org mode files. It supports bidirectional syncing, so changes made in
+  either Trello or Emacs will be reflected in both places.
+- Orgzit :: This is a web-based task manager that integrates with Org mode via
+  a REST API. You can use it to create and manage tasks, and then sync them to
+  your Org mode files using Emacs.
+- org-sync-jira :: This package lets you sync your *JIRA* issues with your Org
+  mode files. You can create, update, and close JIRA issues directly from Emacs,
+  and changes made in either JIRA or Emacs will be synced bidirectionally.
+- org-web-tools :: This package provides a collection of functions for
+  interacting with web-based services, including online task managers. It
+  includes functions for capturing tasks, creating links to tasks, and syncing
+  tasks with Org mode files.
+- org-web-tools-trello :: This package extends org-web-tools to support *Trello*
+  specifically. It provides functions for capturing Trello cards as Org mode
+  tasks, syncing Trello cards with Org mode files, and more.
+- org-roam-server :: This package provides a web interface for browsing and
+  editing your Org mode files, including tasks and notes. You can use it to
+  access your Org mode files from anywhere with an internet connection, making
+  it easy to integrate with online task managers.
+- org-protocol-capture-html :: This package allows you to capture web pages as
+  Org mode tasks, including tasks for online task managers. It works by sending
+  the web page content to Emacs using the org-protocol mechanism.
+- org-todoist :: This package provides an interface to the Todoist API, allowing
+  you to create, update, and delete tasks in your Todoist account directly from
+  Emacs.
+- org-sync-todoist :: This package lets you sync your Todoist tasks with your
+  Org mode files. It supports bidirectional syncing, so changes made in either
+  Todoist or Emacs will be reflected in both places.
+
+These packages offer a range of features and integrations with different online
+task managers, so you may find that one or more of them is a good fit for your
+needs.
+
+** SDAY Add YASnippets
+
+- :date :: 19/05/2023
+- tod :: 19/05/2023
+- :now :: It's {{mytime}}
+- email ::  Hey ,\n\n\n\nBest regards,\nFabrice
+- ty :: Thank you for reaching out!
+- tom :: Are you available tomorrow?
+- meet2h :: Are you available at 11:42 PM? (= now + 2h)
+- :sig1 :: All the best, Fabrice
+- :br :: Best Regards,\nFabrice
+- :ch :: Cheers ;)
+- :log :: Could you please print the output of 'espanso log' here?
+- :espanso :: Hi there!
+- :sor :: I'm sorry you experienced this problem
+- :ip :: {{output of curl 'https://api.ipify.org'}}
+- :localip :: {{output of ip a | grep 'inet 192' | awk '{ print $2 }'}}
+- :contact :: Hi,\nThank you for contacting us!\nBest regards,\nThe Support Team
+- :: Thank you for your email and for bringing this to our attention
+- :: I am sorry that you're disappointed with our product
+- :: Could you please let me know what specific issues you've encountered?
+- :: Looking forward to hearing from you
+- :: All the best
+- :: Espanso Support Team
+- ::
+
+See others at https://espanso.org/.
+
 ** TODO Install format-all for Emacs
 
 https://github.com/emacsmirror/format-all
