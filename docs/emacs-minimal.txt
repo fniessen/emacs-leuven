@@ -158,7 +158,7 @@ You can see the problem by running the following code:
 #+begin_src emacs-lisp
 (with-eval-after-load "org"
   (message "LOADED org.el")
-  (sit-for 3)
+  (sit-for 1.5)
   (message ""))
 #+end_src
 
@@ -170,7 +170,7 @@ You can *get backtraces* at each stopping point by Edebugging =foobar= and
 #+begin_src emacs-lisp
 (defun foobar ()
   (message "LOADED org.el")
-  (sit-for 3)
+  (sit-for 1.5)
   (message ""))
 
 (setq org-load-hook (function foobar))
