@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230429.0927
+;; Version: 20230518.2057
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -66,8 +66,8 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-;; Time the loading of Emacs Leuven.  Keep this on top of your .emacs.
-(defconst leuven--start-time (current-time)
+;; Start recording the load time.
+(defconst emacs-leuven--load-start-time (current-time)
   "Value of `current-time' before loading the Emacs-Leuven library.")
 
 ;; Increase the garbage collection threshold to speed up initialization.
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230429.0927"
+(defconst leuven--emacs-version "20230518.2057"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3277,8 +3277,8 @@ cycle through all windows on current frame."
 
   (leuven--section "21.7 (emacs)Frame Commands")
 
-  ;; Maximize Emacs frame by default.
-  (modify-all-frames-parameters '((fullscreen . maximized)))
+  ;; ;; Maximize Emacs frame by default.
+  ;; (modify-all-frames-parameters '((fullscreen . maximized)))
 
   ;; Full screen.
   (global-set-key (kbd "<C-S-f12>") #'toggle-frame-fullscreen)
@@ -6677,7 +6677,7 @@ This example lists Azerty layout second row keys."
     (defadvice dired-jump (around leuven-dired-jump activate)
       "Ask for confirmation for buffers of 1,400,000 bytes or more."
       (when (or (< (buffer-size) 1400000)
-                (y-or-n-p "Are you sure you want to do this? (This may take time... Use `C-x d' instead) "))
+                (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
         ad-do-it))
     )
 
@@ -7733,10 +7733,10 @@ This example lists Azerty layout second row keys."
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
 
-(let ((elapsed (float-time (time-subtract (current-time)
-                                          leuven--start-time))))
-  (message "[Loaded %s in %.2f s]" load-file-name elapsed))
-(sit-for 0.3)
+;; Compute and display the load time.
+(let ((load-time (float-time (time-subtract (current-time) emacs-leuven--load-start-time))))
+  (message "[Loaded %s in %.2f s]" load-file-name load-time))
+(sit-for 0.5)
 
 ;; ;; (use-package dashboard
 ;; ;;   :if (< (length command-line-args) 2)
@@ -7761,7 +7761,7 @@ This example lists Azerty layout second row keys."
           #'(lambda ()
               (message "[Emacs startup time: %.2f s; GC done: %S]"
                        (string-to-number (emacs-init-time)) gcs-done)
-              (sit-for 0.3))
+              (sit-for 0.5))
   t)
 
   (defun leuven-update ()
