@@ -34,7 +34,7 @@ But -- that's the joy of Emacs -- nearly everything can be adjusted!  Hence,
 this set of customizations (from one pathological Emacs tweaker) to "short-cut"
 that initial process.
 
-Quotations:
+Quotes:
 
 - "Show me your ~/.emacs and I will tell you who you are." \\
   -- Bogdan Maryniuk
@@ -135,8 +135,8 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 ** Startup Time
 
 #+begin_src emacs-lisp
-;; Time the loading of Emacs Leuven.  Keep this on top of your .emacs.
-(defconst leuven--start-time (current-time)
+;; Start recording the load time.
+(defconst emacs-leuven--load-start-time (current-time)
   "Value of `current-time' before loading the Emacs-Leuven library.")
 #+end_src
 
@@ -5884,8 +5884,8 @@ one.
 
   (leuven--section "21.7 (emacs)Frame Commands")
 
-  ;; Maximize Emacs frame by default.
-  (modify-all-frames-parameters '((fullscreen . maximized)))
+  ;; ;; Maximize Emacs frame by default.
+  ;; (modify-all-frames-parameters '((fullscreen . maximized)))
 
   ;; Full screen.
   (global-set-key (kbd "<C-S-f12>") #'toggle-frame-fullscreen)
@@ -15076,11 +15076,10 @@ calls to message), set the variable ~debug-on-message~.
 * Post Init
 
 #+begin_src emacs-lisp
-(let ((elapsed (float-time (time-subtract (current-time)
-                                          leuven--start-time))))
-  (message "[Loaded %s in %.2f s]" load-file-name elapsed))
-(sit-for 0.3)
-
+;; Compute and display the load time.
+(let ((load-time (float-time (time-subtract (current-time) emacs-leuven--load-start-time))))
+  (message "[Loaded %s in %.2f s]" load-file-name load-time))
+(sit-for 0.5)
 #+end_src
 
 See https://github.com/emacs-dashboard/emacs-dashboard/issues/57 (very nice
@@ -15112,7 +15111,7 @@ dashboard):
           #'(lambda ()
               (message "[Emacs startup time: %.2f s; GC done: %S]"
                        (string-to-number (emacs-init-time)) gcs-done)
-              (sit-for 0.3))
+              (sit-for 0.5))
   t)
 #+end_src
 
