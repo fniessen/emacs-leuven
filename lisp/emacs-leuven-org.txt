@@ -2402,11 +2402,11 @@ The function ~leuven-org-todo-list-git-root~ will display your tasks from the Gi
 root directory (including from local files =TODO.org= and =BUGS.org=, for example).
 
 #+begin_src emacs-lisp
-(defun leuven-org-todo-list-git-root ()
-  "Produce a view from all Org files in the Git root directory."
+(defun leuven-org-agenda-git-root-todo-list ()
+  "Produce an Org agenda view of TODO items in the Git root directory."
   (interactive)
   (let* ((git-root (vc-git-root default-directory))
-         (org-agenda-files (directory-files-recursively git-root "\\.\\(org\\|txt\\)$"))
+         (org-files (directory-files-recursively git-root "\\.\\(org\\|txt\\)$"))
          (org-agenda-sorting-strategy '(todo-state-up priority-down))
          (org-agenda-overriding-header
           (format "TODO items in directory: %s" git-root))
@@ -2415,7 +2415,7 @@ root directory (including from local files =TODO.org= and =BUGS.org=, for exampl
     (org-todo-list)))
 
 ;; "TODO list" without asking for a directory.
-(global-set-key (kbd "<M-S-f6>") #'leuven-org-todo-list-git-root)
+(global-set-key (kbd "<M-S-f6>") #'leuven-org-agenda-git-root-todo-list)
 #+end_src
 
 ** Exporting Agenda Views
