@@ -15867,7 +15867,7 @@ calls to message), set the variable `debug-on-message`.
     (message "Loading `%s'...done (in %.3f s)"
              load-file-name
              (- (float-time) leuven--before-time))
-    (sit-for 0.3)
+    (sit-for 0.5)
 
     (let ((elapsed (float-time (time-subtract (current-time)
                                               emacs-start-time))))
