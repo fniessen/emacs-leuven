@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230524.1642
+;; Version: 20230524.1646
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230524.1642"
+(defconst leuven--emacs-version "20230524.1646"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2212,11 +2212,13 @@ Should be selected from `fringe-bitmaps'.")
 
   (global-set-key (kbd "C-S-y") #'leuven-revert-buffer-without-query)
 
-  (when leuven--cygwin-p                ; Cygwin Emacs uses gfilenotify (based
+  (when (and (bound-and-true-p leuven--cygwin-p)
+                                        ; Cygwin Emacs uses gfilenotify (based
                                         ; on GLib) and there are performance
                                         ; problems... Emacs bug 20927
+             (fboundp 'auto-revert-use-notify))  ; Ensure the function is defined.
 
-    ;; Don't use file notification functions.
+    ;; Disable file notification functions.
     (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).

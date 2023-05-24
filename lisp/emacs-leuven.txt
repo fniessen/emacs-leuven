@@ -3757,11 +3757,13 @@ Update time stamps (and copyright notice) automatically.
 Turn on auto-revert mode globally.
 
 #+begin_src emacs-lisp
-  (when leuven--cygwin-p                ; Cygwin Emacs uses gfilenotify (based
+  (when (and (bound-and-true-p leuven--cygwin-p)
+                                        ; Cygwin Emacs uses gfilenotify (based
                                         ; on GLib) and there are performance
                                         ; problems... Emacs bug 20927
+             (fboundp 'auto-revert-use-notify))  ; Ensure the function is defined.
 
-    ;; Don't use file notification functions.
+    ;; Disable file notification functions.
     (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
