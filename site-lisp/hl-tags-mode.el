@@ -2,6 +2,7 @@
 
 ;; Copyright (c) 2011 Mike Spindel <deactivated@gmail.com>
 ;; Modified by Amit J Patel <amitp@cs.stanford.edu> for nxml-mode
+;; Modified by Fabrice Niessen to fix warnings
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,7 +27,7 @@
 ;;   (require 'hl-tags-mode)
 ;;   (add-hook 'sgml-mode-hook (lambda () (hl-tags-mode 1)))
 ;;   (add-hook 'nxml-mode-hook (lambda () (hl-tags-mode 1)))
-          
+
 ;;; Code:
 
 (eval-when-compile (require 'cl))
@@ -60,12 +61,12 @@
     (when (looking-at "<") (forward-char 1))
     (let* ((ctx (hl-tags-sgml-get-context))
            (boundaries
-            (and ctx (case (sgml-tag-type ctx)
-                       ('empty (cons ctx nil))
-                       ('close
+            (and ctx (cl-case (sgml-tag-type ctx)
+                       (empty (cons ctx nil))
+                       (close
                         (goto-char (sgml-tag-start ctx))
                         (cons (hl-tags-sgml-get-context) ctx))
-                       ('open 
+                       (open
                         (goto-char (sgml-tag-start ctx))
                         (sgml-skip-tag-forward 1)
                         (backward-char 1)
@@ -123,13 +124,15 @@ boundaries of the current start and end tag , or nil."
 
 (define-minor-mode hl-tags-mode
   "Toggle hl-tags-mode."
-  nil "" nil
+  :init-value nil
+  :lighter ""
+  :global nil
   (if hl-tags-mode
-      (progn 
-        (add-hook 'post-command-hook 'hl-tags-update nil t)
-        (add-hook 'change-major-mode-hook 'hl-tags-hide nil t))
-    (remove-hook 'post-command-hook 'hl-tags-update t)
-    (remove-hook 'change-major-mode-hook 'hl-tags-hide t)
+      (progn
+        (add-hook 'post-command-hook #'hl-tags-update nil t)
+        (add-hook 'change-major-mode-hook #'hl-tags-hide nil t))
+    (remove-hook 'post-command-hook #'hl-tags-update t)
+    (remove-hook 'change-major-mode-hook #'hl-tags-hide t)
     (hl-tags-hide)))
 
 
