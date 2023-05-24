@@ -1524,20 +1524,23 @@ Currently: 08:00-21:59."
       (load-file leuven-org-agenda-views))))
                                         ; with-eval-after-load "org-agenda" ends here.
 
-(defun leuven-org-todo-list-git-root ()
-  "Produce a view from all Org files in the Git root directory."
+(defun leuven-org-agenda-git-root-todo-list ()
+  "Produce an Org agenda view of unscheduled TODO items in the Git root directory."
   (interactive)
   (let* ((git-root (vc-git-root default-directory))
-         (org-agenda-files (directory-files-recursively git-root "\\.\\(org\\|txt\\)$"))
+         (org-files (directory-files-recursively git-root "\\.\\(org\\|txt\\)$"))
          (org-agenda-sorting-strategy '(todo-state-up priority-down))
          (org-agenda-overriding-header
-          (format "TODO items in directory: %s" git-root))
-         (org-agenda-sticky nil))
+          (format "Unscheduled TODO items in directory: %s" git-root))
+         (org-agenda-sticky nil)
+         (org-agenda-skip-scheduled-if-done t)
+         (org-agenda-skip-deadline-if-done t)
+         (org-agenda-todo-ignore-scheduled 'future))
     (message "[%s...]" org-agenda-overriding-header)
     (org-todo-list)))
 
 ;; "TODO list" without asking for a directory.
-(global-set-key (kbd "<M-S-f6>") #'leuven-org-todo-list-git-root)
+(global-set-key (kbd "<M-S-f6>") #'leuven-org-agenda-git-root-todo-list)
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
