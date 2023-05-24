@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230524.1002
+;; Version: 20230524.1529
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230524.1002"
+(defconst leuven--emacs-version "20230524.1529"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -558,7 +558,7 @@ Return FILE if it is executable, otherwise return nil."
 )                                       ; Chapter 48 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
-  (try-require 'idle-require) ; XXX
+  (try-require 'idle-require)
 
   ;; Fail-safe for `idle-require'.
   (if (not (featurep 'idle-require))
@@ -785,13 +785,13 @@ Return FILE if it is executable, otherwise return nil."
     ;; they are listed).
     (when leuven--win32-p
       ;; (info-initialize)
-      (setq Info-directory-list
-            `(,(expand-file-name
-                (concat (file-name-directory (locate-library "org")) "../doc/"))
-              "c:/cygwin/usr/share/info/"
-              ,@Info-directory-list)))
-
-    ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there).
+      (let ((org-info-dir (expand-file-name
+                           (concat (file-name-directory (locate-library "org")) "../doc/"))))
+        (when (file-directory-p org-info-dir)
+          (add-to-list 'Info-directory-list org-info-dir t)))
+      (let ((cygwin-info-dir "c:/cygwin/usr/share/info/"))
+        (when (file-directory-p cygwin-info-dir)
+          (add-to-list 'Info-directory-list cygwin-info-dir t)))))
 
     (with-eval-after-load "info+-autoloads"
       (idle-require 'info+))

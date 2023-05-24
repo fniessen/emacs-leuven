@@ -778,7 +778,7 @@ like this into your configuration file:
 
 #+begin_src emacs-lisp
   ;; Load elisp libraries while Emacs is idle.
-  (try-require 'idle-require) ; XXX
+  (try-require 'idle-require)
 
   ;; Fail-safe for `idle-require'.
   (if (not (featurep 'idle-require))
@@ -1196,13 +1196,13 @@ Emacs). XXX Could we set ~Info-default-directory-list~ instead???
     ;; they are listed).
     (when leuven--win32-p
       ;; (info-initialize)
-      (setq Info-directory-list
-            `(,(expand-file-name
-                (concat (file-name-directory (locate-library "org")) "../doc/"))
-              "c:/cygwin/usr/share/info/"
-              ,@Info-directory-list)))
-
-    ;; XXX Replace by add-to-list to ensure we don't insert duplicates (if Cygwin was already there).
+      (let ((org-info-dir (expand-file-name
+                           (concat (file-name-directory (locate-library "org")) "../doc/"))))
+        (when (file-directory-p org-info-dir)
+          (add-to-list 'Info-directory-list org-info-dir t)))
+      (let ((cygwin-info-dir "c:/cygwin/usr/share/info/"))
+        (when (file-directory-p cygwin-info-dir)
+          (add-to-list 'Info-directory-list cygwin-info-dir t)))))
 #+end_src
 
 ~Info+~ fontifies entries for reference items (functions, macros, commands,
