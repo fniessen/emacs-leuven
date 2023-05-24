@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230524.1529
+;; Version: 20230524.1627
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230524.1529"
+(defconst leuven--emacs-version "20230524.1627"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1217,23 +1217,21 @@ Return FILE if it is executable, otherwise return nil."
   ;; Highlight tasks.
   (defvar leuven-todo-patterns-in-org
     "\\<\\(\\(FIXME\\|XXX\\|BUG\\)\\(([^)]*)\\)?:?.*\\)" ; Start of word.
-    "TODO patterns to highlight (for Org mode only).
+    "TODO patterns to highlight in Org mode.
   The goal is to ensure no conflict with the Org mode TODO keyword.")
 
   (defvar leuven-todo-patterns-anywhere
     "\\<\\(\\(TODO\\|FIXME\\|XXX\\|BUG\\)\\(([^)]*)\\)?:?.*\\)"
-    "TODO patterns to highlight (for all modes).")
+    "TODO patterns to highlight in all modes.")
 
   ;; Add highlighting keywords.
   (defun leuven--highlight-todo-patterns ()
     "Highlight TODO patterns."
-    (let ((keywords (cond
-                     ((derived-mode-p 'org-mode)
-                      `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)))
-                     ((not (derived-mode-p 'diff-mode))
-                      `((,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend))))))
-
-      (font-lock-add-keywords nil keywords 'end)))
+    (font-lock-add-keywords
+     nil
+     `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)
+       (,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend))
+     'end))
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 
