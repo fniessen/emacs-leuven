@@ -791,7 +791,7 @@ Return FILE if it is executable, otherwise return nil."
           (add-to-list 'Info-directory-list org-info-dir t)))
       (let ((cygwin-info-dir "c:/cygwin/usr/share/info/"))
         (when (file-directory-p cygwin-info-dir)
-          (add-to-list 'Info-directory-list cygwin-info-dir t)))))
+          (add-to-list 'Info-directory-list cygwin-info-dir t))))
 
     (with-eval-after-load "info+-autoloads"
       (idle-require 'info+))
