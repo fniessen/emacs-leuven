@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230524.1635
+;; Version: 20230524.1642
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230524.1635"
+(defconst leuven--emacs-version "20230524.1642"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1701,7 +1701,7 @@ Should be selected from `fringe-bitmaps'.")
   (setq blink-cursor-blinks 0)
 
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
-  (global-hl-line-mode 1)               ; XXX Perhaps only in prog-modes?
+  (global-hl-line-mode 1)
 
   ;; ;; Extensions to hl-line.el.
   ;; (with-eval-after-load "hl-line+-autoloads"
@@ -2077,13 +2077,12 @@ Should be selected from `fringe-bitmaps'.")
   (setq line-number-display-limit large-file-warning-threshold)
                                         ; 14.18 Optional Mode Line Features.
 
-  (defun leuven--is-file-large-p ()
-    "File is too big and might cause performance issue."
+  (defun leuven-file-too-large-p ()
+    "Check if the file is too large and might cause performance issues."
     (> (buffer-size) large-file-warning-threshold))
 
-  ;; View large files.
-  (defun leuven--view-large-file ()
-    "Fix performance issues in Emacs when viewing large files."
+  (defun leuven-optimize-large-file-viewing ()
+    "Optimize Emacs performance when viewing large files."
     (setq buffer-read-only t)
     (setq-local bidi-display-reordering nil) ; Default local setting.
     (jit-lock-mode nil)
@@ -2093,16 +2092,16 @@ Should be selected from `fringe-bitmaps'.")
     (set (make-variable-buffer-local 'column-number-mode) nil)
 
     ;; Disable costly modes.
-    (when (boundp 'smartparens-mode)
-      (smartparens-mode -1))              ; XXX: DOES NOT WORK.
-    (when (boundp 'anzu-mode)
+    (when (fboundp 'smartparens-mode)
+      (smartparens-mode -1))
+    (when (fboundp 'anzu-mode)
       (anzu-mode -1)))
 
   (define-derived-mode leuven-large-file-mode fundamental-mode "LvnLargeFile"
-    "Fix performance issues in Emacs for large files."
-    (leuven--view-large-file))
+    "Major mode for optimized viewing of large files."
+    (leuven-optimize-large-file-viewing))
 
-  (add-to-list 'magic-mode-alist (cons #'leuven--is-file-large-p #'leuven-large-file-mode))
+  (add-to-list 'magic-mode-alist (cons #'leuven-file-too-large-p #'leuven-large-file-mode))
 
   (defun leuven-find-large-file-conservatively (filename)
     (interactive
