@@ -1,11 +1,10 @@
-
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
 ;; Copyright (C) 1999-2023 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230518.2057
+;; Version: 20230524.1002
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -93,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230518.2057"
+(defconst leuven--emacs-version "20230524.1002"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2187,54 +2186,54 @@ Should be selected from `fringe-bitmaps'.")
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
 
-  ;; (leuven--section "18.4 (emacs)Reverting a Buffer")
-  ;;
-  ;; ;; Time between Auto-Revert Mode file checks.
-  ;; (setq auto-revert-interval 1)         ; [Default: 5]
-  ;;
-  ;; ;; ;; But if, for instance, a new version is checked in from outside the current
-  ;; ;; ;; Emacs session, the version control number in the mode line, as well as
-  ;; ;; ;; other version control related information, may not be properly updated
-  ;; ;; (setq auto-revert-check-vc-info t)
-  ;;
-  ;; ;; Synchronize.  Reload the file from disk (replacing current buffer text with
-  ;; ;; the text of the visited file on disk).
-  ;; (defun leuven-revert-buffer-without-query ()
-  ;;   "Unconditionally revert current buffer."
-  ;;   (interactive)
-  ;;   (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
-  ;;   ;; Remove highlights.
-  ;;   (dolist (o (overlays-in (window-start) (window-end)))
-  ;;     (when (or (equal (overlay-get o 'face) 'recover-this-file)
-  ;;               (equal (overlay-get o 'face) 'highlight-changes)
-  ;;               (equal (overlay-get o 'face) 'highlight-changes-delete)
-  ;;               (equal (overlay-get o 'face) 'org-block-executing))
-  ;;       (delete-overlay o)))            ; Useful when our advice of function
-  ;;                                       ; `org-babel-execute-src-block' fails to
-  ;;                                       ; remove the background color.
-  ;;   (message "[Buffer is up to date with file on disk]"))
-  ;;
-  ;; (global-set-key (kbd "C-S-y") #'leuven-revert-buffer-without-query)
-  ;;
-  ;; (when leuven--wsl-p                ; Cygwin Emacs uses gfilenotify (based
-  ;;                                       ; on GLib) and there are performance
-  ;;                                       ; problems... Emacs bug 20927
-  ;;
-  ;;   ;; Don't use file notification functions.
-  ;;   (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
-  ;;
-  ;; ;; Enable Global Auto-Revert mode (auto refresh buffers).
-  ;; (idle-require 'autorevert)
-  ;; (with-eval-after-load "autorevert"
-  ;;   (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
-  ;;                                       ; if `auto-revert-remote-files' is set
-  ;;                                       ; to non-nil.
-  ;;
-  ;; ;; Global Auto-Revert mode operates on all buffers (Dired, etc.)
-  ;; (setq global-auto-revert-non-file-buffers t)
-  ;;
-  ;; ;; Do not generate any messages (be quiet about refreshing Dired).
-  ;; (setq auto-revert-verbose nil)        ; Avoid "Reverting buffer `some-dir/'.".
+  (leuven--section "18.4 (emacs)Reverting a Buffer")
+
+  ;; Time between Auto-Revert Mode file checks.
+  (setq auto-revert-interval 1)         ; [Default: 5]
+
+  ;; ;; But if, for instance, a new version is checked in from outside the current
+  ;; ;; Emacs session, the version control number in the mode line, as well as
+  ;; ;; other version control related information, may not be properly updated
+  ;; (setq auto-revert-check-vc-info t)
+
+  ;; Synchronize.  Reload the file from disk (replacing current buffer text with
+  ;; the text of the visited file on disk).
+  (defun leuven-revert-buffer-without-query ()
+    "Unconditionally revert current buffer."
+    (interactive)
+    (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
+    ;; Remove highlights.
+    (dolist (o (overlays-in (window-start) (window-end)))
+      (when (or (equal (overlay-get o 'face) 'recover-this-file)
+                (equal (overlay-get o 'face) 'highlight-changes)
+                (equal (overlay-get o 'face) 'highlight-changes-delete)
+                (equal (overlay-get o 'face) 'org-block-executing))
+        (delete-overlay o)))            ; Useful when our advice of function
+                                        ; `org-babel-execute-src-block' fails to
+                                        ; remove the background color.
+    (message "[Buffer is up to date with file on disk]"))
+
+  (global-set-key (kbd "C-S-y") #'leuven-revert-buffer-without-query)
+
+  (when leuven--cygwin-p                ; Cygwin Emacs uses gfilenotify (based
+                                        ; on GLib) and there are performance
+                                        ; problems... Emacs bug 20927
+
+    ;; Don't use file notification functions.
+    (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
+
+  ;; Enable Global Auto-Revert mode (auto refresh buffers).
+  (idle-require 'autorevert)
+  (with-eval-after-load "autorevert"
+    (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
+                                        ; if `auto-revert-remote-files' is set
+                                        ; to non-nil.
+
+  ;; Global Auto-Revert mode operates on all buffers (Dired, etc.)
+  (setq global-auto-revert-non-file-buffers t)
+
+  ;; Do not generate any messages (be quiet about refreshing Dired).
+  (setq auto-revert-verbose nil)        ; Avoid "Reverting buffer `some-dir/'.".
 
 ;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
@@ -6618,8 +6617,8 @@ This example lists Azerty layout second row keys."
 
     (leuven--section "30.15 (emacs)Dired Updating")
 
-    ;; ;; Automatically revert Dired buffer *on revisiting*.
-    ;; (setq dired-auto-revert-buffer t)
+    ;; Automatically revert Dired buffer *on revisiting*.
+    (setq dired-auto-revert-buffer t)
 
     ;; Dired sort.
     (try-require 'dired-sort-map)
@@ -6673,7 +6672,6 @@ This example lists Azerty layout second row keys."
     (leuven--section "30.XX (dired-x)Top")
 
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
-
 
     (defadvice dired-jump (around leuven-dired-jump activate)
       "Ask for confirmation for buffers of 1,400,000 bytes or more."
@@ -7765,18 +7763,17 @@ This example lists Azerty layout second row keys."
               (sit-for 0.5))
   t)
 
-  (defun leuven-update ()
-    "Update Emacs-Leuven to its latest version."
+  (defun leuven-update-configuration ()
+    "Update the Emacs-Leuven configuration to its latest version."
     (interactive)
     (leuven-emacs-version)
-    (message "[Updating Leuven...]")
-    (cd leuven--directory)
-    (let ((ret (shell-command-to-string "LC_ALL=C git pull --rebase")))
-      (if (string-match "\\(up to date\\|up-to-date\\)" ret)
-          (message "[Configuration already up-to-date]")
-        (princ ret)
-        (sit-for 3)
-        (message "[Configuration updated. Restart Emacs to complete the process]"))))
+    (message "[Updating Leuven configuration...]")
+    (let ((default-directory leuven--directory))
+      (shell-command "LC_ALL=C git pull --rebase")
+      (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
+          (message "[Configuration is already up-to-date]")
+        (sit-for 1.5)
+        (message "[Configuration updated.  Please restart Emacs to complete the update]"))))
 
   (defun leuven-show-latest-commits ()
     "List latest changes in Emacs-Leuven."

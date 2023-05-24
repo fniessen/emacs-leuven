@@ -12815,7 +12815,6 @@ Extra Dired functionality:
 
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
-
     (defadvice dired-jump (around leuven-dired-jump activate)
       "Ask for confirmation for buffers of 1,400,000 bytes or more."
       (when (or (< (buffer-size) 1400000)
@@ -15137,18 +15136,17 @@ functions implemented in Emacs Lisp.
 "Package can be upgraded"
 
 #+begin_src emacs-lisp
-  (defun leuven-update ()
-    "Update Emacs-Leuven to its latest version."
+  (defun leuven-update-configuration ()
+    "Update the Emacs-Leuven configuration to its latest version."
     (interactive)
     (leuven-emacs-version)
-    (message "[Updating Leuven...]")
-    (cd leuven--directory)
-    (let ((ret (shell-command-to-string "LC_ALL=C git pull --rebase")))
-      (if (string-match "\\(up to date\\|up-to-date\\)" ret)
-          (message "[Configuration already up-to-date]")
-        (princ ret)
-        (sit-for 3)
-        (message "[Configuration updated. Restart Emacs to complete the process]"))))
+    (message "[Updating Leuven configuration...]")
+    (let ((default-directory leuven--directory))
+      (shell-command "LC_ALL=C git pull --rebase")
+      (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
+          (message "[Configuration is already up-to-date]")
+        (sit-for 1.5)
+        (message "[Configuration updated.  Please restart Emacs to complete the update]"))))
 
   (defun leuven-show-latest-commits ()
     "List latest changes in Emacs-Leuven."
