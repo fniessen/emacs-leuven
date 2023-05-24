@@ -2284,23 +2284,26 @@ parent."
   (mapc 'delete-overlay only-code-overlays))
 
 (with-eval-after-load "org"
-  (defun org-kill-ring-save-code-block ()
-    "Save the current code block as if killed, but don't kill it."
+  (defun leuven-org-copy-code-block ()
+    "Copy the contents of the current Org mode code block to the kill ring.
+The code block is identified by \"begin_src\" and \"end_src\" markers.
+This command saves the code block contents as if it were killed, but without actually killing it."
     (interactive)
     (save-excursion
-      (let (beg end)
-        (search-backward "begin_src")
-        (beginning-of-line)
-        (forward-line 1)
-        (setq beg (point))
-        (search-forward "end_src")
-        (beginning-of-line)
-        (setq end (point))
-        (copy-region-as-kill beg end)
-        (message "[Copied the current code block]"))))
+      (let ((block-start (progn
+                           (search-backward "begin_src")
+                           (beginning-of-line)
+                           (forward-line)
+                           (point)))
+            (block-end (progn
+                         (search-forward "end_src")
+                         (beginning-of-line)
+                         (point))))
+        (copy-region-as-kill block-start block-end)
+        (message "[Code block copied to kill ring]"))))
 
   ;; Copy current code block.
-  (define-key org-mode-map (kbd "H-w") #'org-kill-ring-save-code-block))
+  (define-key org-mode-map (kbd "H-w") #'leuven-org-copy-code-block))
 
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
