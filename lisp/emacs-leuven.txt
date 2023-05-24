@@ -5819,40 +5819,28 @@ one.
 
 #+begin_src emacs-lisp
   (when (display-graphic-p)
-
-    ;; Put Emacs exactly where you want it, every time it starts up.
-    (setq initial-frame-alist
-          '((top . 0)
-            (left . 0)))
+    ;; Put Emacs at the top-left corner of the screen.
+    (setq initial-frame-alist '((top . 0) (left . 0)))
 
     ;; Auto-detect the screen dimensions and compute the height of Emacs.
-    (add-to-list 'default-frame-alist
-                 (cons 'height
-                       (/ (-
-                           ;; Height of Display 1.
-                           (nth 4
-                                (assq 'geometry
-                                      (car (display-monitor-attributes-list)))) ; XXX Emacs 24.4 needed!
-                           177)       ; Allow for Emacs' title bar and taskbar
-                                      ; (from the OS).
-                          (frame-char-height)))))
+    (let* ((screen-geometry (car (display-monitor-attributes-list)))
+           (screen-height (- (nth 4 (assq 'geometry screen-geometry)) 177)) ; Account for Emacs' title bar and taskbar.
+           (frame-char-height (frame-char-height)))
+      (add-to-list 'default-frame-alist (cons 'height (/ screen-height frame-char-height)))))
 #+end_src
 
 #+begin_src emacs-lisp
   ;; Title bar display of visible frames.
   (setq frame-title-format
         (format "%s Emacs%s %s%s of %s - PID: %d"
-                (replace-regexp-in-string "-.*$" ""
-                                          (capitalize (symbol-name system-type)))
-                (if (string-match "^x86_64-.*" system-configuration)
+                (replace-regexp-in-string "-.*$" "" (capitalize (symbol-name system-type)))
+                (if (string-match-p "^x86_64-.*" system-configuration)
                     "-w64"
                   "-w32")
                 emacs-version
-                (if (and (boundp 'emacs-repository-version)
+                (if (and (bound-and-true-p emacs-repository-version)
                          emacs-repository-version)
-                    (concat " (" (substring
-                                  (replace-regexp-in-string
-                                   " .*" "" emacs-repository-version) 0 7) ")")
+                    (concat " (" (substring (replace-regexp-in-string " .*" "" emacs-repository-version) 0 7) ")")
                   "")
                 (format-time-string "%Y-%m-%d" emacs-build-time)
                 (emacs-pid)))

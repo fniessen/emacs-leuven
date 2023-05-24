@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230524.1646
+;; Version: 20230524.1654
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230524.1646"
+(defconst leuven--emacs-version "20230524.1654"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3228,38 +3228,26 @@ cycle through all windows on current frame."
   (leuven--section "21.6 (emacs)Creating Frames")
 
   (when (display-graphic-p)
-
-    ;; Put Emacs exactly where you want it, every time it starts up.
-    (setq initial-frame-alist
-          '((top . 0)
-            (left . 0)))
+    ;; Put Emacs at the top-left corner of the screen.
+    (setq initial-frame-alist '((top . 0) (left . 0)))
 
     ;; Auto-detect the screen dimensions and compute the height of Emacs.
-    (add-to-list 'default-frame-alist
-                 (cons 'height
-                       (/ (-
-                           ;; Height of Display 1.
-                           (nth 4
-                                (assq 'geometry
-                                      (car (display-monitor-attributes-list)))) ; XXX Emacs 24.4 needed!
-                           177)       ; Allow for Emacs' title bar and taskbar
-                                      ; (from the OS).
-                          (frame-char-height)))))
+    (let* ((screen-geometry (car (display-monitor-attributes-list)))
+           (screen-height (- (nth 4 (assq 'geometry screen-geometry)) 177)) ; Account for Emacs' title bar and taskbar.
+           (frame-char-height (frame-char-height)))
+      (add-to-list 'default-frame-alist (cons 'height (/ screen-height frame-char-height)))))
 
   ;; Title bar display of visible frames.
   (setq frame-title-format
         (format "%s Emacs%s %s%s of %s - PID: %d"
-                (replace-regexp-in-string "-.*$" ""
-                                          (capitalize (symbol-name system-type)))
-                (if (string-match "^x86_64-.*" system-configuration)
+                (replace-regexp-in-string "-.*$" "" (capitalize (symbol-name system-type)))
+                (if (string-match-p "^x86_64-.*" system-configuration)
                     "-w64"
                   "-w32")
                 emacs-version
-                (if (and (boundp 'emacs-repository-version)
+                (if (and (bound-and-true-p emacs-repository-version)
                          emacs-repository-version)
-                    (concat " (" (substring
-                                  (replace-regexp-in-string
-                                   " .*" "" emacs-repository-version) 0 7) ")")
+                    (concat " (" (substring (replace-regexp-in-string " .*" "" emacs-repository-version) 0 7) ")")
                   "")
                 (format-time-string "%Y-%m-%d" emacs-build-time)
                 (emacs-pid)))
