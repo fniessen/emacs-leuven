@@ -2172,12 +2172,12 @@ Check out ~log4j-mode~ instead?  And nice colors at
 https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html.
 
 #+begin_src emacs-lisp
-  (defun leuven-occur-todo ()
+  (defun leuven-display-todo-lines ()
     "Display all lines in the current buffer containing TODO, FIXME, XXX, or BUG."
     (interactive)
     (occur "TODO\\|FIXME\\|XXX\\|BUG"))
 
-  (global-set-key (kbd "<M-f6>") #'leuven-occur-todo)
+  (global-set-key (kbd "<M-f6>") #'leuven-display-todo-lines)
 #+end_src
 
 #+begin_src emacs-lisp

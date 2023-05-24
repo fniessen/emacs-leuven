@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230524.1627
+;; Version: 20230524.1635
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230524.1627"
+(defconst leuven--emacs-version "20230524.1635"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1235,12 +1235,12 @@ Return FILE if it is executable, otherwise return nil."
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 
-  (defun leuven-occur-todo ()
+  (defun leuven-display-todo-lines ()
     "Display all lines in the current buffer containing TODO, FIXME, XXX, or BUG."
     (interactive)
     (occur "TODO\\|FIXME\\|XXX\\|BUG"))
 
-  (global-set-key (kbd "<M-f6>") #'leuven-occur-todo)
+  (global-set-key (kbd "<M-f6>") #'leuven-display-todo-lines)
 
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
