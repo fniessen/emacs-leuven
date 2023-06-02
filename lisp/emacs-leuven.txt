@@ -2157,11 +2157,12 @@ In IntelliJ IDEA, the are recognized in both lower and upper case.
   ;; Add highlighting keywords.
   (defun leuven--highlight-todo-patterns ()
     "Highlight TODO patterns."
-    (font-lock-add-keywords
-     nil
-     `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)
-       (,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend))
-     'end))
+    (let ((keywords (cond
+                     ((derived-mode-p 'org-mode)
+                      `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)))
+                     ((not (derived-mode-p 'diff-mode))
+                      `((,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend))))))
+      (font-lock-add-keywords nil keywords 'end)))
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 #+end_src

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230524.1909
+;; Version: 20230602.1928
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230524.1909"
+(defconst leuven--emacs-version "20230602.1928"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1227,11 +1227,12 @@ Return FILE if it is executable, otherwise return nil."
   ;; Add highlighting keywords.
   (defun leuven--highlight-todo-patterns ()
     "Highlight TODO patterns."
-    (font-lock-add-keywords
-     nil
-     `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)
-       (,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend))
-     'end))
+    (let ((keywords (cond
+                     ((derived-mode-p 'org-mode)
+                      `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)))
+                     ((not (derived-mode-p 'diff-mode))
+                      `((,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend))))))
+      (font-lock-add-keywords nil keywords 'end)))
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 
