@@ -1527,36 +1527,42 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 #+end_src
 
-With the following gems, you can kill or copy the line point is on with a single
-keystroke:
+With the following functions, you can conveniently kill or copy the line where
+the cursor is located using simple key combinations:
 
-- ~C-w~ kills the current line
-- ~M-w~ copies the current line
+- Press ~C-w~ to kill (delete) the current line.
+- Press ~M-w~ to copy the current line.
 
 #+begin_note
-If there is an active region, ~kill-region~ and ~kill-ring-save~ will continue to do
-what they normally do: kill or copy it.
+If there is an active region (text selected), the standard ~kill-region~ and
+~kill-ring-save~ commands will continue to perform their usual functions: killing
+or copying the selected text.
 #+end_note
 
 #+begin_src emacs-lisp
-  ;; Add the ability to cut the current line without marking it (no selection).
-  (defun kill-region--slick-cut (beg end &optional region)
-    "When called with no active region, kill the current line instead."
+  ;; Function to perform slick cut for the kill-region command.
+  (defun lvn--slick-cut-region (beg end &optional region)
+    "Cut the selected region or the current line if REGION is nil.
+  BEG and END specify the region to cut if a region is selected."
     (interactive
      (if (use-region-p)
          (list (region-beginning) (region-end))
        (list (line-beginning-position) (line-beginning-position 2)))))
-  (advice-add 'kill-region :before #'kill-region--slick-cut)
+  ;; Add advice to execute lvn--slick-cut-region before the kill-region command.
+  (advice-add 'kill-region :before #'lvn--slick-cut-region)
 
-  ;; Add the ability to copy the current line without marking it (no selection).
-  (defun kill-ring-save--slick-copy (beg end &optional region)
-    "When called with no active region, copy the current line instead."
+  ;; Function to perform slick copy for the kill-ring-save command.
+  (defun lvn--slick-copy-region (beg end &optional region)
+    "Copy the selected region or the current line if REGION is nil.
+  BEG and END specify the region to copy if a region is selected."
     (interactive
      (if (use-region-p)
          (list (region-beginning) (region-end))
-       (message "[Copied the current line]")
-       (list (line-beginning-position) (line-beginning-position 2)))))
-  (advice-add 'kill-ring-save :before #'kill-ring-save--slick-copy)
+       (progn
+         (message "[Copied the current line]")
+         (list (line-beginning-position) (line-beginning-position 2))))))
+  ;; Add advice to execute lvn--slick-copy-region before the kill-ring-save command.
+  (advice-add 'kill-ring-save :before #'lvn--slick-copy-region)
 #+end_src
 
 | Command        | Emacs | Sublime Text | TextMate |
@@ -1638,10 +1644,10 @@ Auto-indent on paste.
   (dolist (command '(yank
                      yank-pop))
     (eval `(defadvice ,command (after leuven-indent-region activate)
-             "Indent `yank'ed text if programming mode (and no prefix)."
+             "Indent `yank'ed text if in programming mode (and no prefix)."
              (let ((mark-even-if-inactive t))
-               (and (not current-prefix-arg)
-                    (derived-mode-p 'prog-mode)
+               (and (not current-prefix-arg)  ; Check if there's no prefix argument.
+                    (derived-mode-p 'prog-mode) ; Check if the current buffer is in a programming mode.
                     (indent-region (region-beginning) (region-end) nil))))))
 #+end_src
 
@@ -5522,13 +5528,13 @@ Get EXIF data with ~image-dired-get-exif-data~.
   (leuven--section "19.4 (emacs)Kill Buffer")
 
   ;; Kill this buffer without confirmation (if not modified).
-  (defun leuven-kill-this-buffer-without-query ()
+  (defun leuven-lvn-kill-current-buffer-no-confirm ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
     (kill-buffer nil))
 
   ;; Key binding.
-  (global-set-key (kbd "<S-f12>") #'leuven-kill-this-buffer-without-query)
+  (global-set-key (kbd "<S-f12>") #'leuven-lvn-kill-current-buffer-no-confirm)
 #+end_src
 
 ** Operating on Several Buffers

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230602.1928
+;; Version: 20230718.2229
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230602.1928"
+(defconst leuven--emacs-version "20230718.2229"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -947,24 +947,29 @@ Return FILE if it is executable, otherwise return nil."
   ;; Manipulate whitespace around point in a smart way.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
-  ;; Add the ability to cut the current line without marking it (no selection).
-  (defun kill-region--slick-cut (beg end &optional region)
-    "When called with no active region, kill the current line instead."
+  ;; Function to perform slick cut for the kill-region command.
+  (defun lvn--slick-cut-region (beg end &optional region)
+    "Cut the selected region or the current line if REGION is nil.
+  BEG and END specify the region to cut if a region is selected."
     (interactive
      (if (use-region-p)
          (list (region-beginning) (region-end))
        (list (line-beginning-position) (line-beginning-position 2)))))
-  (advice-add 'kill-region :before #'kill-region--slick-cut)
+  ;; Add advice to execute lvn--slick-cut-region before the kill-region command.
+  (advice-add 'kill-region :before #'lvn--slick-cut-region)
 
-  ;; Add the ability to copy the current line without marking it (no selection).
-  (defun kill-ring-save--slick-copy (beg end &optional region)
-    "When called with no active region, copy the current line instead."
+  ;; Function to perform slick copy for the kill-ring-save command.
+  (defun lvn--slick-copy-region (beg end &optional region)
+    "Copy the selected region or the current line if REGION is nil.
+  BEG and END specify the region to copy if a region is selected."
     (interactive
      (if (use-region-p)
          (list (region-beginning) (region-end))
-       (message "[Copied the current line]")
-       (list (line-beginning-position) (line-beginning-position 2)))))
-  (advice-add 'kill-ring-save :before #'kill-ring-save--slick-copy)
+       (progn
+         (message "[Copied the current line]")
+         (list (line-beginning-position) (line-beginning-position 2))))))
+  ;; Add advice to execute lvn--slick-copy-region before the kill-ring-save command.
+  (advice-add 'kill-ring-save :before #'lvn--slick-copy-region)
 
   (defun duplicate-current-line ()
     "Duplicate the line containing point."
@@ -993,10 +998,10 @@ Return FILE if it is executable, otherwise return nil."
   (dolist (command '(yank
                      yank-pop))
     (eval `(defadvice ,command (after leuven-indent-region activate)
-             "Indent `yank'ed text if programming mode (and no prefix)."
+             "Indent `yank'ed text if in programming mode (and no prefix)."
              (let ((mark-even-if-inactive t))
-               (and (not current-prefix-arg)
-                    (derived-mode-p 'prog-mode)
+               (and (not current-prefix-arg)  ; Check if there's no prefix argument.
+                    (derived-mode-p 'prog-mode) ; Check if the current buffer is in a programming mode.
                     (indent-region (region-beginning) (region-end) nil))))))
 
   ;; Save clipboard strings into kill ring before replacing them.
@@ -3033,13 +3038,13 @@ using Tramp's sudo method if it's read-only."
   (leuven--section "19.4 (emacs)Kill Buffer")
 
   ;; Kill this buffer without confirmation (if not modified).
-  (defun leuven-kill-this-buffer-without-query ()
+  (defun leuven-lvn-kill-current-buffer-no-confirm ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
     (kill-buffer nil))
 
   ;; Key binding.
-  (global-set-key (kbd "<S-f12>") #'leuven-kill-this-buffer-without-query)
+  (global-set-key (kbd "<S-f12>") #'leuven-lvn-kill-current-buffer-no-confirm)
 
 ;;** 19.5 (info "(emacs)Several Buffers")
 
