@@ -2876,7 +2876,7 @@ See http://www.elliotglaysher.org/emacs/
 
   (leuven--section "14.19 (emacs)")
 
-  ;; Display width of a TAB character.
+  ;; Set the default tab width of a TAB character to 4 spaces.
   (setq-default tab-width 4)
 #+end_src
 
@@ -2888,13 +2888,13 @@ See http://www.elliotglaysher.org/emacs/
   (leuven--section "14.20 (emacs)The Cursor Display")
 #+end_src
 
-Colorize cursor according to state.
+Colorize cursor according to buffer state.
 
 #+begin_src emacs-lisp
-  ;; Use cursor color and type to indicate some modes (read-only, overwrite
-  ;; and normal insert modes).
-  (defun leuven--set-cursor-according-to-mode ()
-    "Change cursor color according to some minor modes."
+  ;; Customize cursor color and type based on buffer state (read-only,
+  ;; overwrite, and normal insert modes).
+  (defun lvn--customize-cursor-style ()
+    "Change cursor color and type based on buffer state."
     (let* ((read-only-color "purple1")
            (overwrite-color "#7F7F7F")
            (default-color "black")
@@ -2905,7 +2905,7 @@ Colorize cursor according to state.
       (set-cursor-color color)
       (setq cursor-type type)))
 
-  (add-hook 'post-command-hook #'leuven--set-cursor-according-to-mode)
+  (add-hook 'post-command-hook #'lvn---customize-cursor-style)
 
   ;; Cursor to use.
   (setq-default cursor-type 'bar)
@@ -6416,7 +6416,7 @@ Don't tabify.  Instead, _reindent_ everything, e.g. with ~C-M-\~.
 
   (leuven--section "24.3 TABs vs. (emacs)Just Spaces")
 
-  ;; Indentation can't insert TABs.
+  ;; Indentation uses spaces instead of tabs.
   (setq-default indent-tabs-mode nil)
 #+end_src
 

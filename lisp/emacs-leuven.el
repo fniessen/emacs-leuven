@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230724.2210
+;; Version: 20230729.1837
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230724.2210"
+(defconst leuven--emacs-version "20230729.1837"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1677,17 +1677,17 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "14.19 (emacs)")
 
-  ;; Display width of a TAB character.
+  ;; Set the default tab width of a TAB character to 4 spaces.
   (setq-default tab-width 4)
 
 ;;** 14.20 The (info "(emacs)Cursor Display")
 
   (leuven--section "14.20 (emacs)The Cursor Display")
 
-  ;; Use cursor color and type to indicate some modes (read-only, overwrite
-  ;; and normal insert modes).
-  (defun leuven--set-cursor-according-to-mode ()
-    "Change cursor color according to some minor modes."
+  ;; Customize cursor color and type based on buffer state (read-only,
+  ;; overwrite, and normal insert modes).
+  (defun lvn--customize-cursor-style ()
+    "Change cursor color and type based on buffer state."
     (let* ((read-only-color "purple1")
            (overwrite-color "#7F7F7F")
            (default-color "black")
@@ -1698,7 +1698,7 @@ Should be selected from `fringe-bitmaps'.")
       (set-cursor-color color)
       (setq cursor-type type)))
 
-  (add-hook 'post-command-hook #'leuven--set-cursor-according-to-mode)
+  (add-hook 'post-command-hook #'lvn---customize-cursor-style)
 
   ;; Cursor to use.
   (setq-default cursor-type 'bar)
@@ -3594,7 +3594,7 @@ windows, leaving only the currently active window visible."
 
   (leuven--section "24.3 TABs vs. (emacs)Just Spaces")
 
-  ;; Indentation can't insert TABs.
+  ;; Indentation uses spaces instead of tabs.
   (setq-default indent-tabs-mode nil)
 
   ;; (setq tab-always-indent 'complete)
