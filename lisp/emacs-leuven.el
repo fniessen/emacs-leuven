@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230718.2229
+;; Version: 20230724.2210
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230718.2229"
+(defconst leuven--emacs-version "20230724.2210"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -3081,16 +3081,20 @@ using Tramp's sudo method if it's read-only."
 
   (global-set-key (kbd "<f6>") #'other-window)
 
-  (defun leuven-switch-to-other-window-or-buffer ()
-    "If there is only one window displayed, swap it with previous buffer.
-If there are two or more windows displayed, act like `other-window':
-cycle through all windows on current frame."
+  (defun lvn-rotate-or-previous-buffer ()
+    "Switch to the previous buffer or rotate window configuration.
+
+If there is only one window in the frame, this function switches to the previous
+buffer, cycling through the buffer list in the current window.
+
+If there are multiple windows in the frame, this function rotates the window
+configuration, moving to the previous window in the cyclic order."
     (interactive)
     (if (one-window-p t)
         (switch-to-buffer (other-buffer (current-buffer) 1))
       (other-window -1)))
 
-  (global-set-key (kbd "<f6>") #'leuven-switch-to-other-window-or-buffer)
+  (global-set-key (kbd "<f6>") #'lvn-rotate-or-previous-buffer)
 
   ;; Reverse operation of `other-window' (`C-x o').
   (global-set-key (kbd "<S-f6>") #'previous-multiframe-window)
@@ -3099,22 +3103,17 @@ cycle through all windows on current frame."
 
   (leuven--section "20.5 (emacs)Change Window")
 
-  (defun leuven-delete-or-split-window ()
-    "Cycle between 1 window and 2 windows.
+  (defun lvn-toggle-or-delete-window-layout ()
+    "Toggle or delete the window layout.
 
-  When splitting the window, the new window is selected, as it
-  makes more sense to do something there first.
+If there is only one window in the frame, this function will split the window
+either horizontally or vertically, depending on the frame's width, as defined by
+`split-width-threshold' variable. If the frame width is greater than
+`split-width-threshold', it will split the window horizontally, otherwise
+vertically.
 
-  The window's contents is unchanged by default.
-
-  Do you want to see another part of the same file?  You've
-  nothing to do.
-
-  Do you want to see the last file you were visiting?  Simply
-  bury the current buffer (M-<F12>).
-
-  Do you want to go back to the first window?  Switch to
-  it (<F6>)."
+If there are multiple windows in the frame, this function will delete all other
+windows, leaving only the currently active window visible."
     (interactive)
     (cond ((one-window-p t)
            (select-window
@@ -3124,8 +3123,7 @@ cycle through all windows on current frame."
           (t
            (delete-other-windows))))
 
-  ;; Delete all windows in the selected frame except the selected window.
-  (global-set-key (kbd "<f5>") #'leuven-delete-or-split-window)
+  (global-set-key (kbd "<f5>") #'lvn-toggle-or-delete-window-layout)
 
   ;; Swap 2 windows.
   (defun leuven-swap-windows ()
