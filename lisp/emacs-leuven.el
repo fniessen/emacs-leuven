@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230801.2053
+;; Version: 20230801.2122
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230801.2053"
+(defconst leuven--emacs-version "20230801.2122"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1018,19 +1018,25 @@ Return FILE if it is executable, otherwise return nil."
   (menu-bar-enable-clipboard)
 
   ;; Define the copy command for WSL.
-  (defun wsl-copy (start end)
-    "Copy the selected text to the Windows clipboard in WSL."
-    (interactive "r")
-    (shell-command-on-region start end "clip.exe")
-    (deactivate-mark)
-    (message "[Copied to Windows clipboard.]"))
+  (defun lvn-wsl-slick-copy-region (beg end &optional region)
+    "Copy the selected region or the current line to the Windows clipboard in WSL.
+  BEG and END specify the region to copy if a region is selected."
+    (interactive
+     (if (use-region-p)
+         (list (region-beginning) (region-end))
+       (list (line-beginning-position) (line-beginning-position 2))))
+    (let ((region-text (buffer-substring-no-properties beg end)))
+      (kill-new region-text)
+      (shell-command-on-region beg end "clip.exe")
+      (deactivate-mark)
+      (message "[Copied to Windows clipboard and kill-ring.]")))
 
   ;; Override the kill-ring-save command when in WSL config.
   (when leuven--wsl-p
-    (global-set-key (kbd "M-w") 'wsl-copy))
+    (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
   ;; Define the paste command for WSL.
-  (defun wsl-paste ()
+  (defun lvn-wsl-paste-region ()
     "Paste the contents of the Windows clipboard in WSL."
     (interactive)
     (let ((clipboard
@@ -1047,7 +1053,7 @@ Return FILE if it is executable, otherwise return nil."
 
   ;; Override the yank command when in WSL config.
   (when leuven--wsl-p
-    (global-set-key (kbd "C-y") 'wsl-paste))
+    (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
 
 )                                       ; Chapter 12 ends here.
 
