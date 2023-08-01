@@ -1696,8 +1696,13 @@ Copy/paste from Windows clipboard in WSL Emacs:
     (interactive)
     (let ((clipboard
            (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
-      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
-      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
+      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters.
+      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell.
+
+      ;; Delete the selected region before inserting clipboard content.
+      (when (region-active-p)
+        (delete-region (region-beginning) (region-end)))
+
       (insert clipboard))
     (message "[Pasted from Windows clipboard.]"))
 

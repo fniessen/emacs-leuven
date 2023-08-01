@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230729.1837
+;; Version: 20230801.2053
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230729.1837"
+(defconst leuven--emacs-version "20230801.2053"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1035,8 +1035,13 @@ Return FILE if it is executable, otherwise return nil."
     (interactive)
     (let ((clipboard
            (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
-      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters
-      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell
+      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters.
+      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell.
+
+      ;; Delete the selected region before inserting clipboard content.
+      (when (region-active-p)
+        (delete-region (region-beginning) (region-end)))
+
       (insert clipboard))
     (message "[Pasted from Windows clipboard.]"))
 
