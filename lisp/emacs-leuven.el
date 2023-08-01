@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230801.2122
+;; Version: 20230801.2135
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230801.2122"
+(defconst leuven--emacs-version "20230801.2135"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -971,22 +971,17 @@ Return FILE if it is executable, otherwise return nil."
   ;; Add advice to execute lvn--slick-copy-region before the kill-ring-save command.
   (advice-add 'kill-ring-save :before #'lvn--slick-copy-region)
 
-  (defun duplicate-current-line ()
-    "Duplicate the line containing point."
+  (defun lvn-duplicate-line-or-region ()
+    "Duplicate the current line or the region if active."
     (interactive)
-    (save-excursion
-      (let (line-text)
-        (goto-char (line-beginning-position))
-        (let ((beg (point)))
-          (goto-char (line-end-position))
-          (setq line-text (buffer-substring beg (point))))
-        (if (eobp)
-            (insert ?\n)
-          (forward-line))
-        (open-line 1)
-        (insert line-text))))
+    (if (region-active-p)
+        (kill-ring-save (region-beginning) (region-end))
+      (kill-ring-save (line-beginning-position) (line-end-position)))
+    (newline)
+    (yank)
+    (indent-according-to-mode))
 
-  (global-set-key (kbd "C-S-d") #'duplicate-current-line)
+  (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
 
 ;;** 12.2 (info "(emacs)Yanking")
 

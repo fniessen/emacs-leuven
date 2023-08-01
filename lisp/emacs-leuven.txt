@@ -1570,22 +1570,17 @@ or copying the selected text.
 | Duplicate line | C-S-d | C-S-d        | C-S-d    |
 
 #+begin_src emacs-lisp
-  (defun duplicate-current-line ()
-    "Duplicate the line containing point."
+  (defun lvn-duplicate-line-or-region ()
+    "Duplicate the current line or the region if active."
     (interactive)
-    (save-excursion
-      (let (line-text)
-        (goto-char (line-beginning-position))
-        (let ((beg (point)))
-          (goto-char (line-end-position))
-          (setq line-text (buffer-substring beg (point))))
-        (if (eobp)
-            (insert ?\n)
-          (forward-line))
-        (open-line 1)
-        (insert line-text))))
+    (if (region-active-p)
+        (kill-ring-save (region-beginning) (region-end))
+      (kill-ring-save (line-beginning-position) (line-end-position)))
+    (newline)
+    (yank)
+    (indent-according-to-mode))
 
-  (global-set-key (kbd "C-S-d") #'duplicate-current-line)
+  (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
 #+end_src
 
 To *highlight duplicate lines*, see
