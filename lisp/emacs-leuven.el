@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230801.2135
+;; Version: 20230807.1426
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230801.2135"
+(defconst leuven--emacs-version "20230807.1426"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -622,16 +622,22 @@ Return FILE if it is executable, otherwise return nil."
   ;; Print the current buffer line number.
   (global-set-key (kbd "M-G") #'what-line)
 
-  (defun goto-line-with-feedback ()
-    "Show line numbers temporarily, while prompting for the line number input"
-    (interactive)
-    (unwind-protect
-        (progn
-          (linum-mode 1)
-          (goto-line (read-number "Goto line: ")))
-      (linum-mode -1)))
+  (defun lvn-goto-line-with-line-numbers-feedback ()
+    "Go to a specific line while temporarily enabling line numbers.
 
-  (global-set-key [remap goto-line] #'goto-line-with-feedback)
+This function prompts the user to enter a line number to navigate to. It temporarily
+enables line numbers, moves the point to the specified line, and then restores the
+original state of line numbers after navigation."
+    (interactive)
+    (let ((line-numbers-enabled (display-line-numbers-mode)))
+      (unwind-protect
+          (progn
+            (display-line-numbers-mode 1)
+            (goto-char (point-min))
+            (forward-line (1- (read-number "Goto line: "))))
+        (display-line-numbers-mode line-numbers-enabled))))
+
+  (global-set-key [remap goto-line] #'lvn-goto-line-with-line-numbers-feedback)
 
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
 
@@ -2651,17 +2657,20 @@ using Tramp's sudo method if it's read-only."
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
     ;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
 
-    (defun leuven-helm-file-structure (arg)
+    (defun lvn-generic-imenu (arg)
       "Jump to a place in the buffer using an Index menu.
-    For Org mode buffers, show Org headlines.
-    For programming mode buffers, show functions, variables, etc."
+For Org mode buffers, show Org headlines.
+For programming mode buffers, show functions, variables, etc."
       (interactive "P")
-      (cond ((derived-mode-p 'org-mode) (helm-org-in-buffer-headings))
-            ((derived-mode-p 'tex-mode) (helm-imenu))
-            (t (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
+      (cond ((derived-mode-p 'org-mode)
+             (helm-org-in-buffer-headings))
+            ((derived-mode-p 'tex-mode)
+             (helm-imenu))
+            (t
+             (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
-    (global-set-key (kbd "<C-f12>") #'leuven-helm-file-structure) ; Awesome.
-    ;; (global-set-key (kbd "<f4>") #'leuven-helm-file-structure)
+    (global-set-key (kbd "<C-f12>") #'lvn-generic-imenu) ; Awesome.
+    ;; (global-set-key (kbd "<f4>") #'lvn-generic-imenu)
                                         ; And `C-c =' (like in RefTeX)?
 
     (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings)
