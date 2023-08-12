@@ -1873,11 +1873,17 @@ or added into the given directory, defaulting to the current one."
   ;; (setq org-html-postamble
   ;;       "  <div id=\"footer\"><div id=\"copyright\">\n    &copy; %d %a\n  </div></div>")
 
+  ;; Disable validation link.
+  (setq org-html-validation-link nil)
+
+  ;; ;; Set the creator string to "Emacs Org Mode".
+  ;; (setq org-html-creator-string "Emacs Org Mode")
+
   ;; 13.1.5 Don't include the JavaScript snippets in exported HTML files.
   (setq org-html-head-include-scripts nil)
 
-  ;; ;; 12.5.9 Turn inclusion of the default CSS style off.
-  ;; (setq org-html-head-include-default-style nil)
+  ;; 12.5.9 Turn inclusion of the default CSS style off.
+  (setq org-html-head-include-default-style nil)
 
   ;; HTML checkbox output.
   (defun leuven--checkbox-filter (item backend info)
