@@ -374,6 +374,17 @@ tests.
 You can use ESUP - Emacs Start Up Profiler
 #+end_note
 
+** TODO Add emphasis + font-lock for 'alert'
+
+#+begin_src emacs-lisp
+  ;; Add 'alert' emphasis. The text enclosed by '!' will be displayed in bold
+  ;; and red to indicate emphasis.
+  (add-to-list 'org-emphasis-alist
+               '("!" (bold :foreground "red")))
+#+end_src
+
+See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis in org-emphasis-alist]]
+
 ** Emacs Key Bindings for Atom Editor
 
 https://github.com/dvorka/atom-editor-emacs-key-bindings
