@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230807.1426
+;; Version: 20230809.2133
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230807.1426"
+(defconst leuven--emacs-version "20230809.2133"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -980,12 +980,15 @@ original state of line numbers after navigation."
   (defun lvn-duplicate-line-or-region ()
     "Duplicate the current line or the region if active."
     (interactive)
-    (if (region-active-p)
-        (kill-ring-save (region-beginning) (region-end))
-      (kill-ring-save (line-beginning-position) (line-end-position)))
-    (newline)
-    (yank)
-    (indent-according-to-mode))
+    (save-excursion
+      (if (region-active-p)
+          (kill-ring-save (region-beginning) (region-end))
+        (progn
+          (kill-ring-save (line-beginning-position) (line-end-position))
+          (end-of-line)))
+      (newline)
+      (yank)
+      (indent-according-to-mode)))
 
   (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
 
@@ -3435,14 +3438,6 @@ windows, leaving only the currently active window visible."
   (prefer-coding-system 'utf-8-unix)    ; Unix flavor for code blocks executed
                                         ; via Org-Babel.
 
-;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
-(defun lvn--apply-accent-substitutions (subst-list)
-  "Apply accent substitutions based on a given list of replacements."
-  (dolist (pair subst-list)
-    (save-excursion
-      (while (re-search-forward (car pair) nil t)
-        (replace-match (cdr pair) t)))))
-
 (defun leuven-replace-non-utf8-chars ()
   "Replace non-UTF-8 characters with their corresponding UTF-8 equivalents."
   (interactive)
@@ -3508,6 +3503,15 @@ windows, leaving only the currently active window visible."
                        ("\373" . "û")    ;; \303\273
                        ("\374" . "ü")    ;; \303\274
                        )))
+
+;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
+(defun lvn--apply-accent-substitutions (subst-list)
+  "Apply accent substitutions based on a given list of replacements."
+  (dolist (pair subst-list)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward (car pair) nil t)
+        (replace-match (cdr pair) t)))))
 
 ;;** 22.7 (info "(emacs)Specify Coding") System of a File
 

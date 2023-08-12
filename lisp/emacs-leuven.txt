@@ -1579,12 +1579,15 @@ or copying the selected text.
   (defun lvn-duplicate-line-or-region ()
     "Duplicate the current line or the region if active."
     (interactive)
-    (if (region-active-p)
-        (kill-ring-save (region-beginning) (region-end))
-      (kill-ring-save (line-beginning-position) (line-end-position)))
-    (newline)
-    (yank)
-    (indent-according-to-mode))
+    (save-excursion
+      (if (region-active-p)
+          (kill-ring-save (region-beginning) (region-end))
+        (progn
+          (kill-ring-save (line-beginning-position) (line-end-position))
+          (end-of-line)))
+      (newline)
+      (yank)
+      (indent-according-to-mode)))
 
   (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
 #+end_src
@@ -6155,14 +6158,6 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
 #+end_src
 
 #+begin_src emacs-lisp
-;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
-(defun lvn--apply-accent-substitutions (subst-list)
-  "Apply accent substitutions based on a given list of replacements."
-  (dolist (pair subst-list)
-    (save-excursion
-      (while (re-search-forward (car pair) nil t)
-        (replace-match (cdr pair) t)))))
-
 (defun leuven-replace-non-utf8-chars ()
   "Replace non-UTF-8 characters with their corresponding UTF-8 equivalents."
   (interactive)
@@ -6228,6 +6223,15 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
                        ("\373" . "û")    ;; \303\273
                        ("\374" . "ü")    ;; \303\274
                        )))
+
+;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
+(defun lvn--apply-accent-substitutions (subst-list)
+  "Apply accent substitutions based on a given list of replacements."
+  (dolist (pair subst-list)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward (car pair) nil t)
+        (replace-match (cdr pair) t)))))
 #+end_src
 
 ** Specifying a File's Coding System
