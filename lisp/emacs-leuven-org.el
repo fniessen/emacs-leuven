@@ -2710,34 +2710,6 @@ Ignore non Org buffers."
 ;; Must be in eval-after-load "org"?
 ;; (define-key org-mode-map (kbd "=") #'insert-one-equal-or-two)
 
-(with-eval-after-load "org"
-  (message "[... Org Mime]")
-
-  ;; Using Org mode to send buffer/subtree per mail.
-  (try-require 'org-mime))
-
-(with-eval-after-load "org-mime"
-
-  (add-hook 'org-mode-hook
-            #'(lambda ()
-                (local-set-key (kbd "C-c m") #'org-mime-subtree)))
-
-  (defun leuven-mail-subtree ()
-    "XXX"
-    (interactive)
-    (org-agenda-goto)
-    (org-mime-subtree))
-
-  (add-hook 'org-agenda-mode-hook
-            #'(lambda ()
-                (local-set-key (kbd "C-c m") #'leuven-mail-subtree)))
-
-  ;; Add a `mail_composed' property with the current time when
-  ;; `org-mime-subtree' is called.
-  (add-hook 'org-mime-send-subtree-hook
-            #'(lambda ()
-                (org-entry-put (point) "mail_composed" (current-time-string)))))
-
 ;;** A.3 (info "(org)Adding hyperlink types")
 
 ;; (with-eval-after-load "org"
