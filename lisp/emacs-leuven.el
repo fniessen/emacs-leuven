@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230816.1924
+;; Version: 20230816.2007
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230816.1924"
+(defconst leuven--emacs-version "20230816.2007"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -4274,7 +4274,6 @@ windows, leaving only the currently active window visible."
 
   (with-eval-after-load "web-mode-autoloads"
     (add-to-list 'auto-mode-alist '("\\.aspx\\'"   . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.axvw\\'"   . web-mode)) ; ARCHIBUS view.
     (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))
     (add-to-list 'auto-mode-alist '("\\.jsp\\'"    . web-mode))
     (add-to-list 'auto-mode-alist '("\\.x[ms]l\\'" . web-mode))
@@ -4398,18 +4397,6 @@ windows, leaving only the currently active window visible."
     ;; (setq web-mode-comment-style 2)
 
     ;; (flycheck-add-mode 'html-tidy 'web-mode)
-
-    ;; ARCHIBUS Imenu.
-    (add-to-list 'web-mode-imenu-regexp-list
-                 '("\\(dataSource\\) id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
-    (add-to-list 'web-mode-imenu-regexp-list
-                 '("\\(panel\\) .*id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
-    (add-to-list 'web-mode-imenu-regexp-list
-                 '("\\(button\\).*id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
-    (add-to-list 'web-mode-imenu-regexp-list
-                 '("id=\"\\([a-zA-Z0-9_]*\\).*\\(button\\)" 2 1 " "))
-
-    ;; Highlight `saveWorkflowRuleId' in AXVW files.
 
     )
 
@@ -4881,9 +4868,6 @@ mouse-3: go to end") "]")))
     ;; Let Flycheck handle parse errors.
     (setq js2-strict-missing-semi-warning nil)
 
-    ;; ;; List of any extern names you'd like to consider always declared.
-    ;; (setq js2-global-externs '("View")) ; ARCHIBUS.
-
     ;; Treat unused function arguments like declared-but-unused variables.
     (setq js2-warn-about-unused-function-arguments t)
 
@@ -4900,25 +4884,6 @@ mouse-3: go to end") "]")))
 )
 
 ;; Xref-js2
-
-  ;; Below regex list could be used in both js-mode and js2-mode.
-  (setq javascript-common-imenu-regex-list
-        ;; Items are in reverse order because they are rendered in reverse.
-        `(("Function"                        "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-
-          ("Auto-Wiring Panel Event _after"  "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _on"     "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _before" "^[ \t]*.*_before\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-
-          ("Auto-Wiring View Event 1"        "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring View Event 0"        "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-
-          ("Variable"                        "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
-
-          ("Controller Extension"            "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
-          ("Controller Extension"            "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
-          ("Controller"                      "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)
-          ))
 
 ;; {{ Patching Imenu in js2-mode
 (setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
@@ -5311,24 +5276,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
   (with-eval-after-load "grep"
     ;; Files to ignore for MEPLA.
-    (add-to-list 'grep-find-ignored-files "archive-contents")
-
-    (add-to-list 'grep-find-ignored-files "*-min.js")
-    (add-to-list 'grep-find-ignored-files "*.min.js")
-
-    ;; Files to ignore for ARCHIBUS.
-    (add-to-list 'grep-find-ignored-files "ab-core.js")
-    (add-to-list 'grep-find-ignored-files "ab-pgnav.js")
-    (add-to-list 'grep-find-ignored-files "ab-view.js")
-    (add-to-list 'grep-find-ignored-files "app.js")
-    ;; (add-to-list 'grep-find-ignored-files "cordova.js")
-    (add-to-list 'grep-find-ignored-files "dx.archibus.js")
-    (add-to-list 'grep-find-ignored-files "app.css")
-    (add-to-list 'grep-find-ignored-files "sencha-touch.css")
-
-    ;; Directories to ignore for ARCHIBUS.
-    (add-to-list 'grep-find-ignored-directories "ckeditor")
-    (add-to-list 'grep-find-ignored-directories "common/mobile"))
+    (add-to-list 'grep-find-ignored-files "archive-contents"))
 
     (when (executable-find "rgXXX")        ; ripgrep.
 
@@ -6056,22 +6004,6 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;;                   (not (file-remote-p default-directory)))
     ;;              (format " P[%s]" (projectile-project-name))
     ;;            "")))
-
-    ;; Command to use with ‘projectile-run-project’.
-    (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
-
-    ;; For ARCHIBUS.
-    (add-to-list 'projectile-other-file-alist '("axvw" "js")) ; Switch from AXVW -> JS.
-    (add-to-list 'projectile-other-file-alist '("js" "axvw")) ; Switch from JS -> AXVW.
-
-    (defun leuven-find-file-archibus-log ()
-      (interactive)
-      (when-let ((root (projectile-project-root))
-                 (logfile "WEB-INF/config/archibus.log"))
-          (if (file-exists-p (expand-file-name logfile root))
-              (find-file (expand-file-name logfile root))
-            (user-error "You're not in an ARCHIBUS project"))))
-    (define-key projectile-mode-map (kbd "C-c p A") #'leuven-find-file-archibus-log)
   )
 
 )                                       ; Chapter 28 ends here.
@@ -6594,14 +6526,6 @@ This example lists Azerty layout second row keys."
       ;; ;; Bind it to `E' in Dired mode.
       ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally)
       )
-
-    (with-eval-after-load "dired"
-      (define-key dired-mode-map (kbd "C-c v")
-         #'(lambda ()
-             "Ask a WWW browser to load ARCHIBUS View file."
-             (interactive)
-             (let ((archibus-prefix "http://localhost:8080/archibus/"))
-               (browse-url (concat archibus-prefix (dired-get-filename 'no-dir t)))))))
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()

@@ -7506,7 +7506,6 @@ blocks (client/server side).
 #+begin_src emacs-lisp
   (with-eval-after-load "web-mode-autoloads"
     (add-to-list 'auto-mode-alist '("\\.aspx\\'"   . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.axvw\\'"   . web-mode)) ; ARCHIBUS view.
     (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))
     (add-to-list 'auto-mode-alist '("\\.jsp\\'"    . web-mode))
     (add-to-list 'auto-mode-alist '("\\.x[ms]l\\'" . web-mode))
@@ -7635,42 +7634,6 @@ blocks (client/server side).
 #+end_src
 
 Show XML path on the modeline or in an header?
-
-#+begin_src emacs-lisp
-    ;; ARCHIBUS Imenu.
-    (add-to-list 'web-mode-imenu-regexp-list
-                 '("\\(dataSource\\) id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
-    (add-to-list 'web-mode-imenu-regexp-list
-                 '("\\(panel\\) .*id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
-    (add-to-list 'web-mode-imenu-regexp-list
-                 '("\\(button\\).*id=\"\\([a-zA-Z0-9_]*\\)" 1 2 " "))
-    (add-to-list 'web-mode-imenu-regexp-list
-                 '("id=\"\\([a-zA-Z0-9_]*\\).*\\(button\\)" 2 1 " "))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-    (setq web-mode-imenu-generic-expression
-          '(
-            ("DataSource" "<dataSource[ ]*id=\"\\([a-zA-Z0-9-_./#]*\\)\"[ ]*>" 1)
-            ;; ("Includes" "<cfinclude[ ]*template=\"\\([a-zA-Z0-9-_./#]*\\)\"[ ]*>" 1)
-            ;; ("Cases" "<cfcase[ ]*value=\"\\([a-zA-Z0-9-_,. ]*\\)\".*>" 1)
-            ;; ("Forms" "<form.*action[ ]*=[ ]*\"\\([a-zA-Z0-9-_#.\?=]*\\)\".*>" 1)
-            ;; ("Queries" "<cfquery.*name[ ]*=[ ]*\"\\([a-zA-Z0-9-_#.]*\\)\".*>" 1)
-            ;; ("Loops" "<\\(cfloop\\|cfoutput\\).*\\(list\\|to\\|query\\)[ ]*=[ ]*\"\\([a-zA-Z0-9-_#.=]*\\)\".*>" 3)
-            ;; ("JSFunctions" "function[ ]*\\([a-zA-Z0-9-_]*\\)[ ]*(.*)" 1)
-            ;; ("Content" "<cfcontent.*type=\"\\([a-zA-Z0-9-_./]*\\)\".*>" 1)
-            ;;                             ;cfmodule, cflocation, cftransaction, cfabort, cfif?, add cfform to forms, cflock
-            ))
-
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (setq imenu-generic-expression
-                        web-mode-imenu-generic-expression)))
-#+end_src
-
-#+begin_src emacs-lisp
-    ;; Highlight `saveWorkflowRuleId' in AXVW files.
-#+end_src
 
 #+begin_src emacs-lisp
     )
@@ -8672,9 +8635,6 @@ Key bindings:
     ;; Let Flycheck handle parse errors.
     (setq js2-strict-missing-semi-warning nil)
 
-    ;; ;; List of any extern names you'd like to consider always declared.
-    ;; (setq js2-global-externs '("View")) ; ARCHIBUS.
-
     ;; Treat unused function arguments like declared-but-unused variables.
     (setq js2-warn-about-unused-function-arguments t)
 
@@ -8782,30 +8742,6 @@ List of available *refactorings*:
 
 http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
 NOTE -- Solution 2 refers to (better) outlining support!!
-
-See ARCHIBUS Controller spec at
-http://www.archibus.com/ai/abizfiles/v19.2_help/system-management/Content/wc_views/Adv_Views_Techniques/using_js_to_extend_views/Basic_controller_programming.htm.
-
-#+begin_src emacs-lisp
-  ;; Below regex list could be used in both js-mode and js2-mode.
-  (setq javascript-common-imenu-regex-list
-        ;; Items are in reverse order because they are rendered in reverse.
-        `(("Function"                        "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-
-          ("Auto-Wiring Panel Event _after"  "^[ \t]*.*_after\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _on"     "^[ \t]*.*_on\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring Panel Event _before" "^[ \t]*.*_before\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-
-          ("Auto-Wiring View Event 1"        "^[ \t]*\\(afterInitialDataFetch\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-          ("Auto-Wiring View Event 0"        "^[ \t]*\\(afterViewLoad\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-
-          ("Variable"                        "^[ \t]*\\([a-zA-Z_.]+\\): [^f]" 1)
-
-          ("Controller Extension"            "var[ \t]*\\([^ \t]+\\)[ \t]*= View.extendController(" 1)
-          ("Controller Extension"            "var[ \t]*\\([^ \t]+\\)[ \t]*= .*[cC]ontroller.*extend(" 1)
-          ("Controller"                      "var[ \t]*\\([^ \t]+\\)[ \t]*= View.createController(" 1)
-          ))
-#+end_src
 
 See http://blog.binchen.org/posts/why-emacs-is-better-editor-part-two.html:
 
@@ -8941,12 +8877,6 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
          (setq ad-return-value (js2-imenu--merge-imenu-items ad-return-value extra-rlt))
          ad-return-value))))
 ;; }}
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (defun leuven--archibus-js-imenu-make-index ()
-    (save-excursion
-      (imenu--generic-function leuven-archibus-javascript-common-imenu-regex-list)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -9701,24 +9631,7 @@ To exclude files from ~lgrep~ and ~rgrep~ results (if you use ~rgrep~ instead of
 #+begin_src emacs-lisp
   (with-eval-after-load "grep"
     ;; Files to ignore for MEPLA.
-    (add-to-list 'grep-find-ignored-files "archive-contents")
-
-    (add-to-list 'grep-find-ignored-files "*-min.js")
-    (add-to-list 'grep-find-ignored-files "*.min.js")
-
-    ;; Files to ignore for ARCHIBUS.
-    (add-to-list 'grep-find-ignored-files "ab-core.js")
-    (add-to-list 'grep-find-ignored-files "ab-pgnav.js")
-    (add-to-list 'grep-find-ignored-files "ab-view.js")
-    (add-to-list 'grep-find-ignored-files "app.js")
-    ;; (add-to-list 'grep-find-ignored-files "cordova.js")
-    (add-to-list 'grep-find-ignored-files "dx.archibus.js")
-    (add-to-list 'grep-find-ignored-files "app.css")
-    (add-to-list 'grep-find-ignored-files "sencha-touch.css")
-
-    ;; Directories to ignore for ARCHIBUS.
-    (add-to-list 'grep-find-ignored-directories "ckeditor")
-    (add-to-list 'grep-find-ignored-directories "common/mobile"))
+    (add-to-list 'grep-find-ignored-files "archive-contents"))
 #+end_src
 
 #+begin_note
@@ -11310,22 +11223,6 @@ Projectile's features.
     ;;                   (not (file-remote-p default-directory)))
     ;;              (format " P[%s]" (projectile-project-name))
     ;;            "")))
-
-    ;; Command to use with ‘projectile-run-project’.
-    (setq projectile-project-run-cmd "mintty /bin/bash -l -e '../../start.sh'") ; ARCHIBUS.
-
-    ;; For ARCHIBUS.
-    (add-to-list 'projectile-other-file-alist '("axvw" "js")) ; Switch from AXVW -> JS.
-    (add-to-list 'projectile-other-file-alist '("js" "axvw")) ; Switch from JS -> AXVW.
-
-    (defun leuven-find-file-archibus-log ()
-      (interactive)
-      (when-let ((root (projectile-project-root))
-                 (logfile "WEB-INF/config/archibus.log"))
-          (if (file-exists-p (expand-file-name logfile root))
-              (find-file (expand-file-name logfile root))
-            (user-error "You're not in an ARCHIBUS project"))))
-    (define-key projectile-mode-map (kbd "C-c p A") #'leuven-find-file-archibus-log)
   )
 #+end_src
 
@@ -12619,18 +12516,6 @@ For those under Windows:
       ;; ;; Bind it to `E' in Dired mode.
       ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally)
       )
-#+end_src
-
-**** ARCHIBUS
-
-#+begin_src emacs-lisp
-    (with-eval-after-load "dired"
-      (define-key dired-mode-map (kbd "C-c v")
-         #'(lambda ()
-             "Ask a WWW browser to load ARCHIBUS View file."
-             (interactive)
-             (let ((archibus-prefix "http://localhost:8080/archibus/"))
-               (browse-url (concat archibus-prefix (dired-get-filename 'no-dir t)))))))
 #+end_src
 
 *** Open file with ~eww~
