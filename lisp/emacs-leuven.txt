@@ -11159,10 +11159,6 @@ really like this.
                                         ; php-mode, csharp-mode, awk-mode.
 #+end_src
 
-#+begin_src emacs-lisp
-)                                       ; Chapter 28 ends here.
-#+end_src
-
 *** Projectile
 
 Projectile's features.
@@ -11339,6 +11335,10 @@ Projectile's features.
   (with-eval-after-load "emr-autoloads"
     (add-hook 'prog-mode-hook #'emr-initialize)
     (define-key prog-mode-map (kbd "M-RET") #'emr-show-refactor-menu))
+#+end_src
+
+#+begin_src emacs-lisp
+)                                       ; Chapter 28 ends here.
 #+end_src
 
 * Abbrevs (Snippets, Auto Replacements, or live Code Templates)

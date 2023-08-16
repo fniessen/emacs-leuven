@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230809.2133
+;; Version: 20230816.1924
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230809.2133"
+(defconst leuven--emacs-version "20230816.1924"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -5997,8 +5997,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     )
 
-)                                       ; Chapter 28 ends here.
-
   (with-eval-after-load "projectile-autoloads"
     (idle-require 'projectile)
 
@@ -6075,6 +6073,8 @@ a clean buffer we're an order of magnitude laxer about checking."
             (user-error "You're not in an ARCHIBUS project"))))
     (define-key projectile-mode-map (kbd "C-c p A") #'leuven-find-file-archibus-log)
   )
+
+)                                       ; Chapter 28 ends here.
 
 ;;* 29 (info "(emacs)Abbrevs")
 
