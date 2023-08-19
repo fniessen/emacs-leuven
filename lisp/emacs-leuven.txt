@@ -148,7 +148,7 @@ By default Emacs will initiate GC every 0.76 MB allocated (~gc-cons-threshold~ =
 If you have a modern machine, I encourage you to add the following:
 
 #+begin_src emacs-lisp
-;; Increase the garbage collection threshold to speed up initialization.
+;; Set a higher garbage collection threshold during initialization (to speed it up).
 (setq gc-cons-threshold most-positive-fixnum)
 
 (defun leuven--reset-gc-cons-threshold ()
@@ -156,15 +156,13 @@ If you have a modern machine, I encourage you to add the following:
   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
   (message "[Garbage collection threshold reset to its default value.]"))
 
-;; Reset the garbage collection threshold after initialization is complete.
-(add-hook 'after-init-hook #'leuven--reset-gc-cons-threshold)
-
 (defun leuven--do-garbage-collection ()
   "Perform a garbage collection."
   (garbage-collect)
   (message "[Garbage collection completed.]"))
 
-;; Perform a garbage collection.
+;; Reset the garbage collection threshold and perform collection after initialization.
+(add-hook 'after-init-hook #'leuven--reset-gc-cons-threshold)
 (add-hook 'after-init-hook #'leuven--do-garbage-collection)
 
 ;; Don't display messages at start and end of garbage collection.
@@ -6110,6 +6108,12 @@ but this won't work for a Windows binary (well for the Cygwin version) of Emacs.
   (set-input-mode (car (current-input-mode))
                   (nth 1 (current-input-mode))
                   0)
+
+#+end_src
+  
+#+begin_src emacs-lisp
+  ;; Disable any input method to use pure English input.
+  (setq default-input-method nil)         ; STOP ENCOUNTERING LAGGY ISSUES ON WSL2.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -13805,15 +13809,16 @@ creates an X Window and doesn't wait for ~(server-edit)~.
 
     ;; Test whether server is (definitely) running, avoiding the message of
     ;; "server-start" while opening another Emacs session.
-    (or (equal (server-running-p) t)
+    (unless (equal (server-running-p) t)
 
         ;; Start the Emacs server.
-        (server-start))                 ; ~ 0.20 s
+        (server-start))
 
     ;; Save file without confirmation before returning to the client.
     (defadvice server-edit (before save-buffer-if-needed activate)
       "Save current buffer before marking it as done."
-      (when server-buffer-clients (save-buffer))))
+      (when server-buffer-clients
+	(save-buffer))))
 
 )                                       ; Chapter 39 ends here.
 #+end_src
