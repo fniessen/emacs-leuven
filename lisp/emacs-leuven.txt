@@ -10342,20 +10342,20 @@ can use the following keys to navigate historic versions of the file:
 
   (leuven--section "28.1.9 VC Directory Mode")
 
-  (defun leuven-vc-jump ()
-    "Jump to VC status buffer."
-    (interactive)
-    (let* ((fname (buffer-file-name))
-           (dname (if fname
-                      (if (file-directory-p fname)
-                          fname
-                        (file-name-directory fname))
-                    default-directory)))
-      (message "[VC status for directory: %s]" dname)
-      (vc-dir dname)))
+  (defun lvn-jump-to-vc-status-buffer-for-current-directory ()
+      "Jump to the VC status buffer for the current directory."
+      (interactive)
+      (let* ((buffer-file (buffer-file-name))
+             (directory (if buffer-file
+                            (if (file-directory-p buffer-file)
+                                buffer-file
+                              (file-name-directory buffer-file))
+                          default-directory)))
+        (message "[VC status for directory: %s]" directory)
+        (vc-dir directory)))
 
   ;; VC status without asking for a directory.
-  (global-set-key (kbd "<C-f9>") #'leuven-vc-jump)
+  (global-set-key (kbd "<C-f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
 
   (add-hook 'vc-dir-mode-hook
             #'(lambda ()
