@@ -391,12 +391,16 @@ If not, just print a message."
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; TEMPORARY.
   (unless (fboundp 'with-eval-after-load)
-    ;; Wrapper around `eval-after-load' (added in GNU Emacs 24.4).
     (defmacro with-eval-after-load (mode &rest body)
-      "`eval-after-load' MODE evaluate BODY."
-      (declare (indent defun))
+	"Execute code in BODY after the specified MODE is loaded.
+This macro is a wrapper around `eval-after-load' (added in GNU Emacs 24.4).
+MODE is the feature symbol or library name to wait for before executing BODY.
+BODY contains the forms to be executed.
+The forms in BODY are wrapped in a `progn' to ensure correct evaluation.
+Example usage:
+  (with-eval-after-load 'magit
+    (setq magit-auto-revert-mode nil))"
       `(eval-after-load ,mode
          '(progn ,@body))))
 #+end_src
@@ -15086,21 +15090,6 @@ leuven-send-bug-report~.
 
 #+begin_src emacs-lisp
 (provide 'emacs-leuven)
-#+end_src
-
-** File Local Variables
-
-#+begin_src emacs-lisp
-;; This is for the sake of Emacs.
-;; Local Variables:
-;; coding: utf-8-unix
-;; eval: (when (require 'rainbow-mode nil t) (rainbow-mode))
-;; flycheck-emacs-lisp-initialize-packages: t
-;; flycheck-mode: nil
-;; ispell-local-dictionary: "american"
-;; End:
-
-;;; emacs-leuven.el ends here
 #+end_src
 
 # emacs-leuven.txt ends here
