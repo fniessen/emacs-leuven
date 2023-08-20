@@ -4388,19 +4388,3 @@ Link emails from Org files.
 #+begin_src emacs-lisp
 (provide 'emacs-leuven-org)
 #+end_src
-
-* File Local Variables
-
-#+begin_src emacs-lisp
-;; This is for the sake of Emacs.
-;; Local Variables:
-;; coding: utf-8-unix
-;; flycheck-emacs-lisp-initialize-packages: t
-;; flycheck-mode: nil
-;; ispell-local-dictionary: "american"
-;; End:
-
-;;; org-leuven.el ends here
-#+end_src
-
-# org-leuven.txt ends here
