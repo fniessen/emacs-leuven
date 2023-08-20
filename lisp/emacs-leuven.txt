@@ -3664,14 +3664,14 @@ a remote location.
 
   (leuven--section "18.3 (emacs)Saving Files")
 
-  (defadvice save-buffer (around leuven-save-buffer activate)
+  (defadvice save-buffer (around lvn-report-saving-time activate)
     "Save the file named FILENAME and report time spent."
     (let ((filename (buffer-file-name))
-          (save-buffer-time-start (float-time)))
+          (start-time (float-time)))
       (message "[Saving file %s...]" filename)
       ad-do-it
       (message "[Saved file %s in %.2f s]" filename
-               (- (float-time) save-buffer-time-start))))
+               (- (float-time) start-time))))
 
   ;; Make your changes permanent.
   (global-set-key (kbd "<f2>") #'save-buffer)
