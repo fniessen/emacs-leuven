@@ -10343,16 +10343,16 @@ can use the following keys to navigate historic versions of the file:
   (leuven--section "28.1.9 VC Directory Mode")
 
   (defun lvn-jump-to-vc-status-buffer-for-current-directory ()
-      "Jump to the VC status buffer for the current directory."
-      (interactive)
-      (let* ((buffer-file (buffer-file-name))
-             (directory (if buffer-file
-                            (if (file-directory-p buffer-file)
-                                buffer-file
-                              (file-name-directory buffer-file))
-                          default-directory)))
-        (message "[VC status for directory: %s]" directory)
-        (vc-dir directory)))
+    "Jump to the VC status buffer for the current directory."
+    (interactive)
+    (let* ((buffer-file (buffer-file-name))
+           (directory (if buffer-file
+                          (if (file-directory-p buffer-file)
+                              buffer-file
+                            (file-name-directory buffer-file))
+                        default-directory)))
+      (message "[VC status for directory: %s]" directory)
+      (vc-dir directory)))
 
   ;; VC status without asking for a directory.
   (global-set-key (kbd "<C-f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
@@ -10361,7 +10361,7 @@ can use the following keys to navigate historic versions of the file:
             #'(lambda ()
                 ;; Hide up-to-date and unregistered files.
                 (define-key vc-dir-mode-map
-                  (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
+                  (kbd "x") #'lvn-hide-up-to-date-and-unregistered-files-in-vc-dir)
                 (define-key vc-dir-mode-map
                   (kbd "E") #'vc-ediff)
                 (define-key vc-dir-mode-map
@@ -10369,37 +10369,40 @@ can use the following keys to navigate historic versions of the file:
                                         ; ediff-windows-wordwise?
               ))
 
-  (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
+  (defun lvn-hide-up-to-date-and-unregistered-files-in-vc-dir ()
+    "Hide up-to-date and unregistered files in VC directory buffer."
     (interactive)
     (vc-dir-hide-up-to-date)
-    (vc-dir-hide-unregistered))
+    ;; (vc-dir-hide-up-to-date 'unregistered)
+    (lvn-vc-dir-hide-unregistered)
+    )
 
-  (defun vc-dir-hide-unregistered ()
-    "Hide unregistered items from display."
+  (defun lvn-vc-dir-hide-unregistered ()
+    "Hide ‘unregistered’ items from display."
     (interactive)
-    (let ((crt (ewoc-nth vc-ewoc -1))
-          (first (ewoc-nth vc-ewoc 0)))
-      ;; Go over from the last item to the first and remove the unregistered
-      ;; files and directories with no child files.
-      (while (not (eq crt first))
-        (let* ((data (ewoc-data crt))
-               (dir (vc-dir-fileinfo->directory data))
-               (next (ewoc-next vc-ewoc crt))
-               (prev (ewoc-prev vc-ewoc crt))
-               ;; ewoc-delete does not work without this...
+    (let ((current-item (ewoc-nth vc-ewoc -1))
+          (first-item (ewoc-nth vc-ewoc 0)))
+      ;; Iterate from the last item to the first and remove unregistered files
+      ;; and directories without child files.
+      (while (not (eq current-item first-item))
+        (let* ((item-data (ewoc-data current-item))
+               (is-directory (vc-dir-fileinfo->directory item-data))
+               (next-item (ewoc-next vc-ewoc current-item))
+               (prev-item (ewoc-prev vc-ewoc current-item))
+               ;; Necessary for ewoc-delete to work...
                (inhibit-read-only t))
           (when (or
                  ;; Remove directories with no child files.
-                 (and dir
+                 (and is-directory
                       (or
-                       ;; Nothing follows this directory.
-                       (not next)
+                       ;; No item follows this directory.
+                       (not next-item)
                        ;; Next item is a directory.
-                       (vc-dir-fileinfo->directory (ewoc-data next))))
+                       (vc-dir-fileinfo->directory (ewoc-data next-item))))
                  ;; Remove files in the unregistered state.
-                 (eq (vc-dir-fileinfo->state data) 'unregistered))
-            (ewoc-delete vc-ewoc crt))
-          (setq crt prev)))))
+                 (eq (vc-dir-fileinfo->state item-data) 'unregistered))
+            (ewoc-delete vc-ewoc current-item))
+          (setq current-item prev-item)))))
 
   (defun vc-ediff-ignore-whitespace (historic &optional not-urgent)
     "Ignore regions that differ in white space & line breaks only."
