@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230821.1657
+;; Version: 20230821.1701
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230821.1657"
+(defconst leuven--emacs-version "20230821.1701"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -7181,7 +7181,7 @@ This example lists Azerty layout second row keys."
     (defadvice server-edit (before save-buffer-if-needed activate)
       "Save current buffer before marking it as done."
       (when server-buffer-clients
-	(save-buffer))))
+        (save-buffer))))
 
 )                                       ; Chapter 39 ends here.
 
@@ -7741,3 +7741,5 @@ This example lists Azerty layout second row keys."
 (message "* --[ Loaded Emacs-Leuven %s]--" leuven--emacs-version)
 
 (provide 'emacs-leuven)
+
+;;; emacs-leuven.el ends here

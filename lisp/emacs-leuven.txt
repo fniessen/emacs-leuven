@@ -13825,7 +13825,7 @@ creates an X Window and doesn't wait for ~(server-edit)~.
     (defadvice server-edit (before save-buffer-if-needed activate)
       "Save current buffer before marking it as done."
       (when server-buffer-clients
-	(save-buffer))))
+        (save-buffer))))
 
 )                                       ; Chapter 39 ends here.
 #+end_src
@@ -15093,6 +15093,8 @@ leuven-send-bug-report~.
 
 #+begin_src emacs-lisp
 (provide 'emacs-leuven)
+
+;;; emacs-leuven.el ends here
 #+end_src
 
 # emacs-leuven.txt ends here
