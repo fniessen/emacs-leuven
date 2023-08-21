@@ -2922,7 +2922,7 @@ Colorize cursor according to buffer state.
       (set-cursor-color color)
       (setq cursor-type type)))
 
-  (add-hook 'post-command-hook #'lvn---customize-cursor-style)
+  (add-hook 'post-command-hook #'lvn--customize-cursor-style)
 
   ;; Cursor to use.
   (setq-default cursor-type 'bar)

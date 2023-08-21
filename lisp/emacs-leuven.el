@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230821.1701
+;; Version: 20230821.1706
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230821.1701"
+(defconst leuven--emacs-version "20230821.1706"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1715,7 +1715,7 @@ Should be selected from `fringe-bitmaps'.")
       (set-cursor-color color)
       (setq cursor-type type)))
 
-  (add-hook 'post-command-hook #'lvn---customize-cursor-style)
+  (add-hook 'post-command-hook #'lvn--customize-cursor-style)
 
   ;; Cursor to use.
   (setq-default cursor-type 'bar)
