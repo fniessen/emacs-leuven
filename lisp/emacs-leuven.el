@@ -4886,7 +4886,7 @@ mouse-3: go to end") "]")))
 ;; Xref-js2
 
 ;; {{ Patching Imenu in js2-mode
-(setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
+;; (setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
 
 (defvar js2-imenu-original-item-lines nil
   "List of line information of original Imenu items.")
