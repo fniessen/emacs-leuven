@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230821.1706
+;; Version: 20230821.2120
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230821.1706"
+(defconst leuven--emacs-version "20230821.2120"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1725,18 +1725,6 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
   (global-hl-line-mode 1)
-
-  ;; ;; Extensions to hl-line.el.
-  ;; (with-eval-after-load "hl-line+-autoloads"
-  ;;
-  ;;   ;; Disable Global Hl-Line mode.
-  ;;   (global-hl-line-mode -1)
-  ;;
-  ;;   ;; Turn on `global-hl-line-mode' only when Emacs is idle.
-  ;;   (toggle-hl-line-when-idle))
-
-;; hl-line-overlay-priority
-  ;; (require 'hl-line+) ; Load this file (it will load `hl-line.el')
 
 ;;** 14.21 (info "(emacs)Line Truncation")
 

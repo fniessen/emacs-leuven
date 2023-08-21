@@ -2936,18 +2936,6 @@ Highlight the current line:
 #+begin_src emacs-lisp
   ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
   (global-hl-line-mode 1)
-
-  ;; ;; Extensions to hl-line.el.
-  ;; (with-eval-after-load "hl-line+-autoloads"
-  ;;
-  ;;   ;; Disable Global Hl-Line mode.
-  ;;   (global-hl-line-mode -1)
-  ;;
-  ;;   ;; Turn on `global-hl-line-mode' only when Emacs is idle.
-  ;;   (toggle-hl-line-when-idle))
-
-;; hl-line-overlay-priority
-  ;; (require 'hl-line+) ; Load this file (it will load `hl-line.el')
 #+end_src
 
 ** Truncation of Lines
