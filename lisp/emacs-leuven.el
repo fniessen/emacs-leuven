@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230816.2007
+;; Version: 20230821.1657
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,7 +70,7 @@
 (defconst emacs-leuven--load-start-time (current-time)
   "Value of `current-time' before loading the Emacs-Leuven library.")
 
-;; Increase the garbage collection threshold to speed up initialization.
+;; Set a higher garbage collection threshold during initialization (to speed it up).
 (setq gc-cons-threshold most-positive-fixnum)
 
 (defun leuven--reset-gc-cons-threshold ()
@@ -78,21 +78,19 @@
   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
   (message "[Garbage collection threshold reset to its default value.]"))
 
-;; Reset the garbage collection threshold after initialization is complete.
-(add-hook 'after-init-hook #'leuven--reset-gc-cons-threshold)
-
 (defun leuven--do-garbage-collection ()
   "Perform a garbage collection."
   (garbage-collect)
   (message "[Garbage collection completed.]"))
 
-;; Perform a garbage collection.
+;; Reset the garbage collection threshold and perform collection after initialization.
+(add-hook 'after-init-hook #'leuven--reset-gc-cons-threshold)
 (add-hook 'after-init-hook #'leuven--do-garbage-collection)
 
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230816.2007"
+(defconst leuven--emacs-version "20230821.1657"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -262,12 +260,16 @@ If not, just print a message."
          (message "[Requiring `%s'... missing]" feature)
          nil))))
 
-  ;; TEMPORARY.
   (unless (fboundp 'with-eval-after-load)
-    ;; Wrapper around `eval-after-load' (added in GNU Emacs 24.4).
     (defmacro with-eval-after-load (mode &rest body)
-      "`eval-after-load' MODE evaluate BODY."
-      (declare (indent defun))
+	"Execute code in BODY after the specified MODE is loaded.
+This macro is a wrapper around `eval-after-load' (added in GNU Emacs 24.4).
+MODE is the feature symbol or library name to wait for before executing BODY.
+BODY contains the forms to be executed.
+The forms in BODY are wrapped in a `progn' to ensure correct evaluation.
+Example usage:
+  (with-eval-after-load 'magit
+    (setq magit-auto-revert-mode nil))"
       `(eval-after-load ,mode
          '(progn ,@body))))
 
@@ -2138,14 +2140,14 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "18.3 (emacs)Saving Files")
 
-  (defadvice save-buffer (around leuven-save-buffer activate)
+  (defadvice save-buffer (around lvn-report-saving-time activate)
     "Save the file named FILENAME and report time spent."
     (let ((filename (buffer-file-name))
-          (save-buffer-time-start (float-time)))
+          (start-time (float-time)))
       (message "[Saving file %s...]" filename)
       ad-do-it
       (message "[Saved file %s in %.2f s]" filename
-               (- (float-time) save-buffer-time-start))))
+               (- (float-time) start-time))))
 
   ;; Make your changes permanent.
   (global-set-key (kbd "<f2>") #'save-buffer)
@@ -3411,6 +3413,9 @@ windows, leaving only the currently active window visible."
   (set-input-mode (car (current-input-mode))
                   (nth 1 (current-input-mode))
                   0)
+
+  ;; Disable any input method to use pure English input.
+  (setq default-input-method nil)         ; STOP ENCOUNTERING LAGGY ISSUES ON WSL2.
 
   (defun leuven-list-unicode-display (&optional regexp)
     "Display a list of unicode characters and their names in a buffer."
@@ -5593,26 +5598,26 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1.9 VC Directory Mode")
 
-  (defun leuven-vc-jump ()
-    "Jump to VC status buffer."
+  (defun lvn-jump-to-vc-status-buffer-for-current-directory ()
+    "Jump to the VC status buffer for the current directory."
     (interactive)
-    (let* ((fname (buffer-file-name))
-           (dname (if fname
-                      (if (file-directory-p fname)
-                          fname
-                        (file-name-directory fname))
-                    default-directory)))
-      (message "[VC status for directory: %s]" dname)
-      (vc-dir dname)))
+    (let* ((buffer-file (buffer-file-name))
+           (directory (if buffer-file
+                          (if (file-directory-p buffer-file)
+                              buffer-file
+                            (file-name-directory buffer-file))
+                        default-directory)))
+      (message "[VC status for directory: %s]" directory)
+      (vc-dir directory)))
 
   ;; VC status without asking for a directory.
-  (global-set-key (kbd "<C-f9>") #'leuven-vc-jump)
+  (global-set-key (kbd "<C-f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
 
   (add-hook 'vc-dir-mode-hook
             #'(lambda ()
                 ;; Hide up-to-date and unregistered files.
                 (define-key vc-dir-mode-map
-                  (kbd "x") #'leuven-vc-dir-hide-up-to-date-and-unregistered)
+                  (kbd "x") #'lvn-hide-up-to-date-and-unregistered-files-in-vc-dir)
                 (define-key vc-dir-mode-map
                   (kbd "E") #'vc-ediff)
                 (define-key vc-dir-mode-map
@@ -5620,37 +5625,40 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; ediff-windows-wordwise?
               ))
 
-  (defun leuven-vc-dir-hide-up-to-date-and-unregistered ()
+  (defun lvn-hide-up-to-date-and-unregistered-files-in-vc-dir ()
+    "Hide up-to-date and unregistered files in VC directory buffer."
     (interactive)
     (vc-dir-hide-up-to-date)
-    (vc-dir-hide-unregistered))
+    ;; (vc-dir-hide-up-to-date 'unregistered)
+    (lvn-vc-dir-hide-unregistered)
+    )
 
-  (defun vc-dir-hide-unregistered ()
-    "Hide unregistered items from display."
+  (defun lvn-vc-dir-hide-unregistered ()
+    "Hide ‘unregistered’ items from display."
     (interactive)
-    (let ((crt (ewoc-nth vc-ewoc -1))
-          (first (ewoc-nth vc-ewoc 0)))
-      ;; Go over from the last item to the first and remove the unregistered
-      ;; files and directories with no child files.
-      (while (not (eq crt first))
-        (let* ((data (ewoc-data crt))
-               (dir (vc-dir-fileinfo->directory data))
-               (next (ewoc-next vc-ewoc crt))
-               (prev (ewoc-prev vc-ewoc crt))
-               ;; ewoc-delete does not work without this...
+    (let ((current-item (ewoc-nth vc-ewoc -1))
+          (first-item (ewoc-nth vc-ewoc 0)))
+      ;; Iterate from the last item to the first and remove unregistered files
+      ;; and directories without child files.
+      (while (not (eq current-item first-item))
+        (let* ((item-data (ewoc-data current-item))
+               (is-directory (vc-dir-fileinfo->directory item-data))
+               (next-item (ewoc-next vc-ewoc current-item))
+               (prev-item (ewoc-prev vc-ewoc current-item))
+               ;; Necessary for ewoc-delete to work...
                (inhibit-read-only t))
           (when (or
                  ;; Remove directories with no child files.
-                 (and dir
+                 (and is-directory
                       (or
-                       ;; Nothing follows this directory.
-                       (not next)
+                       ;; No item follows this directory.
+                       (not next-item)
                        ;; Next item is a directory.
-                       (vc-dir-fileinfo->directory (ewoc-data next))))
+                       (vc-dir-fileinfo->directory (ewoc-data next-item))))
                  ;; Remove files in the unregistered state.
-                 (eq (vc-dir-fileinfo->state data) 'unregistered))
-            (ewoc-delete vc-ewoc crt))
-          (setq crt prev)))))
+                 (eq (vc-dir-fileinfo->state item-data) 'unregistered))
+            (ewoc-delete vc-ewoc current-item))
+          (setq current-item prev-item)))))
 
   (defun vc-ediff-ignore-whitespace (historic &optional not-urgent)
     "Ignore regions that differ in white space & line breaks only."
@@ -7164,15 +7172,16 @@ This example lists Azerty layout second row keys."
 
     ;; Test whether server is (definitely) running, avoiding the message of
     ;; "server-start" while opening another Emacs session.
-    (or (equal (server-running-p) t)
+    (unless (equal (server-running-p) t)
 
         ;; Start the Emacs server.
-        (server-start))                 ; ~ 0.20 s
+        (server-start))
 
     ;; Save file without confirmation before returning to the client.
     (defadvice server-edit (before save-buffer-if-needed activate)
       "Save current buffer before marking it as done."
-      (when server-buffer-clients (save-buffer))))
+      (when server-buffer-clients
+	(save-buffer))))
 
 )                                       ; Chapter 39 ends here.
 
@@ -7732,14 +7741,3 @@ This example lists Azerty layout second row keys."
 (message "* --[ Loaded Emacs-Leuven %s]--" leuven--emacs-version)
 
 (provide 'emacs-leuven)
-
-;; This is for the sake of Emacs.
-;; Local Variables:
-;; coding: utf-8-unix
-;; eval: (when (require 'rainbow-mode nil t) (rainbow-mode))
-;; flycheck-emacs-lisp-initialize-packages: t
-;; flycheck-mode: nil
-;; ispell-local-dictionary: "american"
-;; End:
-
-;;; emacs-leuven.el ends here
