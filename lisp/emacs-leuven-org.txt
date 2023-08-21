@@ -4387,4 +4387,6 @@ Link emails from Org files.
 
 #+begin_src emacs-lisp
 (provide 'emacs-leuven-org)
+
+;;; emacs-leuven-org.el ends here
 #+end_src
