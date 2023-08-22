@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230821.2120
+;; Version: 20230822.2231
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230821.2120"
+(defconst leuven--emacs-version "20230822.2231"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2143,14 +2143,15 @@ Should be selected from `fringe-bitmaps'.")
   ;; Make numbered backups.
   (setq version-control t)
 
-  ;; Save backup files (i.e., `foo~' or `foo.~i~') in one central location
-  ;; (instead of in the local directory).
-  (setq backup-directory-alist
-        '((".*" . "~/.emacs.d/backups/")))
-                                        ; Filenames matching a regexp are backed
-                                        ; up in the corresponding directory.
-                                        ; Emacs will `make-directory' it, if
-                                        ; necessary.
+  ;; Set the backup directory path for Emacs backups.
+  (setq lvn-backup-directory "~/.emacs.d/backups/")
+
+  ;; Create the backup directory if it doesn't exist.
+  (when (not (file-exists-p lvn-backup-directory))
+    (make-directory lvn-backup-directory t))
+
+  ;; Configure backup files to be saved in the central backup location.
+  (setq backup-directory-alist `(("." . ,lvn-backup-directory)))
 
   ;; ;; Number of oldest versions to keep when a new numbeRed backup is made.
   ;; (setq kept-old-versions 0)            ; [Default: 2]

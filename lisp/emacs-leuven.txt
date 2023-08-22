@@ -14,8 +14,8 @@
 
 * Evaluating the current setup
 
-To evaluate the current setup you'll need to launch Emacs in a special way.
-Do so by issuing the following commands:
+To evaluate the current setup, you'll need to launch Emacs in a special way.  Do
+so by issuing the following commands:
 
 #+begin_src shell :tangle no
 git clone https://github.com/fniessen/emacs-leuven
@@ -3671,14 +3671,14 @@ Builtin file version control of Emacs.
   ;; Make numbered backups.
   (setq version-control t)
 
+  ;; Set the backup directory path for Emacs backups.
   (setq lvn-backup-directory "~/.emacs.d/backups/")
 
-  ;; `make-directory' it, if necessary.
+  ;; Create the backup directory if it doesn't exist.
   (when (not (file-exists-p lvn-backup-directory))
     (make-directory lvn-backup-directory t))
 
-  ;; Save backup files (i.e., `foo~' or `foo.~i~') in one central location
-  ;; (instead of in the local directory).
+  ;; Configure backup files to be saved in the central backup location.
   (setq backup-directory-alist `(("." . ,lvn-backup-directory)))
 
   ;; ;; Number of oldest versions to keep when a new numbeRed backup is made.
