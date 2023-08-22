@@ -3671,14 +3671,15 @@ Builtin file version control of Emacs.
   ;; Make numbered backups.
   (setq version-control t)
 
+  (setq lvn-backup-directory "~/.emacs.d/backups/")
+
+  ;; `make-directory' it, if necessary.
+  (when (not (file-exists-p lvn-backup-directory))
+    (make-directory lvn-backup-directory t))
+
   ;; Save backup files (i.e., `foo~' or `foo.~i~') in one central location
   ;; (instead of in the local directory).
-  (setq backup-directory-alist
-        '((".*" . "~/.emacs.d/backups/")))
-                                        ; Filenames matching a regexp are backed
-                                        ; up in the corresponding directory.
-                                        ; Emacs will `make-directory' it, if
-                                        ; necessary.
+  (setq backup-directory-alist `(("." . ,lvn-backup-directory)))
 
   ;; ;; Number of oldest versions to keep when a new numbeRed backup is made.
   ;; (setq kept-old-versions 0)            ; [Default: 2]
