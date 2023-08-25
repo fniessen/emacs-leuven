@@ -1573,23 +1573,26 @@ or copying the selected text.
   (advice-add 'kill-ring-save :before #'lvn--slick-copy-region)
 #+end_src
 
-| Command        | Emacs | Sublime Text | TextMate |
-|----------------+-------+--------------+----------|
-| Duplicate line | C-S-d | C-S-d        | C-S-d    |
+| Command                     | Emacs | Sublime Text | TextMate |
+|-----------------------------+-------+--------------+----------|
+| Duplicate line or selection | C-S-d | C-S-d        | C-S-d    |
 
 #+begin_src emacs-lisp
   (defun lvn-duplicate-line-or-region ()
-    "Duplicate the current line or the region if active."
+    "Duplicate the current line or region."
     (interactive)
-    (save-excursion
-      (if (region-active-p)
-          (kill-ring-save (region-beginning) (region-end))
+    (save-mark-and-excursion
+      (if (use-region-p)
+          (progn
+            (kill-ring-save (region-beginning) (region-end))
+            (goto-char (region-end))
+            (yank))
         (progn
           (kill-ring-save (line-beginning-position) (line-end-position))
-          (end-of-line)))
-      (newline)
-      (yank)
-      (indent-according-to-mode)))
+          (end-of-line)
+          (forward-line)
+          (open-line 1)
+          (yank)))))
 
   (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
 #+end_src
@@ -3508,13 +3511,13 @@ https://github.com/Silex/elmacro.
 ** Basic Use
 
 - ~S-<F8>~ ::
-     Start recording your keyboard macro.
+     Start macro recording.
 
 - ~S-<F8>~ again ::
-     Stop recording it.
+     Stop macro recording.
 
 - ~<F8>~ ::
-     Call the keyboard macro.
+     Playback recent macro.
 
 If you want to check the result each time before repeating, type ~<F8> e e...~.
 

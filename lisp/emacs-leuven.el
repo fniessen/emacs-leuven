@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230825.2318
+;; Version: 20230826.0003
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230825.2318"
+(defconst leuven--emacs-version "20230826.0003"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -980,17 +980,20 @@ original state of line numbers after navigation."
   (advice-add 'kill-ring-save :before #'lvn--slick-copy-region)
 
   (defun lvn-duplicate-line-or-region ()
-    "Duplicate the current line or the region if active."
+    "Duplicate the current line or region."
     (interactive)
-    (save-excursion
-      (if (region-active-p)
-          (kill-ring-save (region-beginning) (region-end))
+    (save-mark-and-excursion
+      (if (use-region-p)
+          (progn
+            (kill-ring-save (region-beginning) (region-end))
+            (goto-char (region-end))
+            (yank))
         (progn
           (kill-ring-save (line-beginning-position) (line-end-position))
-          (end-of-line)))
-      (newline)
-      (yank)
-      (indent-according-to-mode)))
+          (end-of-line)
+          (forward-line)
+          (open-line 1)
+          (yank)))))
 
   (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
 
