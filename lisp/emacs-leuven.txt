@@ -9606,7 +9606,7 @@ thereafter.
   (with-eval-after-load "grep"
 
     ;; Run `grep' via `find', with user-friendly interface.
-    (global-set-key (kbd "C-c 3") #'rgrep)
+    (global-set-key (kbd "C-c f 3") #'rgrep)
 
     ;; Ignore case distinctions in the default `grep' command.
     (grep-apply-setting 'grep-command "grep -i -H -n -e ")
@@ -12610,7 +12610,7 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 #+begin_src emacs-lisp
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c 1") #'find-name-dired)
+    (global-set-key (kbd "C-c f 1") #'find-name-dired)
                                         ; Case insensitive if
                                         ; `read-file-name-completion-ignore-case'
                                         ; is non-nil.
@@ -12620,7 +12620,7 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 
     ;; Search for files with contents matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c 2") #'find-grep-dired)
+    (global-set-key (kbd "C-c f 2") #'find-grep-dired)
 #+end_src
 
 ** Editing the Dired Buffer

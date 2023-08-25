@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230822.2231
+;; Version: 20230825.2159
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230822.2231"
+(defconst leuven--emacs-version "20230825.2159"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -5253,7 +5253,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   (with-eval-after-load "grep"
 
     ;; Run `grep' via `find', with user-friendly interface.
-    (global-set-key (kbd "C-c 3") #'rgrep)
+    (global-set-key (kbd "C-c f 3") #'rgrep)
 
     ;; Ignore case distinctions in the default `grep' command.
     (grep-apply-setting 'grep-command "grep -i -H -n -e ")
@@ -6560,7 +6560,7 @@ This example lists Azerty layout second row keys."
 
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c 1") #'find-name-dired)
+    (global-set-key (kbd "C-c f 1") #'find-name-dired)
                                         ; Case insensitive if
                                         ; `read-file-name-completion-ignore-case'
                                         ; is non-nil.
@@ -6570,7 +6570,7 @@ This example lists Azerty layout second row keys."
 
     ;; Search for files with contents matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c 2") #'find-grep-dired)
+    (global-set-key (kbd "C-c f 2") #'find-grep-dired)
 
 ;;** (info "(emacs)Wdired")
 

@@ -309,9 +309,9 @@ Global key bindings.
 | ^         | (anonymous function)            |
 | e         | browse-url-of-dired-file        |
 | E         | w32-dired-open-files-externally |
-| C-c 1     | find-name-dired                 |
-| C-c 2     | find-grep-dired                 |
-| C-c 3     | rgrep                           |
+| C-c f 1   | find-name-dired                 |
+| C-c f 2   | find-grep-dired                 |
+| C-c f 3   | rgrep                           |
 
 ** Other shortcuts
 
