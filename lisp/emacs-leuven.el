@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230825.2231
+;; Version: 20230825.2318
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230825.2231"
+(defconst leuven--emacs-version "20230825.2318"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1845,6 +1845,19 @@ Should be selected from `fringe-bitmaps'.")
 
     ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
     )
+
+    ;; Used in Visual Studio Code and IntelliJ IDEA.
+    (defun lvn-find-usages ()
+      "Approximate 'find usages' using occur command."
+      (interactive)
+      (let ((symbol (symbol-at-point)))
+        (if symbol
+            (progn
+              (occur (format "\\_<%s\\_>" (regexp-quote (symbol-name symbol))))
+              (switch-to-buffer "*Occur*"))
+          (message "No symbol at point"))))
+
+    (global-set-key (kbd "<C-M-f7>") 'lvn-find-usages)
 
 ;;** 15.5 (info "(emacs)Regexp Search")
 

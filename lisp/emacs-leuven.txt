@@ -3139,6 +3139,21 @@ the user see truly invisible matches before replacing them.
      Start a symbol (identifier) incremental search forward with the symbol
      found near point added to the search string initially.
 
+#+begin_src emacs-lisp
+    ;; Used in Visual Studio Code and IntelliJ IDEA.
+    (defun lvn-find-usages ()
+      "Approximate 'find usages' using occur command."
+      (interactive)
+      (let ((symbol (symbol-at-point)))
+        (if symbol
+            (progn
+              (occur (format "\\_<%s\\_>" (regexp-quote (symbol-name symbol))))
+              (switch-to-buffer "*Occur*"))
+          (message "No symbol at point"))))
+
+    (global-set-key (kbd "<C-M-f7>") 'lvn-find-usages)
+#+end_src
+
 ** Regexp Search
 
 Emacs uses basic regular expressions, which means that the extended regexp
