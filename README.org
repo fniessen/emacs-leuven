@@ -207,10 +207,12 @@ Global key bindings.
 
 ** Text
 
-| Shortcut | What it runs    |
-|----------+-----------------|
-| <next>   | pager-page-down |
-| <prior>  | pager-page-up   |
+| Shortcut | What it runs       |
+|----------+--------------------|
+| <next>   | pager-page-down    |
+| <prior>  | pager-page-up      |
+| M-ù      | backward-paragraph |
+| M-*      | forward-paragraph  |
 
 ** Lines
 

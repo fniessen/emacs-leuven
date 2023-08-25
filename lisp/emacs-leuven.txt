@@ -3297,7 +3297,11 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
           (ispell-buffer)))
 
     ;; Key bindings (or `C-c i' prefix key binding?).
+
+    ;; Spell-check the region or buffer.
     (global-set-key (kbd "C-$") #'leuven-ispell-region-or-buffer)
+
+    ;; Change the dictionary.
     (global-set-key (kbd "C-M-$") #'ispell-change-dictionary)
 
     ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
@@ -6476,6 +6480,16 @@ Don't tabify.  Instead, _reindent_ everything, e.g. with ~C-M-\~.
 The default value of ~sentence-end-double-space~ is good for French as well, as
 we put two spaces after a interrogation/question mark. That way, those two
 spaces won't be transformed into one...
+
+** Paragraphs
+
+#+begin_src emacs-lisp
+  ;; Use M-ù for backward-paragraph.
+  (global-set-key (kbd "M-ù") 'backward-paragraph)
+
+  ;; Use M-* for forward-paragraph.
+  (global-set-key (kbd "M-*") 'forward-paragraph)
+#+end_src
 
 ** Filling Text
 

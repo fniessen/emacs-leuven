@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230825.2159
+;; Version: 20230825.2231
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230825.2159"
+(defconst leuven--emacs-version "20230825.2231"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -1919,7 +1919,11 @@ Should be selected from `fringe-bitmaps'.")
           (ispell-buffer)))
 
     ;; Key bindings (or `C-c i' prefix key binding?).
+
+    ;; Spell-check the region or buffer.
     (global-set-key (kbd "C-$") #'leuven-ispell-region-or-buffer)
+
+    ;; Change the dictionary.
     (global-set-key (kbd "C-M-$") #'ispell-change-dictionary)
 
     ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
@@ -3628,6 +3632,12 @@ windows, leaving only the currently active window visible."
 
   ;; ;; A single space does end a sentence.
   ;; (setq-default sentence-end-double-space nil) ; see `ispell-dictionary'
+
+  ;; Use M-ù for backward-paragraph.
+  (global-set-key (kbd "M-ù") 'backward-paragraph)
+
+  ;; Use M-* for forward-paragraph.
+  (global-set-key (kbd "M-*") 'forward-paragraph)
 
   (defun leuven-nbsp-command ()
     "Insert the no-break space character 00A0."
