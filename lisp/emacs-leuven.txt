@@ -1490,7 +1490,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
             js2-mode-show-node
             just-one-space
             kill-region
-            leuven-fill-or-unfill-paragraph
+            lvn-fill-or-unfill-paragraph
             leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
@@ -6543,24 +6543,34 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   (setq-default fill-column 80)
 
   ;; (Un-)fill paragraph.
-  (defun leuven-fill-or-unfill-paragraph (count)
-    "Like `fill-paragraph', but unfill if used twice."
+  (defun lvn-fill-or-unfill-paragraph (arg)
+    "Fill paragraph or region with a customizable fill column width.
+With prefix ARG, set fill column width explicitly.
+
+When called twice consecutively without a prefix argument, the
+paragraph will be unfilled.
+
+In Org mode, the function uses `org-fill-paragraph` to handle specialized
+formatting.
+
+When called with a prefix argument (e.g., \\[universal-argument] \\[lvn-fill-or-unfill-paragraph]),
+you will be prompted to enter the desired fill column width."
     (interactive "P")
     (let ((fill-column
-           (if count
-               (prefix-numeric-value count)
-             (if (eq last-command 'leuven-fill-or-unfill-paragraph)
+           (if arg
+               (prefix-numeric-value arg)
+             (if (eq last-command 'lvn-fill-or-unfill-paragraph)
                  (progn (setq this-command nil)
                         (point-max))
                fill-column))))
       (if (derived-mode-p 'org-mode)
           (org-fill-paragraph)
         (fill-paragraph))))
-
+  
   ;; M-q.
-  (global-set-key [remap fill-paragraph] #'leuven-fill-or-unfill-paragraph)
+  (global-set-key [remap fill-paragraph] #'lvn-fill-or-unfill-paragraph)
   (with-eval-after-load "org"
-    (define-key org-mode-map (kbd "M-q") #'leuven-fill-or-unfill-paragraph))
+    (define-key org-mode-map (kbd "M-q") #'lvn-fill-or-unfill-paragraph))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
