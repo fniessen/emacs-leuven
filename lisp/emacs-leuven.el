@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230826.2038
+;; Version: 20230826.2102
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230826.2038"
+(defconst leuven--emacs-version "20230826.2102"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -924,7 +924,7 @@ original state of line numbers after navigation."
             js2-mode-show-node
             just-one-space
             kill-region
-            leuven-fill-or-unfill-paragraph
+            lvn-fill-or-unfill-paragraph
             leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
@@ -2613,8 +2613,19 @@ using Tramp's sudo method if it's read-only."
     ;; Save file names relative to my current home directory.
     (setq recentf-filename-handlers '(abbreviate-file-name))
 
-    ;; Enable `recentf' mode.
-    (recentf-mode 1))
+    ;; Enable recentf-mode
+    (recentf-mode 1)
+
+    ;; Remove non-existent files from the recent files list automatically.
+    (defun lvn-recentf-cleanup ()
+      "Clean up recentf list by removing non-existent files."
+      (interactive)
+      (setq recentf-list (cl-remove-if-not 'file-exists-p recentf-list))
+      (recentf-cleanup))
+
+    ;; Advice recentf-load-list to perform cleanup after loading the recentf
+    ;; list.
+    (advice-add 'recentf-load-list :after #'lvn-recentf-cleanup))
 
   (leuven--section "Helm")
 
@@ -3669,24 +3680,34 @@ windows, leaving only the currently active window visible."
   (setq-default fill-column 80)
 
   ;; (Un-)fill paragraph.
-  (defun leuven-fill-or-unfill-paragraph (count)
-    "Like `fill-paragraph', but unfill if used twice."
+  (defun lvn-fill-or-unfill-paragraph (arg)
+    "Fill paragraph or region with a customizable fill column width.
+With prefix ARG, set fill column width explicitly.
+
+When called twice consecutively without a prefix argument, the
+paragraph will be unfilled.
+
+In Org mode, the function uses `org-fill-paragraph` to handle specialized
+formatting.
+
+When called with a prefix argument (e.g., \\[universal-argument] \\[lvn-fill-or-unfill-paragraph]),
+you will be prompted to enter the desired fill column width."
     (interactive "P")
     (let ((fill-column
-           (if count
-               (prefix-numeric-value count)
-             (if (eq last-command 'leuven-fill-or-unfill-paragraph)
+           (if arg
+               (prefix-numeric-value arg)
+             (if (eq last-command 'lvn-fill-or-unfill-paragraph)
                  (progn (setq this-command nil)
                         (point-max))
                fill-column))))
       (if (derived-mode-p 'org-mode)
           (org-fill-paragraph)
         (fill-paragraph))))
-
+  
   ;; M-q.
-  (global-set-key [remap fill-paragraph] #'leuven-fill-or-unfill-paragraph)
+  (global-set-key [remap fill-paragraph] #'lvn-fill-or-unfill-paragraph)
   (with-eval-after-load "org"
-    (define-key org-mode-map (kbd "M-q") #'leuven-fill-or-unfill-paragraph))
+    (define-key org-mode-map (kbd "M-q") #'lvn-fill-or-unfill-paragraph))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)

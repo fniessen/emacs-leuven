@@ -4617,8 +4617,19 @@ email, including several trace information for analysis.
     ;; Save file names relative to my current home directory.
     (setq recentf-filename-handlers '(abbreviate-file-name))
 
-    ;; Enable `recentf' mode.
-    (recentf-mode 1))
+    ;; Enable recentf-mode
+    (recentf-mode 1)
+
+    ;; Remove non-existent files from the recent files list automatically.
+    (defun lvn-recentf-cleanup ()
+      "Clean up recentf list by removing non-existent files."
+      (interactive)
+      (setq recentf-list (cl-remove-if-not 'file-exists-p recentf-list))
+      (recentf-cleanup))
+
+    ;; Advice recentf-load-list to perform cleanup after loading the recentf
+    ;; list.
+    (advice-add 'recentf-load-list :after #'lvn-recentf-cleanup))
 #+end_src
 
 *** Helm
