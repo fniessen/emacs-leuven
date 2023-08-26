@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230826.0003
+;; Version: 20230826.2038
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230826.0003"
+(defconst leuven--emacs-version "20230826.2038"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -991,8 +991,7 @@ original state of line numbers after navigation."
         (progn
           (kill-ring-save (line-beginning-position) (line-end-position))
           (end-of-line)
-          (forward-line)
-          (open-line 1)
+          (newline)
           (yank)))))
 
   (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)

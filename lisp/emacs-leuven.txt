@@ -1590,8 +1590,7 @@ or copying the selected text.
         (progn
           (kill-ring-save (line-beginning-position) (line-end-position))
           (end-of-line)
-          (forward-line)
-          (open-line 1)
+          (newline)
           (yank)))))
 
   (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
