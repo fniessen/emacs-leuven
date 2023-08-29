@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230826.2102
+;; Version: 20230829.1124
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230826.2102"
+(defconst leuven--emacs-version "20230829.1124"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -5656,7 +5656,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                 (define-key vc-dir-mode-map
                   (kbd "E") #'vc-ediff)
                 (define-key vc-dir-mode-map
-                  (kbd "#") #'vc-ediff-ignore-whitespace)
+                  (kbd "#") #'lvn-vc-ediff-ignore-whitespace)
                                         ; ediff-windows-wordwise?
               ))
 
@@ -5695,7 +5695,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (ewoc-delete vc-ewoc current-item))
           (setq current-item prev-item)))))
 
-  (defun vc-ediff-ignore-whitespace (historic &optional not-urgent)
+  (defun lvn-vc-ediff-ignore-whitespace (historic &optional not-urgent)
     "Ignore regions that differ in white space & line breaks only."
     (interactive (list current-prefix-arg t))
     (require 'ediff)

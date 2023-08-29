@@ -10406,7 +10406,7 @@ can use the following keys to navigate historic versions of the file:
                 (define-key vc-dir-mode-map
                   (kbd "E") #'vc-ediff)
                 (define-key vc-dir-mode-map
-                  (kbd "#") #'vc-ediff-ignore-whitespace)
+                  (kbd "#") #'lvn-vc-ediff-ignore-whitespace)
                                         ; ediff-windows-wordwise?
               ))
 
@@ -10445,7 +10445,7 @@ can use the following keys to navigate historic versions of the file:
             (ewoc-delete vc-ewoc current-item))
           (setq current-item prev-item)))))
 
-  (defun vc-ediff-ignore-whitespace (historic &optional not-urgent)
+  (defun lvn-vc-ediff-ignore-whitespace (historic &optional not-urgent)
     "Ignore regions that differ in white space & line breaks only."
     (interactive (list current-prefix-arg t))
     (require 'ediff)
