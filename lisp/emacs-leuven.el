@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230829.1124
+;; Version: 20230909.1620
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230829.1124"
+(defconst leuven--emacs-version "20230909.1620"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
@@ -2019,15 +2019,18 @@ Should be selected from `fringe-bitmaps'.")
      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
      ;; '("francais" "deutsch8" "norsk")
 
-     (defun leuven-flyspell-toggle-dictionary ()
-       "Toggle the local dictionary between French and US English."
+     (defun lvn-toggle-ispell-dictionary ()
+       "Toggle the ispell dictionary between French and US English."
        (interactive)
-       (let ((dict (or ispell-local-dictionary
-                       ispell-dictionary)))
-         (setq dict (if (string= dict "francais") "american" "francais"))
-         (message "[Switched to %S]" dict)
+       (let ((current-dict (or ispell-local-dictionary
+                               ispell-dictionary))
+             (new-dict))
+         (setq new-dict (if (string= current-dict "francais")
+                            "american"
+                          "francais"))
+         (ispell-change-dictionary new-dict)
+         (message "[Switched to %S]" new-dict)
          (sit-for 0.5)
-         (ispell-change-dictionary dict)
          (force-mode-line-update)
          (when flyspell-mode
            ;; (flyspell-delete-all-overlays)
@@ -2037,7 +2040,7 @@ Should be selected from `fringe-bitmaps'.")
 
      ;; Key bindings.
      (global-set-key (kbd "C-$") #'flyspell-buffer)
-     (global-set-key (kbd "C-M-$") #'leuven-flyspell-toggle-dictionary)
+     (global-set-key (kbd "C-M-$") #'lvn-toggle-ispell-dictionary)
 
      ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
      ;; faces corresponding to text in programming-mode buffers).
@@ -3810,40 +3813,18 @@ you will be prompted to enter the desired fill column width."
       (key-chord-define-global "xj" #'dired-jump)) ; Autoloaded?
 
     (key-chord-define-global "vb" #'eval-buffer)
-    ;; (key-chord-define-global "vg" #'eval-region) ; 2015-02-17 Crash Gnus `C-u g'
 
-    ;; (key-chord-define-global "x0" #'delete-window) ; 2015-02-09 Crash Gnus `C-u 3'
-    ;; (key-chord-define-global "x1" #'delete-other-windows) ; 2015-02-05 Crash Gnus `C-u 1'
     (key-chord-define-global "xh" #'mark-whole-buffer)
     (key-chord-define-global "xk" #'kill-buffer)
-    (key-chord-define-global "xo" #'other-window) ; box...
-    (key-chord-define-global "xs" #'save-buffer)
 
     (key-chord-define-global "yy" #'browse-kill-ring)
     (key-chord-define-global "zk" #'zap-to-char)
 
-    (with-eval-after-load "hl-anything-autoloads"    ; Package.
-      (key-chord-define-global "*o" #'hl-global-highlight-on/off)
-      (key-chord-define-global "*h" #'hl-highlight-thingatpt-global)
-      (key-chord-define-global "*u" #'hl-unhighlight-all-global)
-      (key-chord-define-global "*n" #'hl-find-next-thing)
-      (key-chord-define-global "*p" #'hl-find-prev-thing)
-      (key-chord-define-global "*r" #'hl-restore-highlights)
-      (key-chord-define-global "*s" #'hl-save-highlights))
-
     (key-chord-define-global ";s" #'set-mark-command)
-
-    ;; (key-chord-define-global "ac" #'align-current)
-    ;; (key-chord-define-global "fc" #'flycheck-mode)
-    ;; (global-set-key (kbd "M-2") #'highlight-symbol-occur)
-    ;; (global-set-key (kbd "M-3") #'(lambda () (interactive) (highlight-symbol-jump -1)))
-    ;; (global-set-key (kbd "M-4") #'(lambda () (interactive) (highlight-symbol-jump 1)))
-    ;; (key-chord-define-global "vg" #'vc-git-grep)
 
     ;; (key-chord-define-global "''" "`'\C-b")
     ;; (key-chord-define-global "dq" "\"\"\C-b")
     ;; (key-chord-define-global ";d" #'dired-jump-other-window)
-    ;; (key-chord-define-global "jk" #'dabbrev-expand)
     ;; (key-chord-define-global "JJ" #'xref-find-definitions)
     ;; (key-chord-define-global ",." "<>\C-b")
     ;; (key-chord-define-global "''" "`'\C-b")
