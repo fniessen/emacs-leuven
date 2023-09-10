@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230910.1651
+;; Version: 20230910.1858
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20230910.1651"
+(defconst lvn--emacs-version "20230910.1858"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7744,7 +7744,9 @@ Git repository directory."
       (if (file-directory-p repository-directory)
           (progn
             (if (not (string-empty-p unstaged-changes))
-                (message "[Error: You have unstaged changes. Please commit or stash them before updating.]")
+                (progn
+                  (message "[Warning: You have unstaged changes. Please commit or stash them before updating.]")
+                  (message "Unstaged changes:\n%s" unstaged-changes))
               (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" el-file-directory))))
                 (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
                     (message "[Configuration is already up-to-date]")
