@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230909.1620
+;; Version: 20230910.1651
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,10 +90,10 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst leuven--emacs-version "20230909.1620"
+(defconst lvn--emacs-version "20230910.1651"
   "Emacs-Leuven version (date of the last change).")
 
-(message "* --[ Loading Emacs-Leuven %s]--" leuven--emacs-version)
+(message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
 
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
@@ -7722,39 +7722,70 @@ This example lists Azerty layout second row keys."
               (sit-for 0.5))
   t)
 
-  (defun leuven-update-configuration ()
-    "Update the Emacs-Leuven configuration to its latest version."
-    (interactive)
-    (leuven-emacs-version)
-    (message "[Updating Leuven configuration...]")
-    (let ((default-directory leuven--directory))
-      (shell-command "LC_ALL=C git pull --rebase")
-      (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
-          (message "[Configuration is already up-to-date]")
-        (sit-for 1.5)
-        (message "[Configuration updated.  Please restart Emacs to complete the update]"))))
+  (defun lvn-update-emacs-leuven-configuration ()
+    "Update the Leuven configuration for Emacs to its latest version.
 
-  (defun leuven-show-latest-commits ()
-    "List latest changes in Emacs-Leuven."
+This function checks for unstaged changes in the Emacs-Leuven configuration repository.
+If there are unstaged changes, it recommends committing or stashing them before updating.
+If updates are available, it pulls the latest changes from the repository.
+If the configuration is already up-to-date, it displays a message indicating so.
+After the update, it recommends restarting Emacs to complete the update.
+
+Before using this function, make sure 'leuven--directory' points to the
+directory containing 'emacs-leuven.el' or a symbolic link to the actual
+Git repository directory."
     (interactive)
-    (leuven-emacs-version)
-    (message "[Fetching last changes in Leuven...]")
-    (cd leuven--directory)
-    (let ((ret (shell-command-to-string "LC_ALL=C git fetch --verbose"))
-          (bufname "*Leuven latest commits*"))
-      (if (string-match "\\(up to date\\|up-to-date\\)" ret)
+    (lvn-display-emacs-leuven-version)
+    (let* ((el-file-path (locate-library "emacs-leuven.el"))
+           (el-file-directory (file-name-directory (file-truename el-file-path)))
+           (repository-directory el-file-directory)
+           (unstaged-changes (shell-command-to-string "cd %s && git status --porcelain"))
+           (status-buffer (generate-new-buffer "*git-status*")))
+      (if (file-directory-p repository-directory)
+          (progn
+            (if (not (string-empty-p unstaged-changes))
+                (message "[Error: You have unstaged changes. Please commit or stash them before updating.]")
+              (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" el-file-directory))))
+                (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
+                    (message "[Configuration is already up-to-date]")
+                  (if (= status 0)
+                      (progn
+                        (sit-for 1.5)
+                        (message "[Configuration updated.  Please restart Emacs to complete the update]"))
+                    (message "[Error: Failed to update configuration.]"))))))
+        (message "[Error: 'emacs-leuven.el' file not found]"))
+      (kill-buffer status-buffer)))
+
+  (defun lvn-display-emacs-levuen-latest-commits ()
+    "Display the latest commits in the Emacs-Leuven configuration.
+
+This function fetches the latest changes from the remote Git repository and
+displays the commits made since the current branch diverged from 'origin'. If
+the configuration is already up-to-date, it indicates so in the message.
+
+Before using this function, make sure 'leuven--directory' points to the
+directory containing 'emacs-leuven.el' or a symbolic link to the actual
+Git repository directory."
+    (interactive)
+    (lvn-display-emacs-leuven-version)
+    (message "[Fetching latest changes in Emacs-Leuven...]")
+    (let* ((el-file-path (locate-library "emacs-leuven.el"))
+           (el-file-directory (file-name-directory (file-truename el-file-path)))
+           (default-directory el-file-directory)
+           (fetch-status (shell-command "LC_ALL=C git fetch --verbose"))
+           (commits-buffer "*Emacs-Leuven latest commits*"))
+      (if (string-match "\\(up to date\\|up-to-date\\)" (shell-command-to-string "LC_ALL=C git status"))
           (message "[Configuration already up-to-date]")
-       (with-output-to-temp-buffer bufname
-         (shell-command
-          "LC_ALL=C git log --pretty=format:'%h %ad %s' --date=short HEAD..origin"
-          bufname)
-         (pop-to-buffer bufname)))))
+        (with-output-to-temp-buffer commits-buffer
+          (shell-command "LC_ALL=C git log --pretty=format:'%h %ad %s' --date=short HEAD..origin" commits-buffer)
+          (pop-to-buffer commits-buffer)))))
 
-  (defun leuven-emacs-version ()
+  (defun lvn-display-emacs-leuven-version ()
+    "Display the current version of the Emacs-Leuven configuration."
     (interactive)
-    (message "[Emacs-Leuven version %s]" leuven--emacs-version))
+    (message (format "[Emacs-Leuven version %s]" lvn--emacs-version)))
 
-(message "* --[ Loaded Emacs-Leuven %s]--" leuven--emacs-version)
+(message "* --[ Loaded Emacs-Leuven %s]--" lvn--emacs-version)
 
 (provide 'emacs-leuven)
 
