@@ -2,6 +2,7 @@
 
 ;; Copyright (C) 2000  Padioleau yoann <padiolea@irisa.fr>
 ;; Copyright (C) 2000  Besson frédéric <fbesson@irisa.fr>
+;; Copyright (C) 2023  Fabrice Niessen
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -185,7 +186,7 @@
 	    (modify-syntax-entry ?+  "w")
 	    (modify-syntax-entry ?.  "w")
 
-	    (toggle-read-only -1)
+	    (read-only-mode -1)
 	    
 	  ;; direct search seems faster than font-lock-mode
 	    (map-apply (lambda (regexp face) 
@@ -198,9 +199,9 @@
 			   )
 			 )
 		       dircolors-font-lock-keywords)
-	    (toggle-read-only (if rd-only 1 -1 ))
+	    (read-only-mode (if rd-only 1 -1 ))
 	    )
-	(t    (toggle-read-only (if rd-only 1 -1)))
+	(t    (read-only-mode (if rd-only 1 -1)))
 	)
       )))
 
