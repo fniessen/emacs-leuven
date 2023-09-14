@@ -2293,26 +2293,26 @@ parent."
   (mapc 'delete-overlay only-code-overlays))
 
 (with-eval-after-load "org"
-  (defun leuven-org-copy-code-block ()
+  (defun lvn-org-copy-current-code-block ()
     "Copy the contents of the current Org mode code block to the kill ring.
-The code block is identified by \"begin_src\" and \"end_src\" markers.
-This command saves the code block contents as if it were killed, but without actually killing it."
+A code block in Org mode is identified by the \"#+begin_src\" and \"#+end_src\" markers.
+This command copies the code block contents to the kill ring, making it available for pasting.
+It does not actually delete or kill the code block.
+This function is intended for use within Org mode buffers."
     (interactive)
-    (save-excursion
-      (let ((block-start (progn
-                           (search-backward "begin_src")
-                           (beginning-of-line)
-                           (forward-line)
-                           (point)))
-            (block-end (progn
-                         (search-forward "end_src")
-                         (beginning-of-line)
-                         (point))))
-        (copy-region-as-kill block-start block-end)
-        (message "[Code block copied to kill ring]"))))
+    (let ((block-start (save-excursion
+                         (re-search-backward "^[ \t]*#\\+begin_src[ \t]+\\([a-zA-Z0-9]+\\)?" nil t)
+                         (forward-line)
+                         (point)))
+          (block-end (save-excursion
+                       (re-search-forward "^[ \t]*#\\+end_src" nil t)
+                       (beginning-of-line)
+                       (point))))
+      (copy-region-as-kill block-start block-end)
+      (message "[Code block copied to kill ring]")))
 
   ;; Copy current code block.
-  (define-key org-mode-map (kbd "H-w") #'leuven-org-copy-code-block))
+  (define-key org-mode-map (kbd "H-w") #'lvn-org-copy-current-code-block))
 
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
