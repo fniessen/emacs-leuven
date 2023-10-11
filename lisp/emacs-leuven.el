@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231011.2002
+;; Version: 20231011.2017
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231011.2002"
+(defconst lvn--emacs-version "20231011.2017"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -831,6 +831,26 @@ original state of line numbers after navigation."
     ;; WoMan adds a Contents menu to the menubar.
     (setq woman-imenu t))
 
+  ;; Guide the following key bindings automatically and dynamically.
+  (with-eval-after-load "which-key-autoloads"
+    (idle-require 'which-key))
+
+  (with-eval-after-load "which-key"
+
+    (which-key-mode)
+
+    ;; Apply suggested settings for side-window that opens on right if there is
+    ;; space and the bottom otherwise.
+    (which-key-setup-side-window-right-bottom)
+
+    (setq which-key-idle-delay 0.4)
+
+    (setq which-key-sort-order 'which-key-local-then-key-order)
+
+    ;; Set the maximum length (in characters) for key descriptions (commands or
+    ;; prefixes).
+    (setq which-key-max-description-length 33))
+
 )                                       ; Chapter 10 ends here.
 
 ;;* 11 The (info "(emacs)Mark") and the Region
@@ -1039,9 +1059,9 @@ original state of line numbers after navigation."
       (deactivate-mark)
       (message "[Copied to Windows clipboard and kill-ring.]")))
 
-  ;; Override the kill-ring-save command when in WSL config.
-  (when leuven--wsl-p-XXX
-    (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
+  ;; ;; Override the kill-ring-save command when in WSL config.
+  ;; (when leuven--wsl-p
+  ;;   (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
   ;; Define the paste command for WSL.
   (defun lvn-wsl-paste-region ()
@@ -1059,9 +1079,9 @@ original state of line numbers after navigation."
       (insert clipboard))
     (message "[Pasted from Windows clipboard.]"))
 
-  ;; Override the yank command when in WSL config.
-  (when leuven--wsl-p-XXX
-    (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
+  ;; ;; Override the yank command when in WSL config.
+  ;; (when leuven--wsl-p
+  ;;   (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
 
 )                                       ; Chapter 12 ends here.
 
@@ -7393,9 +7413,9 @@ This example lists Azerty layout second row keys."
                                         ; use "firefox" or "google-chrome" as
                                         ; well.
 
-  ;; For WSL (Ubuntu on Windows).
-  (when leuven--wsl-p-XXX
-    (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
+  ;; ;; For WSL (Ubuntu on Windows).
+  ;; (when leuven--wsl-p
+  ;;   (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
 
   (leuven--section "FFAP")
 
@@ -7594,26 +7614,6 @@ This example lists Azerty layout second row keys."
             (setq j (1+ j))))))
     (delete-window)
     (setq truncate-lines t))
-
-  ;; Guide the following key bindings automatically and dynamically.
-  (with-eval-after-load "which-key-autoloads"
-    (idle-require 'which-key))
-
-  (with-eval-after-load "which-key"
-
-    (which-key-mode)
-
-    ;; Apply suggested settings for side-window that opens on right if there is
-    ;; space and the bottom otherwise.
-    (which-key-setup-side-window-right-bottom)
-
-    (setq which-key-idle-delay 0.4)
-
-    (setq which-key-sort-order 'which-key-local-then-key-order)
-
-    ;; Set the maximum length (in characters) for key descriptions (commands or
-    ;; prefixes).
-    (setq which-key-max-description-length 33))
 
 )                                       ; Chapter 49 ends here.
 

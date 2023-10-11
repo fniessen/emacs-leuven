@@ -1262,6 +1262,28 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
 #+end_src
 
 #+begin_src emacs-lisp
+  ;; Guide the following key bindings automatically and dynamically.
+  (with-eval-after-load "which-key-autoloads"
+    (idle-require 'which-key))
+
+  (with-eval-after-load "which-key"
+
+    (which-key-mode)
+
+    ;; Apply suggested settings for side-window that opens on right if there is
+    ;; space and the bottom otherwise.
+    (which-key-setup-side-window-right-bottom)
+
+    (setq which-key-idle-delay 0.4)
+
+    (setq which-key-sort-order 'which-key-local-then-key-order)
+
+    ;; Set the maximum length (in characters) for key descriptions (commands or
+    ;; prefixes).
+    (setq which-key-max-description-length 33))
+#+end_src
+
+#+begin_src emacs-lisp
 )                                       ; Chapter 10 ends here.
 #+end_src
 
@@ -1700,9 +1722,9 @@ Copy/paste from Windows clipboard in WSL Emacs:
       (deactivate-mark)
       (message "[Copied to Windows clipboard and kill-ring.]")))
 
-  ;; Override the kill-ring-save command when in WSL config.
-  (when leuven--wsl-p-XXX
-    (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
+  ;; ;; Override the kill-ring-save command when in WSL config.
+  ;; (when leuven--wsl-p
+  ;;   (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
   ;; Define the paste command for WSL.
   (defun lvn-wsl-paste-region ()
@@ -1720,9 +1742,9 @@ Copy/paste from Windows clipboard in WSL Emacs:
       (insert clipboard))
     (message "[Pasted from Windows clipboard.]"))
 
-  ;; Override the yank command when in WSL config.
-  (when leuven--wsl-p-XXX
-    (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
+  ;; ;; Override the yank command when in WSL config.
+  ;; (when leuven--wsl-p
+  ;;   (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
 #+end_src
 
 See https://emacs.stackexchange.com/questions/39210/copy-paste-from-windows-clipboard-in-wsl-terminal
@@ -14110,9 +14132,9 @@ Pick up where you left off.
                                         ; use "firefox" or "google-chrome" as
                                         ; well.
 
-  ;; For WSL (Ubuntu on Windows).
-  (when leuven--wsl-p-XXX
-    (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
+  ;; ;; For WSL (Ubuntu on Windows).
+  ;; (when leuven--wsl-p
+  ;;   (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -14425,28 +14447,6 @@ See as well Print keybindings (pkb).
             (setq j (1+ j))))))
     (delete-window)
     (setq truncate-lines t))
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; Guide the following key bindings automatically and dynamically.
-  (with-eval-after-load "which-key-autoloads"
-    (idle-require 'which-key))
-
-  (with-eval-after-load "which-key"
-
-    (which-key-mode)
-
-    ;; Apply suggested settings for side-window that opens on right if there is
-    ;; space and the bottom otherwise.
-    (which-key-setup-side-window-right-bottom)
-
-    (setq which-key-idle-delay 0.4)
-
-    (setq which-key-sort-order 'which-key-local-then-key-order)
-
-    ;; Set the maximum length (in characters) for key descriptions (commands or
-    ;; prefixes).
-    (setq which-key-max-description-length 33))
 #+end_src
 
 ** Syntax Table
