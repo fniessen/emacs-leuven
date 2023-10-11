@@ -1188,9 +1188,6 @@ special meaning are written with all capitals.
 ;;   "Bury the *Calendar* buffer after reading a date."
 ;;   (bury-buffer "*Calendar*"))
 ;; (ad-activate 'org-read-date)
-
-;; Number of minutes to round time stamps to.
-(setq org-time-stamp-rounding-minutes '(1 1))
 #+end_src
 
 ** Deadlines and scheduling

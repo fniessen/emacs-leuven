@@ -356,10 +356,10 @@ Return FILE if it is executable, otherwise return nil."
 
   (leuven--section "Init")
 
-  ;; Ensure that the echo area is always visible during the early stage of
-  ;; startup (useful in case of error).
-  (modify-all-frames-parameters
-   '((height . 32)))
+  ;; ;; Ensure that the echo area is always visible during the early stage of
+  ;; ;; startup (useful in case of error).
+  ;; (modify-all-frames-parameters
+  ;;  '((height . 32)))
 
 )                                       ; Chapter 0 ends here.
 
@@ -1040,7 +1040,7 @@ original state of line numbers after navigation."
       (message "[Copied to Windows clipboard and kill-ring.]")))
 
   ;; Override the kill-ring-save command when in WSL config.
-  (when leuven--wsl-p
+  (when nil
     (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
   ;; Define the paste command for WSL.
@@ -1060,7 +1060,7 @@ original state of line numbers after navigation."
     (message "[Pasted from Windows clipboard.]"))
 
   ;; Override the yank command when in WSL config.
-  (when leuven--wsl-p
+  (when nil
     (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
 
 )                                       ; Chapter 12 ends here.
