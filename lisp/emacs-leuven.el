@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20230910.1858
+;; Version: 20231011.2002
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20230910.1858"
+(defconst lvn--emacs-version "20231011.2002"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1040,7 +1040,7 @@ original state of line numbers after navigation."
       (message "[Copied to Windows clipboard and kill-ring.]")))
 
   ;; Override the kill-ring-save command when in WSL config.
-  (when nil
+  (when leuven--wsl-p-XXX
     (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
   ;; Define the paste command for WSL.
@@ -1060,7 +1060,7 @@ original state of line numbers after navigation."
     (message "[Pasted from Windows clipboard.]"))
 
   ;; Override the yank command when in WSL config.
-  (when nil
+  (when leuven--wsl-p-XXX
     (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
 
 )                                       ; Chapter 12 ends here.
@@ -7394,7 +7394,7 @@ This example lists Azerty layout second row keys."
                                         ; well.
 
   ;; For WSL (Ubuntu on Windows).
-  (when leuven--wsl-p
+  (when leuven--wsl-p-XXX
     (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
 
   (leuven--section "FFAP")

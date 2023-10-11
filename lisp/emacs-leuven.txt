@@ -501,10 +501,10 @@ Return FILE if it is executable, otherwise return nil."
 
   (leuven--section "Init")
 
-  ;; Ensure that the echo area is always visible during the early stage of
-  ;; startup (useful in case of error).
-  (modify-all-frames-parameters
-   '((height . 32)))
+  ;; ;; Ensure that the echo area is always visible during the early stage of
+  ;; ;; startup (useful in case of error).
+  ;; (modify-all-frames-parameters
+  ;;  '((height . 32)))
 
 )                                       ; Chapter 0 ends here.
 #+end_src
@@ -1701,7 +1701,7 @@ Copy/paste from Windows clipboard in WSL Emacs:
       (message "[Copied to Windows clipboard and kill-ring.]")))
 
   ;; Override the kill-ring-save command when in WSL config.
-  (when leuven--wsl-p
+  (when leuven--wsl-p-XXX
     (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
   ;; Define the paste command for WSL.
@@ -1721,7 +1721,7 @@ Copy/paste from Windows clipboard in WSL Emacs:
     (message "[Pasted from Windows clipboard.]"))
 
   ;; Override the yank command when in WSL config.
-  (when leuven--wsl-p
+  (when leuven--wsl-p-XXX
     (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
 #+end_src
 
@@ -14111,7 +14111,7 @@ Pick up where you left off.
                                         ; well.
 
   ;; For WSL (Ubuntu on Windows).
-  (when leuven--wsl-p
+  (when leuven--wsl-p-XXX
     (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
 #+end_src
 
