@@ -729,9 +729,6 @@ a parent headline."
 ;;   (bury-buffer "*Calendar*"))
 ;; (ad-activate 'org-read-date)
 
-;; Number of minutes to round time stamps to.
-(setq org-time-stamp-rounding-minutes '(1 1))
-
 ;;** 8.3 (info "(org)Deadlines and scheduling")
 
 (message "8.3 (org)Deadlines and scheduling")
