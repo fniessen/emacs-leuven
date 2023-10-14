@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231014.1104
+;; Version: 20231014.1121
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -45,7 +45,7 @@
 ;; line before requiring Emacs-Leuven.
 ;;
 ;;     ;; Show messages describing progress of loading Emacs-Leuven.
-;;     (setq leuven-verbose-loading t)
+;;     (setq lvn-verbose-loading t)
 ;;
 ;; To avoid being questioned about packages to add to your local Emacs
 ;; installation (though, I think you should install them), add the following
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231014.1104"
+(defconst lvn--emacs-version "20231014.1121"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -105,17 +105,16 @@
 ;;; User Customizable Internal Variables
 
 (defgroup leuven nil
-  "Set of Emacs customizations (better defaults)."
-  :group 'convenience
-  :group 'text)
+  "Emacs-Leuven customizations."
+  :group 'convenience)
 
-(defcustom leuven-verbose-loading nil
-  "If non-nil, means show messages describing progress of loading Emacs-Leuven."
-  :group 'emacs-leuven
-  :type 'integer)
+(defcustom lvn-verbose-loading nil
+  "If non-nil, display loading progress messages for Emacs-Leuven."
+  :group 'leuven
+  :type 'boolean)
 
 (when (and (string-match "GNU Emacs" (version))
-           leuven-verbose-loading)
+           lvn-verbose-loading)
   (defadvice message (before leuven-when-was-that activate)
     "Add time stamps to `message' output."
     (ad-set-arg 0 (concat (format-time-string "[%Y-%m-%d %T.")
@@ -179,7 +178,7 @@ Save execution times in the global list `leuven--load-times-list'."
   `(when ,chapterid
      (let (before-chapter-time
            this-chapter-time)
-       (when leuven-verbose-loading
+       (when lvn-verbose-loading
          (message "[** %s]" ,chaptername))
        (setq before-chapter-time (float-time))
        (setq leuven--before-section-time (float-time)) ; Init section time.
@@ -200,7 +199,7 @@ Save execution times in the global list `leuven--load-times-list'."
 Last time is saved in global variable `leuven--before-section-time'."
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time)))
-    (when leuven-verbose-loading
+    (when lvn-verbose-loading
       (when (not (equal this-section-time 0.00))
         (message "[    Section time: %.2f s]" this-section-time))
       (unless end-of-chapter (message "[*** %s]" sectionname)))
@@ -223,7 +222,7 @@ Returns t if DIR is added to load-path, nil otherwise."
         (when (file-exists-p (expand-file-name ".nosearch" dir))
           nil)
         (add-to-list 'load-path dir)
-        (when leuven-verbose-loading
+        (when lvn-verbose-loading
           (message "[Added `%s' to `load-path']" dir))
         t)))
 
@@ -2186,7 +2185,10 @@ Should be selected from `fringe-bitmaps'.")
   (setq version-control t)
 
   ;; Set the backup directory path for Emacs backups.
-  (setq lvn-backup-directory "~/.emacs.d/backups/")
+  (defcustom lvn-backup-directory "~/.emacs.d/backups/"
+    "Directory path for Emacs backups."
+    :group 'leuven
+    :type 'directory)
 
   ;; Create the backup directory if it doesn't exist.
   (when (not (file-exists-p lvn-backup-directory))
@@ -6788,10 +6790,10 @@ This example lists Azerty layout second row keys."
                (sit-for 1)))))
 
     ;; Turn appointment checking on (enable reminders).
-    (when leuven-verbose-loading
+    (when lvn-verbose-loading
       (message "[Enable appointment reminders...]"))
     (appt-activate 1)
-    (when leuven-verbose-loading
+    (when lvn-verbose-loading
       (message "[Enable appointment reminders... Done]"))
 
     ;; Enable appointment notification, several minutes beforehand.
@@ -7680,11 +7682,11 @@ This example lists Azerty layout second row keys."
 ;;   :bind ("C-c e t" . ert-run-tests-interactively))
 
 (when (and (string-match "GNU Emacs" (version))
-           leuven-verbose-loading)
+           lvn-verbose-loading)
   (ad-disable-advice 'message 'before 'leuven-when-was-that)
   (ad-update 'message))
 
-(when leuven-verbose-loading
+(when lvn-verbose-loading
   (message "| Chapter | Time |")
   (message "|---------+------|")
   (mapcar #'(lambda (el)                  ; FIXME Use `mapc' or `dolist'.
