@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231014.1121
+;; Version: 20231014.1127
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231014.1121"
+(defconst lvn--emacs-version "20231014.1127"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -3104,13 +3104,13 @@ For programming mode buffers, show functions, variables, etc."
   (leuven--section "19.4 (emacs)Kill Buffer")
 
   ;; Kill this buffer without confirmation (if not modified).
-  (defun leuven-lvn-kill-current-buffer-no-confirm ()
+  (defun lvn-kill-current-buffer-no-confirm ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
     (kill-buffer nil))
 
   ;; Key binding.
-  (global-set-key (kbd "<S-f12>") #'leuven-lvn-kill-current-buffer-no-confirm)
+  (global-set-key (kbd "<S-f12>") #'lvn-kill-current-buffer-no-confirm)
 
 ;;** 19.5 (info "(emacs)Several Buffers")
 

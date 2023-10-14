@@ -5598,13 +5598,13 @@ Get EXIF data with ~image-dired-get-exif-data~.
   (leuven--section "19.4 (emacs)Kill Buffer")
 
   ;; Kill this buffer without confirmation (if not modified).
-  (defun leuven-lvn-kill-current-buffer-no-confirm ()
+  (defun lvn-kill-current-buffer-no-confirm ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
     (kill-buffer nil))
 
   ;; Key binding.
-  (global-set-key (kbd "<S-f12>") #'leuven-lvn-kill-current-buffer-no-confirm)
+  (global-set-key (kbd "<S-f12>") #'lvn-kill-current-buffer-no-confirm)
 #+end_src
 
 ** Operating on Several Buffers
