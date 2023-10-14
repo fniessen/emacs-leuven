@@ -215,12 +215,12 @@ If you have a modern machine, I encourage you to add the following:
 #+begin_src emacs-lisp
 (when (and (string-match "GNU Emacs" (version))
            lvn-verbose-loading)
-  (defadvice message (before leuven-when-was-that activate)
-    "Add time stamps to `message' output."
-    (ad-set-arg 0 (concat (format-time-string "[%Y-%m-%d %T.")
-                          (substring (format-time-string "%N") 0 3)
-                          (format-time-string "] ")
-                          (ad-get-arg 0)))))
+  (defadvice message (before leuven-add-timestamp activate)
+    "Add timestamps to `message' output."
+    (ad-set-arg 0 (format "[%s.%03s] %s"
+                         (format-time-string "%Y-%m-%d %T")
+                         (substring (format-time-string "%N") 0 3)
+                         (ad-get-arg 0)))))
 #+end_src
 
 #+begin_src emacs-lisp

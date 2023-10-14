@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231014.1158
+;; Version: 20231014.1215
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231014.1158"
+(defconst lvn--emacs-version "20231014.1215"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -115,12 +115,12 @@
 
 (when (and (string-match "GNU Emacs" (version))
            lvn-verbose-loading)
-  (defadvice message (before leuven-when-was-that activate)
-    "Add time stamps to `message' output."
-    (ad-set-arg 0 (concat (format-time-string "[%Y-%m-%d %T.")
-                          (substring (format-time-string "%N") 0 3)
-                          (format-time-string "] ")
-                          (ad-get-arg 0)))))
+  (defadvice message (before leuven-add-timestamp activate)
+    "Add timestamps to `message' output."
+    (ad-set-arg 0 (format "[%s.%03s] %s"
+                         (format-time-string "%Y-%m-%d %T")
+                         (substring (format-time-string "%N") 0 3)
+                         (ad-get-arg 0)))))
 
 ;; Allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!
 (defvar leuven-load-chapter-0-environment t) ; required
