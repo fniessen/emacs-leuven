@@ -2561,10 +2561,11 @@ This command also deletes all *empty lines at the end of the buffer*.
 Remove trailing whitespace *in edited lines* with ~ws-butler~:
 
 #+begin_src emacs-lisp
-  ;; Unobtrusively remove trailing whitespace.
+  ;; Unobtrusively remove trailing whitespace using ws-butler.
   (with-eval-after-load "ws-butler-autoloads"
-    (add-hook 'text-mode-hook #'ws-butler-mode)
-    (add-hook 'prog-mode-hook #'ws-butler-mode))
+    (dolist (hook '(text-mode-hook
+                    prog-mode-hook))
+      (add-hook hook #'ws-butler-mode)))
 
   (with-eval-after-load "ws-butler"
 
@@ -2601,13 +2602,15 @@ characters over the default mechanism of ~nobreak-char-display~ and
 ~show-trailing-whitespace~.
 
 #+begin_src emacs-lisp
-  ;; Enable Whitespace mode in all file buffers (not in *vc-dir*, etc.).
-  (add-hook 'text-mode-hook #'whitespace-mode)
-  (add-hook 'prog-mode-hook #'whitespace-mode)
+  ;; Enable Whitespace mode in text and programming modes (not in *vc-dir*, etc.).
+  (dolist (hook '(text-mode-hook
+                  prog-mode-hook))
+    (add-hook hook #'whitespace-mode))
 
   (with-eval-after-load "whitespace"
+    ;; Customize Whitespace mode settings.
 
-    ;; Which kind of blank is visualized (Show Invisibles).
+    ;; Define whitespace styles (Which kind of blank is visualized).
     (setq whitespace-style
           '(face
             trailing

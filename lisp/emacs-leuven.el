@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231014.1127
+;; Version: 20231014.1158
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231014.1127"
+(defconst lvn--emacs-version "20231014.1158"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1439,10 +1439,11 @@ Should be selected from `fringe-bitmaps'.")
   ;; ;; Highlight trailing whitespaces in all modes.
   ;; (setq-default show-trailing-whitespace t)
 
-  ;; Unobtrusively remove trailing whitespace.
+  ;; Unobtrusively remove trailing whitespace using ws-butler.
   (with-eval-after-load "ws-butler-autoloads"
-    (add-hook 'text-mode-hook #'ws-butler-mode)
-    (add-hook 'prog-mode-hook #'ws-butler-mode))
+    (dolist (hook '(text-mode-hook
+                    prog-mode-hook))
+      (add-hook hook #'ws-butler-mode)))
 
   (with-eval-after-load "ws-butler"
 
@@ -1466,13 +1467,15 @@ Should be selected from `fringe-bitmaps'.")
   ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
 
-  ;; Enable Whitespace mode in all file buffers (not in *vc-dir*, etc.).
-  (add-hook 'text-mode-hook #'whitespace-mode)
-  (add-hook 'prog-mode-hook #'whitespace-mode)
+  ;; Enable Whitespace mode in text and programming modes (not in *vc-dir*, etc.).
+  (dolist (hook '(text-mode-hook
+                  prog-mode-hook))
+    (add-hook hook #'whitespace-mode))
 
   (with-eval-after-load "whitespace"
+    ;; Customize Whitespace mode settings.
 
-    ;; Which kind of blank is visualized (Show Invisibles).
+    ;; Define whitespace styles (Which kind of blank is visualized).
     (setq whitespace-style
           '(face
             trailing
