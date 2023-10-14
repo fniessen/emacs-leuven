@@ -2297,8 +2297,8 @@ This command copies the code block contents to the kill ring, making it availabl
 It does not actually delete or kill the code block.
 This function is intended for use within Org mode buffers."
     (interactive)
-    (if (not (org-mode-p))
-        (message "Not in an Org mode buffer")
+    (if (not (derived-mode-p 'org-mode))
+        (message "[Not in an Org mode buffer]")
       (let ((block-start (save-excursion
                            (re-search-backward "^[ \t]*#\\+begin_src[ \t]+\\([a-zA-Z0-9]+\\)?" nil t)
                            (forward-line)
