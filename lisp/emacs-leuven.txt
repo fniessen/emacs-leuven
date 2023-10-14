@@ -2546,17 +2546,13 @@ Make trailing whitespace at the end of a line visible.
 Remove trailing whitespace (right trim lines) *in all lines*:
 
 #+begin_src emacs-lisp :tangle no
-  ;; Nuke all trailing whitespaces in the buffer.
+  ;; Remove trailing whitespace before saving, except in message-mode
+  ;; (for email signatures) and diff-mode (for patch files).
   (add-hook 'before-save-hook
-            #'(lambda ()                  ; Except for ...
+            #'(lambda ()
                 (let ((buffer-undo-list buffer-undo-list)) ; For goto-chg.
-                  (unless (or (derived-mode-p 'message-mode)
-                                        ; ... where "-- " is the signature
-                                        ; separator (for when using emacsclient
-                                        ; to compose emails and doing C-x #).
-                              (derived-mode-p 'diff-mode))
-                                        ; ... where the patch file can't be
-                                        ; changed!
+                  (unless (or (derived-mode-p 'message-mode) ; Signature separator.
+                              (derived-mode-p 'diff-mode)) ; Patch files.
                     (delete-trailing-whitespace)))))
 #+end_src
 
