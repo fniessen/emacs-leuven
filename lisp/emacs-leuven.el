@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231011.2017
+;; Version: 20231014.1104
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231011.2017"
+(defconst lvn--emacs-version "20231014.1104"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2249,22 +2249,24 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Synchronize.  Reload the file from disk (replacing current buffer text with
   ;; the text of the visited file on disk).
-  (defun leuven-revert-buffer-without-query ()
-    "Unconditionally revert current buffer."
+  (defun lvn-revert-buffer-and-clean-highlights ()
+    "Revert the current buffer unconditionally and remove specified highlights."
     (interactive)
     (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
-    ;; Remove highlights.
-    (dolist (o (overlays-in (window-start) (window-end)))
-      (when (or (equal (overlay-get o 'face) 'recover-this-file)
-                (equal (overlay-get o 'face) 'highlight-changes)
-                (equal (overlay-get o 'face) 'highlight-changes-delete)
-                (equal (overlay-get o 'face) 'org-block-executing))
-        (delete-overlay o)))            ; Useful when our advice of function
+
+    (dolist (overlay (overlays-in (window-start) (window-end)))
+      (when (memq (overlay-get overlay 'face)
+                  '(recover-this-file
+                    highlight-changes
+                    highlight-changes-delete
+                    org-block-executing)) ; Useful when our advice of function
                                         ; `org-babel-execute-src-block' fails to
                                         ; remove the background color.
-    (message "[Buffer is up to date with file on disk]"))
+        (delete-overlay overlay)))
 
-  (global-set-key (kbd "C-S-y") #'leuven-revert-buffer-without-query)
+    (message "[Buffer is up to date with the file on disk]"))
+
+  (global-set-key (kbd "C-S-y") #'lvn-revert-buffer-and-clean-highlights)
 
   (when (and (bound-and-true-p leuven--cygwin-p)
                                         ; Cygwin Emacs uses gfilenotify (based

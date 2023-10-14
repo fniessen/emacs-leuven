@@ -3795,22 +3795,24 @@ Update time stamps (and copyright notice) automatically.
 
   ;; Synchronize.  Reload the file from disk (replacing current buffer text with
   ;; the text of the visited file on disk).
-  (defun leuven-revert-buffer-without-query ()
-    "Unconditionally revert current buffer."
+  (defun lvn-revert-buffer-and-clean-highlights ()
+    "Revert the current buffer unconditionally and remove specified highlights."
     (interactive)
     (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
-    ;; Remove highlights.
-    (dolist (o (overlays-in (window-start) (window-end)))
-      (when (or (equal (overlay-get o 'face) 'recover-this-file)
-                (equal (overlay-get o 'face) 'highlight-changes)
-                (equal (overlay-get o 'face) 'highlight-changes-delete)
-                (equal (overlay-get o 'face) 'org-block-executing))
-        (delete-overlay o)))            ; Useful when our advice of function
+
+    (dolist (overlay (overlays-in (window-start) (window-end)))
+      (when (memq (overlay-get overlay 'face)
+                  '(recover-this-file
+                    highlight-changes
+                    highlight-changes-delete
+                    org-block-executing)) ; Useful when our advice of function
                                         ; `org-babel-execute-src-block' fails to
                                         ; remove the background color.
-    (message "[Buffer is up to date with file on disk]"))
+        (delete-overlay overlay)))
 
-  (global-set-key (kbd "C-S-y") #'leuven-revert-buffer-without-query)
+    (message "[Buffer is up to date with the file on disk]"))
+
+  (global-set-key (kbd "C-S-y") #'lvn-revert-buffer-and-clean-highlights)
 #+end_src
 
 Turn on auto-revert mode globally.
