@@ -8020,8 +8020,9 @@ things.
     (leuven--section "26.3 (emacs)Program Indentation")
 
     ;; Turn on auto-fill mode in Lisp modes.
-    (add-hook 'lisp-mode-hook #'auto-fill-mode)
-    (add-hook 'emacs-lisp-mode-hook #'auto-fill-mode)
+    (dolist (mode '(lisp-mode
+                    emacs-lisp-mode))
+      (add-hook (intern (format "%s-hook" mode)) #'auto-fill-mode))
 
     ;; Auto-indentation: automatically jump to the "correct" column when the RET
     ;; key is pressed while editing a program (act as if you pressed `C-j').
@@ -8030,21 +8031,22 @@ things.
                   (local-set-key (kbd "<RET>") #'newline-and-indent)
                   (local-set-key (kbd "C-j") #'newline)))
 
+    ;; ;; Function to move to the beginning of the line or back to the indentation.
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
     ;;   (if (/= (point) (line-beginning-position))
     ;;       (beginning-of-line)
     ;;     (back-to-indentation)))
     ;;
+    ;; ;; Function to align selected text using spaces for whitespace.
     ;; (defun align-with-spaces (beg end)
-    ;;   "Align selected using only spaces for whitespace."
+    ;;   "Align selected text using only spaces for whitespace."
     ;;   (interactive "r")
     ;;   (let ((indent-tabs-mode nil))
     ;;     (align beg end)))
 
+    ;; Use SMIE code for navigation and indentation in "sh-script" mode.
     (with-eval-after-load "sh-script"
-
-      ;; Use the SMIE code for navigation and indentation.
       (setq sh-use-smie t))
 #+end_src
 
@@ -8054,7 +8056,9 @@ things.
 ;;** 26.4 Commands for Editing with (info "(emacs)Parentheses")
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
+#+end_src
 
+#+begin_src emacs-lisp
   ;; Check for unbalanced parentheses in supported modes.
   (dolist (mode '(emacs-lisp clojure js2 js))
     (add-hook (intern (format "%s-mode-hook" mode))

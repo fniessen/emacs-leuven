@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231015.1211
+;; Version: 20231015.1234
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231015.1211"
+(defconst lvn--emacs-version "20231015.1234"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4629,8 +4629,9 @@ mouse-3: go to end") "]")))
     (leuven--section "26.3 (emacs)Program Indentation")
 
     ;; Turn on auto-fill mode in Lisp modes.
-    (add-hook 'lisp-mode-hook #'auto-fill-mode)
-    (add-hook 'emacs-lisp-mode-hook #'auto-fill-mode)
+    (dolist (mode '(lisp-mode
+                    emacs-lisp-mode))
+      (add-hook (intern (format "%s-hook" mode)) #'auto-fill-mode))
 
     ;; Auto-indentation: automatically jump to the "correct" column when the RET
     ;; key is pressed while editing a program (act as if you pressed `C-j').
@@ -4639,21 +4640,22 @@ mouse-3: go to end") "]")))
                   (local-set-key (kbd "<RET>") #'newline-and-indent)
                   (local-set-key (kbd "C-j") #'newline)))
 
+    ;; ;; Function to move to the beginning of the line or back to the indentation.
     ;; (defun back-to-indentation-or-beginning ()
     ;;   (interactive)
     ;;   (if (/= (point) (line-beginning-position))
     ;;       (beginning-of-line)
     ;;     (back-to-indentation)))
     ;;
+    ;; ;; Function to align selected text using spaces for whitespace.
     ;; (defun align-with-spaces (beg end)
-    ;;   "Align selected using only spaces for whitespace."
+    ;;   "Align selected text using only spaces for whitespace."
     ;;   (interactive "r")
     ;;   (let ((indent-tabs-mode nil))
     ;;     (align beg end)))
 
+    ;; Use SMIE code for navigation and indentation in "sh-script" mode.
     (with-eval-after-load "sh-script"
-
-      ;; Use the SMIE code for navigation and indentation.
       (setq sh-use-smie t))
 
 ;;** 26.4 Commands for Editing with (info "(emacs)Parentheses")
