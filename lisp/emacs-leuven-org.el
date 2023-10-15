@@ -25,9 +25,8 @@ If not, just print a message."
 (try-require 'org-loaddefs)
 
 ;; Getting started.
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
 
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c c") #'org-capture)
@@ -45,7 +44,7 @@ If not, just print a message."
 (with-eval-after-load "org"
   ;; Unbind `C-j' and `C-''.
   (define-key org-mode-map (kbd "C-j") nil)
-  (define-key org-mode-map (kbd "C-'") nil) ; `org-cycle-agenda-files'.
+  (define-key org-mode-map (kbd "C-'") nil) ; Unbind `org-cycle-agenda-files'.
   (define-key org-mode-map (kbd "<C-S-down>") nil)
   (define-key org-mode-map (kbd "<C-S-up>") nil)
 
