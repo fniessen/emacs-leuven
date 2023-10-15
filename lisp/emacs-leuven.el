@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231015.1515
+;; Version: 20231015.1532
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231015.1515"
+(defconst lvn--emacs-version "20231015.1532"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4350,20 +4350,25 @@ you will be prompted to enter the desired fill column width."
 
 
 (defun web-mode-edit-element-elements-end-inside ()
+  "Move point to the end of the current HTML element and then one character backward."
   (interactive)
   (web-mode-element-end)
   (backward-char))
 
 (defun web-mode-edit-element-utils-x-position (fx)
+  "Call the given function and return the point position."
   (save-excursion
     (funcall fx)
     (point)))
 
 (defun web-mode-edit-element-utils-fnil (val f)
-  (if val val
+  "Return VAL if it's non-nil, otherwise, call the given function F and return its result."
+  (if val
+      val
     (funcall f)))
 
 (defun web-mode-edit-element-elements-sibling-next-p ()
+  "Check if the next element is a sibling or part of the parent element."
   (let ((parent-position
          (web-mode-edit-element-utils-fnil
           (save-excursion
@@ -4378,20 +4383,16 @@ you will be prompted to enter the desired fill column width."
             (web-mode-element-beginning)))))
     (not (= parent-position tag-next-position))))
 
-
-
-
 (defun web-mode-edit-element-elements-sibling-next-or-next-parent ()
+  "Move to the next sibling element or, if there are none, move to the parent element."
   (interactive)
   (if (web-mode-edit-element-elements-sibling-next-p)
       (web-mode-element-sibling-next)
     (web-mode-element-parent)
     (web-mode-element-sibling-next)))
 
-
-    (define-key web-mode-map (kbd "M-<down>") #'web-mode-edit-element-elements-sibling-next-or-next-parent)
-
-
+(define-key web-mode-map (kbd "M-<down>")
+            #'web-mode-edit-element-elements-sibling-next-or-next-parent)
 
 
 
