@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231015.1245
+;; Version: 20231015.1252
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231015.1245"
+(defconst lvn--emacs-version "20231015.1252"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2074,20 +2074,31 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "17.1 (emacs)Basic Keyboard Macro Use")
 
-  (defun leuven-kmacro-turn-on-recording ()
-    "Start recording a keyboard macro and toggle functionality of key binding."
+  (defun lvn-kmacro-toggle-recording ()
+    "Toggle keyboard macro recording on and off."
     (interactive)
-    (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-off-recording)
+    (if defining-kbd-macro
+        (progn
+          (global-set-key (kbd "<S-f8>") #'lvn-kmacro-turn-on-recording)
+          (kmacro-end-macro nil))
+      (progn
+        (global-set-key (kbd "<S-f8>") #'lvn-kmacro-turn-off-recording)
+        (kmacro-start-macro nil))))
+
+  (defun lvn-kmacro-turn-on-recording ()
+    "Start recording a keyboard macro."
+    (interactive)
+    (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
     (kmacro-start-macro nil))
 
-  (defun leuven-kmacro-turn-off-recording ()
-    "Stop recording a keyboard macro and toggle functionality of key binding."
+  (defun lvn-kmacro-turn-off-recording ()
+    "Stop recording a keyboard macro."
     (interactive)
-    (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-on-recording)
+    (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
     (kmacro-end-macro nil))
 
   ;; Start/stop recording a keyboard macro.
-  (global-set-key (kbd "<S-f8>") #'leuven-kmacro-turn-on-recording)
+  (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
 
   ;; Execute the most recent keyboard macro.
   (global-set-key (kbd "<f8>") #'kmacro-call-macro)
