@@ -299,15 +299,15 @@ If not, just print a message."
 
 (with-eval-after-load "org"
 
-  (defun leuven-org-reveal (&optional all-siblings)
-    "Show all siblings of current level.
-`C-u C-c C-r' does the same as default Org mode: show all hidden siblings."
+  (defun lvn-org-reveal (&optional all-siblings)
+    "Show all siblings of the current level.
+With a prefix argument (C-u C-c C-r), show all hidden siblings."
     (interactive "P")
     (if all-siblings
         (org-reveal t)
       (org-show-siblings)))
 
-  (define-key org-mode-map (kbd "C-c C-r") #'leuven-org-reveal))
+  (define-key org-mode-map (kbd "C-c C-r") #'lvn-org-reveal))
 
 ;;** (info "(org)Structure editing")
 
