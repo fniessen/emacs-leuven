@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231015.1252
+;; Version: 20231015.1515
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231015.1252"
+(defconst lvn--emacs-version "20231015.1515"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2120,8 +2120,8 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "18.2 (emacs)Visiting Files")
 
-  (defadvice find-file (around leuven-find-file-time activate)
-    "Advice function for `find-file' that reports the time spent."
+  (defadvice find-file (around lvn--find-file-time activate)
+    "Advice function for `find-file' that reports the time spent on file loading."
     (let ((filename (ad-get-arg 0))
           (find-file-time-start (float-time)))
       (message "[Finding file %s...]" filename)
@@ -2179,7 +2179,7 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "18.3 (emacs)Saving Files")
 
-  (defadvice save-buffer (around lvn-report-saving-time activate)
+  (defadvice save-buffer (around lvn--report-saving-time activate)
     "Save the file named FILENAME and report time spent."
     (let ((filename (buffer-file-name))
           (start-time (float-time)))
@@ -2561,8 +2561,8 @@ Should be selected from `fringe-bitmaps'.")
           (cond (leuven--win32-p "plink")
                 (t "ssh")))
 
-    (defun leuven--find-file-sudo-header-warning ()
-      "*Display a warning in header line of the current buffer."
+    (defun lvn--find-file-sudo-header-warning ()
+      "Display a warning in the header line of the current buffer."
       (let* ((warning "WARNING: EDITING FILE WITH ROOT PRIVILEGES!")
              (space (+ 6 (- (frame-width) (length warning))))
              (bracket (make-string (/ space 2) ?-))
@@ -2570,23 +2570,23 @@ Should be selected from `fringe-bitmaps'.")
         (setq header-line-format
               (propertize warning 'face 'header-line))))
 
-    (defun leuven-find-file-sudo (filename)
-      "Open FILENAME with root privileges."
+    (defun lvn-find-file-sudo (filename)
+      "Open FILENAME with root privileges using Tramp's sudo method."
       (interactive "F")
-      (set-buffer (find-file (concat "/sudo::" filename)))
-      (leuven--find-file-sudo-header-warning))
+      (let ((sudo-filename (concat "/sudo::" filename)))
+        (find-file sudo-filename)
+        (lvn--find-file-sudo-header-warning)))
 
-    (defadvice find-file (around leuven-find-file-sudo activate)
-      "Advice function for `find-file' that opens FILENAME with root privileges
-using Tramp's sudo method if it's read-only."
-      (if (and (file-exists-p (ad-get-arg 0))
-               (not (file-writable-p (ad-get-arg 0)))
-               (not (file-remote-p (ad-get-arg 0)))
-               (y-or-n-p (concat "File "
-                                 (ad-get-arg 0)
-                                 " is read-only.  Open it as root? ")))
-          (leuven-find-file-sudo (ad-get-arg 0))
-        ad-do-it))
+    (defadvice find-file (around lvn--find-file-sudo activate)
+      "Open FILENAME with root privileges using Tramp's sudo method if it's read-only.
+Prompts the user for confirmation before opening the file as root."
+      (let ((filename (ad-get-arg 0)))
+        (if (and (file-exists-p filename)
+                 (not (file-writable-p filename))
+                 (not (file-remote-p filename))
+                 (y-or-n-p (format "File %s is read-only. Open it as root? " filename)))
+            (lvn-find-file-sudo filename)
+          ad-do-it)))
 
     ;; How many seconds passwords are cached.
     (setq password-cache-expiry 60)     ; [Default: 16]
@@ -3252,15 +3252,6 @@ windows, leaving only the currently active window visible."
                (if this-win-2nd (other-window 1)))))))
 
   (global-set-key (kbd "C-c |") #'leuven-toggle-window-split)
-
-  (defadvice delete-window (around delete-window (&optional window) activate)
-    (interactive)
-    (save-current-buffer
-      (setq window (or window (selected-window)))
-      (select-window window)
-      (if (one-window-p t)
-      (delete-frame)
-        ad-do-it (selected-window))))
 
   (defun toggle-current-window-dedication ()
     "Toggle whether the current active window is dedicated or not."
@@ -4746,22 +4737,19 @@ mouse-3: go to end") "]")))
 
   (leuven--section "26.5 (emacs)Comments")
 
-  ;; Always comments out empty lines.
+  ;; Always comment out empty lines.
   (setq comment-empty-lines t)
 
-  (unless (locate-library "smart-comment-autoloads-XXX")
+  (defadvice comment-dwim (around lvn--comment activate)
+    "Comment or uncomment lines intelligently.
 
-    (defadvice comment-dwim (around leuven-comment activate)
-      "When called interactively with no active region, comment a single line instead."
-      (if (or (use-region-p) (not (called-interactively-p 'any)))
-          ad-do-it
-        (comment-or-uncomment-region (line-beginning-position)
-                                     (line-end-position))
-        (message "[Commented line]"))))
-
-  (with-eval-after-load "smart-comment-autoloads-XXX"
-
-    (global-set-key (kbd "M-;") #'smart-comment))
+When called interactively with no active region, comment a single
+line instead."
+    (if (or (use-region-p) (not (called-interactively-p 'any)))
+        ad-do-it
+      (comment-or-uncomment-region (line-beginning-position)
+                                   (line-end-position))
+      (message "[Commented line]")))
 
 ;;** 26.6 (info "(emacs)Documentation") Lookup
 
@@ -6676,11 +6664,16 @@ This example lists Azerty layout second row keys."
 
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
-    (defadvice dired-jump (around leuven-dired-jump activate)
-      "Ask for confirmation for buffers of 1,400,000 bytes or more."
+    (defadvice dired-jump (around lvn--dired-jump activate)
+      "Ask for confirmation before jumping to a Dired buffer.
+
+This advice checks the buffer size and prompts for confirmation if the buffer
+size is 1,400,000 bytes or more. It helps prevent time-consuming operations.
+Consider using `C-x d' instead for better performance."
       (when (or (< (buffer-size) 1400000)
                 (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
         ad-do-it))
+
     )
 
 ;;** Dired+
