@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231014.1215
+;; Version: 20231015.1211
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231014.1215"
+(defconst lvn--emacs-version "20231015.1211"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4660,23 +4660,32 @@ mouse-3: go to end") "]")))
 
   (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
 
-  ;; Check for unbalanced parentheses in the current buffer.
+  ;; Check for unbalanced parentheses in supported modes.
   (dolist (mode '(emacs-lisp clojure js2 js))
     (add-hook (intern (format "%s-mode-hook" mode))
               #'(lambda ()
                   (add-hook 'after-save-hook 'check-parens nil t))))
 
-  ;; Move cursor to offscreen open-paren when close-paren is inserted.
-  (setq blink-matching-paren 'jump-offscreen) ; XXX Doesn't work when
-                                              ; `show-paren-mode' is enabled.
+  ;; Move the cursor to the offscreen open-paren when a close-paren is inserted.
+  (setq blink-matching-paren 'jump-offscreen)
+  ;; Note: This doesn't work when `show-paren-mode' is enabled XXX
 
-  ;; Highlight matching paren.
+  ;; Enable show-paren-mode to highlight matching parentheses.
   (show-paren-mode 1)
+
+  ;; Configure the style for highlighting parentheses to 'mixed' (or
+  ;; 'expression' to highlight the entire expression).
   (setq show-paren-style 'mixed)
+
+  ;; Ring the bell when there is a mismatch between parentheses.
   (setq show-paren-ring-bell-on-mismatch t)
 
-(setq show-paren-when-point-inside-paren t)
-(setq show-paren-when-point-in-periphery t)
+  ;; Highlight matching parentheses when the point is inside a parenthesis.
+  (setq show-paren-when-point-inside-paren t)
+
+  ;; Highlight matching parentheses when the point is in the periphery (before
+  ;; or after) of an expression.
+  (setq show-paren-when-point-in-periphery t)
 
   ;; XXX Navigate to the code block start.
   (global-set-key (kbd "C-)") #'forward-sexp)
