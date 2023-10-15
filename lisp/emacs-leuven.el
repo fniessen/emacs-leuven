@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231015.1240
+;; Version: 20231015.1245
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231015.1240"
+(defconst lvn--emacs-version "20231015.1245"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -211,19 +211,23 @@ Last time is saved in global variable `leuven--before-section-time'."
 (leuven--chapter leuven-load-chapter-0-loading-libraries "0 Loading Libraries"
 
   ;; Load-path enhancement.
-  (defun leuven--add-dir-to-load-path (dir)
-    "Add directory DIR to `load-path', if it exists and is a directory.
-Returns t if DIR is added to load-path, nil otherwise."
-    (when (and dir (file-directory-p dir))
-      (let ((dir (expand-file-name dir)))
-        (unless (file-exists-p dir)
-          (message "[WARN- `%s' does not exist]" dir)
+  (defun lvn--add-dir-to-load-path (directory)
+    "Add DIRECTORY to `load-path' if it exists and is a directory.
+This function checks if DIRECTORY exists and is a directory. If it meets
+the criteria, it adds it to the `load-path'. If DIRECTORY does not exist,
+a warning message is displayed, and it returns nil. If a '.nosearch' file
+exists in DIRECTORY, it returns nil. Otherwise, it returns t after adding
+DIRECTORY to `load-path'."
+    (when (and directory (file-directory-p directory))
+      (let ((directory (expand-file-name directory)))
+        (unless (file-exists-p directory)
+          (message "[WARN- Directory '%s' does not exist.]" directory)
           nil)
-        (when (file-exists-p (expand-file-name ".nosearch" dir))
+        (when (file-exists-p (expand-file-name ".nosearch" directory))
           nil)
-        (add-to-list 'load-path dir)
+        (add-to-list 'load-path directory)
         (when lvn-verbose-loading
-          (message "[Added `%s' to `load-path']" dir))
+          (message "[INFO- Added '%s' to `load-path'.]" directory))
         t)))
 
   ;; Remember this directory.
@@ -231,16 +235,16 @@ Returns t if DIR is added to load-path, nil otherwise."
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (leuven--add-dir-to-load-path leuven--directory)
-  (leuven--add-dir-to-load-path (concat leuven--directory "../site-lisp"))
+  (lvn--add-dir-to-load-path leuven--directory)
+  (lvn--add-dir-to-load-path (concat leuven--directory "../site-lisp"))
 
-  ;; (leuven--add-dir-to-load-path "~/lisp")
-  ;; (leuven--add-dir-to-load-path "~/site-lisp")
+  ;; (lvn--add-dir-to-load-path "~/lisp")
+  ;; (lvn--add-dir-to-load-path "~/site-lisp")
 
   (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages.")
 
-  (leuven--add-dir-to-load-path leuven-user-lisp-directory)
+  (lvn--add-dir-to-load-path leuven-user-lisp-directory)
 
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
