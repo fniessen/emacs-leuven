@@ -137,18 +137,15 @@ If not, just print a message."
 (with-eval-after-load "org"
   (message "[... Org Document Structure]")
 
-  ;; Ellipsis to use in the Org mode outline.
-  (if (char-displayable-p ?\u25BA)      ; This test takes ~ 0.40s hence,
-                                        ; wrapped in `with-eval-after-load'.
-      ;; String (black right-pointing pointer).
+  ;; Set the Org mode ellipsis to a right-pointing pointer if available,
+  ;; otherwise customize its face and use a fallback value.
+  (if (char-displayable-p ?\u25BA)
       (setq org-ellipsis " \u25BA")
-
-    ;; Face.
     (set-face-attribute 'org-ellipsis nil
                         :box "#999999"
-                        :foreground "#999999" :background "#FFF8C0"
+                        :foreground "#999999"
+                        :background "#FFF8C0"
                         :underline nil)
-
     (setq org-ellipsis 'org-ellipsis)))
 
 ;; RET follows links (except in tables, where you must use `C-c C-o').
