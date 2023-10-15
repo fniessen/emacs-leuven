@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231015.1234
+;; Version: 20231015.1240
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231015.1234"
+(defconst lvn--emacs-version "20231015.1240"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -260,26 +260,18 @@ If not, just print a message."
          nil))))
 
   (unless (fboundp 'with-eval-after-load)
-    (defmacro with-eval-after-load (mode &rest body)
-	"Execute code in BODY after the specified MODE is loaded.
-This macro is a wrapper around `eval-after-load' (added in GNU Emacs 24.4).
-MODE is the feature symbol or library name to wait for before executing BODY.
-BODY contains the forms to be executed.
-The forms in BODY are wrapped in a `progn' to ensure correct evaluation.
+    (defmacro with-eval-after-load (feature &rest body)
+      "Execute forms in BODY after the specified FEATURE is loaded.
+This macro is a wrapper around `eval-after-load' (introduced in Emacs 24.4).
+FEATURE is the feature symbol or library name to wait for before executing BODY.
+BODY contains the forms to be executed after FEATURE is loaded.
+The forms in BODY are enclosed within a `progn' to ensure proper evaluation.
+
 Example usage:
   (with-eval-after-load 'magit
     (setq magit-auto-revert-mode nil))"
-      `(eval-after-load ,mode
+      `(eval-after-load ,feature
          '(progn ,@body))))
-
-  (defun switch-or-start (function buffer)
-    "If the BUFFER is current, bury it.  If there is a buffer with that name,
-  switch to it; otherwise, invoke the FUNCTION."
-    (if (equal (buffer-name (current-buffer)) buffer)
-        (bury-buffer)
-      (if (get-buffer buffer)
-          (switch-to-buffer buffer)
-        (funcall function))))
 
 )                                       ; Chapter 0-loading-libraries ends here.
 
