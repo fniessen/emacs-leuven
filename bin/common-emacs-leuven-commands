@@ -1,0 +1,51 @@
+if [ -z "$SSH_CONNECTION" ]; then
+    # Configuration for local mode.
+    export EDITOR="emacsclient"
+    export ALTERNATE_EDITOR=""
+    alias e="emacsclient -n"
+    alias ee="emacsclient -n --alternate-editor=emacs"
+    alias bgemacs='emacs &'
+else
+    # Configuration for remote mode.
+    for candidate_editor in emacs subl atom nano; do
+        if command -v "$candidate_editor" &> /dev/null; then
+            # Use the first available editor.
+            EDITOR="$candidate_editor"
+            break
+        fi
+    done
+    alias e="$EDITOR"                   # Alias 'e' uses the chosen editor.
+fi
+
+# Set VISUAL to the same value as EDITOR.
+export VISUAL="$EDITOR"
+
+# Cd to the directory of the current buffer in Emacs.
+cde() {
+    if ! command -v emacsclient > /dev/null 2>&1; then
+        printf >&2 "Error: emacsclient not found.\n"
+        printf >&2 "Please install Emacsclient and ensure the binary is in your PATH.\n"
+        return 2
+    fi
+
+    if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
+        printf >&2 "Error: Emacs server is not running.\n"
+        printf >&2 "Please start the Emacs server first.\n"
+        return 2
+    fi
+
+    local dir
+    dir="$(emacsclient -e '(with-current-buffer
+                               (window-buffer (selected-window))
+                             (replace-regexp-in-string "^~" (getenv "HOME")
+                                default-directory))' | tr -d '"')"
+
+    if [ ! -d "$dir" ]; then
+        printf >&2 "Error: directory not found: %s\n" "$dir"
+        return 2
+    fi
+
+    builtin cd "$dir"
+    #! The change in working directory will persist after the function has
+    #! completed.
+}
