@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231017.1611
+;; Version: 20231017.1645
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231017.1611"
+(defconst lvn--emacs-version "20231017.1645"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2724,11 +2724,14 @@ For Org mode buffers, show Org headlines.
 For programming mode buffers, show functions, variables, etc."
       (interactive "P")
       (cond ((derived-mode-p 'org-mode)
-             (helm-org-in-buffer-headings))
+             (if (fboundp 'helm-org-in-buffer-headings)
+                 (helm-org-in-buffer-headings)
+               (message "helm-org-in-buffer-headings is not available")))
             ((derived-mode-p 'tex-mode)
              (helm-imenu))
             (t
-             (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
+             (helm-semantic-or-imenu arg))) ; More generic than `helm-imenu'.
+      )
 
     (global-set-key (kbd "<C-f12>") #'lvn-generic-imenu) ; Awesome.
     ;; (global-set-key (kbd "<f4>") #'lvn-generic-imenu)
