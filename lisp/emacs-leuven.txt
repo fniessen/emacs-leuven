@@ -645,6 +645,7 @@ like this into your configuration file:
             helm-ag
             helm-descbinds
             helm-ls-git
+            helm-org
             helm-projectile ; Obsolete package?
             helm-swoop
             hide-lines
@@ -4911,7 +4912,8 @@ in the current buffer."
     ;; (global-set-key (kbd "<f4>") #'lvn-generic-imenu)
                                         ; And `C-c =' (like in RefTeX)?
 
-    (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings)
+    (when (fboundp 'helm-org-agenda-files-headings)
+      (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings))
 #+end_src
 
 #+begin_src emacs-lisp

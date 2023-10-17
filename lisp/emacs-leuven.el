@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231017.1653
+;; Version: 20231017.1655
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231017.1653"
+(defconst lvn--emacs-version "20231017.1655"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -431,6 +431,7 @@ Return FILE if it is executable, otherwise return nil."
             helm-ag
             helm-descbinds
             helm-ls-git
+            helm-org
             helm-projectile ; Obsolete package?
             helm-swoop
             hide-lines
@@ -2735,7 +2736,8 @@ in the current buffer."
     ;; (global-set-key (kbd "<f4>") #'lvn-generic-imenu)
                                         ; And `C-c =' (like in RefTeX)?
 
-    (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings)
+    (when (fboundp 'helm-org-agenda-files-headings)
+      (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings))
 
     ;; (global-set-key (kbd "M-5") #'helm-etags-select)
 
