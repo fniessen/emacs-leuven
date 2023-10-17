@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231015.1534
+;; Version: 20231017.1519
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231015.1534"
+(defconst lvn--emacs-version "20231017.1519"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7436,9 +7436,11 @@ Consider using `C-x d' instead for better performance."
                                         ; use "firefox" or "google-chrome" as
                                         ; well.
 
-  ;; ;; For WSL (Ubuntu on Windows).
-  ;; (when leuven--wsl-p
-  ;;   (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
+  (when leuven--wsl-p
+    ;; Configure to run the Windows browser in WSL (Ubuntu on Windows).
+    (setq browse-url-generic-program "/mnt/c/Windows/System32/cmd.exe")
+    (setq browse-url-generic-args '("/c" "start"))
+    (setq browse-url-browser-function #'browse-url-generic))
 
   (leuven--section "FFAP")
 

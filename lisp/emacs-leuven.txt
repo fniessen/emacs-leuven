@@ -14159,14 +14159,11 @@ Pick up where you left off.
                                         ; use "firefox" or "google-chrome" as
                                         ; well.
 
-  ;; ;; For WSL (Ubuntu on Windows).
-  ;; (when leuven--wsl-p
-  ;;   (setq browse-url-generic-program (executable-find "/mnt/c/Program Files/Internet Explorer/iexplore.exe")))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (setq browse-url-browser-function 'browse-url-generic)
-  (setq browse-url-generic-program "cygstart")
+  (when leuven--wsl-p
+    ;; Configure to run the Windows browser in WSL (Ubuntu on Windows).
+    (setq browse-url-generic-program "/mnt/c/Windows/System32/cmd.exe")
+    (setq browse-url-generic-args '("/c" "start"))
+    (setq browse-url-browser-function #'browse-url-generic))
 #+end_src
 
 ** Finding Files and URLs at Point
