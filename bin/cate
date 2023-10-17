@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Print the contents of the current buffer in Emacs to the terminal.
+
+# Check if emacsclient command is available.
+if ! command -v emacsclient > /dev/null 2>&1; then
+    printf >&2 'Error: emacsclient command not found.\n'
+    exit 2
+fi
+
+if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
+    printf >&2 "Error: Emacs server is not running. Please start the Emacs server first.\n"
+    exit 2
+fi
+
+pipe="$(mktemp -u)"
+mkfifo "$pipe"
+emacsclient -e '(with-current-buffer
+                    (window-buffer (selected-window))
+                  (write-region (point-min) (point-max) "'"$pipe"'" nil :quiet))
+               ' >/dev/null &
+while read line; do
+    printf '%s\n' "$line"
+done < "$pipe"
+rm "$pipe"
