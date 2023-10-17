@@ -4896,14 +4896,12 @@ Popup structure of the current file for quick navigation:
 #+begin_src emacs-lisp
     (defun lvn-generic-imenu (arg)
       "Jump to a place in the buffer using an Index menu.
-For Org mode buffers, show Org headlines.
-For programming mode buffers, show functions, variables, etc."
+
+For programming mode buffers, this function displays a menu to
+navigate through functions, variables, and other relevant items
+in the current buffer."
       (interactive "P")
-      (cond ((derived-mode-p 'org-mode)
-             (if (fboundp 'helm-org-in-buffer-headings)
-                 (helm-org-in-buffer-headings)
-               (message "helm-org-in-buffer-headings is not available")))
-            ((derived-mode-p 'tex-mode)
+      (cond ((derived-mode-p 'tex-mode)
              (helm-imenu))
             (t
              (helm-semantic-or-imenu arg))) ; More generic than `helm-imenu'.
