@@ -13944,7 +13944,7 @@ Find a suitable editor.
 ~e .~ opens the current directory in Emacs.
 #+end_note
 
-#+begin_src shell :tangle ../bin/common-emacs-leuven-run-commands
+#+begin_src shell :tangle ../bin/run-commands-common-emacs-leuven
 if [ -z "$SSH_CONNECTION" ]; then
     # Configuration for local mode.
     export EDITOR="emacsclient"
@@ -13970,7 +13970,7 @@ When setting the environment variables ~EDITOR~ and/or ~VISUAL~, you better omit
 editor will think you exited it. In the case of our ~git commit~, we would end up
 with a blank commit message!
 
-#+begin_src shell :tangle ../bin/common-emacs-leuven-run-commands
+#+begin_src shell :tangle ../bin/run-commands-common-emacs-leuven
 # Set VISUAL to the same value as EDITOR.
 export VISUAL="$EDITOR"
 #+end_src
@@ -13980,7 +13980,7 @@ export VISUAL="$EDITOR"
 If you are an avid Emacs user like me, you'll find this function useful.  It
 *enters the directory of the file currently active in Emacs* resides in:
 
-#+begin_src shell :tangle ../bin/common-emacs-leuven-run-commands
+#+begin_src shell :tangle ../bin/run-commands-common-emacs-leuven
 # Cd to the directory of the current buffer in Emacs.
 cde() {
     if ! command -v emacsclient > /dev/null 2>&1; then
