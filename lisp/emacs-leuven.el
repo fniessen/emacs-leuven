@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231017.1519
+;; Version: 20231017.1536
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231017.1519"
+(defconst lvn--emacs-version "20231017.1536"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7415,7 +7415,7 @@ Consider using `C-x d' instead for better performance."
 
   (leuven--section "pass a URL to a WWW browser")
 
-  ;; Default browser started when you click on some URL in the buffer.
+  ;; Configure the default browser behavior based on the platform.
   (setq browse-url-browser-function
         (cond ((or leuven--win32-p
                    leuven--cygwin-p)
@@ -7427,17 +7427,15 @@ Consider using `C-x d' instead for better performance."
               (t                        ; Linux.
                'browse-url-generic)))
 
-  ;; ;; TEMP For testing purpose
-  ;; (setq browse-url-browser-function 'eww-browse-url)
+  ;; Determine the name of the browser program to be used by `browse-url-generic'.
+  (setq browse-url-generic-program
+        (or (executable-find "xdg-open")
+            (executable-find "gnome-open")))
+                                        ; Defer the choice to Xdg or Gnome if
+                                        ; available.
 
-  ;; Name of the browser program used by `browse-url-generic'.
-  (setq browse-url-generic-program (executable-find "gnome-open"))
-                                        ; Defer the decision to Gnome.  We could
-                                        ; use "firefox" or "google-chrome" as
-                                        ; well.
-
+  ;; When running in WSL, configure to run the Windows browser.
   (when leuven--wsl-p
-    ;; Configure to run the Windows browser in WSL (Ubuntu on Windows).
     (setq browse-url-generic-program "/mnt/c/Windows/System32/cmd.exe")
     (setq browse-url-generic-args '("/c" "start"))
     (setq browse-url-browser-function #'browse-url-generic))
