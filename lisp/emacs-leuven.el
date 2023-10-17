@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231017.1536
+;; Version: 20231017.1611
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231017.1536"
+(defconst lvn--emacs-version "20231017.1611"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4572,27 +4572,32 @@ the parent element."
   (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a.
 
   ;; Making buffer indexes as menus.
-  (try-require 'imenu)                  ; Awesome!
-  (with-eval-after-load "imenu"
+  (try-require 'imenu)                  ; Try to load the awesome 'imenu' library.
 
-    ;; Imenu should always rescan the buffers.
+  (with-eval-after-load "imenu"
+    ;; Always rescan buffers for Imenu.
     (setq imenu-auto-rescan t)
 
-    ;; Add Imenu to the menu bar in any mode that supports it.
-    (defun try-to-add-imenu ()
+    ;; Function to add Imenu to the menu bar in modes that support it.
+    (defun lvn--try-to-add-imenu ()
+      "Attempt to add an Imenu index to the menu bar."
       (condition-case nil
-          (imenu-add-to-menubar "Outline") ; Imenu index.
+          (imenu-add-to-menubar "Outline") ; Add Imenu index.
         (error nil)))
-    (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
-    ;; Bind Imenu from the mouse.
+    ;; Add Imenu to the menu bar in any mode that supports it.
+    (add-hook 'font-lock-mode-hook #'lvn--try-to-add-imenu)
+
+    ;; Bind Imenu to the mouse.
     (global-set-key [S-mouse-3] #'imenu)
 
-    ;; String to display in the mode line when current function is unknown.
+    ;; Set the string to display in the mode line when the current function is
+    ;; unknown.
     (setq which-func-unknown "(Top Level)")
 
-    ;; Show current function in mode line (based on Imenu).
-    (which-function-mode 1)             ; ~ Stickyfunc mode (in header line)
+    ;; Enable which-function-mode to show the current function in the mode line
+    ;; based on Imenu.
+    (which-function-mode 1)             ; ~ Stickyfunc mode (in header line).
 
     (defun leuven--which-func-current ()
       (let ((current (gethash (selected-window) which-func-table)))

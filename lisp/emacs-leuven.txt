@@ -7929,29 +7929,34 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
 
 #+begin_src emacs-lisp
   ;; Making buffer indexes as menus.
-  (try-require 'imenu)                  ; Awesome!
-  (with-eval-after-load "imenu"
+  (try-require 'imenu)                  ; Try to load the awesome 'imenu' library.
 
-    ;; Imenu should always rescan the buffers.
+  (with-eval-after-load "imenu"
+    ;; Always rescan buffers for Imenu.
     (setq imenu-auto-rescan t)
 
-    ;; Add Imenu to the menu bar in any mode that supports it.
-    (defun try-to-add-imenu ()
+    ;; Function to add Imenu to the menu bar in modes that support it.
+    (defun lvn--try-to-add-imenu ()
+      "Attempt to add an Imenu index to the menu bar."
       (condition-case nil
-          (imenu-add-to-menubar "Outline") ; Imenu index.
+          (imenu-add-to-menubar "Outline") ; Add Imenu index.
         (error nil)))
-    (add-hook 'font-lock-mode-hook #'try-to-add-imenu)
 
-    ;; Bind Imenu from the mouse.
+    ;; Add Imenu to the menu bar in any mode that supports it.
+    (add-hook 'font-lock-mode-hook #'lvn--try-to-add-imenu)
+
+    ;; Bind Imenu to the mouse.
     (global-set-key [S-mouse-3] #'imenu)
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; String to display in the mode line when current function is unknown.
+    ;; Set the string to display in the mode line when the current function is
+    ;; unknown.
     (setq which-func-unknown "(Top Level)")
 
-    ;; Show current function in mode line (based on Imenu).
-    (which-function-mode 1)             ; ~ Stickyfunc mode (in header line)
+    ;; Enable which-function-mode to show the current function in the mode line
+    ;; based on Imenu.
+    (which-function-mode 1)             ; ~ Stickyfunc mode (in header line).
 #+end_src
 
 Truncate the current function name (for the mode line):
@@ -13928,6 +13933,118 @@ start your Git checkout Emacs binary and the local installation with:
 and use ~emacsclient -s git~ or ~emacsclient -s local~ to connect to the daemon you
 want to use.
 #+end_note
+
+** Shell utilities
+
+*** EDITOR
+
+Find a suitable editor.
+
+#+begin_note
+~e .~ opens the current directory in Emacs.
+#+end_note
+
+#+begin_src shell :tangle ../bin/common-emacs-leuven-commands
+if [ -z "$SSH_CONNECTION" ]; then
+    # Configuration for local mode.
+    export EDITOR="emacsclient"
+    export ALTERNATE_EDITOR=""
+    alias e="emacsclient -n"
+    alias ee="emacsclient -n --alternate-editor=emacs"
+    alias bgemacs='emacs &'
+else
+    # Configuration for remote mode.
+    for candidate_editor in emacs subl atom nano; do
+        if command -v "$candidate_editor" &> /dev/null; then
+            # Use the first available editor.
+            EDITOR="$candidate_editor"
+            break
+        fi
+    done
+    alias e="$EDITOR"                   # Alias 'e' uses the chosen editor.
+fi
+#+end_src
+
+When setting the environment variables ~EDITOR~ and/or ~VISUAL~, you better omit the
+~--no-wait~ (~-n~) option: if ~emacsclient~ doesn't wait, the program that opens the
+editor will think you exited it. In the case of our ~git commit~, we would end up
+with a blank commit message!
+
+#+begin_src shell :tangle ../bin/common-emacs-leuven-commands
+# Set VISUAL to the same value as EDITOR.
+export VISUAL="$EDITOR"
+#+end_src
+
+*** cde - Go to the directory of the file currently active in Emacs
+
+If you are an avid Emacs user like me, you'll find this function useful.  It
+*enters the directory of the file currently active in Emacs* resides in:
+
+#+begin_src shell :tangle ../bin/common-emacs-leuven-commands
+# Cd to the directory of the current buffer in Emacs.
+cde() {
+    if ! command -v emacsclient > /dev/null 2>&1; then
+        printf >&2 "Error: emacsclient not found.\n"
+        printf >&2 "Please install Emacsclient and ensure the binary is in your PATH.\n"
+        return 2
+    fi
+
+    if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
+        printf >&2 "Error: Emacs server is not running.\n"
+        printf >&2 "Please start the Emacs server first.\n"
+        return 2
+    fi
+
+    local dir
+    dir="$(emacsclient -e '(with-current-buffer
+                               (window-buffer (selected-window))
+                             (replace-regexp-in-string "^~" (getenv "HOME")
+                                default-directory))' | tr -d '"')"
+
+    if [ ! -d "$dir" ]; then
+        printf >&2 "Error: directory not found: %s\n" "$dir"
+        return 2
+    fi
+
+    builtin cd "$dir"
+    #! The change in working directory will persist after the function has
+    #! completed.
+}
+#+end_src
+
+You need the ~emacs-server~ functionality enabled for this to work.
+
+*** cate - Print the contents of the current buffer in Emacs to the terminal
+
+#+begin_src shell :tangle :tangle ../bin/cate
+#!/usr/bin/env bash
+
+# Print the contents of the current buffer in Emacs to the terminal.
+
+# Check if emacsclient command is available.
+if ! command -v emacsclient > /dev/null 2>&1; then
+    printf >&2 'Error: emacsclient command not found.\n'
+    exit 2
+fi
+
+if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
+    printf >&2 "Error: Emacs server is not running. Please start the Emacs server first.\n"
+    exit 2
+fi
+
+pipe="$(mktemp -u)"
+mkfifo "$pipe"
+emacsclient -e '(with-current-buffer
+                    (window-buffer (selected-window))
+                  (write-region (point-min) (point-max) "'"$pipe"'" nil :quiet))
+               ' >/dev/null &
+while read line; do
+    printf '%s\n' "$line"
+done < "$pipe"
+rm "$pipe"
+#+end_src
+
+You need the ~emacs-server~ functionality enabled for this to work.
 
 * Printing Hard Copies
 
