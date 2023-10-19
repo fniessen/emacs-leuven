@@ -21,6 +21,8 @@ Debugger entered--Lisp error: (wrong-type-argument integer-or-marker-p nil)
   command-execute(kill-ring-save)
 #+end_src
 
+Les chiffres sont des positions dans mon buffer...
+
 ** TODO Test, then add leuven-remove-matching-lines-between-buffers
 
 #+begin_src emacs-lisp
