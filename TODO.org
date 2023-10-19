@@ -9,6 +9,18 @@
   Dev, Search for usages)
 - [ ] http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
 
+** TODO Error when M-w on one line (sometimes)
+
+#+begin_src emacs-lisp
+Debugger entered--Lisp error: (wrong-type-argument integer-or-marker-p nil)
+  indicate-copied-region()
+  #<subr kill-ring-save>(455056 455119 nil)
+  apply(#<subr kill-ring-save> (455056 455119))
+  kill-ring-save(455056 455119)
+  funcall-interactively(kill-ring-save 455056 455119)
+  command-execute(kill-ring-save)
+#+end_src
+
 ** TODO Test, then add leuven-remove-matching-lines-between-buffers
 
 #+begin_src emacs-lisp
