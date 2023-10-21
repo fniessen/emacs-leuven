@@ -383,9 +383,11 @@ Return FILE if it is executable, otherwise return nil."
   (with-eval-after-load "package"
 
     ;; Archives from which to fetch.
+    ;; (setq package-archives
+    ;;       (append '(("melpa" . "http://melpa.org/packages/"))
+    ;;               package-archives))
     (setq package-archives
-          (append '(("melpa" . "http://melpa.org/packages/"))
-                  package-archives))
+          '(("melpa" . "http://melpa.org/packages/")))
 
     ;; Packages which were installed by the user (as opposed to installed as
     ;; dependencies).
