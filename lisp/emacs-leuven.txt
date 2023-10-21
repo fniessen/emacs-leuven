@@ -13949,13 +13949,21 @@ Find a suitable editor.
 ~e .~ opens the current directory in Emacs.
 #+end_note
 
-#+begin_src shell :tangle ../bin/run-commands-common-emacs-leuven
+#+begin_src shell :tangle ../bin/rc-common-emacs-leuven
 if [ -z "$SSH_CONNECTION" ]; then
     # Configuration for local mode.
     export EDITOR="emacsclient"
     export ALTERNATE_EDITOR=""
     alias e="emacsclient -n"
+
+    alias ec1="emacsclient -n -e '(select-frame-set-input-focus (selected-frame))'"
+    alias ec2='emacsclient -n -e "(progn (find-file \"$1\") (select-frame-set-input-focus (selected-frame)))"'
+    alias ec3='emacsclient -n --eval "(progn (select-frame-set-input-focus (selected-frame)))"'
+
+    # If emacsclient can't connect to an existing Emacs server, it will fall
+    # back to running a new instance of Emacs.
     alias ee="emacsclient -n --alternate-editor=emacs"
+
     alias bgemacs='emacs &'
 else
     # Configuration for remote mode.
@@ -13975,7 +13983,7 @@ When setting the environment variables ~EDITOR~ and/or ~VISUAL~, you better omit
 editor will think you exited it. In the case of our ~git commit~, we would end up
 with a blank commit message!
 
-#+begin_src shell :tangle ../bin/run-commands-common-emacs-leuven
+#+begin_src shell :tangle ../bin/rc-common-emacs-leuven
 # Set VISUAL to the same value as EDITOR.
 export VISUAL="$EDITOR"
 #+end_src
@@ -13985,7 +13993,7 @@ export VISUAL="$EDITOR"
 If you are an avid Emacs user like me, you'll find this function useful.  It
 *enters the directory of the file currently active in Emacs* resides in:
 
-#+begin_src shell :tangle ../bin/run-commands-common-emacs-leuven
+#+begin_src shell :tangle ../bin/rc-common-emacs-leuven
 # Cd to the directory of the current buffer in Emacs.
 cde() {
     if ! command -v emacsclient > /dev/null 2>&1; then

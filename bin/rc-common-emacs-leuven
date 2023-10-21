@@ -3,7 +3,15 @@ if [ -z "$SSH_CONNECTION" ]; then
     export EDITOR="emacsclient"
     export ALTERNATE_EDITOR=""
     alias e="emacsclient -n"
+
+    alias ec1="emacsclient -n -e '(select-frame-set-input-focus (selected-frame))'"
+    alias ec2='emacsclient -n -e "(progn (find-file \"$1\") (select-frame-set-input-focus (selected-frame)))"'
+    alias ec3='emacsclient -n --eval "(progn (select-frame-set-input-focus (selected-frame)))"'
+
+    # If emacsclient can't connect to an existing Emacs server, it will fall
+    # back to running a new instance of Emacs.
     alias ee="emacsclient -n --alternate-editor=emacs"
+
     alias bgemacs='emacs &'
 else
     # Configuration for remote mode.
