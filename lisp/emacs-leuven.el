@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231021.2036
+;; Version: 20231021.2045
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231021.2036"
+(defconst lvn--emacs-version "20231021.2045"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6527,7 +6527,7 @@ This example lists Azerty layout second row keys."
 
 ;;** (info "(emacs)Dired Enter")
 
-  ;; Directory-browsing commands.
+  ;; Directory-browsing commands configuration.
   (with-eval-after-load "dired"
 
     (leuven--section "30.1 (emacs)Dired Enter")
@@ -6542,13 +6542,14 @@ This example lists Azerty layout second row keys."
     ;; Emulate insert-directory completely in Emacs Lisp.
     (when (require 'ls-lisp)
 
-      ;; Disable the case sensitive sort of file names.
+      ;; Disable the case-sensitive sort of file names.
       (setq ls-lisp-ignore-case t)
 
       ;; Sort directories first.
       (setq ls-lisp-dirs-first t)
 
-      ;; Use `ls-lisp' in all versions of Emacs (for Dired sorting to work OK!).
+      ;; Use `ls-lisp' in all versions of Emacs for Dired sorting to work
+      ;; correctly.
       (setq ls-lisp-use-insert-directory-program nil)
                                         ; [Default: nil for Windows, t otherwise]
 
@@ -6564,19 +6565,23 @@ This example lists Azerty layout second row keys."
 
     (leuven--section "30.2 (emacs)Dired Navigation")
 
-    (defun dired-back-to-top ()
+    ;; Function to move the cursor to the top of the Dired buffer.
+    (defun lvn-dired-back-to-top ()
       (interactive)
       (goto-char (point-min))
       (dired-next-line 4))
 
-    (define-key dired-mode-map [remap beginning-of-buffer] #'dired-back-to-top)
+    (define-key dired-mode-map
+                [remap beginning-of-buffer] #'lvn-dired-back-to-top)
 
-    (defun dired-jump-to-bottom ()
+    ;; Function to move the cursor to the bottom of the Dired buffer.
+    (defun lvn-dired-jump-to-bottom ()
       (interactive)
       (goto-char (point-max))
       (dired-next-line -1))
 
-    (define-key dired-mode-map [remap end-of-buffer] #'dired-jump-to-bottom)
+    (define-key dired-mode-map
+                [remap end-of-buffer] #'lvn-dired-jump-to-bottom)
 
     ;; Search in filenames (instead of in everything).
     (define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)

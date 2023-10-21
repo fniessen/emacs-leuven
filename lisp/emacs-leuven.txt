@@ -12386,7 +12386,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Enter")
 
-  ;; Directory-browsing commands.
+  ;; Directory-browsing commands configuration.
   (with-eval-after-load "dired"
 
     (leuven--section "30.1 (emacs)Dired Enter")
@@ -12418,13 +12418,14 @@ Use Emacs's own emulation of ~ls~ in all versions of Emacs.
     ;; Emulate insert-directory completely in Emacs Lisp.
     (when (require 'ls-lisp)
 
-      ;; Disable the case sensitive sort of file names.
+      ;; Disable the case-sensitive sort of file names.
       (setq ls-lisp-ignore-case t)
 
       ;; Sort directories first.
       (setq ls-lisp-dirs-first t)
 
-      ;; Use `ls-lisp' in all versions of Emacs (for Dired sorting to work OK!).
+      ;; Use `ls-lisp' in all versions of Emacs for Dired sorting to work
+      ;; correctly.
       (setq ls-lisp-use-insert-directory-program nil)
                                         ; [Default: nil for Windows, t otherwise]
 
@@ -12446,19 +12447,23 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
 
     (leuven--section "30.2 (emacs)Dired Navigation")
 
-    (defun dired-back-to-top ()
+    ;; Function to move the cursor to the top of the Dired buffer.
+    (defun lvn-dired-back-to-top ()
       (interactive)
       (goto-char (point-min))
       (dired-next-line 4))
 
-    (define-key dired-mode-map [remap beginning-of-buffer] #'dired-back-to-top)
+    (define-key dired-mode-map
+                [remap beginning-of-buffer] #'lvn-dired-back-to-top)
 
-    (defun dired-jump-to-bottom ()
+    ;; Function to move the cursor to the bottom of the Dired buffer.
+    (defun lvn-dired-jump-to-bottom ()
       (interactive)
       (goto-char (point-max))
       (dired-next-line -1))
 
-    (define-key dired-mode-map [remap end-of-buffer] #'dired-jump-to-bottom)
+    (define-key dired-mode-map
+                [remap end-of-buffer] #'lvn-dired-jump-to-bottom)
 #+end_src
 
 #+begin_src emacs-lisp
