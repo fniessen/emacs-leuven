@@ -1724,39 +1724,46 @@ Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
 Copy/paste from Windows clipboard in WSL Emacs:
 
 #+begin_src emacs-lisp
-  ;; Define the copy command for WSL.
-  (defun lvn-wsl-slick-copy-region (beg end &optional region)
-    "Copy the selected region or the current line to the Windows clipboard in WSL.
-  BEG and END specify the region to copy if a region is selected."
-    (interactive
-     (if (use-region-p)
-         (list (region-beginning) (region-end))
-       (list (line-beginning-position) (line-beginning-position 2))))
-    (let ((region-text (buffer-substring-no-properties beg end)))
-      (kill-new region-text)
-      (shell-command-on-region beg end "clip.exe")
-      (deactivate-mark)
-      (message "[Copied to Windows clipboard and kill-ring.]")))
+  (setq interprogram-paste-function
+        (if (equal interprogram-paste-function 'x-cut-buffer-or-selection-value)
+            #'x-selection-value
+          interprogram-paste-function))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; ;; Define the copy command for WSL.
+  ;; (defun lvn-wsl-slick-copy-region (beg end &optional region)
+  ;;   "Copy the selected region or the current line to the Windows clipboard in WSL.
+  ;; BEG and END specify the region to copy if a region is selected."
+  ;;   (interactive
+  ;;    (if (use-region-p)
+  ;;        (list (region-beginning) (region-end))
+  ;;      (list (line-beginning-position) (line-beginning-position 2))))
+  ;;   (let ((region-text (buffer-substring-no-properties beg end)))
+  ;;     (kill-new region-text)
+  ;;     (shell-command-on-region beg end "clip.exe")
+  ;;     (deactivate-mark)
+  ;;     (message "[Copied to Windows clipboard and kill-ring.]")))
 
   ;; ;; Override the kill-ring-save command when in WSL config.
   ;; (when leuven--wsl-p
   ;;   (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
-  ;; Define the paste command for WSL.
-  (defun lvn-wsl-paste-region ()
-    "Paste the contents of the Windows clipboard in WSL."
-    (interactive)
-    (let ((clipboard
-           (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
-      (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters.
-      (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell.
-
-      ;; Delete the selected region before inserting clipboard content.
-      (when (region-active-p)
-        (delete-region (region-beginning) (region-end)))
-
-      (insert clipboard))
-    (message "[Pasted from Windows clipboard.]"))
+  ;; ;; Define the paste command for WSL.
+  ;; (defun lvn-wsl-paste-region ()
+  ;;   "Paste the contents of the Windows clipboard in WSL."
+  ;;   (interactive)
+  ;;   (let ((clipboard
+  ;;          (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
+  ;;     (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters.
+  ;;     (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell.
+  ;;
+  ;;     ;; Delete the selected region before inserting clipboard content.
+  ;;     (when (region-active-p)
+  ;;       (delete-region (region-beginning) (region-end)))
+  ;;
+  ;;     (insert clipboard))
+  ;;   (message "[Pasted from Windows clipboard.]"))
 
   ;; ;; Override the yank command when in WSL config.
   ;; (when leuven--wsl-p
