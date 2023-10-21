@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231021.2045
+;; Version: 20231021.2048
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231021.2045"
+(defconst lvn--emacs-version "20231021.2048"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6597,8 +6597,9 @@ This example lists Azerty layout second row keys."
 
     (leuven--section "30.5 (emacs)Dired Visiting")
 
+    ;; Reveal active file in the file explorer.
     (defun browse-file-directory ()
-      "Open the current file's directory however the OS would."
+      "Open the current file's directory in the default file explorer."
       (interactive)
       (if default-directory
           (browse-url-of-file (expand-file-name default-directory))

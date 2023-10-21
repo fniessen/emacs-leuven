@@ -12555,19 +12555,21 @@ appropriate viewer:
 #+begin_src emacs-lisp :tangle no
     (defun helm-open-file-with-default-tool (file)
       "Open FILE with the default tool on this platform."
-      (let ((program (cond (leuven--linux-p "xdg-open")
-                           (leuven--mac-p "open")))
+      (let ((program (cond ((leuven--linux-p) "xdg-open")
+                           ((leuven--mac-p) "open")))
             process-connect-type)
-        (if leuven--win32-p
+        (if (leuven--win32-p)
             (helm-w32-shell-execute-open-file file)
           (start-process "helm-open-file-with-default-tool" nil program file))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
+    ;; Dired open function.
     (defun dired-open ()
+      "Open marked files in Dired with the default tool on this platform."
       (interactive)
-      (let ((program (cond (leuven--linux-p "xdg-open")
-                           (leuven--mac-p "open"))))
+      (let ((program (cond ((leuven--linux-p) "xdg-open")
+                           ((leuven--mac-p) "open"))))
         (dired-do-shell-command program nil
                                 (dired-get-marked-files t current-prefix-arg))))
 
@@ -12577,8 +12579,9 @@ appropriate viewer:
 Reveal active file in Explorer:
 
 #+begin_src emacs-lisp
+    ;; Reveal active file in the file explorer.
     (defun browse-file-directory ()
-      "Open the current file's directory however the OS would."
+      "Open the current file's directory in the default file explorer."
       (interactive)
       (if default-directory
           (browse-url-of-file (expand-file-name default-directory))
