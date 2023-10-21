@@ -1593,7 +1593,9 @@ or copying the selected text.
     (interactive
      (if (use-region-p)
          (list (region-beginning) (region-end))
-       (list (line-beginning-position) (line-beginning-position 2)))))
+       (progn
+         (message "[Cut the current line]")
+         (list (line-beginning-position) (line-beginning-position 2))))))
   ;; Add advice to execute lvn--slick-cut-region before the kill-region command.
   (advice-add 'kill-region :before #'lvn--slick-cut-region)
 
@@ -1729,6 +1731,8 @@ Copy/paste from Windows clipboard in WSL Emacs:
             #'x-selection-value
           interprogram-paste-function))
 #+end_src
+
+See [[https://stackoverflow.com/questions/11186370/symbols-function-definition-is-void-x-cut-buffer-or-selection-value][Symbol's function definition is void: x-cut-buffer-or-selection-value]].
 
 #+begin_src emacs-lisp
   ;; ;; Define the copy command for WSL.
@@ -13912,12 +13916,9 @@ creates an X Window and doesn't wait for ~(server-edit)~.
 
   (with-eval-after-load "server"
 
-    ;; Test whether server is (definitely) running, avoiding the message of
-    ;; "server-start" while opening another Emacs session.
+    ;; Start the server if it's not already (definitely) running.
     (unless (equal (server-running-p) t)
-
-        ;; Start the Emacs server.
-        (server-start))
+      (server-start))
 
     ;; Save file without confirmation before returning to the client.
     (defadvice server-edit (before save-buffer-if-needed activate)

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231021.1732
+;; Version: 20231021.1844
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231021.1732"
+(defconst lvn--emacs-version "20231021.1844"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -990,7 +990,9 @@ original state of line numbers after navigation."
     (interactive
      (if (use-region-p)
          (list (region-beginning) (region-end))
-       (list (line-beginning-position) (line-beginning-position 2)))))
+       (progn
+         (message "[Cut the current line]")
+         (list (line-beginning-position) (line-beginning-position 2))))))
   ;; Add advice to execute lvn--slick-cut-region before the kill-region command.
   (advice-add 'kill-region :before #'lvn--slick-cut-region)
 
@@ -7254,12 +7256,9 @@ Consider using `C-x d' instead for better performance."
 
   (with-eval-after-load "server"
 
-    ;; Test whether server is (definitely) running, avoiding the message of
-    ;; "server-start" while opening another Emacs session.
+    ;; Start the server if it's not already (definitely) running.
     (unless (equal (server-running-p) t)
-
-        ;; Start the Emacs server.
-        (server-start))
+      (server-start))
 
     ;; Save file without confirmation before returning to the client.
     (defadvice server-edit (before save-buffer-if-needed activate)
