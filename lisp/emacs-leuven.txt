@@ -597,9 +597,8 @@ like this into your configuration file:
   (with-eval-after-load "package"
 
     ;; Archives from which to fetch.
-    ;; (setq package-archives
-    ;;       (append '(("melpa" . "http://melpa.org/packages/"))
-    ;;               package-archives))
+    ;; (add-to-list 'package-archives
+    ;;              '("melpa" . "https://melpa.org/packages/") t)
     (setq package-archives
           '(("melpa" . "http://melpa.org/packages/")))
 
@@ -6376,7 +6375,7 @@ Instead of superseding the binding in ~auto-mode-alist~, you can replace it
 (brute force) with ~(setcdr (rassq 'old-mode auto-mode-alist) 'new-mode)~.
 
 #+begin_src emacs-lisp
-  ;; List of filename patterns.
+  ;; Define a list of filename patterns and their associated major modes.
   (setq auto-mode-alist
         (append '(("\\.log\\'"       . text-mode)
                   ;; ("\\.[tT]e[xX]\\'" . latex-mode)
@@ -9069,6 +9068,8 @@ Install ESLint (globally) using ~npm~:
   ;;               (append flycheck-disabled-checkers
   ;;                       '(javascript-jshint)))
 
+  ;; Disable the JavaScript ESLint checker by adding it to the list of disabled
+  ;; checkers.
   (setq-default flycheck-disabled-checkers
                 (append flycheck-disabled-checkers
                         '(javascript-eslint)))
@@ -9079,9 +9080,11 @@ Install ESLint (globally) using ~npm~:
     ;; (add-hook 'js2-mode-hook
     ;;           #'(lambda () (flycheck-select-checker "javascript-eslint")))
 
+  ;; Set up configurations for the `js2-mode` by adding a hook.
   (add-hook 'js2-mode-hook
             (defun leuven--js2-mode-setup ()
               (flycheck-mode t)
+              ;; Enable a specific checker if ESLint is available:
               ;; (when (executable-find "eslint")
               ;;   (flycheck-select-checker 'javascript-eslint))
               ))
@@ -9360,7 +9363,7 @@ Basic config for MS SQL.
 
   ;; Redefined.
   (defun sql-comint-ms (product options)
-    "Create comint buffer and connect to Microsoft SQL Server."
+    "Create a comint buffer and connect to Microsoft SQL Server."
     ;; Put all parameters to the program (if defined) in a list and call
     ;; make-comint.
     (message "[Leuven Options: %s]" options)
@@ -9374,10 +9377,10 @@ Basic config for MS SQL.
       (if (not (string= "" sql-password))
           (setq params (append (list "-P" sql-password) params))
         (if (string= "" sql-user)
-            ;; if neither user nor password is provided, use system credentials.
+            ;; If neither user nor password is provided, use system credentials.
             (setq params (append (list "-E") params))
-          ;; If -P is passed to ISQL as the last argument without a password, it's
-          ;; considered null.
+          ;; If -P is passed to ISQL as the last argument without a password,
+          ;; it's considered null.
           (setq params (append params (list "-P")))))
       (message "[Leuven Params: %s]" params)
       (sql-comint product params)))
@@ -11871,7 +11874,7 @@ Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-c
     (define-key ac-completing-map (kbd "<left>")  #'ac-stop)
     ;; (define-key ac-completing-map (kbd "<right>") #'ac-stop)
 
-    ;; Add other modes into `ac-modes'.
+    ;; Extend the `ac-modes' list with additional modes.
     (setq ac-modes
           (append ac-modes
                   '(change-log-mode
@@ -12063,20 +12066,21 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     ;;! Temporarily display a buffer showing the selected candidate in context.
     (define-key company-active-map (kbd "M-.")     #'company-show-location) ; XXX Also on C-w.
 
+    (setq company-auto-complete
+          #'(lambda ()
+              (and (company-tooltip-visible-p)
+                   (company-explicit-action-p))))
 
- (setq company-auto-complete
-       #'(lambda ()
-           (and (company-tooltip-visible-p)
-                (company-explicit-action-p))))
+    ;; Configure the list of commands to continue company mode.
+    (setq company-continue-commands
+          '(not save-buffer
+                save-some-buffers
+                save-buffers-kill-terminal
+                save-buffers-kill-emacs
+                comint-previous-matching-input-from-input
+                comint-next-matching-input-from-input))
 
- (setq company-continue-commands
-   '(not save-buffer
-         save-some-buffers
-         save-buffers-kill-terminal
-         save-buffers-kill-emacs
-         comint-previous-matching-input-from-input
-         comint-next-matching-input-from-input))
- (setq company-require-match nil)
+    (setq company-require-match nil)
 #+end_src
 
 #+begin_src emacs-lisp

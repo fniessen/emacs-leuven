@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231021.1844
+;; Version: 20231021.2036
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231021.1844"
+(defconst lvn--emacs-version "20231021.2036"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -383,9 +383,8 @@ Return FILE if it is executable, otherwise return nil."
   (with-eval-after-load "package"
 
     ;; Archives from which to fetch.
-    ;; (setq package-archives
-    ;;       (append '(("melpa" . "http://melpa.org/packages/"))
-    ;;               package-archives))
+    ;; (add-to-list 'package-archives
+    ;;              '("melpa" . "https://melpa.org/packages/") t)
     (setq package-archives
           '(("melpa" . "http://melpa.org/packages/")))
 
@@ -3608,7 +3607,7 @@ windows, leaving only the currently active window visible."
 
   (leuven--section "23.3 (emacs)Choosing File Modes")
 
-  ;; List of filename patterns.
+  ;; Define a list of filename patterns and their associated major modes.
   (setq auto-mode-alist
         (append '(("\\.log\\'"       . text-mode)
                   ;; ("\\.[tT]e[xX]\\'" . latex-mode)
@@ -5135,6 +5134,8 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;;               (append flycheck-disabled-checkers
   ;;                       '(javascript-jshint)))
 
+  ;; Disable the JavaScript ESLint checker by adding it to the list of disabled
+  ;; checkers.
   (setq-default flycheck-disabled-checkers
                 (append flycheck-disabled-checkers
                         '(javascript-eslint)))
@@ -5145,9 +5146,11 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     ;; (add-hook 'js2-mode-hook
     ;;           #'(lambda () (flycheck-select-checker "javascript-eslint")))
 
+  ;; Set up configurations for the `js2-mode` by adding a hook.
   (add-hook 'js2-mode-hook
             (defun leuven--js2-mode-setup ()
               (flycheck-mode t)
+              ;; Enable a specific checker if ESLint is available:
               ;; (when (executable-find "eslint")
               ;;   (flycheck-select-checker 'javascript-eslint))
               ))
@@ -6293,7 +6296,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (define-key ac-completing-map (kbd "<left>")  #'ac-stop)
     ;; (define-key ac-completing-map (kbd "<right>") #'ac-stop)
 
-    ;; Add other modes into `ac-modes'.
+    ;; Extend the `ac-modes' list with additional modes.
     (setq ac-modes
           (append ac-modes
                   '(change-log-mode
@@ -6406,20 +6409,21 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;;! Temporarily display a buffer showing the selected candidate in context.
     (define-key company-active-map (kbd "M-.")     #'company-show-location) ; XXX Also on C-w.
 
+    (setq company-auto-complete
+          #'(lambda ()
+              (and (company-tooltip-visible-p)
+                   (company-explicit-action-p))))
 
- (setq company-auto-complete
-       #'(lambda ()
-           (and (company-tooltip-visible-p)
-                (company-explicit-action-p))))
+    ;; Configure the list of commands to continue company mode.
+    (setq company-continue-commands
+          '(not save-buffer
+                save-some-buffers
+                save-buffers-kill-terminal
+                save-buffers-kill-emacs
+                comint-previous-matching-input-from-input
+                comint-next-matching-input-from-input))
 
- (setq company-continue-commands
-   '(not save-buffer
-         save-some-buffers
-         save-buffers-kill-terminal
-         save-buffers-kill-emacs
-         comint-previous-matching-input-from-input
-         comint-next-matching-input-from-input))
- (setq company-require-match nil)
+    (setq company-require-match nil)
 
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
