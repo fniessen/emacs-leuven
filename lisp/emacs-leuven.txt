@@ -13969,13 +13969,29 @@ Find a suitable editor.
 #+begin_src shell :tangle ../bin/rc-common-emacs-leuven
 if [ -z "$SSH_CONNECTION" ]; then
     # Configuration for local mode.
+
+    # Set the default editor to emacsclient.
     export EDITOR="emacsclient"
+
+    # Set an alternate editor to an empty string.
     export ALTERNATE_EDITOR=""
+
+    # Create an alias 'e' for running emacsclient in non-blocking mode.
     alias e="emacsclient -n"
 
     alias ec1="emacsclient -n -e '(select-frame-set-input-focus (selected-frame))'"
     alias ec2='emacsclient -n -e "(progn (find-file \"$1\") (select-frame-set-input-focus (selected-frame)))"'
     alias ec3='emacsclient -n --eval "(progn (select-frame-set-input-focus (selected-frame)))"'
+
+    # Open a file in an Emacs terminal frame using emacsclient.
+    et() {
+        emacsclient -t -a '' --eval "(find-file \"$1\")"
+    }
+
+    function eee()      { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (find-file \"$1\"))"; }
+    function eeediff()  { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (ediff-files \"$1\" \"$2\"))"; }
+    function eeedired() { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (dired \"$1\"))"; }
+    function eeevcdir() { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (vc-dir \"$1\"))"; }
 
     # If emacsclient can't connect to an existing Emacs server, it will fall
     # back to running a new instance of Emacs.
