@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231021.1522
+;; Version: 20231021.1527
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231021.1522"
+(defconst lvn--emacs-version "20231021.1527"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -503,40 +503,52 @@ Return FILE if it is executable, otherwise return nil."
             (push pkg missing-elpa-packages)))
         missing-elpa-packages))
 
-    ;; Install missing ELPA packages for Emacs-Leuven if any.
-    (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
-      ;; If there are missing packages, prompt the user to install them.
-      (when missing-elpa-packages
-        (setq leuven-install-all-missing-elpa-packages
-              (or leuven-install-all-missing-elpa-packages
-                  (yes-or-no-p
-                   (format "Install the %s missing ELPA package(s) without confirming each? "
-                           (length missing-elpa-packages)))))
+    (defun internet-connection-available-p ()
+      "Check if there is an internet connection by attempting to retrieve a website."
+      (ignore-errors (url-retrieve "http://www.google.com/"
+                                   '(lambda (retrieved) t))))
 
-        ;; Check for internet connection before refreshing package archives.
-        (when (ignore-errors (url-retrieve "http://www.google.com/" '(lambda (retrieved) t)))
-          ;; Refresh package archives.
-          (unless package-archive-contents
-            (package-refresh-contents)))
+    (defun leuven-install-missing-elpa-packages ()
+      "Install missing ELPA packages for Emacs-Leuven if any."
+      (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
+        (when missing-elpa-packages
+          (setq leuven-install-all-missing-elpa-packages
+                (or leuven-install-all-missing-elpa-packages
+                    (yes-or-no-p
+                     (format "Install the %s missing ELPA package(s) without confirming each? "
+                             (length missing-elpa-packages)))))
 
-        ;; Install missing packages.
-        (dolist (pkg (reverse missing-elpa-packages))
-          (if leuven-install-all-missing-elpa-packages
-              (condition-case err
-                  (progn
-                    (package-install pkg)
-                    (message "[Installed package `%s'.]" pkg))
-                (error
-                 (message "[Failed to install package `%s': %s]" pkg (error-message-string err))))
-            (when (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
-              (condition-case err
-                  (progn
-                    (package-install pkg)
-                    (message "[Installed package `%s'.]" pkg))
-                (error
-                 (message "[Failed to install package `%s': %s]" pkg (error-message-string err)))))
-            (message "[Customize Emacs-Leuven to ignore the `%s' package next times...]" pkg)
+          (if (internet-connection-available-p)
+              (progn
+                (package-refresh-contents)
+                (dolist (pkg (reverse missing-elpa-packages))
+                  (leuven-install-package pkg)))
+            (message "No internet connection available. Cannot refresh package archives.")))))
+
+    (defun leuven-install-package (pkg)
+      "Install the specified package and handle errors."
+      (if leuven-install-all-missing-elpa-packages
+          (leuven-install-package-quietly pkg)
+        (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
+            (leuven-install-package-quietly pkg)
+          (progn
+            (message "[Customize Emacs-Leuven to ignore the `%s' package next time...]" pkg)
             (sit-for 1.5)))))
+
+    (defun leuven-install-package-quietly (pkg)
+      "Install the specified package without user confirmation and handle errors."
+      (condition-case err
+          (progn
+            (package-install pkg)
+            (message "[Installed package `%s'.]" pkg))
+        (error
+         (message "[Failed to install package `%s': %s]" pkg (error-message-string err)))))
+
+    (defun internet-connection-available-p ()
+      "Check if there is an internet connection by attempting to retrieve a website."
+      (ignore-errors (url-retrieve "http://www.google.com/" '(lambda (retrieved) t))))
+
+    (leuven-install-missing-elpa-packages)
 
     )
 
