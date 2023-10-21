@@ -696,17 +696,15 @@ like this into your configuration file:
     ;; (when (fboundp 'package-install-selected-packages) ; Emacs-v25
     ;;   (package-install-selected-packages))
 
-    (defcustom leuven-excluded-packages
-      nil
+    (defcustom leuven-excluded-packages nil
       "List of packages that should be ignored by Emacs-Leuven."
-      :group 'emacs-leuven
-      :type '(repeat (string)))
+      :group 'leuven
+      :type '(repeat string))
 
-    (defcustom leuven-install-all-missing-elpa-packages
-     nil
+    (defcustom leuven-install-all-missing-elpa-packages nil
       "Force the installation (without query) of all missing packages."
-      :group 'emacs-leuven
-      :type '(repeat (string)))
+      :group 'leuven
+      :type 'boolean)
 
     ;; Define a function to check if there are any missing ELPA packages.
     (defun leuven--missing-elpa-packages ()

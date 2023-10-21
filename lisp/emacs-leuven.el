@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231017.1655
+;; Version: 20231021.1522
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231017.1655"
+(defconst lvn--emacs-version "20231021.1522"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -482,17 +482,15 @@ Return FILE if it is executable, otherwise return nil."
     ;; (when (fboundp 'package-install-selected-packages) ; Emacs-v25
     ;;   (package-install-selected-packages))
 
-    (defcustom leuven-excluded-packages
-      nil
+    (defcustom leuven-excluded-packages nil
       "List of packages that should be ignored by Emacs-Leuven."
-      :group 'emacs-leuven
-      :type '(repeat (string)))
+      :group 'leuven
+      :type '(repeat string))
 
-    (defcustom leuven-install-all-missing-elpa-packages
-     nil
+    (defcustom leuven-install-all-missing-elpa-packages nil
       "Force the installation (without query) of all missing packages."
-      :group 'emacs-leuven
-      :type '(repeat (string)))
+      :group 'leuven
+      :type 'boolean)
 
     ;; Define a function to check if there are any missing ELPA packages.
     (defun leuven--missing-elpa-packages ()
