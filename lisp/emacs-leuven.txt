@@ -12580,14 +12580,14 @@ Reveal active file in Explorer:
 
 #+begin_src emacs-lisp
     ;; Reveal active file in the file explorer.
-    (defun browse-file-directory ()
+    (defun lvn-open-current-directory-in-explorer ()
       "Open the current file's directory in the default file explorer."
       (interactive)
       (if default-directory
           (browse-url-of-file (expand-file-name default-directory))
         (error "No `default-directory' to open")))
 
-    (global-set-key (kbd "C-c r") #'browse-file-directory)
+    (global-set-key (kbd "C-c r") #'lvn-open-current-directory-in-explorer)
 #+end_src
 
 **** Ask a WWW browser to display file
@@ -12597,7 +12597,6 @@ Just ask a WWW browser to display the current file.
 #+begin_src emacs-lisp
     ;; In Dired, ask a WWW browser to display the file named on this line.
     (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?
-
 #+end_src
 
 It works for files as well as for directories.
@@ -12624,9 +12623,8 @@ For those under Windows:
     ;; Open files using Windows associations.
     (when (or leuven--win32-p
               leuven--cygwin-p)
-      (defun w32-dired-open-files-externally (&optional arg)
-        "In Dired, open the marked files (or directories) with the default
-      Windows tool."
+      (defun lvn-open-files-externally-in-dired (&optional arg)
+        "In Dired, open the marked files (or directories) with the default Windows tool."
         (interactive "P")
         (mapcar
          #'(lambda (file)
@@ -12634,7 +12632,7 @@ For those under Windows:
          (dired-get-marked-files nil arg)))
 
       ;; ;; Bind it to `E' in Dired mode.
-      ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally)
+      ;; (define-key dired-mode-map (kbd "E") #'lvn-open-files-externally-in-dired)
       )
 #+end_src
 

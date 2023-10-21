@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231021.2048
+;; Version: 20231021.2059
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231021.2048"
+(defconst lvn--emacs-version "20231021.2059"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6598,14 +6598,14 @@ This example lists Azerty layout second row keys."
     (leuven--section "30.5 (emacs)Dired Visiting")
 
     ;; Reveal active file in the file explorer.
-    (defun browse-file-directory ()
+    (defun lvn-open-current-directory-in-explorer ()
       "Open the current file's directory in the default file explorer."
       (interactive)
       (if default-directory
           (browse-url-of-file (expand-file-name default-directory))
         (error "No `default-directory' to open")))
 
-    (global-set-key (kbd "C-c r") #'browse-file-directory)
+    (global-set-key (kbd "C-c r") #'lvn-open-current-directory-in-explorer)
 
     ;; In Dired, ask a WWW browser to display the file named on this line.
     (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?
@@ -6613,9 +6613,8 @@ This example lists Azerty layout second row keys."
     ;; Open files using Windows associations.
     (when (or leuven--win32-p
               leuven--cygwin-p)
-      (defun w32-dired-open-files-externally (&optional arg)
-        "In Dired, open the marked files (or directories) with the default
-      Windows tool."
+      (defun lvn-open-files-externally-in-dired (&optional arg)
+        "In Dired, open the marked files (or directories) with the default Windows tool."
         (interactive "P")
         (mapcar
          #'(lambda (file)
@@ -6623,7 +6622,7 @@ This example lists Azerty layout second row keys."
          (dired-get-marked-files nil arg)))
 
       ;; ;; Bind it to `E' in Dired mode.
-      ;; (define-key dired-mode-map (kbd "E") #'w32-dired-open-files-externally)
+      ;; (define-key dired-mode-map (kbd "E") #'lvn-open-files-externally-in-dired)
       )
 
     ;; Open current file with eww.
