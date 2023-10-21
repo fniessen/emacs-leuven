@@ -923,7 +923,7 @@ Shortcuts:
 
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
-  ;; Undo changes.
+  ;; Bind F11 to the undo command.
   (global-set-key (kbd "<f11>") #'undo)
 #+end_src
 
@@ -2980,7 +2980,7 @@ Colorize cursor according to buffer state.
 Highlight the current line:
 
 #+begin_src emacs-lisp
-  ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
+  ;; Enable highlighting of the current line in all buffers.
   (global-hl-line-mode 1)
 #+end_src
 
@@ -3747,7 +3747,7 @@ a remote location.
 Builtin file version control of Emacs.
 
 #+begin_src emacs-lisp
-  ;; Make numbered backups.
+  ;; Enable numbered backups.
   (setq version-control t)
 
   ;; Set the backup directory path for Emacs backups.
@@ -5633,7 +5633,7 @@ Get EXIF data with ~image-dired-get-exif-data~.
 
   (leuven--section "19.4 (emacs)Kill Buffer")
 
-  ;; Kill this buffer without confirmation (if not modified).
+  ;; Kill the current buffer without confirmation (if not modified).
   (defun lvn-kill-current-buffer-no-confirm ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)

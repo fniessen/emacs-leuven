@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231021.1648
+;; Version: 20231021.1732
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231021.1648"
+(defconst lvn--emacs-version "20231021.1732"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -653,7 +653,7 @@ original state of line numbers after navigation."
 
   (leuven--section "7.4 (emacs)Basic Undoing Changes")
 
-  ;; Undo changes.
+  ;; Bind F11 to the undo command.
   (global-set-key (kbd "<f11>") #'undo)
 
   ;; Treat undo history as a tree.
@@ -1761,7 +1761,7 @@ Should be selected from `fringe-bitmaps'.")
   ;; Cursor blinks forever.
   (setq blink-cursor-blinks 0)
 
-  ;; Toggle line highlighting in all buffers (Global Hl-Line mode).
+  ;; Enable highlighting of the current line in all buffers.
   (global-hl-line-mode 1)
 
 ;;** 14.21 (info "(emacs)Line Truncation")
@@ -2209,7 +2209,7 @@ Should be selected from `fringe-bitmaps'.")
   ;; Make your changes permanent.
   (global-set-key (kbd "<f2>") #'save-buffer)
 
-  ;; Make numbered backups.
+  ;; Enable numbered backups.
   (setq version-control t)
 
   ;; Set the backup directory path for Emacs backups.
@@ -3133,7 +3133,7 @@ in the current buffer."
 
   (leuven--section "19.4 (emacs)Kill Buffer")
 
-  ;; Kill this buffer without confirmation (if not modified).
+  ;; Kill the current buffer without confirmation (if not modified).
   (defun lvn-kill-current-buffer-no-confirm ()
     "Kill the current buffer without confirmation (if not modified)."
     (interactive)
