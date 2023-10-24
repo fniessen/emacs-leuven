@@ -6519,7 +6519,7 @@ Don't tabify.  Instead, _reindent_ everything, e.g. with ~C-M-\~.
 
   (leuven--section "24.3 TABs vs. (emacs)Just Spaces")
 
-  ;; Indentation uses spaces instead of tabs.
+  ;; Set the default for indentation to use spaces instead of tabs.
   (setq-default indent-tabs-mode nil)
 #+end_src
 

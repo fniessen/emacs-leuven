@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231021.2059
+;; Version: 20231024.1740
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231021.2059"
+(defconst lvn--emacs-version "20231024.1740"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -3686,7 +3686,7 @@ windows, leaving only the currently active window visible."
 
   (leuven--section "24.3 TABs vs. (emacs)Just Spaces")
 
-  ;; Indentation uses spaces instead of tabs.
+  ;; Set the default for indentation to use spaces instead of tabs.
   (setq-default indent-tabs-mode nil)
 
   ;; (setq tab-always-indent 'complete)
