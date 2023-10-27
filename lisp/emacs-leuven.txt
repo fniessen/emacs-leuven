@@ -13969,6 +13969,9 @@ want to use.
 
 ** Shell utilities
 
+You can benefit from the provided aliases and functions by sourcing the file
+located at =PATH/TO/bin/rc-common-emacs-leuven=.
+
 *** EDITOR
 
 Find a suitable editor.
