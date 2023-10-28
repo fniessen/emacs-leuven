@@ -1,3 +1,5 @@
+# Hey Emacs, this is a -- sh -- file
+
 if [ -z "$SSH_CONNECTION" ]; then
     # Configuration for local mode.
 
