@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231024.1740
+;; Version: 20231102.1528
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231024.1740"
+(defconst lvn--emacs-version "20231102.1528"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7229,16 +7229,6 @@ Consider using `C-x d' instead for better performance."
   ;; - ssh -t -t user@host
   ;; - Cygwin'ized Emacs
   ;; - MSYS (MinGW)
-
-  ;; Let Cygwin Emacs recognize Windows paths (e.g. C:\Program Files\).
-  (when leuven--cygwin-p
-
-    (try-require 'windows-path)         ; Require cygwin-mount!
-
-    (with-eval-after-load "windows-path"
-
-      ;; Activate windows-path-style-handling.
-      (windows-path-activate)))
 
 ;;* Proced
 

@@ -13867,7 +13867,7 @@ See =w32-settings.el= for more!
 If you want the *backslashes* in the *Windows paths* returned by Everything to be
 interpreted correctly, you should use ~windows-path~.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Let Cygwin Emacs recognize Windows paths (e.g. C:\Program Files\).
   (when leuven--cygwin-p
 
