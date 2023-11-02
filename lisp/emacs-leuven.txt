@@ -5293,9 +5293,11 @@ arrow keys.  Use ~RET~ to insert it.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
-  (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
+  ;; ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+  ;; (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
 #+end_src
+
+XXX Conflict with mc/mark-all-like-this
 
 ~helm-all-mark-rings~ allows you to view the content of the both the *local and
 global mark rings* in a friendly interface, so you can always jump back to where
@@ -12196,14 +12198,14 @@ one that works.
         (if (looking-at "->") t nil)))))
 
 (defun do-yas-expand ()
-  (let ((yas/fallback-behavior 'return-nil))
-    (yas/expand)))
+  (let ((yas-fallback-behavior 'return-nil))
+    (yas-expand)))
 
 (defun tab-indent-or-complete ()
   (interactive)
   (if (minibufferp)
       (minibuffer-complete)
-    (if (or (not yas/minor-mode)
+    (if (or (not yas-minor-mode)
             (null (do-yas-expand)))
         (if (check-expansion)
             (company-complete-common)

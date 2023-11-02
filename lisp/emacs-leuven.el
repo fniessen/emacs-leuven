@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231102.1528
+;; Version: 20231102.1356
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231102.1528"
+(defconst lvn--emacs-version "20231102.1356"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2941,8 +2941,8 @@ in the current buffer."
   ;; Paste from History.
   (global-set-key (kbd "M-y") #'helm-show-kill-ring) ; OK.
 
-  ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
-  (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
+  ;; ;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+  ;; (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
 
   ;; kill-ring, mark-ring, and register browsers for Helm.
   (with-eval-after-load "helm-ring"

@@ -12647,7 +12647,7 @@ expand words finishing with the snippet key&rdquo;, even if:
 
 Find it at <http://capitaomorte.github.io/yasnippet/snippet-reference.html#yas-key-syntaxes>
 
-    ;; ;; Make the "yas/minor-mode"'s expansion behavior to take input word
+    ;; ;; Make the "yas-minor-mode"'s expansion behavior to take input word
     ;; ;; including hyphen.
     ;; (setq yas-key-syntaxes '("w_" "w_." "^ "))
                                         ; [default:
