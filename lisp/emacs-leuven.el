@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231102.1356
+;; Version: 20231104.1356
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231102.1356"
+(defconst lvn--emacs-version "20231104.1356"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5866,48 +5866,6 @@ a clean buffer we're an order of magnitude laxer about checking."
                  sym)))
 
     (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
-
-;; XXX IntelliJ IDEA:
-;; C-f1
-;; Quick Definition View: C-S-i
-;; Quick Documentation View: C-q
-  (with-eval-after-load "dumb-jump-autoloads"
-
-    ;; ;; Use Helm as selector when there are multiple choices.
-    ;; (setq dumb-jump-selector 'helm)
-
-    ;; Prefer to use `rg' over `ag'.
-    (setq dumb-jump-prefer-searcher 'rg)
-
-    ;; Number of seconds a grep/find command can take before being warned to use
-    ;; ag and config.
-    (setq dumb-jump-max-find-time 5)
-
-    (global-set-key (kbd "M-g j") #'dumb-jump-go)
-    (global-set-key (kbd "<f12>") #'dumb-jump-go)
-                                        ; Conflict when GDB'ing Emacs under
-                                        ; Win32.
-    ;; (global-set-key (kbd "C-M-g") #'dumb-jump-go)
-    ;; (global-set-key (kbd "C-c S") #'dumb-jump-go)
-
-    (global-set-key (kbd "M-g o") #'dumb-jump-go-other-window)
-    ;; (global-set-key (kbd "C-M-o") #'dumb-jump-go-other-window)
-
-    (global-set-key (kbd "M-g x") #'dumb-jump-go-prefer-external)
-    (global-set-key (kbd "M-g z") #'dumb-jump-go-prefer-external-other-window)
-
-    (global-set-key (kbd "M-g P") #'dumb-jump-back)
-
-    ;; (define-key prog-mode-map (kbd "C-M-q") nil)
-
-;; XXX ‘dumb-jump-quick-look’ is an obsolete command (as of 2020-06-26);
-;; XXX ‘dumb-jump-quick-look’ has been obsoleted by the xref interface.
-
-    (global-set-key (kbd "M-g y") #'dumb-jump-quick-look)
-    (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look)
-
-    (dumb-jump-mode)
-)
 
 ;;** 28.4 (info "(emacs)EDE")
 

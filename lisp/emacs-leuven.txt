@@ -10854,7 +10854,7 @@ Go to source code for symbol at point:
     (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 #+end_src
 
-*** dump-jump (go to definition)
+*** dump-jump (go to definition) -- obsoleted by the xref interface
 
 With this package, you can jump to a definition (of the symbol at point) for
 multiple languages without any setup (e.g. *no =TAGS= file is needed anymore*).
@@ -10880,7 +10880,7 @@ Keyboard shortcuts:
 |-------------------------------------+--------+--------------+---------------|
 | Quick look                          | C-M-y  |              |               |
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; XXX IntelliJ IDEA:
 ;; C-f1
 ;; Quick Definition View: C-S-i
