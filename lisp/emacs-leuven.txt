@@ -1586,7 +1586,7 @@ or copying the selected text.
 
 #+begin_src emacs-lisp
   ;; Function to perform slick cut for the kill-region command.
-  (defun lvn--slick-cut-region (beg end &optional region)
+  (defun lvn-slick-cut-region (beg end &optional region)
     "Cut the selected region or the current line if REGION is nil.
   BEG and END specify the region to cut if a region is selected."
     (interactive
@@ -1595,11 +1595,11 @@ or copying the selected text.
        (progn
          (message "[Cut the current line]")
          (list (line-beginning-position) (line-beginning-position 2))))))
-  ;; Add advice to execute lvn--slick-cut-region before the kill-region command.
-  (advice-add 'kill-region :before #'lvn--slick-cut-region)
+  ;; Add advice to execute lvn-slick-cut-region before the kill-region command.
+  (advice-add 'kill-region :before #'lvn-slick-cut-region)
 
   ;; Function to perform slick copy for the kill-ring-save command.
-  (defun lvn--slick-copy-region (beg end &optional region)
+  (defun lvn-slick-copy-region (beg end &optional region)
     "Copy the selected region or the current line if REGION is nil.
   BEG and END specify the region to copy if a region is selected."
     (interactive
@@ -1608,8 +1608,8 @@ or copying the selected text.
        (progn
          (message "[Copied the current line]")
          (list (line-beginning-position) (line-beginning-position 2))))))
-  ;; Add advice to execute lvn--slick-copy-region before the kill-ring-save command.
-  (advice-add 'kill-ring-save :before #'lvn--slick-copy-region)
+  ;; Add advice to execute lvn-slick-copy-region before the kill-ring-save command.
+  (advice-add 'kill-ring-save :before #'lvn-slick-copy-region)
 #+end_src
 
 | Command                     | Emacs | Sublime Text | TextMate |

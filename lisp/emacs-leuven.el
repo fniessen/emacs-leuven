@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231104.1356
+;; Version: 20231104.2016
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231104.1356"
+(defconst lvn--emacs-version "20231104.2016"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -983,7 +983,7 @@ original state of line numbers after navigation."
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
   ;; Function to perform slick cut for the kill-region command.
-  (defun lvn--slick-cut-region (beg end &optional region)
+  (defun lvn-slick-cut-region (beg end &optional region)
     "Cut the selected region or the current line if REGION is nil.
   BEG and END specify the region to cut if a region is selected."
     (interactive
@@ -992,11 +992,11 @@ original state of line numbers after navigation."
        (progn
          (message "[Cut the current line]")
          (list (line-beginning-position) (line-beginning-position 2))))))
-  ;; Add advice to execute lvn--slick-cut-region before the kill-region command.
-  (advice-add 'kill-region :before #'lvn--slick-cut-region)
+  ;; Add advice to execute lvn-slick-cut-region before the kill-region command.
+  (advice-add 'kill-region :before #'lvn-slick-cut-region)
 
   ;; Function to perform slick copy for the kill-ring-save command.
-  (defun lvn--slick-copy-region (beg end &optional region)
+  (defun lvn-slick-copy-region (beg end &optional region)
     "Copy the selected region or the current line if REGION is nil.
   BEG and END specify the region to copy if a region is selected."
     (interactive
@@ -1005,8 +1005,8 @@ original state of line numbers after navigation."
        (progn
          (message "[Copied the current line]")
          (list (line-beginning-position) (line-beginning-position 2))))))
-  ;; Add advice to execute lvn--slick-copy-region before the kill-ring-save command.
-  (advice-add 'kill-ring-save :before #'lvn--slick-copy-region)
+  ;; Add advice to execute lvn-slick-copy-region before the kill-ring-save command.
+  (advice-add 'kill-ring-save :before #'lvn-slick-copy-region)
 
   (defun lvn-duplicate-line-or-region ()
     "Duplicate the current line or region."
