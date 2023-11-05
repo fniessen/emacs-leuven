@@ -6755,7 +6755,8 @@ you will be prompted to enter the desired fill column width."
     (key-chord-define-global "xh" #'mark-whole-buffer)
     (key-chord-define-global "xk" #'kill-buffer)
 
-    (key-chord-define-global "yy" #'browse-kill-ring)
+    (with-eval-after-load "helm-ring"
+      (key-chord-define-global "yy" #'helm-show-kill-ring))
     (key-chord-define-global "zk" #'zap-to-char)
 
     (key-chord-define-global ";s" #'set-mark-command)
