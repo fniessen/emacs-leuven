@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231106.1028
+;; Version: 20231106.1726
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231106.1028"
+(defconst lvn--emacs-version "20231106.1726"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6664,15 +6664,16 @@ This example lists Azerty layout second row keys."
 
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
-    (defadvice dired-jump (around lvn--dired-jump activate)
-      "Ask for confirmation before jumping to a Dired buffer.
+    (when leuven--cygwin-p
+      (defadvice dired-jump (around lvn--dired-jump activate)
+        "Ask for confirmation before jumping to a Dired buffer.
 
 This advice checks the buffer size and prompts for confirmation if the buffer
 size is 1,400,000 bytes or more. It helps prevent time-consuming operations.
 Consider using `C-x d' instead for better performance."
-      (when (or (< (buffer-size) 1400000)
-                (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
-        ad-do-it))
+        (when (or (< (buffer-size) 1400000)
+                  (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
+          ad-do-it)))
 
     )
 
