@@ -13977,6 +13977,10 @@ want to use.
 You can benefit from the provided aliases and functions by sourcing the file
 located at =PATH/TO/bin/rc-common-emacs-leuven=.
 
+#+begin_src shell :tangle ../bin/rc-common-emacs-leuven
+# Hey Emacs, this is a -*- sh -*- file ...
+#+end_src
+
 *** EDITOR
 
 Find a suitable editor.
