@@ -2429,30 +2429,32 @@ point, the highlighting goes away.
     (idle-require 'auto-highlight-symbol)
 
     (with-eval-after-load "auto-highlight-symbol"
-      ;; Add major modes Auto-Highlight-Symbol can run on.
-      (mapc #'(lambda (mode)
-                (add-to-list 'ahs-modes mode t))
-            '(js2-mode
-              ess-mode))                  ; R.
+      ;; Define a list of modes to enable Auto-Highlight-Symbol mode.
+      (setq lvn--extra-ahs-modes '(js2-mode
+                                   ess-mode)) ; R.
+
+      ;; Add the modes to ahs-modes list.
+      (mapc (lambda (mode)
+              (add-to-list 'ahs-modes mode t))
+            lvn--extra-ahs-modes)
 
       ;; Number of seconds to wait before highlighting the current symbol.
       (setq ahs-idle-interval 0.2) ; 0.35.
 
       ;; Unset AHS key bindings that override Org key bindings.
-      (define-key auto-highlight-symbol-mode-map (kbd "<M-left>")    nil)
-      (define-key auto-highlight-symbol-mode-map (kbd "<M-right>")   nil)
-      (define-key auto-highlight-symbol-mode-map (kbd "<M-S-left>")  nil)
-      (define-key auto-highlight-symbol-mode-map (kbd "<M-S-right>") nil)
+      (dolist (key '("<M-left>"
+                     "<M-right>"
+                     "<M-S-left>"
+                     "<M-S-right>"))
+        (define-key auto-highlight-symbol-mode-map (kbd key) nil))
 
       ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
       ;; (global-auto-highlight-symbol-mode t)
 
-      ;; Enable Auto-Highlight-Symbol mode in all programming mode buffers.
-      (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
-
-      ;; Enable Auto-Highlight-Symbol mode in LaTeX mode.
-      (add-hook 'latex-mode-hook #'auto-highlight-symbol-mode)
-      ))
+      ;; Enable Auto-Highlight-Symbol mode in programming mode and LaTeX mode buffers.
+      (dolist (hook '(prog-mode-hook
+                      latex-mode-hook))
+        (add-hook hook 'auto-highlight-symbol-mode))))
 #+end_src
 
 XXX Check out ~light-symbol~.
@@ -4737,6 +4739,8 @@ We cannot change ~helm-command-prefix-key~ once ~helm-config~ is loaded.
     (global-unset-key (kbd "C-x c"))
 #+end_src
 
+XXX Unsetting does not work...
+
 #+begin_src emacs-lisp
     ;; Resume a previous `helm' session.
     (global-set-key (kbd "C-M-z") #'helm-resume)
@@ -4889,14 +4893,12 @@ XXX Look at helm-dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Speedy file opening.
-    (global-set-key (kbd "<f3>")
-                    #'(lambda ()
-                        (interactive)
-                        (let ((split-width-threshold (* 2 132)))
-                          (helm-for-files))))
+    ;; Bind the Helm-for-Files command to the F3 key.
+    (global-set-key (kbd "<f3>") #'helm-for-files)
 
-    ;; (global-set-key [remap find-file] #'helm-find-files) ; OK. C-x C-f
+    ;; ;; Remap the standard 'find-file' key binding (C-x C-f) to use Helm for file
+    ;; ;; navigation.
+    ;; (global-set-key [remap find-file] #'helm-find-files)
 #+end_src
 
 #+begin_src emacs-lisp

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231105.1130
+;; Version: 20231106.1028
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231105.1130"
+(defconst lvn--emacs-version "20231106.1028"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1386,30 +1386,32 @@ Should be selected from `fringe-bitmaps'.")
     (idle-require 'auto-highlight-symbol)
 
     (with-eval-after-load "auto-highlight-symbol"
-      ;; Add major modes Auto-Highlight-Symbol can run on.
-      (mapc #'(lambda (mode)
-                (add-to-list 'ahs-modes mode t))
-            '(js2-mode
-              ess-mode))                  ; R.
+      ;; Define a list of modes to enable Auto-Highlight-Symbol mode.
+      (setq lvn--extra-ahs-modes '(js2-mode
+                                   ess-mode)) ; R.
+
+      ;; Add the modes to ahs-modes list.
+      (mapc (lambda (mode)
+              (add-to-list 'ahs-modes mode t))
+            lvn--extra-ahs-modes)
 
       ;; Number of seconds to wait before highlighting the current symbol.
       (setq ahs-idle-interval 0.2) ; 0.35.
 
       ;; Unset AHS key bindings that override Org key bindings.
-      (define-key auto-highlight-symbol-mode-map (kbd "<M-left>")    nil)
-      (define-key auto-highlight-symbol-mode-map (kbd "<M-right>")   nil)
-      (define-key auto-highlight-symbol-mode-map (kbd "<M-S-left>")  nil)
-      (define-key auto-highlight-symbol-mode-map (kbd "<M-S-right>") nil)
+      (dolist (key '("<M-left>"
+                     "<M-right>"
+                     "<M-S-left>"
+                     "<M-S-right>"))
+        (define-key auto-highlight-symbol-mode-map (kbd key) nil))
 
       ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
       ;; (global-auto-highlight-symbol-mode t)
 
-      ;; Enable Auto-Highlight-Symbol mode in all programming mode buffers.
-      (add-hook 'prog-mode-hook #'auto-highlight-symbol-mode)
-
-      ;; Enable Auto-Highlight-Symbol mode in LaTeX mode.
-      (add-hook 'latex-mode-hook #'auto-highlight-symbol-mode)
-      ))
+      ;; Enable Auto-Highlight-Symbol mode in programming mode and LaTeX mode buffers.
+      (dolist (hook '(prog-mode-hook
+                      latex-mode-hook))
+        (add-hook hook 'auto-highlight-symbol-mode))))
 
 ;; XXX Impact on Org's HTML export?
   ;; (with-eval-after-load "color-identifiers-mode-autoloads"
@@ -2719,14 +2721,12 @@ Prompts the user for confirmation before opening the file as root."
 
     (global-set-key (kbd "M-x") #'helm-M-x)
 
-    ;; Speedy file opening.
-    (global-set-key (kbd "<f3>")
-                    #'(lambda ()
-                        (interactive)
-                        (let ((split-width-threshold (* 2 132)))
-                          (helm-for-files))))
+    ;; Bind the Helm-for-Files command to the F3 key.
+    (global-set-key (kbd "<f3>") #'helm-for-files)
 
-    ;; (global-set-key [remap find-file] #'helm-find-files) ; OK. C-x C-f
+    ;; ;; Remap the standard 'find-file' key binding (C-x C-f) to use Helm for file
+    ;; ;; navigation.
+    ;; (global-set-key [remap find-file] #'helm-find-files)
 
     ;; Buffer list.
     (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
