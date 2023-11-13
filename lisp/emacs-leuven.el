@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231113.1528
+;; Version: 20231113.1549
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231113.1528"
+(defconst lvn--emacs-version "20231113.1549"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1916,14 +1916,24 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "15.11 (emacs)Other Repeating Search Commands")
 
-  (global-unset-key (kbd "M-o")) ; XXX???
+  ;; Unset keybinding to avoid conflicts. XXX???
+  (global-unset-key (kbd "M-o"))
 
-  ;; "Multi-occur" easily inside Isearch.
+  ;; Bind "M-o" to invoke "multi-occur" during Isearch.
   (define-key isearch-mode-map (kbd "M-o") #'helm-multi-swoop-all)
 
   ;; Grep all same extension files from inside Isearch.
-  (defun leuven-isearch-grep ()
-    "Start grep using current isearch string."
+  (defun lvn-grep-search-isearch-string ()
+    "Start grep using the current isearch string.
+
+This function initiates a grep search based on the current isearch string. If
+the isearch is using regular expressions, it directly uses the isearch-string.
+Otherwise, it converts the isearch-string to a regular expression.
+
+The search is performed in files with a pattern corresponding to the current
+buffer's file extension, and the search is conducted in the default directory.
+
+After initiating the grep search, the isearch is aborted."
     (interactive)
     (let* ((search-str (if isearch-regexp isearch-string (regexp-quote isearch-string)))
            (file-pattern (if (buffer-file-name)
@@ -1934,7 +1944,7 @@ Should be selected from `fringe-bitmaps'.")
       (lgrep search-str file-pattern default-dir)
       (isearch-abort)))
 
-  (define-key isearch-mode-map (kbd "C-M-o") #'leuven-isearch-grep)
+  (define-key isearch-mode-map (kbd "C-M-o") #'lvn-grep-search-isearch-string)
 
   (defun lvn-keep-duplicate-lines ()
     "Keep only lines that are duplicated in the current buffer."
