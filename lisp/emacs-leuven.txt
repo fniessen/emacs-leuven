@@ -3301,6 +3301,33 @@ except those containing matches for REGEXP.
   (define-key isearch-mode-map (kbd "C-M-o") #'leuven-isearch-grep)
 #+end_src
 
+Keep only the lines that are duplicated in the buffer and delete the
+non-duplicated lines:
+
+#+begin_src emacs-lisp
+  (defun lvn-keep-duplicate-lines ()
+    "Keep only lines that are duplicated in the current buffer."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((lines '())
+            (duplicated-lines '())
+            line)
+        (while (not (eobp))
+          (setq line (buffer-substring-no-properties
+                      (line-beginning-position)
+                      (line-end-position)))
+          (if (member line lines)
+              (unless (member line duplicated-lines)
+                (push line duplicated-lines))
+            (push line lines))
+          (forward-line 1))
+        (erase-buffer)
+        (dolist (l (reverse duplicated-lines))
+          (insert l "\n"))
+        (message "[Non-duplicated lines deleted from the buffer.]"))))
+#+end_src
+
 #+begin_src emacs-lisp
 )                                       ; Chapter 15 ends here.
 #+end_src

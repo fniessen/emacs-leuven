@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231106.1726
+;; Version: 20231113.1528
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231106.1726"
+(defconst lvn--emacs-version "20231113.1528"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1935,6 +1935,28 @@ Should be selected from `fringe-bitmaps'.")
       (isearch-abort)))
 
   (define-key isearch-mode-map (kbd "C-M-o") #'leuven-isearch-grep)
+
+  (defun lvn-keep-duplicate-lines ()
+    "Keep only lines that are duplicated in the current buffer."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((lines '())
+            (duplicated-lines '())
+            line)
+        (while (not (eobp))
+          (setq line (buffer-substring-no-properties
+                      (line-beginning-position)
+                      (line-end-position)))
+          (if (member line lines)
+              (unless (member line duplicated-lines)
+                (push line duplicated-lines))
+            (push line lines))
+          (forward-line 1))
+        (erase-buffer)
+        (dolist (l (reverse duplicated-lines))
+          (insert l "\n"))
+        (message "[Non-duplicated lines deleted from the buffer.]"))))
 
 )                                       ; Chapter 15 ends here.
 
