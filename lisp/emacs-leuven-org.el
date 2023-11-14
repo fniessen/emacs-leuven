@@ -138,8 +138,8 @@ If not, just print a message."
 
   ;; Set the Org mode ellipsis to a right-pointing pointer if available,
   ;; otherwise customize its face and use a fallback value.
-  (if (char-displayable-p ?\u25BA)
-      (setq org-ellipsis " \u25BA")
+  (if (char-displayable-p ?\u2014)
+      (setq org-ellipsis " \u2014")
     (set-face-attribute 'org-ellipsis nil
                         :box "#999999"
                         :foreground "#999999"
@@ -1158,10 +1158,12 @@ From the address <%a>"
   (message "10.1 (org)Agenda files")
 
   (when (boundp 'org-agenda-files)
-    (message "[Found %s entries in `org-agenda-files']"
-             (length org-agenda-files))
-    ;; (sit-for 0.5)
-    )
+    (if (null org-agenda-files)
+        (progn
+          (message "[No Org agenda files currently found]")
+          (sit-for 1.5)) ; Wait for 1.5 seconds
+      (message "[Found %s entries in `org-agenda-files']"
+               (length org-agenda-files))))
 
   ;;** 10.2 (info "(org)Agenda dispatcher")
 
