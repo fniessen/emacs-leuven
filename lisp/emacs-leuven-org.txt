@@ -308,8 +308,8 @@ unsetting local keys?
 
   ;; Set the Org mode ellipsis to a right-pointing pointer if available,
   ;; otherwise customize its face and use a fallback value.
-  (if (char-displayable-p ?\u2014)
-      (setq org-ellipsis " \u2014")
+  (if (char-displayable-p ?\u25B7)
+      (setq org-ellipsis " \u25B7")
     (set-face-attribute 'org-ellipsis nil
                         :box "#999999"
                         :foreground "#999999"
