@@ -136,16 +136,24 @@ If not, just print a message."
 (with-eval-after-load "org"
   (message "[... Org Document Structure]")
 
-  ;; Set the Org mode ellipsis to a right-pointing pointer if available,
-  ;; otherwise customize its face and use a fallback value.
-  (if (char-displayable-p ?\u25B7)
-      (setq org-ellipsis " \u25B7")
-    (set-face-attribute 'org-ellipsis nil
-                        :box "#999999"
-                        :foreground "#999999"
-                        :background "#FFF8C0"
-                        :underline nil)
-    (setq org-ellipsis 'org-ellipsis)))
+  ;; Define the right-pointing pointer character.
+  (defvar lvn-right-pointing-char
+    (if (char-displayable-p ?\u25B6)
+        " \u25B6"
+      nil))
+
+  ;; Define common face attributes.
+  (defvar lvn-org-ellipsis-face-attributes
+    '((:box "#999999"
+       :foreground "#999999"
+       :background "#FFF8C0"
+       :underline nil)))
+
+  ;; Set the Org mode ellipsis.
+  (if lvn-right-pointing-char
+      (setq org-ellipsis lvn-right-pointing-char)
+    (apply #'set-face-attribute 'org-ellipsis lvn-org-ellipsis-face-attributes)
+    (setq org-ellipsis 'org-ellipsis))
 
 ;; RET follows links (except in tables, where you must use `C-c C-o').
 (setq org-return-follows-link t)
