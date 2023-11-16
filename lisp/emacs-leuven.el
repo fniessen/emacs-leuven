@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231113.1549
+;; Version: 20231116.1901
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231113.1549"
+(defconst lvn--emacs-version "20231116.1901"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -455,7 +455,6 @@ Return FILE if it is executable, otherwise return nil."
             ;; multi-term
             multiple-cursors
             pager
-            paradox
             ;; paredit
             ;; pdf-tools
             powerline

@@ -669,7 +669,6 @@ like this into your configuration file:
             ;; multi-term
             multiple-cursors
             pager
-            paradox
             ;; paredit
             ;; pdf-tools
             powerline
@@ -779,12 +778,6 @@ like this into your configuration file:
     ;; "It looks like there's a problem with your network connection."
     ;; (auto-package-update-maybe)
   )
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (idle-require 'paradox)
-  (with-eval-after-load "paradox"
-    (paradox-enable))
 #+end_src
 
 #+begin_src emacs-lisp
