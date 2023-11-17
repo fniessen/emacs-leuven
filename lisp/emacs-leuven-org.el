@@ -153,7 +153,7 @@ If not, just print a message."
   (if lvn-right-pointing-char
       (setq org-ellipsis lvn-right-pointing-char)
     (apply #'set-face-attribute 'org-ellipsis lvn-org-ellipsis-face-attributes)
-    (setq org-ellipsis 'org-ellipsis))
+    (setq org-ellipsis 'org-ellipsis)))
 
 ;; RET follows links (except in tables, where you must use `C-c C-o').
 (setq org-return-follows-link t)

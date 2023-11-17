@@ -335,7 +335,7 @@ customize its face and use a fallback value.
   (if lvn-right-pointing-char
       (setq org-ellipsis lvn-right-pointing-char)
     (apply #'set-face-attribute 'org-ellipsis lvn-org-ellipsis-face-attributes)
-    (setq org-ellipsis 'org-ellipsis))
+    (setq org-ellipsis 'org-ellipsis)))
 #+end_src
 
 The character displayability check is relatively slow.
