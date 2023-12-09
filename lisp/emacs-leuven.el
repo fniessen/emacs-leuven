@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231209.1815
+;; Version: 20231209.1819
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231209.1815"
+(defconst lvn--emacs-version "20231209.1819"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7571,20 +7571,43 @@ Consider using `C-x d' instead for better performance."
 
   ;; Record safe values for some local variables.
   (setq safe-local-variable-values
-        '((TeX-master . t) ; Tells AUCTeX that the current file is the master document.
-          (ac-sources . (ac-source-words-in-buffer ac-source-dictionary)) ; Specifies auto-complete sources.
-          (flycheck-emacs-lisp-initialize-packages . t) ; Initializes packages for flycheck-mode.
-          (flycheck-mode . nil) ; Disables flycheck-mode by default.
-          (flyspell-mode . -1) ; Disables flyspell-mode by default.
-          (flyspell-mode . 1) ; Enables flyspell-mode by default.
-          (ispell-local-dictionary . "american") ; Specifies the dictionary to use for ispell.
-          (ispell-local-dictionary . "francais") ; Specifies the dictionary to use for ispell.
-          (org-tags-column . -80) ; Sets the column for tags in Org mode.
-          (outline-minor-mode) ; Enables outline-minor-mode.
+        '(
+          ;; Tell AUCTeX that the current file is the master document.
+          (TeX-master . t)
+
+          ;; Specify auto-complete sources.
+          (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
+
+          ;; Initialize packages for flycheck-mode.
+          (flycheck-emacs-lisp-initialize-packages . t)
+
+          ;; Disable flycheck-mode by default.
+          (flycheck-mode . nil)
+
+          ;; Disable flyspell-mode by default.
+          (flyspell-mode . -1)
+
+          ;; Enable flyspell-mode by default.
+          (flyspell-mode . 1)
+
+          ;; Specifiy the dictionary to use for ispell.
+          (ispell-local-dictionary . "american")
+
+          ;; Specify the dictionary to use for ispell.
+          (ispell-local-dictionary . "francais")
+
+          ;; Set the column for tags in Org mode.
+          (org-tags-column . -80)
+
+          ;; Enable outline-minor-mode.
+          (outline-minor-mode)
+
+          ;; Set whitespace style options.
           (whitespace-style face tabs spaces trailing lines
                             space-before-tab::space newline indentation::space
                             empty space-after-tab::space space-mark tab-mark
-                            newline-mark))) ; Sets whitespace style options.
+                            newline-mark)
+          ))
 
 ;;** 49.4 Customizing (info "(emacs)Key Bindings")
 
