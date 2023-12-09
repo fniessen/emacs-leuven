@@ -86,7 +86,7 @@
 
 ;; This is for the sake of Emacs.
 ;; Local Variables:
-;; coding: utf-8-unix
+;; coding: utf-8
 ;; eval: (when (require 'rainbow-mode nil t) (rainbow-mode))
 ;; flycheck-emacs-lisp-initialize-packages: t
 ;; flycheck-mode: nil
