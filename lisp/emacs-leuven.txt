@@ -14111,7 +14111,7 @@ cde() {
         return 2
     fi
 
-    builtin cd "$dir"
+    cd "$dir"
     # The change in working directory will persist after the function has
     # completed.
 }
