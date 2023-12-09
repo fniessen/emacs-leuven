@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231116.1901
+;; Version: 20231209.1815
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231116.1901"
+(defconst lvn--emacs-version "20231209.1815"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5462,14 +5462,15 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
   (leuven--section "27.5 (emacs)Flymake")
 
-  ;; Modern on-the-fly syntax checking.
-  (with-eval-after-load "flycheck-autoloads"
+  ;; Enable on-the-fly syntax checking with Flycheck.
+  (with-eval-after-load 'flycheck-autoloads
+    ;; ;; Enable Flycheck mode in all programming modes.
+    ;; (add-hook 'prog-mode-hook #'flycheck-mode)
+    ;;
+    ;; ;; Enable Flycheck mode in LaTeX mode.
+    ;; (add-hook 'LaTeX-mode-hook #'flycheck-mode)
 
-    ;; Enable Flycheck mode in all programming modes. XXX Should not in Java?
-    (add-hook 'prog-mode-hook  #'flycheck-mode)
-
-    (add-hook 'LaTeX-mode-hook #'flycheck-mode)
-
+    ;; Set a global keybinding to quickly access the Flycheck error list.
     (global-set-key (kbd "M-g l") #'flycheck-list-errors))
 
   (with-eval-after-load "flycheck"
