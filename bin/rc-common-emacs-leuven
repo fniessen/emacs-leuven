@@ -66,12 +66,12 @@ cde() {
                              (replace-regexp-in-string "^~" (getenv "HOME")
                                 default-directory))' | tr -d '"')"
 
-    if [ ! -d "$dir" ]; then
+    if [[ ! -d "$dir" ]]; then
         printf >&2 "Error: directory not found: %s\n" "$dir"
         return 2
     fi
 
     builtin cd "$dir"
-    #! The change in working directory will persist after the function has
-    #! completed.
+    # The change in working directory will persist after the function has
+    # completed.
 }
