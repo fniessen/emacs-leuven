@@ -36,11 +36,11 @@
 (setq org-agenda-custom-commands nil)
 
 (add-to-list 'org-agenda-custom-commands
-             '("c" . "COLLECT...") t)
+             '("c" . "CLARIFY...") t)
 
 ;; Collectbox.
 (add-to-list 'org-agenda-custom-commands
-             `("cb" "CollectBox"
+             `("cc" "CollectBox"
                ((alltodo ""))
                ((org-agenda-files (list ,org-default-notes-file)))) t)
 
@@ -587,7 +587,9 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
              '("rW" "Waiting for"
                ((tags-todo "TODO={WAIT}"))
                ((org-agenda-overriding-header "Waiting for")
-                (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work.
+                (org-agenda-sorting-strategy '(deadline-up))))
+             t)
+                                        ; FIXME deadline-up does not work.
 
 (add-to-list 'org-agenda-custom-commands
              '("rP" "Projects"

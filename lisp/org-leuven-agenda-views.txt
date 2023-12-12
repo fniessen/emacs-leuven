@@ -226,11 +226,11 @@ You should be able to work with Org items with the mapping and property APIs:
 - ~(info "(org) Using the property API")~
 - ~(info "(org) Using the mapping API")~
 
-* COLLECT
+* CLARIFY
 
 #+begin_src emacs-lisp
 (add-to-list 'org-agenda-custom-commands
-             '("c" . "COLLECT...") t)
+             '("c" . "CLARIFY...") t)
 #+end_src
 
 ** CollectBox
@@ -240,7 +240,7 @@ The CollectBox is the default place where you collect your thoughts.
 #+begin_src emacs-lisp
 ;; Collectbox.
 (add-to-list 'org-agenda-custom-commands
-             `("cb" "CollectBox"
+             `("cc" "CollectBox"
                ((alltodo ""))
                ((org-agenda-files (list ,org-default-notes-file)))) t)
 #+end_src
@@ -1216,7 +1216,7 @@ If you want to show TODO items neither *scheduled* nor *deadline*'d, you can use
 : -SCHEDULED={.+}-DEADLINE={.+}+TODO="TODO"
 #+end_note
 
-** Ticklers
+** Tickler File
 :PROPERTIES:
 :header-args+: :tangle no
 :END:
@@ -1233,23 +1233,27 @@ An item with a start date in the future doesn't appear in ordinary OmniFocus
 views. But when the start date comes around, the project or action appears
 again, ready for you to decide what to do with it.
 
-FIXME C'est scheduled qu'il faut checker, plutôt que deadline ?
-
 #+begin_src emacs-lisp
 (add-to-list 'org-agenda-custom-commands
-             '("F" "Future"
-               ((tags-todo "TODO<>{SDAY}+DEADLINE>\"<+0d>\""))
-               ((org-agenda-overriding-header "List of all TODO entries with future due date (no SDAY)")
-                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline))
-                (org-agenda-sorting-strategy '(priority-down)))) t)
+             '("F" "Ticker File"
+               ((tags-todo "TODO<>{SDAY}+SCHEDULED>\"<+0d>\""))
+               ((org-agenda-overriding-header "List of all TODO entries with future start date (no SDAY)")
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notscheduled))
+                (org-agenda-sorting-strategy '(priority-down))))
+             t)
 #+end_src
 
+Broader:
+
 #+begin_src emacs-lisp
 (add-to-list 'org-agenda-custom-commands
-             '("F" "List TODO entries scheduled for the future"
+             '("G" "Tickler File"
                ((todo ""))
                ((org-agenda-todo-ignore-scheduled 'past)
-                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notscheduled)))) t)
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notscheduled))
+                (org-agenda-overriding-header "List of TODO entries scheduled for the future")
+                (org-agenda-sorting-strategy '(priority-down))))
+             t)
 #+end_src
 
 #+begin_src emacs-lisp :tangle org-leuven-agenda-views.el
@@ -1278,7 +1282,9 @@ See other people's tasks.
              '("rW" "Waiting for"
                ((tags-todo "TODO={WAIT}"))
                ((org-agenda-overriding-header "Waiting for")
-                (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME does not work.
+                (org-agenda-sorting-strategy '(deadline-up))))
+             t)
+                                        ; FIXME deadline-up does not work.
 #+end_src
 
 ** Projects
