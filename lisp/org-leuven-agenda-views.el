@@ -243,18 +243,18 @@
                         ((org-agenda-entry-types '(:deadline))
                          (org-agenda-overriding-header "Tomorrow")
                          (org-agenda-skip-function
-                          '(leuven--skip-entry-unless-deadline-in-n-days-or-more 1))
+                          '(lvn--skip-entry-unless-deadline-in-n-days-or-more 1))
                          (org-deadline-warning-days 1)))
                 (agenda ""
                         ((org-agenda-overriding-header "Next 5 days")
                          (org-agenda-skip-function
-                          '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
+                          '(lvn--skip-entry-unless-deadline-in-n-days-or-more 2))
                          (org-deadline-warning-days 7)))
                 (agenda ""
                         ((org-agenda-format-date "")
                          (org-agenda-overriding-header "Next 3 weeks")
                          (org-agenda-skip-function
-                          '(leuven--skip-entry-unless-deadline-in-n-days-or-more 7))
+                          '(lvn--skip-entry-unless-deadline-in-n-days-or-more 7))
                          (org-deadline-warning-days 28))))
                ((org-agenda-deadline-faces '((0.0 . default)))
                 (org-agenda-start-with-clockreport-mode nil)
@@ -264,54 +264,55 @@
                 (org-agenda-use-time-grid nil)
                 (org-agenda-write-buffer-name "Reminders"))) t)
 
-(defun leuven--skip-entry-unless-deadline-in-n-days-or-more (n)
-  "Skip entries that have no deadline, or that have a deadline earlier than in N days."
-  (let* ((dl (org-entry-get nil "DEADLINE")))
-    (if (or (not dl)
-            (equal dl "")
-            (org-time< dl (+ (org-time-today) (* n 86400))))
-        (progn (outline-next-heading) (point)))))
+(defun lvn--skip-entry-unless-deadline-in-n-days-or-more (n)
+  "Skip entries that have no deadline or have a deadline earlier than N days from today."
+  (let ((deadline (org-entry-get nil "DEADLINE")))
+    (when (or (not deadline)
+              (string= deadline "")
+              (org-time< deadline (+ (org-time-today) (* n 86400))))
+      (outline-next-heading)
+      (point))))
 
-(defun leuven--skip-entry-unless-overdue-deadline ()
-  "Skip entries that have no deadline, or that have a deadline later than or equal to today."
-  (let* ((dl (org-entry-get nil "DEADLINE")))
-    (if (or (not dl)
-            (equal dl "")
-            (org-time>= dl (org-time-today)))
-        (progn (outline-next-heading) (point)))))
+(defun lvn--skip-entry-unless-overdue-deadline ()
+  "Skip entries that have no deadline or have a deadline later than or equal to today."
+  (let ((deadline (org-entry-get nil "DEADLINE")))
+    (when (or (not deadline)
+              (string= deadline "")
+              (org-time>= deadline (org-time-today)))
+      (outline-next-heading)
+      (point))))
 
-(defun leuven--skip-entry-if-past-deadline ()
+(defun lvn--skip-entry-if-past-deadline ()
   "Skip entries that have a deadline earlier than today."
-  (let* ((dl (org-entry-get nil "DEADLINE")))
-    (if (org-time< dl (org-time-today))
-        (progn (outline-next-heading) (point)))))
+  (let* ((deadline (org-entry-get nil "DEADLINE")))
+    (when (and deadline (org-time< deadline (org-time-today)))
+      (outline-next-heading)
+      (point))))
 
-(defun leuven--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days (n1 n2)
+(defun lvn--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days (n1 n2)
   "Skip entries that have a deadline in less than N1 days, or that have a
 scheduled date in less than N2 days, or that have no deadline nor scheduled."
-  (let* ((dl (org-entry-get nil "DEADLINE"))
-         (sd (org-entry-get nil "SCHEDULED")))
-    (if (or (and dl
-                 (not (equal dl ""))
-                 (org-time< dl (+ (org-time-today) (* n1 86400))))
-            (and sd
-                 (not (equal sd ""))
-                 (org-time< sd (+ (org-time-today) (* n2 86400))))
-            (and (or (not dl)       ; No deadline.
-                     (equal dl ""))
-                 (or (not sd)       ; Nor scheduled.
-                     (equal sd ""))))
-        (progn (outline-next-heading) (point)))))
+  (let ((deadline (org-entry-get nil "DEADLINE"))
+        (scheduled (org-entry-get nil "SCHEDULED")))
+    (when (or (and deadline
+                   (not (string= deadline ""))
+                   (org-time< deadline (+ (org-time-today) (* n1 86400))))
+              (and scheduled
+                   (not (string= scheduled ""))
+                   (org-time< scheduled (+ (org-time-today) (* n2 86400))))
+              (and (or (not deadline) (string= deadline ""))
+                   (or (not scheduled) (string= scheduled ""))))
+      (outline-next-heading)
+      (point))))
 
-(defun leuven--skip-entry-if-deadline-or-schedule ()
+(defun lvn--skip-entry-if-deadline-or-schedule ()
   "Skip entries that have a deadline or that have a scheduled date."
-  (let* ((dl (org-entry-get nil "DEADLINE"))
-         (sd (org-entry-get nil "SCHEDULED")))
-    (if (or (and dl
-                 (not (equal dl "")))
-            (and sd
-                 (not (equal sd ""))))
-        (progn (outline-next-heading) (point)))))
+  (let ((deadline (org-entry-get nil "DEADLINE"))
+        (scheduled (org-entry-get nil "SCHEDULED")))
+    (when (or (and deadline (not (string= deadline "")))
+              (and scheduled (not (string= scheduled ""))))
+      (outline-next-heading)
+      (point))))
 
 (add-to-list 'org-agenda-custom-commands
              '("ra3" "Agenda for all TODO entries"
@@ -319,13 +320,13 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                         ((org-agenda-format-date "")
                          (org-agenda-overriding-header "Past due")
                          (org-agenda-skip-function
-                          'leuven--skip-entry-unless-overdue-deadline)
+                          'lvn--skip-entry-unless-overdue-deadline)
                          (org-deadline-warning-days 0)))
                 (agenda ""
                         ((org-agenda-format-date "")
                          (org-agenda-overriding-header "Today/tomorrow")
                          (org-agenda-skip-function
-                          'leuven--skip-entry-if-past-deadline)
+                          'lvn--skip-entry-if-past-deadline)
                          (org-agenda-span 2)
                          (org-agenda-use-time-grid t)
                          (org-deadline-warning-days 0)))
@@ -333,17 +334,17 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                         ((org-agenda-format-date "")
                          (org-agenda-overriding-header "Next 12 days")
                          (org-agenda-skip-function
-                          '(leuven--skip-entry-unless-deadline-in-n-days-or-more 2))
+                          '(lvn--skip-entry-unless-deadline-in-n-days-or-more 2))
                          (org-deadline-warning-days 14)))
                 (todo ""
                       ((org-agenda-overriding-header "Later")
                        (org-agenda-skip-function
-                        '(leuven--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days 15 2))
+                        '(lvn--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days 15 2))
                        (org-agenda-sorting-strategy '(ts-up))))
                 (todo ""
                       ((org-agenda-overriding-header "No due date")
                        (org-agenda-skip-function
-                        'leuven--skip-entry-if-deadline-or-schedule))))
+                        'lvn--skip-entry-if-deadline-or-schedule))))
                ((org-agenda-start-with-clockreport-mode nil)
                 (org-agenda-prefix-format " %i %?-12t% s")
                 (org-agenda-span 'day)
@@ -570,6 +571,17 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY)")
                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                 (org-agenda-sorting-strategy '(priority-down)))) t)
+
+(add-to-list 'org-agenda-custom-commands
+             '("p" "Past and unscheduled TODOs"
+               ((todo ""
+                      ((org-agenda-overriding-header "Unscheduled and Past Due")
+                       (org-agenda-skip-function
+                        '(lambda ()
+                           (let ((scheduled (org-get-scheduled-time (point))))
+                             (if (or (not scheduled) (org-time< scheduled (current-time)))
+                                 nil
+                               (org-agenda-skip-entry-if 'nottodo 'scheduled))))))))))
 
 (add-to-list 'org-agenda-custom-commands
              '("rW" "Waiting for"
