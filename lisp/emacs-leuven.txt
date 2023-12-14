@@ -608,7 +608,7 @@ like this into your configuration file:
           '(ag
             ant
             anzu
-            auctex
+            ;; auctex
             ;; auto-complete
             auto-highlight-symbol
             auto-package-update
@@ -621,7 +621,7 @@ like this into your configuration file:
             color-identifiers-mode
             company
             company-quickhelp
-            csv-mode
+            ;; csv-mode
             dashboard
             diff-hl
             diminish
@@ -634,10 +634,10 @@ like this into your configuration file:
             flycheck
             flycheck-color-mode-line
             fuzzy
-            git-commit
-            git-commit-insert-issue
+            ;; git-commit
+            ;; git-commit-insert-issue
             git-messenger
-            git-timemachine
+            ;; git-timemachine
             google-this
             google-translate
             goto-chg

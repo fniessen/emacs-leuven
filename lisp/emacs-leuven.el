@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231209.1819
+;; Version: 20231214.2238
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231209.1819"
+(defconst lvn--emacs-version "20231214.2238"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -394,7 +394,7 @@ Return FILE if it is executable, otherwise return nil."
           '(ag
             ant
             anzu
-            auctex
+            ;; auctex
             ;; auto-complete
             auto-highlight-symbol
             auto-package-update
@@ -407,7 +407,7 @@ Return FILE if it is executable, otherwise return nil."
             color-identifiers-mode
             company
             company-quickhelp
-            csv-mode
+            ;; csv-mode
             dashboard
             diff-hl
             diminish
@@ -420,10 +420,10 @@ Return FILE if it is executable, otherwise return nil."
             flycheck
             flycheck-color-mode-line
             fuzzy
-            git-commit
-            git-commit-insert-issue
+            ;; git-commit
+            ;; git-commit-insert-issue
             git-messenger
-            git-timemachine
+            ;; git-timemachine
             google-this
             google-translate
             goto-chg
