@@ -1081,8 +1081,9 @@ From the address <%a>"
 ;; ;; 4.6 Shortcut links.
 ;; (add-to-list 'org-link-abbrev-alist '(("att" . org-attach-expand-link)))
 
-(add-to-list 'org-safe-remote-resources
-             "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'")
+(with-eval-after-load "org-protocol"
+  (add-to-list 'org-safe-remote-resources
+               "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'"))
 
 (message "9.4 (org)Protocols")
 

@@ -1756,8 +1756,9 @@ Instead of modifying ~org-link-abbrev-alist~, you can also use
 in your Org buffers.
 
 #+begin_src emacs-lisp
-(add-to-list 'org-safe-remote-resources
-             "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'")
+(with-eval-after-load "org-protocol"
+  (add-to-list 'org-safe-remote-resources
+               "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'"))
 #+end_src
 
 ** Protocols for external access
