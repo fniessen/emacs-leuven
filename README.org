@@ -78,25 +78,30 @@ git clone https://github.com/fniessen/emacs-leuven
 
 * Installation
 
-Using the Emacs Leuven library is very easy: you just need to...
+Incorporating the Emacs Leuven library into your Emacs environment is
+a straightforward process:
 
-- Download and install [[https://github.com/fniessen/emacs-leuven][emacs-leuven]].
+- Download the Emacs-Leuven package from [[https://github.com/fniessen/emacs-leuven][GitHub]].
+
+- Integrate Emacs-Leuven into your Emacs configuration file:
 
   #+begin_src emacs-lisp
-  ;; Make sure `emacs-leuven.el' is in your `load-path'.
-  (add-to-list 'load-path "/path/to/emacs-leuven/lisp")
+  ;; Ensure that `emacs-leuven' libraries are included in your Emacs
+  ;; `load-path'.
+  (add-to-list 'load-path "/PATH/TO/emacs-leuven/lisp")
 
-  ;; Require it as normal.
+  ;; Load Emacs-Leuven and its associated modules.
   (require 'emacs-leuven)
   (require 'emacs-leuven-org)
   (require 'emacs-leuven-bbdb)
   (require 'emacs-leuven-ess)
   (require 'emacs-leuven-ledger)
 
-  ;; Place your settings here, which can override the settings of Emacs-Leuven.
+  ;; Customize your settings here, which can override the defaults provided by
+  ;; Emacs-Leuven.
   #+end_src
 
-- Restart Emacs.
+- Restart Emacs to apply the changes.
 
 * Some better defaults
 
