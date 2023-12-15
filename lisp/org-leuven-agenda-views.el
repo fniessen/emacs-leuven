@@ -38,9 +38,9 @@
 (add-to-list 'org-agenda-custom-commands
              '("c" . "CLARIFY...") t)
 
-;; Collectbox.
+;; Inbox.
 (add-to-list 'org-agenda-custom-commands
-             `("cc" "CollectBox"
+             `("cc" "Inbox"
                ((alltodo ""))
                ((org-agenda-files (list ,org-default-notes-file))))
              t)
@@ -69,7 +69,7 @@
                          (org-agenda-span 'day)))
                 ;; Unscheduled new tasks (waiting to be prioritized and scheduled).
                 (tags-todo "LEVEL=2"
-                           ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")
+                           ((org-agenda-overriding-header "INBOX (Unscheduled)")
                             (org-agenda-skip-function
                              '(org-agenda-skip-entry-if 'scheduled))
                             (org-agenda-files (list ,org-default-notes-file))))
@@ -524,7 +524,7 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
 (add-to-list 'org-agenda-custom-commands
              '("rw" "Weekly review"
                ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                      ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
+                      ((org-agenda-overriding-header "INBOX (Unscheduled)")))
 
                 (agenda ""
                         ((org-agenda-clockreport-mode t)
@@ -561,7 +561,7 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                       ((org-agenda-overriding-header "IN PROGRESS")
                        (org-agenda-todo-ignore-scheduled nil)))
 
-                (todo "TODO"        ; Don't include items from CollectBox! XXX
+                (todo "TODO"        ; Don't include items from Inbox! XXX
                       ((org-agenda-overriding-header "ACTION LIST")))
 
                 ;; Ignore scheduled and deadline entries, as they're visible

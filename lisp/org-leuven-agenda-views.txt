@@ -103,7 +103,7 @@ week) on the ~errands~ tag.
 ** Gather it all in one place
 
 Each and every thing that you want to accomplish needs to end up in one place,
-and that place is the *CollectBox*.
+and that place is the *Inbox*.
 
 It's fine if you haven't yet come up with a plan for exactly how or when you'll
 do these new to-dos. What's crucial is immediately getting them off your mind
@@ -233,14 +233,14 @@ You should be able to work with Org items with the mapping and property APIs:
              '("c" . "CLARIFY...") t)
 #+end_src
 
-** CollectBox
+** Inbox
 
-The CollectBox is the default place where you collect your thoughts.
+The Inbox is the default place where you collect your thoughts.
 
 #+begin_src emacs-lisp
-;; Collectbox.
+;; Inbox.
 (add-to-list 'org-agenda-custom-commands
-             `("cc" "CollectBox"
+             `("cc" "Inbox"
                ((alltodo ""))
                ((org-agenda-files (list ,org-default-notes-file))))
              t)
@@ -301,7 +301,7 @@ because:
                          (org-agenda-span 'day)))
                 ;; Unscheduled new tasks (waiting to be prioritized and scheduled).
                 (tags-todo "LEVEL=2"
-                           ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")
+                           ((org-agenda-overriding-header "INBOX (Unscheduled)")
                             (org-agenda-skip-function
                              '(org-agenda-skip-entry-if 'scheduled))
                             (org-agenda-files (list ,org-default-notes-file))))
@@ -610,7 +610,7 @@ All *tasks*, grouped by *due date*:
 - Due within a week (next 5 days)
 - Due within a month (next 3 weeks)
 - Due later
-- No due date (includes CollectBox)
+- No due date (includes Inbox)
 
 [[file:images/agenda-view-rad.png]]
 
@@ -1149,7 +1149,7 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
 (add-to-list 'org-agenda-custom-commands
              '("rw" "Weekly review"
                ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
-                      ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
+                      ((org-agenda-overriding-header "INBOX (Unscheduled)")))
 
                 (agenda ""
                         ((org-agenda-clockreport-mode t)
@@ -1186,7 +1186,7 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
                       ((org-agenda-overriding-header "IN PROGRESS")
                        (org-agenda-todo-ignore-scheduled nil)))
 
-                (todo "TODO"        ; Don't include items from CollectBox! XXX
+                (todo "TODO"        ; Don't include items from Inbox! XXX
                       ((org-agenda-overriding-header "ACTION LIST")))
 
                 ;; Ignore scheduled and deadline entries, as they're visible
@@ -2142,7 +2142,7 @@ http://www.liquidplanner.com/support/videos/daily-task-management/
 Check first that all the correct tasks are shown, the ones with a time part and
 the ones without...
 
-** TODO Si restriction à un fichier (TODO-Org.org), f7 montre les tâches comme venant du collectbox!
+** TODO Si restriction à un fichier (TODO-Org.org), f7 montre les tâches comme venant du inbox!
 
 ** TODO Voir s'il faut montrer les tâches quel que soit leur niveau
 

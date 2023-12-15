@@ -971,7 +971,7 @@ This is a useful function for adding to `kill-emacs-query-functions'."
                  :prepend t) t)
 
   (defun leuven--find-location ()
-    "Find my CollectBox file and some headline in the current buffer."
+    "Find the Inbox file and navigate to a headline in the current buffer."
     (find-file org-default-notes-file)
     (goto-char (point-min))
     (helm-org-in-buffer-headings)

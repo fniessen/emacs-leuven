@@ -1860,8 +1860,9 @@ Setup registers for files I commonly edit.
   (set-register ?a '(file . "/sudo::/etc/apt/sources.list"))
   (set-register ?b '(file . "~/.bashrc"))
   (set-register ?e `(file . ,(concat leuven--directory "emacs-leuven.txt")))
-  (when (file-exists-p "~/4-Admin/0-refile.org")
-    (set-register ?r '(file . "~/4-Admin/0-refile.org"))) ; Open my CollectBox.
+  (with-eval-after-load "org"
+    (when (file-exists-p "~/org/inbox.org")
+      (set-register ?i '(file . "~/org/inbox.org")))) ; Open my Inbox.
   (set-register ?z '(file . "~/.zshrc"))
 #+end_src
 
