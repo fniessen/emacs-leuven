@@ -31,7 +31,7 @@ If not, just print a message."
        nil))))
 #+end_src
 
-* To move
+* Disabled configurations
 
 #+begin_src emacs-lisp :tangle no
     ;; Enable on-the-fly spell checking.
@@ -88,7 +88,7 @@ Alternatives: http://emacs.stackexchange.com/questions/17284/adding-tilde-to-ele
         (add-to-list 'yas-snippet-dirs org-snippets)))
 #+end_src
 
-* XXX
+* Configuration and customization
 :PROPERTIES:
 :ID:       737b836b-ac1f-4120-94ca-c9e0282268f0
 :END:
@@ -1745,6 +1745,11 @@ Instead of modifying ~org-link-abbrev-alist~, you can also use
 : #+LINK: att %(org-attach-expand-link)
 
 in your Org buffers.
+
+#+begin_src emacs-lisp
+(add-to-list 'org-safe-remote-resources
+             "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'")
+#+end_src
 
 ** Protocols for external access
 
@@ -4315,9 +4320,12 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 
 * A.5 Tables and lists in arbitrary syntax
 
+Interactively export all Org tables within a LaTeX document to their
+corresponding LaTeX tables.
+
 #+begin_src emacs-lisp
-(defun leuven-org-send-all-buffer-tables ()
-  "Export all Org tables of the LaTeX document to their corresponding LaTeX tables."
+(defun lvn-orgtbl-send-all-tables ()
+  "Export all Org tables in the current LaTeX document to LaTeX tables."
   (interactive)
   (org-table-map-tables
    #'(lambda ()

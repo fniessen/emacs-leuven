@@ -138,8 +138,8 @@ If not, just print a message."
 
   ;; Define the right-pointing pointer character.
   (defvar lvn-right-pointing-char
-    (if (char-displayable-p ?\u25B6)
-        " \u25B6"
+    (if (char-displayable-p ?\u25B8)
+        " \u25B8"
       nil))
 
   ;; Define common face attributes.
@@ -1076,6 +1076,9 @@ From the address <%a>"
 ;; bug when C-c C-l
 ;; ;; 4.6 Shortcut links.
 ;; (add-to-list 'org-link-abbrev-alist '(("att" . org-attach-expand-link)))
+
+(add-to-list 'org-safe-remote-resources
+             "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'")
 
 (message "9.4 (org)Protocols")
 
@@ -2743,8 +2746,8 @@ Ignore non Org buffers."
 ;;          (t
 ;;           (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
 
-(defun leuven-org-send-all-buffer-tables ()
-  "Export all Org tables of the LaTeX document to their corresponding LaTeX tables."
+(defun lvn-orgtbl-send-all-tables ()
+  "Export all Org tables in the current LaTeX document to LaTeX tables."
   (interactive)
   (org-table-map-tables
    #'(lambda ()
