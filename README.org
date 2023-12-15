@@ -88,6 +88,10 @@ Using the Emacs Leuven library is very easy: you just need to...
 
   ;; Require it as normal.
   (require 'emacs-leuven)
+  (require 'emacs-leuven-org)
+  (require 'emacs-leuven-bbdb)
+  (require 'emacs-leuven-ess)
+  (require 'emacs-leuven-ledger)
 
   ;; Place your settings here, which can override the settings of Emacs-Leuven.
   #+end_src
