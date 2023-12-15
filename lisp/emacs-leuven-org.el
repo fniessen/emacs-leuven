@@ -657,7 +657,7 @@ This makes ID links quasi-bidirectional."
          (:slant italic :foreground "#009900"))
         ("now"                        ; To do.
          (:slant italic :foreground "#3333FF"))
-        ("refile"                     ; Later.
+        ("inbox"                      ; Later.
          (:slant italic :foreground "#993399"))
         ("notbillable"
          (:slant italic :foreground "#A9876E"))
@@ -922,9 +922,13 @@ This is a useful function for adding to `kill-emacs-query-functions'."
 ;; 9.1.2 Default target for storing notes.
 (setq org-default-notes-file            ; Inbox for collecting
                                         ; [Default: "~/.notes"].
-      (if (file-exists-p (concat org-directory "/0-refile.org"))
-          (concat org-directory "/0-refile.org")
-        (concat org-directory "/refile.org")))
+      (or (and (file-exists-p (concat org-directory "/inbox.org"))
+               (concat org-directory "/inbox.org"))
+          (and (file-exists-p (concat org-directory "/refile.org"))
+               (concat org-directory "/refile.org"))
+          (and (file-exists-p (concat org-directory "/notes.org"))
+               (concat org-directory "/notes.org"))
+          org-default-notes-file))
 
 ;; 9.1.2 templates for the creation of capture buffers
 
@@ -1455,19 +1459,19 @@ From the address <%a>"
         (?C . (:foreground "#64992C" :background "#FFFFFF"))))
 
 ;; 10.5 Commands in the agenda buffer.
-(defun leuven--weekday-p ()
+(defun leuven--org-weekday-p ()
   "Return t if current day is between Monday and Friday."
   (let ((dow (nth 6 (decode-time))))
     (and (> dow 0)
          (< dow 6))))
 
-(defun leuven--working-p ()
+(defun leuven--org-working-p ()
   "Return t if current time is inside normal working hours.
 Currently: 08:30-12:30 and 13:30-17:30."
   (let* ((time (decode-time))
          (hour (nth 2 time))
          (mins (nth 1 time)))
-    (and (leuven--weekday-p)
+    (and (leuven--org-weekday-p)
          (or (or (and (= hour 8) (>= mins 30))
                  (and (< 8 hour) (< hour 12))
                  (and (= hour 12) (<= mins 30)))
@@ -1475,14 +1479,14 @@ Currently: 08:30-12:30 and 13:30-17:30."
                  (and (< 13 hour) (< hour 17))
                  (and (= hour 17) (<= mins 30)))))))
 
-(defun leuven--calling-hours-p ()
+(defun leuven--org-calling-hours-p ()
   "Return t if current time is inside normal calling hours.
 Currently: 08:00-21:59."
   (let* ((hour (nth 2 (decode-time))))
     (and (<= 8 hour) (<= hour 21))))
 
 (defun leuven--org-auto-exclude-function (tag)
-  "XXX"
+  "Exclude certain tags from the agenda based on specific conditions."
   (and (cond
         ((string= tag "personal")
          (with-temp-buffer
@@ -1495,17 +1499,28 @@ Currently: 08:00-21:59."
            (or (< hour 8) (> hour 21)))))
        (concat "-" tag)))
 
-;;! Ensure that `:refile:' tags never will be excluded!
 (defun leuven--org-auto-exclude-function (tag)
-  "XXX"
+  "Exclude certain tags from the agenda based on specific conditions.
+
+This function is designed to be used as the `org-agenda-auto-exclude-function'.
+It ensures that tags like ':inbox:' are never excluded!
+
+TAG is the tag to be considered for exclusion.
+
+Returns a string to be used in the agenda filter.
+
+Examples:
+- Exclude 'personal' tag during working hours.
+- Exclude 'work' tag outside of working hours.
+- Exclude 'errands' and 'call' tags outside of calling hours."
   (and (cond
         ((string= tag "personal")
-         (leuven--working-p))
+         (leuven--org-working-p))
         ((string= tag "work")
-         (not (leuven--working-p)))
+         (not (leuven--org-working-p)))
         ((or (string= tag "errands")
              (string= tag "call"))
-         (not (leuven--calling-hours-p))))
+         (not (leuven--org-calling-hours-p))))
        (concat "-" tag)))
 
 (setq org-agenda-auto-exclude-function 'leuven--org-auto-exclude-function)
