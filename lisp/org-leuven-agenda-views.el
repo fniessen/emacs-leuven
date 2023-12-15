@@ -42,7 +42,15 @@
 (add-to-list 'org-agenda-custom-commands
              `("cc" "CollectBox"
                ((alltodo ""))
-               ((org-agenda-files (list ,org-default-notes-file)))) t)
+               ((org-agenda-files (list ,org-default-notes-file))))
+             t)
+
+(add-to-list 'org-agenda-custom-commands
+             '("ci" "All TODOs in Inbox"
+               ((tags-todo "inbox"))
+               ((org-agenda-overriding-header "List of all TODO tasks in Inbox")
+                (org-agenda-sorting-strategy '(priority-down))))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("f" . "FOCUS...") t)
@@ -107,7 +115,8 @@
                           (format-time-string leuven-org-completed-date-regexp)))
                        (org-agenda-sorting-strategy '(priority-down)))))
                ((org-agenda-format-date "")
-                (org-agenda-start-with-clockreport-mode nil))) t)
+                (org-agenda-start-with-clockreport-mode nil)))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("w" "Work"
@@ -116,7 +125,8 @@
                            ((org-agenda-overriding-header "Work")))
                 )
                ((org-agenda-todo-ignore-scheduled 'future)
-                (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
+                (org-agenda-sorting-strategy '(deadline-up))))
+             t) ; FIXME sort not OK
 
 (add-to-list 'org-agenda-custom-commands
              '("fh" "Hotlist"
@@ -136,7 +146,8 @@
                 ;;            ((org-agenda-overriding-header "...FLAGGED...")))
                 )
                ((org-agenda-todo-ignore-scheduled 'future)
-                (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK
+                (org-agenda-sorting-strategy '(deadline-up))))
+             t) ; FIXME sort not OK
 
 (add-to-list 'org-agenda-custom-commands
              '("ff" "Hot N Fast"
@@ -156,7 +167,8 @@
                 ;;            ((org-agenda-overriding-header "...FLAGGED...")))
                 )
                ((org-agenda-todo-ignore-scheduled 'future)
-                (org-agenda-sorting-strategy '(deadline-up)))) t) ; FIXME sort not OK.
+                (org-agenda-sorting-strategy '(deadline-up))))
+             t) ; FIXME sort not OK.
 
 (add-to-list 'org-agenda-custom-commands
              '("r" . "REVIEW...") t)
@@ -222,7 +234,8 @@
                ((org-agenda-overriding-header "All Tasks (sorted by Due Date)")
                 (org-agenda-skip-function
                  '(org-agenda-skip-entry-if 'notdeadline))
-                (org-agenda-sorting-strategy '(deadline-up)))) t)
+                (org-agenda-sorting-strategy '(deadline-up))))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              `("ra2" "All active tasks, by due date"
@@ -262,7 +275,8 @@
                 (org-agenda-span 'day)
                 (org-agenda-sorting-strategy '(deadline-up))
                 (org-agenda-use-time-grid nil)
-                (org-agenda-write-buffer-name "Reminders"))) t)
+                (org-agenda-write-buffer-name "Reminders")))
+             t)
 
 (defun lvn--skip-entry-unless-deadline-in-n-days-or-more (n)
   "Skip entries that have no deadline or have a deadline earlier than N days from today."
@@ -369,7 +383,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                 (todo "DONE|CANX"
                       ((org-agenda-overriding-header "COMPLETED")
-                       (org-agenda-sorting-strategy '(priority-down)))))) t)
+                       (org-agenda-sorting-strategy '(priority-down))))))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("rt" . "Timesheet...") t)
@@ -383,7 +398,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                 (org-agenda-show-log 'clockcheck)
                 (org-agenda-span 'day)
                 (org-agenda-start-with-clockreport-mode t)
-                (org-agenda-time-grid nil))) t)
+                (org-agenda-time-grid nil)))
+             t)
 
 ;; Show what happened this week.
 (add-to-list 'org-agenda-custom-commands
@@ -396,7 +412,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                 (org-agenda-span 'week)
                 (org-agenda-start-on-weekday 1)
                 (org-agenda-start-with-clockreport-mode t)
-                (org-agenda-time-grid nil))) t)
+                (org-agenda-time-grid nil)))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("rc" . "Calendar...") t)
@@ -410,7 +427,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                 (org-agenda-span 'week)
                 (org-agenda-format-date "\n%a %d")
                 ;; (org-agenda-date-weekend ... new face ...)
-                (org-agenda-time-grid nil))) t)
+                (org-agenda-time-grid nil)))
+             t)
 
 ;; Calendar view for org-agenda.
 (when (locate-library "calfw-org")
@@ -421,7 +439,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
   (add-to-list 'org-agenda-custom-commands
                '("rcm" "Calendar for current month"
                  (lambda (&rest ignore)
-                   (cfw:open-org-calendar))) t)
+                   (cfw:open-org-calendar)))
+               t)
 
   ;; (defun cfw:open-org-calendar-non-work (&args)
   ;;   (interactive)
@@ -469,7 +488,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                           (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 3))))
                        (org-agenda-sorting-strategy '(priority-down)))))
                ((org-agenda-format-date "")
-                (org-agenda-start-with-clockreport-mode nil))) t)
+                (org-agenda-start-with-clockreport-mode nil)))
+             t)
 
 (defun current-time-ndays-ago (n)
   "Return the current time minus N days."
@@ -483,7 +503,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                         '(org-agenda-skip-entry-if
                           'regexp
                           (format-time-string "  CLOCK: .*--.* =>  .*")))
-                       (org-agenda-sorting-strategy '(priority-down)))))) t)
+                       (org-agenda-sorting-strategy '(priority-down))))))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("rr" "Recent items (past 7 days)"
@@ -497,7 +518,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                 ;; maybe not make much difference ka
                 ;; (org-agenda-use-tag-inheritance nil)
                 (org-agenda-inactive-leader "Inactive:  ")
-                (org-agenda-include-inactive-timestamps t))) t)
+                (org-agenda-include-inactive-timestamps t)))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("rw" "Weekly review"
@@ -563,14 +585,16 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                 ;;  (org-agenda-prefix-format " %i %?-12t% s")
                 ;;  (org-agenda-write-buffer-name "Weekly task review"))
                 ;; "~/org-weekly-review.html") t)
-                )) t)
+                ))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("rN" "Next"
                ((tags-todo "TODO<>{SDAY}"))
                ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY)")
                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
-                (org-agenda-sorting-strategy '(priority-down)))) t)
+                (org-agenda-sorting-strategy '(priority-down))))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("p" "Past and unscheduled TODOs"
@@ -595,7 +619,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
              '("rP" "Projects"
                ((tags-todo "project-DONE-CANX"))
                ((org-agenda-overriding-header "Projects (High Level)")
-                (org-agenda-sorting-strategy nil))) t)
+                (org-agenda-sorting-strategy nil)))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("+" . "MORE...") t)
@@ -605,7 +630,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
              `("+a" "Assigned to me"
                ((tags ,(concat "Assignee={" user-login-name "\\|"
                                user-mail-address "}")))
-               ((org-agenda-overriding-header "ASSIGNED TO ME"))) t)
+               ((org-agenda-overriding-header "ASSIGNED TO ME")))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("E" . "Exported agenda files...") t)
@@ -617,7 +643,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                (;; (org-tag-faces nil)
                 (ps-landscape-mode t)
                 (ps-number-of-columns 1))
-               ("~/org-agenda.html" "~/org-agenda.pdf")) t)
+               ("~/org-agenda.html" "~/org-agenda.pdf"))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("Ep" "Call list"
@@ -629,7 +656,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                  "Phone calls that you need to make")
                 (ps-landscape-mode t)
                 (ps-number-of-columns 1))
-               ("~/org___calls.pdf")) t)
+               ("~/org___calls.pdf"))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("A" . "ARCHIVE...") t)
@@ -638,7 +666,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
              '("Aa" "Archive"
                ((tags-todo "ARCHIVE"))
                ((org-agenda-todo-ignore-scheduled 'future)
-                (org-agenda-sorting-strategy '(deadline-down)))) t)
+                (org-agenda-sorting-strategy '(deadline-down))))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("R" . "REFERENCE...") t)
@@ -648,25 +677,29 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                ((search ""))
                ((org-agenda-text-search-extra-files
                  ;; FIXME Add `agenda-archives'
-                 leuven-org-search-extra-files))) t)
+                 leuven-org-search-extra-files)))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("RS" "Like s, but only TODO entries"
                ((search ""))
                ((org-agenda-text-search-extra-files
                  ;; FIXME Add `agenda-archives'
-                 leuven-org-search-extra-files))) t)
+                 leuven-org-search-extra-files)))
+             t)
 
 (add-to-list 'org-agenda-custom-commands
              '("Rn" "Organize thoughts to refile"
                ((tags "refile|capture"))
-               ((org-agenda-overriding-header "Refile stuff"))) t)
+               ((org-agenda-overriding-header "Refile stuff")))
+             t)
 
 ;; Create a sparse tree (current buffer only) with all entries containing the
 ;; word `TODO', `FIXME', `XXX' or `BUG'.
 (add-to-list 'org-agenda-custom-commands
              '("1" "Task markers (in current buffer)"
-               ((occur-tree "\\<TODO\\|FIXME\\|XXX\\|BUG\\>"))) t)
+               ((occur-tree "\\<TODO\\|FIXME\\|XXX\\|BUG\\>")))
+             t)
 
 (provide 'org-leuven-agenda-views)
 
