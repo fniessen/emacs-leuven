@@ -1,4 +1,4 @@
-#+TITLE:     Yes, you can... get Emacs preset to be more productive!
+#+TITLE:     Boost your productivity with a preconfigured Emacs setup!
 #+AUTHOR:    Fabrice Niessen
 #+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
 #+DESCRIPTION: Emacs configuration file
@@ -14,20 +14,6 @@
 #+html: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">
 #+html:   <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="btn_donate_LG.gif" />
 #+html: </a>
-
-Looking for an Emacs *configuration file* with many packages already enabled and
-a more *pleasant set of defaults*?  Here's the place to find one!  That will save
-you hours (and hours) of configuration...
-
-The "Emacs Leuven" configuration file is packaged as an Emacs Lisp library, and
-ready to be used by you.
-
-And it is optimized to keep the *Emacs startup time* fast (around *2 seconds*)!
-
-#+begin_note
-Emacs Leuven should not shadow any default Emacs key binding.  It just adds its
-own, for productivity reasons, but keeps everything from the Emacs manual.
-#+end_note
 
 * ADVERT: Elevate Your Emacs Skills in Paris, Rotterdam, Leuven or Valencia!
 
@@ -67,21 +53,28 @@ locations, and to *reserve your seat*.
 
 /See you in Paris!/  [[https://emacsboost.com/][#EmacsBoostParis]]
 
-* Download
+* Emacs Leuven: Boost your productivity
 
-Get the full Git repository at https://github.com/fniessen/emacs-leuven
-using the following command:
+Are you in search of an Emacs *configuration file* that comes with numerous
+*pre-enabled packages* and a more *user-friendly default setup*?  Look no further!
+This resource will spare you countless hours of manual configuration.
 
-#+begin_src shell
-git clone https://github.com/fniessen/emacs-leuven
-#+end_src
+Introducing the "*Emacs Leuven*" configuration file, packaged as an *Emacs Lisp
+library* and ready for your use. What's more, it's finely tuned to ensure
+a swift *Emacs startup time* of approximately *2 seconds*!
+
+#+begin_note
+*Emacs Leuven* meticulously avoids overshadowing any default Emacs key
+bindings. It introduces its own bindings solely for *productivity enhancements*
+while retaining everything from the Emacs manual.
+#+end_note
 
 * Installation
 
 Incorporating the Emacs Leuven library into your Emacs environment is
 a straightforward process:
 
-- Download the Emacs-Leuven package from [[https://github.com/fniessen/emacs-leuven][GitHub]].
+- Download or clone the Emacs-Leuven repository from [[https://github.com/fniessen/emacs-leuven][GitHub]].
 
 - Integrate Emacs-Leuven into your Emacs configuration file:
 
@@ -103,19 +96,15 @@ a straightforward process:
 
 - Restart Emacs to apply the changes.
 
-* Some better defaults
-
-- Unnecessary spaces at the end of the lines are indicated by yellow blocks.
-
 * Packages
 
-#+begin_note
-To install all the extra packages used hereunder, without being questioned, add
-the following line before requiring Emacs-Leuven.
+To effortlessly install all the additional packages referenced below without
+prompts, insert the following line before requiring Emacs-Leuven:
 
-    ;; Install all extra Emacs packages without asking for confirmation.
-    (setq leuven-install-all-missing-elpa-packages t)
-#+end_note
+#+begin_src emacs-lisp
+;; Install all extra Emacs packages without asking for confirmation.
+(setq leuven-install-all-missing-elpa-packages t)
+#+end_src
 
 | Subject                              | Package                | Description |
 |--------------------------------------+------------------------+-------------|
@@ -183,18 +172,21 @@ the following line before requiring Emacs-Leuven.
 |                                      | rainbow-mode           |             |
 |                                      | unbound                |             |
 
-To list packages which should NOT be installed by Emacs Leuven (neither proposed
-for installation), add something like this into your configuration file:
+To specify packages that should be excluded from installation by Emacs Leuven
+(and not suggested for installation), incorporate a configuration snippet like
+the following into your Emacs configuration file:
 
 #+begin_src emacs-lisp
-(setq leuven-excluded-packages
-      '(useless-package
-        other-annoying-package))
+(setq leuven-excluded-packages '(some-useless-package
+                                 ...
+                                 other-annoying-package))
 #+end_src
 
-* Keyboard shortcuts
+* Supercharge your efficiency with keyboard shortcuts!
 
-Save time and boost your productivity with Emacs Leuven keyboard shortcuts.
+Unlock time-saving techniques and enhance your productivity using the Emacs
+Leuven keyboard shortcuts. Experience a streamlined workflow that puts you in
+control.
 
 Key binding conventions:
 http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
@@ -364,89 +356,88 @@ Global key bindings.
 
 ** Other shortcuts
 
-| Shortcut | What it runs                                   |
-|----------+------------------------------------------------|
-| C-c SPC  | ace-jump                                       |
-| C-)      | match-paren                                    |
-| x        | leuven-vc-dir-hide-up-to-date-and-unregistered |
-| E        | vc-ediff                                       |
-| =        | leuven-vc-diff                                 |
-| M-?      | etags-select-find-tag-at-point                 |
-| C-c e    | ecb-minor-mode                                 |
-| M-/      | hippie-expand                                  |
-| <tab>    | ac-expand                                      |
-
-** Other shortcuts
-
 I still have to sort them out, by mode (when applicable).
 
-| Shortcut      | What it runs                              |
-|---------------+-------------------------------------------|
-| <             | scroll-calendar-right                     |
-| >             | scroll-calendar-left                      |
-|---------------+-------------------------------------------|
-| <C-down>      | comint-next-matching-input-from-input     |
-| <C-up>        | comint-previous-matching-input-from-input |
-| <down>        | comint-next-input                         |
-| <up>          | comint-previous-input                     |
-|---------------+-------------------------------------------|
-| <C-backspace> | backward-kill-word                        |
-| <left>        | speedbar-contract-line                    |
-| <right>       | speedbar-expand-line                      |
-| <S-return>    | leuven-ess-eval                           |
-| M--           | ess-smart-underscore                      |
-| C-*           | leuven-hlt-highlight-current-word         |
-| C-c !         | shell                                     |
-| C-c .         | leuven-insert-current-date                |
-| C-c C-c       | tidy-buffer                               |
-| C-c C-x nil   |                                           |
-| C-c d l       | dictionary-lookup-definition              |
-| C-c d m       | dictionary-match-words                    |
-| C-c d s       | dictionary-search                         |
-| C-c g g       | leuven-google-search                      |
-| C-c g r       | leuven-google-search-region               |
-| C-c g s       | google                                    |
-| C-c g w       | leuven-google-search-word-at-point        |
-| C-c n         |                                           |
-| C-c q         | boxquote-region                           |
-| C-c s         | yas-insert-snippet                        |
-| C-c t         | toggle-truncate-lines                     |
-| C-c T         | multi-term                                |
-| C-c z         | toggle-full-screen                        |
-| C-h A         | apropos-variable                          |
-| C-h E         | elisp-index-search                        |
-| C-S-n         | hlt-next-highlight                        |
-| C-S-p         | hlt-previous-highlight                    |
-| C-x b         | helm-buffers-list                         |
-| C-x C-b       | electric-buffer-list                      |
-| C-x C-b       | ibuffer                                   |
-| C-x p         | proced                                    |
-| M-o           |                                           |
-| M-p           | ps-print-buffer-with-faces                |
-| M-x           | helm-M-x                                  |
+| Shortcut      | What it runs                                   |
+|---------------+------------------------------------------------|
+| C-c SPC       | ace-jump                                       |
+| C-)           | match-paren                                    |
+| x             | leuven-vc-dir-hide-up-to-date-and-unregistered |
+| E             | vc-ediff                                       |
+| =             | leuven-vc-diff                                 |
+| M-?           | etags-select-find-tag-at-point                 |
+| C-c e         | ecb-minor-mode                                 |
+| M-/           | hippie-expand                                  |
+| <tab>         | ac-expand                                      |
+|---------------+------------------------------------------------|
+| <             | scroll-calendar-right                          |
+| >             | scroll-calendar-left                           |
+|---------------+------------------------------------------------|
+| <C-down>      | comint-next-matching-input-from-input          |
+| <C-up>        | comint-previous-matching-input-from-input      |
+| <down>        | comint-next-input                              |
+| <up>          | comint-previous-input                          |
+|---------------+------------------------------------------------|
+| <C-backspace> | backward-kill-word                             |
+| <left>        | speedbar-contract-line                         |
+| <right>       | speedbar-expand-line                           |
+| <S-return>    | leuven-ess-eval                                |
+| M--           | ess-smart-underscore                           |
+| C-*           | leuven-hlt-highlight-current-word              |
+| C-c !         | shell                                          |
+| C-c .         | leuven-insert-current-date                     |
+| C-c C-c       | tidy-buffer                                    |
+| C-c C-x nil   |                                                |
+| C-c d l       | dictionary-lookup-definition                   |
+| C-c d m       | dictionary-match-words                         |
+| C-c d s       | dictionary-search                              |
+| C-c g g       | leuven-google-search                           |
+| C-c g r       | leuven-google-search-region                    |
+| C-c g s       | google                                         |
+| C-c g w       | leuven-google-search-word-at-point             |
+| C-c n         |                                                |
+| C-c q         | boxquote-region                                |
+| C-c s         | yas-insert-snippet                             |
+| C-c t         | toggle-truncate-lines                          |
+| C-c T         | multi-term                                     |
+| C-c z         | toggle-full-screen                             |
+| C-h A         | apropos-variable                               |
+| C-h E         | elisp-index-search                             |
+| C-S-n         | hlt-next-highlight                             |
+| C-S-p         | hlt-previous-highlight                         |
+| C-x b         | helm-buffers-list                              |
+| C-x C-b       | electric-buffer-list                           |
+| C-x C-b       | ibuffer                                        |
+| C-x p         | proced                                         |
+| M-o           |                                                |
+| M-p           | ps-print-buffer-with-faces                     |
+| M-x           | helm-M-x                                       |
 
-* Contributing
+* Contribute to the project!
 
-** Issues
+** Report issues and enhancements
 
-Report issues and suggest features and improvements on the [[https://github.com/fniessen/emacs-leuven/issues/new][GitHub issue tracker]].
+Found a bug or have an idea for a new feature?  Share your thoughts on the
+[[https://github.com/fniessen/emacs-leuven/issues/new][GitHub issue tracker]].
 
-** Patches
+** Submit patches
 
-I love contributions!  Patches under any form are always welcome!
+I welcome contributions in any form!  Feel free to submit patches to enhance the
+project.
 
-** Donations
+** Support development with a donation!
 
-If you like the emacs-leuven project and feel it is making your life better and
-easier, you can show your appreciation and help support future development by
-making a [[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted][donation]] through PayPal.  Thank you!
+If you find the emacs-leuven project enhancing your Emacs experience and
+simplifying your workflow, seize the opportunity to express your appreciation!
+Help fuel future development by making a [[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted][donation]] through PayPal. Your support
+is invaluable — thank you!
 
-Regardless of the donations, emacs-leuven will always be free both as in
-beer and as in speech.
+Remember, regardless of donations, emacs-leuven will always remain freely
+accessible, both as in Belgian beer and as in speech.
 
 * License
 
-Copyright (C) 1999-2022 Free Software Foundation, Inc.
+Copyright (C) 1999-2023 Free Software Foundation, Inc.
 
 Author: Fabrice Niessen \\
 Keywords: emacs configuration file
