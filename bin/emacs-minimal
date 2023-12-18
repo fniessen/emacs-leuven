@@ -1,17 +1,20 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
 TESTEL=
 TESTFILE=~/test.el
-if test -e $TESTFILE # file exists
-then
+
+# Check if the file exists.
+if [[ -e $TESTFILE ]]; then
     TESTEL="-l $TESTFILE"
 fi
 
 EMACS="emacs"
+INIT_FILE=~/.emacs.d/lisp/emacs-minimal.el
 
-# No init file.
-cmd="$EMACS -q -l ~/.emacs.d/lisp/emacs-minimal.el $TESTEL"
+# Construct the command.
+cmd="$EMACS -q -l $INIT_FILE $TESTEL"
 
-echo "Launching '$cmd'..."
+printf "Launching '%s'...\n" "$cmd"
 eval "$cmd"
 
-echo "Exit status: $?"
+printf "Exit status: %d\n" "$?"
