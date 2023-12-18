@@ -1,8 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+# Check if at least one argument is provided.
 if [ "$#" -lt 1 ]; then
-  echo "Usage: ec FILENAME"
-  exit 1
+    printf "Usage: %s FILENAME\n" "$(basename "$0")"
+    exit 2
 fi
 
+# Use 'exec' to replace the current process with emacsclient.
 exec emacsclient -c -a '' "$@"
