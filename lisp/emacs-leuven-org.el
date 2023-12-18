@@ -920,15 +920,16 @@ This is a useful function for adding to `kill-emacs-query-functions'."
              (t "~/"))))
 
 ;; 9.1.2 Default target for storing notes.
-(setq org-default-notes-file            ; Inbox for collecting
+(with-eval-after-load "org"
+  (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
-      (or (and (file-exists-p (concat org-directory "/inbox.org"))
-               (concat org-directory "/inbox.org"))
-          (and (file-exists-p (concat org-directory "/refile.org"))
-               (concat org-directory "/refile.org"))
-          (and (file-exists-p (concat org-directory "/notes.org"))
-               (concat org-directory "/notes.org"))
-          org-default-notes-file))
+        (or (and (file-exists-p (concat org-directory "/inbox.org"))
+                 (concat org-directory "/inbox.org"))
+            (and (file-exists-p (concat org-directory "/refile.org"))
+                 (concat org-directory "/refile.org"))
+            (and (file-exists-p (concat org-directory "/notes.org"))
+                 (concat org-directory "/notes.org"))
+            org-default-notes-file)))
 
 ;; 9.1.2 templates for the creation of capture buffers
 
