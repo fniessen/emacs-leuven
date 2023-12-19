@@ -4,7 +4,7 @@ set -x
 
 # Retrieve the last command from the shell history.
 # last_command=$(HISTTIMEFORMAT= history | tail -n 1 | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')
-last_command=$(fc -ln -1)
+last_command=$(history | tail -n 1)
 
 # Check if the last command is empty.
 if [ -z "$last_command" ]; then
