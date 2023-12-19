@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -x
+
+# Retrieve the last command from the shell history.
+# last_command=$(HISTTIMEFORMAT= history | tail -n 1 | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')
+last_command=$(fc -ln -1)
+
+# Check if the last command is empty.
+if [ -z "$last_command" ]; then
+    printf >&2 "No command found in the shell history.\n"
+    exit 2
+fi
+
+# Debugging information.
+printf "Last command: %s\n" "$last_command"
+
+# Run the last command and capture its output.
+command_output=$($last_command)
+
+# Debugging information.
+printf "Command output: %s\n" "$command_output"
+
+# Extract the last line (assuming it's a list of files).
+last_file=$(printf "%s" "$command_output" | tail -n 1)
+
+# Debugging information.
+printf "Last file: %s\n" "$last_file"
+
+# Check if the last line is not empty.
+if [[ -n "$last_file" ]]; then
+    # Open the last file in Emacs using emacsclient.
+    emacsclient -n "$last_file"
+else
+    printf "No output from the last command or no files found.\n"
+fi
