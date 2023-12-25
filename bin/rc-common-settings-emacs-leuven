@@ -17,10 +17,37 @@ if [[ -z "$SSH_CONNECTION" ]]; then
         emacsclient -t -a '' --eval "(find-file \"$1\")"
     }
 
-    function ec()     { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (find-file \"$1\"))"; }
-    function ediff()  { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (ediff-files \"$1\" \"$2\"))"; }
-    function edired() { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (dired \"$1\"))"; }
-    function evcdir() { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (vc-dir \"$1\"))"; }
+    # Emacsclient with frame focus and file opening.
+    ec() {
+        emacsclient -n -r -a '' --eval "(progn
+            (select-frame-set-input-focus (selected-frame))
+            (find-file \"$1\")
+        )"
+    }
+
+    # Open Ediff for two files.
+    ediff() {
+        emacsclient -n -r -a '' --eval "(progn
+            (select-frame-set-input-focus (selected-frame))
+            (ediff-files \"$1\" \"$2\")
+        )"
+    }
+
+    # Open Dired for a directory.
+    edired() {
+        emacsclient -n -r -a '' --eval "(progn
+            (select-frame-set-input-focus (selected-frame))
+            (dired \"$1\")
+        )"
+    }
+
+    # Open VC Dir for a version-controlled directory.
+    evcdir() {
+        emacsclient -n -r -a '' --eval "(progn
+            (select-frame-set-input-focus (selected-frame))
+            (vc-dir \"$1\")
+        )"
+    }
 
 
     alias ec1='emacsclient -n -e "(progn (find-file \"$1\") (select-frame-set-input-focus (selected-frame)))"'
