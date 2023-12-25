@@ -9,13 +9,13 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     # Set an alternate editor to an empty string.
     export ALTERNATE_EDITOR=""
 
-    # Create an alias 'e' for running emacsclient in non-blocking mode.
-    alias e="emacsclient -n"
-
     # Open a file in an Emacs terminal frame using emacsclient.
     et() {
         emacsclient -t -a '' --eval "(find-file \"$1\")"
     }
+
+    # Create an alias 'e' for running emacsclient in non-blocking mode.
+    alias e="emacsclient -n"
 
     # Emacsclient with frame focus and file opening.
     ec() {
@@ -41,7 +41,18 @@ if [[ -z "$SSH_CONNECTION" ]]; then
         )"
     }
 
+    # Open a new Emacs instance in the background.
+    alias bgemacs='emacs &'
+
+    # Alias to open Emacs using the alternate editor setting.
+    # If emacsclient can't connect to an existing Emacs server, it will fall
+    # back to running a new instance of Emacs.
+    alias ealt="emacsclient -n --alternate-editor=emacs"
+
+    # --
+
     alias ec0='emacsclient -n -r -a "" --eval "(progn (select-frame-set-input-focus (selected-frame)) (find-file \"$1\"))"'
+    # *ERROR*: Symbol’s value as variable is void: xit.sql + Opens Dired...
 
     alias ec1='emacsclient -n -e "(progn (find-file \"$1\") (select-frame-set-input-focus (selected-frame)))"'
     alias ec2="emacsclient -n -e '(select-frame-set-input-focus (selected-frame))'"
@@ -50,12 +61,6 @@ if [[ -z "$SSH_CONNECTION" ]]; then
 
     alias ec11='emacsclient -n -e "(progn (find-file "$1") (select-frame-set-input-focus (selected-frame)))"'
     # *ERROR*: Wrong number of arguments: #[(ad--addoit-function filename &optional wildcards) "\305  \306    !\203&
-
-    # If emacsclient can't connect to an existing Emacs server, it will fall
-    # back to running a new instance of Emacs.
-    alias ee="emacsclient -n --alternate-editor=emacs"
-
-    alias bgemacs='emacs &'
 else
     # Configuration for remote mode.
     for candidate_editor in emacs subl atom nano; do
