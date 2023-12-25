@@ -41,10 +41,7 @@ if [[ -z "$SSH_CONNECTION" ]]; then
         )"
     }
 
-
-
-    alias ec0='emacsclient -n -r -a "" --eval "(progn (select-frame-set-input-focus (selected-frame)) (find-file \"\$1\"))"'
-
+    alias ec0='emacsclient -n -r -a "" --eval "(progn (select-frame-set-input-focus (selected-frame)) (find-file \"$1\"))"'
 
     alias ec1='emacsclient -n -e "(progn (find-file \"$1\") (select-frame-set-input-focus (selected-frame)))"'
     alias ec2="emacsclient -n -e '(select-frame-set-input-focus (selected-frame))'"
