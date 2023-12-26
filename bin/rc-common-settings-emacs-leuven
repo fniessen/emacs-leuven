@@ -48,19 +48,6 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     # If emacsclient can't connect to an existing Emacs server, it will fall
     # back to running a new instance of Emacs.
     alias ealt="emacsclient -n --alternate-editor=emacs"
-
-    # --
-
-    alias ec0='emacsclient -n -r -a "" --eval "(progn (select-frame-set-input-focus (selected-frame)) (find-file \"$1\"))"'
-    # *ERROR*: Symbol’s value as variable is void: xit.sql + Opens Dired...
-
-    alias ec1='emacsclient -n -e "(progn (find-file \"$1\") (select-frame-set-input-focus (selected-frame)))"'
-    alias ec2="emacsclient -n -e '(select-frame-set-input-focus (selected-frame))'"
-    alias ec3='emacsclient -n --eval "(progn (select-frame-set-input-focus (selected-frame)))"'
-    # *ERROR*: Symbol’s value as variable is void: xit.sql
-
-    alias ec11='emacsclient -n -e "(progn (find-file "$1") (select-frame-set-input-focus (selected-frame)))"'
-    # *ERROR*: Wrong number of arguments: #[(ad--addoit-function filename &optional wildcards) "\305  \306    !\203&
 else
     # Configuration for remote mode.
     for candidate_editor in emacs subl atom nano; do
