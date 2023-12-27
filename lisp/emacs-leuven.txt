@@ -424,14 +424,14 @@ Example usage:
 ** Creating and selecting buffers
 
 #+begin_src emacs-lisp
-  (defun lvn--switch-or-start (function buffer)
+  (defun lvn--switch-or-start (fn buffer)
     "If BUFFER is the current buffer, bury it. If a buffer with the name BUFFER
-exists, switch to it; otherwise, invoke FUNCTION."
+exists, switch to it; otherwise, invoke FN."
     (if (equal (buffer-name (current-buffer)) buffer)
         (bury-buffer)
       (if (get-buffer buffer)
           (switch-to-buffer buffer)
-        (funcall function))))
+        (funcall fn))))
 #+end_src
 
 #+begin_src emacs-lisp
