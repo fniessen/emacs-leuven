@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231214.2238
+;; Version: 20231227.1320
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231214.2238"
+(defconst lvn--emacs-version "20231227.1320"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -276,6 +276,15 @@ Example usage:
     (setq magit-auto-revert-mode nil))"
       `(eval-after-load ,feature
          '(progn ,@body))))
+
+  (defun switch-or-start (function buffer)
+    "If the BUFFER is current, bury it.  If there is a buffer with that name,
+  switch to it; otherwise, invoke the FUNCTION."
+    (if (equal (buffer-name (current-buffer)) buffer)
+        (bury-buffer)
+      (if (get-buffer buffer)
+          (switch-to-buffer buffer)
+        (funcall function))))
 
 )                                       ; Chapter 0-loading-libraries ends here.
 

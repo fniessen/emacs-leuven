@@ -421,6 +421,19 @@ Example usage:
          '(progn ,@body))))
 #+end_src
 
+** Creating and selecting buffers
+
+#+begin_src emacs-lisp
+  (defun switch-or-start (function buffer)
+    "If the BUFFER is current, bury it.  If there is a buffer with that name,
+  switch to it; otherwise, invoke the FUNCTION."
+    (if (equal (buffer-name (current-buffer)) buffer)
+        (bury-buffer)
+      (if (get-buffer buffer)
+          (switch-to-buffer buffer)
+        (funcall function))))
+#+end_src
+
 #+begin_src emacs-lisp
 )                                       ; Chapter 0-loading-libraries ends here.
 #+end_src
