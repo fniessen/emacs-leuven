@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231227.1320
+;; Version: 20231227.1325
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231227.1320"
+(defconst lvn--emacs-version "20231227.1325"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -277,9 +277,9 @@ Example usage:
       `(eval-after-load ,feature
          '(progn ,@body))))
 
-  (defun switch-or-start (function buffer)
-    "If the BUFFER is current, bury it.  If there is a buffer with that name,
-  switch to it; otherwise, invoke the FUNCTION."
+  (defun lvn--switch-or-start (function buffer)
+    "If BUFFER is the current buffer, bury it. If a buffer with the name BUFFER
+exists, switch to it; otherwise, invoke FUNCTION."
     (if (equal (buffer-name (current-buffer)) buffer)
         (bury-buffer)
       (if (get-buffer buffer)
@@ -6984,7 +6984,7 @@ Consider using `C-x d' instead for better performance."
   (global-set-key (kbd "C-c n")
     #'(lambda ()
         (interactive)
-        (switch-or-start 'gnus "*Group*")))
+        (lvn--switch-or-start 'gnus "*Group*")))
 
   ;; Directory beneath which additional per-user Gnus-specific files are placed.
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
@@ -7212,7 +7212,7 @@ Consider using `C-x d' instead for better performance."
   (global-set-key (kbd "C-!")
     #'(lambda ()
         (interactive)
-        (switch-or-start 'shell "*shell*")))
+        (lvn--switch-or-start 'shell "*shell*")))
 
 ;;** 38.10 Remote Host Shell
 
