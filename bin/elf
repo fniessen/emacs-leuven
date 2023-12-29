@@ -2,14 +2,22 @@
 
 # Edit Last File
 
+# Retrieve the last command from the shell history, run it, capture the output,
+# and (assuming the output is a list of files) open the last file in Emacs using
+# emacsclient.
+
 set -x
 
-# Retrieve the last command from the shell history.
-# last_command=$(HISTTIMEFORMAT= history | tail -n 1 | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')
-last_command=$(history | tail -n 1)
+set -euo pipefail
+
+# Path to the history file.
+history_file="$HOME/.bash_history"
+
+# Retrieve the last command from the history file.
+last_command=$(tail -n 1 "$history_file" | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')
 
 # Check if the last command is empty.
-if [ -z "$last_command" ]; then
+if [[ -z "$last_command" ]]; then
     printf >&2 "No command found in the shell history.\n"
     exit 2
 fi
@@ -18,7 +26,7 @@ fi
 printf "Last command: %s\n" "$last_command"
 
 # Run the last command and capture its output.
-command_output=$($last_command)
+command_output=$(eval "$last_command")
 
 # Debugging information.
 printf "Command output: %s\n" "$command_output"
@@ -29,10 +37,14 @@ last_file=$(printf "%s" "$command_output" | tail -n 1)
 # Debugging information.
 printf "Last file: %s\n" "$last_file"
 
-# Check if the last line is not empty.
-if [[ -n "$last_file" ]]; then
-    # Open the last file in Emacs using emacsclient.
-    emacsclient -n "$last_file"
-else
-    printf "No output from the last command or no files found.\n"
+# Exit if the last line is empty.
+if [[ -z "$last_file" ]]; then
+    printf >&2 "No output from the last command or no files found.\n"
+    exit 2
 fi
+
+# Open the last file in Emacs using emacsclient.
+emacsclient -n "$last_file"
+
+# Exit with a success code.
+exit 0
