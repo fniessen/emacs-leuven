@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Edit Last File
+
 set -x
 
 # Retrieve the last command from the shell history.
