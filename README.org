@@ -20,6 +20,9 @@
 *Unlock the power of Emacs in Rotterdam!  Join my next exclusive "Emacs Boost"
 course on February 14th to 16th, 2024!*
 
+#+attr_html: :style height: 90px !important;
+[[file:images/Logo-HD-transparent-25pc.png]]
+
 Ready to /supercharge your productivity/ and become an Emacs ninja?  Look no
 further!
 
