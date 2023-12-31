@@ -98,7 +98,8 @@ cde() {
 elf() {
     # Retrieve the last command from the history file.
     local last_command
-    last_command=$(HISTTIMEFORMAT="" history 2 | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
+    last_command=$(HISTTIMEFORMAT="" history 2 \
+                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
 
     # Check if the last command is empty.
     if [[ -z "$last_command" ]]; then
@@ -112,7 +113,8 @@ elf() {
 
     # Extract the last line (assuming it's a list of files).
     local last_file
-    last_file=$(printf "%s" "$command_output" | tail -n 1 | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
+    last_file=$(printf "%s" "$command_output" | tail -n 1 \
+                    | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
 
     # Debugging information.
     printf "Edit last file: %s\n" "$last_file"
