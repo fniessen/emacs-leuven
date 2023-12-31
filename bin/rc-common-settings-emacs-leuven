@@ -92,3 +92,37 @@ cde() {
     # The change in working directory will persist after the function has
     # completed.
 }
+
+# Retrieve and execute the last command from shell history, assuming it outputs
+# a list of files, then open the last file in Emacs for inspection.
+elf() {
+    # Retrieve the last command from the history file.
+    local last_command
+    last_command=$(HISTTIMEFORMAT="" history 2 | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
+
+    # Check if the last command is empty.
+    if [[ -z "$last_command" ]]; then
+        printf >&2 "No command found in the shell history.\n"
+        return 2
+    fi
+
+    # Run the last command and capture its output.
+    local command_output
+    command_output=$(eval "$last_command")
+
+    # Extract the last line (assuming it's a list of files).
+    local last_file
+    last_file=$(printf "%s" "$command_output" | tail -n 1 | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
+
+    # Debugging information.
+    printf "Edit last file: %s\n" "$last_file"
+
+    # Return if the last line is empty.
+    if [[ -z "$last_file" ]]; then
+        printf >&2 "No output from the last command or no files found.\n"
+        return 2
+    fi
+
+    # Open the last file in Emacs using emacsclient.
+    emacsclient -n "$last_file"
+}
