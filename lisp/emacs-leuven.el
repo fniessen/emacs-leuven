@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240101.1840
+;; Version: 20240101.1910
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240101.1840"
+(defconst lvn--emacs-version "20240101.1910"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1990,47 +1990,38 @@ After initiating the grep search, the isearch is aborted."
   (setq ispell-program-name             ; Defined in ispell.el.
         (or (executable-find "aspell")
             (executable-find "hunspell")
-            (executable-find "ispell")
-            ;; nil                      ; [Default: "ispell"]
-            ))
+            (executable-find "ispell")))
 
-  (defun leuven--executable-ispell-program-name-p ()
+  (defun lvn--executable-ispell-program-name-p ()
     "Ensure that `ispell-program-name' is an executable program name."
-    (and (boundp 'ispell-program-name)
-         ispell-program-name            ; It can be nil!
+    (and (bound-and-true-p ispell-program-name)
          (file-executable-p ispell-program-name)
          ispell-program-name))
 
-  (when (leuven--executable-ispell-program-name-p)
+  (when (lvn--executable-ispell-program-name-p)
 
-    (defun leuven-ispell-region-or-buffer ()
+    (defun lvn-ispell-region-or-buffer ()
       "Interactively check the current region or buffer for spelling errors."
       (interactive)
       (if mark-active
-          (if (< (mark) (point))
-              (ispell-region (mark) (point))
-              (ispell-region (point) (mark)))
-          (ispell-buffer)))
+          (ispell-region (min (point) (mark)) (max (point) (mark)))
+        (ispell-buffer)))
 
-    ;; Key bindings (or `C-c i' prefix key binding?).
-
-    ;; Spell-check the region or buffer.
-    (global-set-key (kbd "C-$") #'leuven-ispell-region-or-buffer)
-
-    ;; Change the dictionary.
+    ;; Key bindings (Should we use the `C-c i' prefix key binding?).
+    (global-set-key (kbd "C-$") #'lvn-ispell-region-or-buffer)
     (global-set-key (kbd "C-M-$") #'ispell-change-dictionary)
 
-    ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that
-    ;; ;; is if there is no local dictionary to use in the buffer).
-    ;; (setq ispell-dictionary "american") ; see `sentence-end-double-space'
+    ;; ;; Default dictionary to use (if `ispell-local-dictionary' is nil, that is
+    ;; ;; if there is no local dictionary to use in the buffer).
+    ;; (setq ispell-dictionary "american") ; See `sentence-end-double-space'.
 
-    ;; Comments in programs should always be in English.
+    ;; Set the American English dictionary for spell-checking in programming modes.
     (add-hook 'prog-mode-hook
               #'(lambda ()
                   (setq ispell-dictionary "american")))
 
-    ;; Prevent Flyspell from finding mistakes in the code, well in comments and
-    ;; strings.
+    ;; Enable Flyspell mode in programming modes, including comments and strings,
+    ;; while excluding code.
     (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
     (with-eval-after-load "ispell"
@@ -2038,7 +2029,7 @@ After initiating the grep search, the isearch is aborted."
       ;; Save the personal dictionary without confirmation.
       (setq ispell-silently-savep t)
 
-      ;; Extensions and extra switches to pass to the `ispell' program.
+      ;; Configure extensions and extra switches for the `ispell' program.
       (cond
 
        ((string-match "aspell" ispell-program-name)
@@ -2080,50 +2071,49 @@ After initiating the grep search, the isearch is aborted."
 
     (with-eval-after-load "flyspell"
 
-     ;; Don't consider that a word repeated twice is an error.
-     (setq flyspell-mark-duplications-flag nil)
+      ;; Don't consider that a word repeated twice is an error.
+      (setq flyspell-mark-duplications-flag nil)
 
-     ;; Lower (for performance reasons) the maximum distance for finding
-     ;; duplicates of unrecognized words.
-     (setq flyspell-duplicate-distance 12000) ; [default: 400000]
+      ;; Lower (for performance reasons) the maximum distance for finding
+      ;; duplicates of unrecognized words.
+      (setq flyspell-duplicate-distance 12000) ; [default: 400000]
 
-     ;; Fix the "enabling flyspell mode gave an error" bug.
-     (setq flyspell-issue-welcome-flag nil)
+      ;; Fix the "enabling flyspell mode gave an error" bug.
+      (setq flyspell-issue-welcome-flag nil)
 
-     ;; ;; Don't print messages for every word (when checking the entire buffer)
-     ;; ;; as it causes a (small) slowdown.
-     ;; (setq flyspell-issue-message-flag nil)
+      ;; ;; Don't print messages for every word (when checking the entire buffer) as
+      ;; ;; it causes a (small) slowdown.
+      ;; (setq flyspell-issue-message-flag nil)
 
-     ;; Dash character (`-') is considered as a word delimiter.
-     (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
-     ;; '("francais" "deutsch8" "norsk")
+      ;; Dash character (`-') is considered as a word delimiter.
+      (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
 
-     (defun lvn-toggle-ispell-dictionary ()
-       "Toggle the ispell dictionary between French and US English."
-       (interactive)
-       (let ((current-dict (or ispell-local-dictionary
-                               ispell-dictionary))
-             (new-dict))
-         (setq new-dict (if (string= current-dict "francais")
-                            "american"
-                          "francais"))
-         (ispell-change-dictionary new-dict)
-         (message "[Switched to %S]" new-dict)
-         (sit-for 0.5)
-         (force-mode-line-update)
-         (when flyspell-mode
-           ;; (flyspell-delete-all-overlays)
-           ;; If above is executed, the advised `org-mode-flyspell-verify'
-           ;; won't work anymore.
-           (flyspell-buffer))))
+      (defun lvn-toggle-ispell-dictionary ()
+        "Toggle the ispell dictionary between French and US English."
+        (interactive)
+        (let ((current-dict (or ispell-local-dictionary
+                                ispell-dictionary))
+              (new-dict))
+          (setq new-dict (if (string= current-dict "francais")
+                             "american"
+                           "francais"))
+          (ispell-change-dictionary new-dict)
+          (message "[Switched to %S]" new-dict)
+          (sit-for 0.5)
+          (force-mode-line-update)
+          (when flyspell-mode
+            ;; (flyspell-delete-all-overlays)
+            ;; If above is executed, the advised `org-mode-flyspell-verify'
+            ;; won't work anymore.
+            (flyspell-buffer))))
 
-     ;; Key bindings.
-     (global-set-key (kbd "C-$") #'flyspell-buffer)
-     (global-set-key (kbd "C-M-$") #'lvn-toggle-ispell-dictionary)
+      ;; Key bindings.
+      (global-set-key (kbd "C-$") #'flyspell-buffer)
+      (global-set-key (kbd "C-M-$") #'lvn-toggle-ispell-dictionary)
 
-     ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
-     ;; faces corresponding to text in programming-mode buffers).
-     (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
+      ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
+      ;; faces corresponding to text in programming-mode buffers).
+      (add-to-list 'flyspell-prog-text-faces 'nxml-text-face)))
 
 )                                       ; Chapter 16 ends here.
 
@@ -5673,7 +5663,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;;*** 28.1.4 (info "(emacs)Log Buffer")
 
   (defun leuven--vc-log-mode-setup ()
-    (when (leuven--executable-ispell-program-name-p)
+    (when (lvn--executable-ispell-program-name-p)
       (setq ispell-local-dictionary "american")
       (flyspell-mode)))
 
