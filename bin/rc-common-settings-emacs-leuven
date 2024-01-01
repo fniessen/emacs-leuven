@@ -107,7 +107,8 @@ elf() {
         return 2
     fi
 
-    # Run the last command and capture its output.
+    # Run the last command and capture its output, supporting piping or other
+    # advanced shell features.
     local command_output
     command_output=$(eval "$last_command")
 
