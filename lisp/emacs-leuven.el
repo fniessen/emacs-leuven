@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20231227.1348
+;; Version: 20240101.1840
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20231227.1348"
+(defconst lvn--emacs-version "20240101.1840"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4216,21 +4216,25 @@ you will be prompted to enter the desired fill column width."
 
     (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
 
-    (defun leuven--change-dict-to-fr ()
-      "Change the local dictionary to French if babel package is set to French."
+    (defun lvn--change-dictionary-to-fr ()
+      "Change the local dictionary to French if the babel package is set to French."
       (interactive)
-      (when (string-equal (file-name-extension (buffer-file-name)) "tex")
+      (when (and (eq major-mode 'latex-mode)
+                 (or (progn (save-excursion
+                              (goto-char (point-min))
+                              (re-search-forward "\\(documentclass.*french\\)" nil t)))
+                     (progn (save-excursion
+                              (goto-char (point-min))
+                              (re-search-forward "\\(usepackage.*french.*babel\\)" nil t)))))
+        (message "Switched dictionary to français")
+        (sit-for 0.5)
         (save-excursion
-          (goto-char (point-min))
-          (when (re-search-forward "\\(documentclass.*french\\|usepackage.*french.*babel\\)" nil t)
-            (message "Switched dictionary to francais")
-            (sit-for 0.5)
-            (ispell-change-dictionary "francais")
-            (force-mode-line-update)
-            (when flyspell-mode
-              (flyspell-buffer))))))
+          (ispell-change-dictionary "francais")
+          (force-mode-line-update)
+          (when flyspell-mode
+            (flyspell-buffer)))))
 
-    (add-hook 'LaTeX-mode-hook #'leuven--change-dict-to-fr)
+    (add-hook 'LaTeX-mode-hook #'lvn--change-dictionary-to-fr)
 
     ;; Don't ask user for permission to save files before starting TeX.
     (setq TeX-save-query nil)
