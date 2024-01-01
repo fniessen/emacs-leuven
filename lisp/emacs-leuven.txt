@@ -3707,11 +3707,14 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Get rid of the "File xxx is large, really open? (y or n)" annoying message.
-  (setq large-file-warning-threshold (* 512 1024 1024)) ; 512 MB.
+  (defcustom lvn-large-file-warning-threshold
+    (* 512 1024 1024) ; 512 MB
+    "Threshold for the 'File xxx is large, really open? (y or n)' warning."
+    :group 'leuven
+    :type 'integer)
 
   ;; Maximum buffer size for which line number should be displayed.
-  (setq line-number-display-limit large-file-warning-threshold)
+  (setq line-number-display-limit lvn-large-file-warning-threshold)
                                         ; 14.18 Optional Mode Line Features.
 #+end_src
 
@@ -3721,11 +3724,11 @@ against reading a log which spits out a long line, I often do something like
 obviously, but helps a lot with reading.
 
 #+begin_src emacs-lisp
-  (defun leuven-file-too-large-p ()
+  (defun lvn-file-too-large-p ()
     "Check if the file is too large and might cause performance issues."
-    (> (buffer-size) large-file-warning-threshold))
+    (> (buffer-size) lvn-large-file-warning-threshold))
 
-  (defun leuven-optimize-large-file-viewing ()
+  (defun lvn-optimize-large-file-viewing ()
     "Optimize Emacs performance when viewing large files."
     (setq buffer-read-only t)
     (setq-local bidi-display-reordering nil) ; Default local setting.
@@ -3741,23 +3744,23 @@ obviously, but helps a lot with reading.
     (when (fboundp 'anzu-mode)
       (anzu-mode -1)))
 
-  (define-derived-mode leuven-large-file-mode fundamental-mode "LvnLargeFile"
+  (define-derived-mode lvn-large-file-mode fundamental-mode "LvnLargeFile"
     "Major mode for optimized viewing of large files."
-    (leuven-optimize-large-file-viewing))
+    (lvn-optimize-large-file-viewing))
 
-  (add-to-list 'magic-mode-alist (cons #'leuven-file-too-large-p #'leuven-large-file-mode))
+  (add-to-list 'magic-mode-alist (cons #'lvn-file-too-large-p #'lvn-large-file-mode))
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun leuven-find-large-file-conservatively (filename)
-    (interactive
-     (list (read-file-name
-            "Find file conservatively: " nil default-directory
-            (confirm-nonexistent-file-or-buffer))))
-    (let ((auto-mode-alist nil))
-      (find-file filename)
-      (fundamental-mode)
-      (leuven--view-large-file)))
+  ;; (defun leuven-find-large-file-conservatively (filename)
+  ;;   (interactive
+  ;;    (list (read-file-name
+  ;;           "Find file conservatively: " nil default-directory
+  ;;           (confirm-nonexistent-file-or-buffer))))
+  ;;   (let ((auto-mode-alist nil))
+  ;;     (find-file filename)
+  ;;     (fundamental-mode)
+  ;;     (leuven--view-large-file)))
 #+end_src
 
 The *SoLong* package is a workaround for the issue of large "minified" files of
@@ -7850,7 +7853,7 @@ Some key bindings:
 
     (add-hook 'nxml-mode-hook
               #'(lambda ()
-                  (when (< (buffer-size) large-file-warning-threshold) ; View large files.
+                  (when (< (buffer-size) lvn-large-file-warning-threshold) ; View large files.
                     (hl-tags-mode 1))))
 
     ;; (add-hook 'web-mode-hook #'hl-tags-mode)

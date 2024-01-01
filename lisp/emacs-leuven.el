@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240101.1910
+;; Version: 20240101.1931
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240101.1910"
+(defconst lvn--emacs-version "20240101.1931"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2183,18 +2183,21 @@ After initiating the grep search, the isearch is aborted."
   ;; Visit a file.
   (global-set-key (kbd "<f3>") #'find-file)
 
-  ;; Get rid of the "File xxx is large, really open? (y or n)" annoying message.
-  (setq large-file-warning-threshold (* 512 1024 1024)) ; 512 MB.
+  (defcustom lvn-large-file-warning-threshold
+    (* 512 1024 1024) ; 512 MB
+    "Threshold for the 'File xxx is large, really open? (y or n)' warning."
+    :group 'leuven
+    :type 'integer)
 
   ;; Maximum buffer size for which line number should be displayed.
-  (setq line-number-display-limit large-file-warning-threshold)
+  (setq line-number-display-limit lvn-large-file-warning-threshold)
                                         ; 14.18 Optional Mode Line Features.
 
-  (defun leuven-file-too-large-p ()
+  (defun lvn-file-too-large-p ()
     "Check if the file is too large and might cause performance issues."
-    (> (buffer-size) large-file-warning-threshold))
+    (> (buffer-size) lvn-large-file-warning-threshold))
 
-  (defun leuven-optimize-large-file-viewing ()
+  (defun lvn-optimize-large-file-viewing ()
     "Optimize Emacs performance when viewing large files."
     (setq buffer-read-only t)
     (setq-local bidi-display-reordering nil) ; Default local setting.
@@ -2210,21 +2213,21 @@ After initiating the grep search, the isearch is aborted."
     (when (fboundp 'anzu-mode)
       (anzu-mode -1)))
 
-  (define-derived-mode leuven-large-file-mode fundamental-mode "LvnLargeFile"
+  (define-derived-mode lvn-large-file-mode fundamental-mode "LvnLargeFile"
     "Major mode for optimized viewing of large files."
-    (leuven-optimize-large-file-viewing))
+    (lvn-optimize-large-file-viewing))
 
-  (add-to-list 'magic-mode-alist (cons #'leuven-file-too-large-p #'leuven-large-file-mode))
+  (add-to-list 'magic-mode-alist (cons #'lvn-file-too-large-p #'lvn-large-file-mode))
 
-  (defun leuven-find-large-file-conservatively (filename)
-    (interactive
-     (list (read-file-name
-            "Find file conservatively: " nil default-directory
-            (confirm-nonexistent-file-or-buffer))))
-    (let ((auto-mode-alist nil))
-      (find-file filename)
-      (fundamental-mode)
-      (leuven--view-large-file)))
+  ;; (defun leuven-find-large-file-conservatively (filename)
+  ;;   (interactive
+  ;;    (list (read-file-name
+  ;;           "Find file conservatively: " nil default-directory
+  ;;           (confirm-nonexistent-file-or-buffer))))
+  ;;   (let ((auto-mode-alist nil))
+  ;;     (find-file filename)
+  ;;     (fundamental-mode)
+  ;;     (leuven--view-large-file)))
 
 ;;** 18.3 (info "(emacs)Saving") Files
 
@@ -4549,7 +4552,7 @@ the parent element."
 
     (add-hook 'nxml-mode-hook
               #'(lambda ()
-                  (when (< (buffer-size) large-file-warning-threshold) ; View large files.
+                  (when (< (buffer-size) lvn-large-file-warning-threshold) ; View large files.
                     (hl-tags-mode 1))))
 
     ;; (add-hook 'web-mode-hook #'hl-tags-mode)
