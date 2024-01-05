@@ -1103,10 +1103,10 @@ From the address <%a>"
   (message "[... Org Refile]")
 
   (defvar leuven-org-refile-extra-files
-    (if (file-exists-p "~/org/notes/")
-        (directory-files "~/org/notes/" t "^[^\\.#].*\\.\\(txt\\|org\\)$")
+    (if (file-exists-p "~/org/")
+        (file-expand-wildcards "~/org/*.txt")
       nil)
-    "List of extra files to be used as targets for refile commands.")
+    "List of extra .txt files to be used as targets for refile commands.")
 
   ;; 9.5 Any headline with level <= 3 is a target.
   (setq org-refile-targets
