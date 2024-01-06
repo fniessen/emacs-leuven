@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240106.1755
+;; Version: 20240106.1828
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240106.1755"
+(defconst lvn--emacs-version "20240106.1828"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6605,18 +6605,21 @@ This example lists Azerty layout second row keys."
 
     ;; Open files using Windows associations.
     (when (or leuven--win32-p
+              leuven--wsl-p
               leuven--cygwin-p)
-      (defun lvn-open-files-externally-in-dired (&optional arg)
+      (defun lvn-dired-open-files-externally (&optional arg)
         "In Dired, open the marked files (or directories) with the default Windows tool."
         (interactive "P")
         (mapcar
          #'(lambda (file)
-             (w32-shell-execute "open" (convert-standard-filename file)))
+             (if leuven--wsl-p
+                 (shell-command (format "start %s" (convert-standard-filename file)))
+               (w32-shell-execute "open" (convert-standard-filename file))))
          (dired-get-marked-files nil arg)))
 
       ;; ;; Bind it to `E' in Dired mode.
-      ;; (define-key dired-mode-map (kbd "E") #'lvn-open-files-externally-in-dired)
-      )
+      ;; (define-key dired-mode-map (kbd "E") #'lvn-dired-open-files-externally)
+    )
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()

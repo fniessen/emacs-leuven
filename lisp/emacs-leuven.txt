@@ -12737,18 +12737,21 @@ For those under Windows:
 #+begin_src emacs-lisp
     ;; Open files using Windows associations.
     (when (or leuven--win32-p
+              leuven--wsl-p
               leuven--cygwin-p)
-      (defun lvn-open-files-externally-in-dired (&optional arg)
+      (defun lvn-dired-open-files-externally (&optional arg)
         "In Dired, open the marked files (or directories) with the default Windows tool."
         (interactive "P")
         (mapcar
          #'(lambda (file)
-             (w32-shell-execute "open" (convert-standard-filename file)))
+             (if leuven--wsl-p
+                 (shell-command (format "start %s" (convert-standard-filename file)))
+               (w32-shell-execute "open" (convert-standard-filename file))))
          (dired-get-marked-files nil arg)))
 
       ;; ;; Bind it to `E' in Dired mode.
-      ;; (define-key dired-mode-map (kbd "E") #'lvn-open-files-externally-in-dired)
-      )
+      ;; (define-key dired-mode-map (kbd "E") #'lvn-dired-open-files-externally)
+    )
 #+end_src
 
 *** Open file with ~eww~
