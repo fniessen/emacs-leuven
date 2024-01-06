@@ -6092,14 +6092,26 @@ See NeoTree as well.
     (setq-default vertical-scroll-bar 'right))
 #+end_src
 
+** Menu Bars
+
+#+begin_src emacs-lisp :tangle no
+;;** 21.14 (info "(emacs)Menu Bars")
+
+  (leuven--section "21.15 (emacs)Menu Bars")
+
+  ;; Disable the menu-bar.
+  (when (display-graphic-p)
+    (menu-bar-mode -1))
+#+end_src
+
 ** Tool Bars
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;;** 21.15 (info "(emacs)Tool Bars")
 
   (leuven--section "21.15 (emacs)Tool Bars")
 
-  ;; Turn tool bar off.
+  ;; Disable the tool-bar.
   (when (display-graphic-p)
     (tool-bar-mode -1))
 #+end_src
@@ -9604,41 +9616,44 @@ XXX Compiling with ~ant~?
 Make the compilation window go away -- if there were no compilation errors:
 
 #+begin_src emacs-lisp
-  (defun compile-hide-window-if-successful (cur-buffer msg)
-    (if (string-match "exited abnormally" msg)
-        ;; There were errors.
-        (message "[Compilation errors, press C-x ` to visit]")
-      ;; No errors, make compilation window go away in 0.5 sec
+  (defun lvn--compilation-hide-window-if-successful (buffer message)
+    "Handle the compilation result in BUFFER with the given MESSAGE."
+    (if (string-match "exited abnormally" message)
+        ;; There were errors. Provide a suggestion to visit errors.
+        (message "[Compilation errors detected. Press C-x ` to visit.]")
+      ;; No errors, close the compilation window after 0.5 seconds.
       (run-at-time 0.5 nil
-                   'delete-windows-on cur-buffer)
+                   #'delete-windows-on buffer)
       (message "[No compilation errors!]")))
 
-  ;; (add-to-list 'compilation-finish-functions #'compile-hide-window-if-successful)
-#+end_src
+  ;; (add-to-list 'compilation-finish-functions #'lvn--compilation-hide-window-if-successful)
+  #+end_src
 
 #+begin_src emacs-lisp
-  (defun compile-goto-first-error (cur-buffer msg)
-    (with-current-buffer cur-buffer
+  (defun lvn--compilation-move-to-first-error (buffer message)
+    "Move to the first compilation error in BUFFER and beep."
+    (with-current-buffer buffer
       (goto-char (point-min))
       (compilation-next-error 1)
       (beep)))
 
-  ;; (add-to-list 'compilation-finish-functions #'compile-goto-first-error)
+  ;; (add-to-list 'compilation-finish-functions #'lvn--compilation-move-to-first-error)
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun compile-scroll-eob (cur-buffer msg)
-    (let ((win (get-buffer-window cur-buffer))
-          (current (selected-window)))
-      (when win
-        (select-window win)
-        (with-current-buffer cur-buffer
+  (defun lvn--compilation-scroll-to-end-of-buffer (buffer message)
+    "Ensure that BUFFER is visible, scrolling to the end if needed."
+    (let ((buffer-window (get-buffer-window buffer))
+          (current-window (selected-window)))
+      (when buffer-window
+        (select-window buffer-window)
+        (with-current-buffer buffer
           (when (> (line-number-at-pos (point-max)) (window-height))
             (goto-char (point-max))
             (recenter (window-height))))
-        (select-window current))))
+        (select-window current-window))))
 
-  (add-to-list 'compilation-finish-functions #'compile-scroll-eob)
+  (add-to-list 'compilation-finish-functions #'lvn--compilation-scroll-to-end-of-buffer)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -10639,10 +10654,59 @@ changes.
 
 (setq vc-annotate-color-map
   '((  1.0 . "#FFCCCC") ; red
-    (  7.0 . "#FFE4CC") ; orange
+    (  2.0 . "#FFE4CC") ; orange
+    (  7.0 . "#FFE4CC") ; yellow
     ( 30.0 . "#DEFFCC") ; green
     ( 90.0 . "#CCE4FF") ; blue
-    (360.0 . "#C9C9C9"))) ; white
+    (360.0 . "#C9C9C9"))) ; gray
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(defun my-vc-annotate-apply-faces ()
+  "Apply custom faces based on commit date in vc-annotate."
+  (let ((age (time-to-number-of-days (time-since (vc-annotate-extract-revision)))))
+    (cond
+     ((= age 0) (set-face-attribute 'vc-annotate-0-face nil :foreground "white" :background "red"))
+     ((= age 1) (set-face-attribute 'vc-annotate-1-face nil :foreground "white" :background "orange"))
+     ((<= 2 age 7) (set-face-attribute 'vc-annotate-2-face nil :foreground "white" :background "yellow"))
+     ((<= 8 age 30) (set-face-attribute 'vc-annotate-3-face nil :foreground "white" :background "green"))
+     ((<= 31 age 90) (set-face-attribute 'vc-annotate-4-face nil :foreground "white" :background "blue"))
+     (t (set-face-attribute 'vc-annotate-5-face nil :foreground "white" :background "gray")))))
+
+(add-hook 'vc-annotate-mode-hook 'my-vc-annotate-apply-faces)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(defun my-vc-annotate-apply-faces ()
+  "Apply custom faces based on commit date in vc-annotate."
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eobp))
+      (let* ((line (thing-at-point 'line t))
+             (revision (vc-annotate-extract-revision-at-line line))
+             (age (my-vc-annotate-get-commit-age revision)))
+        (cond
+         ((= age 0) (vc-annotate-apply-face-at-line 'vc-annotate-0-face))
+         ((= age 1) (vc-annotate-apply-face-at-line 'vc-annotate-1-face))
+         ((<= 2 age 7) (vc-annotate-apply-face-at-line 'vc-annotate-2-face))
+         ((<= 8 age 30) (vc-annotate-apply-face-at-line 'vc-annotate-3-face))
+         ((<= 31 age 90) (vc-annotate-apply-face-at-line 'vc-annotate-4-face))
+         (t (vc-annotate-apply-face-at-line 'vc-annotate-5-face)))))
+    (goto-char (point-min))))
+
+(defun my-vc-annotate-get-commit-age (revision)
+  "Get the age of a commit in days."
+  (string-to-number
+   (shell-command-to-string
+    (format "git show -s --format=%%ct %s | xargs -I{} echo $(( (($(date +%s) - {})) / 86400 ))" revision))))
+
+(defun vc-annotate-apply-face-at-line (face)
+  "Apply FACE to the current line in vc-annotate buffer."
+  (let ((start (line-beginning-position))
+        (end (line-end-position)))
+    (put-text-property start end 'face face)))
+
+(add-hook 'vc-annotate-mode-hook 'my-vc-annotate-apply-faces)
 #+end_src
 
 *************** TODO Customize `vc-annotate-background' (and future `vc-annotate-foreground')
@@ -14022,9 +14086,9 @@ want to use.
 ** Shell utilities
 
 You can benefit from the provided aliases and functions by sourcing the file
-located at =PATH/TO/bin/rc-common-emacs-leuven=.
+located at =PATH/TO/bin/rc-common-settings-emacs-leuven=.
 
-#+begin_src shell :tangle ../bin/rc-common-emacs-leuven
+#+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
 # Hey Emacs, this is a -*- sh -*- file ...
 #+end_src
 
@@ -14036,7 +14100,7 @@ Find a suitable editor.
 ~e .~ opens the current directory in Emacs.
 #+end_note
 
-#+begin_src shell :tangle ../bin/rc-common-emacs-leuven
+#+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
 if [ -z "$SSH_CONNECTION" ]; then
     # Configuration for local mode.
 
@@ -14086,7 +14150,7 @@ When setting the environment variables ~EDITOR~ and/or ~VISUAL~, you better omit
 editor will think you exited it. In the case of our ~git commit~, we would end up
 with a blank commit message!
 
-#+begin_src shell :tangle ../bin/rc-common-emacs-leuven
+#+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
 # Set VISUAL to the same value as EDITOR.
 export VISUAL="$EDITOR"
 #+end_src
@@ -14096,7 +14160,7 @@ export VISUAL="$EDITOR"
 If you are an avid Emacs user like me, you'll find this function useful.  It
 *enters the directory of the file currently active in Emacs* resides in:
 
-#+begin_src shell :tangle ../bin/rc-common-emacs-leuven
+#+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
 # Cd to the directory of the current buffer in Emacs.
 cde() {
     if ! command -v emacsclient > /dev/null 2>&1; then
@@ -14125,6 +14189,49 @@ cde() {
     cd "$dir"
     # The change in working directory will persist after the function has
     # completed.
+}
+#+end_src
+
+You need the ~emacs-server~ functionality enabled for this to work.
+
+*** elf - Edit last file (from last command output) in Emacs
+
+#+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
+# Retrieve and execute the last command from shell history, assuming it outputs
+# a list of files, then open the last file in Emacs for inspection.
+elf() {
+    # Retrieve the last command from the history file.
+    local last_command
+    last_command=$(HISTTIMEFORMAT="" history 2 \
+                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
+
+    # Check if the last command is empty.
+    if [[ -z "$last_command" ]]; then
+        printf >&2 "No command found in the shell history.\n"
+        return 2
+    fi
+
+    # Run the last command and capture its output, supporting piping or other
+    # advanced shell features.
+    local command_output
+    command_output=$(eval "$last_command")
+
+    # Extract the last line (assuming it's a list of files).
+    local last_file
+    last_file=$(printf "%s" "$command_output" | tail -n 1 \
+                    | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
+
+    # Debugging information.
+    printf "Edit last file: %s\n" "$last_file"
+
+    # Return if the last line is empty.
+    if [[ -z "$last_file" ]]; then
+        printf >&2 "No output from the last command or no files found.\n"
+        return 2
+    fi
+
+    # Open the last file in Emacs using emacsclient.
+    emacsclient -n "$last_file"
 }
 #+end_src
 

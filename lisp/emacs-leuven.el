@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240101.1931
+;; Version: 20240106.1755
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240101.1931"
+(defconst lvn--emacs-version "20240106.1755"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -3450,14 +3450,6 @@ windows, leaving only the currently active window visible."
     ;; Position of the vertical scroll bar.
     (setq-default vertical-scroll-bar 'right))
 
-;;** 21.15 (info "(emacs)Tool Bars")
-
-  (leuven--section "21.15 (emacs)Tool Bars")
-
-  ;; Turn tool bar off.
-  (when (display-graphic-p)
-    (tool-bar-mode -1))
-
 ;;** 21.16 Using (info "(emacs)Dialog Boxes")
 
   (leuven--section "21.16 (emacs)Using Dialog Boxes")
@@ -5273,37 +5265,40 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;; Always kill a running compilation process before starting a new one.
   (setq compilation-always-kill t)
 
-  (defun compile-hide-window-if-successful (cur-buffer msg)
-    (if (string-match "exited abnormally" msg)
-        ;; There were errors.
-        (message "[Compilation errors, press C-x ` to visit]")
-      ;; No errors, make compilation window go away in 0.5 sec
+  (defun lvn--compilation-hide-window-if-successful (buffer message)
+    "Handle the compilation result in BUFFER with the given MESSAGE."
+    (if (string-match "exited abnormally" message)
+        ;; There were errors. Provide a suggestion to visit errors.
+        (message "[Compilation errors detected. Press C-x ` to visit.]")
+      ;; No errors, close the compilation window after 0.5 seconds.
       (run-at-time 0.5 nil
-                   'delete-windows-on cur-buffer)
+                   #'delete-windows-on buffer)
       (message "[No compilation errors!]")))
 
-  ;; (add-to-list 'compilation-finish-functions #'compile-hide-window-if-successful)
+  ;; (add-to-list 'compilation-finish-functions #'lvn--compilation-hide-window-if-successful)
 
-  (defun compile-goto-first-error (cur-buffer msg)
-    (with-current-buffer cur-buffer
+  (defun lvn--compilation-move-to-first-error (buffer message)
+    "Move to the first compilation error in BUFFER and beep."
+    (with-current-buffer buffer
       (goto-char (point-min))
       (compilation-next-error 1)
       (beep)))
 
-  ;; (add-to-list 'compilation-finish-functions #'compile-goto-first-error)
+  ;; (add-to-list 'compilation-finish-functions #'lvn--compilation-move-to-first-error)
 
-  (defun compile-scroll-eob (cur-buffer msg)
-    (let ((win (get-buffer-window cur-buffer))
-          (current (selected-window)))
-      (when win
-        (select-window win)
-        (with-current-buffer cur-buffer
+  (defun lvn--compilation-scroll-to-end-of-buffer (buffer message)
+    "Ensure that BUFFER is visible, scrolling to the end if needed."
+    (let ((buffer-window (get-buffer-window buffer))
+          (current-window (selected-window)))
+      (when buffer-window
+        (select-window buffer-window)
+        (with-current-buffer buffer
           (when (> (line-number-at-pos (point-max)) (window-height))
             (goto-char (point-max))
             (recenter (window-height))))
-        (select-window current))))
+        (select-window current-window))))
 
-  (add-to-list 'compilation-finish-functions #'compile-scroll-eob)
+  (add-to-list 'compilation-finish-functions #'lvn--compilation-scroll-to-end-of-buffer)
 
   (defvar make-clean-command "make clean all"
     "*Command used by the `make-clean' function.")
@@ -5845,10 +5840,11 @@ a clean buffer we're an order of magnitude laxer about checking."
 
 (setq vc-annotate-color-map
   '((  1.0 . "#FFCCCC") ; red
-    (  7.0 . "#FFE4CC") ; orange
+    (  2.0 . "#FFE4CC") ; orange
+    (  7.0 . "#FFE4CC") ; yellow
     ( 30.0 . "#DEFFCC") ; green
     ( 90.0 . "#CCE4FF") ; blue
-    (360.0 . "#C9C9C9"))) ; white
+    (360.0 . "#C9C9C9"))) ; gray
 
 ;;** 28.2 (info "(emacs)Change Log")
 
