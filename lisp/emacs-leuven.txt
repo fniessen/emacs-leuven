@@ -14104,7 +14104,7 @@ Find a suitable editor.
 #+end_note
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
-if [ -z "$SSH_CONNECTION" ]; then
+if [[ -z "$SSH_CONNECTION" ]]; then
     # Configuration for local mode.
 
     # Set the default editor to emacsclient.
@@ -14113,28 +14113,45 @@ if [ -z "$SSH_CONNECTION" ]; then
     # Set an alternate editor to an empty string.
     export ALTERNATE_EDITOR=""
 
-    # Create an alias 'e' for running emacsclient in non-blocking mode.
-    alias e="emacsclient -n"
-
-    alias ec1="emacsclient -n -e '(select-frame-set-input-focus (selected-frame))'"
-    alias ec2='emacsclient -n -e "(progn (find-file \"$1\") (select-frame-set-input-focus (selected-frame)))"'
-    alias ec3='emacsclient -n --eval "(progn (select-frame-set-input-focus (selected-frame)))"'
-
     # Open a file in an Emacs terminal frame using emacsclient.
     et() {
         emacsclient -t -a '' --eval "(find-file \"$1\")"
     }
 
-    function eee()      { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (find-file \"$1\"))"; }
-    function eeediff()  { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (ediff-files \"$1\" \"$2\"))"; }
-    function eeedired() { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (dired \"$1\"))"; }
-    function eeevcdir() { emacsclient -n -r -a '' --eval "(progn (select-frame-set-input-focus (selected-frame)) (vc-dir \"$1\"))"; }
+    # Create an alias 'e' for running emacsclient in non-blocking mode.
+    alias e="emacsclient -n"
 
+    # Emacsclient with frame focus and file opening.
+    ec() {
+        emacsclient -n -r -a '' --eval "(progn
+            (select-frame-set-input-focus (selected-frame))
+            (find-file \"$1\")
+        )"
+    }
+
+    # Open Ediff for two files.
+    ediff() {
+        emacsclient -n -r -a '' --eval "(progn
+            (select-frame-set-input-focus (selected-frame))
+            (ediff-files \"$1\" \"$2\")
+        )"
+    }
+
+    # Open VC Dir for a version-controlled directory.
+    evcdir() {
+        emacsclient -n -r -a '' --eval "(progn
+            (select-frame-set-input-focus (selected-frame))
+            (vc-dir \"$1\")
+        )"
+    }
+
+    # Open a new Emacs instance in the background.
+    alias bgemacs='emacs &'
+
+    # Alias to open Emacs using the alternate editor setting.
     # If emacsclient can't connect to an existing Emacs server, it will fall
     # back to running a new instance of Emacs.
-    alias ee="emacsclient -n --alternate-editor=emacs"
-
-    alias bgemacs='emacs &'
+    alias ealt="emacsclient -n --alternate-editor=emacs"
 else
     # Configuration for remote mode.
     for candidate_editor in emacs subl atom nano; do
