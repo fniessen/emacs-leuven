@@ -14257,6 +14257,47 @@ elf() {
 
 You need the ~emacs-server~ functionality enabled for this to work.
 
+*** eff - Edit first file (from last command output) in Emacs
+
+#+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
+eff() {
+    # Retrieve the last command from the history file.
+    local last_command
+    last_command=$(HISTTIMEFORMAT="" history 2 \
+                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
+
+    # Check if the last command is empty.
+    if [[ -z "$last_command" ]]; then
+        printf >&2 "No command found in the shell history.\n"
+        return 2
+    fi
+
+    # Run the last command and capture its output, supporting piping or other
+    # advanced shell features.
+    local command_output
+    command_output=$(eval "$last_command")
+
+    # Extract the first line (assuming it's a list of files).
+    local first_file
+    first_file=$(printf "%s" "$command_output" | head -n 1 \
+                    | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
+
+    # Debugging information.
+    printf "Edit first file: %s\n" "$first_file"
+
+    # Return if the first line is empty.
+    if [[ -z "$first_file" ]]; then
+        printf >&2 "No output from the last command or no files found.\n"
+        return 2
+    fi
+
+    # Open the first file in Emacs using emacsclient.
+    emacsclient -n "$first_file"
+}
+#+end_src
+
+You need the ~emacs-server~ functionality enabled for this to work.
+
 *** cate - Print the contents of the current buffer in Emacs to the terminal
 
 #+begin_src shell :tangle :tangle ../bin/cate
