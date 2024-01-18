@@ -449,22 +449,22 @@ exists, switch to it; otherwise, invoke FN."
 
   (leuven--section "Type of OS")
 
-  (defconst leuven--linux-p (eq system-type 'gnu/linux)
+  (defconst lvn--linux-p (eq system-type 'gnu/linux)
     "Running Emacs on Linux or WSL.")
 
-  (defconst leuven--wsl-p
+  (defconst lvn--wsl-p
     (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))
       (or (string-match "WSL" kernel-release)
           (string-match "microsoft-standard-WSL2" kernel-release)))
     "Running Emacs on WSL or WSL2.")
 
-  (defconst leuven--mac-p (eq system-type 'darwin)
+  (defconst lvn--mac-p (eq system-type 'darwin)
     "Running Emacs on macOS.")
 
-  (defconst leuven--win32-p (eq system-type 'windows-nt)
+  (defconst lvn--win32-p (eq system-type 'windows-nt)
     "Running Emacs on native Microsoft Windows.")
 
-  (defconst leuven--cygwin-p (eq system-type 'cygwin)
+  (defconst lvn--cygwin-p (eq system-type 'cygwin)
     "Running Emacs on Cygwin.")
 
 ;;** MS Windows
@@ -472,9 +472,9 @@ exists, switch to it; otherwise, invoke FN."
   ;; Set the default Windows Program Files directory depending on the operating
   ;; system Emacs is running on.
   (defconst leuven--windows-program-files-dir
-    (cond (leuven--win32-p
+    (cond (lvn--win32-p
            (file-name-as-directory (getenv "ProgramFiles(x86)")))
-          (leuven--cygwin-p
+          (lvn--cygwin-p
            "/cygdrive/c/Program Files (x86)/")
           (t
            "/usr/local/bin/"))
@@ -1223,7 +1223,7 @@ Emacs). XXX Could we set ~Info-default-directory-list~ instead???
   (with-eval-after-load "info"
     ;; List of directories to search for Info documentation files (in the order
     ;; they are listed).
-    (when leuven--win32-p
+    (when lvn--win32-p
       ;; (info-initialize)
       (let ((org-info-dir (expand-file-name
                            (concat (file-name-directory (locate-library "org")) "../doc/"))))
@@ -1755,7 +1755,7 @@ See [[https://stackoverflow.com/questions/11186370/symbols-function-definition-i
   ;;     (message "[Copied to Windows clipboard and kill-ring.]")))
 
   ;; ;; Override the kill-ring-save command when in WSL config.
-  ;; (when leuven--wsl-p
+  ;; (when lvn--wsl-p
   ;;   (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
   ;; ;; Define the paste command for WSL.
@@ -1775,7 +1775,7 @@ See [[https://stackoverflow.com/questions/11186370/symbols-function-definition-i
   ;;   (message "[Pasted from Windows clipboard.]"))
 
   ;; ;; Override the yank command when in WSL config.
-  ;; (when leuven--wsl-p
+  ;; (when lvn--wsl-p
   ;;   (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
 #+end_src
 
@@ -3900,7 +3900,7 @@ Update time stamps (and copyright notice) automatically.
 Turn on auto-revert mode globally.
 
 #+begin_src emacs-lisp
-  (when (and (bound-and-true-p leuven--cygwin-p)
+  (when (and (bound-and-true-p lvn--cygwin-p)
                                         ; Cygwin Emacs uses gfilenotify (based
                                         ; on GLib) and there are performance
                                         ; problems... Emacs bug 20927
@@ -4556,7 +4556,7 @@ As there are *issues with Cygwin ~ssh~* (which only works with Cygwinized Emacs)
 #+begin_src emacs-lisp
     ;; Default transfer method.
     (setq tramp-default-method          ; [Default: "scp"]
-          (cond (leuven--win32-p "plink")
+          (cond (lvn--win32-p "plink")
                 (t "ssh")))
 #+end_src
 
@@ -4639,7 +4639,7 @@ him about it if you need to change this.*
 #+begin_src emacs-lisp :tangle no
     ;; String used for end of line in rsh connections.
     (setq tramp-rsh-end-of-line         ; [Default: "\n"]
-          (cond (leuven--win32-p "\n")
+          (cond (lvn--win32-p "\n")
                 (t "\r")))
 #+end_src
 
@@ -5289,7 +5289,9 @@ interface ~es.exe~.
   ;; XXX Problems since Cygwin update (beginning of 2020-02).
   ;; (with-eval-after-load "helm-locate"
   ;;
-  ;;   (when (and (or leuven--win32-p leuven--cygwin-p)
+  ;;   (when (and (or lvn--win32-p
+  ;;                  lvn--wsl-p
+  ;;                  lvn--cygwin-p)
   ;;              (executable-find "es"))
   ;;
   ;;     ;; Sort locate results by full path.
@@ -6384,7 +6386,7 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
 
   ;; To copy and paste to and from Emacs through the clipboard (with coding
   ;; system conversion).
-  (cond (leuven--win32-p
+  (cond (lvn--win32-p
          (set-selection-coding-system 'compound-text-with-extensions))
         (t
          (set-selection-coding-system 'utf-8)))
@@ -7389,19 +7391,25 @@ SumatraPDF as your PDF viewer.
     ;; TeX-view-program-selection.
     ;; ;; Use a saner PDF viewer (evince, SumatraPDF).
     ;; (setcdr (assoc "^pdf$" TeX-output-view-style)
-    ;;         (cond ((or leuven--win32-p leuven--cygwin-p)
+    ;;         (cond ((or lvn--win32-p
+    ;;                    lvn--wsl-p
+    ;;                    lvn--cygwin-p)
     ;;                `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
     ;;               (t
     ;;                '("." "evince %o"))))
 
     ;; For AUCTeX 11.86+.
-    (when (or leuven--win32-p leuven--cygwin-p)
+    (when (or lvn--win32-p
+              lvn--wsl-p
+              lvn--cygwin-p)
       (when (boundp 'TeX-view-program-list)
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
                        ,(list (concat "\"" leuven--sumatrapdf-command "\" %o"))))))
 
-    (when (or leuven--win32-p leuven--cygwin-p)
+    (when (or lvn--win32-p
+              lvn--wsl-p
+              lvn--cygwin-p)
       (setcdr (assoc 'output-pdf TeX-view-program-selection)
               '("SumatraPDF")))
 #+end_src
@@ -7476,7 +7484,7 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
 
       ;; Path to `gs' command (for format conversions).
       (setq preview-gs-command
-        (cond (leuven--win32-p
+        (cond (lvn--win32-p
                (or (executable-find "gswin32c.exe")
                    "C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; Default value.
@@ -9793,7 +9801,7 @@ thereafter.
                                         ; used supports the `-H' option.
 
     ;; For Windows.
-    (when leuven--win32-p
+    (when lvn--win32-p
       ;; Default find command for `M-x grep-find'.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 #+end_src
@@ -12670,10 +12678,10 @@ appropriate viewer:
 #+begin_src emacs-lisp :tangle no
     (defun helm-open-file-with-default-tool (file)
       "Open FILE with the default tool on this platform."
-      (let ((program (cond ((leuven--linux-p) "xdg-open")
-                           ((leuven--mac-p) "open")))
+      (let ((program (cond ((lvn--linux-p) "xdg-open")
+                           ((lvn--mac-p) "open")))
             process-connect-type)
-        (if (leuven--win32-p)
+        (if (lvn--win32-p)
             (helm-w32-shell-execute-open-file file)
           (start-process "helm-open-file-with-default-tool" nil program file))))
 #+end_src
@@ -12683,8 +12691,8 @@ appropriate viewer:
     (defun dired-open ()
       "Open marked files in Dired with the default tool on this platform."
       (interactive)
-      (let ((program (cond ((leuven--linux-p) "xdg-open")
-                           ((leuven--mac-p) "open"))))
+      (let ((program (cond ((lvn--linux-p) "xdg-open")
+                           ((lvn--mac-p) "open"))))
         (dired-do-shell-command program nil
                                 (dired-get-marked-files t current-prefix-arg))))
 
@@ -12736,15 +12744,15 @@ For those under Windows:
 
 #+begin_src emacs-lisp
     ;; Open files using Windows associations.
-    (when (or leuven--win32-p
-              leuven--wsl-p
-              leuven--cygwin-p)
+    (when (or lvn--win32-p
+              lvn--wsl-p
+              lvn--cygwin-p)
       (defun lvn-dired-open-files-externally (&optional arg)
         "In Dired, open the marked files (or directories) with the default Windows tool."
         (interactive "P")
         (mapcar
          #'(lambda (file)
-             (if leuven--wsl-p
+             (if lvn--wsl-p
                  (shell-command (format "start %s" (convert-standard-filename file)))
                (w32-shell-execute "open" (convert-standard-filename file))))
          (dired-get-marked-files nil arg)))
@@ -12950,7 +12958,7 @@ Extra Dired functionality:
 
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
-    (when leuven--cygwin-p
+    (when lvn--cygwin-p
       (defadvice dired-jump (around lvn--dired-jump activate)
         "Ask for confirmation before jumping to a Dired buffer.
 
@@ -13413,7 +13421,7 @@ It offers many features:
 It's the best PDF viewer on GNU/Linux (including the ones not running in Emacs).
 
 #+begin_src emacs-lisp :tangle no
-  (when (and leuven--linux-p
+  (when (and lvn--linux-p
              (not (executable-find "epdfinfo")))
     (with-eval-after-load "pdf-tools-autoloads"
       (pdf-tools-install)))
@@ -13526,7 +13534,7 @@ and *replaces* it with the output from the shell command.
   ;;             (file-name-nondirectory (or (executable-find "zsh")
   ;;                                         (executable-find "bash")
   ;;                                         (executable-find "sh"))))
-  ;;           (when leuven--win32-p "cmdproxy.exe")))
+  ;;           (when lvn--win32-p "cmdproxy.exe")))
   ;;
   ;; ;; Use `shell-file-name' as the default shell.
   ;; (setenv "SHELL" shell-file-name)
@@ -13920,7 +13928,7 @@ inside it."
   ;; ;; Run an inferior shell, with I/O through buffer `*shell*'.
   ;; (global-set-key
   ;;   (kbd "C-c !")
-  ;;   (cond (leuven--win32-p 'shell)
+  ;;   (cond (lvn--win32-p 'shell)
   ;;         (t 'term)))
 
   ;; Toggle to and from the `*shell*' buffer.
@@ -13967,7 +13975,7 @@ Those problems disappear as soon as we do ~cygwin-mount-deactivate~...
 
 #+begin_src emacs-lisp :tangle no
   ;; Let Windows Emacs recognize Cygwin paths (e.g. /usr/local/lib).
-  (when (and leuven--win32-p
+  (when (and lvn--win32-p
              (executable-find "mount")) ; Cygwin bin directory found.
 
     (with-eval-after-load "cygwin-mount-autoloads"
@@ -13988,7 +13996,7 @@ interpreted correctly, you should use ~windows-path~.
 
 #+begin_src emacs-lisp :tangle no
   ;; Let Cygwin Emacs recognize Windows paths (e.g. C:\Program Files\).
-  (when leuven--cygwin-p
+  (when lvn--cygwin-p
 
     (try-require 'windows-path)         ; Require cygwin-mount!
 
@@ -14371,7 +14379,7 @@ printing on Windows.
       (ps-print-buffer-with-faces)))
 
   ;; Generate and print a PostScript image of the buffer.
-  (when leuven--win32-p
+  (when lvn--win32-p
     ;; Override `Print Screen' globally used as a hotkey by Windows.
     (w32-register-hot-key (kbd "<snapshot>"))
     (global-set-key
@@ -14541,10 +14549,11 @@ Pick up where you left off.
 
   ;; Configure the default browser behavior based on the platform.
   (setq browse-url-browser-function
-        (cond ((or leuven--win32-p
-                   leuven--cygwin-p)
+        (cond ((or lvn--win32-p
+                   lvn--wsl-p
+                   lvn--cygwin-p)
                'browse-url-default-windows-browser)
-              (leuven--mac-p
+              (lvn--mac-p
                'browse-url-default-macosx-browser)
               ((not (display-graphic-p)) ; Console.
                'eww-browse-url)
@@ -14559,7 +14568,7 @@ Pick up where you left off.
                                         ; available.
 
   ;; When running in WSL, configure to run the Windows browser.
-  (when leuven--wsl-p
+  (when lvn--wsl-p
     (setq browse-url-generic-program "/mnt/c/Windows/System32/cmd.exe")
     (setq browse-url-generic-args '("/c" "start"))
     (setq browse-url-browser-function #'browse-url-generic))

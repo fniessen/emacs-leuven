@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240106.1828
+;; Version: 20240118.1818
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240106.1828"
+(defconst lvn--emacs-version "20240118.1818"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -296,22 +296,22 @@ exists, switch to it; otherwise, invoke FN."
 
   (leuven--section "Type of OS")
 
-  (defconst leuven--linux-p (eq system-type 'gnu/linux)
+  (defconst lvn--linux-p (eq system-type 'gnu/linux)
     "Running Emacs on Linux or WSL.")
 
-  (defconst leuven--wsl-p
+  (defconst lvn--wsl-p
     (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))
       (or (string-match "WSL" kernel-release)
           (string-match "microsoft-standard-WSL2" kernel-release)))
     "Running Emacs on WSL or WSL2.")
 
-  (defconst leuven--mac-p (eq system-type 'darwin)
+  (defconst lvn--mac-p (eq system-type 'darwin)
     "Running Emacs on macOS.")
 
-  (defconst leuven--win32-p (eq system-type 'windows-nt)
+  (defconst lvn--win32-p (eq system-type 'windows-nt)
     "Running Emacs on native Microsoft Windows.")
 
-  (defconst leuven--cygwin-p (eq system-type 'cygwin)
+  (defconst lvn--cygwin-p (eq system-type 'cygwin)
     "Running Emacs on Cygwin.")
 
 ;;** MS Windows
@@ -319,9 +319,9 @@ exists, switch to it; otherwise, invoke FN."
   ;; Set the default Windows Program Files directory depending on the operating
   ;; system Emacs is running on.
   (defconst leuven--windows-program-files-dir
-    (cond (leuven--win32-p
+    (cond (lvn--win32-p
            (file-name-as-directory (getenv "ProgramFiles(x86)")))
-          (leuven--cygwin-p
+          (lvn--cygwin-p
            "/cygdrive/c/Program Files (x86)/")
           (t
            "/usr/local/bin/"))
@@ -806,7 +806,7 @@ original state of line numbers after navigation."
   (with-eval-after-load "info"
     ;; List of directories to search for Info documentation files (in the order
     ;; they are listed).
-    (when leuven--win32-p
+    (when lvn--win32-p
       ;; (info-initialize)
       (let ((org-info-dir (expand-file-name
                            (concat (file-name-directory (locate-library "org")) "../doc/"))))
@@ -1082,7 +1082,7 @@ original state of line numbers after navigation."
   ;;     (message "[Copied to Windows clipboard and kill-ring.]")))
 
   ;; ;; Override the kill-ring-save command when in WSL config.
-  ;; (when leuven--wsl-p
+  ;; (when lvn--wsl-p
   ;;   (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
   ;; ;; Define the paste command for WSL.
@@ -1102,7 +1102,7 @@ original state of line numbers after navigation."
   ;;   (message "[Pasted from Windows clipboard.]"))
 
   ;; ;; Override the yank command when in WSL config.
-  ;; (when leuven--wsl-p
+  ;; (when lvn--wsl-p
   ;;   (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
 
 )                                       ; Chapter 12 ends here.
@@ -2334,7 +2334,7 @@ After initiating the grep search, the isearch is aborted."
 
   (global-set-key (kbd "C-S-y") #'lvn-revert-buffer-and-clean-highlights)
 
-  (when (and (bound-and-true-p leuven--cygwin-p)
+  (when (and (bound-and-true-p lvn--cygwin-p)
                                         ; Cygwin Emacs uses gfilenotify (based
                                         ; on GLib) and there are performance
                                         ; problems... Emacs bug 20927
@@ -2612,7 +2612,7 @@ After initiating the grep search, the isearch is aborted."
 
     ;; Default transfer method.
     (setq tramp-default-method          ; [Default: "scp"]
-          (cond (leuven--win32-p "plink")
+          (cond (lvn--win32-p "plink")
                 (t "ssh")))
 
     (defun lvn--find-file-sudo-header-warning ()
@@ -2949,7 +2949,9 @@ in the current buffer."
   ;; XXX Problems since Cygwin update (beginning of 2020-02).
   ;; (with-eval-after-load "helm-locate"
   ;;
-  ;;   (when (and (or leuven--win32-p leuven--cygwin-p)
+  ;;   (when (and (or lvn--win32-p
+  ;;                  lvn--wsl-p
+  ;;                  lvn--cygwin-p)
   ;;              (executable-find "es"))
   ;;
   ;;     ;; Sort locate results by full path.
@@ -3617,7 +3619,7 @@ windows, leaving only the currently active window visible."
 
   ;; To copy and paste to and from Emacs through the clipboard (with coding
   ;; system conversion).
-  (cond (leuven--win32-p
+  (cond (lvn--win32-p
          (set-selection-coding-system 'compound-text-with-extensions))
         (t
          (set-selection-coding-system 'utf-8)))
@@ -4249,19 +4251,25 @@ you will be prompted to enter the desired fill column width."
     ;; TeX-view-program-selection.
     ;; ;; Use a saner PDF viewer (evince, SumatraPDF).
     ;; (setcdr (assoc "^pdf$" TeX-output-view-style)
-    ;;         (cond ((or leuven--win32-p leuven--cygwin-p)
+    ;;         (cond ((or lvn--win32-p
+    ;;                    lvn--wsl-p
+    ;;                    lvn--cygwin-p)
     ;;                `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
     ;;               (t
     ;;                '("." "evince %o"))))
 
     ;; For AUCTeX 11.86+.
-    (when (or leuven--win32-p leuven--cygwin-p)
+    (when (or lvn--win32-p
+              lvn--wsl-p
+              lvn--cygwin-p)
       (when (boundp 'TeX-view-program-list)
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
                        ,(list (concat "\"" leuven--sumatrapdf-command "\" %o"))))))
 
-    (when (or leuven--win32-p leuven--cygwin-p)
+    (when (or lvn--win32-p
+              lvn--wsl-p
+              lvn--cygwin-p)
       (setcdr (assoc 'output-pdf TeX-view-program-selection)
               '("SumatraPDF")))
 
@@ -4314,7 +4322,7 @@ you will be prompted to enter the desired fill column width."
 
       ;; Path to `gs' command (for format conversions).
       (setq preview-gs-command
-        (cond (leuven--win32-p
+        (cond (lvn--win32-p
                (or (executable-find "gswin32c.exe")
                    "C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"))
                                         ; Default value.
@@ -5392,7 +5400,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
                                         ; used supports the `-H' option.
 
     ;; For Windows.
-    (when leuven--win32-p
+    (when lvn--win32-p
       ;; Default find command for `M-x grep-find'.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 
@@ -6604,15 +6612,15 @@ This example lists Azerty layout second row keys."
     (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?
 
     ;; Open files using Windows associations.
-    (when (or leuven--win32-p
-              leuven--wsl-p
-              leuven--cygwin-p)
+    (when (or lvn--win32-p
+              lvn--wsl-p
+              lvn--cygwin-p)
       (defun lvn-dired-open-files-externally (&optional arg)
         "In Dired, open the marked files (or directories) with the default Windows tool."
         (interactive "P")
         (mapcar
          #'(lambda (file)
-             (if leuven--wsl-p
+             (if lvn--wsl-p
                  (shell-command (format "start %s" (convert-standard-filename file)))
                (w32-shell-execute "open" (convert-standard-filename file))))
          (dired-get-marked-files nil arg)))
@@ -6701,7 +6709,7 @@ This example lists Azerty layout second row keys."
 
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
-    (when leuven--cygwin-p
+    (when lvn--cygwin-p
       (defadvice dired-jump (around lvn--dired-jump activate)
         "Ask for confirmation before jumping to a Dired buffer.
 
@@ -7036,7 +7044,7 @@ Consider using `C-x d' instead for better performance."
   ;;             (file-name-nondirectory (or (executable-find "zsh")
   ;;                                         (executable-find "bash")
   ;;                                         (executable-find "sh"))))
-  ;;           (when leuven--win32-p "cmdproxy.exe")))
+  ;;           (when lvn--win32-p "cmdproxy.exe")))
   ;;
   ;; ;; Use `shell-file-name' as the default shell.
   ;; (setenv "SHELL" shell-file-name)
@@ -7201,7 +7209,7 @@ Consider using `C-x d' instead for better performance."
   ;; ;; Run an inferior shell, with I/O through buffer `*shell*'.
   ;; (global-set-key
   ;;   (kbd "C-c !")
-  ;;   (cond (leuven--win32-p 'shell)
+  ;;   (cond (lvn--win32-p 'shell)
   ;;         (t 'term)))
 
   ;; Toggle to and from the `*shell*' buffer.
@@ -7291,7 +7299,7 @@ Consider using `C-x d' instead for better performance."
       (ps-print-buffer-with-faces)))
 
   ;; Generate and print a PostScript image of the buffer.
-  (when leuven--win32-p
+  (when lvn--win32-p
     ;; Override `Print Screen' globally used as a hotkey by Windows.
     (w32-register-hot-key (kbd "<snapshot>"))
     (global-set-key
@@ -7437,10 +7445,11 @@ Consider using `C-x d' instead for better performance."
 
   ;; Configure the default browser behavior based on the platform.
   (setq browse-url-browser-function
-        (cond ((or leuven--win32-p
-                   leuven--cygwin-p)
+        (cond ((or lvn--win32-p
+                   lvn--wsl-p
+                   lvn--cygwin-p)
                'browse-url-default-windows-browser)
-              (leuven--mac-p
+              (lvn--mac-p
                'browse-url-default-macosx-browser)
               ((not (display-graphic-p)) ; Console.
                'eww-browse-url)
@@ -7455,7 +7464,7 @@ Consider using `C-x d' instead for better performance."
                                         ; available.
 
   ;; When running in WSL, configure to run the Windows browser.
-  (when leuven--wsl-p
+  (when lvn--wsl-p
     (setq browse-url-generic-program "/mnt/c/Windows/System32/cmd.exe")
     (setq browse-url-generic-args '("/c" "start"))
     (setq browse-url-browser-function #'browse-url-generic))

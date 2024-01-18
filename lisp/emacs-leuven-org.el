@@ -2189,7 +2189,7 @@ parent."
   ;; Convert "odt" format to "doc" format.
   (setq org-odt-preferred-output-format "doc")
 
-  (when leuven--cygwin-p
+  (when lvn--cygwin-p
     (setcdr (assoc "LibreOffice" org-odt-convert-processes)
             "soffice --headless --convert-to %f%x --outdir \"$(cygpath -m %d)\" \"$(cygpath -m %i)\"")))
 
