@@ -1,0 +1,33 @@
+#+TITLE:     Inbox
+#+DESCRIPTION: A place to collect new thoughts and tasks quickly for later organization and completion.
+#+KEYWORDS:  organization, tasks, thoughts, inbox
+#+LANGUAGE:  en
+#+OPTIONS:   ^:{}
+
+#+FILETAGS:  :inbox:
+#+SETUPFILE: ~/org/theme-readtheorg.setup
+
+Now, *collect* all your "stuff" (new thoughts and tasks) quickly in here.
+
+Later, sort them, organize them... and Get Them Done.
+
+* Tasks
+:PROPERTIES:
+:CATEGORY: 0-Tasks
+:END:
+
+* Calendar
+
+* Messages                                                                :mail:
+
+* Phone calls                                                             :call:
+:PROPERTIES:
+:CATEGORY: 0-Phone
+:END:
+
+* Shopping
+:PROPERTIES:
+:CATEGORY: 0-Shopping
+:END:
+
+* Notes
