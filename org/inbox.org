@@ -16,18 +16,18 @@ Later, sort them, organize them... and Get Them Done.
 :CATEGORY: 0-Tasks
 :END:
 
-* Calendar
-
-* Messages                                                                :mail:
+* Shopping
+:PROPERTIES:
+:CATEGORY: 0-Shopping
+:END:
 
 * Phone calls                                                             :call:
 :PROPERTIES:
 :CATEGORY: 0-Phone
 :END:
 
-* Shopping
-:PROPERTIES:
-:CATEGORY: 0-Shopping
-:END:
+* Messages                                                                :mail:
+
+* Calendar
 
 * Notes
