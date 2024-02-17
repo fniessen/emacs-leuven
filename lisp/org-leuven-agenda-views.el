@@ -118,6 +118,21 @@
                 (org-agenda-start-with-clockreport-mode nil)))
              t)
 
+(defun my-open-current-buffer-org-agenda ()
+  "Open the Org mode agenda for the current buffer."
+  (interactive)
+  (let ((org-agenda-files (list (buffer-file-name))))
+    (org-agenda))) ; works, but shows the export menu.
+
+(defun leuven-org-custom-agenda-current-buffer ()
+  "Generate a custom Org agenda view for the current buffer."
+  (interactive)
+  (let* ((org-agenda-files (list (buffer-file-name)))
+         (org-default-notes-file nil))
+    (org-agenda nil "f.")))
+
+(global-set-key (kbd "M-S-<f6>") 'leuven-org-custom-agenda-current-buffer)
+
 (add-to-list 'org-agenda-custom-commands
              '("w" "Work"
                ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
