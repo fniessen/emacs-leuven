@@ -2469,17 +2469,18 @@ This function is intended for use within Org mode buffers."
 ;;* 15 (info "(org)Miscellaneous")
 
 ;; From Dan Davison.
-(defun leuven-switch-to-org-scratch ()
-  "Switch to a temp Org buffer.  If the region is active, insert it."
+(defun lvn-switch-to-org-scratch ()
+  "Switch to a temporary Org buffer. If the region is active, insert its contents."
   (interactive)
   (let ((contents (and (use-region-p)
                        (buffer-substring (region-beginning)
                                          (region-end)))))
     (find-file "/tmp/org-scratch.org")
-    (if contents (insert contents))))
+    (when contents
+      (insert contents))))
 
-(defun org-check-property-drawers ()
-  "XXX"
+(defun lvn-org-check-property-drawers ()
+  "Check for erroneous 'PROPERTIES' drawers in Org mode headlines."
   (interactive)
   (org-element-map (org-element-parse-buffer 'element) 'headline
     #'(lambda (h)
