@@ -2524,29 +2524,28 @@ Ignore non Org buffers."
 (when (boundp 'org-planning-line-re)
   (add-hook 'org-mode-hook #'org-repair-property-drawers))
 
-(defun leuven--org-switch-dictionary ()
-  "Set language if Flyspell is enabled and `#+LANGUAGE:' is on top 8 lines."
+(defun lvn--org-switch-dictionary ()
+  "Set the language dictionary if Flyspell is enabled and `#+LANGUAGE:' is found within the top 8 lines of the buffer."
   (when (and (boundp 'ispell-dictionary-alist)
              ispell-dictionary-alist)
     (save-excursion
       (goto-char (point-min))
       (forward-line 8)
-      (let (lang dict
-                 (dict-alist '(("en" . "american")
+      (let ((lang-dict-alist '(("en" . "american")
                                ("fr" . "francais"))))
         (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
-          (setq lang (match-string 1))
-          (setq dict (cdr (assoc lang dict-alist)))
-          (if dict
-              (progn
-                (ispell-change-dictionary dict)
-                (force-mode-line-update))
-            (message "[No Ispell dictionary for language `%s' (see file `%s')]"
-                     lang (file-name-base))
-            (sit-for 1.5)))))))
+          (let ((lang (match-string 1))
+                (dict (cdr (assoc lang lang-dict-alist))))
+            (if dict
+                (progn
+                  (ispell-change-dictionary dict)
+                  (force-mode-line-update))
+              (message "[No Ispell dictionary for language `%s' (see file `%s')]"
+                       lang (file-name-base))
+              (sit-for 1.5))))))))
 
 ;; Guess dictionary.
-(add-hook 'org-mode-hook #'leuven--org-switch-dictionary)
+(add-hook 'org-mode-hook #'lvn--org-switch-dictionary)
 
 ;;** 15.2 (info "(org)Easy Templates")
 
