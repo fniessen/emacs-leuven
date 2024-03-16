@@ -18,7 +18,7 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     alias e="emacsclient -n"
 
     # Emacsclient with frame focus and file opening.
-    ec() {
+    ecli() {
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (find-file \"$1\")

@@ -68,7 +68,7 @@ Quotes:
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2023 Fabrice Niessen
+;; Copyright (C) 1999-2024 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -14130,7 +14130,7 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     alias e="emacsclient -n"
 
     # Emacsclient with frame focus and file opening.
-    ec() {
+    ecli() {
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (find-file \"$1\")
