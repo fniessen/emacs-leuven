@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2023 Fabrice Niessen
+;; Copyright (C) 1999-2024 Fabrice Niessen
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240118.1818
+;; Version: 20240316.1143
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240118.1818"
+(defconst lvn--emacs-version "20240316.1143"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6206,8 +6206,8 @@ a clean buffer we're an order of magnitude laxer about checking."
     (setq yas-verbosity 2)              ; Warning.
 
   (with-eval-after-load "auto-yasnippet-autoloads"
-      ;; (global-set-key (kbd "H-w") #'aya-create)
-      (global-set-key (kbd "H-y") #'aya-open-line))
+    ;; (global-set-key (kbd "H-w") #'aya-create)
+    (global-set-key (kbd "H-y") #'aya-open-line))
 
 ;;** 29.7 (info "(emacs)Dabbrev Customization")
 

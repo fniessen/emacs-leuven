@@ -11763,8 +11763,8 @@ Find it at http://capitaomorte.github.io/yasnippet/snippet-reference.html#yas-ke
 
 #+begin_src emacs-lisp
   (with-eval-after-load "auto-yasnippet-autoloads"
-      ;; (global-set-key (kbd "H-w") #'aya-create)
-      (global-set-key (kbd "H-y") #'aya-open-line))
+    ;; (global-set-key (kbd "H-w") #'aya-create)
+    (global-set-key (kbd "H-y") #'aya-open-line))
 #+end_src
 
 ** Dynamic Abbrev Expansion
