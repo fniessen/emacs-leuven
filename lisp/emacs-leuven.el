@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240316.1143
+;; Version: 20240317.1542
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240316.1143"
+(defconst lvn--emacs-version "20240317.1542"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2522,10 +2522,10 @@ After initiating the grep search, the isearch is aborted."
     (setq ediff-split-window-function
           #'(lambda (&optional arg)
               (if (> (frame-width) split-width-threshold)
-                  (split-window-horizontally arg)
-                (split-window-vertically arg))))
+                  (split-window-right arg)
+                (split-window-below arg))))
 
-    ;; (setq ediff-merge-split-window-function 'split-window-vertically)
+    ;; (setq ediff-merge-split-window-function 'split-window-below)
 
     (defun turn-on-visible-mode ()
       "Make all invisible text visible."
@@ -3061,7 +3061,7 @@ in the current buffer."
     (setq helm-swoop-speed-or-color t)
 
     ;; Split direction.
-    ;; (setq helm-swoop-split-direction 'split-window-horizontally)
+    ;; (setq helm-swoop-split-direction 'split-window-right)
     (setq helm-swoop-split-direction 'split-window-sensibly)
 
     ;; Don't save each buffer you edit when editing is complete.
@@ -3250,8 +3250,8 @@ windows, leaving only the currently active window visible."
     (cond ((one-window-p t)
            (select-window
             (if (> (frame-width) split-width-threshold)
-                (split-window-horizontally)
-              (split-window-vertically))))
+                (split-window-right)
+              (split-window-below))))
           (t
            (delete-other-windows))))
 
@@ -3296,8 +3296,8 @@ windows, leaving only the currently active window visible."
                   (splitter
                    (if (= (car this-win-edges)
                           (car (window-edges (next-window))))
-                       'split-window-horizontally
-                     'split-window-vertically)))
+                       'split-window-right
+                     'split-window-below)))
              (delete-other-windows)
              (let ((first-win (selected-window)))
                (funcall splitter)
@@ -3868,41 +3868,52 @@ you will be prompted to enter the desired fill column width."
   ;; Map pairs of simultaneously pressed keys to commands.
   (with-eval-after-load "key-chord"
 
-    (key-chord-define-global "<<" #'(lambda () (interactive) (insert "«")))
-    (key-chord-define-global ">>" #'(lambda () (interactive) (insert "»")))
+    (with-eval-after-load "helm-command"
+      (key-chord-define-global "xx" #'helm-M-x)) ; NEW-10
 
-    ;; (key-chord-define-global "hb" #'describe-bindings) ; dashboard.
-    (key-chord-define-global "hf" #'describe-function)
-    (key-chord-define-global "hv" #'describe-variable)
+    (key-chord-define-global "hf" #'describe-function) ; NEW-11.3
+    (key-chord-define-global "hv" #'describe-variable) ; NEW-11.3
+    ;; (key-chord-define-global "hb" #'describe-bindings) ; NEW-11.8
 
-    (with-eval-after-load "expand-region-autoloads" ; Autoloads file.
-      (key-chord-define-global "hh" #'er/expand-region) ; Autoloaded.
-      (key-chord-define-global "HH" #'er/contract-region)) ; Autoloaded.
+    (key-chord-define-global "xh" #'mark-whole-buffer) ; NEW-12.2
 
-    (with-eval-after-load "avy-autoloads"
-      (key-chord-define-global "jj" #'avy-goto-word-or-subword-1))
+    (with-eval-after-load "expand-region-autoloads"
+      (key-chord-define-global "hh" #'er/expand-region) ; NEW-12.2
+      (key-chord-define-global "HH" #'er/contract-region))
 
-    (with-eval-after-load "dired-x"
-      (key-chord-define-global "xj" #'dired-jump)) ; Autoloaded?
-
-    (key-chord-define-global "vb" #'eval-buffer)
-
-    (key-chord-define-global "xh" #'mark-whole-buffer)
-    (key-chord-define-global "xk" #'kill-buffer)
+    (key-chord-define-global "kk" #'kill-whole-line) ; NEW-13.1.2
 
     (with-eval-after-load "helm-ring"
-      (key-chord-define-global "yy" #'helm-show-kill-ring))
-    (key-chord-define-global "zk" #'zap-to-char)
+      (key-chord-define-global "yy" #'helm-show-kill-ring)) ; NEW-13.2.1
 
-    (key-chord-define-global ";s" #'set-mark-command)
+    (with-eval-after-load "avy-autoloads"
+      (key-chord-define-global "jj" #'avy-goto-word-1)
+      (key-chord-define-global "jl" #'avy-goto-line))
 
-    ;; (key-chord-define-global "''" "`'\C-b")
-    ;; (key-chord-define-global "dq" "\"\"\C-b")
+    (key-chord-define-global "xu" #'undo) ; NEW-17.1
+
+    (with-eval-after-load "helm-for-files"
+      (key-chord-define-global "FF" #'helm-for-files)) ; NEW-19.2
+
+    (key-chord-define-global "xk" #'kill-buffer) ; NEW-20.4
+    ;; (key-chord-define-global "kb" #'kill-buffer)
+
+    (key-chord-define-global "vv" #'split-window-below) ; "vertically" ; NEW-21.2
+    (key-chord-define-global "hh" #'split-window-right) ; "horizontally" ; NEW-21.2
+
+    (key-chord-define-global "jw" #'other-window) ; NEW-21.3
+
+    (key-chord-define-global "sq" "''\C-b") ; NEW-26.5
+    (key-chord-define-global "dq" "\"\"\C-b")
+    (key-chord-define-global "<<" #'(lambda () (interactive) (insert "«"))) ; NEW-26.5
+    (key-chord-define-global ">>" #'(lambda () (interactive) (insert "»")))
+
+    (key-chord-define-global "vb" #'eval-buffer) ; NEW-28.9
+
+    ;; (key-chord-define-global "JJ" #'xref-find-definitions) ; NEW-29.4.1.1
+
+    (key-chord-define-global "xj" #'dired-jump) ; NEW-31.1
     ;; (key-chord-define-global ";d" #'dired-jump-other-window)
-    ;; (key-chord-define-global "JJ" #'xref-find-definitions)
-    ;; (key-chord-define-global ",." "<>\C-b")
-    ;; (key-chord-define-global "''" "`'\C-b")
-    ;; (key-chord-define-global ",," #'indent-for-comment)
     )
 
 ;;** 25.6 (info "(emacs)Case") Conversion Commands
