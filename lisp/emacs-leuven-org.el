@@ -1355,7 +1355,8 @@ From the address <%a>"
                              "...... " ""))
 
 ;; String for the current time marker in the agenda.
-(setq org-agenda-current-time-string "Right now")
+(setq org-agenda-current-time-string
+      "◀── Right now ─────────────────────────────────────────")
 
 ;; 10.4.3 Sorting structure for the agenda items of a single day.
 (setq org-agenda-sorting-strategy   ; custom value

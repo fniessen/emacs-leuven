@@ -2149,7 +2149,8 @@ for today's date:
                              "...... " ""))
 
 ;; String for the current time marker in the agenda.
-(setq org-agenda-current-time-string "Right now")
+(setq org-agenda-current-time-string
+      "◀── Right now ─────────────────────────────────────────")
 #+end_src
 
 ~time-up~ will only be applied to those items have a time stamp for the day in
