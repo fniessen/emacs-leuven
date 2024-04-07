@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240317.1542
+;; Version: 20240407.1856
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240317.1542"
+(defconst lvn--emacs-version "20240407.1856"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1754,15 +1754,20 @@ Should be selected from `fringe-bitmaps'.")
   ;; overwrite, and normal insert modes).
   (defun lvn--customize-cursor-style ()
     "Change cursor color and type based on buffer state."
-    (let* ((read-only-color "purple1")
+    (let* ((light-theme (is-light-theme))
+           (read-only-color "purple1")
            (overwrite-color "#7F7F7F")
-           (default-color "black")
+           (default-color (if light-theme "black" "white"))
            (color (cond (buffer-read-only read-only-color)
                         (overwrite-mode overwrite-color)
                         (t default-color)))
            (type (if (null overwrite-mode) 'bar 'box)))
       (set-cursor-color color)
       (setq cursor-type type)))
+
+  (defun is-light-theme ()
+    "Check if the current Emacs theme is light."
+    (eq (frame-parameter nil 'background-mode) 'light))
 
   (add-hook 'post-command-hook #'lvn--customize-cursor-style)
 
@@ -1841,9 +1846,6 @@ Should be selected from `fringe-bitmaps'.")
   ;; Isearch mode).
   (setq isearch-allow-scroll t)
 
-(setq isearch-regexp-lax-whitespace t)
-(setq search-whitespace-regexp "[ \t\r\n]+")
-
   ;; Fuzzy matching utilities (a must-have).
   (with-eval-after-load "fuzzy-autoloads"
 
@@ -1895,6 +1897,14 @@ Should be selected from `fringe-bitmaps'.")
     ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
     )
 
+(unless (fboundp 'anzu-mode)
+
+  ;; Enable lazy counting during Isearch.
+  (setq isearch-lazy-count t)
+
+  ;; Set the format for displaying lazy count prefix.
+  (setq lazy-count-prefix-format "(%s of %s) "))
+
     ;; Used in Visual Studio Code and IntelliJ IDEA.
     (defun lvn-find-usages ()
       "Approximate 'find usages' using occur command."
@@ -1911,6 +1921,9 @@ Should be selected from `fringe-bitmaps'.")
 ;;** 15.5 (info "(emacs)Regexp Search")
 
   (leuven--section "15.5 (emacs)Regexp Search")
+
+  (setq isearch-regexp-lax-whitespace t)
+  (setq search-whitespace-regexp "[ \t\r\n]+")
 
 ;;** 15.9 (info "(emacs)Search Case")
 
@@ -2777,7 +2790,11 @@ For programming mode buffers, this function displays a menu to
 navigate through functions, variables, and other relevant items
 in the current buffer."
       (interactive "P")
-      (cond ((derived-mode-p 'tex-mode)
+      (cond ((derived-mode-p 'org-mode)
+             (if (fboundp 'helm-org-in-buffer-headings)
+                 (helm-org-in-buffer-headings)
+               (message "helm-org-in-buffer-headings is not available")))
+            ((derived-mode-p 'tex-mode)
              (helm-imenu))
             (t
              (helm-semantic-or-imenu arg))) ; More generic than `helm-imenu'.
@@ -3891,6 +3908,7 @@ you will be prompted to enter the desired fill column width."
       (key-chord-define-global "jl" #'avy-goto-line))
 
     (key-chord-define-global "xu" #'undo) ; NEW-17.1
+    (key-chord-define-global "hj" #'undo) ; NEW-17.1
 
     (with-eval-after-load "helm-for-files"
       (key-chord-define-global "FF" #'helm-for-files)) ; NEW-19.2
@@ -3898,10 +3916,11 @@ you will be prompted to enter the desired fill column width."
     (key-chord-define-global "xk" #'kill-buffer) ; NEW-20.4
     ;; (key-chord-define-global "kb" #'kill-buffer)
 
-    (key-chord-define-global "vv" #'split-window-below) ; "vertically" ; NEW-21.2
-    (key-chord-define-global "hh" #'split-window-right) ; "horizontally" ; NEW-21.2
+    (key-chord-define-global "22" #'split-window-below) ; "vertically" ; NEW-21.2
+    (key-chord-define-global "33" #'split-window-right) ; "horizontally" ; NEW-21.2
 
     (key-chord-define-global "jw" #'other-window) ; NEW-21.3
+    (key-chord-define-global "ww" #'other-window) ; NEW-21.3
 
     (key-chord-define-global "sq" "''\C-b") ; NEW-26.5
     (key-chord-define-global "dq" "\"\"\C-b")

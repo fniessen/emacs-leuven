@@ -2970,15 +2970,20 @@ Colorize cursor according to buffer state.
   ;; overwrite, and normal insert modes).
   (defun lvn--customize-cursor-style ()
     "Change cursor color and type based on buffer state."
-    (let* ((read-only-color "purple1")
+    (let* ((light-theme (is-light-theme))
+           (read-only-color "purple1")
            (overwrite-color "#7F7F7F")
-           (default-color "black")
+           (default-color (if light-theme "black" "white"))
            (color (cond (buffer-read-only read-only-color)
                         (overwrite-mode overwrite-color)
                         (t default-color)))
            (type (if (null overwrite-mode) 'bar 'box)))
       (set-cursor-color color)
       (setq cursor-type type)))
+
+  (defun is-light-theme ()
+    "Check if the current Emacs theme is light."
+    (eq (frame-parameter nil 'background-mode) 'light))
 
   (add-hook 'post-command-hook #'lvn--customize-cursor-style)
 
@@ -3112,14 +3117,6 @@ string* is possible with new commands ~isearch-beginning-of-buffer~ and
   (setq isearch-allow-scroll t)
 #+end_src
 
-Search for string ignoring new lines: incremental search will see any number of
-white spaces, tab spaces, and line breaks as a simple white space.
-
-#+begin_src emacs-lisp
-(setq isearch-regexp-lax-whitespace t)
-(setq search-whitespace-regexp "[ \t\r\n]+")
-#+end_src
-
 #+begin_note
 When ~search-invisible~ is ~t~, ~perform-replace~ can replace matches in any invisible
 text, but does not display it when prompting the user for confirmation.
@@ -3191,6 +3188,21 @@ the user see truly invisible matches before replacing them.
     )
 #+end_src
 
+The following code checks if the ~anzu-mode~ function is defined. If it's not, it
+enables lazy counting during Isearch and sets the format for displaying the lazy
+count prefix. Lazy counting improves the performance of Isearch by only updating
+the search count periodically.
+
+#+begin_src emacs-lisp
+(unless (fboundp 'anzu-mode)
+
+  ;; Enable lazy counting during Isearch.
+  (setq isearch-lazy-count t)
+
+  ;; Set the format for displaying lazy count prefix.
+  (setq lazy-count-prefix-format "(%s of %s) "))
+#+end_src
+
 ** Symbol Search
 
 - ~M-s .~ (~isearch-forward-symbol-at-point~) ::
@@ -3240,7 +3252,17 @@ Optimize regexps with =regexp-opt.el=.
   (global-set-key (kbd "C-M-r") #'isearch-backward)
 #+end_src
 
-** Search Case
+** Lax Matching During Searching
+
+Search for string ignoring new lines: incremental search will see any number of
+white spaces, tab spaces, and line breaks as a simple white space.
+
+#+begin_src emacs-lisp
+  (setq isearch-regexp-lax-whitespace t)
+  (setq search-whitespace-regexp "[ \t\r\n]+")
+#+end_src
+
+*** Search Case
 
 #+begin_src emacs-lisp
 ;;** 15.9 (info "(emacs)Search Case")
@@ -4335,6 +4357,7 @@ resolve conflicts.
 
 For *comparing two directories*, you can use ~ediff-directories~, ~ztree-diff~, [[http://meldmerge.org/][Meld]]
 (free) or [[https://www.deltawalker.com/][DeltaWalker]] (39.95 USD).
+or [[https://diffoscope.org/][diffoscope]]
 
 ~ediff-directories~ combined with the key sequence == h x= ~= h x~ shows you only the
 files which differ.
@@ -4967,7 +4990,11 @@ For programming mode buffers, this function displays a menu to
 navigate through functions, variables, and other relevant items
 in the current buffer."
       (interactive "P")
-      (cond ((derived-mode-p 'tex-mode)
+      (cond ((derived-mode-p 'org-mode)
+             (if (fboundp 'helm-org-in-buffer-headings)
+                 (helm-org-in-buffer-headings)
+               (message "helm-org-in-buffer-headings is not available")))
+            ((derived-mode-p 'tex-mode)
              (helm-imenu))
             (t
              (helm-semantic-or-imenu arg))) ; More generic than `helm-imenu'.
@@ -6813,6 +6840,7 @@ you will be prompted to enter the desired fill column width."
       (key-chord-define-global "jl" #'avy-goto-line))
 
     (key-chord-define-global "xu" #'undo) ; NEW-17.1
+    (key-chord-define-global "hj" #'undo) ; NEW-17.1
 
     (with-eval-after-load "helm-for-files"
       (key-chord-define-global "FF" #'helm-for-files)) ; NEW-19.2
@@ -6820,10 +6848,11 @@ you will be prompted to enter the desired fill column width."
     (key-chord-define-global "xk" #'kill-buffer) ; NEW-20.4
     ;; (key-chord-define-global "kb" #'kill-buffer)
 
-    (key-chord-define-global "vv" #'split-window-below) ; "vertically" ; NEW-21.2
-    (key-chord-define-global "hh" #'split-window-right) ; "horizontally" ; NEW-21.2
+    (key-chord-define-global "22" #'split-window-below) ; "vertically" ; NEW-21.2
+    (key-chord-define-global "33" #'split-window-right) ; "horizontally" ; NEW-21.2
 
     (key-chord-define-global "jw" #'other-window) ; NEW-21.3
+    (key-chord-define-global "ww" #'other-window) ; NEW-21.3
 
     (key-chord-define-global "sq" "''\C-b") ; NEW-26.5
     (key-chord-define-global "dq" "\"\"\C-b")
@@ -9961,6 +9990,10 @@ ag %s -l --nocolor --hidden -g ""
   ;; Run `grep' via `find', with user-friendly interface.
   (global-set-key (kbd "C-c 3") #'rgrep)
 #+end_src
+
+*** Editing the Grep Buffer
+
+Install the ~wgrep~ package to enable editing of ~grep~ buffers.
 
 ** Finding Syntax Errors On The Fly
 
