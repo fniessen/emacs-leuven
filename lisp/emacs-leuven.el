@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240407.1856
+;; Version: 20240415.1103
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240407.1856"
+(defconst lvn--emacs-version "20240415.1103"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -452,7 +452,7 @@ Return FILE if it is executable, otherwise return nil."
             ;; jabber
             jquery-doc
             js2-mode
-            js2-refactor
+            ;; js2-refactor
             json-mode
             key-chord
             litable
@@ -5027,14 +5027,6 @@ line instead."
     ;; Augment the default indent-line behavior with cycling among several
     ;; computed alternatives.
     (setq js2-bounce-indent-p t)
-
-  (with-eval-after-load "js2-refactor-autoloads"
-    (add-hook 'js2-mode-hook #'js2-refactor-mode)
-
-    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
-                                                 ; `C-c C-m ev`.
-    )
-)
 
 ;; Xref-js2
 

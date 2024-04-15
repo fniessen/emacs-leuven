@@ -670,7 +670,7 @@ like this into your configuration file:
             ;; jabber
             jquery-doc
             js2-mode
-            js2-refactor
+            ;; js2-refactor
             json-mode
             key-chord
             litable
@@ -4419,7 +4419,7 @@ marked files (using ~gzip~) by pressing ~Z~.
 If you want to create *a single archive* file from many marked files, you can use
 ~dired-do-compress-to~, bound to ~c~.
 
-*** On Windows                                                        :noexport:
+*** On Windows                                                          :noexport:
 
 On Windows, if you are trying to use ~gunzip~ to uncompress a file under Dired,
 you will probably encounter errors.
@@ -8936,7 +8936,7 @@ List of available *refactorings*:
 - ~uw~ (~unwrap~) ::
      Replaces the parent statement with the selected region.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (with-eval-after-load "js2-refactor-autoloads"
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
 
