@@ -8940,9 +8940,11 @@ List of available *refactorings*:
   (with-eval-after-load "js2-refactor-autoloads"
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
 
-    (js2r-add-keybindings-with-prefix "C-c C-m") ; eg. extract variable with
-                                                 ; `C-c C-m ev`.
-    )
+    (js2r-add-keybindings-with-prefix "C-c C-m")) ; eg. extract variable with
+                                                  ; `C-c C-m ev`.
+#+end_src
+
+#+begin_src emacs-lisp
 )
 #+end_src
 

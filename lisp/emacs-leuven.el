@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240415.1103
+;; Version: 20240415.1758
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240415.1103"
+(defconst lvn--emacs-version "20240415.1758"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5027,6 +5027,8 @@ line instead."
     ;; Augment the default indent-line behavior with cycling among several
     ;; computed alternatives.
     (setq js2-bounce-indent-p t)
+
+)
 
 ;; Xref-js2
 
