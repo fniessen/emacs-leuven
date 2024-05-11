@@ -1,4 +1,6 @@
 #+TITLE:     Inbox
+#+AUTHOR:    Fabrice Niessen
+#+EMAIL:     (concat "fni" at-sign "pirilampo.be")
 #+DESCRIPTION: A place to collect new thoughts and tasks quickly for later organization and completion.
 #+KEYWORDS:  organization, tasks, thoughts, inbox
 #+LANGUAGE:  en
