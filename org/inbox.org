@@ -18,18 +18,32 @@ Later, sort them, organize them... and Get Them Done.
 :CATEGORY: 0-Tasks
 :END:
 
-* Shopping
-:PROPERTIES:
-:CATEGORY: 0-Shopping
-:END:
+General tasks that need to be done.
 
 * Phone calls                                                             :call:
 :PROPERTIES:
 :CATEGORY: 0-Phone
 :END:
 
+Phone calls that need to be made or followed up on.
+
 * Messages                                                                :mail:
+
+Email or text messages that need to be sent or responded to.
+
+* Shopping
+:PROPERTIES:
+:CATEGORY: 0-Shopping
+:END:
+
+Items that need to be purchased.
 
 * Calendar
 
+Appointments, events, and time-specific actions that need to be scheduled or
+attended.
+
 * Notes
+
+Information, ideas, and reference material that need to be captured and
+organized.
