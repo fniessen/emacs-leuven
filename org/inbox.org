@@ -47,3 +47,25 @@ attended.
 
 Information, ideas, and reference material that need to be captured and
 organized.
+
+* Routines
+
+Regular, recurring tasks and habits that need to be maintained.
+
+** Daily
+
+** Weekly
+
+** Monthly
+
+** Quarterly
+
+** Semiannually
+
+** Yearly
+
+** Inactive
+
+* Checklists
+
+Lists of steps or items to ensure completeness in various activities and tasks.
