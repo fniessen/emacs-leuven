@@ -13,12 +13,10 @@ Now, *collect* all your "stuff" (new thoughts and tasks) quickly in here.
 
 Later, sort them, organize them... and Get Them Done.
 
-* Tasks
-:PROPERTIES:
-:CATEGORY: 0-Tasks
-:END:
+* Calendar
 
-General tasks that need to be done.
+Appointments, events, and time-specific actions that need to be scheduled or
+attended.
 
 * Phone calls                                                             :call:
 :PROPERTIES:
@@ -38,15 +36,12 @@ Email or text messages that need to be sent or responded to.
 
 Items that need to be purchased.
 
-* Calendar
+* Tasks
+:PROPERTIES:
+:CATEGORY: 0-Tasks
+:END:
 
-Appointments, events, and time-specific actions that need to be scheduled or
-attended.
-
-* Notes
-
-Information, ideas, and reference material that need to be captured and
-organized.
+General tasks that need to be done.
 
 * Routines
 
@@ -69,3 +64,11 @@ Regular, recurring tasks and habits that need to be maintained.
 * Checklists
 
 Lists of steps or items to ensure completeness in various activities and tasks.
+
+* Reading list
+
+* Notes
+
+Information, ideas, and reference material that need to be captured and
+organized.
+
