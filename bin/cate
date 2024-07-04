@@ -2,9 +2,9 @@
 
 # Print the contents of the current buffer in Emacs to the terminal.
 
-# Check if emacsclient command is available.
+# Check if 'emacsclient' command is available.
 if ! command -v emacsclient > /dev/null 2>&1; then
-    printf >&2 'Error: emacsclient command not found.\n'
+    printf >&2 "Error: 'emacsclient' command not found.\n"
     exit 2
 fi
 
