@@ -2150,7 +2150,10 @@ for today's date:
 
 ;; String for the current time marker in the agenda.
 (setq org-agenda-current-time-string
-      "◀── Right now ─────────────────────────────────────────")
+      ;; Check if character 25C0 is displayable.
+      (if (char-displayable-p ?\u25C0)
+          "\u25C0── Right now ─────────────────────────────────────────"
+        "<── Right now ─────────────────────────────────────────"))
 #+end_src
 
 ~time-up~ will only be applied to those items have a time stamp for the day in

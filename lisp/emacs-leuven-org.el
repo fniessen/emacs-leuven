@@ -1356,7 +1356,10 @@ From the address <%a>"
 
 ;; String for the current time marker in the agenda.
 (setq org-agenda-current-time-string
-      "◀── Right now ─────────────────────────────────────────")
+      ;; Check if character 25C0 is displayable.
+      (if (char-displayable-p ?\u25C0)
+          "\u25C0── Right now ─────────────────────────────────────────"
+        "<── Right now ─────────────────────────────────────────"))
 
 ;; 10.4.3 Sorting structure for the agenda items of a single day.
 (setq org-agenda-sorting-strategy   ; custom value
