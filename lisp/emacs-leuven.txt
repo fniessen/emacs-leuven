@@ -14314,6 +14314,8 @@ You need the ~emacs-server~ functionality enabled for this to work.
 *** eff - Edit first file (from last command output) in Emacs
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
+# Retrieve and execute the last command from shell history, assuming it outputs
+# a list of files, then open the first file in Emacs for inspection.
 eff() {
     # Retrieve the last command from the history file.
     local last_command
@@ -14347,6 +14349,47 @@ eff() {
 
     # Open the first file in Emacs using emacsclient.
     emacsclient -n "$first_file"
+}
+#+end_src
+
+You need the ~emacs-server~ functionality enabled for this to work.
+
+*** elo - Edit last output (from last command) in Emacs
+
+#+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
+# Retrieve and execute the last command from shell history, then open its output
+# in Emacs for inspection.
+elo() {
+    # Retrieve the last command from the history file.
+    local last_command
+    last_command=$(HISTTIMEFORMAT="" history 2 \
+                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
+
+    # Check if the last command is empty.
+    if [[ -z "$last_command" ]]; then
+        printf >&2 "No command found in the shell history.\n"
+        return 2
+    fi
+
+    # Run the last command and capture its output, supporting piping or other
+    # advanced shell features.
+    local command_output
+    command_output=$(eval "$last_command")
+
+    # Debugging information.
+    printf "Edit output of last command: %s\n" "$last_command"
+
+    # Return if the last line is empty.
+    if [[ -z "$command_output" ]]; then
+        printf >&2 "No output from the last command.\n"
+        return 2
+    fi
+
+    # Open Emacs and paste the output of the last command into a buffer named
+    # "*Shell Command Output*".
+    emacsclient -e "(with-current-buffer
+                      (get-buffer-create \"*Shell Command Output*\")
+                      (insert \"$command_output\"))"
 }
 #+end_src
 
