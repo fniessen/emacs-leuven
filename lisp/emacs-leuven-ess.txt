@@ -26,6 +26,11 @@ See:
 #+end_src
 
 #+begin_src emacs-lisp
+;; Load ESS package.
+(require 'ess)
+#+end_src
+
+#+begin_src emacs-lisp
 (autoload 'R "ess-site"
   "Call 'R', the 'GNU S' system from the R Foundation." t)
 
@@ -48,7 +53,7 @@ that the directories for ~R~ or ~Rterm~ (see ~inferior-R-program-name~) are in t
 *Customize* variables for ESS (set these variables *before* loading ~ess-site~).
 
 #+begin_src emacs-lisp
-;; Start R in current working directory, don't ask user.
+;; Don't ask for directory when starting R.
 (setq ess-ask-for-ess-directory nil)
 
 ;; New inferior ESS process appears in another window in the current frame.
@@ -94,8 +99,10 @@ Smart underscore:
 - Pressing underscore twice inserts a literal underscore.
 
 #+begin_src emacs-lisp
-;; Default ESS indentation style.
-(setq ess-default-style 'DEFAULT)
+;; Set ESS style (Use RStudio style formatting).
+(add-hook 'ess-mode-hook
+          (lambda ()
+            (ess-set-style 'RStudio)))
 #+end_src
 
 *** Code folding

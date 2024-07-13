@@ -1,6 +1,9 @@
 ;; ESS: Emacs Speaks Statistics
 (add-to-list 'package-selected-packages 'ess)
 
+;; Load ESS package.
+(require 'ess)
+
 (autoload 'R "ess-site"
   "Call 'R', the 'GNU S' system from the R Foundation." t)
 
@@ -9,7 +12,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
 
-;; Start R in current working directory, don't ask user.
+;; Don't ask for directory when starting R.
 (setq ess-ask-for-ess-directory nil)
 
 ;; New inferior ESS process appears in another window in the current frame.
@@ -34,8 +37,10 @@
 ;; (setq ess-eval-visibly 'nowait)      ; But avoid Emacs hanging on large
 ;;                                      ; evaluations.
 
-;; Default ESS indentation style.
-(setq ess-default-style 'DEFAULT)
+;; Set ESS style (Use RStudio style formatting).
+(add-hook 'ess-mode-hook
+          (lambda ()
+            (ess-set-style 'RStudio)))
 
 (with-eval-after-load "ess-site"
 
