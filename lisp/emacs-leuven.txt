@@ -4419,7 +4419,7 @@ marked files (using ~gzip~) by pressing ~Z~.
 If you want to create *a single archive* file from many marked files, you can use
 ~dired-do-compress-to~, bound to ~c~.
 
-*** On Windows                                                          :noexport:
+*** On Windows                                                        :noexport:
 
 On Windows, if you are trying to use ~gunzip~ to uncompress a file under Dired,
 you will probably encounter errors.
@@ -6848,8 +6848,8 @@ you will be prompted to enter the desired fill column width."
     (key-chord-define-global "xk" #'kill-buffer) ; NEW-20.4
     ;; (key-chord-define-global "kb" #'kill-buffer)
 
-    (key-chord-define-global "22" #'split-window-below) ; "vertically" ; NEW-21.2
-    (key-chord-define-global "33" #'split-window-right) ; "horizontally" ; NEW-21.2
+    ;; (key-chord-define-global "22" #'split-window-below) ; "vertically" ; NEW-21.2
+    ;; (key-chord-define-global "33" #'split-window-right) ; "horizontally" ; NEW-21.2
 
     (key-chord-define-global "jw" #'other-window) ; NEW-21.3
     (key-chord-define-global "ww" #'other-window) ; NEW-21.3
