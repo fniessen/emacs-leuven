@@ -14238,7 +14238,7 @@ If you are an avid Emacs user like me, you'll find this function useful.  It
 # Cd to the directory of the current buffer in Emacs.
 cde() {
     if ! command -v emacsclient > /dev/null 2>&1; then
-        printf >&2 "Error: emacsclient command not found.\n"
+        printf >&2 "Error: 'emacsclient' command not found.\n"
         printf >&2 "Please install Emacsclient and ensure the binary is in your PATH.\n"
         return 2
     fi
@@ -14402,9 +14402,9 @@ You need the ~emacs-server~ functionality enabled for this to work.
 
 # Print the contents of the current buffer in Emacs to the terminal.
 
-# Check if emacsclient command is available.
+# Check if 'emacsclient' command is available.
 if ! command -v emacsclient > /dev/null 2>&1; then
-    printf >&2 'Error: emacsclient command not found.\n'
+    printf >&2 "Error: 'emacsclient' command not found.\n"
     exit 2
 fi
 
