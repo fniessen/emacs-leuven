@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240714.1138
+;; Version: 20240816.2127
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240714.1138"
+(defconst lvn--emacs-version "20240816.2127"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -3907,7 +3907,6 @@ you will be prompted to enter the desired fill column width."
       (key-chord-define-global "jj" #'avy-goto-word-1)
       (key-chord-define-global "jl" #'avy-goto-line))
 
-    (key-chord-define-global "xu" #'undo) ; NEW-17.1
     (key-chord-define-global "hj" #'undo) ; NEW-17.1
 
     (with-eval-after-load "helm-for-files"

@@ -6839,7 +6839,6 @@ you will be prompted to enter the desired fill column width."
       (key-chord-define-global "jj" #'avy-goto-word-1)
       (key-chord-define-global "jl" #'avy-goto-line))
 
-    (key-chord-define-global "xu" #'undo) ; NEW-17.1
     (key-chord-define-global "hj" #'undo) ; NEW-17.1
 
     (with-eval-after-load "helm-for-files"
