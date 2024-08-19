@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240816.2127
+;; Version: 20240819.0954
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240816.2127"
+(defconst lvn--emacs-version "20240819.0954"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5639,15 +5639,6 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; ;; cause actual stack overflow in C, which would be fatal for Emacs.
   ;; (setq max-lisp-eval-depth 600)        ; 1000?
 
-  (defun eval-and-replace ()
-    "Replace the preceding sexp with its value."
-    (interactive)
-    (let ((value (eval (preceding-sexp))))
-      (kill-sexp -1)
-      (insert (format "%S" value))))
-
-  (global-set-key (kbd "C-c e") #'eval-and-replace)
-
   ;; Dynamic evaluation replacement with Emacs.
   (with-eval-after-load "litable-autoloads"
 
@@ -6651,6 +6642,18 @@ This example lists Azerty layout second row keys."
       ;; ;; Bind it to `E' in Dired mode.
       ;; (define-key dired-mode-map (kbd "E") #'lvn-dired-open-files-externally)
     )
+
+(defun dired-open-marked-files-with-explorer ()
+  ;; dired-open-marked-files-with-explorer
+  "Open marked files in Dired using Explorer on Windows."
+  (interactive)
+  (if-let ((marks (dired-get-marked-files)))
+      (dolist (file marks)
+        (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file))))
+    (user-error "No marked files; aborting")))
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map "o" 'dired-open-marked-files-with-explorer))
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()

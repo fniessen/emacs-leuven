@@ -778,6 +778,17 @@ like this into your configuration file:
     )
 #+end_src
 
+;; Add MELPA repository.
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
+;; Install ESS if not already installed.
+(unless (package-installed-p 'ess)
+  (package-refresh-contents)
+  (package-install 'ess))
+
 #+begin_src emacs-lisp
   ;; Automatically update Emacs packages.
   (with-eval-after-load "auto-package-update-autoloads"
@@ -10282,17 +10293,6 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
   ;; (setq max-lisp-eval-depth 600)        ; 1000?
 #+end_src
 
-#+begin_src emacs-lisp
-  (defun eval-and-replace ()
-    "Replace the preceding sexp with its value."
-    (interactive)
-    (let ((value (eval (preceding-sexp))))
-      (kill-sexp -1)
-      (insert (format "%S" value))))
-
-  (global-set-key (kbd "C-c e") #'eval-and-replace)
-#+end_src
-
 For on-the-fly evaluation/substitution of Emacs Lisp code, see
 https://github.com/Fuco1/litable.
 
@@ -12805,6 +12805,20 @@ For those under Windows:
       ;; ;; Bind it to `E' in Dired mode.
       ;; (define-key dired-mode-map (kbd "E") #'lvn-dired-open-files-externally)
     )
+#+end_src
+
+#+begin_src emacs-lisp
+(defun dired-open-marked-files-with-explorer ()
+  ;; dired-open-marked-files-with-explorer
+  "Open marked files in Dired using Explorer on Windows."
+  (interactive)
+  (if-let ((marks (dired-get-marked-files)))
+      (dolist (file marks)
+        (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file))))
+    (user-error "No marked files; aborting")))
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map "o" 'dired-open-marked-files-with-explorer))
 #+end_src
 
 *** Open file with ~eww~
