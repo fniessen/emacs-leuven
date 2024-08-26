@@ -2,7 +2,7 @@
 (add-to-list 'package-selected-packages 'ess)
 
 ;; Load ESS package.
-(require 'ess)
+(try-require 'ess)
 
 (autoload 'R "ess-site"
   "Call 'R', the 'GNU S' system from the R Foundation." t)

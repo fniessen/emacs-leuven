@@ -27,7 +27,7 @@ See:
 
 #+begin_src emacs-lisp
 ;; Load ESS package.
-(require 'ess)
+(try-require 'ess)
 #+end_src
 
 #+begin_src emacs-lisp
