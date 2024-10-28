@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20240819.0954
+;; Version: 20241028.1624
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20240819.0954"
+(defconst lvn--emacs-version "20241028.1624"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2914,9 +2914,12 @@ in the current buffer."
 
       (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
                                         ; Or `C-c p s s' (Helm-projectile ag?)
+      )
+
+  ;;
+  (with-eval-after-load "helm-grep"
       (setq helm-grep-ag-command "rg --color=always --colors 'match:fg:black' --colors 'match:bg:yellow' --smart-case --no-heading --line-number %s %s %s")
       (setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'")) ; #CDCD00
-
       )
 
   ;; the_silver_searcher.

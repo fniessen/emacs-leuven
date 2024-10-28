@@ -5220,9 +5220,14 @@ Launchable from ~current-buffer~ or from ~helm-find-files~.
 
       (global-set-key (kbd "M-g a") #'helm-do-grep-ag) ; Thierry Volpiatto
                                         ; Or `C-c p s s' (Helm-projectile ag?)
+      )
+#+end_src
+
+#+begin_src emacs-lisp
+  ;;
+  (with-eval-after-load "helm-grep"
       (setq helm-grep-ag-command "rg --color=always --colors 'match:fg:black' --colors 'match:bg:yellow' --smart-case --no-heading --line-number %s %s %s")
       (setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'")) ; #CDCD00
-
       )
 #+end_src
 
@@ -9916,7 +9921,7 @@ Some problems with ripgrep:
 - no match highlighting,
 - error parsing regex when string is, for example, ~Handler().update~ or ~myFunc(~.
 
-find . -name "*.log" -type f -print0 | xargs -I _ sh -c 'iconv -f utf16 -t utf8 _ | grep runPMGeneration'
+: find . -type f -name "*.log" -print0 | xargs -I _ sh -c 'iconv -f utf16 -t utf8 _ | grep runPMGeneration'
 
 *** The Silver Searcher
 
