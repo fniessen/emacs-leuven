@@ -10675,19 +10675,15 @@ can use the following keys to navigate historic versions of the file:
      rev1 rev2 nil))
 
   (defun leuven-vc-diff (&optional arg)
+    "Diff current file with another revision or perform `vc-diff` interactively.
+With ARG, run `vc-diff`.
+Without ARG, prompt for a revision and use `leuven--ediff-revision`."
     (interactive "P")
-    (call-interactively
-     (cond (arg
-            #'(lambda ()
-                (interactive)
-                (vc-diff nil)))
-           (t
-            #'(lambda ()
-                (interactive)
-                (leuven--ediff-revision (buffer-file-name)
-                                        (read-string "revision? "
-                                                     "HEAD" nil "HEAD")
-                                        ""))))))
+    (if arg
+        (vc-diff nil)
+      (leuven--ediff-revision (buffer-file-name)
+                              (read-string "Revision? " "HEAD" nil "HEAD")
+                              "")))
 
   (define-key vc-prefix-map (kbd "=") #'leuven-vc-diff)
 #+end_src

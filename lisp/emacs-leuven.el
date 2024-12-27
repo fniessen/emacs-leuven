@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20241028.1624
+;; Version: 20241227.1511
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20241028.1624"
+(defconst lvn--emacs-version "20241227.1511"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5841,19 +5841,15 @@ a clean buffer we're an order of magnitude laxer about checking."
      rev1 rev2 nil))
 
   (defun leuven-vc-diff (&optional arg)
+    "Diff current file with another revision or perform `vc-diff` interactively.
+With ARG, run `vc-diff`.
+Without ARG, prompt for a revision and use `leuven--ediff-revision`."
     (interactive "P")
-    (call-interactively
-     (cond (arg
-            #'(lambda ()
-                (interactive)
-                (vc-diff nil)))
-           (t
-            #'(lambda ()
-                (interactive)
-                (leuven--ediff-revision (buffer-file-name)
-                                        (read-string "revision? "
-                                                     "HEAD" nil "HEAD")
-                                        ""))))))
+    (if arg
+        (vc-diff nil)
+      (leuven--ediff-revision (buffer-file-name)
+                              (read-string "Revision? " "HEAD" nil "HEAD")
+                              "")))
 
   (define-key vc-prefix-map (kbd "=") #'leuven-vc-diff)
 
