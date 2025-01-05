@@ -414,7 +414,7 @@ Citations:
 
     ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
     
-    ;; Copyright (C) 1999-2017 Fabrice Niessen
+    ;; Copyright (C) 1999-2017 Fabrice Niessen. All rights reserved.
     
     ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
     ;; URL: https://github.com/fniessen/emacs-leuven

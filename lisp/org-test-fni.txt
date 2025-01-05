@@ -19,7 +19,7 @@ See http://www.randomsample.de:4457/waterfall.
 #+begin_src emacs-lisp
 ;;;; org-test-fni.el --- Extra tests for Org mode
 
-;; Copyright (C) 2014-2017 Fabrice Niessen
+;; Copyright (C) 2014-2017 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen
 

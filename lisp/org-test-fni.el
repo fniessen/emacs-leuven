@@ -1,7 +1,7 @@
 
 ;;;; org-test-fni.el --- Extra tests for Org mode
 
-;; Copyright (C) 2014-2016 Fabrice Niessen
+;; Copyright (C) 2014-2016 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen
 
