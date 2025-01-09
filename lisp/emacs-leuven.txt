@@ -15521,6 +15521,11 @@ Eventually have a look as well at ~input-decode-map~.
 
 * Profiler
 
+- Run ~M-x profiler-start~ and select ~cpu+ram~ as the profiling option.
+- Perform the actions that causes slowdowns.
+- Once finished, run ~M-x profiler-stop~.
+- View the results by running ~M-x profiler-report~.
+
 * Reporting Bugs
 
 To get a backtrace when a specific regexp is displayed in the echo area (through
