@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: 20241227.1511
+;; Version: <20250112.1659>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "20241227.1511"
+(defconst lvn--emacs-version "<20250112.1659>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -297,7 +297,7 @@ exists, switch to it; otherwise, invoke FN."
   (leuven--section "Type of OS")
 
   (defconst lvn--linux-p (eq system-type 'gnu/linux)
-    "Running Emacs on Linux or WSL.")
+    "Running Emacs on native Linux or WSL.")
 
   (defconst lvn--wsl-p
     (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))

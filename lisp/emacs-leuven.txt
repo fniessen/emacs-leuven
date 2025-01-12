@@ -450,7 +450,7 @@ exists, switch to it; otherwise, invoke FN."
   (leuven--section "Type of OS")
 
   (defconst lvn--linux-p (eq system-type 'gnu/linux)
-    "Running Emacs on Linux or WSL.")
+    "Running Emacs on native Linux or WSL.")
 
   (defconst lvn--wsl-p
     (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))
