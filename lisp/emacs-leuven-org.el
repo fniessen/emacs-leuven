@@ -461,103 +461,53 @@ This makes ID links quasi-bidirectional."
 
 (message "5.2 Use of (org)TODO extensions")
 
-;; List of TODO entry keyword sequences (+ fast access keys and specifiers
-;; for state change logging).
+;; Define TODO keyword sequences with fast access keys and state change logging.
 (setq org-todo-keywords
-      '((sequence "NEW(n!)"             ; Proposal, idea (under review), to be
-                                        ; prioritized.
-                  "TODO(t!)"            ; Open, not (yet) started.
-                  "STRT(s!)"            ; In progress, working on, doing.
-                  "WAIT(w!)"            ; On hold, to be discussed, assigned,
-                                        ; feedback.
-                  "SDAY(y!)"            ; Someday, maybe, perhaps, wish.
+      '((sequence "MAYB(m)"             ; Proposal, idea, someday/maybe, wish.
+                  "TODO(t)"             ; Open, not yet started.
+                  "STRT(s)"             ; In progress, working on.
+                  "WAIT(w@/!)"          ; On hold, needs discussion or feedback.
                   "|"
-                  "DONE(d!)"            ; Completed, closed, fixed, resolved,
-                                        ; verified.
-                  "CANX(x!)")           ; Wontfix, rejected, ignored.
-
-        (sequence "QTE(q!)"             ; Planning.
-                  "QTD(Q!)"             ; Awaiting approval.
-                  "|"
-                  "APP(A!)"             ; Approved.
-                  "REJ(R!)")            ; Rejected.
-
-        (sequence "OPENPO(O!)"
-                  "|"
-                  "CLSDPO(C!)")))
+                  "DONE(d!)"            ; Completed, closed, resolved.
+                  "CANX(x@)")))         ; Won't fix, rejected, ignored.
 
 (with-eval-after-load "org-faces"
 
-  ;; Faces for specific TODO keywords.
+  ;; Define non-standard faces for specific TODO states.
+  (defface leuven-org-mayb-kwd
+    '((t :weight bold :box "#BBBBBB"
+         :foreground "#BBBBBB" :background "#F0F0F0"))
+    "Face used to display state MAYB.")
+  (defface leuven-org-strt-kwd
+    '((t :weight bold :box "#D9D14A"
+         :foreground "#D9D14A" :background "#FCFCDC"))
+    "Face used to display state STRT.")
+  (defface leuven-org-wait-kwd
+    '((t :weight bold :box "#9EB6D4"
+         :foreground "#9EB6D4" :background "#E0EFFF"))
+    "Face used to display state WAIT.")
+  (defface leuven-org-canx-kwd
+    '((t :weight bold :box "#BBBBBB"
+         :foreground "#BBBBBB" :background "#F0F0F0"))
+    "Face used to display state CANX.")
+
+  ;; Set the specific faces for Org TODO keywords.
   (setq org-todo-keyword-faces
-        '(("NEW"  . leuven-org-created-kwd)
+        '(("MAYB" . leuven-org-mayb-kwd)
           ("TODO" . org-todo)
-          ("STRT" . leuven-org-in-progress-kwd)
-          ("WAIT" . leuven-org-waiting-for-kwd)
-          ("SDAY" . leuven-org-someday-kwd)
+          ("STRT" . leuven-org-strt-kwd)
+          ("WAIT" . leuven-org-wait-kwd)
           ("DONE" . org-done)
-          ("CANX" . org-done)
+          ("CANX" . leuven-org-canx-kwd)))
 
-          ("QTE" . leuven-org-quote-kwd)
-          ("QTD" . leuven-org-quoted-kwd)
-          ("APP" . leuven-org-approved-kwd)
-          ("REJ" . leuven-org-rejected-kwd)
-
-          ("OPENPO" . leuven-org-openpo-kwd)
-          ("CLSDPO" . leuven-org-closedpo-kwd)))
-
-  ;; Org standard faces.
+  ;; Org standard faces with specific attributes.
   (set-face-attribute 'org-todo nil
                       :weight 'bold :box "#D8ABA7"
                       :foreground "#D8ABA7" :background "#FFE6E4")
 
   (set-face-attribute 'org-done nil
-                      :weight 'bold :box "#BBBBBB"
-                      :foreground "#BBBBBB" :background "#F0F0F0")
-
-  ;; Org non-standard faces.
-  (defface leuven-org-created-kwd
-    '((t :weight bold :box "#FFE8A3"
-         :foreground "#1F8DD6" :background "#FFFFFF"))
-    "Face used to display state NEW.")
-  (defface leuven-org-in-progress-kwd
-    '((t :weight bold :box "#D9D14A"
-         :foreground "#D9D14A" :background "#FCFCDC"))
-    "Face used to display state STRT.")
-  (defface leuven-org-waiting-for-kwd
-    '((t :weight bold :box "#89C58F"
-         :foreground "#89C58F" :background "#E2FEDE"))
-    "Face used to display state WAIT.")
-  (defface leuven-org-someday-kwd
-    '((t :weight bold :box "#9EB6D4"
-         :foreground "#9EB6D4" :background "#E0EFFF"))
-    "Face used to display state SDAY.")
-
-  (defface leuven-org-quote-kwd
-    '((t :weight bold :box "#FC5158"
-         :foreground "#FC5158" :background "#FED5D7"))
-    "Face used to display .")
-  (defface leuven-org-quoted-kwd
-    '((t :weight bold :box "#55BA80"
-         :foreground "#55BA80" :background "#DFFFDF"))
-    "Face used to display .")
-  (defface leuven-org-approved-kwd
-    '((t :weight bold :box "#969696"
-         :foreground "#969696" :background "#F2F2EE"))
-    "Face used to display .")
-  (defface leuven-org-rejected-kwd
-    '((t :weight bold :box "#42B5FF"
-         :foreground "#42B5FF" :background "#D3EEFF"))
-    "Face used to display state REJECTED.")
-
-  (defface leuven-org-openpo-kwd
-    '((t :weight bold :box "#FC5158"
-         :foreground "#FC5158" :background "#FED5D7"))
-    "Face used to display OPEN purchase order.")
-  (defface leuven-org-closedpo-kwd
-    '((t :weight bold :box "#969696"
-         :foreground "#969696" :background "#F2F2EE"))
-    "Face used to display CLOSED purchase order."))
+                      :weight 'bold :box "#89C58F"
+                      :foreground "#89C58F" :background "#E2FEDE"))
 
 ;; Block switching entries to DONE if
 ;; 1) there are undone child entries, or
@@ -941,7 +891,7 @@ This is a useful function for adding to `kill-emacs-query-functions'."
   (add-to-list 'org-capture-templates
                `("t" "Task" entry
                  (file+headline ,org-default-notes-file "Tasks")
-                 "* NEW %^{Task}%?
+                 "* MAYB %^{Task}%?
 
 %i"
                  :empty-lines 1) t)
@@ -1167,8 +1117,8 @@ From the address <%a>"
   ;; ;; Speed up agenda by avoiding to update some text properties.
   ;; (setq org-agenda-ignore-properties '(effort category)) ; org.el
 
-  ;; Normally hide the "someday" (nice-to-have) things.
-  ;; (setq org-agenda-filter-preset '("-SDAY"))
+  ;; Normally hide the "maybe" (nice-to-have) things.
+  ;; (setq org-agenda-filter-preset '("-MAYB"))
 
   ;;** 10.1 (info "(org)Agenda files")
 
@@ -2078,8 +2028,9 @@ buffer."
   (setq org-latex-listings t)
 
   ;; 12.6.2 Default packages to be inserted in the header.
-  ;; Include the `listings' package for fontified source code.
-  (add-to-list 'org-latex-packages-alist '("" "listings") t)
+  ;; Add the `listings' package (for fontified source code) to the end of the
+  ;; list.
+  (push '("" "listings") org-latex-packages-alist)
 
   ;; Include the `xcolor' package for colored source code.
   (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
@@ -2538,8 +2489,8 @@ Ignore non Org buffers."
       (let ((lang-dict-alist '(("en" . "american")
                                ("fr" . "francais"))))
         (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
-          (let ((lang (match-string 1))
-                (dict (cdr (assoc lang lang-dict-alist))))
+          (let* ((lang (match-string 1))
+                 (dict (cdr (assoc lang lang-dict-alist))))
             (if dict
                 (progn
                   (ispell-change-dictionary dict)
