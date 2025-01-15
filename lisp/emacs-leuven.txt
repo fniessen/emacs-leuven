@@ -14591,7 +14591,7 @@ printing on Windows.
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
 
-  (defun sort-names-by-last-name ()
+  (defun lvn-sort-names-by-last-name ()
     "Sort lines in the region by last name (everything after the first space)."
     (interactive)
     (save-excursion
@@ -14605,7 +14605,8 @@ printing on Windows.
                              (last-name-b (car (last (split-string b)))))
                         (string< last-name-a last-name-b)))))
         (delete-region (region-beginning) (region-end))
-        (insert (mapconcat 'identity lines "\n")))))
+        (insert (mapconcat 'identity lines "\n"))
+        (insert "\n"))))
 
 )                                       ; Chapter 41 ends here.
 #+end_src

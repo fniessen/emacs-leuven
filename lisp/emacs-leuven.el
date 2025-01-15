@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250115.1122>
+;; Version: <20250115.1128>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250115.1122>"
+(defconst lvn--emacs-version "<20250115.1128>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7429,7 +7429,7 @@ Consider using `C-x d' instead for better performance."
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
 
-  (defun sort-names-by-last-name ()
+  (defun lvn-sort-names-by-last-name ()
     "Sort lines in the region by last name (everything after the first space)."
     (interactive)
     (save-excursion
@@ -7443,7 +7443,8 @@ Consider using `C-x d' instead for better performance."
                              (last-name-b (car (last (split-string b)))))
                         (string< last-name-a last-name-b)))))
         (delete-region (region-beginning) (region-end))
-        (insert (mapconcat 'identity lines "\n")))))
+        (insert (mapconcat 'identity lines "\n"))
+        (insert "\n"))))
 
 )                                       ; Chapter 41 ends here.
 
