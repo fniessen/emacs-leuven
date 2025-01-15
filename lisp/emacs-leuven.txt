@@ -14591,6 +14591,22 @@ printing on Windows.
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
 
+  (defun sort-names-by-last-name ()
+    "Sort lines in the region by last name (everything after the first space)."
+    (interactive)
+    (save-excursion
+      (let ((region-text (buffer-substring (region-beginning) (region-end)))
+            (lines nil))
+        (setq lines (split-string region-text "\n" t))
+        (setq lines
+              (sort lines
+                    (lambda (a b)
+                      (let* ((last-name-a (car (last (split-string a))))
+                             (last-name-b (car (last (split-string b)))))
+                        (string< last-name-a last-name-b)))))
+        (delete-region (region-beginning) (region-end))
+        (insert (mapconcat 'identity lines "\n")))))
+
 )                                       ; Chapter 41 ends here.
 #+end_src
 
