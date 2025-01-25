@@ -2264,12 +2264,14 @@ Check out ~log4j-mode~ instead?  And nice colors at
 https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html.
 
 #+begin_src emacs-lisp
-  (defun leuven-display-todo-lines ()
+  (defun lvn-display-todo-lines ()
     "Display all lines in the current buffer containing TODO, FIXME, XXX, or BUG."
     (interactive)
-    (occur "TODO\\|FIXME\\|XXX\\|BUG"))
+    (occur "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"))
+    ;; See also `org-agenda-custom-command' '1'.
 
-  (global-set-key (kbd "<M-f6>") #'leuven-display-todo-lines)
+  ;; Set global keybinding for the function.
+  (global-set-key (kbd "C-c t") 'lvn-display-todo-lines)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5800,25 +5802,24 @@ Get EXIF data with ~image-dired-get-exif-data~.
   previous buffer in the buffer list.
 
 #+begin_src emacs-lisp
-  (defun lvn-rotate-or-previous-buffer ()
+  (defun lvn-switch-or-rotate-buffer ()
     "Switch to the previous buffer or rotate window configuration.
 
-If there is only one window in the frame, this function switches to the previous
-buffer, cycling through the buffer list in the current window.
+If there is only one window in the frame, this function switches
+to the previous buffer, cycling through the buffer list in the
+current window.
 
-If there are multiple windows in the frame, this function rotates the window
-configuration, moving to the previous window in the cyclic order."
+If there are multiple windows in the frame, this function rotates
+the window configuration, moving to the previous window in the
+cyclic order."
     (interactive)
     (if (one-window-p t)
+        ;; Switch to the previous buffer.
         (switch-to-buffer (other-buffer (current-buffer) 1))
+      ;; Move to the previous window in a multi-window configuration.
       (other-window -1)))
 
-  (global-set-key (kbd "<f6>") #'lvn-rotate-or-previous-buffer)
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; Reverse operation of `other-window' (`C-x o').
-  (global-set-key (kbd "<S-f6>") #'previous-multiframe-window)
+  (global-set-key (kbd "<f6>") #'lvn-switch-or-rotate-buffer)
 #+end_src
 
 ** Deleting and Rearranging Windows
@@ -14826,7 +14827,7 @@ using ~C-n~ and ~C-p~ key bindings.
   (with-eval-after-load "google-translate-autoloads"
 
     ;; Translate a text using translation directions.
-    (global-set-key (kbd "C-c t") #'google-translate-smooth-translate))
+    (global-set-key (kbd "C-c T") #'google-translate-smooth-translate))
 
   ;; Just another UI to Google.
   (with-eval-after-load "google-translate-smooth-ui"

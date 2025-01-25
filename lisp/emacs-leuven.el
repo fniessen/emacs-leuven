@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250125.1500>
+;; Version: <20250125.1654>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250125.1500>"
+(defconst lvn--emacs-version "<20250125.1654>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1302,12 +1302,14 @@ original state of line numbers after navigation."
 
   (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
 
-  (defun leuven-display-todo-lines ()
+  (defun lvn-display-todo-lines ()
     "Display all lines in the current buffer containing TODO, FIXME, XXX, or BUG."
     (interactive)
-    (occur "TODO\\|FIXME\\|XXX\\|BUG"))
+    (occur "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"))
+    ;; See also `org-agenda-custom-command' '1'.
 
-  (global-set-key (kbd "<M-f6>") #'leuven-display-todo-lines)
+  ;; Set global keybinding for the function.
+  (global-set-key (kbd "C-c t") 'lvn-display-todo-lines)
 
   ;; Just-in-time fontification.
   (with-eval-after-load "jit-lock"
@@ -3233,23 +3235,24 @@ in the current buffer."
 
   (global-set-key (kbd "<f6>") #'other-window)
 
-  (defun lvn-rotate-or-previous-buffer ()
+  (defun lvn-switch-or-rotate-buffer ()
     "Switch to the previous buffer or rotate window configuration.
 
-If there is only one window in the frame, this function switches to the previous
-buffer, cycling through the buffer list in the current window.
+If there is only one window in the frame, this function switches
+to the previous buffer, cycling through the buffer list in the
+current window.
 
-If there are multiple windows in the frame, this function rotates the window
-configuration, moving to the previous window in the cyclic order."
+If there are multiple windows in the frame, this function rotates
+the window configuration, moving to the previous window in the
+cyclic order."
     (interactive)
     (if (one-window-p t)
+        ;; Switch to the previous buffer.
         (switch-to-buffer (other-buffer (current-buffer) 1))
+      ;; Move to the previous window in a multi-window configuration.
       (other-window -1)))
 
-  (global-set-key (kbd "<f6>") #'lvn-rotate-or-previous-buffer)
-
-  ;; Reverse operation of `other-window' (`C-x o').
-  (global-set-key (kbd "<S-f6>") #'previous-multiframe-window)
+  (global-set-key (kbd "<f6>") #'lvn-switch-or-rotate-buffer)
 
 ;;** 20.5 (info "(emacs)Change Window")
 
@@ -7580,7 +7583,7 @@ Consider using `C-x d' instead for better performance."
   (with-eval-after-load "google-translate-autoloads"
 
     ;; Translate a text using translation directions.
-    (global-set-key (kbd "C-c t") #'google-translate-smooth-translate))
+    (global-set-key (kbd "C-c T") #'google-translate-smooth-translate))
 
   ;; Just another UI to Google.
   (with-eval-after-load "google-translate-smooth-ui"

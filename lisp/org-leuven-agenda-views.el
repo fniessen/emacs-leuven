@@ -1,3 +1,165 @@
+(defun lvn-open-org-agenda-for-current-buffer (&optional arg)
+  "Open the Org mode agenda with entries restricted based on ARG.
+ARG determines the scope:
+- No ARG (nil): Restrict to the current buffer's file.
+- Single C-u (4): Restrict to the current buffer's file and all .org files
+  in the current directory and its subdirectories.
+- Double C-u (16): Restrict to the current buffer's file, all .org files,
+  and all .txt files in the current directory and its subdirectories.
+If the buffer is in a version-controlled project (e.g., vc-dir),
+use the project's root directory instead of the current directory."
+  (interactive "P")
+  (let* ((current-dir
+          (or (when (buffer-file-name) (file-name-directory (buffer-file-name)))
+                                        ; File's directory.
+              (when (vc-root-dir) (vc-root-dir))))
+                                        ; Git root directory.
+         (org-agenda-files
+          (cond
+           ((not current-dir)
+            (error "Cannot determine a directory for this buffer"))
+           ;; No argument: Restrict to the current buffer's file.
+           ((not arg)
+            (list (buffer-file-name)))
+           ;; Single C-u: Current buffer + .org files in current dir/subdirs.
+           ((equal arg '(4))
+            (append (list (buffer-file-name))
+                    (directory-files-recursively current-dir ".*\\.org$")))
+           ;; Double C-u: Current buffer + .org and .txt files in current dir/subdirs.
+           ((equal arg '(16))
+            (append (list (buffer-file-name))
+                    (directory-files-recursively current-dir ".*\\(\\.org\\|\\.txt\\)$")))))
+         (org-default-notes-file nil))  ; Disable default notes file temporarily
+    (org-agenda))                       ; Open the standard agenda view.
+    ;; Uncomment below line if custom agenda view is needed:
+    ;; (org-agenda nil "f.")               ; Generate a custom Org agenda view.
+  )
+
+(global-set-key (kbd "<S-f6>")
+                (lambda ()
+                  (interactive)
+                  (lvn-open-org-agenda-for-current-buffer nil)))
+                                        ; Without arg: current buffer only.
+
+(global-set-key (kbd "<C-f6>")
+                (lambda ()
+                  (interactive)
+                  (lvn-open-org-agenda-for-current-buffer '(4))))
+                                        ; With C-u: current buffer + .org files.
+
+(global-set-key (kbd "<M-f6>")
+                (lambda ()
+                  (interactive)
+                  (lvn-open-org-agenda-for-current-buffer '(16))))
+                                        ; With C-u C-u: current buffer + .org + .txt files.
+
+(setq org-agenda-custom-commands
+      '(("c" "Custom task view"
+         ;; High Priority Tasks
+         ((tags-todo "+PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "High Priority Tasks:")))
+          ;; Tasks Due This Week
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Tasks Due This Week:")))
+          ;; Scheduled Tasks (Next 14 Days)
+          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days):")
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX") 'deadline))))
+          ;; Tasks with Future Deadlines
+          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Tasks with Future Deadlines:")
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX")))
+                      (org-agenda-sorting-strategy '(deadline-up))))
+          (todo "STRT"
+                ((org-agenda-overriding-header "Started Tasks:")
+                 (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
+                                                (org-agenda-skip-entry-if 'regexp "\\[#A\\]")))))
+          (todo "WAIT"
+                ((org-agenda-overriding-header "Waiting Tasks:")
+                                  (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
+                                                (org-agenda-skip-entry-if 'regexp "\\[#A\\]")))))
+          (todo "TODO"
+                ((org-agenda-overriding-header "TODO Tasks:")
+                 (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
+                                                (org-agenda-skip-entry-if 'regexp "\\[#A\\]")))))
+          (todo "MAYB"
+                ((org-agenda-overriding-header "Maybe Tasks:")
+                                  (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
+                                                (org-agenda-skip-entry-if 'regexp "\\[#A\\]")))))
+          (todo "DONE|CANX"
+                ((org-agenda-overriding-header "Completed or Cancelled Tasks:")
+                 (org-agenda-span 'week))))
+         ;; Compact blocks
+         ((org-agenda-compact-blocks t)))))
+
+(setq org-agenda-custom-commands
+      '(("c" "Custom task view"
+         ;; High Priority Tasks
+         ((tags-todo "+PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "High Priority Tasks:")))
+          ;; Tasks Due This Week
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Tasks Due This Week:")))
+          ;; Scheduled Tasks (Next 14 Days)
+          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days):")
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX") 'deadline))))
+          ;; Tasks with Future Deadlines
+          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Tasks with Future Deadlines:")
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX")))
+                      (org-agenda-sorting-strategy '(deadline-up))))
+          ;; Task states: STRT, WAIT, TODO, MAYB
+          ,@(mapcar (lambda (state)
+                      `(todo ,state
+                             ((org-agenda-overriding-header (concat (capitalize ,state) " Tasks:"))
+                              (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
+                                                             (org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))))
+                    '("STRT" "WAIT" "TODO" "MAYB"))
+          ;; Completed or Cancelled Tasks
+          (todo "DONE|CANX"
+                ((org-agenda-overriding-header "Completed or Cancelled Tasks:")
+                 (org-agenda-span 'week))))
+         ;; Compact blocks
+         ((org-agenda-compact-blocks t)))))
+
+(setq org-agenda-custom-commands
+      '(("c" "Custom Task View"
+         ((tags-todo "+PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "High Priority Tasks")))
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Tasks Due This Week")))
+          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days)")))
+          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Future Deadlines")
+                      (org-agenda-sorting-strategy '(deadline-up))))
+          (todo "DONE|CANX"
+                ((org-agenda-overriding-header "Completed or Cancelled Tasks")
+                 (org-agenda-span 'week)))))))
+
+(setq org-agenda-custom-commands
+      '(("n" "Agenda and all TODOs"
+         ((agenda "" nil)
+          (alltodo "" nil))
+         nil)
+        ("h" "High priority tasks"
+         ((tags-todo "+PRIORITY=\"A\"-SCHEDULED>=\"<today>\"-DEADLINE>=\"<today>\""
+                     ((org-agenda-overriding-header "High Priority Tasks")
+                      (org-agenda-skip-function
+                       '(org-agenda-skip-entry-if 'scheduled 'deadline))))
+          (tags-todo "-SCHEDULED>=\"<today>\"-DEADLINE>=\"<today>\""
+                     ((org-agenda-overriding-header "Other Current Tasks")
+                      (org-agenda-skip-function
+                       '(org-agenda-skip-entry-if 'scheduled 'deadline)))))
+         nil)
+        ("p" . "Priority views")
+        ("pa" "A items" tags-todo "+PRIORITY=\"A\"")
+        ("pb" "B items" tags-todo "+PRIORITY=\"B\"")
+        ("pc" "C items" tags-todo "+PRIORITY=\"C\"")
+        ("w" "Waiting tasks" todo "WAIT"
+         ((org-agenda-overriding-header "Waiting Tasks")))))
+
 ;;; org-leuven-agenda-views.el --- Org customized views
 
 ;;; Commentary:
@@ -42,7 +204,8 @@
 (add-to-list 'org-agenda-custom-commands
              `("cc" "Inbox"
                ((alltodo ""))
-               ((org-agenda-files (list ,org-default-notes-file))))
+               ;; ((org-agenda-files (list ,org-default-notes-file)))
+               )
              t)
 
 (add-to-list 'org-agenda-custom-commands
@@ -72,7 +235,8 @@
                            ((org-agenda-overriding-header "INBOX (Unscheduled)")
                             (org-agenda-skip-function
                              '(org-agenda-skip-entry-if 'scheduled))
-                            (org-agenda-files (list ,org-default-notes-file))))
+                            ;; (org-agenda-files (list ,org-default-notes-file))
+                            ))
                 ;; List of all TODO entries with deadline today.
                 (tags-todo "DEADLINE=\"<+0d>\""
                            ((org-agenda-overriding-header "DUE TODAY")
@@ -117,21 +281,6 @@
                ((org-agenda-format-date "")
                 (org-agenda-start-with-clockreport-mode nil)))
              t)
-
-(defun my-open-current-buffer-org-agenda ()
-  "Open the Org mode agenda for the current buffer."
-  (interactive)
-  (let ((org-agenda-files (list (buffer-file-name))))
-    (org-agenda))) ; works, but shows the export menu.
-
-(defun leuven-org-custom-agenda-current-buffer ()
-  "Generate a custom Org agenda view for the current buffer."
-  (interactive)
-  (let* ((org-agenda-files (list (buffer-file-name)))
-         (org-default-notes-file nil))
-    (org-agenda nil "f.")))
-
-(global-set-key (kbd "M-S-<f6>") 'leuven-org-custom-agenda-current-buffer)
 
 (add-to-list 'org-agenda-custom-commands
              '("w" "Work"
@@ -226,7 +375,7 @@
                            ((org-agenda-overriding-header "NO DUE DATE / STARTED")
                             (org-agenda-skip-function
                              '(org-agenda-skip-entry-if 'deadline))))
-                (tags-todo "TODO<>{STRT\\|WAIT\\|SDAY}"
+                (tags-todo "TODO<>{STRT\\|WAIT}"
                            ((org-agenda-overriding-header "NO DUE DATE / NEXT")
                             (org-agenda-skip-function
                              '(org-agenda-skip-entry-if 'deadline))))
@@ -234,8 +383,8 @@
                            ((org-agenda-overriding-header "NO DUE DATE / WAITING FOR")
                             (org-agenda-skip-function
                              '(org-agenda-skip-entry-if 'deadline))))
-                (tags-todo "TODO={SDAY}"
-                           ((org-agenda-overriding-header "NO DUE DATE / SOMEDAY")
+                (tags-todo "TODO={MAYB}"
+                           ((org-agenda-overriding-header "NO DUE DATE / MAYBE")
                             (org-agenda-skip-function
                              '(org-agenda-skip-entry-if 'deadline))))
                 )
@@ -538,7 +687,7 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
 
 (add-to-list 'org-agenda-custom-commands
              '("rw" "Weekly review"
-               ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={NEW}"
+               ((tags "CATEGORY={@Collect}&LEVEL=2|TODO={MAYB}"
                       ((org-agenda-overriding-header "INBOX (Unscheduled)")))
 
                 (agenda ""
@@ -589,12 +738,12 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                        (org-agenda-todo-ignore-scheduled t)))
 
                 ;; Same reasoning as for WAIT.
-                (todo "SDAY"
+                (todo "MAYB"
                       ((org-agenda-format-date "")
-                       (org-agenda-overriding-header "SOMEDAY")
+                       (org-agenda-overriding-header "MAYBE")
                        (org-agenda-todo-ignore-deadlines 'all)
                        (org-agenda-todo-ignore-scheduled t)
-                       (org-agenda-filter-preset '("+SDAY"))))
+                       (org-agenda-filter-preset '("+MAYB"))))
 
                 ;; ((org-agenda-start-with-clockreport-mode nil)
                 ;;  (org-agenda-prefix-format " %i %?-12t% s")
@@ -605,8 +754,8 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
 
 (add-to-list 'org-agenda-custom-commands
              '("rN" "Next"
-               ((tags-todo "TODO<>{SDAY}"))
-               ((org-agenda-overriding-header "List of all TODO entries with no due date (no SDAY)")
+               ((tags-todo "TODO<>{MAYB}"))
+               ((org-agenda-overriding-header "List of all TODO entries with no due date (no MAYB)")
                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
                 (org-agenda-sorting-strategy '(priority-down))))
              t)
@@ -709,11 +858,11 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                ((org-agenda-overriding-header "Refile stuff")))
              t)
 
-;; Create a sparse tree (current buffer only) with all entries containing the
-;; word `TODO', `FIXME', `XXX' or `BUG'.
+;; Add a custom agenda command to create a sparse tree in the current buffer
+;; showing entries with task markers: TODO, FIXME, XXX, or BUG.
 (add-to-list 'org-agenda-custom-commands
-             '("1" "Task markers (in current buffer)"
-               ((occur-tree "\\<TODO\\|FIXME\\|XXX\\|BUG\\>")))
+             '("1" "Task markers (current buffer)"
+               ((occur-tree "\\<\\(TODO\\|FIXME\\|XXX\\|BUG\\)\\>")))
              t)
 
 (provide 'org-leuven-agenda-views)
