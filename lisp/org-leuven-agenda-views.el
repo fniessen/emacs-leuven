@@ -23,17 +23,17 @@ use the project's root directory instead of the current directory."
             (list (buffer-file-name)))
            ;; Single C-u: Current buffer + .org files in current dir/subdirs.
            ((equal arg '(4))
-            (append (list (buffer-file-name))
+            (append (when (buffer-file-name) (list (buffer-file-name)))
                     (directory-files-recursively current-dir ".*\\.org$")))
            ;; Double C-u: Current buffer + .org and .txt files in current dir/subdirs.
            ((equal arg '(16))
-            (append (list (buffer-file-name))
+            (append (when (buffer-file-name) (list (buffer-file-name)))
                     (directory-files-recursively current-dir ".*\\(\\.org\\|\\.txt\\)$")))))
          (org-default-notes-file nil))  ; Disable default notes file temporarily
     (org-agenda))                       ; Open the standard agenda view.
     ;; Uncomment below line if custom agenda view is needed:
     ;; (org-agenda nil "f.")               ; Generate a custom Org agenda view.
-  )
+)
 
 (global-set-key (kbd "<S-f6>")
                 (lambda ()
@@ -200,19 +200,11 @@ use the project's root directory instead of the current directory."
 (add-to-list 'org-agenda-custom-commands
              '("c" . "CLARIFY...") t)
 
-;; Inbox.
+;; Display all tasks with the 'inbox' tag.
 (add-to-list 'org-agenda-custom-commands
-             `("cc" "Inbox"
-               ((alltodo ""))
-               ;; ((org-agenda-files (list ,org-default-notes-file)))
-               )
-             t)
-
-(add-to-list 'org-agenda-custom-commands
-             '("ci" "All TODOs in Inbox"
-               ((tags-todo "inbox"))
-               ((org-agenda-overriding-header "List of all TODO tasks in Inbox")
-                (org-agenda-sorting-strategy '(priority-down))))
+             `("ci" "Inbox"
+               tags-todo "inbox"
+               ((org-agenda-overriding-header "Inbox Tasks")))
              t)
 
 (add-to-list 'org-agenda-custom-commands
@@ -283,7 +275,7 @@ use the project's root directory instead of the current directory."
              t)
 
 (add-to-list 'org-agenda-custom-commands
-             '("w" "Work"
+             '("W" "Work"
                ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
                ((tags-todo "work-pirilampo"
                            ((org-agenda-overriding-header "Work")))

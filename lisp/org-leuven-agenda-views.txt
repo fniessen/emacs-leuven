@@ -89,17 +89,17 @@ use the project's root directory instead of the current directory."
             (list (buffer-file-name)))
            ;; Single C-u: Current buffer + .org files in current dir/subdirs.
            ((equal arg '(4))
-            (append (list (buffer-file-name))
+            (append (when (buffer-file-name) (list (buffer-file-name)))
                     (directory-files-recursively current-dir ".*\\.org$")))
            ;; Double C-u: Current buffer + .org and .txt files in current dir/subdirs.
            ((equal arg '(16))
-            (append (list (buffer-file-name))
+            (append (when (buffer-file-name) (list (buffer-file-name)))
                     (directory-files-recursively current-dir ".*\\(\\.org\\|\\.txt\\)$")))))
          (org-default-notes-file nil))  ; Disable default notes file temporarily
     (org-agenda))                       ; Open the standard agenda view.
     ;; Uncomment below line if custom agenda view is needed:
     ;; (org-agenda nil "f.")               ; Generate a custom Org agenda view.
-  )
+)
 #+end_src
 
 Usage:
@@ -173,8 +173,7 @@ level of the universal argument.
                  (org-agenda-span 'week))))
          ;; Compact blocks
          ((org-agenda-compact-blocks t)))))
-         #+end_src
-
+#+end_src
 
 #+begin_src emacs-lisp
 (setq org-agenda-custom-commands
@@ -469,22 +468,16 @@ You should be able to work with Org items with the mapping and property APIs:
 
 ** Inbox
 
-The Inbox is the default place where you collect your thoughts.
+The "inbox" typically refers to a collection of tasks that are yet to be sorted
+into specific categories. It can be represented by the tasks that have
+a specific tag like ~:inbox:~.
 
 #+begin_src emacs-lisp
-;; Inbox.
+;; Display all tasks with the 'inbox' tag.
 (add-to-list 'org-agenda-custom-commands
-             `("cc" "Inbox"
-               ((alltodo ""))
-               ;; ((org-agenda-files (list ,org-default-notes-file)))
-               )
-             t)
-
-(add-to-list 'org-agenda-custom-commands
-             '("ci" "All TODOs in Inbox"
-               ((tags-todo "inbox"))
-               ((org-agenda-overriding-header "List of all TODO tasks in Inbox")
-                (org-agenda-sorting-strategy '(priority-down))))
+             `("ci" "Inbox"
+               tags-todo "inbox"
+               ((org-agenda-overriding-header "Inbox Tasks")))
              t)
 #+end_src
 
@@ -685,6 +678,20 @@ Disadvantages of this view:
              t)
 #+end_src
 
+** Work
+
+#+begin_src emacs-lisp
+(add-to-list 'org-agenda-custom-commands
+             '("W" "Work"
+               ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
+               ((tags-todo "work-pirilampo"
+                           ((org-agenda-overriding-header "Work")))
+                )
+               ((org-agenda-todo-ignore-scheduled 'future)
+                (org-agenda-sorting-strategy '(deadline-up))))
+             t) ; FIXME sort not OK
+#+end_src
+
 ** Hotlist
 
 The *hotlist* is a convenient and smart way to see (in a single, clear overview)
@@ -717,18 +724,6 @@ Déjà le cas pour les tâches avec DEADLINE. Pas pour les autres.
 *************** TODO Tasks with a DEADLINE and a ~-0d~ specifier are shown
 We said "get it out my way for now", nope?
 *************** END
-
-#+begin_src emacs-lisp
-(add-to-list 'org-agenda-custom-commands
-             '("w" "Work"
-               ;; tags-todo "DEADLINE<=\"<+1w>\"|PRIORITY={A}|FLAGGED"
-               ((tags-todo "work-pirilampo"
-                           ((org-agenda-overriding-header "Work")))
-                )
-               ((org-agenda-todo-ignore-scheduled 'future)
-                (org-agenda-sorting-strategy '(deadline-up))))
-             t) ; FIXME sort not OK
-#+end_src
 
 #+begin_src emacs-lisp
 (add-to-list 'org-agenda-custom-commands
