@@ -138,17 +138,17 @@ level of the universal argument.
 (setq org-agenda-custom-commands
       '(("c" "Custom task view"
          ;; High Priority Tasks
-         ((tags-todo "+PRIORITY=\"A\""
+         ((tags-todo "+PRIORITY={A}"
                      ((org-agenda-overriding-header "High Priority Tasks:")))
           ;; Tasks Due This Week
-          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks Due This Week:")))
           ;; Scheduled Tasks (Next 14 Days)
-          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY=\"A\""
+          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days):")
                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX") 'deadline))))
           ;; Tasks with Future Deadlines
-          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY=\"A\""
+          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks with Future Deadlines:")
                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX")))
                       (org-agenda-sorting-strategy '(deadline-up))))
@@ -179,17 +179,17 @@ level of the universal argument.
 (setq org-agenda-custom-commands
       '(("c" "Custom task view"
          ;; High Priority Tasks
-         ((tags-todo "+PRIORITY=\"A\""
+         ((tags-todo "+PRIORITY={A}"
                      ((org-agenda-overriding-header "High Priority Tasks:")))
           ;; Tasks Due This Week
-          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks Due This Week:")))
           ;; Scheduled Tasks (Next 14 Days)
-          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY=\"A\""
+          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days):")
                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX") 'deadline))))
           ;; Tasks with Future Deadlines
-          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY=\"A\""
+          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks with Future Deadlines:")
                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX")))
                       (org-agenda-sorting-strategy '(deadline-up))))
@@ -211,13 +211,13 @@ level of the universal argument.
 #+begin_src emacs-lisp
 (setq org-agenda-custom-commands
       '(("c" "Custom Task View"
-         ((tags-todo "+PRIORITY=\"A\""
+         ((tags-todo "+PRIORITY={A}"
                      ((org-agenda-overriding-header "High Priority Tasks")))
-          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks Due This Week")))
-          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY=\"A\""
+          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days)")))
-          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY=\"A\""
+          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Future Deadlines")
                       (org-agenda-sorting-strategy '(deadline-up))))
           (todo "DONE|CANX"
@@ -227,12 +227,8 @@ level of the universal argument.
 
 #+begin_src emacs-lisp
 (setq org-agenda-custom-commands
-      '(("n" "Agenda and all TODOs"
-         ((agenda "" nil)
-          (alltodo "" nil))
-         nil)
-        ("h" "High priority tasks"
-         ((tags-todo "+PRIORITY=\"A\"-SCHEDULED>=\"<today>\"-DEADLINE>=\"<today>\""
+      '(("h" "High priority tasks"
+         ((tags-todo "+PRIORITY={A}-SCHEDULED>=\"<today>\"-DEADLINE>=\"<today>\""
                      ((org-agenda-overriding-header "High Priority Tasks")
                       (org-agenda-skip-function
                        '(org-agenda-skip-entry-if 'scheduled 'deadline))))
@@ -240,11 +236,15 @@ level of the universal argument.
                      ((org-agenda-overriding-header "Other Current Tasks")
                       (org-agenda-skip-function
                        '(org-agenda-skip-entry-if 'scheduled 'deadline)))))
-         nil)
-        ("p" . "Priority views")
-        ("pa" "A items" tags-todo "+PRIORITY=\"A\"")
-        ("pb" "B items" tags-todo "+PRIORITY=\"B\"")
-        ("pc" "C items" tags-todo "+PRIORITY=\"C\"")
+         nil)))
+#+end_src
+
+#+begin_src emacs-lisp
+(setq org-agenda-custom-commands
+      '(("p" . "Priority views")
+        ("pa" "A items" tags-todo "+PRIORITY={A}")
+        ("pb" "B items" tags-todo "+PRIORITY={B}")
+        ("pc" "C items" tags-todo "+PRIORITY={C}")
         ("w" "Waiting tasks" todo "WAIT"
          ((org-agenda-overriding-header "Waiting Tasks")))))
 #+end_src
@@ -1075,9 +1075,6 @@ All *tasks*, grouped by *priority*:
                 (tags-todo "PRIORITY={B}"
                            ((org-agenda-overriding-header "MEDIUM")
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-                (tags-todo "PRIORITY=\"\""
-                           ((org-agenda-overriding-header "NONE") ; = Medium.
-                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
                 (tags-todo "PRIORITY={C}"
                            ((org-agenda-overriding-header "LOW")
                             (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
@@ -1398,9 +1395,6 @@ Read [[http://gridwriter.com/2012/11/14/omnifocus-series-flags-due-dates-daily-r
                          (org-agenda-start-day "+0d")
                          (org-deadline-warning-days 0) ; XXX
                          ))
-
-                (todo "PROJ"
-                      ((org-agenda-overriding-header "PROJECT LIST")))
 
                 ;; FIXME we should show which tasks (don't) have CLOCK lines: archived vs. deleted.
                 (todo "DONE|PROJDONE"
@@ -2037,16 +2031,6 @@ buffer, helping you manage tasks more effectively.
   ;; (ps-print-header nil)
   (ps-landscape-mode t))
  ("~/org___agenda-storage.pdf"))
-
-("P" "Projects"
- ((agenda ""
-          ((org-agenda-skip-function
-            '(org-agenda-skip-entry-if 'notregexp "* PROJ"))
-           (org-agenda-include-diary nil)
-           (org-agenda-time-grid nil)))
-  (todo "PROJ"
-        ((org-agenda-todo-ignore-deadlines t)
-         (org-agenda-sorting-strategy '(priority-down))))))
 #+end_src
 
 * Test cases
