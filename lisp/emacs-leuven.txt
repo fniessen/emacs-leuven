@@ -6344,80 +6344,82 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
 #+end_src
 
 #+begin_src emacs-lisp
-(defun leuven-replace-non-utf8-chars ()
+(defun lvn-replace-non-utf8-chars ()
   "Replace non-UTF-8 characters with their corresponding UTF-8 equivalents."
   (interactive)
-  ;; See https://www.fileformat.info/info/charset/UTF-8/list.htm, then type
-  ;; `C-x 8 RET' and then the number, followed by RET.
-  (lvn--apply-accent-substitutions '(("\200" . "EUR")  ;; \342\202\254
-                       ("\205" . "...")
-                       ("\221" . "`")
-                       ("\222" . "'")    ;; \342\200\231
-                       ("\223" . "\"")
-                       ("\224" . "\"")
-                       ("\226" . "-")
-                       ("\227" . "--")
-                       ("\234" . "oe")
-                       ("\240" . " ")    ;; \302\240
-                       ("\246" . "|")
-                       ("\251" . "©")
-                       ("\253" . "«")
-                       ("\256" . "®")
-                       ("\260" . "°")
-                       ("\265" . "u")
-                       ("\272" . "°")
-                       ("\273" . "»")
-                       ("\274" . "1/4")
-                       ("\275" . "1/2")
-                       ("\276" . "3/4")
-                       ("\277" . "¿")
-                       ("\300" . "À")
-                       ;; ("\301" . "") ;; caps spanish a ("facil")
-                       ("\302" . "Â")
-                       ("\304" . "Ä")
-                       ("\307" . "Ç")
-                       ("\310" . "È")
-                       ("\311" . "É")
-                       ("\312" . "Ê")
-                       ("\316" . "Î")
-                       ("\317" . "Ï")
-                       ("\324" . "Ô")
-                       ("\326" . "Ö")
-                       ("\331" . "Ù")
-                       ("\337" . "ss")
-                       ("\333" . "Û")
-                       ("\334" . "Ü")
-                       ("\340" . "à")    ;; \303\240
-                       ("\341" . "á")    ;; \303\241
-                       ("\342" . "â")    ;; \303\242
-                       ("\344" . "ä")
-                       ("\347" . "ç")
-                       ("\350" . "è")    ;; \303\250
-                       ("\351" . "é")    ;; \303\251
-                       ("\352" . "ê")
-                       ("\353" . "ë")
-                       ("\355" . "í")
-                       ("\356" . "î")
-                       ("\357" . "ï")
-                       ("\361" . "ñ")
-                       ("\363" . "ó")    ;; \303\263
-                       ("\364" . "ô")    ;; \303\264
-                       ("\365" . "õ")
-                       ("\366" . "ö")
-                       ("\371" . "ù")
-                       ("\372" . "ú")
-                       ("\373" . "û")    ;; \303\273
-                       ("\374" . "ü")    ;; \303\274
-                       )))
+  ;; Replace non-UTF-8 characters using predefined substitutions.
+  (lvn--apply-accent-substitutions lvn--non-utf8-to-utf8-mapping))
 
-;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
+(defconst lvn--non-utf8-to-utf8-mapping
+  '(("\200" . "EUR")  ;; \342\202\254
+    ("\205" . "...")
+    ("\221" . "`")
+    ("\222" . "'")    ;; \342\200\231
+    ("\223" . "\"")
+    ("\224" . "\"")
+    ("\226" . "-")
+    ("\227" . "--")
+    ("\234" . "oe")
+    ("\240" . " ")    ;; \302\240
+    ("\246" . "|")
+    ("\251" . "©")
+    ("\253" . "«")
+    ("\256" . "®")
+    ("\260" . "°")
+    ("\265" . "u")
+    ("\272" . "°")
+    ("\273" . "»")
+    ("\274" . "1/4")
+    ("\275" . "1/2")
+    ("\276" . "3/4")
+    ("\277" . "¿")
+    ("\300" . "À")
+    ;; ("\301" . "") ;; caps spanish a ("facil")
+    ("\302" . "Â")
+    ("\304" . "Ä")
+    ("\307" . "Ç")
+    ("\310" . "È")
+    ("\311" . "É")
+    ("\312" . "Ê")
+    ("\316" . "Î")
+    ("\317" . "Ï")
+    ("\324" . "Ô")
+    ("\326" . "Ö")
+    ("\331" . "Ù")
+    ("\337" . "ss")
+    ("\333" . "Û")
+    ("\334" . "Ü")
+    ("\340" . "à")    ;; \303\240
+    ("\341" . "á")    ;; \303\241
+    ("\342" . "â")    ;; \303\242
+    ("\344" . "ä")
+    ("\347" . "ç")
+    ("\350" . "è")    ;; \303\250
+    ("\351" . "é")    ;; \303\251
+    ("\352" . "ê")
+    ("\353" . "ë")
+    ("\355" . "í")
+    ("\356" . "î")
+    ("\357" . "ï")
+    ("\361" . "ñ")
+    ("\363" . "ó")    ;; \303\263
+    ("\364" . "ô")    ;; \303\264
+    ("\365" . "õ")
+    ("\366" . "ö")
+    ("\371" . "ù")
+    ("\372" . "ú")
+    ("\373" . "û")    ;; \303\273
+    ("\374" . "ü"))   ;; \303\274
+  "Mapping of non-UTF-8 characters to their UTF-8 equivalents.")
+
 (defun lvn--apply-accent-substitutions (subst-list)
-  "Apply accent substitutions based on a given list of replacements."
+  "Apply substitutions based on a given list of replacements.
+SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   (dolist (pair subst-list)
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward (car pair) nil t)
-        (replace-match (cdr pair) t)))))
+        (replace-match (cdr pair) t t)))))
 #+end_src
 
 ** Specifying a File's Coding System
