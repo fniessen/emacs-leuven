@@ -75,14 +75,21 @@ use the project's root directory instead of the current directory."
           ;; Task states: STRT, WAIT, TODO, MAYB.
           ,@(mapcar (lambda (state)
                       `(todo ,state
-                             ((org-agenda-overriding-header (concat (upcase ,state) " Tasks:"))
+                             ((org-agenda-overriding-header (concat ,state " Tasks:"))
                               (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
                                                              (org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))))
                     '("STRT" "WAIT" "TODO" "MAYB"))
-          ;; Completed or Cancelled Tasks.
+          ;; Completed or Cancelled Tasks (Inactive tasks with clock entries this week).
           (todo "DONE|CANX"
-                ((org-agenda-overriding-header "Completed or Cancelled Tasks:")
-                 (org-agenda-span 'week))))
+                ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
+                 ;; Show tasks with clock entries in the current week.
+                 (org-agenda-log-mode-items '(clock)) ; Show clocked entries.
+                 (org-agenda-span 'week)              ; Filter to current week.
+                 (org-agenda-skip-function
+                  '(org-agenda-skip-entry-if 'notregexp "CLOCK:")) ; Only tasks with clock entries.
+                 ;; (org-agenda-skip-function
+                 ;;  '(org-agenda-skip-entry-if 'notregexp "CLOSED:")) ; Ensure the task is closed (completed or cancelled).
+                 ))
          ;; Compact blocks.
          ((org-agenda-compact-blocks t))
          )))
@@ -134,9 +141,55 @@ use the project's root directory instead of the current directory."
       '(("p" . "Priority views")
         ("pa" "A items" tags-todo "+PRIORITY={A}")
         ("pb" "B items" tags-todo "+PRIORITY={B}")
-        ("pc" "C items" tags-todo "+PRIORITY={C}")
-        ("w" "Waiting tasks" todo "WAIT"
-         ((org-agenda-overriding-header "Waiting Tasks")))))
+        ("pc" "C items" tags-todo "+PRIORITY={C}")))
+
+(setq org-agenda-custom-commands
+      '(("r" "Weekly Review Cgpt"
+         ;; Tasks from the past week.
+         ((tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks from the Past Week:")))
+          ;; Tasks due this week.
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks Due This Week:")))
+          ;; Tasks scheduled for the upcoming week.
+          (tags-todo "+SCHEDULED>\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks Scheduled for Next Week:")))
+          ;; Active tasks (TODO, STRT, WAIT).
+          (tags-todo "+TODO={TODO|STRT|WAIT}"
+                     ((org-agenda-overriding-header "Active Tasks:")))
+          ;; Completed tasks for review (can be adjusted as needed).
+          (todo "DONE|CANX"
+                ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
+                 ;; XXX Does not work!
+                 (org-agenda-span 'week)))
+          )
+         ;; ;; Display in a compact view.
+         ;; ((org-agenda-compact-blocks t))
+         )))
+
+(setq org-agenda-custom-commands
+      '(("w" "Weekly Review Perp"
+         ((agenda "" ((org-agenda-span 7)
+                      (org-agenda-start-on-weekday 1)
+                      (org-agenda-start-day "-1d")
+                      (org-agenda-overriding-header "This Week's Schedule:")))
+          (tags-todo "+PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "High Priority Tasks:")))
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Tasks Due This Week:")))
+          (todo "WAIT"
+                ((org-agenda-overriding-header "Waiting Tasks:")
+                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))
+          (todo "STRT"
+                ((org-agenda-overriding-header "In-Progress Tasks:")
+                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))
+          ;; XXX Does not work!
+          ;; (todo "DONE|CANX"
+          ;;       ((org-agenda-overriding-header "Completed or Cancelled Tasks:")
+          ;;        (org-agenda-span 7)))
+          )
+         ;; ((org-agenda-compact-blocks t))
+         )))
 
 ;;; org-leuven-agenda-views.el --- Org customized views
 

@@ -229,10 +229,80 @@ level of the universal argument.
       '(("p" . "Priority views")
         ("pa" "A items" tags-todo "+PRIORITY={A}")
         ("pb" "B items" tags-todo "+PRIORITY={B}")
-        ("pc" "C items" tags-todo "+PRIORITY={C}")
-        ("w" "Waiting tasks" todo "WAIT"
-         ((org-agenda-overriding-header "Waiting Tasks")))))
+        ("pc" "C items" tags-todo "+PRIORITY={C}")))
 #+end_src
+
+** Next actions
+
+The next action tasks are either:
+- high priority,
+- due soon (e.g., within the next 7 days),
+- scheduled for the near future (e.g., within the next 14 days), or
+- don't have specific dates but are marked as STRT or TODO,
+
+making them potential next actions.
+
+** Weekly review
+
+#+begin_src emacs-lisp
+(setq org-agenda-custom-commands
+      '(("r" "Weekly Review Cgpt"
+         ;; Tasks from the past week.
+         ((tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks from the Past Week:")))
+          ;; Tasks due this week.
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks Due This Week:")))
+          ;; Tasks scheduled for the upcoming week.
+          (tags-todo "+SCHEDULED>\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks Scheduled for Next Week:")))
+          ;; Active tasks (TODO, STRT, WAIT).
+          (tags-todo "+TODO={TODO|STRT|WAIT}"
+                     ((org-agenda-overriding-header "Active Tasks:")))
+          ;; Completed tasks for review (can be adjusted as needed).
+          (todo "DONE|CANX"
+                ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
+                 ;; XXX Does not work!
+                 (org-agenda-span 'week)))
+          )
+         ;; ;; Display in a compact view.
+         ;; ((org-agenda-compact-blocks t))
+         )))
+#+end_src
+
+Review *recently completed or cancelled tasks* for any post-action steps that need
+attention.
+
+#+begin_src emacs-lisp
+(setq org-agenda-custom-commands
+      '(("w" "Weekly Review Perp"
+         ((agenda "" ((org-agenda-span 7)
+                      (org-agenda-start-on-weekday 1)
+                      (org-agenda-start-day "-1d")
+                      (org-agenda-overriding-header "This Week's Schedule:")))
+          (tags-todo "+PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "High Priority Tasks:")))
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Tasks Due This Week:")))
+          (todo "WAIT"
+                ((org-agenda-overriding-header "Waiting Tasks:")
+                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))
+          (todo "STRT"
+                ((org-agenda-overriding-header "In-Progress Tasks:")
+                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))
+          ;; XXX Does not work!
+          ;; (todo "DONE|CANX"
+          ;;       ((org-agenda-overriding-header "Completed or Cancelled Tasks:")
+          ;;        (org-agenda-span 7)))
+          )
+         ;; ((org-agenda-compact-blocks t))
+         )))
+#+end_src
+
+This approach ensures that *high-priority tasks* are only *kept in the "High
+Priority Tasks" section* while avoiding duplicating them in other more general
+sections (such as "Started Tasks" or "Waiting Tasks"). It maintains the emphasis
+on urgent and important tasks without losing any information.
 
 * Priorities or Must-Do Today
 
