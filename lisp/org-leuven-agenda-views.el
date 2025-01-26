@@ -145,18 +145,24 @@ use the project's root directory instead of the current directory."
 
 (setq org-agenda-custom-commands
       '(("r" "Weekly Review Cgpt"
-         ;; Tasks from the past week.
-         ((tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
+         ((tags-todo "+PRIORITY={A}"
+                     ((org-agenda-overriding-header "High Priority Tasks:")))
+          ;; Tasks from the past week.
+          (tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks from the Past Week:")))
           ;; Tasks due this week.
           (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks Due This Week:")))
-          ;; Tasks scheduled for the upcoming week.
-          (tags-todo "+SCHEDULED>\"<+7d>\"-PRIORITY={A}"
-                     ((org-agenda-overriding-header "Tasks Scheduled for Next Week:")))
+          ;; Tasks scheduled for this week (Not due this week).
+          (tags-todo "+SCHEDULED<=\"<+7d>\"-DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks Scheduled for This Week:")))
           ;; Active tasks (TODO, STRT, WAIT).
-          (tags-todo "+TODO={TODO|STRT|WAIT}"
-                     ((org-agenda-overriding-header "Active Tasks:")))
+          (todo "TODO|STRT|WAIT"
+                ((org-agenda-overriding-header "Active Tasks:")
+                 (org-agenda-skip-function
+                  '(or (org-agenda-skip-entry-if 'deadline '("<+7d>"))
+                       (org-agenda-skip-entry-if 'scheduled '("<+7d>"))
+                       (org-agenda-skip-entry-if 'regexp "\\[#A\\]")))))
           ;; Completed tasks for review (can be adjusted as needed).
           (todo "DONE|CANX"
                 ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
@@ -190,6 +196,32 @@ use the project's root directory instead of the current directory."
           )
          ;; ((org-agenda-compact-blocks t))
          )))
+
+(defun lvn-set-org-agenda-files-dotfiles-todo (&optional root-dir)
+  "Set `org-agenda-files` to all TODO.org and TODO-xxx.org files
+in the root directories of repositories under ROOT-DIR.
+If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
+  (interactive
+   (list (read-directory-name "Root directory: " "~/.dotfiles/" nil t)))
+                                        ; Prompt interactively for ROOT-DIR,
+                                        ; defaulting to `~/.dotfiles/`.
+  (let ((todo-files '())) ;; Temporary list to store the found files.
+    ;; Set ROOT-DIR to default if not provided.
+    (setq root-dir (or root-dir "~/.dotfiles/"))
+    ;; Iterate over the immediate subdirectories of ROOT-DIR.
+    (dolist (subdir (directory-files root-dir t "^[^.]" t))
+                                        ; Exclude hidden files ("." and "..").
+      (when (and (file-directory-p subdir) ; Ensure it's a directory.
+                 (not (file-symlink-p subdir))) ; Ignore symbolic links.
+        ;; Look for files matching the pattern `TODO.org` or `TODO-xxx.org` in
+        ;; the subdir.
+        (dolist (todo-file (directory-files subdir t "^TODO\\(-.*\\)?\\.org$"))
+          (push todo-file todo-files)))) ; Add each matching file to the list.
+    ;; Update `org-agenda-files` with the found files.
+    (setq org-agenda-files todo-files)
+    ;; Message and return the list of files for verification.
+    (message "Org agenda files set to: %s" org-agenda-files)
+    org-agenda-files))
 
 ;;; org-leuven-agenda-views.el --- Org customized views
 

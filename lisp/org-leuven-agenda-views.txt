@@ -134,7 +134,7 @@ level of the universal argument.
                                         ; With C-u C-u: current buffer + .org + .txt files.
 #+end_src
 
-** Agenda views
+** Custom agenda views in Org mode
 
 #+begin_src emacs-lisp
 (setq org-agenda-custom-commands
@@ -244,21 +244,29 @@ making them potential next actions.
 
 ** Weekly review
 
+MAYB tasks are not shown here... Nor future schedules or deadlines
+
 #+begin_src emacs-lisp
 (setq org-agenda-custom-commands
       '(("r" "Weekly Review Cgpt"
-         ;; Tasks from the past week.
-         ((tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
+         ((tags-todo "+PRIORITY={A}"
+                     ((org-agenda-overriding-header "High Priority Tasks:")))
+          ;; Tasks from the past week.
+          (tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks from the Past Week:")))
           ;; Tasks due this week.
           (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks Due This Week:")))
-          ;; Tasks scheduled for the upcoming week.
-          (tags-todo "+SCHEDULED>\"<+7d>\"-PRIORITY={A}"
-                     ((org-agenda-overriding-header "Tasks Scheduled for Next Week:")))
+          ;; Tasks scheduled for this week (Not due this week).
+          (tags-todo "+SCHEDULED<=\"<+7d>\"-DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks Scheduled for This Week:")))
           ;; Active tasks (TODO, STRT, WAIT).
-          (tags-todo "+TODO={TODO|STRT|WAIT}"
-                     ((org-agenda-overriding-header "Active Tasks:")))
+          (todo "TODO|STRT|WAIT"
+                ((org-agenda-overriding-header "Active Tasks:")
+                 (org-agenda-skip-function
+                  '(or (org-agenda-skip-entry-if 'deadline '("<+7d>"))
+                       (org-agenda-skip-entry-if 'scheduled '("<+7d>"))
+                       (org-agenda-skip-entry-if 'regexp "\\[#A\\]")))))
           ;; Completed tasks for review (can be adjusted as needed).
           (todo "DONE|CANX"
                 ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
@@ -270,8 +278,39 @@ making them potential next actions.
          )))
 #+end_src
 
+Explanation of Sections
+
+1. High Priority Tasks
+   - Displays tasks marked with ~PRIORITY={A}~ that need immediate attention.
+2. Tasks from the Past Week
+   - Lists tasks that were scheduled or had deadlines in the past week,
+     excluding high-priority tasks. This helps ensure that nothing was missed in
+     previous planning.
+3. Tasks Due This Week
+   - Shows tasks with deadlines within the next 7 days.
+4. Tasks Scheduled for This Week
+   - Highlights tasks scheduled for this week but without imminent
+     deadlines. This is useful for planning ahead and balancing workload.
+5. Active Tasks \\
+   Includes tasks with statuses of ~TODO~, ~STRT~, or ~WAIT~, excluding:
+   - Future deadlines or schedules (beyond 7 days).
+   - Tasks already marked as high-priority (~[#A]~).
+6. Completed or Cancelled Tasks
+   - Allows for a quick review of tasks marked as ~DONE~ or ~CANX~ within the past
+     week to identify any follow-ups or additional actions that might be
+     required.
+
+Notes
+- Excluded Items: Tasks marked with ~MAYB~, or tasks scheduled or due in the
+  future, are intentionally omitted from this view. This keeps the focus on
+  actionable and relevant tasks for the current week.
+- Review Process: Use the "Completed or Cancelled Tasks" section to assess
+  whether there are any post-action steps for *recently completed* work.
+
 Review *recently completed or cancelled tasks* for any post-action steps that need
 attention.
+
+*** Other
 
 #+begin_src emacs-lisp
 (setq org-agenda-custom-commands
@@ -303,6 +342,36 @@ This approach ensures that *high-priority tasks* are only *kept in the "High
 Priority Tasks" section* while avoiding duplicating them in other more general
 sections (such as "Started Tasks" or "Waiting Tasks"). It maintains the emphasis
 on urgent and important tasks without losing any information.
+
+** Dotfiles-based Org agenda management
+
+#+begin_src emacs-lisp
+(defun lvn-set-org-agenda-files-dotfiles-todo (&optional root-dir)
+  "Set `org-agenda-files` to all TODO.org and TODO-xxx.org files
+in the root directories of repositories under ROOT-DIR.
+If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
+  (interactive
+   (list (read-directory-name "Root directory: " "~/.dotfiles/" nil t)))
+                                        ; Prompt interactively for ROOT-DIR,
+                                        ; defaulting to `~/.dotfiles/`.
+  (let ((todo-files '())) ;; Temporary list to store the found files.
+    ;; Set ROOT-DIR to default if not provided.
+    (setq root-dir (or root-dir "~/.dotfiles/"))
+    ;; Iterate over the immediate subdirectories of ROOT-DIR.
+    (dolist (subdir (directory-files root-dir t "^[^.]" t))
+                                        ; Exclude hidden files ("." and "..").
+      (when (and (file-directory-p subdir) ; Ensure it's a directory.
+                 (not (file-symlink-p subdir))) ; Ignore symbolic links.
+        ;; Look for files matching the pattern `TODO.org` or `TODO-xxx.org` in
+        ;; the subdir.
+        (dolist (todo-file (directory-files subdir t "^TODO\\(-.*\\)?\\.org$"))
+          (push todo-file todo-files)))) ; Add each matching file to the list.
+    ;; Update `org-agenda-files` with the found files.
+    (setq org-agenda-files todo-files)
+    ;; Message and return the list of files for verification.
+    (message "Org agenda files set to: %s" org-agenda-files)
+    org-agenda-files))
+#+end_src
 
 * Priorities or Must-Do Today
 
