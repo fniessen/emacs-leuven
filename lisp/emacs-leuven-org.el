@@ -525,21 +525,24 @@ This makes ID links quasi-bidirectional."
 
 (message "5.3 (org)Progress logging")
 
-;; ;; 5.3.1 Don't insert a CLOSED time stamp each time a TODO entry is marked DONE.
-;; (setq org-log-done nil)
+;; 5.3.1 Prevent inserting a CLOSED timestamp each time a TODO entry is marked
+;; DONE (the default behavior).
+(setq org-log-done nil)
 
-;; 5.3.2 The notes will be ordered according to time.
+;; 5.3.2 Ensure notes are ordered chronologically.
 (setq org-log-states-order-reversed nil)
 
-;; 5.3.2 Insert state change notes and time stamps into a LOGBOOK drawer.
-(setq org-log-into-drawer t)          ; should be the DEFAULT!
+;; 5.3.3 Insert state change notes and timestamps into the LOGBOOK drawer.
+(setq org-log-into-drawer t)    ; This should be the default behavior!
 
 ;; ~5.3.2 Heading for state change added to entries.
 (with-eval-after-load "org"
   (message "[... Progress logging]")
 
+  ;; Update the 'state' log format to show state transitions like
+  ;; 'State "TODO"        ->  "DONE"       [2025-01-26 Sun 10:38]'.
   (setcdr (assq 'state org-log-note-headings)
-          "State %-12S  ->  %-12s %t")) ; "State old -> new + timestamp".
+          "State %-12S  ->  %-12s %t"))
 
 (with-eval-after-load "org-habit"
 
@@ -2774,6 +2777,71 @@ Ignore non Org buffers."
 
   ;; Add the city.
   (setq org-google-weather-format "%C %i %c, %l°-%h°"))
+
+(with-eval-after-load "org-modern"
+
+  (add-hook 'org-mode-hook #'org-modern-mode)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+
+  (setq org-modern-label-border 1)
+
+  ;; TODO: Make a choice with leading characters (in order to visualize depth).
+  (setq org-modern-star ["◉" "○" "✸" "✳" "◈" "◇" "✿" "❀" "✜"])
+  (setq org-modern-star ["◉" "·○" "··◈" "···◇" "····✳"]) ; OK.
+  (setq org-modern-star ["◈" "·◈" "··◇" "···◇" "·····"]) ; OK.
+
+  ;; (setq org-modern-timestamp '("%y-%m-%d" . "%y-%m-%d %H:%M"))
+
+  (setq org-modern-table-vertical 2)
+  (setq org-modern-table-horizontal 1)
+
+  (setq org-modern-list '(
+                          ;; (?- . "-")
+                          (?- . "–")
+                          (?+ . "•")
+                          ;; (?+ . "○")
+                          (?* . "▹")
+                          ;; (?* . "◦")
+                          ))
+
+  (setq org-moden-checkbox
+        '((?X  . #("▢✓" 0 2 (composition ((2)))))
+          (?-  . #("▢–" 0 2 (composition ((2)))))
+          (?\s . #("▢" 0 1 (composition ((1)))))))
+
+  (setq org-modern-block-name
+        '((t . t)
+          ("src" "»" "∥")
+          ("example" "»–" "∥")
+          ("quote" "❝" "❞")))
+
+  (setq org-modern-block-fringe nil)
+
+  ;; See https://gitlab.com/jdm204/dotfiles/-/blob/master/config.org
+  (setq org-modern-keyword
+        '((t . t)
+          ("bibliography" . "")
+          ("cite_export" . "⮭")
+          ("include" . "⇤")
+          ("setupfile" . "⇚")
+          ("html_head" . "🅷")
+          ("html" . "🅗")
+          ("latex_class" . "🄻")
+          ("latex_header" . "🅻")
+          ("latex_header_extra" . "🅻⁺")
+          ("latex" . "🅛")
+          ("beamer_theme" . "🄱")
+          ("beamer_header" . "🅱")
+          ("beamer" . "🅑")
+          ("attr_latex" . "🄛")
+          ("attr_html" . "🄗")
+          ("attr_org" . "⒪")
+          ("header" . "›")
+          ("caption" . "☰")
+          ("name" . "⁝")
+          ("results" . "∴")))
+  ;; (setq org-modern-keyword nil)
+  )
 
 (provide 'emacs-leuven-org)
 
