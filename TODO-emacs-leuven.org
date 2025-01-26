@@ -9,7 +9,13 @@
   Dev, Search for usages)
 - [ ] http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
 
-** TODO Error when M-w on one line (sometimes)
+** TODO 005 - Org-html-themes
+
+(setq  org-html-head-include-scripts t)
+
+See issue #144
+
+** TODO Investigate intermittent error when using M-w on a single line
 
 #+begin_src emacs-lisp
 Debugger entered--Lisp error: (wrong-type-argument integer-or-marker-p nil)
@@ -23,7 +29,7 @@ Debugger entered--Lisp error: (wrong-type-argument integer-or-marker-p nil)
 
 Les chiffres sont des positions dans mon buffer...
 
-** TODO Test, then add leuven-remove-matching-lines-between-buffers
+** TODO Test and integrate 'leuven-remove-matching-lines-between-buffers'
 
 #+begin_src emacs-lisp
 (defun leuven-remove-matching-lines-between-buffers (buffer-a buffer-b)
@@ -43,7 +49,7 @@ Les chiffres sont des positions dans mon buffer...
 
 See delete-matching-lines...
 
-** TODO Install Emacs packages that can integrate an online task manager with an Org mode file
+** TODO Research and install Emacs packages for integrating an online task manager with Org mode files
 
 There are several Emacs packages available that can integrate an online task
 manager with an Org mode file. Here are a few options:
@@ -88,7 +94,7 @@ These packages offer a range of features and integrations with different online
 task managers, so you may find that one or more of them is a good fit for your
 needs.
 
-** SDAY Add YASnippets
+** MAYB Add YASnippets for snippet expansion in Emacs
 
 - :date :: 19/05/2023
 - tod :: 19/05/2023
@@ -116,13 +122,13 @@ needs.
 
 See others at https://espanso.org/.
 
-** TODO Install format-all for Emacs
+** TODO Install the 'format-all' package for Emacs to format code automatically
 
 https://github.com/emacsmirror/format-all
 
-** TODO Add Imenu regexp for AXVW files
+** TODO Add Imenu regexp support for AXVW files in Emacs
 
-** TODO Check out features of IntelliJ IDEA
+** TODO Explore the features and capabilities of IntelliJ IDEA for possible workflow improvements
 
 https://www.jetbrains.com/help/idea/2016.1/intellij-idea-editor.html (bookmarks,
 breakpoints, syntax highlighting, code completion, zooming, folding code blocks,
@@ -134,15 +140,15 @@ and fast navigation, etc.)
 
 - https://www.catalysts.cc/wissenswertes/intellij-idea-and-eclipse-shortcuts/
 
-** TODO How does package-autoremove decide which packages to remove?
+** TODO Understand how 'package-autoremove' determines which packages to remove in Emacs
 
 http://emacs.stackexchange.com/questions/18253/how-does-package-autoremove-decide-which-packages-to-remove
 
-** TODO Port old advices to Emacs 24.4+
+** TODO Migrate old Emacs advice functions to be compatible with Emacs 24.4+
 
 https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices
 
-** TODO Publish doc of Emacs-Leuven
+** TODO Publish documentation for Emacs-Leuven
 
 Use my Org html theme!
 
@@ -154,7 +160,7 @@ Or put in on RTD:
 - http://emacs.readthedocs.io/en/latest/completion_and_selection.html (via =docs=
   subdirectory)
 
-** TODO Use the bug hunter
+** TODO Use the Emacs bug hunter tool to track down potential issues
 
 The Bug Hunter https://travis-ci.org/Malabarba/elisp-bug-hunter.svg?branch=master
 
@@ -167,11 +173,11 @@ Automatically debug and bisect your init (=.emacs=) file!
        nil)
 #+end_src
 
-** TODO Check out other configs
+** TODO Explore and evaluate other Emacs configurations
 
 https://alhassy.github.io/init/
 
-** TODO Re: Goto last edit location -- explanation provided!!! (from l. david andersson)
+** TODO Investigate "Goto last edit location" functionality (explained by L. David Andersson)
 [2015-06-24 Wed 18:53]
 
 #+begin_verse
@@ -235,11 +241,11 @@ with goto-chg even without Kevin Rodgers' patch.)
 
 From [[gnus:INBOX#57408.213.114.113.54.1435164814.squirrel@alexander.fl-net.se][Email from l. david andersson: Re: Goto last edit location --]]
 
-** TODO Error in post-command-hook (hl-tags-update): (void-function sgml-get-context)
+** TODO Fix error in post-command-hook ('hl-tags-update'): '(void-function sgml-get-context)'
 
 Ouvrir =client-bldgops-cost-report.axvw= au démarrage d'Emacs...
 
-** TODO Improve writing of time-substract
+** TODO Improve implementation of time subtraction
 
 #+begin_src emacs-lisp
 (let ((time (current-time)))
@@ -247,7 +253,7 @@ Ouvrir =client-bldgops-cost-report.axvw= au démarrage d'Emacs...
   (format "%ss" (time-to-seconds (time-subtract (current-time) time))))
 #+end_src
 
-** TODO Profile code performance
+** TODO Profile Emacs code performance to identify bottlenecks
 
 In case this helps anyone, I've found this code makes profiling a lot
 easier.  It automatically instruments the desired functions, runs the
@@ -277,7 +283,7 @@ results.
     (org-table-align))
 #+END_SRC
 
-** TODO Update setcdr assoc constructs
+** TODO Refactor 'setcdr' with 'assoc' constructs
 
 : (setcdr (assoc value alist) new-value)
 
@@ -289,7 +295,7 @@ In Emacs 25:
 
 even without not-found checking.
 
-** TODO Improve documentation of navigation and search
+** TODO Enhance documentation for navigation and search functions in Emacs
 
 Excellent example:
 http://www.jetbrains.com/resharper/features/navigation_search.html
@@ -325,7 +331,7 @@ Report all errors with:
   Remember that the indentation before the starting double-quote is not part of
   the string!
 
-** TODO Optimize startup time
+** TODO Optimize Emacs startup time for faster initialization
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -388,7 +394,7 @@ tests.
 You can use ESUP - Emacs Start Up Profiler
 #+end_note
 
-** TODO Add emphasis + font-lock for 'alert'
+** TODO Add 'alert' emphasis and font-lock support
 
 #+begin_src emacs-lisp
   ;; Add 'alert' emphasis. The text enclosed by '!' will be displayed in bold
@@ -399,7 +405,7 @@ You can use ESUP - Emacs Start Up Profiler
 
 See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis in org-emphasis-alist]]
 
-** Emacs Key Bindings for Atom Editor
+** TODO Check out Emacs key bindings for Atom editor
 
 https://github.com/dvorka/atom-editor-emacs-key-bindings
 
