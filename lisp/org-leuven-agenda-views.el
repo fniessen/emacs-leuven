@@ -146,7 +146,10 @@ use the project's root directory instead of the current directory."
 (setq org-agenda-custom-commands
       '(("r" "Weekly Review Cgpt"
          ((tags-todo "+PRIORITY={A}"
-                     ((org-agenda-overriding-header "High Priority Tasks:")))
+                     ((org-agenda-overriding-header "High Priority Tasks:")
+                      (org-agenda-skip-function
+                       '(lvn--org-skip-tasks-scheduled-over-7-days 'agenda))))
+                                        ; Use custom skip function.
           ;; Tasks from the past week.
           (tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks from the Past Week:")))
@@ -172,6 +175,44 @@ use the project's root directory instead of the current directory."
          ;; ;; Display in a compact view.
          ;; ((org-agenda-compact-blocks t))
          )))
+
+(defun lvn--org-skip-tasks-scheduled-over-7-days (part)
+  "Skip entries scheduled more than 7 days in the future.
+   High-priority tasks are never skipped unless scheduled more than 7 days in the future."
+  (let* ((scheduled-time (org-get-scheduled-time (point)))
+         (seven-days-later (time-add (current-time) (* 7 24 60 60)))
+         (headline (org-element-at-point))
+         (priority (if headline (org-element-property :priority headline) nil)))
+
+    (cond
+     ;; High-priority tasks without a scheduled time are never skipped.
+     ((and priority (= priority ?A) (not scheduled-time))
+      nil)
+
+     ;; High-priority tasks scheduled within 7 days are not skipped.
+     ((and priority (= priority ?A)
+           scheduled-time
+           (not (time-less-p seven-days-later scheduled-time)))
+      nil)
+
+     ;; High-priority tasks scheduled more than 7 days in the future are skipped.
+     ((and priority (= priority ?A)
+           scheduled-time
+           (time-less-p seven-days-later scheduled-time))
+      (org-element-property :end headline))
+
+     ;; Regular tasks scheduled more than 7 days in the future are skipped.
+     ((and scheduled-time
+           (time-less-p seven-days-later scheduled-time)
+           (not priority))
+      (org-element-property :end headline))
+
+     ;; Regular tasks without a scheduled time are skipped.
+     ((and (not priority) (not scheduled-time))
+      (org-element-property :end headline))
+
+     ;; All other cases (including regular tasks scheduled within 7 days).
+     (t nil))))
 
 (setq org-agenda-custom-commands
       '(("w" "Weekly Review Perp"
