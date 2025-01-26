@@ -146,7 +146,7 @@ use the project's root directory instead of the current directory."
 (setq org-agenda-custom-commands
       '(("r" "Weekly Review Cgpt"
          ((tags-todo "+PRIORITY={A}"
-                     ((org-agenda-overriding-header "High Priority Tasks:")
+                     ((org-agenda-overriding-header "High Priority Tasks (Unscheduled or Within 1 Week):")
                       (org-agenda-skip-function
                        '(lvn--org-skip-tasks-scheduled-over-7-days 'agenda))))
                                         ; Use custom skip function.
@@ -177,42 +177,23 @@ use the project's root directory instead of the current directory."
          )))
 
 (defun lvn--org-skip-tasks-scheduled-over-7-days (part)
-  "Skip entries scheduled more than 7 days in the future.
-   High-priority tasks are never skipped unless scheduled more than 7 days in the future."
+  "Skip entries scheduled more than 7 days in the future."
   (let* ((scheduled-time (org-get-scheduled-time (point)))
          (seven-days-later (time-add (current-time) (* 7 24 60 60)))
-         (headline (org-element-at-point))
-         (priority (if headline (org-element-property :priority headline) nil)))
+         (headline (org-element-at-point)))
 
     (cond
-     ;; High-priority tasks without a scheduled time are never skipped.
-     ((and priority (= priority ?A) (not scheduled-time))
+     ;; Tasks without a scheduled time are never skipped.
+     ((and (not scheduled-time))
       nil)
 
-     ;; High-priority tasks scheduled within 7 days are not skipped.
-     ((and priority (= priority ?A)
-           scheduled-time
+     ;; Tasks scheduled within 7 days are not skipped.
+     ((and scheduled-time
            (not (time-less-p seven-days-later scheduled-time)))
       nil)
 
-     ;; High-priority tasks scheduled more than 7 days in the future are skipped.
-     ((and priority (= priority ?A)
-           scheduled-time
-           (time-less-p seven-days-later scheduled-time))
-      (org-element-property :end headline))
-
-     ;; Regular tasks scheduled more than 7 days in the future are skipped.
-     ((and scheduled-time
-           (time-less-p seven-days-later scheduled-time)
-           (not priority))
-      (org-element-property :end headline))
-
-     ;; Regular tasks without a scheduled time are skipped.
-     ((and (not priority) (not scheduled-time))
-      (org-element-property :end headline))
-
      ;; All other cases (including regular tasks scheduled within 7 days).
-     (t nil))))
+     (t (org-element-property :end headline)))))
 
 (setq org-agenda-custom-commands
       '(("w" "Weekly Review Perp"
@@ -263,6 +244,12 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
     ;; Message and return the list of files for verification.
     (message "Org agenda files set to: %s" org-agenda-files)
     org-agenda-files))
+
+(defun lvn-set-org-agenda-files ()
+  "Set `org-agenda-files` to all `.org` files in `org-directory`."
+  (interactive)
+  (setq org-agenda-files (directory-files org-directory t "\\.org$"))
+  (message "Org agenda files set to: %s" org-agenda-files))
 
 ;;; org-leuven-agenda-views.el --- Org customized views
 
