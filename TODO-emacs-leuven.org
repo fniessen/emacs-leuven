@@ -60,6 +60,7 @@ manager with an Org mode file. Here are a few options:
 - Orgzly :: This is an *Android app* that can sync with your Org mode files and
   online task managers like *Todoist*, *Trello*, and *Google Tasks*. You can use it to
   manage your tasks on the go and then sync them back to your Emacs setup.
+  - https://elis.nu/blog/2021/08/mobile-org-mode-use-with-orgzly-and-syncthing/
 - Org-sync-trello :: This package lets you synchronize your *Trello* boards with
   your Org mode files. It supports bidirectional syncing, so changes made in
   either Trello or Emacs will be reflected in both places.
