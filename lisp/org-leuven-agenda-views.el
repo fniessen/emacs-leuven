@@ -297,9 +297,9 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
                             (org-agenda-skip-function
                              '(lambda ()
                                 (let ((todo-keyword (org-get-todo-state)))
-                                  ;; TODO: Test "Skip tasks with MAYB status or scheduled tasks."
+                                  ;; Skip tasks with MAYB status or scheduled tasks.
                                   (when (or (equal todo-keyword "MAYB")
-                                            (org-entry-is-scheduled-p))
+                                            (lvn--org-entry-is-scheduled-p))
                                     (org-end-of-subtree t)))))))
                 ;; List of all TODO entries with deadline today.
                 (tags-todo "DEADLINE=\"<+0d>\""
@@ -347,6 +347,11 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
                ((org-agenda-format-date "")
                 (org-agenda-start-with-clockreport-mode nil)))
              t)
+
+(defun lvn--org-entry-is-scheduled-p ()
+  "Return non-nil if the current Org entry has a scheduled timestamp."
+  (let ((scheduled-time (org-get-scheduled-time (point))))
+    (and scheduled-time t)))
 
 (add-to-list 'org-agenda-custom-commands
              '("W" "Work"
