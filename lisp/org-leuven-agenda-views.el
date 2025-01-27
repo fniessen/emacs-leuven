@@ -89,7 +89,7 @@ use the project's root directory instead of the current directory."
                   '(org-agenda-skip-entry-if 'notregexp "CLOCK:")) ; Only tasks with clock entries.
                  ;; (org-agenda-skip-function
                  ;;  '(org-agenda-skip-entry-if 'notregexp "CLOSED:")) ; Ensure the task is closed (completed or cancelled).
-                 ))
+                 )))
          ;; Compact blocks.
          ((org-agenda-compact-blocks t))
          )))
