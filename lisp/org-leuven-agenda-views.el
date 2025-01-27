@@ -148,8 +148,7 @@ use the project's root directory instead of the current directory."
          ((tags-todo "+PRIORITY={A}"
                      ((org-agenda-overriding-header "High Priority Tasks (Unscheduled or Within 1 Week):")
                       (org-agenda-skip-function
-                       '(lvn--org-skip-tasks-scheduled-over-7-days 'agenda))))
-                                        ; Use custom skip function.
+                       '(lvn--org-skip-tasks-scheduled-over-n-days))))
           ;; Tasks from the past week.
           (tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
                      ((org-agenda-overriding-header "Tasks from the Past Week:")))
@@ -176,24 +175,27 @@ use the project's root directory instead of the current directory."
          ;; ((org-agenda-compact-blocks t))
          )))
 
-(defun lvn--org-skip-tasks-scheduled-over-7-days (part)
-  "Skip entries scheduled more than 7 days in the future."
-  (let* ((scheduled-time (org-get-scheduled-time (point)))
-         (seven-days-later (time-add (current-time) (* 7 24 60 60)))
-         (headline (org-element-at-point)))
+(defun lvn--org-skip-tasks-scheduled-over-n-days (&optional days)
+  "Skip entries scheduled more than DAYS (default 7) in the future."
+  (let* ((days (or days 7))
+         (scheduled-time (org-get-scheduled-time (point)))
+         (n-days-later (time-add (current-time) (* days 24 60 60)))
+         (headline (org-element-at-point))
+         (skip (org-element-property :end headline))
+         (dont-skip nil))
 
     (cond
      ;; Tasks without a scheduled time are never skipped.
      ((and (not scheduled-time))
-      nil)
+      dont-skip)
 
-     ;; Tasks scheduled within 7 days are not skipped.
+     ;; Tasks scheduled within DAYS are not skipped.
      ((and scheduled-time
-           (not (time-less-p seven-days-later scheduled-time)))
-      nil)
+           (not (time-less-p n-days-later scheduled-time)))
+      dont-skip)
 
-     ;; All other cases (including regular tasks scheduled within 7 days).
-     (t (org-element-property :end headline)))))
+     ;; All other cases.
+     (t skip))))
 
 (setq org-agenda-custom-commands
       '(("w" "Weekly Review Perp"
