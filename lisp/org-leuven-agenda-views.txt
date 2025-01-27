@@ -656,10 +656,10 @@ example, start /every morning/ by:
 - scheduling tasks to another day if you already know it can't be completed
   before that date,
 
-- moving tasks to "maybe" if you just don't know if/when it will be completed
+- moving tasks to ~MAYB~ if you just don't know if/when it will be completed
 
   #+begin_note
-  This explanation assumes every task without a ~SCHEDULED~ date = ~MAYBE~ task!
+  This explanation assumes every task without a ~SCHEDULED~ date = ~MAYB~ task!
   #+end_note
 
 - delegating, and
@@ -689,9 +689,12 @@ because:
                 (tags-todo "LEVEL=2"
                            ((org-agenda-overriding-header "INBOX (Unscheduled)")
                             (org-agenda-skip-function
-                             '(org-agenda-skip-entry-if 'scheduled))
-                            ;; (org-agenda-files (list ,org-default-notes-file))
-                            ))
+                             '(lambda ()
+                                (let ((todo-keyword (org-get-todo-state)))
+                                  ;; TODO: Test "Skip tasks with MAYB status or scheduled tasks."
+                                  (when (or (equal todo-keyword "MAYB")
+                                            (org-entry-is-scheduled-p))
+                                    (org-end-of-subtree t)))))))
                 ;; List of all TODO entries with deadline today.
                 (tags-todo "DEADLINE=\"<+0d>\""
                            ((org-agenda-overriding-header "DUE TODAY")
@@ -725,8 +728,10 @@ because:
                          (org-agenda-span 'day)
                          (org-agenda-start-on-weekday nil)
                          (org-agenda-time-grid nil)))
-                ;; List of all TODO entries completed today.
-                (todo "TODO|DONE|CANX" ; Includes repeated tasks (back in TODO).
+                ;; List of all TODO entries that were completed today.
+                (todo "TODO|DONE|CANX"  ; Includes repeated/recurring tasks that
+                                        ; were completed or cancelled (and moved
+                                        ; back to TODO).
                       ((org-agenda-overriding-header "COMPLETED TODAY")
                        (org-agenda-skip-function
                         '(org-agenda-skip-entry-if

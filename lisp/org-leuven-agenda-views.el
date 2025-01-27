@@ -319,9 +319,12 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
                 (tags-todo "LEVEL=2"
                            ((org-agenda-overriding-header "INBOX (Unscheduled)")
                             (org-agenda-skip-function
-                             '(org-agenda-skip-entry-if 'scheduled))
-                            ;; (org-agenda-files (list ,org-default-notes-file))
-                            ))
+                             '(lambda ()
+                                (let ((todo-keyword (org-get-todo-state)))
+                                  ;; TODO: Test "Skip tasks with MAYB status or scheduled tasks."
+                                  (when (or (equal todo-keyword "MAYB")
+                                            (org-entry-is-scheduled-p))
+                                    (org-end-of-subtree t)))))))
                 ;; List of all TODO entries with deadline today.
                 (tags-todo "DEADLINE=\"<+0d>\""
                            ((org-agenda-overriding-header "DUE TODAY")
@@ -355,8 +358,10 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
                          (org-agenda-span 'day)
                          (org-agenda-start-on-weekday nil)
                          (org-agenda-time-grid nil)))
-                ;; List of all TODO entries completed today.
-                (todo "TODO|DONE|CANX" ; Includes repeated tasks (back in TODO).
+                ;; List of all TODO entries that were completed today.
+                (todo "TODO|DONE|CANX"  ; Includes repeated/recurring tasks that
+                                        ; were completed or cancelled (and moved
+                                        ; back to TODO).
                       ((org-agenda-overriding-header "COMPLETED TODAY")
                        (org-agenda-skip-function
                         '(org-agenda-skip-entry-if
