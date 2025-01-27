@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250125.1654>
+;; Version: <20250127.2138>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250125.1654>"
+(defconst lvn--emacs-version "<20250127.2138>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -3629,6 +3629,7 @@ windows, leaving only the currently active window visible."
     ("\374" . "ü"))   ;; \303\274
   "Mapping of non-UTF-8 characters to their UTF-8 equivalents.")
 
+;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
 (defun lvn--apply-accent-substitutions (subst-list)
   "Apply substitutions based on a given list of replacements.
 SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
@@ -4715,8 +4716,8 @@ mouse-3: go to end") "]")))
     ;; Keybinding to quickly jump to a symbol in buffer.
     (global-set-key [remap imenu] #'helm-imenu)
 
-    ;; ;; Helm Imenu tag selection across all buffers (with the same mode).
-    ;; (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers)
+    ;; Helm Imenu tag selection across all buffers (with the same mode).
+    (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers)
   )
 
   ;; Helm interface for Imenu.

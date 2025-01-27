@@ -6413,6 +6413,7 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
     ("\374" . "ü"))   ;; \303\274
   "Mapping of non-UTF-8 characters to their UTF-8 equivalents.")
 
+;; https://lists.gnu.org/archive/html/gnu-emacs-sources/2005-12/msg00005.html
 (defun lvn--apply-accent-substitutions (subst-list)
   "Apply substitutions based on a given list of replacements.
 SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
@@ -8146,8 +8147,8 @@ is often more convenient as you don't have to explicitly build the ~etags~ table
     ;; Keybinding to quickly jump to a symbol in buffer.
     (global-set-key [remap imenu] #'helm-imenu)
 
-    ;; ;; Helm Imenu tag selection across all buffers (with the same mode).
-    ;; (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers)
+    ;; Helm Imenu tag selection across all buffers (with the same mode).
+    (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers)
   )
 
   ;; Helm interface for Imenu.
