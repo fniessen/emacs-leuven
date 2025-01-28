@@ -108,7 +108,7 @@ use the project's root directory instead of the current directory."
                       (org-agenda-sorting-strategy '(deadline-up))))
           (todo "DONE|CANX"
                 ((org-agenda-overriding-header "Completed or Cancelled Tasks")
-                 (org-agenda-span 'week))))))) ; No duplicates!!!
+                 (org-agenda-span 'week))))))) ; OK -- No duplicates!!!
 
 (setq org-agenda-custom-commands
       '(("d" "Dashboard"
@@ -123,7 +123,7 @@ use the project's root directory instead of the current directory."
                       (org-agenda-sorting-strategy '(deadline-up))))
           (todo "DONE|CANX"
                 ((org-agenda-overriding-header "Completed or Cancelled Tasks")
-                 (org-agenda-span 'week))))))) ; Duplicates!!!
+                 (org-agenda-span 'week))))))) ; NOK -- Duplicates!!!
 
 (setq org-agenda-custom-commands
       '(("h" "High priority tasks"
@@ -348,6 +348,7 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
                 (org-agenda-start-with-clockreport-mode nil)))
              t)
 
+;; = (org-agenda-skip-entry-if 'scheduled)
 (defun lvn--org-entry-is-scheduled-p ()
   "Return non-nil if the current Org entry has a scheduled timestamp."
   (let ((scheduled-time (org-get-scheduled-time (point))))
@@ -514,52 +515,59 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
              t)
 
 (defun lvn--skip-entry-unless-deadline-in-n-days-or-more (n)
-  "Skip entries that have no deadline or have a deadline earlier than N days from today."
-  (let ((deadline (org-entry-get nil "DEADLINE")))
+  "Skip entry unless the DEADLINE is in N days or more from today."
+  (let* ((deadline (org-entry-get nil "DEADLINE"))
+         (today (org-time-today))
+         (n-days-from-today (+ today (* n 24 60 60))))
     (when (or (not deadline)
               (string= deadline "")
-              (org-time< deadline (+ (org-time-today) (* n 86400))))
+              (org-time< deadline n-days-from-today))
       (outline-next-heading)
       (point))))
 
 (defun lvn--skip-entry-unless-overdue-deadline ()
-  "Skip entries that have no deadline or have a deadline later than or equal to today."
-  (let ((deadline (org-entry-get nil "DEADLINE")))
+  "Skip entries with no deadline or with a deadline that is not overdue."
+  (let ((deadline (org-entry-get nil "DEADLINE"))
+        (today (org-time-today)))
     (when (or (not deadline)
               (string= deadline "")
-              (org-time>= deadline (org-time-today)))
+              (org-time>= deadline today))
       (outline-next-heading)
       (point))))
 
 (defun lvn--skip-entry-if-past-deadline ()
   "Skip entries that have a deadline earlier than today."
-  (let* ((deadline (org-entry-get nil "DEADLINE")))
-    (when (and deadline (org-time< deadline (org-time-today)))
+  (let ((deadline (org-entry-get nil "DEADLINE"))
+        (today (org-time-today)))
+    (when (and deadline (org-time< deadline today))
       (outline-next-heading)
       (point))))
 
 (defun lvn--skip-entry-if-deadline-in-less-than-n-days-or-schedule-in-less-than-n-days (n1 n2)
-  "Skip entries that have a deadline in less than N1 days, or that have a
-scheduled date in less than N2 days, or that have no deadline nor scheduled."
-  (let ((deadline (org-entry-get nil "DEADLINE"))
-        (scheduled (org-entry-get nil "SCHEDULED")))
+  "Skip entries with a DEADLINE in less than N1 days or a SCHEDULED
+date in less than N2 days."
+  (let* ((today (org-time-today))
+         (deadline (org-entry-get nil "DEADLINE"))
+         (scheduled (org-entry-get nil "SCHEDULED"))
+         (deadline-time (+ today (* n1 24 60 60)))
+         (scheduled-time (+ today (* n2 24 60 60))))
     (when (or (and deadline
-                   (not (string= deadline ""))
-                   (org-time< deadline (+ (org-time-today) (* n1 86400))))
+                   (not (string-empty-p deadline))
+                   (org-time< deadline deadline-time))
               (and scheduled
-                   (not (string= scheduled ""))
-                   (org-time< scheduled (+ (org-time-today) (* n2 86400))))
-              (and (or (not deadline) (string= deadline ""))
-                   (or (not scheduled) (string= scheduled ""))))
+                   (not (string-empty-p scheduled))
+                   (org-time< scheduled scheduled-time))
+              (and (not deadline)
+                   (not scheduled)))
       (outline-next-heading)
       (point))))
 
 (defun lvn--skip-entry-if-deadline-or-schedule ()
-  "Skip entries that have a deadline or that have a scheduled date."
+  "Skip entries with either a DEADLINE or SCHEDULED property."
   (let ((deadline (org-entry-get nil "DEADLINE"))
         (scheduled (org-entry-get nil "SCHEDULED")))
-    (when (or (and deadline (not (string= deadline "")))
-              (and scheduled (not (string= scheduled ""))))
+    (when (or (and deadline (not (string-empty-p deadline)))
+              (and scheduled (not (string-empty-p scheduled))))
       (outline-next-heading)
       (point))))
 
@@ -618,32 +626,52 @@ scheduled date in less than N2 days, or that have no deadline nor scheduled."
                        (org-agenda-sorting-strategy '(priority-down))))))
              t)
 
+;; Define custom commands for timesheets under the prefix `C-c a x`.
 (add-to-list 'org-agenda-custom-commands
-             '("rt" . "Timesheet...") t)
+             '("x" . "Timesheets...") t)
 
-;; Show what happened today.
+;; Add a custom command for a daily timesheet.
 (add-to-list 'org-agenda-custom-commands
-             '("rtd" "Daily Timesheet"
+             '("xd" "Daily Timesheet"
+               ;; Display a daily timesheet with clocked tasks and closed
+               ;; entries. Useful for tracking time spent on tasks for a single
+               ;; day.
                ((agenda ""))
-               ((org-agenda-log-mode-items '(clock closed))
+               (
+                ;; Include clocked tasks and closed entries in the log view.
+                (org-agenda-log-mode-items '(clock closed))
+                ;; Custom header for clarity.
                 (org-agenda-overriding-header "DAILY TIMESHEET")
+                ;; Show logs specific to clocked items.
                 (org-agenda-show-log 'clockcheck)
+                ;; Set the agenda span to a single day.
                 (org-agenda-span 'day)
+                ;; Start the agenda view with the clock report enabled.
                 (org-agenda-start-with-clockreport-mode t)
+                ;; Disable the time grid for a cleaner view.
                 (org-agenda-time-grid nil)))
              t)
 
-;; Show what happened this week.
+;; Add a custom command for a weekly timesheet.
 (add-to-list 'org-agenda-custom-commands
-             '("rtw" "Weekly Timesheet"
+             '("xw" "Weekly Timesheet"
+               ;; Display a weekly timesheet for an overview of tasks with time
+               ;; tracking. Skip entries with timestamps and focuses on clocked
+               ;; work for the week.
                ((agenda ""))
                (
                 ;; (org-agenda-format-date "")
+                ;; Custom header for clarity.
                 (org-agenda-overriding-header "WEEKLY TIMESHEET")
+                ;; Skip entries with a timestamp property.
                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
+                ;; Set the agenda span to a week.
                 (org-agenda-span 'week)
+                ;; Start the week on Monday.
                 (org-agenda-start-on-weekday 1)
+                ;; Start the agenda view with the clock report enabled.
                 (org-agenda-start-with-clockreport-mode t)
+                ;; Disable the time grid for a cleaner view.
                 (org-agenda-time-grid nil)))
              t)
 
