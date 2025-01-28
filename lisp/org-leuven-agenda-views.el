@@ -719,41 +719,42 @@ date in less than N2 days."
                 (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                       ((org-agenda-overriding-header
                         (concat "YESTERDAY   "
-                                (format-time-string "%a %d" (current-time-ndays-ago 1))
+                                (format-time-string "%a %d" (lvn--current-time-minus-days 1))
                                 ;; #("__________________" 0 12 (face (:foreground "gray")))
                                 ))
                        (org-agenda-skip-function
                         '(org-agenda-skip-entry-if
                           'notregexp
-                          (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 1))))
+                          (format-time-string leuven-org-completed-date-regexp (lvn--current-time-minus-days 1))))
                        (org-agenda-sorting-strategy '(priority-down))))
                 ;; List of all TODO entries completed 2 days ago.
                 (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                       ((org-agenda-overriding-header
                         (concat "2 DAYS AGO  "
-                                (format-time-string "%a %d" (current-time-ndays-ago 2))))
+                                (format-time-string "%a %d" (lvn--current-time-minus-days 2))))
                        (org-agenda-skip-function
                         '(org-agenda-skip-entry-if
                           'notregexp
-                          (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 2))))
+                          (format-time-string leuven-org-completed-date-regexp (lvn--current-time-minus-days 2))))
                        (org-agenda-sorting-strategy '(priority-down))))
                 ;; List of all TODO entries completed 3 days ago.
                 (todo "TODO|DONE|CANX" ; Includes repeated tasks (back in TODO).
                       ((org-agenda-overriding-header
                         (concat "3 DAYS AGO  "
-                                (format-time-string "%a %d" (current-time-ndays-ago 3))))
+                                (format-time-string "%a %d" (lvn--current-time-minus-days 3))))
                        (org-agenda-skip-function
                         '(org-agenda-skip-entry-if
                           'notregexp
-                          (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 3))))
+                          (format-time-string leuven-org-completed-date-regexp (lvn--current-time-minus-days 3))))
                        (org-agenda-sorting-strategy '(priority-down)))))
                ((org-agenda-format-date "")
                 (org-agenda-start-with-clockreport-mode nil)))
              t)
 
-(defun current-time-ndays-ago (n)
-  "Return the current time minus N days."
-  (time-subtract (current-time) (days-to-time n)))
+(defun lvn--current-time-minus-days (n)
+  "Return the current time minus N days.
+N should be a non-negative integer representing the number of days."
+  (time-subtract (current-time) (days-to-time (max 0 n))))
 
 (add-to-list 'org-agenda-custom-commands
              '("rx" "Completed tasks with no CLOCK lines"

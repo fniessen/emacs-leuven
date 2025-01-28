@@ -1433,41 +1433,42 @@ FIXME Group completed tasks per date of completion.
                 (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                       ((org-agenda-overriding-header
                         (concat "YESTERDAY   "
-                                (format-time-string "%a %d" (current-time-ndays-ago 1))
+                                (format-time-string "%a %d" (lvn--current-time-minus-days 1))
                                 ;; #("__________________" 0 12 (face (:foreground "gray")))
                                 ))
                        (org-agenda-skip-function
                         '(org-agenda-skip-entry-if
                           'notregexp
-                          (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 1))))
+                          (format-time-string leuven-org-completed-date-regexp (lvn--current-time-minus-days 1))))
                        (org-agenda-sorting-strategy '(priority-down))))
                 ;; List of all TODO entries completed 2 days ago.
                 (todo "TODO|DONE|CANX" ; includes repeated tasks (back in TODO)
                       ((org-agenda-overriding-header
                         (concat "2 DAYS AGO  "
-                                (format-time-string "%a %d" (current-time-ndays-ago 2))))
+                                (format-time-string "%a %d" (lvn--current-time-minus-days 2))))
                        (org-agenda-skip-function
                         '(org-agenda-skip-entry-if
                           'notregexp
-                          (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 2))))
+                          (format-time-string leuven-org-completed-date-regexp (lvn--current-time-minus-days 2))))
                        (org-agenda-sorting-strategy '(priority-down))))
                 ;; List of all TODO entries completed 3 days ago.
                 (todo "TODO|DONE|CANX" ; Includes repeated tasks (back in TODO).
                       ((org-agenda-overriding-header
                         (concat "3 DAYS AGO  "
-                                (format-time-string "%a %d" (current-time-ndays-ago 3))))
+                                (format-time-string "%a %d" (lvn--current-time-minus-days 3))))
                        (org-agenda-skip-function
                         '(org-agenda-skip-entry-if
                           'notregexp
-                          (format-time-string leuven-org-completed-date-regexp (current-time-ndays-ago 3))))
+                          (format-time-string leuven-org-completed-date-regexp (lvn--current-time-minus-days 3))))
                        (org-agenda-sorting-strategy '(priority-down)))))
                ((org-agenda-format-date "")
                 (org-agenda-start-with-clockreport-mode nil)))
              t)
 
-(defun current-time-ndays-ago (n)
-  "Return the current time minus N days."
-  (time-subtract (current-time) (days-to-time n)))
+(defun lvn--current-time-minus-days (n)
+  "Return the current time minus N days.
+N should be a non-negative integer representing the number of days."
+  (time-subtract (current-time) (days-to-time (max 0 n))))
 #+end_src
 
 The above is more appropriate than:
@@ -1483,27 +1484,28 @@ The above is more appropriate than:
 because *repeatable* tasks are switched back to a non-TODO state and (at least,
 by default) don't get a ~CLOSED:~ time-stamp.
 
-*** Note from Sascha Ziemann
-
-http://jcardente.blogspot.de/2010/06/org-mode-hack-tasks-done-last-month.html
-
-inspired me to do this:
+*** Note
 
 #+begin_src emacs-lisp :tangle no
 (defun org-done-view (&optional offset)
-  "Shows all TODOs, which are done."
-  (interactive "nOffset: ")
-  (let ((offset (or offset 0)))
-    (let ((t0 (calendar-current-date offset))
-      (t1 (calendar-current-date (+ offset 1))))
-      (org-tags-view nil
-             (format "CLOSED>=\"[%s-%s-%s]\"+CLOSED<=\"[%s-%s-%s]\""
-                 (calendar-extract-year t0)
-                 (calendar-extract-month t0)
-                 (calendar-extract-day t0)
-                 (calendar-extract-year t1)
-                 (calendar-extract-month t1)
-                 (calendar-extract-day t1))))))
+  "Show all TODOs that are marked as done within a specific day.
+OFFSET specifies the number of days from today. Defaults to 0 (today)."
+  (interactive "p") ;; Use prefix argument for OFFSET, defaulting to 0
+  (let* ((offset (or offset 0))
+         (start-date (calendar-gregorian-from-absolute
+                      (+ offset
+                         (calendar-absolute-from-gregorian (calendar-current-date)))))
+         (end-date (calendar-gregorian-from-absolute
+                    (+ 1 offset
+                       (calendar-absolute-from-gregorian (calendar-current-date))))))
+    (org-tags-view nil
+                   (format "CLOSED>=\"[%04d-%02d-%02d]\"+CLOSED<=\"[%04d-%02d-%02d]\""
+                           (calendar-extract-year start-date)
+                           (calendar-extract-month start-date)
+                           (calendar-extract-day start-date)
+                           (calendar-extract-year end-date)
+                           (calendar-extract-month end-date)
+                           (calendar-extract-day end-date)))))
 #+end_src
 
 ** Cleanup
