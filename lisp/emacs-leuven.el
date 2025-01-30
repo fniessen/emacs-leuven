@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2024 Fabrice Niessen. All rights reserved.
+;; Copyright (C) 1999-2025 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250127.2138>
+;; Version: <20250130.1830>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250127.2138>"
+(defconst lvn--emacs-version "<20250130.1830>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5869,9 +5869,9 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
   '((  1.0 . "#FFCCCC") ; red
     (  2.0 . "#FFE4CC") ; orange
     (  7.0 . "#FFE4CC") ; yellow
-    ( 30.0 . "#DEFFCC") ; green
-    ( 90.0 . "#CCE4FF") ; blue
-    (360.0 . "#C9C9C9"))) ; gray
+    ( 32.0 . "#DEFFCC") ; green
+    ( 92.0 . "#CCE4FF") ; blue
+    (366.0 . "#C9C9C9"))) ; gray
 
 ;;** 28.2 (info "(emacs)Change Log")
 
@@ -6855,30 +6855,31 @@ Consider using `C-x d' instead for better performance."
     ;; Warn every 15 minutes.
     (setq appt-display-interval 15)     ; [default: 3]
 
-    ;; Use a separate window to display appointment reminders.
+    ;; Display appointment reminders in a separate window.
     (setq appt-display-format 'window)
 
-    ;; Function called to display appointment reminders *in a window*.
-    (setq appt-disp-window-function (function leuven--appt-display))
+    ;; Function to display appointment reminders in a window.
+    (setq appt-disp-window-function #'lvn--appt-show-reminder)
 
-    (defun leuven--appt-display (mins-to-appt current-time notification-string)
+    (defun lvn--appt-show-reminder (mins-to-appt current-time notification-string)
       "Display a reminder for appointments.
-    Use `libnotify' if available and if display is graphical, or fall back on a
-    message in the echo area."
-      (or (listp mins-to-appt)
-          (setq notification-string (list notification-string)))
-      (dotimes (i (length notification-string))
-        (cond ((and (display-graphic-p)
-                    (executable-find "notify-send"))
-               (shell-command
-                (concat "notify-send "
-                        "-i /usr/share/icons/gnome/32x32/status/appointment-soon.png "
-                        "-t 1000 "
-                        "'Appointment' "
-                        "'" (nth i notification-string) "'")))
-              (t
-               (message "[%s]" (nth i notification-string))
-               (sit-for 1)))))
+If available and running in a graphical display, use `notify-send`.
+Otherwise, show a message in the echo area.
+
+MINS-TO-APPT: Time in minutes until the appointment.
+CURRENT-TIME: Current timestamp (unused).
+NOTIFICATION-STRING: Message(s) to display."
+      (unless (listp mins-to-appt)
+        (setq notification-string (list notification-string)))
+
+      (dolist (message notification-string)
+        (if (and (display-graphic-p) (executable-find "notify-send"))
+            (let ((escaped-message (shell-quote-argument message)))
+              (shell-command
+               (format "notify-send -i /usr/share/icons/gnome/32x32/status/appointment-soon.png -t 1000 'Appointment' %s"
+                       escaped-message)))
+          (message "[%s]" message)
+          (sit-for 1))))
 
     ;; Turn appointment checking on (enable reminders).
     (when lvn-verbose-loading

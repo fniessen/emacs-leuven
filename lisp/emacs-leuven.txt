@@ -68,7 +68,7 @@ Quotes:
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2024 Fabrice Niessen. All rights reserved.
+;; Copyright (C) 1999-2025 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
@@ -10714,10 +10714,22 @@ changes.
   '((  1.0 . "#FFCCCC") ; red
     (  2.0 . "#FFE4CC") ; orange
     (  7.0 . "#FFE4CC") ; yellow
-    ( 30.0 . "#DEFFCC") ; green
-    ( 90.0 . "#CCE4FF") ; blue
-    (360.0 . "#C9C9C9"))) ; gray
+    ( 32.0 . "#DEFFCC") ; green
+    ( 92.0 . "#CCE4FF") ; blue
+    (366.0 . "#C9C9C9"))) ; gray
 #+end_src
+
+We should use:
+
+| Age Range                            | Background Color |
+|--------------------------------------+------------------|
+| Today's Changes (0 days)             | Deep Red         |
+| Yesterday's Changes (1 day)          | Dark Orange      |
+| Recent Changes (2-7 days)            | Dark Yellow      |
+| Moderate Age (8-30 days)             | Dark Green       |
+| Moderate to Old Changes (31-90 days) | Dark Blue        |
+| Old Changes (91-365 days)            | Dark Purple      |
+| Older than One Year (1+ years)       | Gray             |
 
 #+begin_src emacs-lisp :tangle no
 (defun my-vc-annotate-apply-faces ()
@@ -10756,7 +10768,8 @@ changes.
   "Get the age of a commit in days."
   (string-to-number
    (shell-command-to-string
-    (format "git show -s --format=%%ct %s | xargs -I{} echo $(( (($(date +%s) - {})) / 86400 ))" revision))))
+    (format "git show -s --format=%%ct %s | xargs -I{} echo $(( (($(date +%s) - {})) / (24 * 60 * 60) ))"
+            revision))))
 
 (defun vc-annotate-apply-face-at-line (face)
   "Apply FACE to the current line in vc-annotate buffer."
@@ -13206,30 +13219,31 @@ Or better look at the ~alert~ package?
 *************** TODO Diff between shell-command and call-process?  Blocking call?
 
 #+begin_src emacs-lisp
-    ;; Use a separate window to display appointment reminders.
+    ;; Display appointment reminders in a separate window.
     (setq appt-display-format 'window)
 
-    ;; Function called to display appointment reminders *in a window*.
-    (setq appt-disp-window-function (function leuven--appt-display))
+    ;; Function to display appointment reminders in a window.
+    (setq appt-disp-window-function #'lvn--appt-show-reminder)
 
-    (defun leuven--appt-display (mins-to-appt current-time notification-string)
+    (defun lvn--appt-show-reminder (mins-to-appt current-time notification-string)
       "Display a reminder for appointments.
-    Use `libnotify' if available and if display is graphical, or fall back on a
-    message in the echo area."
-      (or (listp mins-to-appt)
-          (setq notification-string (list notification-string)))
-      (dotimes (i (length notification-string))
-        (cond ((and (display-graphic-p)
-                    (executable-find "notify-send"))
-               (shell-command
-                (concat "notify-send "
-                        "-i /usr/share/icons/gnome/32x32/status/appointment-soon.png "
-                        "-t 1000 "
-                        "'Appointment' "
-                        "'" (nth i notification-string) "'")))
-              (t
-               (message "[%s]" (nth i notification-string))
-               (sit-for 1)))))
+If available and running in a graphical display, use `notify-send`.
+Otherwise, show a message in the echo area.
+
+MINS-TO-APPT: Time in minutes until the appointment.
+CURRENT-TIME: Current timestamp (unused).
+NOTIFICATION-STRING: Message(s) to display."
+      (unless (listp mins-to-appt)
+        (setq notification-string (list notification-string)))
+
+      (dolist (message notification-string)
+        (if (and (display-graphic-p) (executable-find "notify-send"))
+            (let ((escaped-message (shell-quote-argument message)))
+              (shell-command
+               (format "notify-send -i /usr/share/icons/gnome/32x32/status/appointment-soon.png -t 1000 'Appointment' %s"
+                       escaped-message)))
+          (message "[%s]" message)
+          (sit-for 1))))
 #+end_src
 
 #+begin_src emacs-lisp
