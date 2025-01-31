@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250131.1924>
+;; Version: <20250131.2106>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250131.1924>"
+(defconst lvn--emacs-version "<20250131.2106>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -341,20 +341,26 @@ exists, switch to it; otherwise, invoke FN."
 
 ;;** Testing file accessibility
 
-  (defun leuven--ensure-file-executable-p (file)
-    "Make sure the file FILE exists and is executable.
-Return FILE if it is executable, otherwise return nil."
-    (unless file
-      (error "Missing argument to `leuven--ensure-file-executable-p'"))
-    (unless (file-exists-p file)
-      (message "[WARN- File `%s' does not exist]" file)
+  (defun lvn--validate-file-executable-p (file)
+    "Ensure FILE exists and is executable.
+Returns FILE if it is both existent and executable, otherwise returns nil.
+Shows a warning message if the file does not exist or is not executable."
+    (when (not file)
+      (error "Missing argument to `lvn--validate-file-executable-p'"))
+
+    (cond
+     ((not (file-exists-p file))
+      (message "[WARN] File `%s' does not exist." file)
       (sit-for 1.5)
       nil)
-    (unless (file-executable-p file)
-      (message "[WARN- File `%s' is not executable]" file)
+
+     ((not (file-executable-p file))
+      (message "[WARN] File `%s' is not executable." file)
       (sit-for 1.5)
       nil)
-    file)
+
+     ;; Return the file if it exists and is executable.
+     (t file)))
 
 ;;** Init
 
@@ -4368,16 +4374,21 @@ you will be prompted to enter the desired fill column width."
 
     (with-eval-after-load "preview"
 
-      ;; Path to `gs' command (for format conversions).
+      ;; Determine the path to the `gs' command for format conversions.
       (setq preview-gs-command
-        (cond (lvn--win32-p
-               (or (executable-find "gswin32c.exe")
-                   "C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"))
-                                        ; Default value.
-              (t
-               (or (executable-find "rungs") ; For Cygwin Emacs.
-                   "/usr/bin/gs"))))
-      (leuven--ensure-file-executable-p preview-gs-command)
+            (cond
+             (lvn--win32-p
+              ;; Windows-specific path for `gswin32c.exe'.
+              (or (executable-find "gswin32c.exe")
+                  "C:/texlive/2015/tlpkg/tlgs/bin/gswin32c.exe"))
+
+             (t
+              ;; Default for Unix-like systems or Cygwin Emacs.
+              (or (executable-find "rungs") ; Cygwin-specific gs command.
+                  "/usr/bin/gs"))))     ; Default Ghostscript path for Unix-like systems.
+
+      ;; Ensure the `gs' command is executable, or signal an error if not.
+      (lvn--validate-file-executable-p preview-gs-command)
 
       ;; Scale factor for included previews.
       (setq preview-scale-function 1.2))
@@ -7354,30 +7365,19 @@ NOTIFICATION-STRING: Message(s) to display."
       (concat leuven--windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
       "Defines the Windows path to the gsview executable.")
 
-    (leuven--ensure-file-executable-p gsprint-program)
+    (lvn--validate-file-executable-p gsprint-program)
 
-    (if (and gsprint-program
-             (executable-find gsprint-program))
-
+    (if (and gsprint-program (executable-find gsprint-program))
         (progn
-          ;; Name of a local printer for printing PostScript files.
+          ;; Use Ghostscript for printing PostScript files.
           (setq ps-printer-name t)      ; Adjusted to run Ghostscript.
-
-
-          ;; Name of program for printing a PostScript file.
-          (setq ps-lpr-command gsprint-program)
-                                        ; Tell Emacs where Ghostscript print
-                                        ; utility is located.
-
-          ;; List of extra switches to pass to `ps-lpr-command'.
-          (setq ps-lpr-switches '("-query")))
-                                        ; Tell Ghostscript to query which
-                                        ; printer to use.
-                                        ; '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2")
-
-      (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; XXX
-      (setq ps-lpr-command "")
-      (setq ps-lpr-switches '("raw")))
+          (setq ps-lpr-command gsprint-program) ; Set Ghostscript as the command for printing.
+          (setq ps-lpr-switches '("-query"))) ; Tell Ghostscript to query which printer to use.
+      (progn
+        ;; Default printer settings.
+        (setq ps-printer-name "//PRINT-SERVER/Brother HL-4150CDN") ; Adjust this for your setup.
+        (setq ps-lpr-command "")        ; No specific command for non-Ghostscript printing.
+        (setq ps-lpr-switches '("raw")))) ; Use raw printing mode.
 
     ;; (setq ps-error-handler-message 'system)
 
