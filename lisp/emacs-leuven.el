@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250130.1830>
+;; Version: <20250131.1924>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -90,7 +90,7 @@
 ;; Don't display messages at start and end of garbage collection.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250130.1830>"
+(defconst lvn--emacs-version "<20250131.1924>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4140,29 +4140,39 @@ you will be prompted to enter the desired fill column width."
 
   (leuven--section "25.11 (emacs)TeX Mode")
 
-  ;; Get colored PDFLaTeX output.
+  ;; Define a derived mode for colorized PDFLaTeX output.
   (define-derived-mode latex-output-mode fundamental-mode "LaTeX-Output"
-    "Simple mode for colorizing LaTeX output."
-    (set (make-local-variable 'font-lock-defaults)
-         '((("^!.*" .
-             compilation-error-face)    ; LaTeX error
-            ("^-+$" .
-             compilation-info-face)     ; Latexmk separator
-            ("^Package .* Warning: .*" .
-             compilation-warning-face)
-            ("Reference .* undefined" .
-             compilation-warning-face)
-            ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" .
-             font-lock-string-face)
-            ("^LaTeX Font Warning:" .
-             font-lock-string-face)
-            ;; ...
-            ))))
+    "Major mode for colorizing LaTeX output."
+    (setq-local font-lock-defaults
+                '((latex-output-font-lock-keywords))))
 
-  (defadvice TeX-recenter-output-buffer
-    (after leuven-colorize-latex-output activate)
-    (with-selected-window (get-buffer-window (TeX-active-buffer))
-      (latex-output-mode)))
+  (defconst latex-output-font-lock-keywords
+    '(;; LaTeX error messages.
+      ("^!.*" . compilation-error-face)
+      ;; Latexmk separator lines.
+      ("^-+$" . compilation-info-face)
+      ;; LaTeX package warnings.
+      ("^Package .* Warning: .*" . compilation-warning-face)
+      ;; Undefined references.
+      ("Reference .* undefined" . compilation-warning-face)
+      ;; Overfull/Underfull boxes.
+      ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-string-face)
+      ;; Font warnings.
+      ("^LaTeX Font Warning:" . font-lock-string-face)
+      ;; Add more patterns as needed...
+      )
+    "Font lock keywords for `latex-output-mode'.")
+
+  ;; Automatically apply latex-output-mode to LaTeX output buffers.
+  (defun leuven-colorize-latex-output (&rest _)
+    "Enable `latex-output-mode' in the LaTeX output buffer."
+    (when-let* ((output-buffer (TeX-active-buffer))
+                (window (get-buffer-window output-buffer)))
+      (with-selected-window window
+        (unless (eq major-mode 'latex-output-mode)
+          (latex-output-mode)))))
+
+  (advice-add 'TeX-recenter-output-buffer :after #'leuven-colorize-latex-output)
 
   (leuven--section "25.11 (emacs)AUCTeX Mode")
 
