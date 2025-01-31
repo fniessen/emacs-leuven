@@ -7365,10 +7365,9 @@ file, AUCTeX gives you a ~Command~ menu.
 
     (leuven--section "2.8 (auctex)Indenting")
 
-    ;; Leave some environments un-indented when doing `M-q'.
-    (add-to-list 'LaTeX-indent-environment-list '("tikzpicture" current-indentation))
-    (add-to-list 'LaTeX-indent-environment-list '("comment"     current-indentation))
-    (add-to-list 'LaTeX-indent-environment-list '("sverbatim"   current-indentation))
+    ;; Leave some environments un-indented when using `M-q'.
+    (dolist (env '("tikzpicture" "comment" "sverbatim"))
+      (add-to-list 'LaTeX-indent-environment-list (list env 'current-indentation)))
 
     ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
     ;; a local key binding to `RET' in the `LaTeX-mode-hook').
@@ -7389,26 +7388,27 @@ file, AUCTeX gives you a ~Command~ menu.
     ;;                TeX-run-function nil t :help "Run latexmk") t)
     ;; (setq TeX-command-default "latexmk")
 
-    (defun leuven--LaTeX-mode-hook ()
+    ;; Not called?
+    (defun lvn--setup-latex-mode ()
+      "Custom hook for LaTeX mode."
+      (setq TeX-command-default (lvn--determine-tex-command))
+      (TeX-fold-mode 1))
 
-      ;; Default command to run in the LaTeX buffer.
-      (setq TeX-command-default         ; TeX-engine?
-            (save-excursion
-              (save-restriction
-                (widen)
-                (goto-char (point-min))
-                (let ((re (concat
-                           "^\\s-*\\\\usepackage\\(?:\\[.*\\]\\)?"
-                           "{.*\\<\\(?:font\\|math\\)spec\\>.*}")))
-                  (save-match-data
-                    (if (re-search-forward re 3000 t)
-                        "XeLaTeX"
-                      "LaTeX"))))))
+    (defun lvn--determine-tex-command ()
+      "Determine the appropriate TeX command based on package usage."
+      (let ((fontspec-regex "^\\s-*\\\\usepackage\\(?:\\[.*\\]\\)?{.*\\<\\(?:font\\|math\\)spec\\>.*}")
+            (search-limit 3000))
+        (if (lvn--file-contains-regex fontspec-regex search-limit)
+            "XeLaTeX"
+          "LaTeX")))
 
-      ;; Minor mode for hiding and revealing macros and environments.
-      (TeX-fold-mode t))
-
-    (add-hook 'LaTeX-mode-hook #'leuven--LaTeX-mode-hook)
+    (defun lvn--file-contains-regex (regex limit)
+      "Check if the current buffer contains REGEX within LIMIT lines from the start."
+      (save-excursion
+        (save-restriction
+          (widen)
+          (goto-char (point-min))
+          (re-search-forward regex limit t))))
 
     (defun lvn--change-dictionary-to-fr ()
       "Change the local dictionary to French if the babel package is set to French."
