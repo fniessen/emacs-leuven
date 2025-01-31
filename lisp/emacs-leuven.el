@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250131.2236>
+;; Version: <20250131.2348>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250131.2236>"
+(defconst lvn--emacs-version "<20250131.2348>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4148,33 +4148,39 @@ you will be prompted to enter the desired fill column width."
     (setq-local font-lock-defaults
                 '((latex-output-font-lock-keywords))))
 
+  ;; Font lock keywords.
   (defconst latex-output-font-lock-keywords
     '(;; LaTeX error messages.
       ("^!.*" . compilation-error-face)
       ;; Latexmk separator lines.
       ("^-+$" . compilation-info-face)
       ;; LaTeX package warnings.
-      ("^Package .* Warning: .*" . compilation-warning-face)
+      ("^Package .* Warning:.*" . compilation-warning-face)
       ;; Undefined references.
       ("Reference .* undefined" . compilation-warning-face)
       ;; Overfull/Underfull boxes.
       ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-string-face)
       ;; Font warnings.
       ("^LaTeX Font Warning:" . font-lock-string-face)
+      ;; Output written lines (successful compilation)
+      ("^Output written on .*\\.pdf (.*)" . font-lock-function-name-face)
       ;; Add more patterns as needed...
       )
     "Font lock keywords for `latex-output-mode'.")
 
-  ;; Automatically apply latex-output-mode to LaTeX output buffers.
-  (defun leuven-colorize-latex-output (&rest _)
-    "Enable `latex-output-mode' in the LaTeX output buffer."
-    (when-let* ((output-buffer (TeX-active-buffer))
-                (window (get-buffer-window output-buffer)))
-      (with-selected-window window
-        (unless (eq major-mode 'latex-output-mode)
-          (latex-output-mode)))))
+  ;; Function to apply latex-output-mode and ensure scrolling.
+  (defun lvn--setup-latex-output ()
+    "Enable `latex-output-mode' in the LaTeX output buffer and ensure
+scrolling to the bottom."
+    ;; Ensure mode is always reapplied.
+    (unless (eq major-mode 'latex-output-mode)
+      (latex-output-mode))
+    (set (make-local-variable 'window-point-insertion-type) t)
+    ;; Scroll to the bottom.
+    (goto-char (point-max)))
 
-  (advice-add 'TeX-recenter-output-buffer :after #'leuven-colorize-latex-output)
+  ;; Add our function to TeX-output-mode-hook.
+  (add-hook 'TeX-output-mode-hook #'lvn--setup-latex-output)
 
   (leuven--section "25.11 (emacs)AUCTeX Mode")
 
