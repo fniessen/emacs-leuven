@@ -14,37 +14,36 @@
 
 * Evaluating the current setup
 
-To evaluate the current setup and experience the "improved" default Emacs
-configuration, follow these steps:
+To experience the enhanced default Emacs configuration provided by Emacs-Leuven,
+follow these steps:
 
-1. Clone the Emacs-Leuven repository by executing the following commands in your
-   terminal:
+1. Clone the Emacs-Leuven repository:
 
    #+begin_src shell :tangle no
    git clone https://github.com/fniessen/emacs-leuven
    cd emacs-leuven
    #+end_src
 
-2. Launch Emacs with the following command, enabling the Emacs-Leuven
-   configuration:
+2. Launch Emacs with the Emacs-Leuven configuration:
 
    #+begin_src shell :tangle no
    emacs -Q -l ./emacs-leuven.el
    #+end_src
 
-Now, you are running the enhanced Emacs default experience provided by
+You are now running Emacs with the improved default experience provided by
 Emacs-Leuven.
 
 * Introduction
 
-Emacs can be quite challenging for newcomers, mainly because some of the default
-settings may appear (and sometimes are) unattractive or cumbersome.
+Emacs can be challenging for newcomers, primarily due to some default settings
+that may seem unattractive or cumbersome. However, Emacs' strength lies in its
+unparalleled flexibility, allowing users to customize almost every aspect to
+their preferences.
 
-However, the beauty of Emacs lies in its flexibility, where almost everything
-can be fine-tuned to your liking.  Therefore, the following set of
-customizations, born from the mind of a pathological Emacs enthusiast, is
-designed to "short-cut" the initial setup process and enhance your Emacs
-experience.
+This set of customizations, crafted by an pathological Emacs enthusiast, aims to
+streamline the initial setup process and enhance your Emacs experience. It
+provides a solid foundation for both newcomers and experienced users looking to
+refine their Emacs environment, "short-cutting" the initial setup process.
 
 Quotes:
 
@@ -57,6 +56,17 @@ Quotes:
 
 - "While any text editor can save your files, only Emacs can save your soul." \\
   -- Per Abrahamsen
+
+**  Key Features
+
+- Improved default settings for enhanced usability.
+- Carefully selected package recommendations.
+- Optimized keybindings for common tasks.
+- Thoughtful UI enhancements for a more modern look.
+
+By using Emacs-Leuven, you can quickly set up a powerful and user-friendly Emacs
+environment, allowing you to focus on your work rather than configuration
+details.
 
 * Header
 
