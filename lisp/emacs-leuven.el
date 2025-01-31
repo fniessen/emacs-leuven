@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250131.2106>
+;; Version: <20250131.2111>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,27 +70,29 @@
 (defconst emacs-leuven--load-start-time (current-time)
   "Value of `current-time' before loading the Emacs-Leuven library.")
 
-;; Set a higher garbage collection threshold during initialization (to speed it up).
+;; Set a high garbage collection threshold during initialization to speed it up.
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defun leuven--reset-gc-cons-threshold ()
-  "Reset the garbage collection threshold after initialization is complete."
+(defun lvn--restore-default-gc-threshold ()
+  "Restore the garbage collection threshold to its default value after initialization."
   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
-  (message "[Garbage collection threshold reset to its default value.]"))
+  (message "[GC threshold restored to default.]"))
 
-(defun leuven--do-garbage-collection ()
-  "Perform a garbage collection."
+(defun lvn--trigger-garbage-collection ()
+  "Trigger garbage collection and log the completion."
   (garbage-collect)
   (message "[Garbage collection completed.]"))
 
-;; Reset the garbage collection threshold and perform collection after initialization.
-(add-hook 'after-init-hook #'leuven--reset-gc-cons-threshold)
-(add-hook 'after-init-hook #'leuven--do-garbage-collection)
+;; Reset the garbage collection threshold and trigger garbage collection after
+;; initialization.
+(add-hook 'after-init-hook #'lvn--restore-default-gc-threshold)
+(add-hook 'after-init-hook #'lvn--trigger-garbage-collection)
 
-;; Don't display messages at start and end of garbage collection.
+;; Disable garbage collection messages during startup to keep the messages
+;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250131.2106>"
+(defconst lvn--emacs-version "<20250131.2111>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
