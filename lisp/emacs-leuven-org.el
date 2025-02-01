@@ -1499,7 +1499,7 @@ Examples:
 
 (with-eval-after-load "org-agenda"
   (let ((leuven-org-agenda-views
-         (concat leuven--directory "org-leuven-agenda-views.el")))
+         (concat lvn--directory "org-leuven-agenda-views.el")))
     (when (file-exists-p leuven-org-agenda-views)
       (load-file leuven-org-agenda-views))))
                                         ; with-eval-after-load "org-agenda" ends here.

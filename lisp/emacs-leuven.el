@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250201.0958>
+;; Version: <20250201.1039>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250201.0958>"
+(defconst lvn--emacs-version "<20250201.1039>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -213,40 +213,49 @@ Last time is saved in global variable `leuven--before-section-time'."
 (leuven--chapter leuven-load-chapter-0-loading-libraries "0 Loading Libraries"
 
   ;; Load-path enhancement.
-  (defun lvn--add-dir-to-load-path (directory)
-    "Add DIRECTORY to `load-path' if it exists and is a directory.
-This function checks if DIRECTORY exists and is a directory. If it meets
-the criteria, it adds it to the `load-path'. If DIRECTORY does not exist,
-a warning message is displayed, and it returns nil. If a '.nosearch' file
-exists in DIRECTORY, it returns nil. Otherwise, it returns t after adding
-DIRECTORY to `load-path'."
-    (when (and directory (file-directory-p directory))
-      (let ((directory (expand-file-name directory)))
-        (unless (file-exists-p directory)
-          (message "[WARN- Directory '%s' does not exist.]" directory)
-          nil)
-        (when (file-exists-p (expand-file-name ".nosearch" directory))
-          nil)
-        (add-to-list 'load-path directory)
-        (when lvn-verbose-loading
-          (message "[INFO- Added '%s' to `load-path'.]" directory))
-        t)))
+  (defun lvn--add-directory-to-load-path (directory)
+    "Add DIRECTORY to `load-path' if it's a valid, searchable directory.
+
+This function enhances the `load-path' by adding the specified DIRECTORY,
+but only if it meets certain criteria:
+
+1. The DIRECTORY must exist and be a directory.
+2. It must not contain a '.nosearch' file (which indicates it should be skipped)."
+    (let ((abs-directory (expand-file-name directory)))
+      (cond
+       ((not (file-directory-p abs-directory))
+        (message "[WARN- Directory '%s' does not exist or is not a directory."
+                 abs-directory)
+        nil)
+
+       ((file-exists-p (expand-file-name ".nosearch" abs-directory))
+        (message "[INFO- Skipping '%s' due to .nosearch file."
+                 abs-directory)
+        nil)
+
+       (t
+        (add-to-list 'load-path abs-directory)
+        (message "[INFO- Added '%s' to `load-path'."
+                 abs-directory)
+        t))))
 
   ;; Remember this directory.
-  (defconst leuven--directory
+  (defconst lvn--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (lvn--add-dir-to-load-path leuven--directory)
-  (lvn--add-dir-to-load-path (concat leuven--directory "../site-lisp"))
+  (lvn--add-directory-to-load-path lvn--directory)
+  (lvn--add-directory-to-load-path (concat lvn--directory "../site-lisp"))
 
-  ;; (lvn--add-dir-to-load-path "~/lisp")
-  ;; (lvn--add-dir-to-load-path "~/site-lisp")
+  ;; (lvn--add-directory-to-load-path "~/lisp")
+  ;; (lvn--add-directory-to-load-path "~/site-lisp")
 
-  (defvar leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
-    "Directory containing personal additional Emacs Lisp packages.")
+  (defcustom leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
+    "Directory containing personal additional Emacs Lisp packages."
+    :group 'leuven
+    :type 'directory)
 
-  (lvn--add-dir-to-load-path leuven-user-lisp-directory)
+  (lvn--add-directory-to-load-path leuven-user-lisp-directory)
 
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
@@ -6155,7 +6164,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
 
     ;; Add root directories that store the snippets.
     (let ((leuven-snippets              ; Additional YASnippets.
-           (concat leuven--directory "../.emacs.d/snippets")))
+           (concat lvn--directory "../.emacs.d/snippets")))
 
       (when (file-directory-p leuven-snippets)
         (add-to-list 'yas-snippet-dirs leuven-snippets)))
@@ -7861,7 +7870,7 @@ If updates are available, it pulls the latest changes from the repository.
 If the configuration is already up-to-date, it displays a message indicating so.
 After the update, it recommends restarting Emacs to complete the update.
 
-Before using this function, make sure 'leuven--directory' points to the
+Before using this function, make sure 'lvn--directory' points to the
 directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
     (interactive)
@@ -7895,7 +7904,7 @@ This function fetches the latest changes from the remote Git repository and
 displays the commits made since the current branch diverged from 'origin'. If
 the configuration is already up-to-date, it indicates so in the message.
 
-Before using this function, make sure 'leuven--directory' points to the
+Before using this function, make sure 'lvn--directory' points to the
 directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
     (interactive)
