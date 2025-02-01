@@ -22,7 +22,7 @@
 ;; Search the BBDB.
 (global-set-key (kbd "<C-f11>") #'bbdb)
 
-(with-eval-after-load "bbdb"
+(with-eval-after-load 'bbdb
 
   ;; Coding system used for reading and writing `bbdb-file'.
   (setq bbdb-file-coding-system 'utf-8)
