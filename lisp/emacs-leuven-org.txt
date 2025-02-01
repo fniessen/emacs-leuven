@@ -36,15 +36,15 @@ If not, just print a message."
 #+begin_src emacs-lisp :tangle no
     ;; Enable on-the-fly spell checking.
     (add-hook 'org-mode-hook
-              #'(lambda ()
-                  (if (or (eq (aref (buffer-name) 0) ?\s)
+              (lambda ()
+                (if (or (eq (aref (buffer-name) 0) ?\s)
                                         ; Buffer starting with " *".
-                          (and (boundp 'org-babel-exp-reference-buffer)
-                               org-babel-exp-reference-buffer))
+                        (and (boundp 'org-babel-exp-reference-buffer)
+                             org-babel-exp-reference-buffer))
                                         ; Export buffer.
-                      (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
-                    (message "[Turning on Flyspell mode in `%s']" (buffer-name))
-                    (flyspell-mode))))
+                    (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
+                  (message "[Turning on Flyspell mode in `%s']" (buffer-name))
+                  (flyspell-mode))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -249,20 +249,20 @@ interface).
 
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook
-          #'(lambda ()
-              ;; ;; Create a binding for `org-show-subtree'.
-              ;; (local-set-key (kbd "C-c C-S-s") #'org-show-subtree)
-              ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
+          (lambda ()
+            ;; ;; Create a binding for `org-show-subtree'.
+            ;; (local-set-key (kbd "C-c C-S-s") #'org-show-subtree)
+            ;; (local-set-key (kbd "C-c s") #'org-show-subtree)
 
-              ;; (local-set-key (kbd "C-c h") #'hide-other) ; XXX Helm
+            ;; (local-set-key (kbd "C-c h") #'hide-other) ; XXX Helm
 
-              ;; Remove some bindings.
-              (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
-              (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
-              ;; (local-unset-key (kbd "C-c %")) ; XXX
-              ;; (local-unset-key (kbd "C-c &")) ; XXX
+            ;; Remove some bindings.
+            (local-unset-key (kbd "C-c SPC")) ; Used by Ace Jump.
+            (local-unset-key (kbd "C-c C-<")) ; Used by Multiple Cursors.
+            ;; (local-unset-key (kbd "C-c %")) ; XXX
+            ;; (local-unset-key (kbd "C-c &")) ; XXX
 
-              ))
+            ))
 #+end_src
 
 #+begin_note
@@ -394,7 +394,7 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
   ;;           (when tags
   ;;             (concat "&nbsp;&nbsp;&nbsp;"
   ;;                     "<span class=\"tag\">"
-  ;;                     (mapconcat #'(lambda (tag)
+  ;;                     (mapconcat (lambda (tag)
   ;;                                  (concat "<span class= \"" tag "\">" tag
   ;;                                          "</span>"))
   ;;                                tags
@@ -473,7 +473,7 @@ See `org-latex-format-inlinetask-function' for details."
                  (when tags
                    (format "\\hfill{}\\textsc{:%s:}"
                            (mapconcat
-                            #'(lambda (tag) (org-latex-plain-text tag info))
+                            (lambda (tag) (org-latex-plain-text tag info))
                             tags ":"))))))
     (concat "\\begin{center}\n"
             "\\fcolorbox{black}{yellow}{\n"
@@ -542,15 +542,15 @@ full outline path.
 ;; Outline-node based navigation similar to the behavior of paredit-mode in
 ;; Lisp files.
 (add-hook 'org-mode-hook
-          #'(lambda ()
-              ;; (local-set-key (kbd "M-n")   #'outline-next-visible-heading)
-              ;; (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
+          (lambda ()
+            ;; (local-set-key (kbd "M-n")   #'outline-next-visible-heading)
+            ;; (local-set-key (kbd "C-M-n") #'outline-next-visible-heading)
 
-              ;; (local-set-key (kbd "M-p")   #'outline-previous-visible-heading)
-              ;; (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
+            ;; (local-set-key (kbd "M-p")   #'outline-previous-visible-heading)
+            ;; (local-set-key (kbd "C-M-p") #'outline-previous-visible-heading)
 
-              ;; (local-set-key (kbd "C-M-u") #'outline-up-heading)
-              ))
+            ;; (local-set-key (kbd "C-M-u") #'outline-up-heading)
+            ))
 #+end_src
 
 Move through an Org file like ~cd~ on a file system with ~org-goto~:
@@ -1110,18 +1110,18 @@ a parent headline."
   (when (derived-mode-p 'org-mode)
     (save-excursion
       (org-map-entries
-       #'(lambda ()
-           (let ((alltags (split-string
-                           (or (org-entry-get (point) "ALLTAGS") "")
-                           ":"))
-                 local inherited tag)
-             (dolist (tag alltags)
-               (if (get-text-property 0 'inherited tag)
-                   (push tag inherited)
-                 (push tag local)))
-             (dolist (tag local)
-               (when (member tag inherited)
-                 (org-toggle-tag tag 'off)))))
+       (lambda ()
+         (let ((alltags (split-string
+                         (or (org-entry-get (point) "ALLTAGS") "")
+                         ":"))
+               local inherited tag)
+           (dolist (tag alltags)
+             (if (get-text-property 0 'inherited tag)
+                 (push tag inherited)
+               (push tag local)))
+           (dolist (tag local)
+             (when (member tag inherited)
+               (org-toggle-tag tag 'off)))))
        t nil))))
 
 ;; ;; Always offer completion for all tags of all agenda files.
@@ -1281,10 +1281,10 @@ Alternative to requiring org-clock in every Emacs session.
 
 ;; XXX Under test!
 (add-hook 'org-mode-hook
-          #'(lambda ()
-              (require 'org-clock)
-              (setq org-clock-persist t)
-              (org-clock-persistence-insinuate)))
+          (lambda ()
+            (require 'org-clock)
+            (setq org-clock-persist t)
+            (org-clock-persistence-insinuate)))
 
 (with-eval-after-load "org-clock"
 
@@ -1866,9 +1866,9 @@ at the end of your =.emacs= file.
 
 #+begin_example
     (add-hook 'org-mode-hook
-              #'(lambda ()
-                  (local-unset-key (kbd "C-c ["))
-                  (local-unset-key (kbd "C-c ]"))))
+              (lambda ()
+                (local-unset-key (kbd "C-c ["))
+                (local-unset-key (kbd "C-c ]"))))
 #+end_example
 
 Otherwise, through this hook, every org file is automatically "filed" and any to
@@ -2502,9 +2502,9 @@ XXX Does this work?
 
 #+begin_src emacs-lisp
   (add-hook 'org-agenda-finalize-hook
-            #'(lambda ()
-                (remove-text-properties (point-min) (point-max)
-                                        '(mouse-face t))))
+            (lambda ()
+              (remove-text-properties (point-min) (point-max)
+                                      '(mouse-face t))))
 #+end_src
 
 *************** TODO Adding ":tangle yes" on the above code block results in partial tangling!
@@ -2513,10 +2513,10 @@ XXX Does this work?
 
 #+begin_src emacs-lisp
   (add-hook 'org-agenda-finalize-hook
-            #'(lambda ()
-                (let ((inhibit-read-only t))
-                  (goto-char (point-min))
-                  (org-do-emphasis-faces (point-max)))))
+            (lambda ()
+              (let ((inhibit-read-only t))
+                (goto-char (point-min))
+                (org-do-emphasis-faces (point-max)))))
 #+end_src
 
 *** Mark a task as DONE and create a follow-up task
@@ -2935,11 +2935,11 @@ To get a start for your CSS file, use the command
     (when (org-export-derived-backend-p backend 'html)
       (replace-regexp-in-string
        "\\`.*\\(<code>\\[\\(X\\|&#xa0;\\|-\\)\\]</code>\\).*$"
-       #'(lambda (rep)
-           (let ((check (match-string 2 rep)))
-             (cond ((equal check "X") "&#x2611;")
-                   ((equal check "-") "&#x2610;")
-                   (t "&#x2610;"))))
+       (lambda (rep)
+         (let ((check (match-string 2 rep)))
+           (cond ((equal check "X") "&#x2611;")
+                 ((equal check "-") "&#x2610;")
+                 (t "&#x2610;"))))
        item
        nil nil 1)))
   (add-to-list 'org-export-filter-item-functions
@@ -3290,25 +3290,25 @@ Each headline tagged \"ignore\" will be removed retaining its
 contents and promoting any children headlines to the level of the
 parent."
     (org-element-map data 'headline
-      #'(lambda (object)
-          (when (member "ignore" (org-element-property :tags object))
-            (let ((level-top (org-element-property :level object))
-                  level-diff)
-              (mapc #'(lambda (el)
-                        ;; Recursively promote all nested headlines.
-                        (org-element-map el 'headline
-                          #'(lambda (el)
-                              (when (equal 'headline (org-element-type el))
-                                (unless level-diff
-                                  (setq level-diff (- (org-element-property :level el)
-                                                      level-top)))
-                                (org-element-put-property el
-                                                          :level (- (org-element-property :level el)
-                                                                    level-diff)))))
-                        ;; Insert back into parse tree.
-                        (org-element-insert-before el object))
-                    (org-element-contents object)))
-            (org-element-extract-element object)))
+      (lambda (object)
+        (when (member "ignore" (org-element-property :tags object))
+          (let ((level-top (org-element-property :level object))
+                level-diff)
+            (mapc (lambda (el)
+                    ;; Recursively promote all nested headlines.
+                    (org-element-map el 'headline
+                      (lambda (el)
+                        (when (equal 'headline (org-element-type el))
+                          (unless level-diff
+                            (setq level-diff (- (org-element-property :level el)
+                                                level-top)))
+                          (org-element-put-property el
+                                                    :level (- (org-element-property :level el)
+                                                              level-diff)))))
+                    ;; Insert back into parse tree.
+                    (org-element-insert-before el object))
+                  (org-element-contents object)))
+          (org-element-extract-element object)))
       info nil)
     data)
 
@@ -3451,7 +3451,7 @@ up-to-date.
   ;; execution.
 
   ;; (add-hook 'org-babel-after-execute-hook
-  ;;           #'(lambda ()
+  ;;           (lambda ()
   ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
   ;;                                       ; More efficient with refresh == t.
 
@@ -3523,7 +3523,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
 
 ;; ;; with-eval-after-load...
 ;; (add-hook 'org-src-mode-hook
-;;           #'(lambda ()
+;;           (lambda ()
 ;;             (define-key org-src-mode-map (kbd "<f2>") #'org-edit-src-save)))
 #+end_src
 
@@ -3549,10 +3549,10 @@ logically equivalent to "tangle", but without creating a separate file).
       (while (re-search-forward org-babel-src-block-regexp nil t)
         (push (match-beginning 5) begs)
         (push (match-end 5)       ends))
-      (map 'list #'(lambda (beg end)
-                     (let ((ov (make-overlay beg end)))
-                       (push ov only-code-overlays)
-                       (overlay-put ov 'invisible 'non-code)))
+      (map 'list (lambda (beg end)
+                   (let ((ov (make-overlay beg end)))
+                     (push ov only-code-overlays)
+                     (overlay-put ov 'invisible 'non-code)))
            (cons (point-min) (reverse ends))
            (append (reverse begs) (list (point-max)))))))
 
@@ -3686,27 +3686,27 @@ languages which can be evaluated in Org mode buffers.
     (interactive)
     (org-element-map (org-element-parse-buffer)
         '(src-block inline-src-block)
-      #'(lambda (sb)
-          (let ((language (org-element-property :language sb)))
-            (cond ((null language)
-                   (error "Missing language at line %d in %s"
-                          (line-number-at-pos
-                           (org-element-property :post-affiliated sb))
-                          (buffer-name)))
-                  ;; ((and (not (assoc-string language org-babel-load-languages))
-                  ;;       (not (assoc-string language org-src-lang-modes))
-                  ;;       ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
-                  ;;       )
-                  ;;                       ; XXX This should be stricter: must be
-                  ;;                       ; in org-babel-load-languages for
-                  ;;                       ; evaluated code blocks. Must be in both
-                  ;;                       ; other cases for edited code blocks.
-                  ;;  (error "Unknown language `%s' at line %d in `%s'"
-                  ;;         language
-                  ;;         (line-number-at-pos
-                  ;;          (org-element-property :post-affiliated sb))
-                  ;;         (buffer-name)))
-                  ))))
+      (lambda (sb)
+        (let ((language (org-element-property :language sb)))
+          (cond ((null language)
+                 (error "Missing language at line %d in %s"
+                        (line-number-at-pos
+                         (org-element-property :post-affiliated sb))
+                        (buffer-name)))
+                ;; ((and (not (assoc-string language org-babel-load-languages))
+                ;;       (not (assoc-string language org-src-lang-modes))
+                ;;       ;; (locate-library (concat language "-mode")) ; would allow `sh-mode'
+                ;;       )
+                ;;                       ; XXX This should be stricter: must be
+                ;;                       ; in org-babel-load-languages for
+                ;;                       ; evaluated code blocks. Must be in both
+                ;;                       ; other cases for edited code blocks.
+                ;;  (error "Unknown language `%s' at line %d in `%s'"
+                ;;         language
+                ;;         (line-number-at-pos
+                ;;          (org-element-property :post-affiliated sb))
+                ;;         (buffer-name)))
+                ))))
 
     ;; (message "[Source blocks checked in %s]"
     ;;          (buffer-name (buffer-base-buffer)))
@@ -3819,13 +3819,13 @@ Find all entries where ~:PROPERTIES:~ is not the first item listed.
   "Check for erroneous 'PROPERTIES' drawers in Org mode headlines."
   (interactive)
   (org-element-map (org-element-parse-buffer 'element) 'headline
-    #'(lambda (h)
-        (and (org-element-map h 'drawer
-               #'(lambda (d) (equal (org-element-property :name d) "PROPERTIES"))
-               nil t 'headline)
-             (let ((begin (org-element-property :begin h)))
-               (message "[Entry with erroneous properties drawer at %d]" begin)
-               begin)))))
+    (lambda (h)
+      (and (org-element-map h 'drawer
+             (lambda (d) (equal (org-element-property :name d) "PROPERTIES"))
+             nil t 'headline)
+           (let ((begin (org-element-property :begin h)))
+             (message "[Entry with erroneous properties drawer at %d]" begin)
+             begin)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3840,24 +3840,24 @@ Ignore non Org buffers."
                            (concat (org-inlinetask-outline-regexp)
                                    "END[ \t]*$"))))
        (org-map-entries
-        #'(lambda ()
-            (unless (and inline-re (looking-at-p inline-re))
-              (save-excursion
-                (let ((end (save-excursion (outline-next-heading) (point))))
-                  (forward-line)
-                  (when (looking-at-p org-planning-line-re) ; Org-8.3.
-                    (forward-line))
-                  (when (and (< (point) end)
-                             (not (looking-at-p org-property-drawer-re))
-                             (save-excursion
-                               (and (re-search-forward org-property-drawer-re end t)
-                                    (eq (org-element-type
-                                         (save-match-data (org-element-at-point)))
-                                        'drawer))))
-                    (insert (delete-and-extract-region
-                             (match-beginning 0)
-                             (min (1+ (match-end 0)) end)))
-                    (unless (bolp) (insert "\n"))))))))))))
+        (lambda ()
+          (unless (and inline-re (looking-at-p inline-re))
+            (save-excursion
+              (let ((end (save-excursion (outline-next-heading) (point))))
+                (forward-line)
+                (when (looking-at-p org-planning-line-re) ; Org-8.3.
+                  (forward-line))
+                (when (and (< (point) end)
+                           (not (looking-at-p org-property-drawer-re))
+                           (save-excursion
+                             (and (re-search-forward org-property-drawer-re end t)
+                                  (eq (org-element-type
+                                       (save-match-data (org-element-at-point)))
+                                      'drawer))))
+                  (insert (delete-and-extract-region
+                           (match-beginning 0)
+                           (min (1+ (match-end 0)) end)))
+                  (unless (bolp) (insert "\n"))))))))))))
 
 (when (boundp 'org-planning-line-re)
   (add-hook 'org-mode-hook #'org-repair-property-drawers))
@@ -4093,9 +4093,9 @@ Org...
           `(("Snippets" ,org-babel-src-name-w-name-regexp 2)))
 
     (add-hook 'org-mode-hook
-              #'(lambda ()
-                  (setq imenu-generic-expression
-                        org-src-blocks-imenu-generic-expression))))
+              (lambda ()
+                (setq imenu-generic-expression
+                      org-src-blocks-imenu-generic-expression))))
 
   ;; Alternative to Imenu.
   (defun dan/find-in-buffer ()
@@ -4148,19 +4148,19 @@ Anonymize Org contents (sanitize the sensitive data).
     (org-element-map tree
         '(code comment comment-block example-block fixed-width keyword link
                node-property plain-text verbatim)
-      #'(lambda (obj)
-          (cl-case (org-element-type obj)
-            ((code comment comment-block example-block fixed-width keyword
-                   node-property verbatim)
-             (let ((value (org-element-property :value obj)))
-               (org-element-put-property
-                obj :value (replace-regexp-in-string "[[:alnum:]]" "x" value))))
-            (link
-             (unless (string= (org-element-property :type obj) "radio")
-               (org-element-put-property obj :raw-link "http://orgmode.org")))
-            (plain-text
-             (org-element-set-element
-              obj (replace-regexp-in-string "[[:alnum:]]" "x" obj)))))
+      (lambda (obj)
+        (cl-case (org-element-type obj)
+          ((code comment comment-block example-block fixed-width keyword
+                 node-property verbatim)
+           (let ((value (org-element-property :value obj)))
+             (org-element-put-property
+              obj :value (replace-regexp-in-string "[[:alnum:]]" "x" value))))
+          (link
+           (unless (string= (org-element-property :type obj) "radio")
+             (org-element-put-property obj :raw-link "http://orgmode.org")))
+          (plain-text
+           (org-element-set-element
+            obj (replace-regexp-in-string "[[:alnum:]]" "x" obj)))))
       nil nil nil t)
     (let ((buffer (get-buffer-create "*Scrambled text*")))
       (with-current-buffer buffer
@@ -4211,15 +4211,15 @@ Anonymize Org contents (sanitize the sensitive data).
         ;; (while (re-search-forward (concat ":" tag ":") nil t)
         ;; (delete-region (point-at-bol) (point-at-eol)))
         (org-map-entries
-         #'(lambda ()
-             (delete-region (point-at-bol) (point-at-eol)))
+         (lambda ()
+           (delete-region (point-at-bol) (point-at-eol)))
          (concat ":" tag ":"))))
     (when (eq org-export-current-backend 'html)
       ;; set custom css style class based on matched tag
       (let* ((match "Qn"))
         (org-map-entries
-         #'(lambda ()
-             (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
+         (lambda ()
+           (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
          match)))))
 
 (add-hook 'org-export-preprocess-hook #'leuven--org-export-preprocess-hook)
@@ -4233,10 +4233,10 @@ Promote ignoreheading. Works in ASCII backend too:
   (save-excursion
     (let ((org-allow-promoting-top-level-subtree t))
       (org-map-entries
-       #'(lambda ()
-           (when (member "ignoreheading" (org-get-tags-at nil 'local))
-             (org-promote-subtree)
-             (delete-region (line-beginning-position) (line-end-position))))))))
+       (lambda ()
+         (when (member "ignoreheading" (org-get-tags-at nil 'local))
+           (org-promote-subtree)
+           (delete-region (line-beginning-position) (line-end-position))))))))
 
 (add-hook 'org-export-before-parsing-hook #'yz/org-export-ignore-headline)
 #+end_src
@@ -4294,24 +4294,24 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 ;;   ;; any LaTeX command.
 ;;   (org-link-set-parameters
 ;;    "latex" nil
-;;    #'(lambda (path desc format)
-;;        (cond
-;;         ((eq format 'html)
-;;          (format "<span class=\"%s\">%s</span>" path desc))
-;;         ((eq format 'latex)
-;;          (format "\\%s{%s}" path desc)))))
+;;    (lambda (path desc format)
+;;      (cond
+;;       ((eq format 'html)
+;;        (format "<span class=\"%s\">%s</span>" path desc))
+;;       ((eq format 'latex)
+;;        (format "\\%s{%s}" path desc)))))
 ;;
 ;;   ;; Add background color by using custom links like [[bgcolor:red][Warning!]].
 ;;   (org-link-set-parameters
 ;;     "bgcolor" nil
-;;     #'(lambda (path desc format)
-;;         (cond
-;;          ((eq format 'html)
-;;           (format "<span style=\"background-color:%s;\">%s</span>" path desc))
-;;          ((eq format 'latex)
-;;           (format "\\colorbox{%s}{%s}" path desc))
-;;          (t
-;;           (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
+;;     (lambda (path desc format)
+;;       (cond
+;;        ((eq format 'html)
+;;         (format "<span style=\"background-color:%s;\">%s</span>" path desc))
+;;        ((eq format 'latex)
+;;         (format "\\colorbox{%s}{%s}" path desc))
+;;        (t
+;;         (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
 #+end_src
 
 * A.5 Tables and lists in arbitrary syntax
@@ -4324,8 +4324,8 @@ corresponding LaTeX tables.
   "Export all Org tables in the current LaTeX document to LaTeX tables."
   (interactive)
   (org-table-map-tables
-   #'(lambda ()
-       (orgtbl-send-table 'maybe))))
+   (lambda ()
+     (orgtbl-send-table 'maybe))))
 #+end_src
 
 * A.6 Dynamic blocks
@@ -4379,7 +4379,7 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 ;;   (with-eval-after-load "org-effectiveness"
 ;;
 ;;     (add-hook 'org-mode-hook
-;;               #'(lambda ()
+;;               (lambda ()
 ;;                 (org-effectiveness-count-todo)
 ;;                 (sit-for 0.2)))))
 #+end_src
