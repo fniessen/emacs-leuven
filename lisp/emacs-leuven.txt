@@ -628,7 +628,7 @@ like this into your configuration file:
 
   ;; Simple package system for GNU Emacs.
   (try-require 'package)
-  (with-eval-after-load "package"
+  (with-eval-after-load 'package
 
     ;; Archives from which to fetch.
     ;; (add-to-list 'package-archives
@@ -845,7 +845,7 @@ like this into your configuration file:
     (defun idle-require (feature &optional file noerror)
       (try-require feature)))
 
-  (with-eval-after-load "idle-require"
+  (with-eval-after-load 'idle-require
 
     ;; Idle time in seconds after which autoload functions will be loaded.
     (setq idle-require-idle-delay 5)
@@ -970,28 +970,27 @@ Shortcuts:
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Treat undo history as a tree.
-  (with-eval-after-load "undo-tree-autoloads"
-
+  ;; Configuration for undo-tree.
+  (with-eval-after-load 'undo-tree-autoloads
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1))
 
-  (with-eval-after-load "undo-tree"
-
-    (with-eval-after-load "diminish-autoloads"
+  (with-eval-after-load 'undo-tree
+    ;; Diminish undo-tree-mode from modeline.
+    (with-eval-after-load 'diminish-autoloads
       (diminish 'undo-tree-mode))
 
-    ;; Display times relative to current time in visualizer.
+    ;; Visualizer settings - Display relative timestamps.
     (setq undo-tree-visualizer-relative-timestamps t)
 
-    ;; Display time-stamps by default in undo-tree visualizer.
+    ;; Visualizer settings - Show timestamps by default.
     (setq undo-tree-visualizer-timestamps t)
                                         ; Toggle time-stamps display using `t'.
 
-    ;; Display diff by default in undo-tree visualizer.
+    ;; Visualizer settings - Show diff by default.
     (setq undo-tree-visualizer-diff t)  ; Toggle the diff display using `d'.
 
-    ;; Redo changes.
+    ;; Keybindings for redo.
     (global-set-key (kbd "C-S-z")   #'undo-tree-redo)
     (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
 #+end_src
@@ -999,10 +998,11 @@ Shortcuts:
 Visual feedback on some operations (~undo~, ~yank~, etc.).
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "volatile-highlights-autoloads"
-    (idle-require 'volatile-highlights)
-    (with-eval-after-load "volatile-highlights"
-      (volatile-highlights-mode 1)))
+  (with-eval-after-load 'volatile-highlights-autoloads
+    (idle-require 'volatile-highlights))
+
+  (with-eval-after-load 'volatile-highlights
+    (volatile-highlights-mode 1))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1160,7 +1160,7 @@ RET~.
 
   (leuven--section "10.4 (emacs)Apropos")
 
-  (with-eval-after-load "apropos"
+  (with-eval-after-load 'apropos
 
     ;; Apropos commands will search more extensively, checking all variables and
     ;; non-interactive functions as well.
@@ -1257,7 +1257,7 @@ must do so if we want to force our Info manuals before the standard ones (from
 Emacs). XXX Could we set ~Info-default-directory-list~ instead???
 
 #+begin_src emacs-lisp
-  (with-eval-after-load "info"
+  (with-eval-after-load 'info
     ;; List of directories to search for Info documentation files (in the order
     ;; they are listed).
     (when lvn--win32-p
@@ -1279,16 +1279,14 @@ With ~Info+~, you can also merge an Info node with its subnodes into the same
 buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 #+begin_src emacs-lisp
-    (with-eval-after-load "info+-autoloads"
-      (idle-require 'info+))
-
-    (with-eval-after-load "info+"
-
+  (with-eval-after-load 'info+-autoloads
+    (idle-require 'info+)
+    (with-eval-after-load 'info+
       ;; Show breadcrumbs in the header line.
       (setq Info-breadcrumbs-in-header-flag t)
 
       ;; Don't show breadcrumbs in the mode line.
-      (setq Info-breadcrumbs-in-mode-line-mode nil))
+      (setq Info-breadcrumbs-in-mode-line-mode nil)))
 #+end_src
 
 In an Info page, ~w~ will copy the reference to the current node (the ~(%s)%s~ part
@@ -1304,27 +1302,27 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
   ;; Get a Unix manual page of the item under point.
   ;; (global-set-key (kbd "<S-f1>") #'man-follow)
 
-  (with-eval-after-load "man"
+  (with-eval-after-load 'man
     ;; Make the manpage the current buffer in the current window.
     (setq Man-notify-method 'pushy))
+#+end_src
 
-  ;; Alias man to woman.
+#+begin_src emacs-lisp
+  ;; Alias man to woman globally.
   (defalias 'man 'woman)
 
   ;; Decode and browse Unix man-pages "W.o. (without) Man".
-  (with-eval-after-load "woman"
-    (defalias 'man 'woman)
-
+  (with-eval-after-load 'woman
     ;; WoMan adds a Contents menu to the menubar.
     (setq woman-imenu t))
 #+end_src
 
 #+begin_src emacs-lisp
   ;; Guide the following key bindings automatically and dynamically.
-  (with-eval-after-load "which-key-autoloads"
+  (with-eval-after-load 'which-key-autoloads
     (idle-require 'which-key))
 
-  (with-eval-after-load "which-key"
+  (with-eval-after-load 'which-key
 
     (which-key-mode)
 

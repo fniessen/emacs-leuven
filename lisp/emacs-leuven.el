@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250201.1414>
+;; Version: <20250201.1629>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250201.1414>"
+(defconst lvn--emacs-version "<20250201.1629>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -406,7 +406,7 @@ Shows a warning message if the file does not exist or is not executable."
 
   ;; Simple package system for GNU Emacs.
   (try-require 'package)
-  (with-eval-after-load "package"
+  (with-eval-after-load 'package
 
     ;; Archives from which to fetch.
     ;; (add-to-list 'package-archives
@@ -604,7 +604,7 @@ Shows a warning message if the file does not exist or is not executable."
     (defun idle-require (feature &optional file noerror)
       (try-require feature)))
 
-  (with-eval-after-load "idle-require"
+  (with-eval-after-load 'idle-require
 
     ;; Idle time in seconds after which autoload functions will be loaded.
     (setq idle-require-idle-delay 5)
@@ -685,35 +685,35 @@ original state of line numbers after navigation."
   ;; Bind F11 to the undo command.
   (global-set-key (kbd "<f11>") #'undo)
 
-  ;; Treat undo history as a tree.
-  (with-eval-after-load "undo-tree-autoloads"
-
+  ;; Configuration for undo-tree.
+  (with-eval-after-load 'undo-tree-autoloads
     ;; Enable Global-Undo-Tree mode.
     (global-undo-tree-mode 1))
 
-  (with-eval-after-load "undo-tree"
-
-    (with-eval-after-load "diminish-autoloads"
+  (with-eval-after-load 'undo-tree
+    ;; Diminish undo-tree-mode from modeline.
+    (with-eval-after-load 'diminish-autoloads
       (diminish 'undo-tree-mode))
 
-    ;; Display times relative to current time in visualizer.
+    ;; Visualizer settings - Display relative timestamps.
     (setq undo-tree-visualizer-relative-timestamps t)
 
-    ;; Display time-stamps by default in undo-tree visualizer.
+    ;; Visualizer settings - Show timestamps by default.
     (setq undo-tree-visualizer-timestamps t)
                                         ; Toggle time-stamps display using `t'.
 
-    ;; Display diff by default in undo-tree visualizer.
+    ;; Visualizer settings - Show diff by default.
     (setq undo-tree-visualizer-diff t)  ; Toggle the diff display using `d'.
 
-    ;; Redo changes.
+    ;; Keybindings for redo.
     (global-set-key (kbd "C-S-z")   #'undo-tree-redo)
     (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
 
-  (with-eval-after-load "volatile-highlights-autoloads"
-    (idle-require 'volatile-highlights)
-    (with-eval-after-load "volatile-highlights"
-      (volatile-highlights-mode 1)))
+  (with-eval-after-load 'volatile-highlights-autoloads
+    (idle-require 'volatile-highlights))
+
+  (with-eval-after-load 'volatile-highlights
+    (volatile-highlights-mode 1))
 
 )                                       ; Chapter 7 ends here.
 
@@ -779,7 +779,7 @@ original state of line numbers after navigation."
 
   (leuven--section "10.4 (emacs)Apropos")
 
-  (with-eval-after-load "apropos"
+  (with-eval-after-load 'apropos
 
     ;; Apropos commands will search more extensively, checking all variables and
     ;; non-interactive functions as well.
@@ -825,7 +825,7 @@ original state of line numbers after navigation."
   ;; have documentation in Info).
   ;; (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
 
-  (with-eval-after-load "info"
+  (with-eval-after-load 'info
     ;; List of directories to search for Info documentation files (in the order
     ;; they are listed).
     (when lvn--win32-p
@@ -838,41 +838,37 @@ original state of line numbers after navigation."
         (when (file-directory-p cygwin-info-dir)
           (add-to-list 'Info-directory-list cygwin-info-dir t))))
 
-    (with-eval-after-load "info+-autoloads"
-      (idle-require 'info+))
-
-    (with-eval-after-load "info+"
-
+  (with-eval-after-load 'info+-autoloads
+    (idle-require 'info+)
+    (with-eval-after-load 'info+
       ;; Show breadcrumbs in the header line.
       (setq Info-breadcrumbs-in-header-flag t)
 
       ;; Don't show breadcrumbs in the mode line.
-      (setq Info-breadcrumbs-in-mode-line-mode nil))
+      (setq Info-breadcrumbs-in-mode-line-mode nil)))
 
     )
 
   ;; Get a Unix manual page of the item under point.
   ;; (global-set-key (kbd "<S-f1>") #'man-follow)
 
-  (with-eval-after-load "man"
+  (with-eval-after-load 'man
     ;; Make the manpage the current buffer in the current window.
     (setq Man-notify-method 'pushy))
 
-  ;; Alias man to woman.
+  ;; Alias man to woman globally.
   (defalias 'man 'woman)
 
   ;; Decode and browse Unix man-pages "W.o. (without) Man".
-  (with-eval-after-load "woman"
-    (defalias 'man 'woman)
-
+  (with-eval-after-load 'woman
     ;; WoMan adds a Contents menu to the menubar.
     (setq woman-imenu t))
 
   ;; Guide the following key bindings automatically and dynamically.
-  (with-eval-after-load "which-key-autoloads"
+  (with-eval-after-load 'which-key-autoloads
     (idle-require 'which-key))
 
-  (with-eval-after-load "which-key"
+  (with-eval-after-load 'which-key
 
     (which-key-mode)
 
