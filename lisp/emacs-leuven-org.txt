@@ -122,7 +122,7 @@ work and tasks with Org mode.
   (message "[Found no entries in `org-agenda-files']")
   (sit-for 1.5))
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   ;; Unbind `C-j' and `C-''.
   (define-key org-mode-map (kbd "C-j") nil)
   (define-key org-mode-map (kbd "C-'") nil) ; Unbind `org-cycle-agenda-files'.
@@ -160,7 +160,7 @@ I set ~org-emphasis-alist~ to itself and let the customize interface call the
 handler for me.
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   ;; Allow both single and double quotes in the border.
   (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n,")
   (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
@@ -278,7 +278,7 @@ unsetting local keys?
 (add-to-list 'package-selected-packages 'orgalist)
 (add-to-list 'package-selected-packages 'ox-jira)
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Introduction]")
 
   ;;** 1.3 (info "(org)Activation")
@@ -306,7 +306,7 @@ customize its face and use a fallback value.
 #+begin_src emacs-lisp
 ;;* 2 (info "(org)Document Structure")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Document Structure]")
 
   ;; Define the right-pointing pointer character.
@@ -332,7 +332,7 @@ customize its face and use a fallback value.
 The character displayability check is relatively slow.
 
 To mitigate potential performance issues, the code is enclosed in
-~(with-eval-after-load "org")~ to ensure that the test is performed only after the
+~(with-eval-after-load 'org)~ to ensure that the test is performed only after the
 org library is loaded. This way, the test's execution delay won't affect Emacs
 startup time.
 
@@ -368,13 +368,13 @@ The package =org-inlinetask.el= (for *tasks independent of outline hierarchy*)
 installs the key binding ~C-c C-x t~ to insert a new *inline task*.
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Headlines]")
 
   ;; Insert an inline task (independent of outline hierarchy).
   (try-require 'org-inlinetask))      ; Needed.
 
-(with-eval-after-load "org-inlinetask"
+(with-eval-after-load 'org-inlinetask
 
   ;; Initial state (TODO keyword) of inline tasks.
   (setq org-inlinetask-default-state "TODO")
@@ -524,7 +524,7 @@ options.
 (setq w32-pass-apps-to-system nil)
 (setq w32-apps-modifier 'hyper)       ; Apps key.
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   ;; Create indirect buffer and narrow it to current subtree.
   (define-key org-mode-map (kbd "<H-RET>") #'org-tree-to-indirect-buffer))
 #+end_src
@@ -565,7 +565,7 @@ vs ~C-u C-c C-j~
 #+end_src
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 
   (defun lvn-org-reveal (&optional all-siblings)
     "Show all siblings of the current level.
@@ -604,7 +604,7 @@ See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior 
 
 (message "2.6 (org)Sparse trees")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 #+end_src
 
 To control visibility when revealing a location, see ~org-show-context-detail~:
@@ -667,7 +667,7 @@ See [[http://orgmode.org/worg/org-tutorials/org-spreadsheet-intro.html][Org as a
 
 (message "3.5 (org)The spreadsheet")
 
-(with-eval-after-load "org-table"
+(with-eval-after-load 'org-table
   ;; Some Calc mode settings for use in `calc-eval' for table formulas.
   (setcar (cdr (memq 'calc-float-format org-calc-default-modes))
           '(float 12)))               ; [Default: 8]
@@ -698,7 +698,7 @@ has the equal signs escaped, unless you have:
 ** External links
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Hyperlinks]")
 
   ;; ;; Open non-existing files.
@@ -710,7 +710,7 @@ has the equal signs escaped, unless you have:
 
 #+begin_src emacs-lisp
 ;; Support for links to Gnus groups and messages from within Org mode.
-(with-eval-after-load "org-gnus"
+(with-eval-after-load 'org-gnus
 
   ;; Create web links to Google groups or Gmane (instead of Gnus messages).
   (setq org-gnus-prefer-web-links t))
@@ -720,7 +720,7 @@ has the equal signs escaped, unless you have:
 
 #+begin_src emacs-lisp
 ;; Global identifiers for Org mode entries.
-(with-eval-after-load "org-id"
+(with-eval-after-load 'org-id
 
   ;; Storing a link to an Org file will use entry IDs.
   (setq org-id-link-to-org-use-id
@@ -739,7 +739,7 @@ If I inline an image in an Org file, I can toggle its display with ~C-c C-x C-v~
 and resize it to a specific width.
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Handling links]")
 
   ;; 4.4 Show inline images when loading a new Org file.
@@ -901,7 +901,7 @@ vert MERGED back #DCFFF1       fore 006644
 rouge DECLINED back #FFECEB  fore AE2E24
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org-faces"
+(with-eval-after-load 'org-faces
 
   ;; Define non-standard faces for specific TODO states.
   (defface leuven-org-mayb-kwd
@@ -985,7 +985,7 @@ rouge DECLINED back #FFECEB  fore AE2E24
 (setq org-log-into-drawer t)    ; This should be the default behavior!
 
 ;; ~5.3.2 Heading for state change added to entries.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Progress logging]")
 
   ;; Update the 'state' log format to show state transitions like
@@ -999,7 +999,7 @@ Warning! The docstring of ~org-log-note-headings~ mentions that "in fact, it is
 on the format of these entries."
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org-habit"
+(with-eval-after-load 'org-habit
 
   ;; Show habits for future days.
   (setq org-habit-show-habits-only-for-today nil)
@@ -1157,7 +1157,7 @@ special meaning are written with all capitals.
 (message "8 (org)Dates and Times")
 
 ;; Insinuate appt if Org mode is loaded.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Dates and Times]")
 
   (try-require 'appt))
@@ -1286,7 +1286,7 @@ Alternative to requiring org-clock in every Emacs session.
             (setq org-clock-persist t)
             (org-clock-persistence-insinuate)))
 
-(with-eval-after-load "org-clock"
+(with-eval-after-load 'org-clock
 
   ;; ;; 8.4 Save both the running clock and the entire clock history when Emacs
   ;; ;; is closed, and resume it next time Emacs is started up.
@@ -1442,7 +1442,7 @@ organization:
 
 #+begin_src emacs-lisp
 ;; 9.1.2 Default target for storing notes.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
         (or (and (file-exists-p (concat org-directory "/inbox.org"))
@@ -1497,7 +1497,7 @@ Use ~:jump-to-captured~ to tell capture to jump to the note after storing it.
 ;; ("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")
 
 ;; Fast note taking in Org mode (the ultimate capture tool).
-(with-eval-after-load "org-capture"
+(with-eval-after-load 'org-capture
 
   (add-to-list 'org-capture-templates
                `("t" "Task" entry
@@ -1726,7 +1726,7 @@ Instead of modifying ~org-link-abbrev-alist~, you can also use
 in your Org buffers.
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org-protocol"
+(with-eval-after-load 'org-protocol
   (add-to-list 'org-safe-remote-resources
                "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'"))
 #+end_src
@@ -1741,7 +1741,7 @@ Have a look at [[http://vimeo.com/5662410][Store links in Emacs Org using org-pr
 (message "9.4 (org)Protocols")
 
 ;; 9.4 Capture from Firefox (to store links and text).
-(with-eval-after-load "org-protocol"
+(with-eval-after-load 'org-protocol
 
   ;; Map online URL to an existing working file.
   (add-to-list 'org-protocol-project-alist
@@ -1759,7 +1759,7 @@ using the *refile* command ~C-c C-w~.  This lets me select (with completion) the
 header under which the entry will be placed.
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Refile]")
 
   (defvar leuven-org-refile-extra-files
@@ -1822,7 +1822,7 @@ header under which the entry will be placed.
 
 ;;* 10 (info "(org)Agenda Views")
 
-(with-eval-after-load "org-agenda"
+(with-eval-after-load 'org-agenda
 
   ;; Multiple same-day time stamps in entry make multiple agenda lines.
   (setq org-agenda-skip-additional-timestamps-same-entry nil)
@@ -2060,7 +2060,7 @@ headline (to return any kind of string you want).
 
   )                                   ; with-eval-after-load "org-agenda" ends here.
 
-(with-eval-after-load "org-faces"
+(with-eval-after-load 'org-faces
 
   ;; Faces for showing deadlines in the agenda.
   (setq org-agenda-deadline-faces
@@ -2090,7 +2090,7 @@ headline (to return any kind of string you want).
 #+end_src
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org-agenda"
+(with-eval-after-load 'org-agenda
 
   ;; ;; 10.4 Column to shift tags to (in agenda items).
   ;; (setq org-agenda-tags-column -132)
@@ -2412,7 +2412,7 @@ Commands:
 
 (message "10.6 (org)Custom agenda views")
 
-(with-eval-after-load "org-agenda"
+(with-eval-after-load 'org-agenda
   (let ((leuven-org-agenda-views
          (concat lvn--directory "org-leuven-agenda-views.el")))
     (when (file-exists-p leuven-org-agenda-views)
@@ -2486,7 +2486,7 @@ root directory (including from local files =TODO.org= and =BUGS.org=, for exampl
 ** Not sorted
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org-agenda"
+(with-eval-after-load 'org-agenda
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2565,12 +2565,12 @@ Source: Sacha Chua.
 
 (message "11 (org)Markup")
 
-(with-eval-after-load "org-faces"
+(with-eval-after-load 'org-faces
 
   ;; Add a face to #+begin_quote and #+begin_verse blocks.
   (setq org-fontify-quote-and-verse-blocks t))
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Markup]")
 
   ;;??? Change the face of a headline (as an additional information) if it is
@@ -2641,7 +2641,7 @@ exporter only).
 
 #+begin_src emacs-lisp
 ;; 11.7.1 Define user entities to produce special characters.
-(with-eval-after-load "org-entities"
+(with-eval-after-load 'org-entities
 
   (add-to-list 'org-entities-user
                '("ok"
@@ -2687,7 +2687,7 @@ To list all available entities, run ~M-x org-entities-help~.
 ;;* 12 (info "(org)Exporting")
 
 ;; Bind the exporter dispatcher to a key sequence.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Exporting]")
 
   ;; Libraries in this list will be loaded once the export framework is needed.
@@ -2713,7 +2713,7 @@ Why not adding a recursive functionality as well (in Emacs Lisp too), to be
 launched from Dired?
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 
   (defun org-save-buffer-and-do-related ()
     "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
@@ -2819,7 +2819,7 @@ Before exporting...
 (message "12.2 (org)Export options")
 
 ;; Org generic export engine.
-(with-eval-after-load "ox"
+(with-eval-after-load 'ox
 
   ;; 12.3 Don't insert a time stamp into the exported file.
   (setq org-export-time-stamp-file nil)
@@ -2891,7 +2891,7 @@ To get a start for your CSS file, use the command
 ;;** 12.5 (info "(org)HTML export")
 
 ;; Org HTML export engine.
-(with-eval-after-load "ox-html"
+(with-eval-after-load 'ox-html
 
   (setq org-html-checkbox-type 'unicode)
 
@@ -2965,7 +2965,7 @@ directory.
 (autoload 'htmlize-file "htmlize"
   "Load FILE, fontify it, convert it to HTML, and save the result." t)
 
-(with-eval-after-load "htmlize"
+(with-eval-after-load 'htmlize
 
   ;; Output type of generated HTML.
   (setq htmlize-output-type 'css)
@@ -3012,7 +3012,7 @@ This adds a Quick Print option to your menu bar (under File).
 (global-set-key (kbd "C-c C-e h o") #'htmlize-view-buffer)
 
 ;; View current buffer as html in web browser.
-(with-eval-after-load "htmlize-view"
+(with-eval-after-load 'htmlize-view
 
   ;; Add "Quick Print" entry to file menu.
   (htmlize-view-add-to-files-menu))
@@ -3031,7 +3031,7 @@ capabilities.
 (message "12.6 (org)LaTeX and PDF export")
 
 ;; LaTeX back-end.
-(with-eval-after-load "ox-latex"
+(with-eval-after-load 'ox-latex
 
   ;; Markup for TODO keywords and for tags, as a printf format.
   (defun leuven--org-latex-format-headline
@@ -3354,7 +3354,7 @@ headline.  This is useful to support structures like the following:
 #+begin_src emacs-lisp
 ;; 12.6.6 Beamer class export.
 ;; (require 'ox-beamer)
-(with-eval-after-load "ox-beamer"
+(with-eval-after-load 'ox-beamer
 
   ;; Default title of a frame containing an outline.
   (setq org-beamer-outline-frame-title "Plan")) ; [default: "Outline"]
@@ -3366,7 +3366,7 @@ ODT export is not loaded by default.  You will have to load it explicitly or to
 add it to ~org-export-backends~.
 
 #+begin_src emacs-lisp
-(with-eval-after-load "ox-odt"
+(with-eval-after-load 'ox-odt
 
   ;; Convert "odt" format to "doc" format.
   (setq org-odt-preferred-output-format "doc")
@@ -3385,7 +3385,7 @@ through LaTeX!
 
 #+begin_src emacs-lisp
 ;; major mode for editing Markdown-formatted text.
-(with-eval-after-load "markdown-mode-autoloads"
+(with-eval-after-load 'markdown-mode-autoloads
   (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
 #+end_src
 
@@ -3409,7 +3409,7 @@ See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 T
 
 (message "13 (org)Publishing")
 
-(with-eval-after-load "ox-publish"
+(with-eval-after-load 'ox-publish
 
   ;; Show message about files *not* published.
   (setq org-publish-list-skipped-files nil)
@@ -3445,7 +3445,7 @@ Automate the redisplay of inline images, so that the images are always
 up-to-date.
 
 #+begin_src emacs-lisp
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
 
   ;; Make the images in the Emacs buffer automatically refresh after
   ;; execution.
@@ -3469,7 +3469,7 @@ up-to-date.
 Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org-src"
+(with-eval-after-load 'org-src
 
   ;; Mapping languages to their major mode (for editing the source code block
   ;; with `C-c '') -- when the language name doesn't match exactly the
@@ -3506,7 +3506,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
 (setq org-src-tab-acts-natively t)
 
 
-;; (with-eval-after-load "org"
+;; (with-eval-after-load 'org
 ;;   (message "[... Org Editing source code]")
 ;;
 ;;   ;; Allow indent region in the code edit buffer (according to language).
@@ -3563,7 +3563,7 @@ logically equivalent to "tangle", but without creating a separate file).
 #+end_src
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (defun lvn-org-copy-current-code-block ()
     "Copy the contents of the current Org mode code block to the kill ring.
 A code block in Org mode is identified by the \"#+begin_src\" and \"#+end_src\" markers.
@@ -3606,7 +3606,7 @@ See:
 ;; Languages for which Org-babel will raise literate programming errors when
 ;; noweb references can not be resolved.
 
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
   (add-to-list 'org-babel-noweb-error-langs "emacs-lisp"))
 #+end_src
 
@@ -3627,7 +3627,7 @@ Write error messages to the Messages buffer for invalid ~org-sbe~ calls.
 *** Languages
 
 #+begin_src emacs-lisp
-(with-eval-after-load "ob-exp"
+(with-eval-after-load 'ob-exp
   ;; Template used to export the body of code blocks.
   (setq org-babel-exp-code-template
         ;; (concat "\n=%name=:\n"
@@ -3650,7 +3650,7 @@ languages which can be evaluated in Org mode buffers.
 ;; FIXME Test executable-find (of Rterm, gnuplot, ruby, etc.) before
 ;; setting language to yes...
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Languages]")
 
   ;; Configure Babel to support most languages.
@@ -3762,7 +3762,7 @@ where we *load languages* such as R, etc.
 
 (message "14.6 (org)Library of Babel")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 
   ;; Load the NAMED code blocks defined in Org mode files into the library of
   ;; Babel (global `org-babel-library-of-babel' variable).
@@ -3777,7 +3777,7 @@ where we *load languages* such as R, etc.
 #+begin_src emacs-lisp
 (message "14.11 (org)Key bindings and useful functions")
 
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
 
   (defadvice org-babel-next-src-block
       (after leuven-org-babel-next-src-block activate)
@@ -3911,7 +3911,7 @@ Lower-case in ~BEGIN_SRC~ and other keywords: do not stand out!
 
 (message "15.2 (org)Easy Templates")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Easy Templates]")
 
   ;; New format in Org 9.2.
@@ -3958,7 +3958,7 @@ Use ~?~ at the start of an Org header to see which speed commands we have.
 
 (message "15.3 (org)Speed keys")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Speek keys]")
 
   ;; Activate single letter commands at beginning of a headline.
@@ -4016,14 +4016,14 @@ For security resons, evaluation is not turned on by default.
 
 (message "15.4 (org)Code evaluation security issues")
 
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
 
   ;;!! Don't be prompted on every code block evaluation.
   (setq org-confirm-babel-evaluate nil))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
 
   (defface org-block-executing
     '((t :background "#FFE0FF"))
@@ -4051,7 +4051,7 @@ exporting =gnus-leuven.txt= to HTML.
 #+begin_src emacs-lisp
 ;;** 15.8 A (info "(org)Clean view")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Clean view]")
 
   ;; 15.8 Don't skip even levels for the outline.
@@ -4076,7 +4076,7 @@ Org...
 #+end_note
 
 #+begin_src emacs-lisp :tangle no
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 
   ;; Support shift-selection for making and enlarging regions when the cursor
   ;; is not in a special context.
@@ -4122,12 +4122,12 @@ C-r~ (fits nicely with the meaning of "reveal").
 #+begin_src emacs-lisp
 ;; Keep my encrypted data (like account passwords) in my Org mode files with
 ;; a special tag instead.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Crypt]")
 
   (try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
 
-(with-eval-after-load "org-crypt"
+(with-eval-after-load 'org-crypt
 
   ;; Encrypt all entries before saving.
   (org-crypt-use-before-save-magic)
@@ -4287,7 +4287,7 @@ See http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-10-3
 #+begin_src emacs-lisp
 ;;** A.3 (info "(org)Adding hyperlink types")
 
-;; (with-eval-after-load "org"
+;; (with-eval-after-load 'org
 ;;   (message "[... Org Adding hyperlink types]")
 ;;
 ;;   ;; Define a new link type (`latex') whose path argument can hold the name of
@@ -4372,11 +4372,11 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 ** Org-effectiveness
 
 #+begin_src emacs-lisp
-;; (with-eval-after-load "org"
+;; (with-eval-after-load 'org
 ;;   (message "[... Org Effectiveness]")
 ;;
 ;;   (try-require 'org-effectiveness)
-;;   (with-eval-after-load "org-effectiveness"
+;;   (with-eval-after-load 'org-effectiveness
 ;;
 ;;     (add-hook 'org-mode-hook
 ;;               (lambda ()
@@ -4406,7 +4406,7 @@ Link emails from Org files.
 (autoload 'org-google-weather "org-google-weather"
   "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
-(with-eval-after-load "org-google-weather"
+(with-eval-after-load 'org-google-weather
   ;; (try-require 'url)
 
   ;; Add the city.
@@ -4438,7 +4438,7 @@ Link emails from Org files.
 | Ubuntu Mono                  |
 
 #+begin_src emacs-lisp
-(with-eval-after-load "org-modern"
+(with-eval-after-load 'org-modern
 
   (add-hook 'org-mode-hook #'org-modern-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)

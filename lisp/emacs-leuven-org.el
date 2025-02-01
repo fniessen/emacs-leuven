@@ -41,7 +41,7 @@ If not, just print a message."
   (message "[Found no entries in `org-agenda-files']")
   (sit-for 1.5))
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   ;; Unbind `C-j' and `C-''.
   (define-key org-mode-map (kbd "C-j") nil)
   (define-key org-mode-map (kbd "C-'") nil) ; Unbind `org-cycle-agenda-files'.
@@ -68,7 +68,7 @@ If not, just print a message."
 ;;         ;; ("?" (:box t))
 ;;         ("!" (:weight ultra-bold :foreground "#B40000")) ; = alert in some Wikis
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   ;; Allow both single and double quotes in the border.
   (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n,")
   (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
@@ -121,7 +121,7 @@ If not, just print a message."
 (add-to-list 'package-selected-packages 'orgalist)
 (add-to-list 'package-selected-packages 'ox-jira)
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Introduction]")
 
   ;;** 1.3 (info "(org)Activation")
@@ -133,7 +133,7 @@ If not, just print a message."
 
 ;;* 2 (info "(org)Document Structure")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Document Structure]")
 
   ;; Define the right-pointing pointer character.
@@ -174,13 +174,13 @@ If not, just print a message."
 ;; `C-a' and `C-e' behave specially in headlines and items.
 (setq org-special-ctrl-a/e 'reversed)
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Headlines]")
 
   ;; Insert an inline task (independent of outline hierarchy).
   (try-require 'org-inlinetask))      ; Needed.
 
-(with-eval-after-load "org-inlinetask"
+(with-eval-after-load 'org-inlinetask
 
   ;; Initial state (TODO keyword) of inline tasks.
   (setq org-inlinetask-default-state "TODO")
@@ -279,7 +279,7 @@ If not, just print a message."
 (setq w32-pass-apps-to-system nil)
 (setq w32-apps-modifier 'hyper)       ; Apps key.
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   ;; Create indirect buffer and narrow it to current subtree.
   (define-key org-mode-map (kbd "<H-RET>") #'org-tree-to-indirect-buffer))
 
@@ -304,7 +304,7 @@ If not, just print a message."
 ;; (interface also used by the `refile' command).
 (setq org-goto-interface 'outline-path-completion)
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 
   (defun lvn-org-reveal (&optional all-siblings)
     "Show all siblings of the current level.
@@ -330,7 +330,7 @@ With a prefix argument (C-u C-c C-r), show all hidden siblings."
 
 (message "2.6 (org)Sparse trees")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 
   (when (boundp 'org-show-context-detail)
     ;; (setq org-show-context-detail '((default . local)))
@@ -372,7 +372,7 @@ With a prefix argument (C-u C-c C-r), show all hidden siblings."
 
 (message "3.5 (org)The spreadsheet")
 
-(with-eval-after-load "org-table"
+(with-eval-after-load 'org-table
   ;; Some Calc mode settings for use in `calc-eval' for table formulas.
   (setcar (cdr (memq 'calc-float-format org-calc-default-modes))
           '(float 12)))               ; [Default: 8]
@@ -382,7 +382,7 @@ With a prefix argument (C-u C-c C-r), show all hidden siblings."
 ;; Don't hexify URL when creating a link.
 (setq org-url-hexify-p nil)
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Hyperlinks]")
 
   ;; ;; Open non-existing files.
@@ -392,19 +392,19 @@ With a prefix argument (C-u C-c C-r), show all hidden siblings."
   (setq org-link-mailto-program '(compose-mail "%a" "%s")))
 
 ;; Support for links to Gnus groups and messages from within Org mode.
-(with-eval-after-load "org-gnus"
+(with-eval-after-load 'org-gnus
 
   ;; Create web links to Google groups or Gmane (instead of Gnus messages).
   (setq org-gnus-prefer-web-links t))
 
 ;; Global identifiers for Org mode entries.
-(with-eval-after-load "org-id"
+(with-eval-after-load 'org-id
 
   ;; Storing a link to an Org file will use entry IDs.
   (setq org-id-link-to-org-use-id
         'create-if-interactive-and-no-custom-id))
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Handling links]")
 
   ;; 4.4 Show inline images when loading a new Org file.
@@ -471,7 +471,7 @@ This makes ID links quasi-bidirectional."
                   "DONE(d!)"            ; Completed, closed, resolved.
                   "CANX(x@)")))         ; Won't fix, rejected, ignored.
 
-(with-eval-after-load "org-faces"
+(with-eval-after-load 'org-faces
 
   ;; Define non-standard faces for specific TODO states.
   (defface leuven-org-mayb-kwd
@@ -536,7 +536,7 @@ This makes ID links quasi-bidirectional."
 (setq org-log-into-drawer t)    ; This should be the default behavior!
 
 ;; ~5.3.2 Heading for state change added to entries.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Progress logging]")
 
   ;; Update the 'state' log format to show state transitions like
@@ -544,7 +544,7 @@ This makes ID links quasi-bidirectional."
   (setcdr (assq 'state org-log-note-headings)
           "State %-12S  ->  %-12s %t"))
 
-(with-eval-after-load "org-habit"
+(with-eval-after-load 'org-habit
 
   ;; Show habits for future days.
   (setq org-habit-show-habits-only-for-today nil)
@@ -664,7 +664,7 @@ a parent headline."
 (message "8 (org)Dates and Times")
 
 ;; Insinuate appt if Org mode is loaded.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Dates and Times]")
 
   (try-require 'appt))
@@ -751,7 +751,7 @@ a parent headline."
             (setq org-clock-persist t)
             (org-clock-persistence-insinuate)))
 
-(with-eval-after-load "org-clock"
+(with-eval-after-load 'org-clock
 
   ;; ;; 8.4 Save both the running clock and the entire clock history when Emacs
   ;; ;; is closed, and resume it next time Emacs is started up.
@@ -873,7 +873,7 @@ This is a useful function for adding to `kill-emacs-query-functions'."
              (t "~/"))))
 
 ;; 9.1.2 Default target for storing notes.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
         (or (and (file-exists-p (concat org-directory "/inbox.org"))
@@ -889,7 +889,7 @@ This is a useful function for adding to `kill-emacs-query-functions'."
 ;; ("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")
 
 ;; Fast note taking in Org mode (the ultimate capture tool).
-(with-eval-after-load "org-capture"
+(with-eval-after-load 'org-capture
 
   (add-to-list 'org-capture-templates
                `("t" "Task" entry
@@ -1035,14 +1035,14 @@ From the address <%a>"
 ;; ;; 4.6 Shortcut links.
 ;; (add-to-list 'org-link-abbrev-alist '(("att" . org-attach-expand-link)))
 
-(with-eval-after-load "org-protocol"
+(with-eval-after-load 'org-protocol
   (add-to-list 'org-safe-remote-resources
                "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'"))
 
 (message "9.4 (org)Protocols")
 
 ;; 9.4 Capture from Firefox (to store links and text).
-(with-eval-after-load "org-protocol"
+(with-eval-after-load 'org-protocol
 
   ;; Map online URL to an existing working file.
   (add-to-list 'org-protocol-project-alist
@@ -1052,7 +1052,7 @@ From the address <%a>"
                  :base-url "http://orgmode.org/worg/"
                  :working-directory "~/Public/Repositories/worg/") t))
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Refile]")
 
   (defvar leuven-org-refile-extra-files
@@ -1105,7 +1105,7 @@ From the address <%a>"
 
 ;;* 10 (info "(org)Agenda Views")
 
-(with-eval-after-load "org-agenda"
+(with-eval-after-load 'org-agenda
 
   ;; Multiple same-day time stamps in entry make multiple agenda lines.
   (setq org-agenda-skip-additional-timestamps-same-entry nil)
@@ -1257,7 +1257,7 @@ From the address <%a>"
 
   )                                   ; with-eval-after-load "org-agenda" ends here.
 
-(with-eval-after-load "org-faces"
+(with-eval-after-load 'org-faces
 
   ;; Faces for showing deadlines in the agenda.
   (setq org-agenda-deadline-faces
@@ -1285,7 +1285,7 @@ From the address <%a>"
     '((t :foreground "#40A80B"))
     "Face used to highlight tasks whose due date is for later."))
 
-(with-eval-after-load "org-agenda"
+(with-eval-after-load 'org-agenda
 
   ;; ;; 10.4 Column to shift tags to (in agenda items).
   ;; (setq org-agenda-tags-column -132)
@@ -1497,7 +1497,7 @@ Examples:
 
 (message "10.6 (org)Custom agenda views")
 
-(with-eval-after-load "org-agenda"
+(with-eval-after-load 'org-agenda
   (let ((leuven-org-agenda-views
          (concat lvn--directory "org-leuven-agenda-views.el")))
     (when (file-exists-p leuven-org-agenda-views)
@@ -1550,7 +1550,7 @@ Examples:
 ;; DUPLICATE Obey `eval' variables -- RISKY!
 (setq enable-local-eval t)
 
-(with-eval-after-load "org-agenda"
+(with-eval-after-load 'org-agenda
 
   (defadvice org-agenda-switch-to
       (after leuven-org-agenda-switch-to activate)
@@ -1597,12 +1597,12 @@ this with to-do items than with projects or headings."
 
 (message "11 (org)Markup")
 
-(with-eval-after-load "org-faces"
+(with-eval-after-load 'org-faces
 
   ;; Add a face to #+begin_quote and #+begin_verse blocks.
   (setq org-fontify-quote-and-verse-blocks t))
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Markup]")
 
   ;;??? Change the face of a headline (as an additional information) if it is
@@ -1656,7 +1656,7 @@ or added into the given directory, defaulting to the current one."
       (when pos (goto-char pos)))))
 
 ;; 11.7.1 Define user entities to produce special characters.
-(with-eval-after-load "org-entities"
+(with-eval-after-load 'org-entities
 
   (add-to-list 'org-entities-user
                '("ok"
@@ -1692,7 +1692,7 @@ or added into the given directory, defaulting to the current one."
 ;;* 12 (info "(org)Exporting")
 
 ;; Bind the exporter dispatcher to a key sequence.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Exporting]")
 
   ;; Libraries in this list will be loaded once the export framework is needed.
@@ -1700,7 +1700,7 @@ or added into the given directory, defaulting to the current one."
 
   (define-key org-mode-map (kbd "C-c C-e") #'org-export-dispatch))
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 
   (defun org-save-buffer-and-do-related ()
     "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
@@ -1777,7 +1777,7 @@ or added into the given directory, defaulting to the current one."
 (message "12.2 (org)Export options")
 
 ;; Org generic export engine.
-(with-eval-after-load "ox"
+(with-eval-after-load 'ox
 
   ;; 12.3 Don't insert a time stamp into the exported file.
   (setq org-export-time-stamp-file nil)
@@ -1829,7 +1829,7 @@ or added into the given directory, defaulting to the current one."
 ;;** 12.5 (info "(org)HTML export")
 
 ;; Org HTML export engine.
-(with-eval-after-load "ox-html"
+(with-eval-after-load 'ox-html
 
   (setq org-html-checkbox-type 'unicode)
 
@@ -1895,7 +1895,7 @@ or added into the given directory, defaulting to the current one."
 (autoload 'htmlize-file "htmlize"
   "Load FILE, fontify it, convert it to HTML, and save the result." t)
 
-(with-eval-after-load "htmlize"
+(with-eval-after-load 'htmlize
 
   ;; Output type of generated HTML.
   (setq htmlize-output-type 'css)
@@ -1935,7 +1935,7 @@ buffer."
 (global-set-key (kbd "C-c C-e h o") #'htmlize-view-buffer)
 
 ;; View current buffer as html in web browser.
-(with-eval-after-load "htmlize-view"
+(with-eval-after-load 'htmlize-view
 
   ;; Add "Quick Print" entry to file menu.
   (htmlize-view-add-to-files-menu))
@@ -1945,7 +1945,7 @@ buffer."
 (message "12.6 (org)LaTeX and PDF export")
 
 ;; LaTeX back-end.
-(with-eval-after-load "ox-latex"
+(with-eval-after-load 'ox-latex
 
   ;; Markup for TODO keywords and for tags, as a printf format.
   (defun leuven--org-latex-format-headline
@@ -2137,12 +2137,12 @@ parent."
 
 ;; 12.6.6 Beamer class export.
 ;; (require 'ox-beamer)
-(with-eval-after-load "ox-beamer"
+(with-eval-after-load 'ox-beamer
 
   ;; Default title of a frame containing an outline.
   (setq org-beamer-outline-frame-title "Plan")) ; [default: "Outline"]
 
-(with-eval-after-load "ox-odt"
+(with-eval-after-load 'ox-odt
 
   ;; Convert "odt" format to "doc" format.
   (setq org-odt-preferred-output-format "doc")
@@ -2152,14 +2152,14 @@ parent."
             "soffice --headless --convert-to %f%x --outdir \"$(cygpath -m %d)\" \"$(cygpath -m %i)\"")))
 
 ;; major mode for editing Markdown-formatted text.
-(with-eval-after-load "markdown-mode-autoloads"
+(with-eval-after-load 'markdown-mode-autoloads
   (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
 
 ;;* 13 (info "(org)Publishing")
 
 (message "13 (org)Publishing")
 
-(with-eval-after-load "ox-publish"
+(with-eval-after-load 'ox-publish
 
   ;; Show message about files *not* published.
   (setq org-publish-list-skipped-files nil)
@@ -2176,7 +2176,7 @@ parent."
 
 ;;* 14 (info "(org)Working With Source Code")
 
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
 
   ;; Make the images in the Emacs buffer automatically refresh after
   ;; execution.
@@ -2192,7 +2192,7 @@ parent."
 
 (message "14.2 (org)Editing source code")
 
-(with-eval-after-load "org-src"
+(with-eval-after-load 'org-src
 
   ;; Mapping languages to their major mode (for editing the source code block
   ;; with `C-c '') -- when the language name doesn't match exactly the
@@ -2227,7 +2227,7 @@ parent."
 (setq org-src-tab-acts-natively t)
 
 
-;; (with-eval-after-load "org"
+;; (with-eval-after-load 'org
 ;;   (message "[... Org Editing source code]")
 ;;
 ;;   ;; Allow indent region in the code edit buffer (according to language).
@@ -2273,7 +2273,7 @@ parent."
   (interactive)
   (mapc 'delete-overlay only-code-overlays))
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (defun lvn-org-copy-current-code-block ()
     "Copy the contents of the current Org mode code block to the kill ring.
 A code block in Org mode is identified by the \"#+begin_src\" and \"#+end_src\" markers.
@@ -2308,10 +2308,10 @@ This function is intended for use within Org mode buffers."
 ;; Languages for which Org-babel will raise literate programming errors when
 ;; noweb references can not be resolved.
 
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
   (add-to-list 'org-babel-noweb-error-langs "emacs-lisp"))
 
-(with-eval-after-load "ob-exp"
+(with-eval-after-load 'ob-exp
   ;; Template used to export the body of code blocks.
   (setq org-babel-exp-code-template
         ;; (concat "\n=%name=:\n"
@@ -2329,7 +2329,7 @@ This function is intended for use within Org mode buffers."
 ;; FIXME Test executable-find (of Rterm, gnuplot, ruby, etc.) before
 ;; setting language to yes...
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Languages]")
 
   ;; Configure Babel to support most languages.
@@ -2401,7 +2401,7 @@ This function is intended for use within Org mode buffers."
 
 (message "14.6 (org)Library of Babel")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
 
   ;; Load the NAMED code blocks defined in Org mode files into the library of
   ;; Babel (global `org-babel-library-of-babel' variable).
@@ -2412,7 +2412,7 @@ This function is intended for use within Org mode buffers."
 
 (message "14.11 (org)Key bindings and useful functions")
 
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
 
   (defadvice org-babel-next-src-block
       (after leuven-org-babel-next-src-block activate)
@@ -2509,7 +2509,7 @@ Ignore non Org buffers."
 
 (message "15.2 (org)Easy Templates")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Easy Templates]")
 
   ;; New format in Org 9.2.
@@ -2525,7 +2525,7 @@ Ignore non Org buffers."
 
 (message "15.3 (org)Speed keys")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Speek keys]")
 
   ;; Activate single letter commands at beginning of a headline.
@@ -2564,14 +2564,14 @@ Ignore non Org buffers."
 
 (message "15.4 (org)Code evaluation security issues")
 
-(with-eval-after-load "ob-core"
+(with-eval-after-load 'ob-core
 
   ;;!! Don't be prompted on every code block evaluation.
   (setq org-confirm-babel-evaluate nil))
 
 ;;** 15.8 A (info "(org)Clean view")
 
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Clean view]")
 
   ;; 15.8 Don't skip even levels for the outline.
@@ -2583,12 +2583,12 @@ Ignore non Org buffers."
 
 ;; Keep my encrypted data (like account passwords) in my Org mode files with
 ;; a special tag instead.
-(with-eval-after-load "org"
+(with-eval-after-load 'org
   (message "[... Org Crypt]")
 
   (try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
 
-(with-eval-after-load "org-crypt"
+(with-eval-after-load 'org-crypt
 
   ;; Encrypt all entries before saving.
   (org-crypt-use-before-save-magic)
@@ -2695,7 +2695,7 @@ Ignore non Org buffers."
 
 ;;** A.3 (info "(org)Adding hyperlink types")
 
-;; (with-eval-after-load "org"
+;; (with-eval-after-load 'org
 ;;   (message "[... Org Adding hyperlink types]")
 ;;
 ;;   ;; Define a new link type (`latex') whose path argument can hold the name of
@@ -2757,11 +2757,11 @@ Ignore non Org buffers."
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
 (add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)
 
-;; (with-eval-after-load "org"
+;; (with-eval-after-load 'org
 ;;   (message "[... Org Effectiveness]")
 ;;
 ;;   (try-require 'org-effectiveness)
-;;   (with-eval-after-load "org-effectiveness"
+;;   (with-eval-after-load 'org-effectiveness
 ;;
 ;;     (add-hook 'org-mode-hook
 ;;               (lambda ()
@@ -2772,13 +2772,13 @@ Ignore non Org buffers."
 (autoload 'org-google-weather "org-google-weather"
   "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
-(with-eval-after-load "org-google-weather"
+(with-eval-after-load 'org-google-weather
   ;; (try-require 'url)
 
   ;; Add the city.
   (setq org-google-weather-format "%C %i %c, %l°-%h°"))
 
-(with-eval-after-load "org-modern"
+(with-eval-after-load 'org-modern
 
   (add-hook 'org-mode-hook #'org-modern-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
