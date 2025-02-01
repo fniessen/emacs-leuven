@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250131.2348>
+;; Version: <20250201.0955>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250131.2348>"
+(defconst lvn--emacs-version "<20250201.0955>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1585,52 +1585,43 @@ Should be selected from `fringe-bitmaps'.")
     ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
 
   (defface powerline-modified-face
-    '((((class color))
-       (:background "#FFA335" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "#FFA335" :foreground "black" :weight bold)))
     "Face to fontify modified files."
     :group 'powerline)
 
   (defface powerline-normal-face
-    '((((class color))
-       (:background "#4F9D03" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "#4F9D03" :foreground "black" :weight bold)))
     "Face to fontify unchanged files."
     :group 'powerline)
 
   (defface powerline-default-dictionary-active-face
-    '((((class color))
-       (:background "#8A2BE2" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "#8A2BE2" :foreground "black" :weight bold)))
     "Face to fontify default dictionary in the active buffer."
     :group 'powerline)
 
   (defface powerline-default-dictionary-inactive-face
-    '((((class color))
-       (:background "thistle" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "thistle" :foreground "black" :weight bold)))
     "Face to fontify default dictionary in inactive buffers."
     :group 'powerline)
 
   (defface powerline-other-dictionary-active-face
-    '((((class color))
-       (:background "yellow" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "yellow" :foreground "black" :weight bold)))
     "Face to fontify another dictionary in the active buffer."
     :group 'powerline)
 
   (defface powerline-other-dictionary-inactive-face
-    '((((class color))
-       (:background "LightYellow1" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "LightYellow1" :foreground "black" :weight bold)))
     "Face to fontify another dictionary in inactive buffers."
     :group 'powerline)
 
   (defface powerline-buffer-position-face
-    '((((class color))
-       (:background "#D2D2D2" :foreground "#282828"))
-      (t (:weight bold)))
+    '((t (:background "#D2D2D2" :foreground "#282828")))
     "Face to fontify buffer position."
+    :group 'powerline)
+
+  (defface powerline-column-over-80
+    '((t (:background "red" :foreground "yellow" :weight bold)))
+    "Face for column number when it's over 80."
     :group 'powerline)
 
   (defun powerline--get-face (active face1 face2)
@@ -1712,9 +1703,11 @@ Should be selected from `fringe-bitmaps'.")
                       (funcall separator-left face2 mode-line)))
                 (rhs (list (powerline-raw global-mode-string mode-line 'r)
                            (funcall separator-right mode-line face1)
-
                            (powerline-raw "%l," face1 'l)
-                           (powerline-raw "%c" face1 'r)
+                           (propertize "%c " 'face
+                                    (if (> (current-column) 80)
+                                        'powerline-column-over-80
+                                      face1))
                            (funcall separator-right face1 'powerline-buffer-position-face)
                            (powerline-raw " %3p" 'powerline-buffer-position-face 'r)
                            (funcall separator-right 'powerline-buffer-position-face face2)

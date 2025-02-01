@@ -2804,52 +2804,43 @@ We build our mode line:
 
 #+begin_src emacs-lisp
   (defface powerline-modified-face
-    '((((class color))
-       (:background "#FFA335" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "#FFA335" :foreground "black" :weight bold)))
     "Face to fontify modified files."
     :group 'powerline)
 
   (defface powerline-normal-face
-    '((((class color))
-       (:background "#4F9D03" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "#4F9D03" :foreground "black" :weight bold)))
     "Face to fontify unchanged files."
     :group 'powerline)
 
   (defface powerline-default-dictionary-active-face
-    '((((class color))
-       (:background "#8A2BE2" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "#8A2BE2" :foreground "black" :weight bold)))
     "Face to fontify default dictionary in the active buffer."
     :group 'powerline)
 
   (defface powerline-default-dictionary-inactive-face
-    '((((class color))
-       (:background "thistle" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "thistle" :foreground "black" :weight bold)))
     "Face to fontify default dictionary in inactive buffers."
     :group 'powerline)
 
   (defface powerline-other-dictionary-active-face
-    '((((class color))
-       (:background "yellow" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "yellow" :foreground "black" :weight bold)))
     "Face to fontify another dictionary in the active buffer."
     :group 'powerline)
 
   (defface powerline-other-dictionary-inactive-face
-    '((((class color))
-       (:background "LightYellow1" :foreground "black" :weight bold))
-      (t (:weight bold)))
+    '((t (:background "LightYellow1" :foreground "black" :weight bold)))
     "Face to fontify another dictionary in inactive buffers."
     :group 'powerline)
 
   (defface powerline-buffer-position-face
-    '((((class color))
-       (:background "#D2D2D2" :foreground "#282828"))
-      (t (:weight bold)))
+    '((t (:background "#D2D2D2" :foreground "#282828")))
     "Face to fontify buffer position."
+    :group 'powerline)
+
+  (defface powerline-column-over-80
+    '((t (:background "red" :foreground "yellow" :weight bold)))
+    "Face for column number when it's over 80."
     :group 'powerline)
 
   (defun powerline--get-face (active face1 face2)
@@ -2931,15 +2922,11 @@ We build our mode line:
                       (funcall separator-left face2 mode-line)))
                 (rhs (list (powerline-raw global-mode-string mode-line 'r)
                            (funcall separator-right mode-line face1)
-                         #+end_src
-
-*************** TODO Show column in red when we go over the 80th character
-See http://www.elliotglaysher.org/emacs/
-*************** END
-
-                         #+begin_src emacs-lisp
                            (powerline-raw "%l," face1 'l)
-                           (powerline-raw "%c" face1 'r)
+                           (propertize "%c " 'face
+                                    (if (> (current-column) 80)
+                                        'powerline-column-over-80
+                                      face1))
                            (funcall separator-right face1 'powerline-buffer-position-face)
                            (powerline-raw " %3p" 'powerline-buffer-position-face 'r)
                            (funcall separator-right 'powerline-buffer-position-face face2)
@@ -2968,6 +2955,13 @@ See http://www.elliotglaysher.org/emacs/
   (with-eval-after-load "powerline-autoloads"
     (add-hook 'after-init-hook #'powerline-leuven-theme))
   #+end_src
+
+*************** TODO Fix paren problems in the 'cond' of the "dictionary indicator"
+*************** END
+
+*************** TODO Simplify conditions by adding local variables
+See http://www.elliotglaysher.org/emacs/
+*************** END
 
 ** How Text Is Displayed
 
