@@ -2923,10 +2923,11 @@ We build our mode line:
                 (rhs (list (powerline-raw global-mode-string mode-line 'r)
                            (funcall separator-right mode-line face1)
                            (powerline-raw "%l," face1 'l)
-                           (propertize "%c " 'face
+                           (propertize "%c" 'face
                                     (if (> (current-column) 80)
                                         'powerline-column-over-80
                                       face1))
+                           (powerline-raw " " face1)
                            (funcall separator-right face1 'powerline-buffer-position-face)
                            (powerline-raw " %3p" 'powerline-buffer-position-face 'r)
                            (funcall separator-right 'powerline-buffer-position-face face2)

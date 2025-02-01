@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250201.0955>
+;; Version: <20250201.0958>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250201.0955>"
+(defconst lvn--emacs-version "<20250201.0958>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1704,10 +1704,11 @@ Should be selected from `fringe-bitmaps'.")
                 (rhs (list (powerline-raw global-mode-string mode-line 'r)
                            (funcall separator-right mode-line face1)
                            (powerline-raw "%l," face1 'l)
-                           (propertize "%c " 'face
+                           (propertize "%c" 'face
                                     (if (> (current-column) 80)
                                         'powerline-column-over-80
                                       face1))
+                           (powerline-raw " " face1)
                            (funcall separator-right face1 'powerline-buffer-position-face)
                            (powerline-raw " %3p" 'powerline-buffer-position-face 'r)
                            (funcall separator-right 'powerline-buffer-position-face face2)
