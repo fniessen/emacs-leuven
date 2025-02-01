@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250201.1406>
+;; Version: <20250201.1414>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250201.1406>"
+(defconst lvn--emacs-version "<20250201.1414>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -576,17 +576,22 @@ Shows a warning message if the file does not exist or is not executable."
 
     )
 
-  ;; Automatically update Emacs packages.
-  (with-eval-after-load "auto-package-update-autoloads"
-
+  ;; Configuration for automatic Emacs package updates.
+  (with-eval-after-load 'auto-package-update-autoloads
+    ;; Delete old versions when updating.
     (setq auto-package-update-delete-old-versions t)
 
-    (add-hook 'auto-package-update-before-hook
-              #'(lambda ()
-                  (message "[Updating (M)ELPA packages now...]")))
+    ;; Define a function for the update message.
+    (defun lvn--display-update-message ()
+      "Display a message before updating packages."
+      (message "[Updating (M)ELPA packages now...]"))
 
-    ;; "It looks like there's a problem with your network connection."
+    ;; Add the message function to the update hook.
+    (add-hook 'auto-package-update-before-hook #'lvn--display-update-message)
+
+    ;; Uncomment the following line to enable automatic updates.
     ;; (auto-package-update-maybe)
+    ;; ("It looks like there's a problem with your network connection.")
   )
 
 )                                       ; Chapter 48 ends here.
