@@ -42,7 +42,7 @@
           (lambda ()
             (ess-set-style 'RStudio)))
 
-(with-eval-after-load "ess-site"
+(with-eval-after-load 'ess-site
 
   ;; Code folding in ESS mode.
   (add-hook 'ess-mode-hook #'hs-minor-mode)
