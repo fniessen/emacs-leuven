@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250201.1629>
+;; Version: <20250201.1646>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250201.1629>"
+(defconst lvn--emacs-version "<20250201.1646>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1351,13 +1351,13 @@ original state of line numbers after navigation."
 Should be selected from `fringe-bitmaps'.")
 
     (defun hilit-chg-make-ov--add-fringe ()
-      (mapc #'(lambda (ov)
-                (if (overlay-get ov 'hilit-chg)
-                    (let ((fringe-anchor (make-string 1 ?x)))
-                      (put-text-property 0 1 'display
-                                         (list 'left-fringe highlight-fringe-mark)
-                                         fringe-anchor)
-                      (overlay-put ov 'before-string fringe-anchor))))
+      (mapc (lambda (ov)
+              (if (overlay-get ov 'hilit-chg)
+                  (let ((fringe-anchor (make-string 1 ?x)))
+                    (put-text-property 0 1 'display
+                                       (list 'left-fringe highlight-fringe-mark)
+                                       fringe-anchor)
+                    (overlay-put ov 'before-string fringe-anchor))))
             (overlays-at (ad-get-arg 1))))
     (advice-add 'hilit-chg-make-ov :after #'hilit-chg-make-ov--add-fringe))
 
@@ -2319,11 +2319,11 @@ After initiating the grep search, the isearch is aborted."
 
   ;; Update the copyright notice to indicate the current year.
   (add-hook 'before-save-hook
-            #'(lambda ()                  ; Except for ...
-                (unless (derived-mode-p 'diff-mode)
+            (lambda ()                  ; Except for ...
+              (unless (derived-mode-p 'diff-mode)
                                         ; ... where the patch file can't be
                                         ; changed!
-                  (copyright-update))))
+                (copyright-update))))
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
 
@@ -2460,9 +2460,9 @@ After initiating the grep search, the isearch is aborted."
                 (ediff-files file2 file1)
               (ediff-files file1 file2))
             (add-hook 'ediff-after-quit-hook-internal
-                      #'(lambda ()
-                          (setq ediff-after-quit-hook-internal nil)
-                          (set-window-configuration wnd))))
+                      (lambda ()
+                        (setq ediff-after-quit-hook-internal nil)
+                        (set-window-configuration wnd))))
         (error "no more than 2 files should be marked"))))
 
   (with-eval-after-load "dired"
@@ -2494,11 +2494,11 @@ After initiating the grep search, the isearch is aborted."
                 (diff-refine-hunk)))    ; ... when this does it.
           (error nil))
         (run-at-time 0.0 nil
-                     #'(lambda ()
-                         (if (derived-mode-p 'diff-mode)
-                             ;; Put back the cursor only if still in a Diff buffer
-                             ;; after the delay.
-                             (goto-char (point-min)))))))
+                     (lambda ()
+                       (if (derived-mode-p 'diff-mode)
+                           ;; Put back the cursor only if still in a Diff buffer
+                           ;; after the delay.
+                           (goto-char (point-min)))))))
 
     (defun vc-diff--diff-make-fine-diffs-if-necessary (&optional historic not-urgent)
       "Auto-refine only the regions of 14,000 bytes or less."
@@ -2544,10 +2544,10 @@ After initiating the grep search, the isearch is aborted."
     ;; Split the window (horizontally or vertically) depending on the frame
     ;; width.
     (setq ediff-split-window-function
-          #'(lambda (&optional arg)
-              (if (> (frame-width) split-width-threshold)
-                  (split-window-right arg)
-                (split-window-below arg))))
+          (lambda (&optional arg)
+            (if (> (frame-width) split-width-threshold)
+                (split-window-right arg)
+              (split-window-below arg))))
 
     ;; (setq ediff-merge-split-window-function 'split-window-below)
 
@@ -2864,8 +2864,8 @@ in the current buffer."
 
     ;; Default function used for splitting window.
     (setq helm-split-window-preferred-function
-          #'(lambda (window)
-              (split-window-sensibly)))
+          (lambda (window)
+            (split-window-sensibly)))
 
     ;; ;; Move to end or beginning of source when reaching top or bottom of
     ;; ;; source.
@@ -3188,8 +3188,8 @@ in the current buffer."
                   (mode . Man-mode))))))
 
     (add-hook 'ibuffer-mode-hook
-              #'(lambda ()
-                  (ibuffer-switch-to-saved-filter-groups "default")))
+              (lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default")))
 
     ;; Order the groups so the order is: [Default], [agenda], [emacs].
     (defadvice ibuffer-generate-filter-groups
@@ -3549,9 +3549,9 @@ windows, leaving only the currently active window visible."
     (interactive "sRegexp (default \".*\"): ")
     (let* ((regexp (or regexp ".*"))
            (case-fold-search t)
-           (cmp #'(lambda (x y) (< (cdr x) (cdr y))))
+           (cmp (lambda (x y) (< (cdr x) (cdr y))))
            ;; alist like ("name" . code-point).
-           (char-alist (sort (cl-remove-if-not #'(lambda (x) (string-match regexp (car x)))
+           (char-alist (sort (cl-remove-if-not (lambda (x) (string-match regexp (car x)))
                                                (ucs-names))
                              cmp)))
       (with-help-window "*Unicode characters*"
@@ -3941,8 +3941,8 @@ you will be prompted to enter the desired fill column width."
 
     (key-chord-define-global "sq" "''\C-b") ; NEW-26.5
     (key-chord-define-global "dq" "\"\"\C-b")
-    (key-chord-define-global "<<" #'(lambda () (interactive) (insert "«"))) ; NEW-26.5
-    (key-chord-define-global ">>" #'(lambda () (interactive) (insert "»")))
+    (key-chord-define-global "<<" (lambda () (interactive) (insert "«"))) ; NEW-26.5
+    (key-chord-define-global ">>" (lambda () (interactive) (insert "»")))
 
     (key-chord-define-global "vb" #'eval-buffer) ; NEW-28.9
 
@@ -3957,7 +3957,7 @@ you will be prompted to enter the desired fill column width."
   (leuven--section "25.6 (emacs)Case Conversion Commands")
 
   ;; Enable the use of some commands without confirmation.
-  (mapc #'(lambda (command)
+  (mapc (lambda (command)
           (put command 'disabled nil))
         ;; Disabled commands.
         '(downcase-region
@@ -3979,17 +3979,17 @@ you will be prompted to enter the desired fill column width."
     ;; (try-require 'outline-magic)
     ;; (with-eval-after-load "outline-magic"
     ;;   (add-hook 'outline-minor-mode-hook
-    ;;             #'(lambda ()
+    ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<S-tab>") #'outline-cycle)
+    ;;                           (kbd "<S-tab>") #'outline-cycle)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-left>") #'outline-promote)
+    ;;                           (kbd "<M-left>") #'outline-promote)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-right>") #'outline-demote)
+    ;;                           (kbd "<M-right>") #'outline-demote)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-up>") #'outline-move-subtree-up)
+    ;;                           (kbd "<M-up>") #'outline-move-subtree-up)
     ;;               (define-key outline-minor-mode-map
-    ;;                 (kbd "<M-down>") #'outline-move-subtree-down))))
+    ;;                           (kbd "<M-down>") #'outline-move-subtree-down))))
 
     ;; ;; Extra support for outline minor mode.
     ;; (try-require 'out-xtra)
@@ -4047,14 +4047,14 @@ you will be prompted to enter the desired fill column width."
     )
 
     (add-hook 'outline-minor-mode-hook
-              #'(lambda ()
-                  (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
-                    (hide-sublevels 1000))))
+              (lambda ()
+                (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
+                  (hide-sublevels 1000))))
 
   ;; (add-hook 'outline-minor-mode-hook
-  ;;   #'(lambda ()
-  ;;     (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
-  ;;     (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
+  ;;           (lambda ()
+  ;;             (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
+  ;;             (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
 
   ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
   (setq org-cycle-global-at-bob t)
@@ -4200,7 +4200,7 @@ scrolling to the bottom."
 
     ;; ;; LaTeX-sensitive spell checking
     ;; (add-hook 'tex-mode-hook
-    ;;           #'(lambda ()
+    ;;           (lambda ()
     ;;             (make-local-variable 'ispell-parser)
     ;;             (setq ispell-parser 'tex)))
 
@@ -4613,15 +4613,15 @@ the parent element."
   (with-eval-after-load "hl-tags-mode"
 
     (add-hook 'html-mode-hook
-              #'(lambda ()
-                  (require 'sgml-mode)
-                  ;; When `html-mode-hook' is called from `html-helper-mode'.
-                  (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
+              (lambda ()
+                (require 'sgml-mode)
+                ;; When `html-mode-hook' is called from `html-helper-mode'.
+                (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
 
     (add-hook 'nxml-mode-hook
-              #'(lambda ()
-                  (when (< (buffer-size) lvn-large-file-warning-threshold) ; View large files.
-                    (hl-tags-mode 1))))
+              (lambda ()
+                (when (< (buffer-size) lvn-large-file-warning-threshold) ; View large files.
+                  (hl-tags-mode 1))))
 
     ;; (add-hook 'web-mode-hook #'hl-tags-mode)
     )
@@ -4660,22 +4660,22 @@ the parent element."
     (forward-line -2))
 
   (add-hook 'prog-mode-hook
-            #'(lambda ()
-                (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
-                (local-set-key (kbd "<C-S-up>")   #'leuven-move-line-up)
+            (lambda ()
+              (local-set-key (kbd "<C-S-down>") #'leuven-move-line-down)
+              (local-set-key (kbd "<C-S-up>")   #'leuven-move-line-up)
                                         ; Sublime Text and js2-refactor.
-                (local-set-key (kbd "<M-S-down>") #'leuven-move-line-down)
-                (local-set-key (kbd "<M-S-up>")   #'leuven-move-line-up)))
+              (local-set-key (kbd "<M-S-down>") #'leuven-move-line-down)
+              (local-set-key (kbd "<M-S-up>")   #'leuven-move-line-up)))
                                         ; IntelliJ IDEA.
 
   ;; Move caret down and up in the editor.
   (add-hook 'prog-mode-hook
-            #'(lambda ()
-                ;; Scroll text of current window upward by one line.
-                (local-set-key (kbd "<C-up>")   (kbd "C-u 1 C-v"))
+            (lambda ()
+              ;; Scroll text of current window upward by one line.
+              (local-set-key (kbd "<C-up>")   (kbd "C-u 1 C-v"))
 
-                ;; Scroll text of current window downward by one line.
-                (local-set-key (kbd "<C-down>") (kbd "C-u 1 M-v"))))
+              ;; Scroll text of current window downward by one line.
+              (local-set-key (kbd "<C-down>") (kbd "C-u 1 M-v"))))
                                         ; Sublime Text + SQL Management Studio + IntelliJ IDEA.
 
 ;;** 26.1 Major Modes for (info "(emacs)Program Modes")
@@ -4771,9 +4771,9 @@ mouse-3: go to end") "]")))
     ;; Auto-indentation: automatically jump to the "correct" column when the RET
     ;; key is pressed while editing a program (act as if you pressed `C-j').
     (add-hook 'prog-mode-hook
-              #'(lambda ()
-                  (local-set-key (kbd "<RET>") #'newline-and-indent)
-                  (local-set-key (kbd "C-j") #'newline)))
+              (lambda ()
+                (local-set-key (kbd "<RET>") #'newline-and-indent)
+                (local-set-key (kbd "C-j") #'newline)))
 
     ;; ;; Function to move to the beginning of the line or back to the indentation.
     ;; (defun back-to-indentation-or-beginning ()
@@ -4800,8 +4800,8 @@ mouse-3: go to end") "]")))
   ;; Check for unbalanced parentheses in supported modes.
   (dolist (mode '(emacs-lisp clojure js2 js))
     (add-hook (intern (format "%s-mode-hook" mode))
-              #'(lambda ()
-                  (add-hook 'after-save-hook 'check-parens nil t))))
+              (lambda ()
+                (add-hook 'after-save-hook 'check-parens nil t))))
 
   ;; Move the cursor to the offscreen open-paren when a close-paren is inserted.
   (setq blink-matching-paren 'jump-offscreen)
@@ -5244,7 +5244,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
 
     ;; (add-hook 'js2-mode-hook
-    ;;           #'(lambda () (flycheck-select-checker "javascript-eslint")))
+    ;;           (lambda () (flycheck-select-checker "javascript-eslint")))
 
   ;; Set up configurations for the `js2-mode` by adding a hook.
   (add-hook 'js2-mode-hook
@@ -5410,8 +5410,8 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
                                          'leuven--ant-command-history))))))
 
   (add-hook 'java-mode-hook
-            #'(lambda ()
-                (local-set-key "<f9>" 'leuven-ant)))
+            (lambda ()
+              (local-set-key "<f9>" 'leuven-ant)))
 
   ;; Use Java for class files decompiled with Jad.
   (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
@@ -5650,9 +5650,9 @@ a clean buffer we're an order of magnitude laxer about checking."
     "If you're saving an elisp file, likely the .elc is no longer valid."
     (make-local-variable 'after-save-hook)
     (add-hook 'after-save-hook
-              #'(lambda ()
-                  (if (file-exists-p (concat buffer-file-name "c"))
-                      (delete-file (concat buffer-file-name "c"))))))
+              (lambda ()
+                (if (file-exists-p (concat buffer-file-name "c"))
+                    (delete-file (concat buffer-file-name "c"))))))
 
   (add-hook 'emacs-lisp-mode-hook #'remove-elc-on-save)
 
@@ -5741,8 +5741,8 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     ;; Turn off save-place.
     (add-hook 'git-commit-setup-hook
-              #'(lambda ()
-                  (toggle-save-place 0))))
+              (lambda ()
+                (toggle-save-place 0))))
 
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
 
@@ -5793,14 +5793,14 @@ a clean buffer we're an order of magnitude laxer about checking."
   (global-set-key (kbd "<C-f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
 
   (add-hook 'vc-dir-mode-hook
-            #'(lambda ()
-                ;; Hide up-to-date and unregistered files.
-                (define-key vc-dir-mode-map
-                  (kbd "x") #'lvn-hide-up-to-date-and-unregistered-files-in-vc-dir)
-                (define-key vc-dir-mode-map
-                  (kbd "E") #'vc-ediff)
-                (define-key vc-dir-mode-map
-                  (kbd "#") #'lvn-vc-ediff-ignore-whitespace)
+            (lambda ()
+              ;; Hide up-to-date and unregistered files.
+              (define-key vc-dir-mode-map
+                          (kbd "x") #'lvn-hide-up-to-date-and-unregistered-files-in-vc-dir)
+              (define-key vc-dir-mode-map
+                          (kbd "E") #'vc-ediff)
+              (define-key vc-dir-mode-map
+                          (kbd "#") #'lvn-vc-ediff-ignore-whitespace)
                                         ; ediff-windows-wordwise?
               ))
 
@@ -6193,12 +6193,12 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
 
     ;; Don't expand when you are typing in a string or comment.
     (add-hook 'prog-mode-hook
-              #'(lambda ()
-                  (setq yas-buffer-local-condition
-                        '(if (nth 8 (syntax-ppss))
+              (lambda ()
+                (setq yas-buffer-local-condition
+                      '(if (nth 8 (syntax-ppss))
                                         ; Non-nil if in a string or comment.
-                             '(require-snippet-condition . force-in-comment)
-                           t))))
+                           '(require-snippet-condition . force-in-comment)
+                         t))))
 
     ;; UI for selecting snippet when there are multiple candidates.
     (setq yas-prompt-functions '(yas-dropdown-prompt))
@@ -6239,8 +6239,8 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
     (global-set-key [mouse-3] #'leuven-popup-contextual-menu)
 
     (add-hook 'snippet-mode-hook
-              #'(lambda ()
-                  (setq require-final-newline nil)))
+              (lambda ()
+                (setq require-final-newline nil)))
 
     ;; ;; Make the "yas-minor-mode"'s expansion behavior to take input word
     ;; ;; including hyphen.
@@ -6460,9 +6460,9 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
     (define-key company-active-map (kbd "M-.")     #'company-show-location) ; XXX Also on C-w.
 
     (setq company-auto-complete
-          #'(lambda ()
-              (and (company-tooltip-visible-p)
-                   (company-explicit-action-p))))
+          (lambda ()
+            (and (company-tooltip-visible-p)
+                 (company-explicit-action-p))))
 
     ;; Configure the list of commands to continue company mode.
     (setq company-continue-commands
@@ -6478,14 +6478,14 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
     (advice-add 'company-complete-number :around
-     #'(lambda (fun n)
-         (let ((cand (nth (+ (1- n) company-tooltip-offset)
-                          company-candidates)))
-           (if (string-match-p "[0-9]" cand)
-               (let ((last-command-event (+ ?0 n)))
-                 (self-insert-command 1))
-             (funcall fun n))))
-     '((name . "Don't complete numbers")))
+                (lambda (fun n)
+                  (let ((cand (nth (+ (1- n) company-tooltip-offset)
+                                   company-candidates)))
+                    (if (string-match-p "[0-9]" cand)
+                        (let ((last-command-event (+ ?0 n)))
+                          (self-insert-command 1))
+                      (funcall fun n))))
+                '((name . "Don't complete numbers")))
 
     ;; From https://github.com/company-mode/company-mode/issues/188
     (defun leuven-company-quick-access-key (numbered)
@@ -6536,9 +6536,9 @@ This example lists Azerty layout second row keys."
     )
 
   (add-hook 'js2-mode-hook
-            #'(lambda ()
-                (set (make-local-variable 'company-backends)
-                     '((company-dabbrev-code company-yasnippet)))))
+            (lambda ()
+              (set (make-local-variable 'company-backends)
+                   '((company-dabbrev-code company-yasnippet)))))
 
   ;; Dabbrev-like company-mode completion back-end.
   (with-eval-after-load "company-dabbrev"
@@ -6668,10 +6668,10 @@ This example lists Azerty layout second row keys."
         "In Dired, open the marked files (or directories) with the default Windows tool."
         (interactive "P")
         (mapcar
-         #'(lambda (file)
-             (if lvn--wsl-p
-                 (shell-command (format "start %s" (convert-standard-filename file)))
-               (w32-shell-execute "open" (convert-standard-filename file))))
+         (lambda (file)
+           (if lvn--wsl-p
+               (shell-command (format "start %s" (convert-standard-filename file)))
+             (w32-shell-execute "open" (convert-standard-filename file))))
          (dired-get-marked-files nil arg)))
 
       ;; ;; Bind it to `E' in Dired mode.
@@ -6847,9 +6847,9 @@ Consider using `C-x d' instead for better performance."
 
   ;; Fix foolish calendar-mode scrolling after loading `calendar.el'.
   (add-hook 'calendar-load-hook
-            #'(lambda ()
-                (define-key calendar-mode-map (kbd ">") #'calendar-scroll-left)
-                (define-key calendar-mode-map (kbd "<") #'calendar-scroll-right)))
+            (lambda ()
+              (define-key calendar-mode-map (kbd ">") #'calendar-scroll-left)
+              (define-key calendar-mode-map (kbd "<") #'calendar-scroll-right)))
 
 ;;** 31.7 Times of (info "(emacs)Sunrise/Sunset")
 
@@ -7048,9 +7048,9 @@ NOTIFICATION-STRING: Message(s) to display."
 (leuven--chapter leuven-load-chapter-34-gnus "34 Gnus"
 
   (global-set-key (kbd "C-c n")
-    #'(lambda ()
-        (interactive)
-        (lvn--switch-or-start 'gnus "*Group*")))
+                  (lambda ()
+                    (interactive)
+                    (lvn--switch-or-start 'gnus "*Group*")))
 
   ;; Directory beneath which additional per-user Gnus-specific files are placed.
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
@@ -7198,9 +7198,9 @@ NOTIFICATION-STRING: Message(s) to display."
 
     ;; Rejects short commands.
     (setq comint-input-filter
-      #'(lambda (str)
-          (and (not (string-match "\\`\\s *\\'" str))
-               (> (length str) 2))))    ; Ignore '!!' and kin.
+          (lambda (str)
+            (and (not (string-match "\\`\\s *\\'" str))
+                 (> (length str) 2))))    ; Ignore '!!' and kin.
 
     ;; Cycle backwards/forwards through input history.
     (define-key comint-mode-map
@@ -7237,10 +7237,10 @@ NOTIFICATION-STRING: Message(s) to display."
     (rename-buffer (concat "*shell " default-directory "*")))
 
   (add-hook 'shell-mode-hook
-            #'(lambda ()
-                (leuven--rename-buffer-to-curdir)
-                (add-hook 'comint-output-filter-functions
-                          #'leuven--rename-buffer-to-curdir nil t)))
+            (lambda ()
+              (leuven--rename-buffer-to-curdir)
+              (add-hook 'comint-output-filter-functions
+                        #'leuven--rename-buffer-to-curdir nil t)))
                                         ; Local to Shell comint.
 
 ;;** 38.7 Options
@@ -7276,9 +7276,9 @@ NOTIFICATION-STRING: Message(s) to display."
 
   ;; Toggle to and from the `*shell*' buffer.
   (global-set-key (kbd "C-!")
-    #'(lambda ()
-        (interactive)
-        (lvn--switch-or-start 'shell "*shell*")))
+                  (lambda ()
+                    (interactive)
+                    (lvn--switch-or-start 'shell "*shell*")))
 
 ;;** 38.10 Remote Host Shell
 
@@ -7828,8 +7828,8 @@ NOTIFICATION-STRING: Message(s) to display."
 (when lvn-verbose-loading
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar #'(lambda (el)                  ; FIXME Use `mapc' or `dolist'.
-              (message el))
+  (mapcar (lambda (el)                  ; FIXME Use `mapc' or `dolist'.
+            (message el))
           (nreverse leuven--load-times-list))
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
@@ -7859,11 +7859,11 @@ NOTIFICATION-STRING: Message(s) to display."
 ;; ;; )
 
 (add-hook 'after-init-hook
-          #'(lambda ()
-              (message "[Emacs startup time: %.2f s; GC done: %S]"
-                       (string-to-number (emacs-init-time)) gcs-done)
-              (sit-for 0.5))
-  t)
+          (lambda ()
+            (message "[Emacs startup time: %.2f s; GC done: %S]"
+                     (string-to-number (emacs-init-time)) gcs-done)
+            (sit-for 0.5))
+          t)
 
   (defun lvn-update-emacs-leuven-configuration ()
     "Update the Leuven configuration for Emacs to its latest version.
