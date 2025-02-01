@@ -30,8 +30,8 @@
   ;; Ensure `~/.bbdb' never becomes non utf-8 again (it is defined with
   ;; `defconst', so it is reset whenever `bbdb.el' is loaded).
   (add-hook 'bbdb-load-hook
-            #'(lambda ()
-                (setq bbdb-file-coding-system 'utf-8)))
+            (lambda ()
+              (setq bbdb-file-coding-system 'utf-8)))
 
   ;; Enable the various package-specific BBDB functions.
   (bbdb-initialize 'gnus 'message)
