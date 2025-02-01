@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250201.1646>
+;; Version: <20250201.1656>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250201.1646>"
+(defconst lvn--emacs-version "<20250201.1656>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -891,13 +891,13 @@ original state of line numbers after navigation."
 (leuven--chapter leuven-load-chapter-11-mark "11 The Mark and the Region"
 
   ;; Go to Last (buffer-local) Edit Location.
-  (with-eval-after-load "goto-chg-autoloads"
+  (with-eval-after-load 'goto-chg-autoloads
     (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 
-  (with-eval-after-load "back-button-autoloads"
+  (with-eval-after-load 'back-button-autoloads
     (idle-require 'back-button)
 
-    (with-eval-after-load "back-button"
+    (with-eval-after-load 'back-button
       (back-button-mode 1)
 
       ;; Navigate backward.
@@ -907,7 +907,7 @@ original state of line numbers after navigation."
       (global-set-key (kbd "<C-M-right>") #'back-button-global-forward))) ; IntelliJ IDEA.
 
   ;; Increase selected region by semantic units.
-  (with-eval-after-load "expand-region-autoloads"
+  (with-eval-after-load 'expand-region-autoloads
 
     ;; ;; Key to use after an initial expand/contract to undo.
     ;; (setq expand-region-reset-fast-key "<escape> <escape>")
@@ -920,7 +920,7 @@ original state of line numbers after navigation."
   (delete-selection-mode 1)             ; Overwrite region.
 
   ;; Multiple cursors for Emacs.
-  (with-eval-after-load "multiple-cursors-autoloads"
+  (with-eval-after-load 'multiple-cursors-autoloads
 
     ;; Add a cursor to each (continuous) line in the current region.
     (global-set-key (kbd "C-S-c C-S-c") #'mc/edit-lines) ;!
@@ -965,7 +965,7 @@ original state of line numbers after navigation."
   )
 
   ;; Multiple cursors for Emacs.
-  (with-eval-after-load "multiple-cursors-core"
+  (with-eval-after-load 'multiple-cursors-core
 
     ;; Commands to run for all cursors in multiple-cursors-mode.
     (setq mc/cmds-to-run-for-all        ; See .mc-lists.el.
@@ -1137,7 +1137,7 @@ original state of line numbers after navigation."
 
   (leuven--section "13.7 (emacs)Bookmarks")
 
-  (with-eval-after-load "bookmark"
+  (with-eval-after-load 'bookmark
 
     ;; Where to save the bookmarks.
     (setq bookmark-default-file (concat user-emacs-directory "bookmarks.bmk"))
@@ -1162,7 +1162,7 @@ original state of line numbers after navigation."
       ;; View all bookmarks.
       (global-set-key (kbd "<M-f2>") #'helm-bookmarks))
 
-    (with-eval-after-load "bookmark+"
+    (with-eval-after-load 'bookmark+
 
       (add-hook 'find-file-hook #'bmkp-light-this-buffer)
 
@@ -1210,11 +1210,11 @@ original state of line numbers after navigation."
                    (line-beginning-position)
                    (1- (line-beginning-position 2))))))))
 
-    (with-eval-after-load "helm-autoloads"
+    (with-eval-after-load 'helm-autoloads
       ;; Helm for bookmarks (filtered by category).
       (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks))
 
-  (with-eval-after-load "avy-autoloads"
+  (with-eval-after-load 'avy-autoloads
 
     ;; ;; Quickly jump to a position in the current view. XXX Conflict with Org mode (in tables).
     ;; (global-set-key (kbd "C-c SPC") #'avy-goto-word-or-subword-1)
@@ -1228,7 +1228,7 @@ original state of line numbers after navigation."
   )
 
   ;; Jump to things.
-  (with-eval-after-load "avy"
+  (with-eval-after-load 'avy
 
     ;; Default keys for jumping.
     (setq avy-keys (number-sequence ?a ?z))
@@ -1255,7 +1255,7 @@ original state of line numbers after navigation."
 
   ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place).
-  (with-eval-after-load "pager-autoloads"
+  (with-eval-after-load 'pager-autoloads
 
     (autoload 'pager-page-up "pager"
       "Like scroll-down, but moves a fixed amount of lines." t)
@@ -1287,7 +1287,7 @@ original state of line numbers after navigation."
   ;; Enable the use of the command `narrow-to-region' without confirmation.
   (put 'narrow-to-region 'disabled nil)
 
-  ;; (with-eval-after-load "fancy-narrow-autoloads"
+  ;; (with-eval-after-load 'fancy-narrow-autoloads
   ;;   (fancy-narrow-mode)) ; perf problems when calling `helm-for-files' from a big file?
 
 ;;** 14.12 (info "(emacs)Font Lock")
@@ -1330,7 +1330,7 @@ original state of line numbers after navigation."
   (global-set-key (kbd "C-c t") 'lvn-display-todo-lines)
 
   ;; Just-in-time fontification.
-  (with-eval-after-load "jit-lock"
+  (with-eval-after-load 'jit-lock
 
     ;; Stealth fontification should show status messages.
     (setq jit-lock-stealth-verbose t)
@@ -1345,7 +1345,7 @@ original state of line numbers after navigation."
   (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
 
   ;; Highlight-Changes mode.
-  (with-eval-after-load "hilit-chg"
+  (with-eval-after-load 'hilit-chg
     (defvar highlight-fringe-mark 'filled-rectangle
       "The fringe bitmap name marked at changed line.
 Should be selected from `fringe-bitmaps'.")
@@ -1374,7 +1374,7 @@ Should be selected from `fringe-bitmaps'.")
   ;; (global-hi-lock-mode 1)
 
   ;; ;; Highlight symbols, selections, enclosing parens and more.
-  ;; (with-eval-after-load "hl-anything-autoloads"
+  ;; (with-eval-after-load 'hl-anything-autoloads
   ;;
   ;;   (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
   ;;   ;; See the very good hl-paren-mode.
@@ -1410,10 +1410,10 @@ Should be selected from `fringe-bitmaps'.")
     )
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
-  (with-eval-after-load "auto-highlight-symbol-autoloads"
+  (with-eval-after-load 'auto-highlight-symbol-autoloads
     (idle-require 'auto-highlight-symbol)
 
-    (with-eval-after-load "auto-highlight-symbol"
+    (with-eval-after-load 'auto-highlight-symbol
       ;; Define a list of modes to enable Auto-Highlight-Symbol mode.
       (setq lvn--extra-ahs-modes '(js2-mode
                                    ess-mode)) ; R.
@@ -1443,15 +1443,15 @@ Should be selected from `fringe-bitmaps'.")
         (add-hook hook 'auto-highlight-symbol-mode))))
 
 ;; XXX Impact on Org's HTML export?
-  ;; (with-eval-after-load "color-identifiers-mode-autoloads"
+  ;; (with-eval-after-load 'color-identifiers-mode-autoloads
   ;;
   ;;   (add-hook 'after-init-hook #'global-color-identifiers-mode))
 
-  (with-eval-after-load "diff-hl-autoloads"
+  (with-eval-after-load 'diff-hl-autoloads
     (idle-require 'diff-hl))
 
   ;; Indicate changes in the fringe.
-  (with-eval-after-load "diff-hl"
+  (with-eval-after-load 'diff-hl
 
     (global-diff-hl-mode 1)
 
@@ -1486,12 +1486,12 @@ Should be selected from `fringe-bitmaps'.")
   ;; (setq-default show-trailing-whitespace t)
 
   ;; Unobtrusively remove trailing whitespace using ws-butler.
-  (with-eval-after-load "ws-butler-autoloads"
+  (with-eval-after-load 'ws-butler-autoloads
     (dolist (hook '(text-mode-hook
                     prog-mode-hook))
       (add-hook hook #'ws-butler-mode)))
 
-  (with-eval-after-load "ws-butler"
+  (with-eval-after-load 'ws-butler
 
     ;; ;; Remove all tab/space indent conversion.
     ;; (defun ws-butler-clean-region (beg end)
@@ -1519,7 +1519,7 @@ Should be selected from `fringe-bitmaps'.")
                   prog-mode-hook))
     (add-hook hook #'whitespace-mode))
 
-  (with-eval-after-load "whitespace"
+  (with-eval-after-load 'whitespace
     ;; Customize Whitespace mode settings.
 
     ;; Define whitespace styles (Which kind of blank is visualized).
@@ -1569,32 +1569,32 @@ Should be selected from `fringe-bitmaps'.")
   (column-number-mode 1)
 
   ;; Unclutter the mode line.
-  (with-eval-after-load "diminish-autoloads"
-    (with-eval-after-load "abbrev"       (diminish 'abbrev-mode " Ab"))
-    (with-eval-after-load "back-button"  (diminish 'back-button-mode))
-    (with-eval-after-load "volatile-highlights" (diminish 'volatile-highlights-mode))
-    (with-eval-after-load "checkdoc"     (diminish 'checkdoc-minor-mode " Cd"))
-    ;; (with-eval-after-load "company"      (diminish 'company-mode " Cp"))
+  (with-eval-after-load 'diminish-autoloads
+    (with-eval-after-load 'abbrev       (diminish 'abbrev-mode " Ab"))
+    (with-eval-after-load 'back-button  (diminish 'back-button-mode))
+    (with-eval-after-load 'volatile-highlights (diminish 'volatile-highlights-mode))
+    (with-eval-after-load 'checkdoc     (diminish 'checkdoc-minor-mode " Cd"))
+    ;; (with-eval-after-load 'company      (diminish 'company-mode " Cp"))
                                         ; Company displays the currently used
                                         ; backend in the mode-line.
-    (with-eval-after-load "eldoc"        (diminish 'eldoc-mode))
-    (with-eval-after-load "color-identifiers-mode" (diminish 'color-identifiers-mode))
-    (with-eval-after-load "fancy-narrow" (diminish 'fancy-narrow-mode))
-    (with-eval-after-load "flycheck"     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
-    (with-eval-after-load "flyspell"     (diminish 'flyspell-mode " fS"))
-    (with-eval-after-load "google-this"  (diminish 'google-this-mode))
-    (with-eval-after-load "hilit-chg"    (diminish 'highlight-changes-mode))
-    ;; (with-eval-after-load "isearch"      (diminish 'isearch-mode (string 32 ?\u279c)))
-    (with-eval-after-load "paredit"      (diminish 'paredit-mode " Pe"))
-    (with-eval-after-load "rainbow-mode" (diminish 'rainbow-mode))
-    (with-eval-after-load "simple"       (diminish 'auto-fill-function))
-    (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
+    (with-eval-after-load 'eldoc        (diminish 'eldoc-mode))
+    (with-eval-after-load 'color-identifiers-mode (diminish 'color-identifiers-mode))
+    (with-eval-after-load 'fancy-narrow (diminish 'fancy-narrow-mode))
+    (with-eval-after-load 'flycheck     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
+    (with-eval-after-load 'flyspell     (diminish 'flyspell-mode " fS"))
+    (with-eval-after-load 'google-this  (diminish 'google-this-mode))
+    (with-eval-after-load 'hilit-chg    (diminish 'highlight-changes-mode))
+    ;; (with-eval-after-load 'isearch      (diminish 'isearch-mode (string 32 ?\u279c)))
+    (with-eval-after-load 'paredit      (diminish 'paredit-mode " Pe"))
+    (with-eval-after-load 'rainbow-mode (diminish 'rainbow-mode))
+    (with-eval-after-load 'simple       (diminish 'auto-fill-function))
+    (with-eval-after-load 'whitespace   (diminish 'whitespace-mode))
     ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
-    (with-eval-after-load "glasses"      (diminish 'glasses-mode))
-    ;; (with-eval-after-load "redshank"     (diminish 'redshank-mode))
-    ;; (with-eval-after-load "smartparens"  (diminish 'smartparens-mode)) ;; Don't hide it, as it impacts perf on big files (must see it!)
-    (with-eval-after-load "which-key"    (diminish 'which-key-mode)))
-    ;; (with-eval-after-load "whitespace"   (diminish 'whitespace-mode))
+    (with-eval-after-load 'glasses      (diminish 'glasses-mode))
+    ;; (with-eval-after-load 'redshank     (diminish 'redshank-mode))
+    ;; (with-eval-after-load 'smartparens  (diminish 'smartparens-mode)) ;; Don't hide it, as it impacts perf on big files (must see it!)
+    (with-eval-after-load 'which-key    (diminish 'which-key-mode)))
+    ;; (with-eval-after-load 'whitespace   (diminish 'whitespace-mode))
 
   (defface powerline-modified-face
     '((t (:background "#FFA335" :foreground "black" :weight bold)))
@@ -1746,7 +1746,7 @@ Should be selected from `fringe-bitmaps'.")
                   (powerline-fill mode-line (powerline-width rhs))
                   (powerline-render rhs)))))))
 
-  (with-eval-after-load "powerline-autoloads"
+  (with-eval-after-load 'powerline-autoloads
     (add-hook 'after-init-hook #'powerline-leuven-theme))
 
 ;;** 14.19 The (info "(emacs)")
@@ -1809,7 +1809,7 @@ Should be selected from `fringe-bitmaps'.")
   (setq idle-update-delay 0.35)
 
   ;; Exhaustive log of interactions with Emacs (display keystrokes, etc.).
-  (with-eval-after-load "interaction-log-autoloads"
+  (with-eval-after-load 'interaction-log-autoloads
 
     (autoload 'interaction-log-mode "interaction-log"
       "Global minor mode logging keys, commands, file loads and messages." t)
@@ -1857,7 +1857,7 @@ Should be selected from `fringe-bitmaps'.")
   (setq isearch-allow-scroll t)
 
   ;; Fuzzy matching utilities (a must-have).
-  (with-eval-after-load "fuzzy-autoloads"
+  (with-eval-after-load 'fuzzy-autoloads
 
     (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
                                         ; This autoload isn't defined in
@@ -1866,7 +1866,7 @@ Should be selected from `fringe-bitmaps'.")
     (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch))
 
   ;; Show number of matches in mode-line while searching.
-  (with-eval-after-load "anzu-autoloads"
+  (with-eval-after-load 'anzu-autoloads
 
     ;; Lighter of anzu-mode.
     (setq anzu-mode-lighter "")
@@ -2048,7 +2048,7 @@ After initiating the grep search, the isearch is aborted."
     ;; strings, while excluding code).
     (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
-    (with-eval-after-load "ispell"
+    (with-eval-after-load 'ispell
 
       ;; Save the personal dictionary without confirmation.
       (setq ispell-silently-savep t)
@@ -2082,7 +2082,7 @@ After initiating the grep search, the isearch is aborted."
 
       )
 
-    (with-eval-after-load "flyspell"
+    (with-eval-after-load 'flyspell
 
       ;; Remove the binding of `flyspell-auto-correct-previous-word', to be used
       ;; by Multiple Cursors.
@@ -2091,9 +2091,9 @@ After initiating the grep search, the isearch is aborted."
     ;; Don't use `M-TAB' to auto-correct the current word (only use `C-.').
     (setq flyspell-use-meta-tab nil)
     ;; FIXME M-TAB is still bound to `flyspell-auto-correct-word' when this
-    ;; chunk of code is placed within (with-eval-after-load "flyspell"...)
+    ;; chunk of code is placed within (with-eval-after-load 'flyspell...)
 
-    (with-eval-after-load "flyspell"
+    (with-eval-after-load 'flyspell
 
       ;; Don't consider that a word repeated twice is an error.
       (setq flyspell-mark-duplications-flag nil)
@@ -2310,7 +2310,7 @@ After initiating the grep search, the isearch is aborted."
 
   ;; Maintain last change time stamps (`Time-stamp: <>' occurring within
   ;; the first 8 lines) in files edited by Emacs.
-  (with-eval-after-load "time-stamp"
+  (with-eval-after-load 'time-stamp
 
     ;; Format of the string inserted by `M-x time-stamp':
     ;; `YYYY-MM-DD Day HH:MM' (see `system-time-locale' for non-numeric
@@ -2369,7 +2369,7 @@ After initiating the grep search, the isearch is aborted."
 
   ;; Enable Global Auto-Revert mode (auto refresh buffers).
   (idle-require 'autorevert)
-  (with-eval-after-load "autorevert"
+  (with-eval-after-load 'autorevert
     (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
                                         ; if `auto-revert-remote-files' is set
                                         ; to non-nil.
@@ -2465,7 +2465,7 @@ After initiating the grep search, the isearch is aborted."
                         (set-window-configuration wnd))))
         (error "no more than 2 files should be marked"))))
 
-  (with-eval-after-load "dired"
+  (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired))
 
   ;; Compare text in current window with text in next window.
@@ -2479,7 +2479,7 @@ After initiating the grep search, the isearch is aborted."
   (leuven--section "18.10 (emacs)Diff Mode")
 
   ;; Mode for viewing/editing context diffs.
-  (with-eval-after-load "diff-mode"
+  (with-eval-after-load 'diff-mode
 
     ;; Highlight the changes with better granularity.
     (defun leuven-diff-make-fine-diffs ()
@@ -2524,7 +2524,7 @@ After initiating the grep search, the isearch is aborted."
   ;; (try-require 'ediff-hook)
   ;; already loaded (by Emacs?)
 
-  (with-eval-after-load "ediff"
+  (with-eval-after-load 'ediff
 
     ;; Ignore space.
     (setq ediff-diff-options (concat ediff-diff-options " -w"))
@@ -2586,7 +2586,7 @@ After initiating the grep search, the isearch is aborted."
   (setq delete-by-moving-to-trash t)
 
   ;; The EasyPG Assistant, transparent file encryption.
-  (with-eval-after-load "epa-file"
+  (with-eval-after-load 'epa-file
     (custom-set-variables '(epg-gpg-program "gpg2"))
                                         ; If you have issues, try uninstalling
                                         ; gnupg, keeping only gnupg2!
@@ -2623,7 +2623,7 @@ After initiating the grep search, the isearch is aborted."
   (leuven--section "Ange-FTP")
 
   ;; Transparent FTP support.
-  (with-eval-after-load "ange-ftp"
+  (with-eval-after-load 'ange-ftp
 
     ;; Try to use passive mode in ftp, if the client program supports it.
     (setq ange-ftp-try-passive-mode t)) ; Needed for Ubuntu.
@@ -2632,7 +2632,7 @@ After initiating the grep search, the isearch is aborted."
 
   (leuven--section "TRAMP")
 
-  (with-eval-after-load "tramp"         ; The autoloads are predefined.
+  (with-eval-after-load 'tramp         ; The autoloads are predefined.
 
     ;; Default transfer method.
     (setq tramp-default-method          ; [Default: "scp"]
@@ -2714,7 +2714,7 @@ Prompts the user for confirmation before opening the file as root."
   ;; Setup a menu of recently opened files.
   (idle-require 'recentf)
 
-  (with-eval-after-load "recentf"
+  (with-eval-after-load 'recentf
 
     ;; Maximum number of items that will be saved.
     (setq recentf-max-saved-items 300)  ; Just 20 is too recent.
@@ -2832,7 +2832,7 @@ in the current buffer."
 
   )                                     ; require 'helm-config ends here.
 
-  (with-eval-after-load "helm"
+  (with-eval-after-load 'helm
 
     ;;! Rebind TAB to do persistent action
     (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
@@ -2894,7 +2894,7 @@ in the current buffer."
   ;; Disable fuzzy matching.
   (setq helm-ff-fuzzy-matching nil)
 
-  (with-eval-after-load "helm-files"
+  (with-eval-after-load 'helm-files
 
 
     ;; Don't show only basename of candidates in `helm-find-files'.
@@ -2913,13 +2913,13 @@ in the current buffer."
           ("mp4"  . "smplayer")))
 
   ;; A convenient `describe-bindings' with `helm'.
-  (with-eval-after-load "helm-descbinds"
+  (with-eval-after-load 'helm-descbinds
 
     ;; Window splitting style.
     (setq helm-descbinds-window-style 'split-window))
 
   ;;
-  (with-eval-after-load "helm-grep-autoloads"
+  (with-eval-after-load 'helm-grep-autoloads
 
       (global-set-key (kbd "M-g ,") #'helm-do-grep)
 
@@ -2928,7 +2928,7 @@ in the current buffer."
       )
 
   ;;
-  (with-eval-after-load "helm-grep"
+  (with-eval-after-load 'helm-grep
       (setq helm-grep-ag-command "rg --color=always --colors 'match:fg:black' --colors 'match:bg:yellow' --smart-case --no-heading --line-number %s %s %s")
       (setq helm-grep-ag-pipe-cmd-switches '("--colors 'match:fg:black'" "--colors 'match:bg:yellow'")) ; #CDCD00
       )
@@ -2937,7 +2937,7 @@ in the current buffer."
   (when (executable-find "ag")
 
     ;; The silver searcher with Helm interface.
-    (with-eval-after-load "helm-ag-autoloads"
+    (with-eval-after-load 'helm-ag-autoloads
 
       (global-set-key (kbd "C-c s") #'helm-ag)
       (global-set-key (kbd "M-s s") #'helm-ag)
@@ -2958,7 +2958,7 @@ in the current buffer."
       (global-set-key (kbd "M-g ,") #'helm-ag-pop-stack)
       ))
 
-  (with-eval-after-load "helm-ag"
+  (with-eval-after-load 'helm-ag
 
     ;; Base command of `ag'.
     (setq helm-ag-base-command (concat helm-ag-base-command " --ignore-case"))
@@ -2969,16 +2969,16 @@ in the current buffer."
     ;; Insert thing at point as search pattern.
     (setq helm-ag-insert-at-point 'symbol))
 
-  (with-eval-after-load "helm-command"
+  (with-eval-after-load 'helm-command
 
     ;; Save command even when it fails (on errors).
     (setq helm-M-x-always-save-history t))
 
-  ;; (with-eval-after-load "helm-autoloads"
+  ;; (with-eval-after-load 'helm-autoloads
   ;;   (global-set-key [remap locate] #'helm-locate))
 
   ;; XXX Problems since Cygwin update (beginning of 2020-02).
-  ;; (with-eval-after-load "helm-locate"
+  ;; (with-eval-after-load 'helm-locate
   ;;
   ;;   (when (and (or lvn--win32-p
   ;;                  lvn--wsl-p
@@ -2988,7 +2988,7 @@ in the current buffer."
   ;;     ;; Sort locate results by full path.
   ;;     (setq helm-locate-command "es -s %s %s")))
 
-  (with-eval-after-load "helm-buffers"
+  (with-eval-after-load 'helm-buffers
 
     ;; Don't truncate buffer names.
     (setq helm-buffer-max-length nil)
@@ -2999,7 +2999,7 @@ in the current buffer."
     ;; String to display at end of truncated buffer names.
     (setq helm-buffers-end-truncated-string "…"))
 
-  ;; (with-eval-after-load "helm-adaptive"
+  ;; (with-eval-after-load 'helm-adaptive
   ;;
   ;;   ;; Don't save history information to file.
   ;;   (remove-hook 'kill-emacs-hook 'helm-adaptive-save-history))
@@ -3011,16 +3011,16 @@ in the current buffer."
   ;; (global-set-key (kbd "C-c m") #'helm-all-mark-rings)
 
   ;; kill-ring, mark-ring, and register browsers for Helm.
-  (with-eval-after-load "helm-ring"
+  (with-eval-after-load 'helm-ring
 
     ;; Max number of lines displayed per candidate in kill-ring browser.
     (setq helm-kill-ring-max-lines-number 20))
 
-  ;; (with-eval-after-load "helm-utils"
+  ;; (with-eval-after-load 'helm-utils
   ;;   (setq helm-yank-symbol-first t)
 
   ;; List Git files.
-  (with-eval-after-load "helm-ls-git-autoloads"
+  (with-eval-after-load 'helm-ls-git-autoloads
 
     ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
     (global-set-key (kbd "M-+")    #'helm-ls-git-ls)
@@ -3030,11 +3030,11 @@ in the current buffer."
     (global-set-key (kbd "C-x C-d") #'helm-browse-project))
 
   ;; Emacs Helm Interface for quick Google searches
-  (with-eval-after-load "helm-google-autoloads"
+  (with-eval-after-load 'helm-google-autoloads
     (global-set-key (kbd "C-c h g") #'helm-google)
     (global-set-key (kbd "C-c h s") #'helm-google-suggest))
 
-  ;; (with-eval-after-load "helm-google"
+  ;; (with-eval-after-load 'helm-google
   ;;
   ;;   ;; (when (executable-find "curl")
   ;;   ;;   (setq helm-google-suggest-use-curl-p t))
@@ -3053,7 +3053,7 @@ in the current buffer."
 
   ;; Efficiently hopping squeezed lines powered by Helm interface
   ;; (= Helm occur + Follow mode!).
-  (with-eval-after-load "helm-swoop-autoloads"
+  (with-eval-after-load 'helm-swoop-autoloads
 
     ;; Better version of `(helm-)occur'.
     (global-set-key (kbd "C-o")   #'helm-swoop)
@@ -3071,12 +3071,12 @@ in the current buffer."
     (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
     ;; (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)
 
-    (with-eval-after-load "dired"
+    (with-eval-after-load 'dired
       (define-key dired-mode-map (kbd "C-o") #'helm-swoop)
       ;; (define-key dired-mode-map (kbd "M-i") #'helm-swoop)
       ))
 
-  (with-eval-after-load "helm-swoop"
+  (with-eval-after-load 'helm-swoop
 
     ;; Move up and down like Isearch.
     (define-key helm-swoop-map (kbd "C-r") #'helm-previous-line)
@@ -3118,7 +3118,7 @@ in the current buffer."
     ;; Operate on buffers like Dired.
     (global-set-key (kbd "C-x C-b") #'ibuffer))
 
-  (with-eval-after-load "ibuffer"
+  (with-eval-after-load 'ibuffer
 
     ;; Completely replaces `list-buffer'.
     (defalias 'ibuffer-list-buffers 'list-buffer)
@@ -3223,7 +3223,7 @@ in the current buffer."
   ;; Unique buffer names dependent on file name.
   (try-require 'uniquify)
 
-  (with-eval-after-load "uniquify"
+  (with-eval-after-load 'uniquify
 
     ;; Distinguish directories by adding extra separator.
     (setq uniquify-trailing-separator-p t))
@@ -3440,7 +3440,7 @@ windows, leaving only the currently active window visible."
     (global-set-key (kbd "<f4>") #'speedbar-get-focus))
 
   ;; Everything browser (into individual source files), or Dired on steroids.
-  (with-eval-after-load "speedbar"
+  (with-eval-after-load 'speedbar
 
     ;; Number of spaces used for indentation.
     (setq speedbar-indentation-width 2)
@@ -3512,7 +3512,7 @@ windows, leaving only the currently active window visible."
   (leuven--section "22.1 (emacs)International Chars")
 
   ;; Keyboard input definitions for ISO 8859-1.
-  (with-eval-after-load "iso-transl"
+  (with-eval-after-load 'iso-transl
 
     ;; Add binding for "zero width space".
     (define-key iso-transl-ctl-x-8-map (kbd "0") [?​]))
@@ -3685,11 +3685,11 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
     "Major mode for fontifiying ssh config files." t)
 
   ;; Major mode for editing comma-separated value files.
-  (with-eval-after-load "csv-mode-autoloads"
+  (with-eval-after-load 'csv-mode-autoloads
 
     (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode)))
 
-  (with-eval-after-load "csv-mode"
+  (with-eval-after-load 'csv-mode
 
     ;; Field separators: a list of *single-character* strings.
     (setq csv-separators '("," ";")))
@@ -3729,12 +3729,12 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   (global-set-key (kbd "C-c =")  #'leuven-align-code)
 
   ;; Show vertical lines to guide indentation.
-  (with-eval-after-load "indent-guide-autoloads-XXX" ; Display problems with CrossMapIntegration.java
+  (with-eval-after-load 'indent-guide-autoloads-XXX ; Display problems with CrossMapIntegration.java
 
     ;; Enable indent-guide-mode automatically.
     (add-hook 'prog-mode-hook #'indent-guide-mode))
 
-  (with-eval-after-load "indent-guide"
+  (with-eval-after-load 'indent-guide
 
     ;; Character used as vertical line.
     (setq indent-guide-char
@@ -3817,7 +3817,7 @@ you will be prompted to enter the desired fill column width."
   
   ;; M-q.
   (global-set-key [remap fill-paragraph] #'lvn-fill-or-unfill-paragraph)
-  (with-eval-after-load "org"
+  (with-eval-after-load 'org
     (define-key org-mode-map (kbd "M-q") #'lvn-fill-or-unfill-paragraph))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
@@ -3897,13 +3897,13 @@ you will be prompted to enter the desired fill column width."
   (add-hook 'text-mode-hook #'leuven--smart-punctuation)
   (add-hook 'message-mode-hook #'leuven--smart-punctuation)
 
-  (with-eval-after-load "key-chord-autoloads"
+  (with-eval-after-load 'key-chord-autoloads
     (key-chord-mode 1))
 
   ;; Map pairs of simultaneously pressed keys to commands.
-  (with-eval-after-load "key-chord"
+  (with-eval-after-load 'key-chord
 
-    (with-eval-after-load "helm-command"
+    (with-eval-after-load 'helm-command
       (key-chord-define-global "xx" #'helm-M-x)) ; NEW-10
 
     (key-chord-define-global "hf" #'describe-function) ; NEW-11.3
@@ -3912,22 +3912,22 @@ you will be prompted to enter the desired fill column width."
 
     (key-chord-define-global "xh" #'mark-whole-buffer) ; NEW-12.2
 
-    (with-eval-after-load "expand-region-autoloads"
+    (with-eval-after-load 'expand-region-autoloads
       (key-chord-define-global "hh" #'er/expand-region) ; NEW-12.2
       (key-chord-define-global "HH" #'er/contract-region))
 
     (key-chord-define-global "kk" #'kill-whole-line) ; NEW-13.1.2
 
-    (with-eval-after-load "helm-ring"
+    (with-eval-after-load 'helm-ring
       (key-chord-define-global "yy" #'helm-show-kill-ring)) ; NEW-13.2.1
 
-    (with-eval-after-load "avy-autoloads"
+    (with-eval-after-load 'avy-autoloads
       (key-chord-define-global "jj" #'avy-goto-word-1)
       (key-chord-define-global "jl" #'avy-goto-line))
 
     (key-chord-define-global "hj" #'undo) ; NEW-17.1
 
-    (with-eval-after-load "helm-for-files"
+    (with-eval-after-load 'helm-for-files
       (key-chord-define-global "FF" #'helm-for-files)) ; NEW-19.2
 
     (key-chord-define-global "xk" #'kill-buffer) ; NEW-20.4
@@ -3968,7 +3968,7 @@ you will be prompted to enter the desired fill column width."
   (leuven--section "25.8 (emacs)Outline Mode")
 
   ;; Outline mode commands for Emacs.
-  (with-eval-after-load "outline"
+  (with-eval-after-load 'outline
 
     ;; Bind the outline minor mode functions to an easy to remember prefix
     ;; key (more accessible than the horrible prefix `C-c @').
@@ -3977,7 +3977,7 @@ you will be prompted to enter the desired fill column width."
     ;; ;; Make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik).
     ;; (try-require 'outline-magic)
-    ;; (with-eval-after-load "outline-magic"
+    ;; (with-eval-after-load 'outline-magic
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
     ;;               (define-key outline-minor-mode-map
@@ -4122,10 +4122,10 @@ you will be prompted to enter the desired fill column width."
 
   (leuven--section "(emacs-goodies-el)boxquote")
 
-  (with-eval-after-load "boxquote-autoloads"
+  (with-eval-after-load 'boxquote-autoloads
     (global-set-key (kbd "C-c q") #'boxquote-region))
 
-  (with-eval-after-load "boxquote"
+  (with-eval-after-load 'boxquote
     (setq boxquote-top-and-tail  "────")
     (setq boxquote-title-format  " %s")
     (setq boxquote-top-corner    "  ┌")
@@ -4196,7 +4196,7 @@ scrolling to the bottom."
   (try-require 'tex-site) ; XXX
 
   ;; Support for LaTeX documents.
-  (with-eval-after-load "latex"
+  (with-eval-after-load 'latex
 
     ;; ;; LaTeX-sensitive spell checking
     ;; (add-hook 'tex-mode-hook
@@ -4381,7 +4381,7 @@ scrolling to the bottom."
 
     (leuven--section "(preview-latex)Top")
 
-    (with-eval-after-load "preview"
+    (with-eval-after-load 'preview
 
       ;; Determine the path to the `gs' command for format conversions.
       (setq preview-gs-command
@@ -4406,7 +4406,7 @@ scrolling to the bottom."
 
     ;; Minor mode with distinct support for `\label', `\ref', `\cite' and
     ;; `\index' in LaTeX.
-    (with-eval-after-load "reftex"
+    (with-eval-after-load 'reftex
 
       ;; Turn all plug-ins on.
       (setq reftex-plug-into-AUCTeX t)
@@ -4416,7 +4416,7 @@ scrolling to the bottom."
       (setq reftex-use-multiple-selection-buffers t))
 
     ;; BibTeX mode.
-    (with-eval-after-load "bibtex"
+    (with-eval-after-load 'bibtex
 
       ;; Current BibTeX dialect.
       (setq bibtex-dialect 'biblatex))
@@ -4445,7 +4445,7 @@ scrolling to the bottom."
     ;; Invoke html-helper-mode automatically on .jsp files.
     (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
 
-  (with-eval-after-load "web-mode-autoloads"
+  (with-eval-after-load 'web-mode-autoloads
     (add-to-list 'auto-mode-alist '("\\.aspx\\'"   . web-mode))
     (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))
     (add-to-list 'auto-mode-alist '("\\.jsp\\'"    . web-mode))
@@ -4453,7 +4453,7 @@ scrolling to the bottom."
     (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . web-mode)))
 
   ;; Major mode for editing web templates.
-  (with-eval-after-load "web-mode"
+  (with-eval-after-load 'web-mode
 
     (define-key web-mode-map (kbd "C--")      #'web-mode-fold-or-unfold)
     (define-key web-mode-map (kbd "C-+")      #'web-mode-fold-or-unfold)
@@ -4578,7 +4578,7 @@ the parent element."
 
     )
 
-  (with-eval-after-load "nxml-mode"
+  (with-eval-after-load 'nxml-mode
 
     ;; Indent 4 spaces (for the children of an element relative to the start-tag).
     (setq nxml-child-indent 4)
@@ -4610,7 +4610,7 @@ the parent element."
 
   ;; Highlight the current SGML tag context (`hl-tags-face').
   (try-require 'hl-tags-mode)
-  (with-eval-after-load "hl-tags-mode"
+  (with-eval-after-load 'hl-tags-mode
 
     (add-hook 'html-mode-hook
               (lambda ()
@@ -4701,7 +4701,7 @@ the parent element."
   ;; Making buffer indexes as menus.
   (try-require 'imenu)                  ; Try to load the awesome 'imenu' library.
 
-  (with-eval-after-load "imenu"
+  (with-eval-after-load 'imenu
     ;; Always rescan buffers for Imenu.
     (setq imenu-auto-rescan t)
 
@@ -4741,7 +4741,7 @@ the parent element."
 mouse-2: toggle rest visibility\n\
 mouse-3: go to end") "]")))
 
-  (with-eval-after-load "helm-autoloads"
+  (with-eval-after-load 'helm-autoloads
 
     ;; Keybinding to quickly jump to a symbol in buffer.
     (global-set-key [remap imenu] #'helm-imenu)
@@ -4751,7 +4751,7 @@ mouse-3: go to end") "]")))
   )
 
   ;; Helm interface for Imenu.
-  (with-eval-after-load "helm-imenu"
+  (with-eval-after-load 'helm-imenu
 
     ;; Delimit types of candidates and his value
     (setq helm-imenu-delimiter ": ")
@@ -4790,7 +4790,7 @@ mouse-3: go to end") "]")))
     ;;     (align beg end)))
 
     ;; Use SMIE code for navigation and indentation in "sh-script" mode.
-    (with-eval-after-load "sh-script"
+    (with-eval-after-load 'sh-script
       (setq sh-use-smie t))
 
 ;;** 26.4 Commands for Editing with (info "(emacs)Parentheses")
@@ -4840,7 +4840,7 @@ mouse-3: go to end") "]")))
 
   ;; Automatic insertion, wrapping and paredit-like navigation with user defined
   ;; pairs.
-  (with-eval-after-load "smartparens-autoloads-XXX"
+  (with-eval-after-load 'smartparens-autoloads-XXX
 
     ;; Default configuration for smartparens package.
     (require 'smartparens-config)       ; Keybinding management, markdown-mode,
@@ -4908,7 +4908,7 @@ line instead."
   ;; Enable Hideshow (code folding) for programming modes.
   (add-hook 'prog-mode-hook #'hs-minor-mode)
 
-  (with-eval-after-load "hideshow"
+  (with-eval-after-load 'hideshow
 
     ;; Unhide both code and comment hidden blocks when doing incremental search.
     (setq hs-isearch-open t)
@@ -4966,7 +4966,7 @@ line instead."
   (add-hook 'inferior-ess-mode-hook #'glasses-mode)
   (add-hook 'java-mode-hook         #'glasses-mode)
 
-  (with-eval-after-load "glasses"
+  (with-eval-after-load 'glasses
 
     ;; String to be displayed as a visual separator in unreadable identifiers.
     (setq glasses-separator "")
@@ -4988,12 +4988,12 @@ line instead."
     (setq glasses-separate-parentheses-p nil))
 
   ;; An interface to the Eclipse IDE.
-  (with-eval-after-load "emacs-eclim-autoloads-XXX"
+  (with-eval-after-load 'emacs-eclim-autoloads-XXX
 
     ;; Enable Eclim mode in Java.
     (add-hook 'java-mode-hook #'eclim-mode))
 
-  (with-eval-after-load "eclim"
+  (with-eval-after-load 'eclim
 
     ;; Find Eclim installation.
     (setq eclim-executable
@@ -5035,11 +5035,11 @@ line instead."
 
     )
 
-  (with-eval-after-load "js2-mode-autoloads"
+  (with-eval-after-load 'js2-mode-autoloads
 
     (add-to-list 'auto-mode-alist '("\\.js\\'\\|\\.json\\'" . js2-mode)))
 
-  (with-eval-after-load "js2-mode"
+  (with-eval-after-load 'js2-mode
 
     ;; Add highlighting of many ECMA built-in functions.
     (setq js2-highlight-level 3)
@@ -5220,7 +5220,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
                                            (js2-node-abs-pos methods)))))))))
 
     ;; Color identifiers based on their names.
-    (with-eval-after-load "color-identifiers-mode-autoloads"
+    (with-eval-after-load 'color-identifiers-mode-autoloads
       (add-hook 'js2-mode-hook 'color-identifiers-mode))
 
     ;; JS-comint.
@@ -5228,7 +5228,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     ;; (define-key js2-mode-map (kbd "C-c C-b") #'js-send-buffer-and-go)
 
 ;; Disable JSHint since we prefer ESLint checking.
-(with-eval-after-load "flycheck"
+(with-eval-after-load 'flycheck
 
   ;; (setq-default flycheck-disabled-checkers
   ;;               (append flycheck-disabled-checkers
@@ -5417,7 +5417,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
 
   ;; Color identifiers based on their names.
-  (with-eval-after-load "color-identifiers-mode-autoloads"
+  (with-eval-after-load 'color-identifiers-mode-autoloads
     (add-hook 'java-mode-hook 'color-identifiers-mode))
 
 ;;** 27.2 (info "(emacs)Compilation Mode")
@@ -5448,7 +5448,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
 
   (leuven--section "27.4 (emacs)Grep Searching under Emacs")
 
-  (with-eval-after-load "grep"
+  (with-eval-after-load 'grep
 
     ;; Run `grep' via `find', with user-friendly interface.
     (global-set-key (kbd "C-c f 3") #'rgrep)
@@ -5466,7 +5466,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
       ;; Default find command for `M-x grep-find'.
       (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 
-  (with-eval-after-load "grep"
+  (with-eval-after-load 'grep
     ;; Files to ignore for MEPLA.
     (add-to-list 'grep-find-ignored-files "archive-contents"))
 
@@ -5544,7 +5544,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     ;; Set a global keybinding to quickly access the Flycheck error list.
     (global-set-key (kbd "M-g l") #'flycheck-list-errors))
 
-  (with-eval-after-load "flycheck"
+  (with-eval-after-load 'flycheck
 
     ;; Delay in seconds before displaying errors at point.
     (setq flycheck-display-errors-delay 0.3)
@@ -5581,12 +5581,12 @@ a clean buffer we're an order of magnitude laxer about checking."
               #'leuven--adjust-flycheck-automatic-syntax-eagerness)
 
     ;; Change mode line color with Flycheck status.
-    (with-eval-after-load "flycheck-color-mode-line"
+    (with-eval-after-load 'flycheck-color-mode-line
       (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 
   (global-set-key (kbd "C-x C-S-e") #'elint-current-buffer)
 
-  (with-eval-after-load "elint"
+  (with-eval-after-load 'elint
     (add-to-list 'elint-standard-variables 'current-prefix-arg)
     (add-to-list 'elint-standard-variables 'command-line-args-left)
     (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
@@ -5597,7 +5597,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "27.6 Running (emacs)Debuggers Under Emacs")
 
-  (with-eval-after-load "gdb-mi"
+  (with-eval-after-load 'gdb-mi
 
     ;; Enable Gdb-Many-Windows mode.
     (setq gdb-many-windows t))          ; The only important parameter for GDB.
@@ -5622,7 +5622,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 ;;** Debugging Lisp programs
 
   ;; Source-level debugger for Emacs Lisp.
-  (with-eval-after-load "edebug"
+  (with-eval-after-load 'edebug
 
     ;; ;; Display a trace of function entry and exit.
     ;; (setq edebug-trace t)
@@ -5679,7 +5679,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; (setq max-lisp-eval-depth 600)        ; 1000?
 
   ;; Dynamic evaluation replacement with Emacs.
-  (with-eval-after-load "litable-autoloads"
+  (with-eval-after-load 'litable-autoloads
 
     (add-hook 'lisp-interaction-mode-hook #'litable-mode))
 
@@ -5729,12 +5729,12 @@ a clean buffer we're an order of magnitude laxer about checking."
   (add-hook 'vc-log-mode-hook #'leuven--vc-log-mode-setup)
 
   (autoload 'vc-git-root "vc-git")
-  (with-eval-after-load "vc-git"
+  (with-eval-after-load 'vc-git
 
     ;; Major mode for editing git commit messages.
     (idle-require 'git-commit))
 
-  (with-eval-after-load "git-commit"
+  (with-eval-after-load 'git-commit
 
     ;; Turn on on-the-fly spell-checking.
     (add-hook 'git-commit-setup-hook #'flyspell-mode)
@@ -5758,7 +5758,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   (global-set-key (kbd "C-x v H") #'vc-region-history)
 
   ;; Walk through Git revisions of a file.
-  (with-eval-after-load "git-timemachine-autoloads"
+  (with-eval-after-load 'git-timemachine-autoloads
 
     ;; Number of chars from the full SHA1 hash to use for abbreviation.
     (setq git-timemachine-abbreviation-length 7)
@@ -5766,7 +5766,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (global-set-key (kbd "C-x v t") #'git-timemachine))
 
   ;; Pop up last commit information of current line.
-  (with-eval-after-load "git-messenger-autoloads"
+  (with-eval-after-load 'git-messenger-autoloads
 
     (global-set-key (kbd "C-x v p") #'git-messenger:popup-message) ; `C-h g'.
 
@@ -5907,7 +5907,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
 
   (leuven--section "28.2 (emacs)Change Logs")
 
-  (with-eval-after-load "add-log"
+  (with-eval-after-load 'add-log
 
     ;; Don't make a new entry, when the last entry was made by you and on the
     ;; same date.
@@ -5931,12 +5931,12 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
 
   (leuven--section "28.3 (emacs)Tags Tables")
 
-  ;; (with-eval-after-load "etags"
+  ;; (with-eval-after-load 'etags
   ;;
   ;;   ;; Select from multiple tags.
   ;;   (try-require 'etags-select))
 
-  (with-eval-after-load "etags-select"
+  (with-eval-after-load 'etags-select
 
     ;; Do a `find-tag-at-point', and display all exact matches.
     (global-set-key (kbd "M-?") #'etags-select-find-tag-at-point))
@@ -5944,7 +5944,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
   ;; Find the definition of the Emacs Lisp function or variable near point.
   (find-function-setup-keys)
 
-  (with-eval-after-load "lisp-mode"
+  (with-eval-after-load 'lisp-mode
 
     (defun leuven-goto-lisp-symbol-at-point ()
       "Go to the definition of the Emacs Lisp symbol at point."
@@ -6013,7 +6013,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
     ;;
     ;; (require 'semantic/db)
 
-    (with-eval-after-load "semantic"
+    (with-eval-after-load 'semantic
 
       (defun leuven--semantic ()
         ;; Automatically complete whatever symbol you are typing.
@@ -6087,10 +6087,10 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
 
     )
 
-  (with-eval-after-load "projectile-autoloads"
+  (with-eval-after-load 'projectile-autoloads
     (idle-require 'projectile)
 
-    (with-eval-after-load "projectile"
+    (with-eval-after-load 'projectile
       ;; Turn on projectile mode by default for all file types
       (projectile-mode)
       ;; (projectile-global-mode) ??
@@ -6113,7 +6113,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
       ;;         helm-source-projectile-files-list))
   ))
 
-  (with-eval-after-load "projectile"
+  (with-eval-after-load 'projectile
 
     ;; Indexing method.
     ;; (setq projectile-indexing-method 'native)
@@ -6161,10 +6161,10 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
   (leuven--section "29.3 Controlling Expanding Abbrevs")
 
   ;; Yet Another Snippet extension for Emacs
-  (with-eval-after-load "yasnippet-autoloads"
+  (with-eval-after-load 'yasnippet-autoloads
     (idle-require 'yasnippet))
 
-  (with-eval-after-load "yasnippet"
+  (with-eval-after-load 'yasnippet
 
     ;; Add root directories that store the snippets.
     (let ((leuven-snippets              ; Additional YASnippets.
@@ -6182,7 +6182,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
     ;; Enable YASnippet in all buffers.
     (yas-global-mode 1)
 
-    (with-eval-after-load "diminish-autoloads"
+    (with-eval-after-load 'diminish-autoloads
       (diminish 'yas-minor-mode " y"))
 
     ;; Load the snippet tables.
@@ -6254,7 +6254,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
     ;; Log level for `yas--message'.
     (setq yas-verbosity 2)              ; Warning.
 
-  (with-eval-after-load "auto-yasnippet-autoloads"
+  (with-eval-after-load 'auto-yasnippet-autoloads
     ;; (global-set-key (kbd "H-w") #'aya-create)
     (global-set-key (kbd "H-y") #'aya-open-line))
 
@@ -6262,7 +6262,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
 
   (leuven--section "29.7 Dabbrev Customization")
 
-  ;; (with-eval-after-load "dabbrev"
+  ;; (with-eval-after-load 'dabbrev
   ;;
   ;;   ;; Preserve case when expanding the abbreviation.
   ;;   (setq dabbrev-case-replace nil))
@@ -6270,7 +6270,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
   ;; Expand text trying various ways to find its expansion.
   (global-set-key (kbd "M-/") #'hippie-expand) ; Built-in.
 
-  (with-eval-after-load "hippie-exp"
+  (with-eval-after-load 'hippie-exp
 
     ;; List of expansion functions tried (in order) by `hippie-expand'
     ;; (completion strategy).
@@ -6298,7 +6298,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
             try-complete-file-name))
 
     ;; Integrate YASnippet with `hippie-expand'.
-    (with-eval-after-load "yasnippet"
+    (with-eval-after-load 'yasnippet
 
       (add-to-list 'hippie-expand-try-functions-list
                    'yas-hippie-try-expand)))
@@ -6306,19 +6306,19 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
                                         ; top of the list.
 
   ;; Auto Completion.
-  (with-eval-after-load "auto-complete-autoloads-XXX"
+  (with-eval-after-load 'auto-complete-autoloads-XXX
     (idle-require 'auto-complete-config)
 
     (global-set-key (kbd "C-/")     #'auto-complete)
     (global-set-key (kbd "C-S-SPC") #'auto-complete))
 
-  (with-eval-after-load "auto-complete-config"
+  (with-eval-after-load 'auto-complete-config
 
     ;; 6.1 Set a list of sources to use (by default + for some major modes)
     (ac-config-default))                ; ... and enable Auto-Complete mode in
                                         ; all buffers.
 
-  (with-eval-after-load "auto-complete"
+  (with-eval-after-load 'auto-complete
                                         ; Required by ESS.
 
     ;; 5.4 Completion will be started automatically by inserting 1 character.
@@ -6401,9 +6401,9 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
 (global-set-key (kbd "<M-f1>") #'toggle-auto-complete-company-modes)
 
   ;; Modular text completion framework.
-  (with-eval-after-load "company-autoloads"
+  (with-eval-after-load 'company-autoloads
     (idle-require 'company)
-    (with-eval-after-load "company"
+    (with-eval-after-load 'company
       ;; Enable Company mode in all buffers ....
       (global-company-mode 1)
 
@@ -6413,7 +6413,7 @@ Without ARG, prompt for a revision and use `leuven--ediff-revision`."
                                         ; and the replacement.
       ))
 
-  (with-eval-after-load "company"
+  (with-eval-after-load 'company
 
     ;; ... Except in some modes.
     (setq company-global-modes
@@ -6520,7 +6520,7 @@ This example lists Azerty layout second row keys."
     )                                   ; with-eval-after-load "company".
 
   ;; Dabbrev-like company-mode back-end for code.
-  (with-eval-after-load "company-dabbrev-code"
+  (with-eval-after-load 'company-dabbrev-code
 
     ;; ;; Search all other buffers
     ;; (setq company-dabbrev-code-other-buffers 'all)
@@ -6541,7 +6541,7 @@ This example lists Azerty layout second row keys."
                    '((company-dabbrev-code company-yasnippet)))))
 
   ;; Dabbrev-like company-mode completion back-end.
-  (with-eval-after-load "company-dabbrev"
+  (with-eval-after-load 'company-dabbrev
 
     ;; Only search in the current buffer
     (setq company-dabbrev-other-buffers nil) ; Prevent Company completing
@@ -6558,7 +6558,7 @@ This example lists Azerty layout second row keys."
     ;; Skip invisible text (Org drawers, etc.).
     (setq company-dabbrev-ignore-invisible t))
 
-  (with-eval-after-load "company-quickhelp-autoloads"
+  (with-eval-after-load 'company-quickhelp-autoloads
 
     ;; Enable `company-quickhelp-mode'.
     (company-quickhelp-mode 1)
@@ -6578,7 +6578,7 @@ This example lists Azerty layout second row keys."
 ;;** (info "(emacs)Dired Enter")
 
   ;; Directory-browsing commands configuration.
-  (with-eval-after-load "dired"
+  (with-eval-after-load 'dired
 
     (leuven--section "30.1 (emacs)Dired Enter")
 
@@ -6743,7 +6743,7 @@ This example lists Azerty layout second row keys."
     (leuven--section "30.17 Editing the (emacs)Wdired Buffer")
 
     ;; Put a Dired buffer in a mode in which filenames are editable.
-    (with-eval-after-load "wdired"
+    (with-eval-after-load 'wdired
 
       ;; Permissions bits of the files are editable.
       (setq wdired-allow-to-change-permissions t))
@@ -6753,7 +6753,7 @@ This example lists Azerty layout second row keys."
     (leuven--section "30.18 Viewing Image Thumbnails in Dired")
 
     ;; Use Dired to browse and manipulate your images.
-    (with-eval-after-load "image-dired"
+    (with-eval-after-load 'image-dired
 
       ;; Maximum number of files to show before warning the user.
       (setq image-dired-show-all-from-dir-max-files 100)
@@ -6810,7 +6810,7 @@ Consider using `C-x d' instead for better performance."
   (leuven--section "30.XX Diff-hl")
 
   ;; Enable VC diff highlighting on the side of a Dired window.
-  (with-eval-after-load "diff-hl-autoloads"
+  (with-eval-after-load 'diff-hl-autoloads
     (add-hook 'dired-mode-hook #'diff-hl-dired-mode))
 
 )                                       ; Chapter 30 ends here.
@@ -6856,7 +6856,7 @@ Consider using `C-x d' instead for better performance."
   (leuven--section "31.7 Times of (emacs)Sunrise/Sunset")
 
   ;; ;; Calendar functions for solar events.
-  ;; (with-eval-after-load "solar"
+  ;; (with-eval-after-load 'solar
   ;;
   ;;   ;; Name of the calendar location.
   ;;   (setq calendar-location-name "Leuven, BE")
@@ -6877,7 +6877,7 @@ Consider using `C-x d' instead for better performance."
                                         ; `diary-loaddefs'.
     (message "[Appointment reminders lib `appt' not loaded (no diary file found)]"))
 
-  (with-eval-after-load "appt"
+  (with-eval-after-load 'appt
 
     ;; Send the first warning 60 minutes before an appointment.
     (setq appt-message-warning-time 60) ; [default: 12]
@@ -6921,7 +6921,7 @@ NOTIFICATION-STRING: Message(s) to display."
     ;; Enable appointment notification, several minutes beforehand.
     (add-hook 'diary-hook #'appt-make-list)
 
-    (with-eval-after-load "org-agenda"
+    (with-eval-after-load 'org-agenda
 
       ;; Keep your appointment list clean: if you delete an appointment from
       ;; your Org agenda file, delete the corresponding alert.
@@ -6975,7 +6975,7 @@ NOTIFICATION-STRING: Message(s) to display."
 ;;* Calendar view framework on Emacs
 
   ;; Calendar view framework on Emacs.
-  (with-eval-after-load "calfw"
+  (with-eval-after-load 'calfw
 
     ;; Unicode characters.
     (setq cfw:fchar-junction ?╋
@@ -6988,7 +6988,7 @@ NOTIFICATION-STRING: Message(s) to display."
           cfw:fchar-top-right-corner ?┓))
 
   ;; Calendar view for org-agenda.
-  (with-eval-after-load "calfw-org"
+  (with-eval-after-load 'calfw-org
 
     ;; Remove some strings (tags and filenames) from item summary.
     (defun cfw:org-summary-format (item)
@@ -7056,7 +7056,7 @@ NOTIFICATION-STRING: Message(s) to display."
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
 
   ;; A newsreader for GNU Emacs.
-  (with-eval-after-load "gnus"
+  (with-eval-after-load 'gnus
 
     ;; Package to compose an outgoing mail (Message, with Gnus paraphernalia).
     (setq mail-user-agent 'gnus-user-agent)
@@ -7079,7 +7079,7 @@ NOTIFICATION-STRING: Message(s) to display."
 (leuven--chapter leuven-load-chapter-38-shell "38 Running Shell Commands from Emacs"
 
   ;; Transform shell names to what they really are.
-  (with-eval-after-load "sh-script"
+  (with-eval-after-load 'sh-script
 
     (add-to-list 'sh-alias-alist '(sh . bash)))
 
@@ -7134,7 +7134,7 @@ NOTIFICATION-STRING: Message(s) to display."
   ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...).
   ;; (try-require 'comint)
-  ;; (with-eval-after-load "comint"
+  ;; (with-eval-after-load 'comint
 
     ;; Comint prompt is read only.
     (setq comint-prompt-read-only t)    ; Text is read-only (in ESS)?
@@ -7173,7 +7173,7 @@ NOTIFICATION-STRING: Message(s) to display."
       (let ((comint-buffer-maximum-size 0))
         (comint-truncate-buffer)))
 
-    (with-eval-after-load "comint"
+    (with-eval-after-load 'comint
       (define-key comint-mode-map (kbd "C-c C-k") #'leuven-comint-clear-buffer))
 
 ;; )
@@ -7194,7 +7194,7 @@ NOTIFICATION-STRING: Message(s) to display."
 
   (leuven--section "38.5 Shell Command History")
 
-  (with-eval-after-load "comint"
+  (with-eval-after-load 'comint
 
     ;; Rejects short commands.
     (setq comint-input-filter
@@ -7223,7 +7223,7 @@ NOTIFICATION-STRING: Message(s) to display."
     (define-key comint-mode-map
       (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio.
 
-    (with-eval-after-load "helm-autoloads"
+    (with-eval-after-load 'helm-autoloads
       ;; Use Helm to search `comint' history.
       (define-key comint-mode-map
         (kbd "C-c C-l") #'helm-comint-input-ring)))
@@ -7259,12 +7259,12 @@ NOTIFICATION-STRING: Message(s) to display."
   ;; Managing multiple terminal buffers in Emacs
   ;; (and fixing some troubles of `term-mode': key bindings, etc.).
 
-  ;; (with-eval-after-load "multi-term-autoloads"
+  ;; (with-eval-after-load 'multi-term-autoloads
   ;;
   ;;   ;; (global-set-key (kbd "C-c t") #'multi-term-next)
   ;;   (global-set-key (kbd "C-c T") #'multi-term)) ; Create a new one.
 
-  (with-eval-after-load "multi-term"
+  (with-eval-after-load 'multi-term
 
     (setq multi-term-program shell-file-name))
 
@@ -7302,7 +7302,7 @@ NOTIFICATION-STRING: Message(s) to display."
   ;; ;; Start Proced in a similar manner to Dired.
   ;; (global-set-key (kbd "C-x p") #'proced) ; Conflict with Bkmp.
 
-  (with-eval-after-load "proced"
+  (with-eval-after-load 'proced
 
     ;; Current sort scheme for Proced listing.
     (setq-default proced-sort 'start)
@@ -7320,7 +7320,7 @@ NOTIFICATION-STRING: Message(s) to display."
   (unless noninteractive
     (idle-require 'server))             ; After init.
 
-  (with-eval-after-load "server"
+  (with-eval-after-load 'server
 
     ;; Start the server if it's not already (definitely) running.
     (unless (equal (server-running-p) t)
@@ -7340,7 +7340,7 @@ NOTIFICATION-STRING: Message(s) to display."
 
   ;; Print Emacs buffer on line printer
   ;; for {lpr,print}-{buffer,region}.
-  (with-eval-after-load "lpr"
+  (with-eval-after-load 'lpr
 
     ;; Name of program for printing a file.
     (setq lpr-command (executable-find "enscript"))
@@ -7368,7 +7368,7 @@ NOTIFICATION-STRING: Message(s) to display."
       (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query))
 
   ;; Print text from the buffer as PostScript.
-  (with-eval-after-load "ps-print"
+  (with-eval-after-load 'ps-print
 
     (defvar gsprint-program
       (concat leuven--windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
@@ -7546,7 +7546,7 @@ NOTIFICATION-STRING: Message(s) to display."
     (global-set-key (kbd "<f3>") #'find-file-at-point))
 
   ;; Find file (or URL) at point.
-  (with-eval-after-load "ffap"
+  (with-eval-after-load 'ffap
 
     ;; Function called to fetch an URL.
     (setq ffap-url-fetcher 'browse-url)); Could be `browse-url-emacs' or
@@ -7557,14 +7557,14 @@ NOTIFICATION-STRING: Message(s) to display."
   (leuven--section "Web search")
 
   ;; A set of functions and bindings to Google under point.
-  (with-eval-after-load "google-this-autoloads"
+  (with-eval-after-load 'google-this-autoloads
 
     ;; Keybinding under which `google-this-mode-submap' is assigned.
     (setq google-this-keybind (kbd "C-c g"))
 
     (idle-require 'google-this))
 
-  (with-eval-after-load "google-this"
+  (with-eval-after-load 'google-this
 
     ;; Enable Google-This mode.
     (google-this-mode 1))
@@ -7601,13 +7601,13 @@ NOTIFICATION-STRING: Message(s) to display."
   (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
 
   ;; Emacs interface to Google Translate.
-  (with-eval-after-load "google-translate-autoloads"
+  (with-eval-after-load 'google-translate-autoloads
 
     ;; Translate a text using translation directions.
     (global-set-key (kbd "C-c T") #'google-translate-smooth-translate))
 
   ;; Just another UI to Google.
-  (with-eval-after-load "google-translate-smooth-ui"
+  (with-eval-after-load 'google-translate-smooth-ui
 
     ;; Translation directions.
     (setq google-translate-translation-directions-alist
@@ -7622,7 +7622,7 @@ NOTIFICATION-STRING: Message(s) to display."
 (leuven--chapter leuven-load-chapter-47-amusements "47 Other Amusements"
 
   ;; Define a default menu bar.
-  (with-eval-after-load "menu-bar"
+  (with-eval-after-load 'menu-bar
 
     ;; Get rid of the Games in the Tools menu.
     (define-key menu-bar-tools-menu [games] nil))
