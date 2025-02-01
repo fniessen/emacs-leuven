@@ -6,13 +6,13 @@
 (add-to-list 'auto-mode-alist '("\\.journal\\'" . ledger-mode))
 (add-to-list 'auto-mode-alist '("\\.ledger\\'"  . ledger-mode))
 
-(with-eval-after-load "ledger-commodities"
+(with-eval-after-load 'ledger-commodities
 
   ;; Default commodity for use in target calculations in ledger reconcile.
   (setq ledger-reconcile-default-commodity "EUR")) ; "€"
 
 ;; Provide custom fontification for ledger-mode.
-(with-eval-after-load "ledger-fontify"
+(with-eval-after-load 'ledger-fontify
 
   ;; If t, the highlight entire xact with state.
   (setq ledger-fontify-xact-state-overrides nil))
@@ -20,7 +20,7 @@
                                         ; each posted item in a xact if it is
                                         ; cleared/pending. XXX
 
-(with-eval-after-load "ledger-init"
+(with-eval-after-load 'ledger-init
 
   ;; (setq ledger-default-date-format "%Y-%m-%d")
   (setq ledger-default-date-format "%Y/%m/%d"))
