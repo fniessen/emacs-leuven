@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250201.1039>
+;; Version: <20250201.1406>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250201.1039>"
+(defconst lvn--emacs-version "<20250201.1406>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1435,7 +1435,8 @@ Should be selected from `fringe-bitmaps'.")
       ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
       ;; (global-auto-highlight-symbol-mode t)
 
-      ;; Enable Auto-Highlight-Symbol mode in programming mode and LaTeX mode buffers.
+      ;; Enable Auto-Highlight-Symbol mode in programming mode and LaTeX mode
+      ;; buffers.
       (dolist (hook '(prog-mode-hook
                       latex-mode-hook))
         (add-hook hook 'auto-highlight-symbol-mode))))
@@ -1511,7 +1512,8 @@ Should be selected from `fringe-bitmaps'.")
   ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
 
-  ;; Enable Whitespace mode in text and programming modes (not in *vc-dir*, etc.).
+  ;; Enable Whitespace mode in text and programming modes (not in *vc-dir*,
+  ;; etc.).
   (dolist (hook '(text-mode-hook
                   prog-mode-hook))
     (add-hook hook #'whitespace-mode))
@@ -2035,13 +2037,14 @@ After initiating the grep search, the isearch is aborted."
     ;; ;; if there is no local dictionary to use in the buffer).
     ;; (setq ispell-dictionary "american") ; See `sentence-end-double-space'.
 
-    ;; Set the American English dictionary for spell-checking in programming modes.
-    (add-hook 'prog-mode-hook
-              #'(lambda ()
-                  (setq ispell-dictionary "american")))
+    ;; Set American English dictionary for text and programming modes.
+    (dolist (hook '(text-mode-hook prog-mode-hook))
+      (add-hook hook
+                (lambda ()
+                  (setq ispell-dictionary "american"))))
 
-    ;; Enable Flyspell mode in programming modes, including comments and strings,
-    ;; while excluding code.
+    ;; Enable Flyspell-Prog in programming modes (including comments and
+    ;; strings, while excluding code).
     (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
     (with-eval-after-load "ispell"

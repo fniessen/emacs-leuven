@@ -550,10 +550,6 @@ Shows a warning message if the file does not exist or is not executable."
 )                                       ; Chapter 0 ends here.
 #+end_src
 
-*************** TODO Function for finding executables
-See function ~--find-program~ at http://www.visualco.de/src/elisp/.emacs.el.html.
-*************** END
-
 * Debugging
 
 #+begin_src emacs-lisp
@@ -2496,7 +2492,8 @@ point, the highlighting goes away.
       ;; ;; Toggle Auto-Highlight-Symbol mode in all buffers.
       ;; (global-auto-highlight-symbol-mode t)
 
-      ;; Enable Auto-Highlight-Symbol mode in programming mode and LaTeX mode buffers.
+      ;; Enable Auto-Highlight-Symbol mode in programming mode and LaTeX mode
+      ;; buffers.
       (dolist (hook '(prog-mode-hook
                       latex-mode-hook))
         (add-hook hook 'auto-highlight-symbol-mode))))
@@ -2676,7 +2673,8 @@ characters over the default mechanism of ~nobreak-char-display~ and
 ~show-trailing-whitespace~.
 
 #+begin_src emacs-lisp
-  ;; Enable Whitespace mode in text and programming modes (not in *vc-dir*, etc.).
+  ;; Enable Whitespace mode in text and programming modes (not in *vc-dir*,
+  ;; etc.).
   (dolist (hook '(text-mode-hook
                   prog-mode-hook))
     (add-hook hook #'whitespace-mode))
@@ -3464,25 +3462,28 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Set the American English dictionary for spell-checking in programming modes.
-    (add-hook 'prog-mode-hook
-              #'(lambda ()
-                  (setq ispell-dictionary "american")))
+    ;; Set American English dictionary for text and programming modes.
+    (dolist (hook '(text-mode-hook prog-mode-hook))
+      (add-hook hook
+                (lambda ()
+                  (setq ispell-dictionary "american"))))
 #+end_src
 
-*************** TODO Enable Flyspell in other modes deriving from Text (HTML, etc.)
-
 #+begin_src emacs-lisp :tangle no
-    ;; Enable on-the-fly spell checking in text modes.
-    (add-hook 'text-mode-hook
-              #'(lambda ()
-                  (message "[Turning on Flyspell mode in `%s']" (buffer-name))
-                  (flyspell-mode)))
+    ;; Define a function to enable Flyspell and display a message.
+    (defun enable-flyspell-with-message ()
+      "Enable Flyspell mode and display a message."
+      (message "[Enabling Flyspell mode in buffer: %s]" (buffer-name))
+      (flyspell-mode))
+
+    ;; Enable Flyspell in text modes (and its derivatives) with a message
+    ;; indicating activation.
+    (add-hook 'text-mode-hook #'enable-flyspell-with-message)
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Enable Flyspell mode in programming modes, including comments and strings,
-    ;; while excluding code.
+    ;; Enable Flyspell-Prog in programming modes (including comments and
+    ;; strings, while excluding code).
     (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
