@@ -1286,36 +1286,32 @@ Alternative to requiring org-clock in every Emacs session.
             (setq org-clock-persist t)
             (org-clock-persistence-insinuate)))
 
+;; Org Clock Configuration.
 (with-eval-after-load 'org-clock
 
-  ;; ;; 8.4 Save both the running clock and the entire clock history when Emacs
-  ;; ;; is closed, and resume it next time Emacs is started up.
+  ;; ;; 8.4 Enable clock persistence and resume previous session on startup.
   ;; (setq org-clock-persist t)
-  ;;
-  ;; ;; 8.4 Set up hooks for clock persistence.
   ;; (org-clock-persistence-insinuate)
 
   ;; Resume clocking task on clock-in if the clock is open.
   (setq org-clock-in-resume t)
 
-  ;; Number of clock tasks to remember in history.
-  (setq org-clock-history-length 35)  ; 1-9A-Z
+  ;; Set history length for clocked tasks.
+  (setq org-clock-history-length 35)    ; 1-9A-Z
 
-  ;; 8.4.2 Include the current clocking task time in clock reports.
+  ;; 8.4.2 Include current clocking task time in reports.
   (setq org-clock-report-include-clocking-task t)
 
-  ;; 8.4.2 Format string used when creating CLOCKSUM lines and when generating
-  ;; a time duration (avoid showing days).
-  (setq org-duration-format 'h:mm)    ; Introduced in Emacs 26.1 / Org 9.1.
+  ;; 8.4.2 Format duration as hours and minutes (h:mm).
+  (setq org-duration-format 'h:mm)      ; Avoid showing days.
 
-  ;; Format string for the total time cells.
+  ;; Define clock time cell formats.
   (setq org-clock-total-time-cell-format "%s")
-
-  ;; Format string for the file time cells.
   (setq org-clock-file-time-cell-format "%s")
 
-  (defun leuven-org-clock-in-interrupted-task ()
-    "Clock back into the task that has been interrupted, if there is one."
+  ;; Function to clock back into an interrupted task.
+  (defun lvn-org-clock-in-interrupted-task ()
+    "Clock back into the interrupted task, if one exists."
     (interactive)
     (if (and (not org-clock-resolving-clocks-due-to-idleness)
              (marker-buffer org-clock-marker)
@@ -1324,14 +1320,14 @@ Alternative to requiring org-clock in every Emacs session.
           (org-clock-in nil))
       (org-clock-out)))
 
-  (global-set-key (kbd "C-c C-x C-q") #'leuven-org-clock-in-interrupted-task)
+  (global-set-key (kbd "C-c C-x C-q") #'lvn-org-clock-in-interrupted-task)
 
-  ;; 8.4.3 Resolve open clocks if the user is idle more than X minutes.
+  ;; 8.4.3 Set idle time before resolving open clocks.
   (setq org-clock-idle-time 240)
 
-  (defun leuven--org-switch-to-started (kwd)
-    "Switch task state to STRT.
-Skip normal headlines and capture tasks."
+  ;; Function to switch task state to "STRT" when clocking in.
+  (defun lvn--org-switch-to-started (kwd)
+    "Switch task state to STRT unless it's already in STRT or in capture mode."
     (if (and kwd
              (not (string-equal kwd "STRT"))
              (not (and (boundp 'org-capture-mode) org-capture-mode)))
@@ -1339,43 +1335,38 @@ Skip normal headlines and capture tasks."
       nil))
 
   ;; 8.4.3 Set task to todo state STRT while clocking it.
-  (setq org-clock-in-switch-to-state 'leuven--org-switch-to-started)
+  (setq org-clock-in-switch-to-state 'lvn--org-switch-to-started)
 
-  ;; Clock won't be stopped when the clocked entry is marked DONE.
+  ;; Prevent automatic clock-out when task is marked DONE.
   (setq org-clock-out-when-done nil)
 
-  ;; Time included for the mode line clock is all time clocked into this task
-  ;; today.
-  (setq org-clock-mode-line-total 'today)
+  ;; Configure mode line clock display.
   (setq org-clock-mode-line-total 'all)
 
-  ;; Get an alert (notification) when your planned time is over.
-  (setq org-clock-sound "~/Public/Music/Sounds/alarm.wav")
-  ;;! Use start-process to have an external program play the sound to
-  ;;! avoid ignored keystrokes until after the sound plays (start-process
-  ;;! "ding" nil "play" "~/Public/Music/Sounds/alarm.wav")
+  ;; Alert when planned time is over.
+  (setq org-clock-sound "/mnt/c/Windows/Media/Alarm01.wav")
+  ;; Use `start-process` for non-blocking sound alerts.
 
-  ;; Default range when displaying clocks with `org-clock-display'.
+  ;; Default clock display range.
   (setq org-clock-display-default-range 'untilnow)
 
-  ;; Remove the clock line when the resulting time is 0:00.
+  ;; Remove zero-time clock entries.
   (setq org-clock-out-remove-zero-time-clocks t)
 
   ;; ;; When clocking into a task with a clock entry which has not been
   ;; ;; closed, resume the clock from that point.
   ;; (setq org-clock-in-resume t)
 
-  ;; Ask the user if they wish to clock out before killing Emacs.
-  (defun leuven--org-query-clock-out ()
-    "Ask the user before clocking out.
-This is a useful function for adding to `kill-emacs-query-functions'."
+  ;; Ask user before clocking out on Emacs exit.
+  (defun lvn--org-query-clock-out ()
+    "Prompt user to clock out before exiting Emacs."
     (if (and (featurep 'org-clock)
              (funcall 'org-clocking-p)
              (y-or-n-p "You are currently clocking time, clock out? "))
         (org-clock-out)
-      t))                             ; Only fails on keyboard quit or error.
+      t))
 
-  (add-hook 'kill-emacs-query-functions #'leuven--org-query-clock-out)
+  (add-hook 'kill-emacs-query-functions #'lvn--org-query-clock-out)
 
   )                                   ; with-eval-after-load "org-clock" ends here.
 #+end_src
