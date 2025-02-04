@@ -1344,7 +1344,13 @@ Alternative to requiring org-clock in every Emacs session.
   (setq org-clock-mode-line-total 'all)
 
   ;; Alert when planned time is over.
-  (setq org-clock-sound "/mnt/c/Windows/Media/Alarm01.wav")
+  (setq org-clock-sound
+        (cond ((file-exists-p "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
+               "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
+              ((file-exists-p "/mnt/c/Windows/Media/Alarm01.wav")
+               "/mnt/c/Windows/Media/Alarm01.wav")
+              (t
+               nil)))                   ; Default to nil if neither file exists.
   ;; Use `start-process` for non-blocking sound alerts.
 
   ;; Default clock display range.
