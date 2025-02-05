@@ -1050,30 +1050,34 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
 (setq org-tags-column -80)
 
 ;; 6.2 List of tags ("contexts") allowed in Org mode files.
-(setq org-tag-alist '(("FLAGGED"     . ?1) ; = ASAP.
-                      (:startgroup  . nil)
-                      ("work"       . ?2)
-                      ("personal"   . ?3)
-                      (:endgroup    . nil)
-                      ;; ("now"      . XXX)
+(setq org-tag-alist '((:startgroup   . nil)
+                      ("work"        . ?W)
+                      ("personal"    . ?P)
+                      (:endgroup     . nil)
+
+                      ("FLAGGED"     . ?!) ;; Mark for special attention.
+                      ("ARCHIVE"     . ?a) ;; Mark for archiving.
+                      ("crypt"       . ?y) ;; Mark for encryption.
+
+                      ("urgent"      . ?u)
+
+                      (:startgroup   . nil) ;; Context-based tags.
+                      ("@work"       . ?w)
+                      ("@home"       . ?h)
+                      ("@errands"    . ?e)
+                      (:endgroup     . nil)
+
+                      (:startgroup   . nil) ;; Resource-based tags.
+                      ("@computer"   . ?c)
+                      ("@phone"      . ?p)
+                      ("@offline"    . ?o)
+                      (:endgroup     . nil)
+
+                      ("finance"     . ?F) ;; Miscellaneous.
+                      ("health"      . ?H)
+                      ("learning"    . ?L)
 
                       ("notbillable" . ?B)
-
-                      ("call"        . ?c)
-                      ("errands"     . ?e)
-                      ;; childcare
-                      ;; event
-                      ("finance"     . ?f) ; = Bills, statements, receipts.
-                      ;; shopping
-                      ;; family
-                      ;; friends
-                      ("mail"        . ?m)
-
-                      ;; ("reading"  . ?r)
-                      ;; ("proj"     . ?P)
-
-                      ("ARCHIVE"     . ?a) ; Speed command + action in task list.
-                      ("crypt"       . ?C)
                       ))
 
 ;; Faces for specific tags.
