@@ -1079,18 +1079,27 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
 
                       ("notbillable" . ?B)
                       ))
+#+end_src
 
+~ARCHIVE~ is a special built-in tag in Org mode that is used to mark entries for
+archiving. When an entry is tagged with ~ARCHIVE~, it can be automatically *hidden
+from* normal views like *the agenda* while still being searchable when needed.
+
+If you prefer keeping archived items in the same file instead of moving them,
+manually tagging them with ~ARCHIVE~ helps keep things organized.
+
+#+begin_src emacs-lisp
 ;; Faces for specific tags.
 (setq org-tag-faces
-      '(("FLAGGED"                    ; Important.
+      '(("FLAGGED"                      ;; Mark for special attention.
          (:slant italic :foreground "#FF0000"))
         ("work"
          (:slant italic :foreground "#FF9900"))
         ("personal"
          (:slant italic :foreground "#009900"))
-        ("now"                        ; To do.
+        ("urgent"
          (:slant italic :foreground "#3333FF"))
-        ("inbox"                      ; Later.
+        ("inbox"
          (:slant italic :foreground "#993399"))
         ("notbillable"
          (:slant italic :foreground "#A9876E"))
@@ -1105,26 +1114,20 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
 *************** TODO Check whether this function removes tags of DIRECT parent
 
 #+begin_src emacs-lisp
-;; Remove redundant tags of headlines (from David Maus).
-(defun leuven-org-remove-redundant-tags ()
-  "Remove redundant tags of headlines in current buffer.
-A tag is considered redundant if it is local to a headline and inherited by
+;; Remove redundant tags of headlines.
+(defun lvn-org-remove-redundant-local-tags ()
+  "Remove locally assigned tags that are already inherited from
 a parent headline."
   (interactive)
   (when (derived-mode-p 'org-mode)
     (save-excursion
       (org-map-entries
        (lambda ()
-         (let ((alltags (split-string
-                         (or (org-entry-get (point) "ALLTAGS") "")
-                         ":"))
-               local inherited tag)
-           (dolist (tag alltags)
-             (if (get-text-property 0 'inherited tag)
-                 (push tag inherited)
-               (push tag local)))
-           (dolist (tag local)
-             (when (member tag inherited)
+         (let* ((all-tags (org-get-tags))
+                (inherited-tags (seq-filter (lambda (tag) (get-text-property 0 'inherited tag)) all-tags))
+                (local-tags (seq-difference all-tags inherited-tags)))
+           (dolist (tag local-tags)
+             (when (member tag inherited-tags)
                (org-toggle-tag tag 'off)))))
        t nil))))
 
@@ -4361,7 +4364,7 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
       (measure-time "Re-applied formulas to all tables"
                     (org-table-iterate-buffer-tables))
       (when (file-exists-p (buffer-file-name (current-buffer)))
-        (leuven-org-remove-redundant-tags))
+        (lvn-org-remove-redundant-local-tags))
       (and fly-state (flyspell-mode fly-state)))))
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.

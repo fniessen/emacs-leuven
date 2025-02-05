@@ -606,15 +606,15 @@ This makes ID links quasi-bidirectional."
 
 ;; Faces for specific tags.
 (setq org-tag-faces
-      '(("FLAGGED"                    ; Important.
+      '(("FLAGGED"                      ;; Mark for special attention.
          (:slant italic :foreground "#FF0000"))
         ("work"
          (:slant italic :foreground "#FF9900"))
         ("personal"
          (:slant italic :foreground "#009900"))
-        ("now"                        ; To do.
+        ("urgent"
          (:slant italic :foreground "#3333FF"))
-        ("inbox"                      ; Later.
+        ("inbox"
          (:slant italic :foreground "#993399"))
         ("notbillable"
          (:slant italic :foreground "#A9876E"))
@@ -623,26 +623,20 @@ This makes ID links quasi-bidirectional."
 ;; 6.2 Exit fast tag selection after first change (toggle this with `C-c').
 (setq org-fast-tag-selection-single-key t)
 
-;; Remove redundant tags of headlines (from David Maus).
-(defun leuven-org-remove-redundant-tags ()
-  "Remove redundant tags of headlines in current buffer.
-A tag is considered redundant if it is local to a headline and inherited by
+;; Remove redundant tags of headlines.
+(defun lvn-org-remove-redundant-local-tags ()
+  "Remove locally assigned tags that are already inherited from
 a parent headline."
   (interactive)
   (when (derived-mode-p 'org-mode)
     (save-excursion
       (org-map-entries
        (lambda ()
-         (let ((alltags (split-string
-                         (or (org-entry-get (point) "ALLTAGS") "")
-                         ":"))
-               local inherited tag)
-           (dolist (tag alltags)
-             (if (get-text-property 0 'inherited tag)
-                 (push tag inherited)
-               (push tag local)))
-           (dolist (tag local)
-             (when (member tag inherited)
+         (let* ((all-tags (org-get-tags))
+                (inherited-tags (seq-filter (lambda (tag) (get-text-property 0 'inherited tag)) all-tags))
+                (local-tags (seq-difference all-tags inherited-tags)))
+           (dolist (tag local-tags)
+             (when (member tag inherited-tags)
                (org-toggle-tag tag 'off)))))
        t nil))))
 
@@ -2752,7 +2746,7 @@ Ignore non Org buffers."
       (measure-time "Re-applied formulas to all tables"
                     (org-table-iterate-buffer-tables))
       (when (file-exists-p (buffer-file-name (current-buffer)))
-        (leuven-org-remove-redundant-tags))
+        (lvn-org-remove-redundant-local-tags))
       (and fly-state (flyspell-mode fly-state)))))
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
