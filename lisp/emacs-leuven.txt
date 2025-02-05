@@ -14231,24 +14231,38 @@ Find a suitable editor.
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
 if [[ -z "$SSH_CONNECTION" ]]; then
-    # Configuration for local mode.
+    # Set up Emacs-related functions and aliases.
 
-    # Set the default editor to emacsclient.
     export EDITOR="emacsclient"
+    export ALTERNATE_EDITOR="emacs"
 
-    # Set an alternate editor to an empty string.
-    export ALTERNATE_EDITOR=""
+    ec() {
+        emacsclient -t -a '' "$@"
+    }
 
-    # Open a file in an Emacs terminal frame using emacsclient.
-    et() {
+    # Alias 'e' for running emacsclient in non-blocking mode.
+    alias e="emacsclient -n"
+
+    # Open a new Emacs instance in the background.
+    alias bgemacs='emacs &'
+
+    # Aliases to open Emacs using the alternate editor setting.
+    # If emacsclient can't connect to an existing Emacs server, it will fall
+    # back to running a new instance of Emacs.
+    alias ealt="emacsclient -n --alternate-editor=emacs"
+    alias ealtnw="emacsclient -n --alternate-editor='emacs -nw'"
+
+    # Aliases for Emacs in terminal mode.
+    alias enw="emacs -nw"
+    alias ecnw="emacsclient -nw"
+
+    # Open a file in an Emacs terminal frame.
+    efindnw() {
         emacsclient -t -a '' --eval "(find-file \"$1\")"
     }
 
-    # Create an alias 'e' for running emacsclient in non-blocking mode.
-    alias e="emacsclient -n"
-
     # Emacsclient with frame focus and file opening.
-    ecli() {
+    efind() {
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (find-file \"$1\")
@@ -14256,7 +14270,7 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     }
 
     # Open Ediff for two files.
-    ediff() {
+    eediff() {
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (ediff-files \"$1\" \"$2\")
@@ -14270,24 +14284,17 @@ if [[ -z "$SSH_CONNECTION" ]]; then
             (vc-dir \"$1\")
         )"
     }
-
-    # Open a new Emacs instance in the background.
-    alias bgemacs='emacs &'
-
-    # Alias to open Emacs using the alternate editor setting.
-    # If emacsclient can't connect to an existing Emacs server, it will fall
-    # back to running a new instance of Emacs.
-    alias ealt="emacsclient -n --alternate-editor=emacs"
 else
-    # Configuration for remote mode.
-    for candidate_editor in emacs subl atom nano; do
-        if command -v "$candidate_editor" &> /dev/null; then
+    # Set up remote environment.
+    local editors=("emacs -nw" "emacs" "nano" "code -w" "subl")
+    for candidate_editor in "${editors[@]}"; do
+        if command -v "${candidate_editor%% *}" &> /dev/null; then
+            export EDITOR="$candidate_editor"
+            alias e="$candidate_editor"
             # Use the first available editor.
-            EDITOR="$candidate_editor"
             break
         fi
     done
-    alias e="$EDITOR"                   # Alias 'e' uses the chosen editor.
 fi
 #+end_src
 
