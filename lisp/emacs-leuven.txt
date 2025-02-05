@@ -2810,6 +2810,9 @@ We build our mode line:
 - buffer size
 - dictionary
 
+*************** TODO Don't show full clock line title (only the first nn characters)
+*************** END
+
 #+begin_src emacs-lisp
   (defface powerline-modified-face
     '((t (:background "#FFA335" :foreground "black" :weight bold)))
@@ -2946,14 +2949,12 @@ We build our mode line:
                            (let ((dict (and (featurep 'ispell)
                                             (or ispell-local-dictionary
                                                 ispell-dictionary))))
-                             ;; Add 2 spaces after the language indicator (for
-                             ;; GNU/Linux).
                              (cond (buffer-read-only
-                                     (powerline-raw "%%%%  " default-dictionary-face 'l))
+                                     (powerline-raw "%%%% " default-dictionary-face 'l))
                                     ((null dict)
-                                     (powerline-raw "--  " default-dictionary-face 'l))
+                                     (powerline-raw "-- " default-dictionary-face 'l))
                                    (t
-                                    (powerline-raw (concat (substring dict 0 2) "  ") other-dictionary-face 'l))))
+                                    (powerline-raw (concat (substring dict 0 2) " ") other-dictionary-face 'l))))
 
                           ;; (powerline-hud face2 face1)
                           )))

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250201.1656>
+;; Version: <20250205.1143>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250201.1656>"
+(defconst lvn--emacs-version "<20250205.1143>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1731,14 +1731,12 @@ Should be selected from `fringe-bitmaps'.")
                            (let ((dict (and (featurep 'ispell)
                                             (or ispell-local-dictionary
                                                 ispell-dictionary))))
-                             ;; Add 2 spaces after the language indicator (for
-                             ;; GNU/Linux).
                              (cond (buffer-read-only
-                                     (powerline-raw "%%%%  " default-dictionary-face 'l))
+                                     (powerline-raw "%%%% " default-dictionary-face 'l))
                                     ((null dict)
-                                     (powerline-raw "--  " default-dictionary-face 'l))
+                                     (powerline-raw "-- " default-dictionary-face 'l))
                                    (t
-                                    (powerline-raw (concat (substring dict 0 2) "  ") other-dictionary-face 'l))))
+                                    (powerline-raw (concat (substring dict 0 2) " ") other-dictionary-face 'l))))
 
                           ;; (powerline-hud face2 face1)
                           )))
