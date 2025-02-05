@@ -563,7 +563,6 @@ vs ~C-u C-c C-j~
 
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
-
   (defun lvn-org-reveal (&optional all-siblings)
     "Show all siblings of the current level.
 With a prefix argument (C-u C-c C-r), show all hidden siblings."
@@ -572,6 +571,7 @@ With a prefix argument (C-u C-c C-r), show all hidden siblings."
         (org-reveal t)
       (org-show-siblings)))
 
+  ;; Bind `C-c C-r' to the `lvn-org-reveal' function in org-mode.
   (define-key org-mode-map (kbd "C-c C-r") #'lvn-org-reveal))
 #+end_src
 
@@ -608,9 +608,25 @@ To control visibility when revealing a location, see ~org-show-context-detail~:
 
 #+begin_src emacs-lisp
   (when (boundp 'org-show-context-detail)
-    ;; (setq org-show-context-detail '((default . local)))
-    (add-to-list 'org-show-context-detail '(tags-tree . ancestors))
-    (add-to-list 'org-show-context-detail '(occur-tree . ancestors))))
+    (setq org-show-context-detail
+          '(;; Agenda view shows the immediate structure (lineage).
+            (agenda . lineage)
+            ;; 'org-goto' shows the immediate context (lineage).
+            (org-goto . lineage)
+            ;; Occurrences search in the tree shows immediate context.
+            (occur-tree . lineage)
+            ;; Tags search shows a broader view (ancestors).
+            (tags-tree . ancestors)
+            ;; Link search shows immediate context.
+            (link-search . lineage)
+            ;; Mark search jumps show broader context (ancestors).
+            (mark-goto . ancestors)
+            ;; Bookmark jumps show immediate context.
+            (bookmark-jump . lineage)
+            ;; Isearch shows the immediate context.
+            (isearch . lineage)
+            ;; Default case shows the broader context (ancestors).
+            (default . ancestors)))))
 #+end_src
 
 ** Plain lists
