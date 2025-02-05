@@ -37,14 +37,13 @@ If not, just print a message."
     ;; Enable on-the-fly spell checking.
     (add-hook 'org-mode-hook
               (lambda ()
-                (if (or (eq (aref (buffer-name) 0) ?\s)
-                                        ; Buffer starting with " *".
-                        (and (boundp 'org-babel-exp-reference-buffer)
-                             org-babel-exp-reference-buffer))
-                                        ; Export buffer.
-                    (message "[DON'T TURN ON Flyspell mode in `%s']" (buffer-name))
-                  (message "[Turning on Flyspell mode in `%s']" (buffer-name))
-                  (flyspell-mode))))
+                (let ((buffer-name (buffer-name)))
+                  (if (or (eq (aref buffer-name 0) ?\s) ; Buffer starting with " *".
+                          (and (boundp 'org-babel-exp-reference-buffer)
+                               org-babel-exp-reference-buffer)) ; Export buffer.
+                      (message "[DON'T TURN ON Flyspell mode in `%s']" buffer-name)
+                    (message "[Turning on Flyspell mode in `%s']" buffer-name)
+                    (flyspell-mode)))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -463,24 +462,22 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
 
 #+begin_src emacs-lisp :tangle no
 (defun org-latex-format-inlinetask-default-function
-  (todo _todo-type priority title tags contents info)
-  "Default format function for a inlinetasks.
+    (todo _todo-type priority title tags contents info)
+  "Default format function for inlinetasks.
 See `org-latex-format-inlinetask-function' for details."
-  (let ((full-title
-         (concat (when todo (format "\\textbf{\\textsf{\\textsc{%s}}} " todo))
-                 (when priority (format "\\framebox{\\#%c} " priority))
-                 title
-                 (when tags
-                   (format "\\hfill{}\\textsc{:%s:}"
-                           (mapconcat
-                            (lambda (tag) (org-latex-plain-text tag info))
-                            tags ":"))))))
+  (let* ((todo-text (when todo (format "\\textbf{\\textsf{\\textsc{%s}}} " todo)))
+         (priority-text (when priority (format "\\framebox{\\#%c} " priority)))
+         (tags-text (when tags
+                      (format "\\hfill{}\\textsc{:%s:}"
+                              (mapconcat (lambda (tag) (org-latex-plain-text tag info))
+                                         tags ":"))))
+         (full-title (concat todo-text priority-text title tags-text)))
     (concat "\\begin{center}\n"
             "\\fcolorbox{black}{yellow}{\n"
             "\\begin{minipage}[c]{\\textwidth}\n"
             full-title "\n\n"
-            (and (org-string-nw-p contents)
-                 (concat "\\rule[.8em]{\\textwidth}{2pt}\n\n" contents))
+            (when (org-string-nw-p contents)
+              (concat "\\rule[.8em]{\\textwidth}{2pt}\n\n" contents))
             "\\end{minipage}\n"
             "}\n"
             "\\end{center}")))
