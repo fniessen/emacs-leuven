@@ -595,7 +595,7 @@ This makes ID links quasi-bidirectional."
                       ("personal"    . ?P)
                       (:endgroup     . nil)
 
-                      ("FLAGGED"     . ?!) ;; Mark for special attention.
+                      ("FLAGGED"     . ??) ;; Mark for special attention.
                       ("ARCHIVE"     . ?a) ;; Mark for archiving.
                       ("crypt"       . ?y) ;; Mark for encryption.
 

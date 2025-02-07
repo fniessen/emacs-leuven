@@ -1068,7 +1068,7 @@ that all tags starting with ~@~ or ~#~ will be excluded from inheritance with:
                       ("personal"    . ?P)
                       (:endgroup     . nil)
 
-                      ("FLAGGED"     . ?!) ;; Mark for special attention.
+                      ("FLAGGED"     . ??) ;; Mark for special attention.
                       ("ARCHIVE"     . ?a) ;; Mark for archiving.
                       ("crypt"       . ?y) ;; Mark for encryption.
 
