@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250205.1143>
+;; Version: <20250212.2249>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250205.1143>"
+(defconst lvn--emacs-version "<20250212.2249>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4159,6 +4159,8 @@ you will be prompted to enter the desired fill column width."
       ("^!.*" . compilation-error-face)
       ;; Latexmk separator lines.
       ("^-+$" . compilation-info-face)
+      ;; LaTeX package errors.
+      ("Package .* Error:.*" . compilation-error-face)
       ;; LaTeX package warnings.
       ("^Package .* Warning:.*" . compilation-warning-face)
       ;; Undefined references.

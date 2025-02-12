@@ -7283,6 +7283,8 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
       ("^!.*" . compilation-error-face)
       ;; Latexmk separator lines.
       ("^-+$" . compilation-info-face)
+      ;; LaTeX package errors.
+      ("Package .* Error:.*" . compilation-error-face)
       ;; LaTeX package warnings.
       ("^Package .* Warning:.*" . compilation-warning-face)
       ;; Undefined references.
