@@ -12807,15 +12807,17 @@ appropriate viewer:
 Reveal active file in Explorer:
 
 #+begin_src emacs-lisp
-    ;; Reveal active file in the file explorer.
-    (defun lvn-open-current-directory-in-explorer ()
-      "Open the current file's directory in the default file explorer."
+    ;; Reveal active buffer's directory in the system file explorer.
+    (defun lvn-open-buffer-directory-in-file-explorer ()
+      "Open the current buffer's directory in the default file explorer."
       (interactive)
-      (if default-directory
-          (browse-url-of-file (expand-file-name default-directory))
-        (error "No `default-directory' to open")))
+      (let ((dir (file-name-directory (or buffer-file-name default-directory))))
+        (if dir
+            (browse-url-of-file dir)
+          (error "No directory associated with this buffer"))))
 
-    (global-set-key (kbd "C-c r") #'lvn-open-current-directory-in-explorer)
+    ;; Mnemonic for "directory".
+    (global-set-key (kbd "C-c d") #'lvn-open-buffer-directory-in-file-explorer)
 #+end_src
 
 **** Ask a WWW browser to display file
@@ -14290,7 +14292,7 @@ else
     # Set up remote environment.
     local editors=("emacs -nw" "emacs" "nano" "code -w" "subl")
     for candidate_editor in "${editors[@]}"; do
-        if command -v "${candidate_editor%% *}" &> /dev/null; then
+        if command -v "${candidate_editor%% *}" > /dev/null 2>&1; then
             export EDITOR="$candidate_editor"
             alias e="$candidate_editor"
             # Use the first available editor.
@@ -14499,7 +14501,7 @@ mkfifo "$pipe"
 emacsclient -e '(with-current-buffer
                     (window-buffer (selected-window))
                   (write-region (point-min) (point-max) "'"$pipe"'" nil :quiet))
-               ' >/dev/null &
+               ' > /dev/null &
 while read line; do
     printf '%s\n' "$line"
 done < "$pipe"
