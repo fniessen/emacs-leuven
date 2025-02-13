@@ -2322,20 +2322,22 @@ https://www.jetbrains.com/resharper/help/Regular_Expressions_Assistance.html.
 #+begin_src emacs-lisp
   ;; Highlight-Changes mode.
   (with-eval-after-load 'hilit-chg
-    (defvar highlight-fringe-mark 'filled-rectangle
-      "The fringe bitmap name marked at changed line.
+    (defvar lvn-highlight-fringe-mark 'filled-rectangle
+      "The fringe bitmap name used for marking changed lines.
 Should be selected from `fringe-bitmaps'.")
 
-    (defun hilit-chg-make-ov--add-fringe ()
+    (defun lvn-hilit-chg-add-fringe-marker ()
+      "Add a fringe marker to overlays with the 'hilit-chg property."
       (mapc (lambda (ov)
-              (if (overlay-get ov 'hilit-chg)
-                  (let ((fringe-anchor (make-string 1 ?x)))
-                    (put-text-property 0 1 'display
-                                       (list 'left-fringe highlight-fringe-mark)
-                                       fringe-anchor)
-                    (overlay-put ov 'before-string fringe-anchor))))
+              (when (overlay-get ov 'hilit-chg)
+                (let ((fringe-anchor (make-string 1 ?x)))
+                  (put-text-property 0 1 'display
+                                     (list 'left-fringe lvn-highlight-fringe-mark)
+                                     fringe-anchor)
+                  (overlay-put ov 'before-string fringe-anchor))))
             (overlays-at (ad-get-arg 1))))
-    (advice-add 'hilit-chg-make-ov :after #'hilit-chg-make-ov--add-fringe))
+
+    (advice-add 'hilit-chg-make-ov :after #'lvn-hilit-chg-add-fringe-marker))
 
   ;; ;; Enable Global-Highlight-Changes mode.
   ;; (global-highlight-changes-mode 1)

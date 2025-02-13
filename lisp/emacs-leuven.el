@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250213.1436>
+;; Version: <20250213.1452>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250213.1436>"
+(defconst lvn--emacs-version "<20250213.1452>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1346,20 +1346,22 @@ original state of line numbers after navigation."
 
   ;; Highlight-Changes mode.
   (with-eval-after-load 'hilit-chg
-    (defvar highlight-fringe-mark 'filled-rectangle
-      "The fringe bitmap name marked at changed line.
+    (defvar lvn-highlight-fringe-mark 'filled-rectangle
+      "The fringe bitmap name used for marking changed lines.
 Should be selected from `fringe-bitmaps'.")
 
-    (defun hilit-chg-make-ov--add-fringe ()
+    (defun lvn-hilit-chg-add-fringe-marker ()
+      "Add a fringe marker to overlays with the 'hilit-chg property."
       (mapc (lambda (ov)
-              (if (overlay-get ov 'hilit-chg)
-                  (let ((fringe-anchor (make-string 1 ?x)))
-                    (put-text-property 0 1 'display
-                                       (list 'left-fringe highlight-fringe-mark)
-                                       fringe-anchor)
-                    (overlay-put ov 'before-string fringe-anchor))))
+              (when (overlay-get ov 'hilit-chg)
+                (let ((fringe-anchor (make-string 1 ?x)))
+                  (put-text-property 0 1 'display
+                                     (list 'left-fringe lvn-highlight-fringe-mark)
+                                     fringe-anchor)
+                  (overlay-put ov 'before-string fringe-anchor))))
             (overlays-at (ad-get-arg 1))))
-    (advice-add 'hilit-chg-make-ov :after #'hilit-chg-make-ov--add-fringe))
+
+    (advice-add 'hilit-chg-make-ov :after #'lvn-hilit-chg-add-fringe-marker))
 
   ;; ;; Enable Global-Highlight-Changes mode.
   ;; (global-highlight-changes-mode 1)
