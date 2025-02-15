@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250213.1452>
+;; Version: <20250215.1016>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250213.1452>"
+(defconst lvn--emacs-version "<20250215.1016>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -308,22 +308,24 @@ exists, switch to it; otherwise, invoke FN."
   (leuven--section "Type of OS")
 
   (defconst lvn--linux-p (eq system-type 'gnu/linux)
-    "Running Emacs on native Linux or WSL.")
+    "Non-nil if running Emacs on native Linux or WSL.")
 
   (defconst lvn--wsl-p
     (let ((kernel-release (string-trim (shell-command-to-string "uname -r"))))
       (or (string-match "WSL" kernel-release)
           (string-match "microsoft-standard-WSL2" kernel-release)))
-    "Running Emacs on WSL or WSL2.")
+    ;; (and (eq system-type 'gnu/linux)
+    ;;      (string-match-p "Microsoft" (shell-command-to-string "uname -r")))
+    "Non-nil if running Emacs on WSL or WSL2.")
 
   (defconst lvn--mac-p (eq system-type 'darwin)
-    "Running Emacs on macOS.")
+    "Non-nil if running Emacs on macOS.")
 
   (defconst lvn--win32-p (eq system-type 'windows-nt)
-    "Running Emacs on native Microsoft Windows.")
+    "Non-nil if running Emacs natively on Microsoft Windows.")
 
   (defconst lvn--cygwin-p (eq system-type 'cygwin)
-    "Running Emacs on Cygwin.")
+    "Non-nil if running Emacs on Cygwin.")
 
 ;;** MS Windows
 
@@ -344,11 +346,11 @@ exists, switch to it; otherwise, invoke FN."
 
   (defconst leuven--console-p
     (not window-system)
-    "Running a text-only terminal.")
+    "Non-nil if running a text-only terminal.")
 
   (defconst leuven--x-window-p
     (eq window-system 'x)
-    "Running an X Window system.")
+    "Non-nil if running an X Window system.")
 
 ;;** Testing file accessibility
 
@@ -6682,17 +6684,27 @@ This example lists Azerty layout second row keys."
       ;; (define-key dired-mode-map (kbd "E") #'lvn-dired-open-files-externally)
     )
 
-(defun dired-open-marked-files-with-explorer ()
+(defun dired-open-marked-files-externally ()
   ;; dired-open-marked-files-with-explorer
-  "Open marked files in Dired using Explorer on Windows."
+  "Open marked files in Dired using the default external application."
   (interactive)
   (if-let ((marks (dired-get-marked-files)))
       (dolist (file marks)
-        (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file))))
+        (cond
+         (lvn--win32-p
+          (w32-shell-execute "open" file))
+         (lvn--wsl-p
+          (if (executable-find "wslview-XXX") ; TO TEST!
+              (start-process "" nil "wslview" file)
+            ;; (w32-shell-execute "open" file)
+            (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file)))
+          ))
+         (t
+          (start-process "" nil "xdg-open" file))))
     (user-error "No marked files; aborting")))
 
 (with-eval-after-load 'dired
-  (define-key dired-mode-map "o" 'dired-open-marked-files-with-explorer))
+  (define-key dired-mode-map "o" 'dired-open-marked-files-externally))
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()
