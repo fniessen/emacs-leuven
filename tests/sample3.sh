@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 n=10
 if [ $n -lt 10 ];
 then
