@@ -18,7 +18,7 @@ mkfifo "$pipe"
 emacsclient -e '(with-current-buffer
                     (window-buffer (selected-window))
                   (write-region (point-min) (point-max) "'"$pipe"'" nil :quiet))
-               ' >/dev/null &
+               ' > /dev/null &
 while read line; do
     printf '%s\n' "$line"
 done < "$pipe"
