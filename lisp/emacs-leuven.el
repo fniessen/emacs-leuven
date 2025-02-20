@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250215.1016>
+;; Version: <20250220.0922>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250215.1016>"
+(defconst lvn--emacs-version "<20250220.0922>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6770,15 +6770,17 @@ This example lists Azerty layout second row keys."
 
     ;; Use Dired to browse and manipulate your images.
     (with-eval-after-load 'image-dired
-
       ;; Maximum number of files to show before warning the user.
       (setq image-dired-show-all-from-dir-max-files 100)
 
-      ;; Size of button-like border around thumbnails.
+      ;; Remove the button-like border around thumbnails for a cleaner look.
       (setq image-dired-thumb-relief 0)
 
-      ;; Size of the margin around thumbnails.
-      (setq image-dired-thumb-margin 4))
+      ;; Increase the margin around thumbnails for better visual separation.
+      (setq image-dired-thumb-margin 4)
+
+      ;; Set the size of thumbnails for better visibility or to save space.
+      (setq image-dired-thumb-size 100))
 
 ;;** Dired Extra
 
@@ -6861,10 +6863,12 @@ Consider using `C-x d' instead for better performance."
 
   (leuven--section "31.2 (emacs)Scroll Calendar")
 
-  ;; Fix foolish calendar-mode scrolling after loading `calendar.el'.
+  ;; Fix foolish calendar-mode scrolling: swap scroll direction.
   (add-hook 'calendar-load-hook
             (lambda ()
+              ;; Bind '>' to scroll left (past dates) in the calendar view.
               (define-key calendar-mode-map (kbd ">") #'calendar-scroll-left)
+              ;; Bind '<' to scroll right (future dates) in the calendar view.
               (define-key calendar-mode-map (kbd "<") #'calendar-scroll-right)))
 
 ;;** 31.7 Times of (info "(emacs)Sunrise/Sunset")

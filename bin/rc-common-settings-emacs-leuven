@@ -4,7 +4,9 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     # Set up Emacs-related functions and aliases.
 
     export EDITOR="emacsclient"
-    export ALTERNATE_EDITOR="emacs"
+
+    # Set an alternate editor to an empty string.
+    export ALTERNATE_EDITOR=""
 
     ec() {
         emacsclient -t -a '' "$@"
@@ -58,7 +60,7 @@ else
     # Set up remote environment.
     local editors=("emacs -nw" "emacs" "nano" "code -w" "subl")
     for candidate_editor in "${editors[@]}"; do
-        if command -v "${candidate_editor%% *}" &> /dev/null; then
+        if command -v "${candidate_editor%% *}" > /dev/null 2>&1; then
             export EDITOR="$candidate_editor"
             alias e="$candidate_editor"
             # Use the first available editor.
