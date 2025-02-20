@@ -176,7 +176,8 @@ Automatically debug and bisect your init (=.emacs=) file!
 
 ** TODO Explore and evaluate other Emacs configurations
 
-https://alhassy.github.io/init/
+- https://github.com/jamescherti/minimal-emacs.d!!!
+- https://alhassy.github.io/init/
 
 ** TODO Investigate "Goto last edit location" functionality (explained by L. David Andersson)
 [2015-06-24 Wed 18:53]
