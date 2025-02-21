@@ -41,7 +41,9 @@ Items that need to be purchased.
 :CATEGORY: 0-Tasks
 :END:
 
-General tasks that need to be done.
+General tasks that need to be done:
+
+Nothing for now...
 
 * Routines
 
