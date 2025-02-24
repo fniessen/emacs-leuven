@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250220.0922>
+;; Version: <20250224.1449>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250220.0922>"
+(defconst lvn--emacs-version "<20250224.1449>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -500,6 +500,7 @@ Shows a warning message if the file does not exist or is not executable."
             ;; undo-tree
             volatile-highlights
             web-mode
+            wgrep
             which-key
             ws-butler
             yasnippet
@@ -1150,7 +1151,8 @@ original state of line numbers after navigation."
     (setq bookmark-save-flag 1)
 
     ;; Extensions to standard library `bookmark.el'.
-    (when (try-require 'bookmark+-XXX) ; XXX + needs bookmark+-mac
+    (when (and (try-require 'bookmark+-XXX) ; XXX + needs bookmark+-mac
+               (locate-library "dired-aux"))
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
       (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
@@ -4193,6 +4195,12 @@ scrolling to the bottom."
   ;; Add our function to TeX-output-mode-hook.
   (add-hook 'TeX-output-mode-hook #'lvn--setup-latex-output)
 
+  ;; Align columns in LaTeX tables within the selected region.
+  (defun lvn-align-latex-tables (start end)
+    "Align columns in LaTeX tables."
+    (interactive "r")
+    (align-regexp start end "\\(\\s-*\\)&" 1 1 t))
+
   (leuven--section "25.11 (emacs)AUCTeX Mode")
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
@@ -6805,7 +6813,8 @@ Consider using `C-x d' instead for better performance."
 
   (leuven--section "30.XX Dired+")
 
-  (when (try-require 'dired+-XXX) ; XXX
+  (when (and (try-require 'dired+-XXX) ; XXX
+             (locate-library "dired-aux"))
 
     ;; Don't hide details in Dired.
     (setq diredp-hide-details-initially-flag nil)
@@ -7577,7 +7586,7 @@ NOTIFICATION-STRING: Message(s) to display."
   (leuven--section "Web search")
 
   ;; A set of functions and bindings to Google under point.
-  (with-eval-after-load 'google-this-autoloads
+  (with-eval-after-load 'google-this-autoloads-XXX
 
     ;; Keybinding under which `google-this-mode-submap' is assigned.
     (setq google-this-keybind (kbd "C-c g"))

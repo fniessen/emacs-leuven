@@ -722,6 +722,7 @@ like this into your configuration file:
             ;; undo-tree
             volatile-highlights
             web-mode
+            wgrep
             which-key
             ws-butler
             yasnippet
@@ -2026,7 +2027,8 @@ Annotating bookmarks.
 
 #+begin_src emacs-lisp
     ;; Extensions to standard library `bookmark.el'.
-    (when (try-require 'bookmark+-XXX) ; XXX + needs bookmark+-mac
+    (when (and (try-require 'bookmark+-XXX) ; XXX + needs bookmark+-mac
+               (locate-library "dired-aux"))
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
       (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
@@ -7316,6 +7318,14 @@ scrolling to the bottom."
 
   ;; Add our function to TeX-output-mode-hook.
   (add-hook 'TeX-output-mode-hook #'lvn--setup-latex-output)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Align columns in LaTeX tables within the selected region.
+  (defun lvn-align-latex-tables (start end)
+    "Align columns in LaTeX tables."
+    (interactive "r")
+    (align-regexp start end "\\(\\s-*\\)&" 1 1 t))
 #+end_src
 
 ** AUCTeX
@@ -13133,7 +13143,8 @@ a Dired buffer.  They are thus similar to the default global bindings ~C-x d~ an
 
   (leuven--section "30.XX Dired+")
 
-  (when (try-require 'dired+-XXX) ; XXX
+  (when (and (try-require 'dired+-XXX) ; XXX
+             (locate-library "dired-aux"))
 
     ;; Don't hide details in Dired.
     (setq diredp-hide-details-initially-flag nil)
@@ -14241,6 +14252,11 @@ located at =PATH/TO/bin/rc-common-settings-emacs-leuven=.
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
 # Hey Emacs, this is a -*- sh -*- file ...
+#
+# This script enhances shell integration with Emacs, leveraging emacsclient
+# for fast access to an Emacs server. It provides aliases and functions for
+# opening files, comparing them, and working with shell output. Designed for
+# Bash; assumes an Emacs daemon is running (start with `emacs --daemon`).
 #+end_src
 
 *** EDITOR
@@ -14252,14 +14268,16 @@ Find a suitable editor.
 #+end_note
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
+# Check if running locally or over SSH.
 if [[ -z "$SSH_CONNECTION" ]]; then
-    # Set up Emacs-related functions and aliases.
+    # Local environment setup.
 
     export EDITOR="emacsclient"
 
     # Set an alternate editor to an empty string.
     export ALTERNATE_EDITOR=""
 
+    # Basic emacsclient wrapper with timeout.
     ec() {
         emacsclient -t -a '' "$@"
     }
@@ -14282,11 +14300,19 @@ if [[ -z "$SSH_CONNECTION" ]]; then
 
     # Open a file in an Emacs terminal frame.
     efindnw() {
+        if [[ -z "$1" ]]; then
+            printf >&2 "Error: No file specified.\n"
+            return 1
+        fi
         emacsclient -t -a '' --eval "(find-file \"$1\")"
     }
 
     # Emacsclient with frame focus and file opening.
     efind() {
+        if [[ -z "$1" ]]; then
+            printf >&2 "Error: No file specified.\n"
+            return 1
+        fi
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (find-file \"$1\")
@@ -14295,6 +14321,10 @@ if [[ -z "$SSH_CONNECTION" ]]; then
 
     # Open Ediff for two files.
     eediff() {
+        if [[ -z "$1" || -z "$2" ]]; then
+            printf >&2 "Error: Two files must be specified.\n"
+            return 1
+        fi
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (ediff-files \"$1\" \"$2\")
@@ -14303,15 +14333,21 @@ if [[ -z "$SSH_CONNECTION" ]]; then
 
     # Open VC Dir for a version-controlled directory.
     evcdir() {
+        if [[ -z "$1" ]]; then
+            printf >&2 "Error: Directory must be specified.\n"
+            return 1
+        fi
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (vc-dir \"$1\")
         )"
     }
 else
-    # Set up remote environment.
-    local editors=("emacs -nw" "emacs" "nano" "code -w" "subl")
-    for candidate_editor in "${editors[@]}"; do
+    # Remote environment setup.
+
+    # Fallback editors for SSH.
+    local remote_editors=("emacs -nw" "emacs" "nano" "code -w" "subl")
+    for candidate_editor in "${remote_editors[@]}"; do
         if command -v "${candidate_editor%% *}" > /dev/null 2>&1; then
             export EDITOR="$candidate_editor"
             alias e="$candidate_editor"
@@ -14328,7 +14364,7 @@ editor will think you exited it. In the case of our ~git commit~, we would end u
 with a blank commit message!
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
-# Set VISUAL to the same value as EDITOR.
+# Set VISUAL to match EDITOR.
 export VISUAL="$EDITOR"
 #+end_src
 
@@ -14341,14 +14377,12 @@ If you are an avid Emacs user like me, you'll find this function useful.  It
 # Cd to the directory of the current buffer in Emacs.
 cde() {
     if ! command -v emacsclient > /dev/null 2>&1; then
-        printf >&2 "Error: 'emacsclient' command not found.\n"
-        printf >&2 "Please install Emacsclient and ensure the binary is in your PATH.\n"
+        printf >&2 "Error: 'emacsclient' not found. Please install it.\n"
         return 2
     fi
 
     if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
-        printf >&2 "Error: Emacs server is not running.\n"
-        printf >&2 "Please start the Emacs server first.\n"
+        printf >&2 "Error: Emacs server not running. Start it with 'emacs --daemon'.\n"
         return 2
     fi
 
@@ -14359,11 +14393,11 @@ cde() {
                                 default-directory))' | tr -d '"')"
 
     if [[ ! -d "$dir" ]]; then
-        printf >&2 "Error: directory not found: %s\n" "$dir"
+        printf >&2 "Error: Directory not found: %s\n" "$dir"
         return 2
     fi
 
-    cd "$dir"
+    cd "$dir" || return 2
     # The change in working directory will persist after the function has
     # completed.
 }
@@ -14374,41 +14408,60 @@ You need the ~emacs-server~ functionality enabled for this to work.
 *** elf - Edit last file (from last command output) in Emacs
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
-# Retrieve and execute the last command from shell history, assuming it outputs
-# a list of files, then open the last file in Emacs for inspection.
-elf() {
-    # Retrieve the last command from the history file.
+# Base function to reduce code duplication in elf/eff/fco.
+_get_last_command_output() {
     local last_command
     last_command=$(HISTTIMEFORMAT="" history 2 \
-                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
+                       | sed -n '1p;s/^[[:space:]]*[0-9]*[[:space:]]*//p')
+                       # | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
 
-    # Check if the last command is empty.
+    # Debug info: Print the retrieved command.
+    printf >&2 "[DEBUG] Retrieved last command: '%s'\n" "$last_command"
+
     if [[ -z "$last_command" ]]; then
-        printf >&2 "No command found in the shell history.\n"
+        printf >&2 "Error: No command found in shell history.\n"
         return 2
     fi
 
     # Run the last command and capture its output, supporting piping or other
     # advanced shell features.
     local command_output
-    command_output=$(eval "$last_command")
+    if ! command_output=$(eval "$last_command" 2>/dev/null); then
+        printf >&2 "Error: Failed to execute command '%s'.\n" "$last_command"
+        return 2
+    fi
+    printf "%s" "$command_output"
+}
+
+# Open last file from previous command output in Emacs.
+elf() {
+    # Retrieve the last command from the history file.
+    local command_output
+    if ! command_output=$(_get_last_command_output); then
+        return 1
+    fi
 
     # Extract the last line (assuming it's a list of files).
     local last_file
     last_file=$(printf "%s" "$command_output" | tail -n 1 \
                     | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
 
-    # Debugging information.
-    printf "Edit last file: %s\n" "$last_file"
-
-    # Return if the last line is empty.
     if [[ -z "$last_file" ]]; then
-        printf >&2 "No output from the last command or no files found.\n"
+        printf >&2 "Error: No valid file found in command output.\n"
         return 2
     fi
 
+    if [[ ! -f "$last_file" ]]; then
+        printf >&2 "Error: File not found: '%s'\n" "$last_file"
+        return 2
+    fi
+
+    printf "Opening last file: %s\n" "$last_file"
     # Open the last file in Emacs using emacsclient.
-    emacsclient -n "$last_file"
+    emacsclient -n "$last_file" || {
+        printf >&2 "Error: Failed to open file in Emacs.\n"
+        return 2
+    }
 }
 #+end_src
 
@@ -14417,82 +14470,69 @@ You need the ~emacs-server~ functionality enabled for this to work.
 *** eff - Edit first file (from last command output) in Emacs
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
-# Retrieve and execute the last command from shell history, assuming it outputs
-# a list of files, then open the first file in Emacs for inspection.
+# Open first file from previous command output in Emacs
 eff() {
     # Retrieve the last command from the history file.
-    local last_command
-    last_command=$(HISTTIMEFORMAT="" history 2 \
-                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
-
-    # Check if the last command is empty.
-    if [[ -z "$last_command" ]]; then
-        printf >&2 "No command found in the shell history.\n"
+    local command_output
+    if ! command_output=$(_get_last_command_output); then
         return 2
     fi
-
-    # Run the last command and capture its output, supporting piping or other
-    # advanced shell features.
-    local command_output
-    command_output=$(eval "$last_command")
 
     # Extract the first line (assuming it's a list of files).
     local first_file
     first_file=$(printf "%s" "$command_output" | head -n 1 \
                     | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
 
-    # Debugging information.
-    printf "Edit first file: %s\n" "$first_file"
-
-    # Return if the first line is empty.
     if [[ -z "$first_file" ]]; then
-        printf >&2 "No output from the last command or no files found.\n"
+        printf >&2 "Error: No valid file found in command output.\n"
         return 2
     fi
 
+    if [[ ! -f "$first_file" ]]; then
+        printf >&2 "Error: File not found: '%s'\n" "$first_file"
+        return 2
+    fi
+
+    printf "Opening first file: '%s'\n" "$first_file"
     # Open the first file in Emacs using emacsclient.
-    emacsclient -n "$first_file"
+    emacsclient -n "$first_file" || {
+        printf >&2 "Error: Failed to open file in Emacs.\n"
+        return 2
+    }
 }
 #+end_src
 
 You need the ~emacs-server~ functionality enabled for this to work.
 
-*** elo - Edit last output (from last command) in Emacs
+*** fco - Fix command output (from last command) in Emacs
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
-# Retrieve and execute the last command from shell history, then open its output
-# in Emacs for inspection.
-elo() {
-    # Retrieve the last command from the history file.
-    local last_command
-    last_command=$(HISTTIMEFORMAT="" history 2 \
-                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
-
-    # Check if the last command is empty.
-    if [[ -z "$last_command" ]]; then
-        printf >&2 "No command found in the shell history.\n"
-        return 2
-    fi
-
-    # Run the last command and capture its output, supporting piping or other
-    # advanced shell features.
+# Open previous command output in Emacs buffer.
+fco() {
     local command_output
-    command_output=$(eval "$last_command")
-
-    # Debugging information.
-    printf "Edit output of last command: %s\n" "$last_command"
-
-    # Return if the last line is empty.
-    if [[ -z "$command_output" ]]; then
-        printf >&2 "No output from the last command.\n"
+    if ! command_output=$(_get_last_command_output); then
         return 2
     fi
+
+    if [[ -z "$command_output" ]]; then
+        printf >&2 "Error: No output from previous command.\n"
+        return 2
+    fi
+
+    # Escape quotes and special characters properly.
+    local escaped_output=${command_output//\"/\\\"}
+    printf "Opening output of previous command in Emacs buffer.\n"
 
     # Open Emacs and paste the output of the last command into a buffer named
     # "*Shell Command Output*".
     emacsclient -e "(with-current-buffer
                       (get-buffer-create \"*Shell Command Output*\")
-                      (insert \"$command_output\"))"
+                      (erase-buffer)
+                      (insert \"$escaped_output\")
+                      (goto-char (point-min)))" >/dev/null || {
+        printf >&2 "Error: Failed to create buffer in Emacs.\n"
+        return 2
+    }
 }
 #+end_src
 
@@ -14829,9 +14869,12 @@ The search engine to use for this is specified by the customizable variable
 
 ~url-parse~ and ~url-cookies~ are quite heavy to load, hence:
 
+*************** TODO google-maps and google-this-maps are undefined
+*************** END
+
 #+begin_src emacs-lisp
   ;; A set of functions and bindings to Google under point.
-  (with-eval-after-load 'google-this-autoloads
+  (with-eval-after-load 'google-this-autoloads-XXX
 
     ;; Keybinding under which `google-this-mode-submap' is assigned.
     (setq google-this-keybind (kbd "C-c g"))
