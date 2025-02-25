@@ -673,7 +673,6 @@ like this into your configuration file:
             ;; git-commit-insert-issue
             git-messenger
             ;; git-timemachine
-            google-this
             google-translate
             goto-chg
             graphviz-dot-mode
@@ -2779,7 +2778,6 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     (with-eval-after-load 'fancy-narrow (diminish 'fancy-narrow-mode))
     (with-eval-after-load 'flycheck     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
     (with-eval-after-load 'flyspell     (diminish 'flyspell-mode " fS"))
-    (with-eval-after-load 'google-this  (diminish 'google-this-mode))
     (with-eval-after-load 'hilit-chg    (diminish 'highlight-changes-mode))
     ;; (with-eval-after-load 'isearch      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load 'paredit      (diminish 'paredit-mode " Pe"))
@@ -14838,18 +14836,6 @@ web browser.
   (leuven--section "Web search")
 #+end_src
 
-- ~C-c g SPC~ (~google-this-region~) ::
-     Search selected text.
-
-- ~C-c g RET~ (~google-this-search~) (could be bound to ~C-S-g~?) ::
-     Search user's input.
-
-- ~C-c g n~ ::
-     ~google-this-noconfirm~
-
-- ~C-c g t~ ::
-     ~google-this~
-
 #+begin_tip
 The ~M-s M-w~ key binding (new in Emacs 25) uses ~eww~ to search the web for the
 text in the region.  It is super handy for quick Google and documentation
@@ -14858,41 +14844,6 @@ searches and this will only make it more useful.
 The search engine to use for this is specified by the customizable variable
 ~eww-search-prefix~.
 #+end_tip
-
-~url-parse~ and ~url-cookies~ are quite heavy to load, hence:
-
-*************** TODO google-maps and google-this-maps are undefined
-*************** END
-
-#+begin_src emacs-lisp
-  ;; A set of functions and bindings to Google under point.
-  (with-eval-after-load 'google-this-autoloads-XXX
-
-    ;; Keybinding under which `google-this-mode-submap' is assigned.
-    (setq google-this-keybind (kbd "C-c g"))
-
-    (idle-require 'google-this))
-
-  (with-eval-after-load 'google-this
-
-    ;; Enable Google-This mode.
-    (google-this-mode 1))
-#+end_src
-
-When I want to Google most of a line, I call ~google-this-line~ and edit the
-prompt. And when I to Google the entire line, hitting ~RET~ one extra time doesn't
-quite bother me.
-
-If you'd like to skip confirmation, you can define the following function and
-bind it to a key:
-
-#+begin_src emacs-lisp :tangle no
-    (defun google-this-line-noconfirm (prefix)
-      "Google the current line without confirmationl.
-    PREFIX determines quoting."
-      (interactive "P")
-      (google-this-line prefix 'noconfirm))
-#+end_src
 
 #+begin_src emacs-lisp
   (defun leuven-google-search-active-region-or-word-at-point ()

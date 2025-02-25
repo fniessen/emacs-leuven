@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250225.1651>
+;; Version: <20250225.1700>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250225.1651>"
+(defconst lvn--emacs-version "<20250225.1700>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -451,7 +451,6 @@ Shows a warning message if the file does not exist or is not executable."
             ;; git-commit-insert-issue
             git-messenger
             ;; git-timemachine
-            google-this
             google-translate
             goto-chg
             graphviz-dot-mode
@@ -1587,7 +1586,6 @@ Should be selected from `fringe-bitmaps'.")
     (with-eval-after-load 'fancy-narrow (diminish 'fancy-narrow-mode))
     (with-eval-after-load 'flycheck     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
     (with-eval-after-load 'flyspell     (diminish 'flyspell-mode " fS"))
-    (with-eval-after-load 'google-this  (diminish 'google-this-mode))
     (with-eval-after-load 'hilit-chg    (diminish 'highlight-changes-mode))
     ;; (with-eval-after-load 'isearch      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load 'paredit      (diminish 'paredit-mode " Pe"))
@@ -7580,19 +7578,6 @@ NOTIFICATION-STRING: Message(s) to display."
 ;;** Web search
 
   (leuven--section "Web search")
-
-  ;; A set of functions and bindings to Google under point.
-  (with-eval-after-load 'google-this-autoloads-XXX
-
-    ;; Keybinding under which `google-this-mode-submap' is assigned.
-    (setq google-this-keybind (kbd "C-c g"))
-
-    (idle-require 'google-this))
-
-  (with-eval-after-load 'google-this
-
-    ;; Enable Google-This mode.
-    (google-this-mode 1))
 
   (defun leuven-google-search-active-region-or-word-at-point ()
     "Create a Google search URL and send it to your web browser.
