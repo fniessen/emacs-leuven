@@ -2532,6 +2532,8 @@ If you need to know what lines changed in latest commit as well, you can enable
 ~diff-hl-amend-mode~ to *show changes against the second-last revision*.
 #+end_tip
 
+azazer
+
 #+begin_src emacs-lisp
   (with-eval-after-load 'diff-hl-autoloads
     (idle-require 'diff-hl))
@@ -5179,10 +5181,9 @@ In helm-find-files, you can alway invoke helm-ff-do-grep with C-s or C-u C-s for
 recursive searching. Probably helm-projectile can replace helm-find-files more
 if it has this feature? I think you can do this by reusing projectile-grep.
 
-helm-find-files can even find file at point. That is, you don't need to remember
-ffap as well. If you write Emacs lisp, move point over the required file and
-execute helm-find-files, it will prompt the file location and you simply RET to
-enter. All in once nice package.
+helm-find-files can even find file at point. If you write Emacs lisp, move point
+over the required file and execute helm-find-files, it will prompt the file
+location and you simply RET to enter. All in once nice package.
 
 
 - ~C-l~ ::
@@ -14820,13 +14821,6 @@ Pick up where you left off.
 
     ;; Visit a file.
     (global-set-key (kbd "<f3>") #'find-file-at-point))
-
-  ;; Find file (or URL) at point.
-  (with-eval-after-load 'ffap
-
-    ;; Function called to fetch an URL.
-    (setq ffap-url-fetcher 'browse-url)); Could be `browse-url-emacs' or
-                                        ; `eww-browse-url'.
 #+end_src
 
 ** Google search

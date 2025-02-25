@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250225.1627>
+;; Version: <20250225.1651>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250225.1627>"
+(defconst lvn--emacs-version "<20250225.1651>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7576,13 +7576,6 @@ NOTIFICATION-STRING: Message(s) to display."
 
     ;; Visit a file.
     (global-set-key (kbd "<f3>") #'find-file-at-point))
-
-  ;; Find file (or URL) at point.
-  (with-eval-after-load 'ffap
-
-    ;; Function called to fetch an URL.
-    (setq ffap-url-fetcher 'browse-url)); Could be `browse-url-emacs' or
-                                        ; `eww-browse-url'.
 
 ;;** Web search
 
