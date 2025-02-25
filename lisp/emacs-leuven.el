@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250225.1708>
+;; Version: <20250225.1810>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250225.1708>"
+(defconst lvn--emacs-version "<20250225.1810>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1298,40 +1298,34 @@ original state of line numbers after navigation."
 
   (leuven--section "14.12 (emacs)Font Lock")
 
-  (defface leuven-todo-patterns-face
-    '((t :weight bold :box "#FF3125" :foreground "#FF3125" :background "#FFFF88"))
-    "Face for making TODO items stand out.")
+;; Load hl-todo only if it's available.
+(when (try-require 'hl-todo)
 
-  ;; Highlight tasks.
-  (defvar leuven-todo-patterns-in-org
-    "\\<\\(\\(FIXME\\|XXX\\|BUG\\)\\(([^)]*)\\)?:?.*\\)" ; Start of word.
-    "TODO patterns to highlight in Org mode.
-  The goal is to ensure no conflict with the Org mode TODO keyword.")
+  ;; Enable hl-todo globally.
+  (global-hl-todo-mode 1)
 
-  (defvar leuven-todo-patterns-anywhere
-    "\\<\\(\\(TODO\\|FIXME\\|XXX\\|BUG\\)\\(([^)]*)\\)?:?.*\\)"
-    "TODO patterns to highlight in all modes.")
+  ;; Customize the keywords to highlight.
+  (setq hl-todo-keyword-faces
+        '(("URGENT"     . "#FF0000")  ; Red, high priority
+          ("FIXME"      . "#FF0000")  ; Red - Issues to fix
+          ("TODO"       . "#FF4500")  ; OrangeRed - Tasks to do
+          ("BUG"        . "#FF1493")  ; DeepPink - Known bugs
+          ("XXX"        . "#8B0000")  ; Dark Red for XXX
+          ("HACK"       . "#FFD700")  ; Gold - Temporary solutions
+          ("REVIEW"     . "#0000FF")  ; Blue - For review
+          ("DEBUG"      . "#0000FF")  ; Blue - For debugging
+          ("NOTE"       . "#1E90FF")  ; DodgerBlue - Informational notes
+          ("TEST"       . "#0000FF")  ; Blue - For test cases
+          ("DONE"       . "#32CD32"))); LimeGreen - Completed tasks
 
-  ;; Add highlighting keywords.
-  (defun leuven--highlight-todo-patterns ()
-    "Highlight TODO patterns."
-    (let ((keywords (cond
-                     ((derived-mode-p 'org-mode)
-                      `((,leuven-todo-patterns-in-org 1 'leuven-todo-patterns-face prepend)))
-                     ((not (derived-mode-p 'diff-mode))
-                      `((,leuven-todo-patterns-anywhere 1 'leuven-todo-patterns-face prepend))))))
-      (font-lock-add-keywords nil keywords 'end)))
+  ;; Highlight TODOs followed by colon.
+  (setq hl-todo-highlight-punctuation ":")
+  ;; (setq hl-todo-highlight-punctuation ".,;:!?")  ; Optional: Highlight with these
 
-  (add-hook 'find-file-hook #'leuven--highlight-todo-patterns)
-
-  (defun lvn-display-todo-lines ()
-    "Display all lines in the current buffer containing TODO, FIXME, XXX, or BUG."
-    (interactive)
-    (occur "\\(TODO\\|FIXME\\|XXX\\|BUG\\)"))
-    ;; See also `org-agenda-custom-command' '1'.
-
-  ;; Set global keybinding for the function.
-  (global-set-key (kbd "C-c t") 'lvn-display-todo-lines)
+  ;; Show all TODOs in an occur buffer.
+  (global-set-key (kbd "C-c t") 'hl-todo-occur)
+  ;; See also `org-agenda-custom-command' '1'.
+)
 
   ;; Just-in-time fontification.
   (with-eval-after-load 'jit-lock
