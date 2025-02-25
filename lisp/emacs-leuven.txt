@@ -670,7 +670,6 @@ like this into your configuration file:
             flycheck
             flycheck-color-mode-line
             fuzzy
-            ;; git-commit
             ;; git-commit-insert-issue
             git-messenger
             ;; git-timemachine
@@ -700,7 +699,7 @@ like this into your configuration file:
             idle-require
             interaction-log
             leuven-theme
-            ;; magit
+            magit
             markdown-mode
             ;; multi-term
             multiple-cursors
@@ -1282,7 +1281,7 @@ With ~Info+~, you can also merge an Info node with its subnodes into the same
 buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 #+begin_src emacs-lisp
-  (with-eval-after-load 'info+-autoloads
+  (with-eval-after-load 'info+-autoloads-XXX
     (idle-require 'info+)
     (with-eval-after-load 'info+
       ;; Show breadcrumbs in the header line.
@@ -1392,7 +1391,7 @@ It moves point through ~buffer-undo-list~ positions.
 *** Navigating to Navigated Items
 
 #+begin_src emacs-lisp
-  (with-eval-after-load 'back-button-autoloads
+  (with-eval-after-load 'back-button-autoloads-XXX
     (idle-require 'back-button)
 
     (with-eval-after-load 'back-button
@@ -2547,11 +2546,6 @@ If you're using some package other than ~vc~ to commit changes, it might not run
 ~vc-checkin-hook~ after commits.  In that case, you'll need to either add
 ~diff-hl-update~ to the hook it does run, or advise some function that's called in
 the buffer after its state has changed.
-
-#+begin_note
-Of course, ~diff-hl~ is not updated when we commit changes with our ~sendpatch~
-utility...
-#+end_note
 
 Jump between changes:
 
@@ -10496,20 +10490,24 @@ it into the commit buffer. So there is no need to "write the same thing twice".
 
 #+begin_src emacs-lisp
   (autoload 'vc-git-root "vc-git")
-  (with-eval-after-load 'vc-git
 
-    ;; Major mode for editing git commit messages.
-    (idle-require 'git-commit))
+  (with-eval-after-load 'vc-git
+    ;; Check if 'git-commit' is available before loading.
+    (when (locate-library "git-commit")
+      ;; Major mode for editing git commit messages (now available via Magit).
+      (idle-require 'git-commit)))
 
   (with-eval-after-load 'git-commit
-
-    ;; Turn on on-the-fly spell-checking.
+    ;; Enable on-the-fly spell-checking in commit messages.
     (add-hook 'git-commit-setup-hook #'flyspell-mode)
 
-    ;; Turn off save-place.
-    (add-hook 'git-commit-setup-hook
-              (lambda ()
-                (toggle-save-place 0))))
+    ;; Function to disable save-place in Git commit buffers.
+    (defun lvn--git-commit-disable-save-place ()
+      "Disable save-place mode in Git commit buffers."
+      (save-place-mode -1))
+
+    ;; Add the function to the git-commit-setup-hook.
+    (add-hook 'git-commit-setup-hook #'lvn--git-commit-disable-save-place))
 #+end_src
 
 See http://whattheemacsd.com/setup-magit.el-01.html.

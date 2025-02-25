@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250224.1449>
+;; Version: <20250225.1627>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250224.1449>"
+(defconst lvn--emacs-version "<20250225.1627>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -448,7 +448,6 @@ Shows a warning message if the file does not exist or is not executable."
             flycheck
             flycheck-color-mode-line
             fuzzy
-            ;; git-commit
             ;; git-commit-insert-issue
             git-messenger
             ;; git-timemachine
@@ -478,7 +477,7 @@ Shows a warning message if the file does not exist or is not executable."
             idle-require
             interaction-log
             leuven-theme
-            ;; magit
+            magit
             markdown-mode
             ;; multi-term
             multiple-cursors
@@ -841,7 +840,7 @@ original state of line numbers after navigation."
         (when (file-directory-p cygwin-info-dir)
           (add-to-list 'Info-directory-list cygwin-info-dir t))))
 
-  (with-eval-after-load 'info+-autoloads
+  (with-eval-after-load 'info+-autoloads-XXX
     (idle-require 'info+)
     (with-eval-after-load 'info+
       ;; Show breadcrumbs in the header line.
@@ -897,7 +896,7 @@ original state of line numbers after navigation."
   (with-eval-after-load 'goto-chg-autoloads
     (global-set-key (kbd "<C-S-backspace>") #'goto-last-change))
 
-  (with-eval-after-load 'back-button-autoloads
+  (with-eval-after-load 'back-button-autoloads-XXX
     (idle-require 'back-button)
 
     (with-eval-after-load 'back-button
@@ -5741,20 +5740,24 @@ a clean buffer we're an order of magnitude laxer about checking."
   (add-hook 'vc-log-mode-hook #'leuven--vc-log-mode-setup)
 
   (autoload 'vc-git-root "vc-git")
-  (with-eval-after-load 'vc-git
 
-    ;; Major mode for editing git commit messages.
-    (idle-require 'git-commit))
+  (with-eval-after-load 'vc-git
+    ;; Check if 'git-commit' is available before loading.
+    (when (locate-library "git-commit")
+      ;; Major mode for editing git commit messages (now available via Magit).
+      (idle-require 'git-commit)))
 
   (with-eval-after-load 'git-commit
-
-    ;; Turn on on-the-fly spell-checking.
+    ;; Enable on-the-fly spell-checking in commit messages.
     (add-hook 'git-commit-setup-hook #'flyspell-mode)
 
-    ;; Turn off save-place.
-    (add-hook 'git-commit-setup-hook
-              (lambda ()
-                (toggle-save-place 0))))
+    ;; Function to disable save-place in Git commit buffers.
+    (defun lvn--git-commit-disable-save-place ()
+      "Disable save-place mode in Git commit buffers."
+      (save-place-mode -1))
+
+    ;; Add the function to the git-commit-setup-hook.
+    (add-hook 'git-commit-setup-hook #'lvn--git-commit-disable-save-place))
 
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
 
