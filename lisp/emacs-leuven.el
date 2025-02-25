@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250225.1700>
+;; Version: <20250225.1708>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250225.1700>"
+(defconst lvn--emacs-version "<20250225.1708>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -865,24 +865,26 @@ original state of line numbers after navigation."
     ;; WoMan adds a Contents menu to the menubar.
     (setq woman-imenu t))
 
-  ;; Guide the following key bindings automatically and dynamically.
+  ;; Load which-key dynamically when idle.
   (with-eval-after-load 'which-key-autoloads
     (idle-require 'which-key))
 
+  ;; Configure which-key after it’s loaded.
   (with-eval-after-load 'which-key
+    ;; Enable which-key mode globally.
+    (which-key-mode 1)
 
-    (which-key-mode)
-
-    ;; Apply suggested settings for side-window that opens on right if there is
-    ;; space and the bottom otherwise.
+    ;; Use a side window, preferring the right side when space is available,
+    ;; falling back to the bottom otherwise.
     (which-key-setup-side-window-right-bottom)
 
+    ;; Set the delay (in seconds) before the which-key popup appears.
     (setq which-key-idle-delay 0.4)
 
+    ;; Sort keybindings by local bindings first, then by key order.
     (setq which-key-sort-order 'which-key-local-then-key-order)
 
-    ;; Set the maximum length (in characters) for key descriptions (commands or
-    ;; prefixes).
+    ;; Limit the maximum length of key descriptions to 33 characters.
     (setq which-key-max-description-length 33))
 
 )                                       ; Chapter 10 ends here.
