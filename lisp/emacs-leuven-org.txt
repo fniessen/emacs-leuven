@@ -4373,28 +4373,34 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 ;;** A.6 (info "(org)Dynamic blocks")
 
 (defun leuven--org-update-buffer-before-save ()
-  "Update all dynamic blocks and all tables in the buffer before save."
+  "Update all dynamic blocks and tables in the Org buffer before saving."
   (when (derived-mode-p 'org-mode)
-    (message "[Update Org buffer %s]"
+    (message "[Updating Org buffer: %s]"
              (file-name-nondirectory (buffer-file-name)))
-    ;; (sit-for 1.5)
-    (let ((cache-long-scans nil)        ; Make `forward-line' much faster and
+
+    (let (;; Optimize line navigation operations.
+          (cache-long-scans nil)        ; Make `forward-line' much faster and
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
-          (fly-state (and (boundp 'flyspell-mode)
-                          (if flyspell-mode 1 -1)))
-          (buffer-undo-list buffer-undo-list)) ; For goto-chg.
-      (and fly-state (flyspell-mode -1))
-                                        ; Temporarily disable Flyspell to avoid
-                                        ; checking the following modifications
-                                        ; of the buffer.
+          (flyspell-state (and (boundp 'flyspell-mode) flyspell-mode))
+          ;; Preserve undo history (for goto-chg).
+          (buffer-undo-list buffer-undo-list))
+
+      ;; Temporarily disable Flyspell to avoid unnecessary spell checks.
+      (when flyspell-state (flyspell-mode -1))
+
+      ;; Perform buffer updates.
       (measure-time "Realigned all tags" (org-align-all-tags))
       (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
       (measure-time "Re-applied formulas to all tables"
                     (org-table-iterate-buffer-tables))
-      (when (file-exists-p (buffer-file-name (current-buffer)))
+
+      ;; Remove redundant local tags if the buffer is associated with a file.
+      (when (buffer-file-name)
         (lvn-org-remove-redundant-local-tags))
-      (and fly-state (flyspell-mode fly-state)))))
+
+      ;; Restore Flyspell mode if it was enabled.
+      (when flyspell-state (flyspell-mode 1)))))
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
 (add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)
