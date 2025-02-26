@@ -686,6 +686,7 @@ like this into your configuration file:
             hide-lines
             highlight-numbers
             hl-anything                 ; Better than `highlight-symbol'.
+            hl-todo
             htmlize
             indent-guide
             ;; jabber

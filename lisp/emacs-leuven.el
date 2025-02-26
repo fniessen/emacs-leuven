@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250226.0857>
+;; Version: <20250226.2217>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250226.0857>"
+(defconst lvn--emacs-version "<20250226.2217>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -464,6 +464,7 @@ Shows a warning message if the file does not exist or is not executable."
             hide-lines
             highlight-numbers
             hl-anything                 ; Better than `highlight-symbol'.
+            hl-todo
             htmlize
             indent-guide
             ;; jabber
