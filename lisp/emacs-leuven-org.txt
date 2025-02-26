@@ -225,11 +225,6 @@ interface).
 #+end_src
 
 #+begin_src emacs-lisp
-;; ;; Habit tracking code for Org mode.
-;; (add-to-list 'org-modules 'org-habit)
-#+end_src
-
-#+begin_src emacs-lisp
 ;; Make sure to turn `ol-info' on in order to link to info nodes.
 (add-to-list 'org-modules 'ol-info)
 #+end_src
@@ -1511,30 +1506,26 @@ Use ~:jump-to-captured~ to tell capture to jump to the note after storing it.
 #+begin_src emacs-lisp
 ;; 9.1.2 templates for the creation of capture buffers
 
-;; ("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")
-
 ;; Fast note taking in Org mode (the ultimate capture tool).
 (with-eval-after-load 'org-capture
 
   (add-to-list 'org-capture-templates
-               `("t" "Task" entry
+               `("t" "New task" entry
                  (file+headline ,org-default-notes-file "Tasks")
-                 "* MAYB %^{Task}%?
-
-%i"
+                 "* MAYB %^{Task}%?\n  CREATED: %U\n  DEADLINE: %^t\n  %a"
                  :empty-lines 1) t)
 
   (add-to-list 'org-capture-templates
-               `("T" "Task in current file" entry
+               `("T" "New task in current file" entry
                  (file+headline
-                  (buffer-file-name (org-capture-get :original-buffer))
+                  ,(or (buffer-file-name) (read-file-name "File for capture: "))
                   "Tasks")
                  "* TODO %?
 %U %a %n"
                  :prepend t) t)
 
   (add-to-list 'org-capture-templates
-               `("a" "Appt" entry
+               `("a" "New appt" entry
                  (file+headline ,org-default-notes-file "Events")
                  "* %^{Appointment}%?
 %^T
@@ -1543,6 +1534,21 @@ Use ~:jump-to-captured~ to tell capture to jump to the note after storing it.
                  :empty-lines 1) t)
   ;; TODO Prompt only for date, not time...
 #+end_src
+
+
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/org/tasks.org" "Tasks")
+         "* TODO %?\n  %u\n  %a")
+        ("n" "Note" entry (file+headline "~/org/notes.org" "Notes")
+         "* %? :NOTE:\n  %u\n  %a")
+        ("m" "Meeting" entry (file+headline "~/org/meetings.org" "Meetings")
+         "* %? :MEETING:\n  %u\n  %a")
+        ("d" "Diary" entry (file+datetree "~/org/diary.org")
+         "* %?\n  %u\n  %a")
+        ("r" "Reference" entry (file+headline "~/org/references.org" "References")
+         "* %? :REFERENCE:\n  %u\n  %a")
+        ("p" "Phone call" entry (file+headline "~/org/phonecalls.org" "Calls")
+         "* PHONE: %? :PHONE:\n  %u\n  %a")))
 
 *** TODO Ask for refile location
 
@@ -1688,7 +1694,17 @@ With the clock options, ~org-capture~ automatically clocks in.  When pressing
 
 %i"
                  :empty-lines 1) t)
+#+end_src
 
+#+begin_src emacs-lisp
+  (add-to-list 'org-capture-templates
+               `("n" "New quick note (with timestamp)" entry
+                 (file+headline ,org-default-notes-file "Notes")
+                 "* %?\n   CREATED: %U\n  %a"
+                 :empty-lines 1))
+#+end_src
+
+#+begin_src emacs-lisp
   ;; Shopping list (stuff to buy).
   (add-to-list 'org-capture-templates
                `("b" "Buy" checkitem

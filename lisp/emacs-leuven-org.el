@@ -94,9 +94,6 @@ If not, just print a message."
 ;; Support for links to Gnus groups and messages from within Org mode.
 (add-to-list 'org-modules 'ol-gnus)
 
-;; ;; Habit tracking code for Org mode.
-;; (add-to-list 'org-modules 'org-habit)
-
 ;; Make sure to turn `ol-info' on in order to link to info nodes.
 (add-to-list 'org-modules 'ol-info)
 
@@ -897,30 +894,26 @@ a parent headline."
 
 ;; 9.1.2 templates for the creation of capture buffers
 
-;; ("Receipt"   ?r "** %^{BriefDesc} %U %^g\n%?"   "~/Personal/finances.org")
-
 ;; Fast note taking in Org mode (the ultimate capture tool).
 (with-eval-after-load 'org-capture
 
   (add-to-list 'org-capture-templates
-               `("t" "Task" entry
+               `("t" "New task" entry
                  (file+headline ,org-default-notes-file "Tasks")
-                 "* MAYB %^{Task}%?
-
-%i"
+                 "* MAYB %^{Task}%?\n  CREATED: %U\n  DEADLINE: %^t\n  %a"
                  :empty-lines 1) t)
 
   (add-to-list 'org-capture-templates
-               `("T" "Task in current file" entry
+               `("T" "New task in current file" entry
                  (file+headline
-                  (buffer-file-name (org-capture-get :original-buffer))
+                  ,(or (buffer-file-name) (read-file-name "File for capture: "))
                   "Tasks")
                  "* TODO %?
 %U %a %n"
                  :prepend t) t)
 
   (add-to-list 'org-capture-templates
-               `("a" "Appt" entry
+               `("a" "New appt" entry
                  (file+headline ,org-default-notes-file "Events")
                  "* %^{Appointment}%?
 %^T
@@ -1009,6 +1002,12 @@ From the address <%a>"
 
 %i"
                  :empty-lines 1) t)
+
+  (add-to-list 'org-capture-templates
+               `("n" "New quick note (with timestamp)" entry
+                 (file+headline ,org-default-notes-file "Notes")
+                 "* %?\n   CREATED: %U\n  %a"
+                 :empty-lines 1))
 
   ;; Shopping list (stuff to buy).
   (add-to-list 'org-capture-templates
