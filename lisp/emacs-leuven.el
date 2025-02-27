@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1224>
+;; Version: <20250227.1333>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1224>"
+(defconst lvn--emacs-version "<20250227.1333>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5674,8 +5674,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (hl-line-mode -1)
       (top-level))
 
-    (with-eval-after-load 'edebug
-      (define-key edebug-mode-map [remap top-level] #'lvn-edebug-quit))
+    (define-key edebug-mode-map [remap top-level] #'lvn-edebug-quit))
 
 ;;** 27.8 (info "(emacs)Lisp Libraries") for Emacs
 
@@ -6723,27 +6722,26 @@ This example lists Azerty layout second row keys."
       ;; (define-key dired-mode-map (kbd "E") #'lvn-dired-open-files-externally)
     )
 
-(defun dired-open-marked-files-externally ()
-  ;; dired-open-marked-files-with-explorer
-  "Open marked files in Dired using the default external application."
-  (interactive)
-  (if-let ((marks (dired-get-marked-files)))
-      (dolist (file marks)
-        (cond
-         (lvn--win32-p
-          (w32-shell-execute "open" file))
-         (lvn--wsl-p
-          (if (executable-find "wslview-XXX") ; TO TEST!
-              (start-process "" nil "wslview" file)
-            ;; (w32-shell-execute "open" file)
-            (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file)))
-          ))
-         (t
-          (start-process "" nil "xdg-open" file))))
-    (user-error "No marked files; aborting")))
+    (defun dired-open-marked-files-externally ()
+      ;; dired-open-marked-files-with-explorer
+      "Open marked files in Dired using the default external application."
+      (interactive)
+      (if-let ((marks (dired-get-marked-files)))
+          (dolist (file marks)
+            (cond
+             (lvn--win32-p
+              (w32-shell-execute "open" file))
+             (lvn--wsl-p
+              (if (executable-find "wslview-XXX") ; TO TEST!
+                  (start-process "" nil "wslview" file)
+                ;; (w32-shell-execute "open" file)
+                (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file)))
+              ))
+             (t
+              (start-process "" nil "xdg-open" file))))
+        (user-error "No marked files; aborting")))
 
-(with-eval-after-load 'dired
-  (define-key dired-mode-map "o" 'dired-open-marked-files-externally))
+    (define-key dired-mode-map "o" 'dired-open-marked-files-externally)
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()
@@ -6837,10 +6835,9 @@ This example lists Azerty layout second row keys."
         (if (or (< (buffer-size) 1400000)
                 (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
             (apply orig-fun args)
-          (message "Operation cancelled.")))
+          (message "Operation cancelled."))))
 
-      (advice-add 'dired-jump :around #'lvn--dired-jump-advice)
-    )
+      (advice-add 'dired-jump :around #'lvn--dired-jump-advice))
 
 ;;** Dired+
 

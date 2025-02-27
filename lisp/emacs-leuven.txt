@@ -5099,10 +5099,10 @@ See helm-flycheck!
 #+begin_src emacs-lisp :tangle no
 (use-package helm-flycheck
   :ensure t
-  :bind (("M-g f"   . lvn-helm-flycheck)
-         ("C-c ! l" . lvn-helm-flycheck))
+  :bind (("M-g f"   . my-helm-flycheck)
+         ("C-c ! l" . my-helm-flycheck))
   :config
-  (defun lvn-helm-flycheck ()
+  (defun my-helm-flycheck ()
     "This function makes sure that flycheck has been finished
 before running helm-flycheck"
     (interactive)
@@ -10315,8 +10315,7 @@ values for each expression it evaluates.
       (hl-line-mode -1)
       (top-level))
 
-    (with-eval-after-load 'edebug
-      (define-key edebug-mode-map [remap top-level] #'lvn-edebug-quit))
+    (define-key edebug-mode-map [remap top-level] #'lvn-edebug-quit))
 #+end_src
 
 ** Executing Lisp Expressions
@@ -10831,7 +10830,7 @@ We should use:
 | Older than One Year (1+ years)       | Gray             |
 
 #+begin_src emacs-lisp :tangle no
-(defun lvn--vc-annotate-apply-faces ()
+(defun my-vc-annotate-apply-faces ()
   "Apply custom faces based on commit date in vc-annotate."
   (let ((age (time-to-number-of-days (time-since (vc-annotate-extract-revision)))))
     (cond
@@ -10842,18 +10841,18 @@ We should use:
      ((<= 31 age 90) (set-face-attribute 'vc-annotate-4-face nil :foreground "white" :background "blue"))
      (t (set-face-attribute 'vc-annotate-5-face nil :foreground "white" :background "gray")))))
 
-(add-hook 'vc-annotate-mode-hook 'lvn--vc-annotate-apply-faces)
+(add-hook 'vc-annotate-mode-hook 'my-vc-annotate-apply-faces)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(defun lvn--vc-annotate-apply-faces ()
+(defun my-vc-annotate-apply-faces ()
   "Apply custom faces based on commit date in vc-annotate."
   (save-excursion
     (goto-char (point-min))
     (while (not (eobp))
       (let* ((line (thing-at-point 'line t))
              (revision (vc-annotate-extract-revision-at-line line))
-             (age (lvn--vc-annotate-get-commit-age revision)))
+             (age (my-vc-annotate-get-commit-age revision)))
         (cond
          ((= age 0) (vc-annotate-apply-face-at-line 'vc-annotate-0-face))
          ((= age 1) (vc-annotate-apply-face-at-line 'vc-annotate-1-face))
@@ -10863,7 +10862,7 @@ We should use:
          (t (vc-annotate-apply-face-at-line 'vc-annotate-5-face)))))
     (goto-char (point-min))))
 
-(defun lvn--vc-annotate-get-commit-age (revision)
+(defun my-vc-annotate-get-commit-age (revision)
   "Get the age of a commit in days."
   (string-to-number
    (shell-command-to-string
@@ -10876,7 +10875,7 @@ We should use:
         (end (line-end-position)))
     (put-text-property start end 'face face)))
 
-(add-hook 'vc-annotate-mode-hook 'lvn--vc-annotate-apply-faces)
+(add-hook 'vc-annotate-mode-hook 'my-vc-annotate-apply-faces)
 #+end_src
 
 *************** TODO Customize `vc-annotate-background' (and future `vc-annotate-foreground')
@@ -12927,27 +12926,26 @@ For those under Windows:
 #+end_src
 
 #+begin_src emacs-lisp
-(defun dired-open-marked-files-externally ()
-  ;; dired-open-marked-files-with-explorer
-  "Open marked files in Dired using the default external application."
-  (interactive)
-  (if-let ((marks (dired-get-marked-files)))
-      (dolist (file marks)
-        (cond
-         (lvn--win32-p
-          (w32-shell-execute "open" file))
-         (lvn--wsl-p
-          (if (executable-find "wslview-XXX") ; TO TEST!
-              (start-process "" nil "wslview" file)
-            ;; (w32-shell-execute "open" file)
-            (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file)))
-          ))
-         (t
-          (start-process "" nil "xdg-open" file))))
-    (user-error "No marked files; aborting")))
+    (defun dired-open-marked-files-externally ()
+      ;; dired-open-marked-files-with-explorer
+      "Open marked files in Dired using the default external application."
+      (interactive)
+      (if-let ((marks (dired-get-marked-files)))
+          (dolist (file marks)
+            (cond
+             (lvn--win32-p
+              (w32-shell-execute "open" file))
+             (lvn--wsl-p
+              (if (executable-find "wslview-XXX") ; TO TEST!
+                  (start-process "" nil "wslview" file)
+                ;; (w32-shell-execute "open" file)
+                (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file)))
+              ))
+             (t
+              (start-process "" nil "xdg-open" file))))
+        (user-error "No marked files; aborting")))
 
-(with-eval-after-load 'dired
-  (define-key dired-mode-map "o" 'dired-open-marked-files-externally))
+    (define-key dired-mode-map "o" 'dired-open-marked-files-externally)
 #+end_src
 
 *** Open file with ~eww~
@@ -13158,10 +13156,9 @@ Extra Dired functionality:
         (if (or (< (buffer-size) 1400000)
                 (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
             (apply orig-fun args)
-          (message "Operation cancelled.")))
+          (message "Operation cancelled."))))
 
-      (advice-add 'dired-jump :around #'lvn--dired-jump-advice)
-    )
+      (advice-add 'dired-jump :around #'lvn--dired-jump-advice))
 #+end_src
 
 ** Dired+
