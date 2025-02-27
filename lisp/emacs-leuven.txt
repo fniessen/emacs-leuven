@@ -5766,9 +5766,11 @@ Get EXIF data with ~image-dired-get-exif-data~.
                 (ibuffer-switch-to-saved-filter-groups "default")))
 
     ;; Order the groups so the order is: [Default], [agenda], [emacs].
-    (defadvice ibuffer-generate-filter-groups
-      (after leuven-reverse-ibuffer-groups activate)
-      (setq ad-return-value (nreverse ad-return-value))))
+    (defun lvn--reverse-ibuffer-groups (orig-fun &rest args)
+      "Reverse the order of ibuffer filter groups."
+      (nreverse (apply orig-fun args)))
+
+    (advice-add 'ibuffer-generate-filter-groups :around #'lvn--reverse-ibuffer-groups))
 #+end_src
 
 ** Killing Buffers

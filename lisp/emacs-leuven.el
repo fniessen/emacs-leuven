@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1151>
+;; Version: <20250227.1153>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1151>"
+(defconst lvn--emacs-version "<20250227.1153>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -3209,9 +3209,11 @@ in the current buffer."
                 (ibuffer-switch-to-saved-filter-groups "default")))
 
     ;; Order the groups so the order is: [Default], [agenda], [emacs].
-    (defadvice ibuffer-generate-filter-groups
-      (after leuven-reverse-ibuffer-groups activate)
-      (setq ad-return-value (nreverse ad-return-value))))
+    (defun lvn--reverse-ibuffer-groups (orig-fun &rest args)
+      "Reverse the order of ibuffer filter groups."
+      (nreverse (apply orig-fun args)))
+
+    (advice-add 'ibuffer-generate-filter-groups :around #'lvn--reverse-ibuffer-groups))
 
 ;;** 19.4 (info "(emacs)Kill Buffer")
 
