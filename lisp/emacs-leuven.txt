@@ -4685,16 +4685,18 @@ root using the ~sudo~ tramp method.
         (find-file sudo-filename)
         (lvn--find-file-sudo-header-warning)))
 
-    (defadvice find-file (around lvn--find-file-sudo activate)
+    (defun lvn--find-file-sudo-advice (orig-fun &rest args)
       "Open FILENAME with root privileges using Tramp's sudo method if it's read-only.
-Prompts the user for confirmation before opening the file as root."
-      (let ((filename (ad-get-arg 0)))
+    Prompts the user for confirmation before opening the file as root."
+      (let ((filename (car args)))
         (if (and (file-exists-p filename)
                  (not (file-writable-p filename))
                  (not (file-remote-p filename))
                  (y-or-n-p (format "File %s is read-only. Open it as root? " filename)))
             (lvn-find-file-sudo filename)
-          ad-do-it)))
+          (apply orig-fun args))))
+
+    (advice-add 'find-file :around #'lvn--find-file-sudo-advice)
 #+end_src
 
 ***** Connecting to a remote host using multiple hops

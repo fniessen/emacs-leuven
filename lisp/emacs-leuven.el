@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1148>
+;; Version: <20250227.1150>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1148>"
+(defconst lvn--emacs-version "<20250227.1150>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2679,16 +2679,18 @@ After initiating the grep search, the isearch is aborted."
         (find-file sudo-filename)
         (lvn--find-file-sudo-header-warning)))
 
-    (defadvice find-file (around lvn--find-file-sudo activate)
+    (defun lvn--find-file-sudo-advice (orig-fun &rest args)
       "Open FILENAME with root privileges using Tramp's sudo method if it's read-only.
-Prompts the user for confirmation before opening the file as root."
-      (let ((filename (ad-get-arg 0)))
+    Prompts the user for confirmation before opening the file as root."
+      (let ((filename (car args)))
         (if (and (file-exists-p filename)
                  (not (file-writable-p filename))
                  (not (file-remote-p filename))
                  (y-or-n-p (format "File %s is read-only. Open it as root? " filename)))
             (lvn-find-file-sudo filename)
-          ad-do-it)))
+          (apply orig-fun args))))
+
+    (advice-add 'find-file :around #'lvn--find-file-sudo-advice)
 
     ;; How many seconds passwords are cached.
     (setq password-cache-expiry 60)     ; [Default: 16]
