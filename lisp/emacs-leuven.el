@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1153>
+;; Version: <20250227.1156>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1153>"
+(defconst lvn--emacs-version "<20250227.1156>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4904,16 +4904,18 @@ mouse-3: go to end") "]")))
   ;; Always comment out empty lines.
   (setq comment-empty-lines t)
 
-  (defadvice comment-dwim (around lvn--comment activate)
+  (defun lvn--comment-advice (orig-fun &rest args)
     "Comment or uncomment lines intelligently.
 
-When called interactively with no active region, comment a single
-line instead."
+  When called interactively with no active region, comment a single
+  line instead."
     (if (or (use-region-p) (not (called-interactively-p 'any)))
-        ad-do-it
+        (apply orig-fun args)
       (comment-or-uncomment-region (line-beginning-position)
                                    (line-end-position))
       (message "[Commented line]")))
+
+  (advice-add 'comment-dwim :around #'lvn--comment-advice)
 
 ;;** 26.6 (info "(emacs)Documentation") Lookup
 

@@ -8528,16 +8528,18 @@ Balanced editing: inserting two matching parentheses at once, etc.
   ;; Always comment out empty lines.
   (setq comment-empty-lines t)
 
-  (defadvice comment-dwim (around lvn--comment activate)
+  (defun lvn--comment-advice (orig-fun &rest args)
     "Comment or uncomment lines intelligently.
 
-When called interactively with no active region, comment a single
-line instead."
+  When called interactively with no active region, comment a single
+  line instead."
     (if (or (use-region-p) (not (called-interactively-p 'any)))
-        ad-do-it
+        (apply orig-fun args)
       (comment-or-uncomment-region (line-beginning-position)
                                    (line-end-position))
       (message "[Commented line]")))
+
+  (advice-add 'comment-dwim :around #'lvn--comment-advice)
 #+end_src
 
 ** Documentation Lookup
