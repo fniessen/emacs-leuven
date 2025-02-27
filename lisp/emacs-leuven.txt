@@ -14251,18 +14251,17 @@ creates an X Window and doesn't wait for ~(server-edit)~.
       (idle-require 'server)))          ; After init.
 
   (with-eval-after-load 'server
-    ;; Start the server if it's not already (definitely) running.
+    ;; Start the Emacs server if it's not already (definitely) running.
     (unless (equal (server-running-p) t)
       (server-start))
 
     ;; Save file without confirmation before returning to the client.
-    (defun lvn--server-edit-advice (orig-fun &rest args)
-      "Save current buffer before marking it as done."
-      (when server-buffer-clients
-        (save-buffer))
-      (apply orig-fun args))
+    (defun lvn--server-edit-save-buffer-advice (proc)
+      "Save current buffer before marking it as done if modified."
+      (when (and server-buffer-clients (buffer-modified-p))
+        (save-buffer)))
 
-    (advice-add 'server-edit :before #'lvn--server-edit-advice))
+    (advice-add 'server-edit :before #'lvn--server-edit-save-buffer-advice))
 
 )                                       ; Chapter 39 ends here.
 #+end_src
