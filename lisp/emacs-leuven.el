@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1146>
+;; Version: <20250227.1148>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1146>"
+(defconst lvn--emacs-version "<20250227.1148>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2278,14 +2278,17 @@ After initiating the grep search, the isearch is aborted."
 
   (leuven--section "18.3 (emacs)Saving Files")
 
-  (defadvice save-buffer (around lvn--report-saving-time activate)
-    "Save the file named FILENAME and report time spent."
-    (let ((filename (buffer-file-name))
-          (start-time (float-time)))
+  (defun lvn--report-saving-time (orig-fun &rest args)
+    "Save the file and report time spent."
+    (let* ((filename (buffer-file-name))
+           (start-time (float-time)))
       (message "[Saving file %s...]" filename)
-      ad-do-it
-      (message "[Saved file %s in %.2f s]" filename
-               (- (float-time) start-time))))
+      (let ((result (apply orig-fun args)))
+        (message "[Saved file %s in %.2f s]" filename
+                 (- (float-time) start-time))
+        result)))
+
+  (advice-add 'save-buffer :around #'lvn--report-saving-time)
 
   ;; Make your changes permanent.
   (global-set-key (kbd "<f2>") #'save-buffer)
