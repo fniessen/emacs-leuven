@@ -3780,14 +3780,17 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 
   (leuven--section "18.2 (emacs)Visiting Files")
 
-  (defadvice find-file (around lvn--find-file-time activate)
+  (defun lvn--find-file-time-advice (orig-fun &rest args)
     "Advice function for `find-file' that reports the time spent on file loading."
-    (let ((filename (ad-get-arg 0))
-          (find-file-time-start (float-time)))
+    (let* ((filename (car args))
+           (find-file-time-start (float-time)))
       (message "[Finding file %s...]" filename)
-      ad-do-it
-      (message "[Found file %s in %.2f s]" filename
-               (- (float-time) find-file-time-start))))
+      (let ((result (apply orig-fun args)))
+        (message "[Found file %s in %.2f s]" filename
+                 (- (float-time) find-file-time-start))
+        result)))
+
+  (advice-add 'find-file :around #'lvn--find-file-time-advice)
 
   ;; Visit a file.
   (global-set-key (kbd "<f3>") #'find-file)

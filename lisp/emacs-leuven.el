@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1145>
+;; Version: <20250227.1146>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1145>"
+(defconst lvn--emacs-version "<20250227.1146>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2213,14 +2213,17 @@ After initiating the grep search, the isearch is aborted."
 
   (leuven--section "18.2 (emacs)Visiting Files")
 
-  (defadvice find-file (around lvn--find-file-time activate)
+  (defun lvn--find-file-time-advice (orig-fun &rest args)
     "Advice function for `find-file' that reports the time spent on file loading."
-    (let ((filename (ad-get-arg 0))
-          (find-file-time-start (float-time)))
+    (let* ((filename (car args))
+           (find-file-time-start (float-time)))
       (message "[Finding file %s...]" filename)
-      ad-do-it
-      (message "[Found file %s in %.2f s]" filename
-               (- (float-time) find-file-time-start))))
+      (let ((result (apply orig-fun args)))
+        (message "[Found file %s in %.2f s]" filename
+                 (- (float-time) find-file-time-start))
+        result)))
+
+  (advice-add 'find-file :around #'lvn--find-file-time-advice)
 
   ;; Visit a file.
   (global-set-key (kbd "<f3>") #'find-file)
