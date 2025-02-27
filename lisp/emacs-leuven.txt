@@ -4756,23 +4756,14 @@ Be notified when TRAMP file transfers are complete by making Emacs beep after
 reading from or writing to the remote host.
 
 #+begin_src emacs-lisp
-    (defadvice tramp-handle-write-region
-      (after leuven-tramp-write-beep-advice activate)
-      "Make TRAMP beep after writing a file."
-      (interactive)
-      (beep))
+    (defun leuven-tramp-beep-advice (&rest _)
+      "Make TRAMP beep after performing an operation."
+      (when (called-interactively-p 'any)
+        (beep)))
 
-    (defadvice tramp-handle-do-copy-or-rename-file
-      (after leuven-tramp-copy-beep-advice activate)
-      "Make TRAMP beep after copying a file."
-      (interactive)
-      (beep))
-
-    (defadvice tramp-handle-insert-file-contents
-      (after leuven-tramp-insert-beep-advice activate)
-      "Make TRAMP beep after inserting contents of a file."
-      (interactive)
-      (beep))
+    (advice-add 'tramp-handle-write-region :after #'leuven-tramp-beep-advice)
+    (advice-add 'tramp-handle-do-copy-or-rename-file :after #'leuven-tramp-beep-advice)
+    (advice-add 'tramp-handle-insert-file-contents :after #'leuven-tramp-beep-advice)
 #+end_src
 
 **** How to Customize Traces

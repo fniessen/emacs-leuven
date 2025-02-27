@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1150>
+;; Version: <20250227.1151>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1150>"
+(defconst lvn--emacs-version "<20250227.1151>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2702,23 +2702,14 @@ After initiating the grep search, the isearch is aborted."
     ;; Faster auto saves.
     (setq tramp-auto-save-directory temporary-file-directory)
 
-    (defadvice tramp-handle-write-region
-      (after leuven-tramp-write-beep-advice activate)
-      "Make TRAMP beep after writing a file."
-      (interactive)
-      (beep))
+    (defun leuven-tramp-beep-advice (&rest _)
+      "Make TRAMP beep after performing an operation."
+      (when (called-interactively-p 'any)
+        (beep)))
 
-    (defadvice tramp-handle-do-copy-or-rename-file
-      (after leuven-tramp-copy-beep-advice activate)
-      "Make TRAMP beep after copying a file."
-      (interactive)
-      (beep))
-
-    (defadvice tramp-handle-insert-file-contents
-      (after leuven-tramp-insert-beep-advice activate)
-      "Make TRAMP beep after inserting contents of a file."
-      (interactive)
-      (beep))
+    (advice-add 'tramp-handle-write-region :after #'leuven-tramp-beep-advice)
+    (advice-add 'tramp-handle-do-copy-or-rename-file :after #'leuven-tramp-beep-advice)
+    (advice-add 'tramp-handle-insert-file-contents :after #'leuven-tramp-beep-advice)
 
     ;; Debugging TRAMP.
     (setq tramp-verbose 6))             ; [Maximum: 10]
