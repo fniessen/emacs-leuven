@@ -13721,10 +13721,13 @@ and *replaces* it with the output from the shell command.
 
   ;; Force interactive behavior (to get my handy shell aliases).
   ;; FIXME Fix for Zsh (zsh:1: command not found: shopt)
-  ;; (defadvice shell-command (before leuven-shell-command activate)
-  ;;   (ad-set-arg 0
-  ;;               (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "
-  ;;                       (ad-get-arg 0))))
+  ;; (defun lvn--shell-command-advice (orig-fun &rest args)
+  ;;   "Advice to source .bashrc and enable aliases before running shell commands."
+  ;;   (let ((command (car args)))
+  ;;     (setq command (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n " command))
+  ;;     (apply orig-fun command (cdr args))))
+  ;;
+  ;; (advice-add 'shell-command :around #'lvn--shell-command-advice)
 
   ;; ;; For single shell commands (= "the" reference).
   ;; (setq shell-file-name                 ; Must be in the `PATH'.

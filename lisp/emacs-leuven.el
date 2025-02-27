@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1217>
+;; Version: <20250227.1219>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1217>"
+(defconst lvn--emacs-version "<20250227.1219>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7159,10 +7159,13 @@ NOTIFICATION-STRING: Message(s) to display."
 
   ;; Force interactive behavior (to get my handy shell aliases).
   ;; FIXME Fix for Zsh (zsh:1: command not found: shopt)
-  ;; (defadvice shell-command (before leuven-shell-command activate)
-  ;;   (ad-set-arg 0
-  ;;               (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n "
-  ;;                       (ad-get-arg 0))))
+  ;; (defun lvn--shell-command-advice (orig-fun &rest args)
+  ;;   "Advice to source .bashrc and enable aliases before running shell commands."
+  ;;   (let ((command (car args)))
+  ;;     (setq command (concat "source ~/.bashrc; shopt -s -q expand_aliases;\n " command))
+  ;;     (apply orig-fun command (cdr args))))
+  ;;
+  ;; (advice-add 'shell-command :around #'lvn--shell-command-advice)
 
   ;; ;; For single shell commands (= "the" reference).
   ;; (setq shell-file-name                 ; Must be in the `PATH'.
