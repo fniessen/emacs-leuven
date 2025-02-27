@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1031>
+;; Version: <20250227.1142>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1031>"
+(defconst lvn--emacs-version "<20250227.1142>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -113,12 +113,17 @@
 
 (when (and (string-match "GNU Emacs" (version))
            lvn-verbose-loading)
-  (defadvice message (before leuven-add-timestamp activate)
+  (defun lvn--add-timestamp-to-message (old-fun &rest args)
     "Add timestamps to `message' output."
-    (ad-set-arg 0 (format "[%s.%03s] %s"
-                         (format-time-string "%Y-%m-%d %T")
-                         (substring (format-time-string "%N") 0 3)
-                         (ad-get-arg 0)))))
+    (when (car args)
+      (apply old-fun
+             (cons (format "[%s.%03d] %s"
+                          (format-time-string "%Y-%m-%d %T")
+                          (string-to-number (substring (format-time-string "%N") 0 3))
+                          (car args))
+                   (cdr args)))))
+
+  (advice-add 'message :around #'lvn--add-timestamp-to-message))
 
 ;; Allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!
 (defvar leuven-load-chapter-0-environment t) ; required

@@ -235,12 +235,17 @@ after the *UI* and all *initialization processes* have completed.
 #+begin_src emacs-lisp
 (when (and (string-match "GNU Emacs" (version))
            lvn-verbose-loading)
-  (defadvice message (before leuven-add-timestamp activate)
+  (defun lvn--add-timestamp-to-message (old-fun &rest args)
     "Add timestamps to `message' output."
-    (ad-set-arg 0 (format "[%s.%03s] %s"
-                         (format-time-string "%Y-%m-%d %T")
-                         (substring (format-time-string "%N") 0 3)
-                         (ad-get-arg 0)))))
+    (when (car args)
+      (apply old-fun
+             (cons (format "[%s.%03d] %s"
+                          (format-time-string "%Y-%m-%d %T")
+                          (string-to-number (substring (format-time-string "%N") 0 3))
+                          (car args))
+                   (cdr args)))))
+
+  (advice-add 'message :around #'lvn--add-timestamp-to-message))
 #+end_src
 
 #+begin_src emacs-lisp
