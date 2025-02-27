@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1158>
+;; Version: <20250227.1159>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1158>"
+(defconst lvn--emacs-version "<20250227.1159>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5222,16 +5222,15 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   (setq extra-rlt (js2-imenu--remove-duplicate-items extra-rlt))
   (append rlt extra-rlt))
 
-(eval-after-load 'js2-mode
-  '(progn
-     (defadvice js2-mode-create-imenu-index (around leuven-js2-mode-create-imenu-index activate)
-       (let (rlt extra-rlt)
-         ad-do-it
-         (setq extra-rlt
-               (save-excursion
-                 (imenu--generic-function js2-imenu-extra-generic-expression)))
-         (setq ad-return-value (js2-imenu--merge-imenu-items ad-return-value extra-rlt))
-         ad-return-value))))
+(with-eval-after-load 'js2-mode
+  (defun lvn--js2-mode-create-imenu-index-advice (orig-fun &rest args)
+    "Advice to enhance js2-mode's imenu index creation."
+    (let* ((original-index (apply orig-fun args))
+           (extra-index (save-excursion
+                          (imenu--generic-function js2-imenu-extra-generic-expression))))
+      (js2-imenu--merge-imenu-items original-index extra-index)))
+
+  (advice-add 'js2-mode-create-imenu-index :around #'lvn--js2-mode-create-imenu-index-advice))
 ;; }}
 
     (defun js2-imenu-record-object-clone-extend ()
