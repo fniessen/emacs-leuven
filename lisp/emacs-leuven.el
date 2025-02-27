@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1205>
+;; Version: <20250227.1210>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1205>"
+(defconst lvn--emacs-version "<20250227.1210>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5895,16 +5895,19 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For Git.
-  (defadvice vc-dir-prepare-status-buffer
-             (before leuven-vcs-goto-top-directory activate compile)
-    (let* ((backend (ad-get-arg 2))
-           (vcs-dir (ad-get-arg 1))
+  (defun lvn--vcs-goto-top-directory-advice (orig-fun &rest args)
+    (let* ((backend (nth 2 args))
+           (vcs-dir (nth 1 args))
            (vcs-top-dir (vc-call-backend backend 'responsible-p vcs-dir)))
-      (when (stringp vcs-top-dir)
-        (ad-set-arg 1 vcs-top-dir))))
+      (if (stringp vcs-top-dir)
+          (apply orig-fun (list (car args) vcs-top-dir (nth 2 args) (nth 3 args)))
+        (apply orig-fun args))))
 
-  (defun leuven--ediff-revision (file rev1 &optional rev2)
-    "Run Ediff by comparing 'master' against the 'current'."
+  (advice-add 'vc-dir-prepare-status-buffer :before #'lvn--vcs-goto-top-directory-advice)
+
+  (defun lvn--ediff-revision (file rev1 &optional rev2)
+    "Run Ediff by comparing two revisions of FILE (rev1 and rev2).
+  If the buffer is modified, prompt to save it before proceeding."
     (require 'ediff)
     (find-file file)
     (if (and (buffer-modified-p)
@@ -5916,18 +5919,18 @@ a clean buffer we're an order of magnitude laxer about checking."
      (intern (format "ediff-%S-internal" ediff-version-control-package))
      rev1 rev2 nil))
 
-  (defun leuven-vc-diff (&optional arg)
+  (defun lvn-vc-diff (&optional arg)
     "Diff current file with another revision or perform `vc-diff` interactively.
 With ARG, run `vc-diff`.
-Without ARG, prompt for a revision and use `leuven--ediff-revision`."
+Without ARG, prompt for a revision and use `lvn--ediff-revision`."
     (interactive "P")
     (if arg
         (vc-diff nil)
-      (leuven--ediff-revision (buffer-file-name)
+      (lvn--ediff-revision (buffer-file-name)
                               (read-string "Revision? " "HEAD" nil "HEAD")
                               "")))
 
-  (define-key vc-prefix-map (kbd "=") #'leuven-vc-diff)
+  (define-key vc-prefix-map (kbd "=") #'lvn-vc-diff)
 
 (setq vc-annotate-display-mode nil)
 
