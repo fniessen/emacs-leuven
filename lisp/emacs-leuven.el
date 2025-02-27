@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1212>
+;; Version: <20250227.1217>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1212>"
+(defconst lvn--emacs-version "<20250227.1217>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6984,26 +6984,28 @@ NOTIFICATION-STRING: Message(s) to display."
     (add-hook 'diary-hook #'appt-make-list)
 
     (with-eval-after-load 'org-agenda
-
       ;; Keep your appointment list clean: if you delete an appointment from
       ;; your Org agenda file, delete the corresponding alert.
-      (defadvice org-agenda-to-appt (before leuven-org-agenda-to-appt activate)
-        "Clear the existing `appt-time-msg-list'."
-        (setq appt-time-msg-list nil))
+      (defun lvn--org-agenda-to-appt-advice (orig-fun &rest args)
+        "Clear the existing `appt-time-msg-list' before calling `org-agenda-to-appt'."
+        (setq appt-time-msg-list nil)
+        (apply orig-fun args))
+
+      (advice-add 'org-agenda-to-appt :around #'lvn--org-agenda-to-appt-advice)
 
       ;; Add today's appointments (found in `org-agenda-files') each time the
       ;; agenda buffer is (re)built.
       (add-hook 'org-agenda-finalize-hook #'org-agenda-to-appt)
-                                          ;! Don't use the `org-agenda-mode-hook'
-                                          ;! because the Org agenda files would be
-                                          ;! opened once by `org-agenda-to-appt',
-                                          ;! and then killed by
-                                          ;! `org-release-buffers' (because
-                                          ;! `org-agenda-to-appt' closes all the
-                                          ;! files it opened itself -- as they
-                                          ;! weren't already opened), to be
-                                          ;! finally re-opened!
-      )
+                                        ;! Don't use the `org-agenda-mode-hook'
+                                        ;! because the Org agenda files would be
+                                        ;! opened once by `org-agenda-to-appt',
+                                        ;! and then killed by
+                                        ;! `org-release-buffers' (because
+                                        ;! `org-agenda-to-appt' closes all the
+                                        ;! files it opened itself -- as they
+                                        ;! weren't already opened), to be
+                                        ;! finally re-opened!
+    )
 
     )                                   ; with-eval-after-load "appt" ends here.
 
