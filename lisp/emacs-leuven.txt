@@ -10265,14 +10265,16 @@ Highlight the current GUD line in GDB/Emacs:
       ov)
     "Overlay variable for GUD highlighting.")
 
-  (defadvice gud-display-line (after my-gud-highlight act)
-    "Highlight current line."
-    (let* ((ov gud-overlay)
-           (bf (gud-find-file true-file)))
-      (save-excursion
-        (set-buffer bf)
-        (move-overlay ov (line-beginning-position) (line-end-position)
-                      (current-buffer)))))
+  (defun lvn--gud-highlight-advice (orig-fun &rest args)
+    "Highlight current line after displaying it in GUD."
+    (let ((result (apply orig-fun args)))
+      (let* ((ov gud-overlay)
+             (bf (gud-find-file true-file)))
+        (with-current-buffer bf
+          (move-overlay ov (line-beginning-position) (line-end-position))))
+      result))
+
+  (advice-add 'gud-display-line :after #'lvn--gud-highlight-advice)
 #+end_src
 
 ** Debugging Lisp programs

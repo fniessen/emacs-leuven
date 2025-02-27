@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1159>
+;; Version: <20250227.1201>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1159>"
+(defconst lvn--emacs-version "<20250227.1201>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5641,14 +5641,16 @@ a clean buffer we're an order of magnitude laxer about checking."
       ov)
     "Overlay variable for GUD highlighting.")
 
-  (defadvice gud-display-line (after my-gud-highlight act)
-    "Highlight current line."
-    (let* ((ov gud-overlay)
-           (bf (gud-find-file true-file)))
-      (save-excursion
-        (set-buffer bf)
-        (move-overlay ov (line-beginning-position) (line-end-position)
-                      (current-buffer)))))
+  (defun lvn--gud-highlight-advice (orig-fun &rest args)
+    "Highlight current line after displaying it in GUD."
+    (let ((result (apply orig-fun args)))
+      (let* ((ov gud-overlay)
+             (bf (gud-find-file true-file)))
+        (with-current-buffer bf
+          (move-overlay ov (line-beginning-position) (line-end-position))))
+      result))
+
+  (advice-add 'gud-display-line :after #'lvn--gud-highlight-advice)
 
 ;;** Debugging Lisp programs
 
