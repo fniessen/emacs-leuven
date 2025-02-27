@@ -854,10 +854,10 @@ like this into your configuration file:
   ;; Load elisp libraries while Emacs is idle.
   (try-require 'idle-require)
 
-  ;; Fail-safe for `idle-require'.
+  ;; Fail-safe for `idle-require`.
   (if (not (featurep 'idle-require))
-    (defun idle-require (feature &optional file noerror)
-      (try-require feature)))
+      (defun idle-require (feature &optional file noerror)
+        (try-require feature)))
 
   (with-eval-after-load 'idle-require
 
@@ -867,8 +867,8 @@ like this into your configuration file:
     ;; Time in seconds between automatically loaded functions.
     (setq idle-require-load-break 2)
 
-    ;; Starts loading.
-    (add-hook 'after-init-hook #'idle-require-mode))
+    ;; Start loading after full startup.
+    (add-hook 'emacs-startup-hook #'idle-require-mode))
 #+end_src
 
 * The Organization of the Screen
@@ -2544,8 +2544,8 @@ Color Identifiers Mode: *color* every *variable* in its own, consistent color.
 #+begin_src emacs-lisp
 ;; XXX Impact on Org's HTML export?
   ;; (with-eval-after-load 'color-identifiers-mode-autoloads
-  ;;
-  ;;   (add-hook 'after-init-hook #'global-color-identifiers-mode))
+  ;;   ;; Enable global-color-identifiers-mode after Emacs has fully initialized.
+  ;;   (add-hook 'emacs-startup-hook #'global-color-identifiers-mode))
 #+end_src
 
 ** Window Fringes
@@ -2994,8 +2994,9 @@ We build our mode line:
                   (powerline-render rhs)))))))
 
   (with-eval-after-load 'powerline-autoloads
-    (add-hook 'after-init-hook #'powerline-leuven-theme))
-  #+end_src
+    ;; Apply theme after full startup.
+    (add-hook 'emacs-startup-hook #'powerline-leuven-theme))
+#+end_src
 
 *************** TODO Fix paren problems in the 'cond' of the "dictionary indicator"
 *************** END
@@ -15704,7 +15705,7 @@ dashboard):
 ;;                   (float-time
 ;;                    (time-subtract after-init-time before-init-time)) gcs-done)))
 ;;   ;; :init
-;;   (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+;;   (add-hook 'emacs-startup-hook 'dashboard-refresh-buffer)
 ;;   (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
 ;;   ;; :custom
 ;;   ;; (dashboard-startup-banner 'logo)
@@ -15714,11 +15715,13 @@ dashboard):
 #+end_src
 
 #+begin_src emacs-lisp
-(add-hook 'after-init-hook
+;; Report Emacs startup time and GC status after full initialization.
+(add-hook 'emacs-startup-hook
           (lambda ()
-            (message "[Emacs startup time: %.2f s; GC done: %S]"
-                     (string-to-number (emacs-init-time)) gcs-done)
-            (sit-for 0.5))
+            (let ((init-time (string-to-number (emacs-init-time))))
+              (message "[Emacs startup time: %.2f s; GC done: %S]"
+                       init-time gcs-done)
+              (sit-for 0.5)))
           t)
 #+end_src
 

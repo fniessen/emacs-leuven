@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.0829>
+;; Version: <20250227.0852>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250227.0829>"
+(defconst lvn--emacs-version "<20250227.0852>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -601,10 +601,10 @@ Shows a warning message if the file does not exist or is not executable."
   ;; Load elisp libraries while Emacs is idle.
   (try-require 'idle-require)
 
-  ;; Fail-safe for `idle-require'.
+  ;; Fail-safe for `idle-require`.
   (if (not (featurep 'idle-require))
-    (defun idle-require (feature &optional file noerror)
-      (try-require feature)))
+      (defun idle-require (feature &optional file noerror)
+        (try-require feature)))
 
   (with-eval-after-load 'idle-require
 
@@ -614,8 +614,8 @@ Shows a warning message if the file does not exist or is not executable."
     ;; Time in seconds between automatically loaded functions.
     (setq idle-require-load-break 2)
 
-    ;; Starts loading.
-    (add-hook 'after-init-hook #'idle-require-mode))
+    ;; Start loading after full startup.
+    (add-hook 'emacs-startup-hook #'idle-require-mode))
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
@@ -1463,8 +1463,8 @@ Should be selected from `fringe-bitmaps'.")
 
 ;; XXX Impact on Org's HTML export?
   ;; (with-eval-after-load 'color-identifiers-mode-autoloads
-  ;;
-  ;;   (add-hook 'after-init-hook #'global-color-identifiers-mode))
+  ;;   ;; Enable global-color-identifiers-mode after Emacs has fully initialized.
+  ;;   (add-hook 'emacs-startup-hook #'global-color-identifiers-mode))
 
   (with-eval-after-load 'diff-hl-autoloads
     (idle-require 'diff-hl))
@@ -1763,7 +1763,8 @@ Should be selected from `fringe-bitmaps'.")
                   (powerline-render rhs)))))))
 
   (with-eval-after-load 'powerline-autoloads
-    (add-hook 'after-init-hook #'powerline-leuven-theme))
+    ;; Apply theme after full startup.
+    (add-hook 'emacs-startup-hook #'powerline-leuven-theme))
 
 ;;** 14.19 The (info "(emacs)")
 
@@ -7875,7 +7876,7 @@ NOTIFICATION-STRING: Message(s) to display."
 ;;                   (float-time
 ;;                    (time-subtract after-init-time before-init-time)) gcs-done)))
 ;;   ;; :init
-;;   (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+;;   (add-hook 'emacs-startup-hook 'dashboard-refresh-buffer)
 ;;   (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
 ;;   ;; :custom
 ;;   ;; (dashboard-startup-banner 'logo)
@@ -7883,11 +7884,13 @@ NOTIFICATION-STRING: Message(s) to display."
 ;;   (dashboard-setup-startup-hook)
 ;; ;; )
 
-(add-hook 'after-init-hook
+;; Report Emacs startup time and GC status after full initialization.
+(add-hook 'emacs-startup-hook
           (lambda ()
-            (message "[Emacs startup time: %.2f s; GC done: %S]"
-                     (string-to-number (emacs-init-time)) gcs-done)
-            (sit-for 0.5))
+            (let ((init-time (string-to-number (emacs-init-time))))
+              (message "[Emacs startup time: %.2f s; GC done: %S]"
+                       init-time gcs-done)
+              (sit-for 0.5)))
           t)
 
   (defun lvn-update-emacs-leuven-configuration ()
