@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1142>
+;; Version: <20250227.1145>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1142>"
+(defconst lvn--emacs-version "<20250227.1145>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1063,14 +1063,14 @@ original state of line numbers after navigation."
   ;; Auto-indentation of pasted code in the programming modes
   ;; (fall back to default, non-indented, yanking by preceding the yanking
   ;; command `C-y' with `C-u').
-  (dolist (command '(yank
-                     yank-pop))
-    (eval `(defadvice ,command (after leuven-indent-region activate)
-             "Indent `yank'ed text if in programming mode (and no prefix)."
-             (let ((mark-even-if-inactive t))
-               (and (not current-prefix-arg)  ; Check if there's no prefix argument.
-                    (derived-mode-p 'prog-mode) ; Check if the current buffer is in a programming mode.
-                    (indent-region (region-beginning) (region-end) nil))))))
+  (dolist (command '(yank yank-pop))
+    (advice-add command :after
+                (lambda (&rest _)
+                  "Indent yanked text in programming mode (unless prefix arg)."
+                  (when (and (not current-prefix-arg)
+                             (derived-mode-p 'prog-mode))
+                    (let ((mark-even-if-inactive t))
+                      (indent-region (region-beginning) (region-end) nil))))))
 
   ;; Save clipboard strings into kill ring before replacing them.
   (setq save-interprogram-paste-before-kill t)

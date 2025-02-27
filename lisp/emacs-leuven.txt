@@ -1746,14 +1746,14 @@ Auto-indent on paste.
   ;; Auto-indentation of pasted code in the programming modes
   ;; (fall back to default, non-indented, yanking by preceding the yanking
   ;; command `C-y' with `C-u').
-  (dolist (command '(yank
-                     yank-pop))
-    (eval `(defadvice ,command (after leuven-indent-region activate)
-             "Indent `yank'ed text if in programming mode (and no prefix)."
-             (let ((mark-even-if-inactive t))
-               (and (not current-prefix-arg)  ; Check if there's no prefix argument.
-                    (derived-mode-p 'prog-mode) ; Check if the current buffer is in a programming mode.
-                    (indent-region (region-beginning) (region-end) nil))))))
+  (dolist (command '(yank yank-pop))
+    (advice-add command :after
+                (lambda (&rest _)
+                  "Indent yanked text in programming mode (unless prefix arg)."
+                  (when (and (not current-prefix-arg)
+                             (derived-mode-p 'prog-mode))
+                    (let ((mark-even-if-inactive t))
+                      (indent-region (region-beginning) (region-end) nil))))))
 #+end_src
 
 #+begin_src emacs-lisp
