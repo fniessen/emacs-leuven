@@ -13149,16 +13149,18 @@ Extra Dired functionality:
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
     (when lvn--cygwin-p
-      (defadvice dired-jump (around lvn--dired-jump activate)
+      (defun lvn--dired-jump-advice (orig-fun &rest args)
         "Ask for confirmation before jumping to a Dired buffer.
 
-This advice checks the buffer size and prompts for confirmation if the buffer
-size is 1,400,000 bytes or more. It helps prevent time-consuming operations.
-Consider using `C-x d' instead for better performance."
-        (when (or (< (buffer-size) 1400000)
-                  (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
-          ad-do-it)))
+      This advice checks the buffer size and prompts for confirmation if the buffer
+      size is 1,400,000 bytes or more. It helps prevent time-consuming operations.
+      Consider using `C-x d' instead for better performance."
+        (if (or (< (buffer-size) 1400000)
+                (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
+            (apply orig-fun args)
+          (message "Operation cancelled.")))
 
+      (advice-add 'dired-jump :around #'lvn--dired-jump-advice)
     )
 #+end_src
 

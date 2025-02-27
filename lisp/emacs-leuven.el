@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1210>
+;; Version: <20250227.1212>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1210>"
+(defconst lvn--emacs-version "<20250227.1212>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6828,16 +6828,18 @@ This example lists Azerty layout second row keys."
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
     (when lvn--cygwin-p
-      (defadvice dired-jump (around lvn--dired-jump activate)
+      (defun lvn--dired-jump-advice (orig-fun &rest args)
         "Ask for confirmation before jumping to a Dired buffer.
 
-This advice checks the buffer size and prompts for confirmation if the buffer
-size is 1,400,000 bytes or more. It helps prevent time-consuming operations.
-Consider using `C-x d' instead for better performance."
-        (when (or (< (buffer-size) 1400000)
-                  (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
-          ad-do-it)))
+      This advice checks the buffer size and prompts for confirmation if the buffer
+      size is 1,400,000 bytes or more. It helps prevent time-consuming operations.
+      Consider using `C-x d' instead for better performance."
+        (if (or (< (buffer-size) 1400000)
+                (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
+            (apply orig-fun args)
+          (message "Operation cancelled.")))
 
+      (advice-add 'dired-jump :around #'lvn--dired-jump-advice)
     )
 
 ;;** Dired+
