@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1219>
+;; Version: <20250227.1224>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1219>"
+(defconst lvn--emacs-version "<20250227.1224>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -7385,19 +7385,22 @@ NOTIFICATION-STRING: Message(s) to display."
 
   ;; Use Emacs as a server (with the `emacsclient' program).
   (unless noninteractive
-    (idle-require 'server))             ; After init.
+    (with-eval-after-load 'idle-require
+      (idle-require 'server)))          ; After init.
 
   (with-eval-after-load 'server
-
     ;; Start the server if it's not already (definitely) running.
     (unless (equal (server-running-p) t)
       (server-start))
 
     ;; Save file without confirmation before returning to the client.
-    (defadvice server-edit (before save-buffer-if-needed activate)
+    (defun lvn--server-edit-advice (orig-fun &rest args)
       "Save current buffer before marking it as done."
       (when server-buffer-clients
-        (save-buffer))))
+        (save-buffer))
+      (apply orig-fun args))
+
+    (advice-add 'server-edit :before #'lvn--server-edit-advice))
 
 )                                       ; Chapter 39 ends here.
 

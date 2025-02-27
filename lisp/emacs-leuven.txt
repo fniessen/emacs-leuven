@@ -14250,19 +14250,22 @@ creates an X Window and doesn't wait for ~(server-edit)~.
 
   ;; Use Emacs as a server (with the `emacsclient' program).
   (unless noninteractive
-    (idle-require 'server))             ; After init.
+    (with-eval-after-load 'idle-require
+      (idle-require 'server)))          ; After init.
 
   (with-eval-after-load 'server
-
     ;; Start the server if it's not already (definitely) running.
     (unless (equal (server-running-p) t)
       (server-start))
 
     ;; Save file without confirmation before returning to the client.
-    (defadvice server-edit (before save-buffer-if-needed activate)
+    (defun lvn--server-edit-advice (orig-fun &rest args)
       "Save current buffer before marking it as done."
       (when server-buffer-clients
-        (save-buffer))))
+        (save-buffer))
+      (apply orig-fun args))
+
+    (advice-add 'server-edit :before #'lvn--server-edit-advice))
 
 )                                       ; Chapter 39 ends here.
 #+end_src
