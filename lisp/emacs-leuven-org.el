@@ -689,13 +689,11 @@ a parent headline."
 
 ;; ;; Advise `org-read-date' to bury the calendar buffer after selecting a date,
 ;; ;; so it is out of the way.
-;; (defadvice org-read-date
-;;   (after leuven-bury-calendar-after-org-read-date
-;;          (&optional with-time to-time from-string prompt
-;;          default-time default-input) protect)
+;; (defun lvn--bury-calendar-after-org-read-date (&rest _)
 ;;   "Bury the *Calendar* buffer after reading a date."
 ;;   (bury-buffer "*Calendar*"))
-;; (ad-activate 'org-read-date)
+;;
+;; (advice-add 'org-read-date :after #'lvn--bury-calendar-after-org-read-date)
 
 ;;** 8.3 (info "(org)Deadlines and scheduling")
 
@@ -1562,10 +1560,11 @@ Examples:
 
 (with-eval-after-load 'org-agenda
 
-  (defadvice org-agenda-switch-to
-      (after leuven-org-agenda-switch-to activate)
+  (defun lvn--org-agenda-switch-to-advice (&rest _)
     "Recenter after jumping to the file which contains the item at point."
     (recenter))
+
+  (advice-add 'org-agenda-switch-to :after #'lvn--org-agenda-switch-to-advice)
 
   (add-hook 'org-agenda-finalize-hook
             (lambda ()
@@ -2423,16 +2422,12 @@ This function is intended for use within Org mode buffers."
 (message "14.11 (org)Key bindings and useful functions")
 
 (with-eval-after-load 'ob-core
-
-  (defadvice org-babel-next-src-block
-      (after leuven-org-babel-next-src-block activate)
-    "Recenter after jumping to the next source block."
+  (defun lvn--org-babel-recenter-advice (&rest _args)
+    "Recenter after jumping to a source block."
     (recenter))
 
-  (defadvice org-babel-previous-src-block
-      (after leuven-org-babel-previous-src-block activate)
-    "Recenter after jumping to the previous source block."
-    (recenter)))
+  (advice-add 'org-babel-next-src-block :after #'lvn--org-babel-recenter-advice)
+  (advice-add 'org-babel-previous-src-block :after #'lvn--org-babel-recenter-advice))
 
 ;;* 15 (info "(org)Miscellaneous")
 

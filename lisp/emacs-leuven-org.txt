@@ -1190,13 +1190,11 @@ special meaning are written with all capitals.
 
 ;; ;; Advise `org-read-date' to bury the calendar buffer after selecting a date,
 ;; ;; so it is out of the way.
-;; (defadvice org-read-date
-;;   (after leuven-bury-calendar-after-org-read-date
-;;          (&optional with-time to-time from-string prompt
-;;          default-time default-input) protect)
+;; (defun lvn--bury-calendar-after-org-read-date (&rest _)
 ;;   "Bury the *Calendar* buffer after reading a date."
 ;;   (bury-buffer "*Calendar*"))
-;; (ad-activate 'org-read-date)
+;;
+;; (advice-add 'org-read-date :after #'lvn--bury-calendar-after-org-read-date)
 #+end_src
 
 ** Deadlines and scheduling
@@ -2523,10 +2521,11 @@ root directory (including from local files =TODO.org= and =BUGS.org=, for exampl
 #+end_src
 
 #+begin_src emacs-lisp
-  (defadvice org-agenda-switch-to
-      (after leuven-org-agenda-switch-to activate)
+  (defun lvn--org-agenda-switch-to-advice (&rest _)
     "Recenter after jumping to the file which contains the item at point."
     (recenter))
+
+  (advice-add 'org-agenda-switch-to :after #'lvn--org-agenda-switch-to-advice)
 #+end_src
 
 *** Mouse cursor doesn't highlight agenda lines
@@ -3647,14 +3646,15 @@ Write error messages to the Messages buffer for invalid ~org-sbe~ calls.
 
 #+begin_src emacs-lisp :tangle no
 ;; Debugging org-sbe calls.
-(defadvice org-sbe (around get-err-msg activate)
-  "Issue messages at errors."
+(defun lvn--org-sbe-get-err-msg-advice (orig-fun &rest args)
+  "Issue messages at errors for org-sbe calls."
   (condition-case err
-      (progn
-    ad-do-it)
+      (apply orig-fun args)
     (error
      (message "[Error in org-sbe: %S]" err)
      (signal (car err) (cdr err)))))
+
+(advice-add 'org-sbe :around #'lvn--org-sbe-get-err-msg-advice)
 #+end_src
 
 *** Languages
@@ -3811,16 +3811,12 @@ where we *load languages* such as R, etc.
 (message "14.11 (org)Key bindings and useful functions")
 
 (with-eval-after-load 'ob-core
-
-  (defadvice org-babel-next-src-block
-      (after leuven-org-babel-next-src-block activate)
-    "Recenter after jumping to the next source block."
+  (defun lvn--org-babel-recenter-advice (&rest _args)
+    "Recenter after jumping to a source block."
     (recenter))
 
-  (defadvice org-babel-previous-src-block
-      (after leuven-org-babel-previous-src-block activate)
-    "Recenter after jumping to the previous source block."
-    (recenter)))
+  (advice-add 'org-babel-next-src-block :after #'lvn--org-babel-recenter-advice)
+  (advice-add 'org-babel-previous-src-block :after #'lvn--org-babel-recenter-advice))
 #+end_src
 
 ** Miscellaneous
@@ -4057,20 +4053,22 @@ For security resons, evaluation is not turned on by default.
 
 #+begin_src emacs-lisp :tangle no
 (with-eval-after-load 'ob-core
-
   (defface org-block-executing
     '((t :background "#FFE0FF"))
     "Face used for the source block background when executed.")
 
   ;; Change the color of code blocks while they are being executed.
-  (defadvice org-babel-execute-src-block (around progress nil activate)
-    "Create an overlay indicating when code block is running."
+  (defun leuven-org-babel-execute-src-block-advice (fn &rest args)
+    "Temporarily highlight the source block during execution and measure time."
     (let ((o (make-overlay (org-element-property :begin (org-element-at-point))
                            (1- (org-element-property :end (org-element-at-point))))))
       (recenter)
       (overlay-put o 'face 'org-block-executing)
-      (measure-time "Executed code block" ad-do-it)
-      (delete-overlay o))))
+      (unwind-protect
+          (measure-time "Executed code block" (apply fn args))
+        (delete-overlay o))))
+
+  (advice-add 'org-babel-execute-src-block :around #'leuven-org-babel-execute-src-block-advice))
 #+end_src
 
 #+begin_note
