@@ -164,7 +164,7 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 
 ** GNU Emacs Internals: Garbage Collection
 
-*** Optimizing garbage collection for faster startup
+*** Optimize garbage collection for faster Emacs startup
 
 By default, Emacs triggers garbage collection (GC) every 0.76 MB allocated
 (~gc-cons-threshold~ == 800,000 bytes). While this keeps memory usage low, it can
@@ -182,27 +182,23 @@ post-startup. Using ~emacs-startup-hook~ ensures these adjustments occur only
 after the *UI* and all *initialization processes* have completed.
 
 #+begin_src emacs-lisp
-;; Set a high garbage collection threshold during initialization to speed it up.
+;; Disable GC messages to keep the messages clean.
+(setq garbage-collection-messages nil)
+
+;; Temporarily disable garbage collection during startup for speed.
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defun lvn--restore-default-gc-settings ()
-  "Restore garbage collection settings to their default values after initialization."
-  (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))
-        gc-cons-percentage 0.1)
-  (message "[GC settings restored to default.]"))
-
-(defun lvn--trigger-garbage-collection ()
-  "Trigger garbage collection and log the completion."
+(defun lvn--restore-gc-settings-and-collect ()
+  "Restore default garbage collection settings and perform collection."
+  (setq gc-cons-threshold 800000)       ; Default value (0.76 MB).
+  (setq gc-cons-percentage 0.1)         ; Default percentage.
+  ;; Trigger garbage collection.
   (garbage-collect)
-  (message "[Garbage collection completed.]"))
+  ;; Log the completion.
+  (message "[Startup optimization: GC settings restored, GC performed.]"))
 
-;; Reset GC settings and trigger garbage collection after full startup.
-(add-hook 'emacs-startup-hook #'lvn--restore-default-gc-settings)
-(add-hook 'emacs-startup-hook #'lvn--trigger-garbage-collection)
-
-;; Disable garbage collection messages during startup to keep the messages
-;; clean.
-(setq garbage-collection-messages nil)
+;; Reset GC settings and trigger GC after full startup.
+(add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 #+end_src
 
 * Init

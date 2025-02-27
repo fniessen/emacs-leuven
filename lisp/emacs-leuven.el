@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.0852>
+;; Version: <20250227.1031>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -70,29 +70,25 @@
 (defconst emacs-leuven--load-start-time (current-time)
   "Value of `current-time' before loading the Emacs-Leuven library.")
 
-;; Set a high garbage collection threshold during initialization to speed it up.
-(setq gc-cons-threshold most-positive-fixnum)
-
-(defun lvn--restore-default-gc-settings ()
-  "Restore garbage collection settings to their default values after initialization."
-  (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))
-        gc-cons-percentage 0.1)
-  (message "[GC settings restored to default.]"))
-
-(defun lvn--trigger-garbage-collection ()
-  "Trigger garbage collection and log the completion."
-  (garbage-collect)
-  (message "[Garbage collection completed.]"))
-
-;; Reset GC settings and trigger garbage collection after full startup.
-(add-hook 'emacs-startup-hook #'lvn--restore-default-gc-settings)
-(add-hook 'emacs-startup-hook #'lvn--trigger-garbage-collection)
-
-;; Disable garbage collection messages during startup to keep the messages
-;; clean.
+;; Disable GC messages to keep the messages clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250227.0852>"
+;; Temporarily disable garbage collection during startup for speed.
+(setq gc-cons-threshold most-positive-fixnum)
+
+(defun lvn--restore-gc-settings-and-collect ()
+  "Restore default garbage collection settings and perform collection."
+  (setq gc-cons-threshold 800000)       ; Default value (0.76 MB).
+  (setq gc-cons-percentage 0.1)         ; Default percentage.
+  ;; Trigger garbage collection.
+  (garbage-collect)
+  ;; Log the completion.
+  (message "[Startup optimization: GC settings restored, GC performed.]"))
+
+;; Reset GC settings and trigger GC after full startup.
+(add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
+
+(defconst lvn--emacs-version "<20250227.1031>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
