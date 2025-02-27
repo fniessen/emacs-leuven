@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.0813>
+;; Version: <20250227.0829>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -92,7 +92,7 @@
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250227.0813>"
+(defconst lvn--emacs-version "<20250227.0829>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1306,30 +1306,35 @@ original state of line numbers after navigation."
   (global-hl-todo-mode 1)
 
   ;; Customize the keywords to highlight.
+  ;; Customize the keywords to highlight.
   (setq hl-todo-keyword-faces
         '(;; Priority and issues first.
-          ("URGENT"     . "#FF3B30")  ; Vivid red - high priority, urgent tasks.
-          ("BUG"        . "#D50000")  ; Strong red - Known bugs.
-          ("FIXME"      . "#FF4500")  ; Orange red - Issues to fix.
-          ("XXX"        . "#8B0000")  ; Dark red - Critical issues.
+          ("URGENT"     . "#FF3B30")    ; Vivid red - High priority, urgent tasks.
+          ("BUG"        . "#D50000")    ; Strong red - Known bugs.
+          ("FIXME"      . "#FF4500")    ; Orange red - Issues to fix.
+          ("XXX"        . "#8B0000")    ; Dark red - Critical issues.
 
           ;; Active development.
-          ("TODO"       . "#FF8C00")  ; Dark orange - Tasks to do (high
-                                      ; priority).
-          ("WIP"        . "#FFA500")  ; Orange - Work in progress.
-          ("HACK"       . "#FFD700")  ; Gold - Temporary solutions.
-          ("REFACTOR"   . "#1E90FF")  ; Dodger blue - Code cleanup, improvement
-                                      ; tasks.
+          ("TODO"       . (:weight bold :box (:line-width 1 :color "#D8ABA7") :foreground "#D8ABA7" :background "#FFE6E4"))
+                                        ; Light red with a box - Tasks to do (matches org-todo).
+          ("WIP"        . "#FFA500")    ; Orange - Work in progress.
+          ("HACK"       . "#FFD700")    ; Gold - Temporary solutions.
+          ("REFACTOR"   . "#1E90FF")    ; Dodger blue - Code cleanup,
+                                        ; improvement tasks.
 
           ;; Verification and collaboration.
-          ("TEST"       . "#0066CC")  ; Medium blue - For test cases.
-          ("REVIEW"     . "#1E90FF")  ; Dodger blue - For review.
-          ("QUESTION"   . "#008B8B")  ; Dark cyan - Clarifications needed.
+          ("TEST"       . "#0066CC")    ; Medium blue - For test cases.
+          ("REVIEW"     . "#1E90FF")    ; Dodger blue - For review.
+          ("QUESTION"   . "#008B8B")    ; Dark cyan - Clarifications needed.
 
           ;; Documentation and closure.
-          ("NOTE"       . "#1E90FF")  ; Dodger blue - Informational notes.
-          ("DEPRECATED" . "#B22222")  ; Fire brick - Deprecated code.
-          ("DONE"       . "#32CD32"))) ; Lime green - Completed tasks.
+          ("NOTE"       . "#1E90FF")    ; Dodger blue - Informational notes.
+          ("DEPRECATED" . "#B22222")    ; Fire brick - Deprecated code.
+
+          ;; Completion status.
+          ("DONE"       . (:weight bold :box "#89C58F" :foreground "#89C58F" :background "#E2FEDE"))
+                                        ; Soft green with a box - Completed tasks (matches org-done).
+  ))
 
   ;; Highlight TODOs followed by colon.
   (setq hl-todo-highlight-punctuation ":")
