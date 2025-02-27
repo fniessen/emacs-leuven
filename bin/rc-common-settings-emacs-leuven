@@ -1,13 +1,20 @@
 # Hey Emacs, this is a -*- sh -*- file ...
+#
+# This script enhances shell integration with Emacs, leveraging emacsclient
+# for fast access to an Emacs server. It provides aliases and functions for
+# opening files, comparing them, and working with shell output. Designed for
+# Bash; assumes an Emacs daemon is running (start with `emacs --daemon`).
 
+# Check if running locally or over SSH.
 if [[ -z "$SSH_CONNECTION" ]]; then
-    # Set up Emacs-related functions and aliases.
+    # Local environment setup.
 
     export EDITOR="emacsclient"
 
     # Set an alternate editor to an empty string.
     export ALTERNATE_EDITOR=""
 
+    # Basic emacsclient wrapper with timeout.
     ec() {
         emacsclient -t -a '' "$@"
     }
@@ -30,11 +37,19 @@ if [[ -z "$SSH_CONNECTION" ]]; then
 
     # Open a file in an Emacs terminal frame.
     efindnw() {
+        if [[ -z "$1" ]]; then
+            printf >&2 "Error: No file specified.\n"
+            return 1
+        fi
         emacsclient -t -a '' --eval "(find-file \"$1\")"
     }
 
     # Emacsclient with frame focus and file opening.
     efind() {
+        if [[ -z "$1" ]]; then
+            printf >&2 "Error: No file specified.\n"
+            return 1
+        fi
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (find-file \"$1\")
@@ -43,6 +58,10 @@ if [[ -z "$SSH_CONNECTION" ]]; then
 
     # Open Ediff for two files.
     eediff() {
+        if [[ -z "$1" || -z "$2" ]]; then
+            printf >&2 "Error: Two files must be specified.\n"
+            return 1
+        fi
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (ediff-files \"$1\" \"$2\")
@@ -51,15 +70,21 @@ if [[ -z "$SSH_CONNECTION" ]]; then
 
     # Open VC Dir for a version-controlled directory.
     evcdir() {
+        if [[ -z "$1" ]]; then
+            printf >&2 "Error: Directory must be specified.\n"
+            return 1
+        fi
         emacsclient -n -r -a '' --eval "(progn
             (select-frame-set-input-focus (selected-frame))
             (vc-dir \"$1\")
         )"
     }
 else
-    # Set up remote environment.
-    local editors=("emacs -nw" "emacs" "nano" "code -w" "subl")
-    for candidate_editor in "${editors[@]}"; do
+    # Remote environment setup.
+
+    # Fallback editors for SSH.
+    local remote_editors=("emacs -nw" "emacs" "nano" "code -w" "subl")
+    for candidate_editor in "${remote_editors[@]}"; do
         if command -v "${candidate_editor%% *}" > /dev/null 2>&1; then
             export EDITOR="$candidate_editor"
             alias e="$candidate_editor"
@@ -69,20 +94,18 @@ else
     done
 fi
 
-# Set VISUAL to the same value as EDITOR.
+# Set VISUAL to match EDITOR.
 export VISUAL="$EDITOR"
 
 # Cd to the directory of the current buffer in Emacs.
 cde() {
     if ! command -v emacsclient > /dev/null 2>&1; then
-        printf >&2 "Error: 'emacsclient' command not found.\n"
-        printf >&2 "Please install Emacsclient and ensure the binary is in your PATH.\n"
+        printf >&2 "Error: 'emacsclient' not found. Please install it.\n"
         return 2
     fi
 
     if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
-        printf >&2 "Error: Emacs server is not running.\n"
-        printf >&2 "Please start the Emacs server first.\n"
+        printf >&2 "Error: Emacs server not running. Start it with 'emacs --daemon'.\n"
         return 2
     fi
 
