@@ -5099,10 +5099,10 @@ See helm-flycheck!
 #+begin_src emacs-lisp :tangle no
 (use-package helm-flycheck
   :ensure t
-  :bind (("M-g f"   . my-helm-flycheck)
-         ("C-c ! l" . my-helm-flycheck))
+  :bind (("M-g f"   . lvn-helm-flycheck)
+         ("C-c ! l" . lvn-helm-flycheck))
   :config
-  (defun my-helm-flycheck ()
+  (defun lvn-helm-flycheck ()
     "This function makes sure that flycheck has been finished
 before running helm-flycheck"
     (interactive)
@@ -10301,19 +10301,22 @@ quickly execute the rest of your code, printing out the arguments and return
 values for each expression it evaluates.
 
 #+begin_src emacs-lisp
-    (defadvice edebug-overlay-arrow (around leuven-highlight-line activate)
+    (defun lvn--highlight-line-advice (orig-fun &rest args)
       "Highlight line currently being Edebug'ged."
       (require 'hl-line)
-      (hl-line-mode)
-      ad-do-it)
+      (hl-line-mode 1)
+      (apply orig-fun args))
 
-    (defun leuven-edebug-quit ()
+    (advice-add 'edebug-overlay-arrow :around #'lvn--highlight-line-advice)
+
+    (defun lvn-edebug-quit ()
       "Stop Edebug'ging and remove highlighting."
       (interactive)
       (hl-line-mode -1)
       (top-level))
 
-    (define-key edebug-mode-map [remap top-level] #'leuven-edebug-quit))
+    (with-eval-after-load 'edebug
+      (define-key edebug-mode-map [remap top-level] #'lvn-edebug-quit))
 #+end_src
 
 ** Executing Lisp Expressions
@@ -10825,7 +10828,7 @@ We should use:
 | Older than One Year (1+ years)       | Gray             |
 
 #+begin_src emacs-lisp :tangle no
-(defun my-vc-annotate-apply-faces ()
+(defun lvn--vc-annotate-apply-faces ()
   "Apply custom faces based on commit date in vc-annotate."
   (let ((age (time-to-number-of-days (time-since (vc-annotate-extract-revision)))))
     (cond
@@ -10836,18 +10839,18 @@ We should use:
      ((<= 31 age 90) (set-face-attribute 'vc-annotate-4-face nil :foreground "white" :background "blue"))
      (t (set-face-attribute 'vc-annotate-5-face nil :foreground "white" :background "gray")))))
 
-(add-hook 'vc-annotate-mode-hook 'my-vc-annotate-apply-faces)
+(add-hook 'vc-annotate-mode-hook 'lvn--vc-annotate-apply-faces)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(defun my-vc-annotate-apply-faces ()
+(defun lvn--vc-annotate-apply-faces ()
   "Apply custom faces based on commit date in vc-annotate."
   (save-excursion
     (goto-char (point-min))
     (while (not (eobp))
       (let* ((line (thing-at-point 'line t))
              (revision (vc-annotate-extract-revision-at-line line))
-             (age (my-vc-annotate-get-commit-age revision)))
+             (age (lvn--vc-annotate-get-commit-age revision)))
         (cond
          ((= age 0) (vc-annotate-apply-face-at-line 'vc-annotate-0-face))
          ((= age 1) (vc-annotate-apply-face-at-line 'vc-annotate-1-face))
@@ -10857,7 +10860,7 @@ We should use:
          (t (vc-annotate-apply-face-at-line 'vc-annotate-5-face)))))
     (goto-char (point-min))))
 
-(defun my-vc-annotate-get-commit-age (revision)
+(defun lvn--vc-annotate-get-commit-age (revision)
   "Get the age of a commit in days."
   (string-to-number
    (shell-command-to-string
@@ -10870,7 +10873,7 @@ We should use:
         (end (line-end-position)))
     (put-text-property start end 'face face)))
 
-(add-hook 'vc-annotate-mode-hook 'my-vc-annotate-apply-faces)
+(add-hook 'vc-annotate-mode-hook 'lvn--vc-annotate-apply-faces)
 #+end_src
 
 *************** TODO Customize `vc-annotate-background' (and future `vc-annotate-foreground')

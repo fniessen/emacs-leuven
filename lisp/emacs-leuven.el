@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1201>
+;; Version: <20250227.1205>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1201>"
+(defconst lvn--emacs-version "<20250227.1205>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5660,19 +5660,22 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; ;; Display a trace of function entry and exit.
     ;; (setq edebug-trace t)
 
-    (defadvice edebug-overlay-arrow (around leuven-highlight-line activate)
+    (defun lvn--highlight-line-advice (orig-fun &rest args)
       "Highlight line currently being Edebug'ged."
       (require 'hl-line)
-      (hl-line-mode)
-      ad-do-it)
+      (hl-line-mode 1)
+      (apply orig-fun args))
 
-    (defun leuven-edebug-quit ()
+    (advice-add 'edebug-overlay-arrow :around #'lvn--highlight-line-advice)
+
+    (defun lvn-edebug-quit ()
       "Stop Edebug'ging and remove highlighting."
       (interactive)
       (hl-line-mode -1)
       (top-level))
 
-    (define-key edebug-mode-map [remap top-level] #'leuven-edebug-quit))
+    (with-eval-after-load 'edebug
+      (define-key edebug-mode-map [remap top-level] #'lvn-edebug-quit))
 
 ;;** 27.8 (info "(emacs)Lisp Libraries") for Emacs
 
