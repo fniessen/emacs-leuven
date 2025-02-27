@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250226.2217>
+;; Version: <20250227.0813>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -73,26 +73,26 @@
 ;; Set a high garbage collection threshold during initialization to speed it up.
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defun lvn--restore-default-gc-threshold ()
-  "Restore the garbage collection threshold to its default value after initialization."
-  (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value)))
-  (message "[GC threshold restored to default.]"))
+(defun lvn--restore-default-gc-settings ()
+  "Restore garbage collection settings to their default values after initialization."
+  (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))
+        gc-cons-percentage 0.1)
+  (message "[GC settings restored to default.]"))
 
 (defun lvn--trigger-garbage-collection ()
   "Trigger garbage collection and log the completion."
   (garbage-collect)
   (message "[Garbage collection completed.]"))
 
-;; Reset the garbage collection threshold and trigger garbage collection after
-;; initialization.
-(add-hook 'after-init-hook #'lvn--restore-default-gc-threshold)
-(add-hook 'after-init-hook #'lvn--trigger-garbage-collection)
+;; Reset GC settings and trigger garbage collection after full startup.
+(add-hook 'emacs-startup-hook #'lvn--restore-default-gc-settings)
+(add-hook 'emacs-startup-hook #'lvn--trigger-garbage-collection)
 
 ;; Disable garbage collection messages during startup to keep the messages
 ;; clean.
 (setq garbage-collection-messages nil)
 
-(defconst lvn--emacs-version "<20250226.2217>"
+(defconst lvn--emacs-version "<20250227.0813>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
