@@ -8606,11 +8606,14 @@ Keyboard shortcuts:
     ;; Unhide both code and comment hidden blocks when doing incremental search.
     (setq hs-isearch-open t)
 
-    (defadvice goto-line (after expand-after-goto-line activate compile)
-      (save-excursion (hs-show-block)))
+    (defun lvn--expand-after-goto (orig-fun &rest args)
+      "Expand the block at point after jumping to a line or definition."
+      (let ((result (apply orig-fun args)))
+        (save-excursion (hs-show-block))
+        result))
 
-    (defadvice xref-find-definitions (after expand-after-xref-find-definitions activate compile)
-      (save-excursion (hs-show-block)))
+    (advice-add 'goto-line :after #'lvn--expand-after-goto)
+    (advice-add 'xref-find-definitions :after #'lvn--expand-after-goto)
 
     ;; Change those really awkward key bindings with `@' in the middle.
 

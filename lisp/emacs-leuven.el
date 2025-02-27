@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1156>
+;; Version: <20250227.1158>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1156>"
+(defconst lvn--emacs-version "<20250227.1158>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -4942,11 +4942,14 @@ mouse-3: go to end") "]")))
     ;; Unhide both code and comment hidden blocks when doing incremental search.
     (setq hs-isearch-open t)
 
-    (defadvice goto-line (after expand-after-goto-line activate compile)
-      (save-excursion (hs-show-block)))
+    (defun lvn--expand-after-goto (orig-fun &rest args)
+      "Expand the block at point after jumping to a line or definition."
+      (let ((result (apply orig-fun args)))
+        (save-excursion (hs-show-block))
+        result))
 
-    (defadvice xref-find-definitions (after expand-after-xref-find-definitions activate compile)
-      (save-excursion (hs-show-block)))
+    (advice-add 'goto-line :after #'lvn--expand-after-goto)
+    (advice-add 'xref-find-definitions :after #'lvn--expand-after-goto)
 
     ;; Change those really awkward key bindings with `@' in the middle.
 
