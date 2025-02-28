@@ -13156,9 +13156,9 @@ Extra Dired functionality:
         (if (or (< (buffer-size) 1400000)
                 (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
             (apply orig-fun args)
-          (message "Operation cancelled."))))
+          (message "Operation cancelled.")))
 
-      (advice-add 'dired-jump :around #'lvn--dired-jump-advice))
+      (advice-add 'dired-jump :around #'lvn--dired-jump-advice)))
 #+end_src
 
 ** Dired+

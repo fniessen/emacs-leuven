@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250227.1404>
+;; Version: <20250228.1057>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250227.1404>"
+(defconst lvn--emacs-version "<20250228.1057>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -6835,9 +6835,9 @@ This example lists Azerty layout second row keys."
         (if (or (< (buffer-size) 1400000)
                 (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
             (apply orig-fun args)
-          (message "Operation cancelled."))))
+          (message "Operation cancelled.")))
 
-      (advice-add 'dired-jump :around #'lvn--dired-jump-advice))
+      (advice-add 'dired-jump :around #'lvn--dired-jump-advice)))
 
 ;;** Dired+
 
