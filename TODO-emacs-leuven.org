@@ -3,19 +3,247 @@
 
 * Tasks
 
-- [ ] https://www.jetbrains.com/help/rider/Navigation_and_Search__Navigating_Between_To_do_Items.html
-  (Emacs, Dev, TODO Lists)
-- [ ] http://www.jetbrains.com/idea/webhelp/highlighting-usages.html (Emacs,
-  Dev, Search for usages)
-- [ ] http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
+** Configuration de base et personnalisation
 
-** TODO 005 - Org-html-themes
+*** TODO Optimize Emacs startup time for faster initialization
+:PROPERTIES:
+:header-args: :tangle no
+:END:
 
-(setq  org-html-head-include-scripts t)
+**** Context
 
-See issue #144
+Identify what parts of your =.emacs= take so long.  You can do this e.g. by
+starting Emacs with ~emacs -q~, set up your ~load-path~, and then evaluate
 
-** TODO Open file with default Windows application in Emacs
+#+begin_src emacs-lisp
+(benchmark-run
+  (require 'some-package))
+#+end_src
+
+The first number appearing in the echo area will be the time needed to run that
+command.
+
+Use autoloads, which delay the loading of the complete package until one of the
+interactive functions is used.
+
+If you want to set options which need to be evaluated after a package is loaded,
+you can use ~eval-after-load~.
+
+With ~(eval-after-load "pkg-autoloads" ...)~, you make sure that you only run code
+when the package is installed/available through ~package.el~.
+
+**** Timings from my system
+
+After much optimization...
+
+  $ time emacs -f kill-emacs
+  real    0m0.157s
+  user    0m0.140s
+  sys     0m0.012s
+  $ time emacs -q -f kill-emacs
+  real    0m0.137s
+  user    0m0.116s
+  sys     0m0.016s
+  $ time emacs -Q -f kill-emacs
+  real    0m0.051s
+  user    0m0.028s
+  sys     0m0.020s
+
+#+begin_src shell
+time emacs -f kill-emacs 2>&1
+#+end_src
+
+#+begin_src shell
+time emacs -q -f kill-emacs 2>&1
+#+end_src
+
+#+begin_src shell
+time emacs -Q -f kill-emacs 2>&1
+#+end_src
+
+Note that your first test is going to be dramatically slower than subsequent
+tests.
+
+#+begin_note
+You can use ESUP - Emacs Start Up Profiler
+#+end_note
+
+*** TODO Suivre les tâches discutées avec Denis Bitouzé lors de sa visite à Leuven
+
+- [ ] Renommer ~init.el~ en ~.emacs~
+- [ ] Définir des variables locales
+- [ ] Utiliser ~S~ pour les semi-colonnes (| awk, comme A1, T1, etc.)
+- [ ] Configurer ~e~ pour lancer le serveur Emacs si Emacs n'est pas lancé
+
+*** TODO Fixer M-u, M-SPC et M-^ (pour Marc Boyer) dans Emacs Linux
+
+Problème pour taper ~M-^~ (il faut taper 2 x ~^~)
+
+Tenter de modifier la configuration d'Emacs pour utiliser un autre raccourci
+clavier que ~M-^~, par exemple ~M-6~.
+
+*** TODO Avoir un git-file-history sur C-S-f ?
+
+*** TODO Shell
+
+e=emacsclient -n -a emacs
+
+EDITOR
+
+VISUAL
+
+editor='emacsclient' (sans le -n) dans .gitconfig
+
+** Gestion des packages
+
+*** TODO Rajouter / retirer des packages dans Emacs-Leuven
+
+**** Packages à retirer (plantent de Laurent Pantera)
+
+1. auctex
+
+   auctex n'est pas dans la liste MELPA. D'après Internet, il est dans la liste
+   gnu-ELPA. J'ai donc ajouté comme tu nous as dit le dépôt gnu comme suit :
+
+   #+begin_src emacs-lisp
+   (setq package-archives
+      '(("melpa" . "http://melpa.org/packages/")))
+   (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+   #+end_src
+
+   Mais lorsque je fais M-x package-list-packages il ne peut pas charger le dépôt
+   gnu car il y a un problème de signature (?). J'ai le message suivant :
+   package--check-signature-content: Failed to verify signature:
+   "archive-contents.sig"
+
+   et donc ensuite je n'est toujours que les packages de MELPA dans la liste avec
+   package-list-packages.
+
+2. paradox
+
+   Il est dans la liste MELPA mais il est labellisé statut=incompat et je ne
+   peut pas l'installer.
+
+3. git-commit,
+   git-commit-insert-issue et
+   git-timemachine
+   ne sont pas dans la liste MELPA
+
+**** Packages à rajouter
+
+- [ ] unbound
+- [ ] tidy
+- [ ] info+
+- [ ] hideshowvis
+- [ ] bookmark+
+- [ ] dired+
+- [ ] dired-sort-map
+- [ ] hl-tags-mode
+
+*** TODO Install the 'format-all' package for Emacs to format code automatically
+
+https://github.com/emacsmirror/format-all
+
+*** TODO Understand how 'package-autoremove' determines which packages to remove in Emacs
+
+http://emacs.stackexchange.com/questions/18253/how-does-package-autoremove-decide-which-packages-to-remove
+
+*** MAYB Add YASnippets for snippet expansion in Emacs
+
+- :date :: 19/05/2023
+- tod :: 19/05/2023
+- :now :: It's {{mytime}}
+- email ::  Hey ,\n\n\n\nBest regards,\nFabrice
+- ty :: Thank you for reaching out!
+- tom :: Are you available tomorrow?
+- meet2h :: Are you available at 11:42 PM? (= now + 2h)
+- :sig1 :: All the best, Fabrice
+- :br :: Best Regards,\nFabrice
+- :ch :: Cheers ;)
+- :log :: Could you please print the output of 'espanso log' here?
+- :espanso :: Hi there!
+- :sor :: I'm sorry you experienced this problem
+- :ip :: {{output of curl 'https://api.ipify.org'}}
+- :localip :: {{output of ip a | grep 'inet 192' | awk '{ print $2 }'}}
+- :contact :: Hi,\nThank you for contacting us!\nBest regards,\nThe Support Team
+- :: Thank you for your email and for bringing this to our attention
+- :: I am sorry that you're disappointed with our product
+- :: Could you please let me know what specific issues you've encountered?
+- :: Looking forward to hearing from you
+- :: All the best
+- :: Espanso Support Team
+- ::
+
+See others at https://espanso.org/.
+
+*** TODO Research and install Emacs packages for integrating an online task manager with Org mode files
+
+There are several Emacs packages available that can integrate an online task
+manager with an Org mode file. Here are a few options:
+
+- Org-capture-Web :: This package allows you to capture tasks and notes from
+  your web browser and save them to an Org mode file. It supports popular online
+  task managers like *Trello*, *Asana*, and *JIRA*.
+- Orgzly :: This is an *Android app* that can sync with your Org mode files and
+  online task managers like *Todoist*, *Trello*, and *Google Tasks*. You can use it to
+  manage your tasks on the go and then sync them back to your Emacs setup.
+  - https://elis.nu/blog/2021/08/mobile-org-mode-use-with-orgzly-and-syncthing/
+- Org-sync-trello :: This package lets you synchronize your *Trello* boards with
+  your Org mode files. It supports bidirectional syncing, so changes made in
+  either Trello or Emacs will be reflected in both places.
+- Orgzit :: This is a web-based task manager that integrates with Org mode via
+  a REST API. You can use it to create and manage tasks, and then sync them to
+  your Org mode files using Emacs.
+- org-sync-jira :: This package lets you sync your *JIRA* issues with your Org
+  mode files. You can create, update, and close JIRA issues directly from Emacs,
+  and changes made in either JIRA or Emacs will be synced bidirectionally.
+- org-web-tools :: This package provides a collection of functions for
+  interacting with web-based services, including online task managers. It
+  includes functions for capturing tasks, creating links to tasks, and syncing
+  tasks with Org mode files.
+- org-web-tools-trello :: This package extends org-web-tools to support *Trello*
+  specifically. It provides functions for capturing Trello cards as Org mode
+  tasks, syncing Trello cards with Org mode files, and more.
+- org-roam-server :: This package provides a web interface for browsing and
+  editing your Org mode files, including tasks and notes. You can use it to
+  access your Org mode files from anywhere with an internet connection, making
+  it easy to integrate with online task managers.
+- org-protocol-capture-html :: This package allows you to capture web pages as
+  Org mode tasks, including tasks for online task managers. It works by sending
+  the web page content to Emacs using the org-protocol mechanism.
+- org-todoist :: This package provides an interface to the Todoist API, allowing
+  you to create, update, and delete tasks in your Todoist account directly from
+  Emacs.
+- org-sync-todoist :: This package lets you sync your Todoist tasks with your
+  Org mode files. It supports bidirectional syncing, so changes made in either
+  Todoist or Emacs will be reflected in both places.
+
+These packages offer a range of features and integrations with different online
+task managers, so you may find that one or more of them is a good fit for your
+needs.
+
+** Fonctionnalités spécifiques et personnalisation avancée
+
+*** TODO Écrire une fonction qui ajoute des demi-espaces fines pour Denis
+
+#+begin_src emacs-lisp
+(defun remplace-espace-fine-on-the-fly ()
+  "Remplace les espaces avant la ponctuation par un espace fine non breaking lors de la frappe."
+  (interactive)
+  (when (and (boundp 'ispell-minor-mode) ispell-minor-mode
+             (eq ispell-dictionary "francais")
+             (not (or (eq major-mode 'latex-mode)
+                      (eq major-mode 'markdown-mode)))
+             (not (org-in-src-block-p)))
+    (save-excursion
+      (while (looking-back "\\(\\s-\\)\\([;:?!]\\)" (point-at-bol))
+        (backward-delete-char 1)
+        (insert (concat (match-string 1) "\u202F" (match-string 2)))))))
+
+(add-hook 'post-self-insert-hook 'remplace-espace-fine-on-the-fly)
+#+end_src
+
+*** TODO Open file with default Windows application in Emacs
 
 #+begin_src emacs-lisp
 (defun open-file-with-default-windows-application ()
@@ -54,113 +282,36 @@ Also:
   (define-key dired-mode-map "o" 'dired-open-marked-files-with-explorer))
 #+end_src
 
-** TODO Shell
+*** TODO Utiliser Orgstruct++
 
-e=emacsclient -n -a emacs
+*** TODO Highlight source line avec C-c 3
 
-EDITOR
+*** TODO Add Imenu regexp support for AXVW files in Emacs
 
-VISUAL
-
-editor='emacsclient' (sans le -n) dans .gitconfig
-
-** TODO Voir infos sur Emacs
-
-- https://emacsconf.org/2021/talks/forever/
-- https://www.win.tue.nl/~aeb/linux/misc/emacs.html
-
-** TODO WSL Emacs
-
-- [ ] https://emacsredux.com/blog/2021/12/19/using-emacs-on-windows-11-with-wsl2/
-- [ ] https://shelper.github.io/posts/setup-emacs-in-wsl2/#copy-paste-sharing-between-wsl2-and-windows-host
-- [ ] https://doc.ubuntu-fr.org/emacs
-- [ ] https://emacs.stackexchange.com/questions/59226/emacs-as-editor-under-win10-wsl-2
-- [ ] https://github.com/microsoft/wslg/issues/1068
-- [ ] https://hkvim.com/post/windows-setup/
-
-** TODO Suivre les tâches discutées avec Denis Bitouzé lors de sa visite à Leuven
-
-- [ ] Renommer ~init.el~ en ~.emacs~
-- [ ] Définir des variables locales
-- [ ] Utiliser ~S~ pour les semi-colonnes (| awk, comme A1, T1, etc.)
-- [ ] Configurer ~e~ pour lancer le serveur Emacs si Emacs n'est pas lancé
-
-** TODO ripgrep
-
-** TODO Utiliser Orgstruct++
-
-** TODO Highlight source line avec C-c 3
-
-** TODO Refresh list of recent files (remove files which don't exist anymore)
-
-** TODO Écrire une fonction qui ajoute des demi-espaces fines pour Denis
-
-#+begin_src emacs-lisp
-(defun remplace-espace-fine-on-the-fly ()
-  "Remplace les espaces avant la ponctuation par un espace fine non breaking lors de la frappe."
-  (interactive)
-  (when (and (boundp 'ispell-minor-mode) ispell-minor-mode
-             (eq ispell-dictionary "francais")
-             (not (or (eq major-mode 'latex-mode)
-                      (eq major-mode 'markdown-mode)))
-             (not (org-in-src-block-p)))
-    (save-excursion
-      (while (looking-back "\\(\\s-\\)\\([;:?!]\\)" (point-at-bol))
-        (backward-delete-char 1)
-        (insert (concat (match-string 1) "\u202F" (match-string 2)))))))
-
-(add-hook 'post-self-insert-hook 'remplace-espace-fine-on-the-fly)
-#+end_src
-
-** TODO Rajouter / retirer des packages dans Emacs-Leuven
-
-*** Packages à retirer (plantent de Laurent Pantera)
-
-1. auctex
-
-   auctex n'est pas dans la liste MELPA. D'après Internet, il est dans la liste
-   gnu-ELPA. J'ai donc ajouté comme tu nous as dit le dépôt gnu comme suit :
-
-   #+begin_src emacs-lisp
-   (setq package-archives
-      '(("melpa" . "http://melpa.org/packages/")))
-   (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
-   #+end_src
-
-   Mais lorsque je fais M-x package-list-packages il ne peut pas charger le dépôt
-   gnu car il y a un problème de signature (?). J'ai le message suivant :
-   package--check-signature-content: Failed to verify signature:
-   "archive-contents.sig"
-
-   et donc ensuite je n'est toujours que les packages de MELPA dans la liste avec
-   package-list-packages.
-
-2. paradox
-
-   Il est dans la liste MELPA mais il est labellisé statut=incompat et je ne
-   peut pas l'installer.
-
-3. git-commit,
-   git-commit-insert-issue et
-   git-timemachine
-   ne sont pas dans la liste MELPA
-
-*** Packages à rajouter
-
-- [ ] unbound
-- [ ] tidy
-- [ ] info+
-- [ ] hideshowvis
-- [ ] bookmark+
-- [ ] dired+
-- [ ] dired-sort-map
-- [ ] hl-tags-mode
-
-** TODO Retirer text-only output from Gnus e-mails
+*** TODO Retirer text-only output from Gnus e-mails
 
 pour output correct sur téléphone
 
-** TODO [#A] Fixer les warnings (cl is deprecated)
+*** TODO 005 - Org-html-themes
+
+(setq  org-html-head-include-scripts t)
+
+See issue #144
+
+*** TODO Add 'alert' emphasis and font-lock support
+
+#+begin_src emacs-lisp
+  ;; Add 'alert' emphasis. The text enclosed by '!' will be displayed in bold
+  ;; and red to indicate emphasis.
+  (add-to-list 'org-emphasis-alist
+               '("!" (bold :foreground "red")))
+#+end_src
+
+See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis in org-emphasis-alist]]
+
+** Optimisation et débogage
+
+*** TODO [#A] Fixer les warnings (cl is deprecated)
 
  ■  Emergency (emacsql): Uninstall the `git-commit' package.
 
@@ -392,16 +543,7 @@ Please uninstalling `git-commit' and then restart Emacs.
  ■  Warning (comp): yasnippet.el:475:2: Warning: defvar `yas-after-exit-snippet-hook' docstring wider than 80 characters
  ■  Warning (comp): yasnippet.el:557:2: Warning: custom-declare-variable `yas-keymap-disable-hook' docstring wider than 80 characters
 
-** TODO Avoir un git-file-history sur C-S-f ?
-
-** TODO Fixer M-u, M-SPC et M-^ (pour Marc Boyer) dans Emacs Linux
-
-Problème pour taper ~M-^~ (il faut taper 2 x ~^~)
-
-Tenter de modifier la configuration d'Emacs pour utiliser un autre raccourci
-clavier que ~M-^~, par exemple ~M-6~.
-
-** TODO Investigate intermittent error when using M-w on a single line
+*** TODO Investigate intermittent error when using M-w on a single line
 
 #+begin_src emacs-lisp
 Debugger entered--Lisp error: (wrong-type-argument integer-or-marker-p nil)
@@ -415,7 +557,7 @@ Debugger entered--Lisp error: (wrong-type-argument integer-or-marker-p nil)
 
 Les chiffres sont des positions dans mon buffer...
 
-** TODO Test and integrate 'leuven-remove-matching-lines-between-buffers'
+*** TODO Test and integrate 'leuven-remove-matching-lines-between-buffers'
 
 #+begin_src emacs-lisp
 (defun leuven-remove-matching-lines-between-buffers (buffer-a buffer-b)
@@ -435,119 +577,11 @@ Les chiffres sont des positions dans mon buffer...
 
 See delete-matching-lines...
 
-** TODO Research and install Emacs packages for integrating an online task manager with Org mode files
+*** TODO Fix error in post-command-hook ('hl-tags-update'): '(void-function sgml-get-context)'
 
-There are several Emacs packages available that can integrate an online task
-manager with an Org mode file. Here are a few options:
+Ouvrir =client-bldgops-cost-report.axvw= au démarrage d'Emacs...
 
-- Org-capture-Web :: This package allows you to capture tasks and notes from
-  your web browser and save them to an Org mode file. It supports popular online
-  task managers like *Trello*, *Asana*, and *JIRA*.
-- Orgzly :: This is an *Android app* that can sync with your Org mode files and
-  online task managers like *Todoist*, *Trello*, and *Google Tasks*. You can use it to
-  manage your tasks on the go and then sync them back to your Emacs setup.
-  - https://elis.nu/blog/2021/08/mobile-org-mode-use-with-orgzly-and-syncthing/
-- Org-sync-trello :: This package lets you synchronize your *Trello* boards with
-  your Org mode files. It supports bidirectional syncing, so changes made in
-  either Trello or Emacs will be reflected in both places.
-- Orgzit :: This is a web-based task manager that integrates with Org mode via
-  a REST API. You can use it to create and manage tasks, and then sync them to
-  your Org mode files using Emacs.
-- org-sync-jira :: This package lets you sync your *JIRA* issues with your Org
-  mode files. You can create, update, and close JIRA issues directly from Emacs,
-  and changes made in either JIRA or Emacs will be synced bidirectionally.
-- org-web-tools :: This package provides a collection of functions for
-  interacting with web-based services, including online task managers. It
-  includes functions for capturing tasks, creating links to tasks, and syncing
-  tasks with Org mode files.
-- org-web-tools-trello :: This package extends org-web-tools to support *Trello*
-  specifically. It provides functions for capturing Trello cards as Org mode
-  tasks, syncing Trello cards with Org mode files, and more.
-- org-roam-server :: This package provides a web interface for browsing and
-  editing your Org mode files, including tasks and notes. You can use it to
-  access your Org mode files from anywhere with an internet connection, making
-  it easy to integrate with online task managers.
-- org-protocol-capture-html :: This package allows you to capture web pages as
-  Org mode tasks, including tasks for online task managers. It works by sending
-  the web page content to Emacs using the org-protocol mechanism.
-- org-todoist :: This package provides an interface to the Todoist API, allowing
-  you to create, update, and delete tasks in your Todoist account directly from
-  Emacs.
-- org-sync-todoist :: This package lets you sync your Todoist tasks with your
-  Org mode files. It supports bidirectional syncing, so changes made in either
-  Todoist or Emacs will be reflected in both places.
-
-These packages offer a range of features and integrations with different online
-task managers, so you may find that one or more of them is a good fit for your
-needs.
-
-** MAYB Add YASnippets for snippet expansion in Emacs
-
-- :date :: 19/05/2023
-- tod :: 19/05/2023
-- :now :: It's {{mytime}}
-- email ::  Hey ,\n\n\n\nBest regards,\nFabrice
-- ty :: Thank you for reaching out!
-- tom :: Are you available tomorrow?
-- meet2h :: Are you available at 11:42 PM? (= now + 2h)
-- :sig1 :: All the best, Fabrice
-- :br :: Best Regards,\nFabrice
-- :ch :: Cheers ;)
-- :log :: Could you please print the output of 'espanso log' here?
-- :espanso :: Hi there!
-- :sor :: I'm sorry you experienced this problem
-- :ip :: {{output of curl 'https://api.ipify.org'}}
-- :localip :: {{output of ip a | grep 'inet 192' | awk '{ print $2 }'}}
-- :contact :: Hi,\nThank you for contacting us!\nBest regards,\nThe Support Team
-- :: Thank you for your email and for bringing this to our attention
-- :: I am sorry that you're disappointed with our product
-- :: Could you please let me know what specific issues you've encountered?
-- :: Looking forward to hearing from you
-- :: All the best
-- :: Espanso Support Team
-- ::
-
-See others at https://espanso.org/.
-
-** TODO Install the 'format-all' package for Emacs to format code automatically
-
-https://github.com/emacsmirror/format-all
-
-** TODO Add Imenu regexp support for AXVW files in Emacs
-
-** TODO Explore the features and capabilities of IntelliJ IDEA for possible workflow improvements
-
-https://www.jetbrains.com/help/idea/2016.1/intellij-idea-editor.html (bookmarks,
-breakpoints, syntax highlighting, code completion, zooming, folding code blocks,
-macros, highlighted TODO items, code analysis, intention actions, intelligent
-and fast navigation, etc.)
-
-- https://dzone.com/articles/why-idea-better-eclipse
-  Auto-complete, debugging, refactoring, how to...
-
-- https://www.catalysts.cc/wissenswertes/intellij-idea-and-eclipse-shortcuts/
-
-** TODO Understand how 'package-autoremove' determines which packages to remove in Emacs
-
-http://emacs.stackexchange.com/questions/18253/how-does-package-autoremove-decide-which-packages-to-remove
-
-** TODO Migrate old Emacs advice functions to be compatible with Emacs 24.4+
-
-https://www.gnu.org/software/emacs/manual/html_node/elisp/Porting-old-advices.html#Porting-old-advices
-
-** TODO Publish documentation for Emacs-Leuven
-
-Use my Org html theme!
-
-Others did already:
-- http://coldnew.github.io/coldnew-emacs/
-- http://spacemacs.org/doc/DOCUMENTATION.html
-
-Or put in on RTD:
-- http://emacs.readthedocs.io/en/latest/completion_and_selection.html (via =docs=
-  subdirectory)
-
-** TODO Use the Emacs bug hunter tool to track down potential issues
+*** TODO Use the Emacs bug hunter tool to track down potential issues
 
 The Bug Hunter https://travis-ci.org/Malabarba/elisp-bug-hunter.svg?branch=master
 
@@ -560,12 +594,74 @@ Automatically debug and bisect your init (=.emacs=) file!
        nil)
 #+end_src
 
-** TODO Explore and evaluate other Emacs configurations
+*** TODO Profile Emacs code performance to identify bottlenecks
 
-- https://github.com/jamescherti/minimal-emacs.d!!!
-- https://alhassy.github.io/init/
+In case this helps anyone, I've found this code makes profiling a lot
+easier.  It automatically instruments the desired functions, runs the
+code you want to test, removes the instrumentation, and presents the
+results.
 
-** TODO Investigate "Goto last edit location" functionality (explained by L. David Andersson)
+#+BEGIN_SRC elisp
+  (defmacro profile-org (times &rest body)
+    `(let (output)
+       (dolist (p '("org-"))            ; Symbol prefixes to instrument.
+         (elp-instrument-package p))
+       (dotimes (x ,times)
+         ,@body)
+       (elp-results)
+       (elp-restore-all)
+       (point-min)
+       (forward-line 20)
+       (delete-region (point) (point-max))
+       (setq output (buffer-substring-no-properties (point-min) (point-max)))
+       (kill-buffer)
+       (delete-window)
+       output))
+
+  ;; Used like this:
+  (profile-org 10
+    (org-table-next-field)
+    (org-table-align))
+#+END_SRC
+
+*** TODO Refactor 'setcdr' with 'assoc' constructs
+
+: (setcdr (assoc value alist) new-value)
+
+works pretty well (but you'll probably need to add a not-found check).
+
+In Emacs 25:
+
+: (setf (alist-get key alist) new-value)
+
+even without not-found checking.
+
+*** TODO Improve implementation of time subtraction
+
+#+begin_src emacs-lisp
+(let ((time (current-time)))
+  (org-id-find "zangwill.nick_2014:aesthetic.judgment")
+  (format "%ss" (time-to-seconds (time-subtract (current-time) time))))
+#+end_src
+
+** Intégration d’outils externes
+
+*** TODO ripgrep
+
+*** TODO WSL Emacs
+
+- [ ] https://emacsredux.com/blog/2021/12/19/using-emacs-on-windows-11-with-wsl2/
+- [ ] https://shelper.github.io/posts/setup-emacs-in-wsl2/#copy-paste-sharing-between-wsl2-and-windows-host
+- [ ] https://doc.ubuntu-fr.org/emacs
+- [ ] https://emacs.stackexchange.com/questions/59226/emacs-as-editor-under-win10-wsl-2
+- [ ] https://github.com/microsoft/wslg/issues/1068
+- [ ] https://hkvim.com/post/windows-setup/
+
+** Exploration et documentation
+
+*** TODO Refresh list of recent files (remove files which don't exist anymore)
+
+*** TODO Investigate "Goto last edit location" functionality (explained by L. David Andersson)
 [2015-06-24 Wed 18:53]
 
 #+begin_verse
@@ -629,61 +725,7 @@ with goto-chg even without Kevin Rodgers' patch.)
 
 From [[gnus:INBOX#57408.213.114.113.54.1435164814.squirrel@alexander.fl-net.se][Email from l. david andersson: Re: Goto last edit location --]]
 
-** TODO Fix error in post-command-hook ('hl-tags-update'): '(void-function sgml-get-context)'
-
-Ouvrir =client-bldgops-cost-report.axvw= au démarrage d'Emacs...
-
-** TODO Improve implementation of time subtraction
-
-#+begin_src emacs-lisp
-(let ((time (current-time)))
-  (org-id-find "zangwill.nick_2014:aesthetic.judgment")
-  (format "%ss" (time-to-seconds (time-subtract (current-time) time))))
-#+end_src
-
-** TODO Profile Emacs code performance to identify bottlenecks
-
-In case this helps anyone, I've found this code makes profiling a lot
-easier.  It automatically instruments the desired functions, runs the
-code you want to test, removes the instrumentation, and presents the
-results.
-
-#+BEGIN_SRC elisp
-  (defmacro profile-org (times &rest body)
-    `(let (output)
-       (dolist (p '("org-"))            ; Symbol prefixes to instrument.
-         (elp-instrument-package p))
-       (dotimes (x ,times)
-         ,@body)
-       (elp-results)
-       (elp-restore-all)
-       (point-min)
-       (forward-line 20)
-       (delete-region (point) (point-max))
-       (setq output (buffer-substring-no-properties (point-min) (point-max)))
-       (kill-buffer)
-       (delete-window)
-       output))
-
-  ;; Used like this:
-  (profile-org 10
-    (org-table-next-field)
-    (org-table-align))
-#+END_SRC
-
-** TODO Refactor 'setcdr' with 'assoc' constructs
-
-: (setcdr (assoc value alist) new-value)
-
-works pretty well (but you'll probably need to add a not-found check).
-
-In Emacs 25:
-
-: (setf (alist-get key alist) new-value)
-
-even without not-found checking.
-
-** TODO Enhance documentation for navigation and search functions in Emacs
+*** TODO Enhance documentation for navigation and search functions in Emacs
 
 Excellent example:
 http://www.jetbrains.com/resharper/features/navigation_search.html
@@ -691,7 +733,7 @@ http://www.jetbrains.com/resharper/features/navigation_search.html
 Other:
 https://support.rstudio.com/hc/en-us/articles/200710523
 
-** TODO Automate reporting of style errors
+*** TODO Automate reporting of style errors
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -719,83 +761,51 @@ Report all errors with:
   Remember that the indentation before the starting double-quote is not part of
   the string!
 
-** TODO Optimize Emacs startup time for faster initialization
-:PROPERTIES:
-:header-args: :tangle no
-:END:
+*** TODO Publish documentation for Emacs-Leuven
 
-*** Context
+Use my Org html theme!
 
-Identify what parts of your =.emacs= take so long.  You can do this e.g. by
-starting Emacs with ~emacs -q~, set up your ~load-path~, and then evaluate
+Others did already:
+- http://coldnew.github.io/coldnew-emacs/
+- http://spacemacs.org/doc/DOCUMENTATION.html
 
-#+begin_src emacs-lisp
-(benchmark-run
-  (require 'some-package))
-#+end_src
+Or put in on RTD:
+- http://emacs.readthedocs.io/en/latest/completion_and_selection.html (via =docs=
+  subdirectory)
 
-The first number appearing in the echo area will be the time needed to run that
-command.
+*** TODO Voir infos sur Emacs
 
-Use autoloads, which delay the loading of the complete package until one of the
-interactive functions is used.
+- https://emacsconf.org/2021/talks/forever/
+- https://www.win.tue.nl/~aeb/linux/misc/emacs.html
 
-If you want to set options which need to be evaluated after a package is loaded,
-you can use ~eval-after-load~.
+*** TODO Explore and evaluate other Emacs configurations
 
-With ~(eval-after-load "pkg-autoloads" ...)~, you make sure that you only run code
-when the package is installed/available through ~package.el~.
+- https://github.com/jamescherti/minimal-emacs.d!!!
+- https://alhassy.github.io/init/
 
-*** Timings from my system
-
-After much optimization...
-
-  $ time emacs -f kill-emacs
-  real    0m0.157s
-  user    0m0.140s
-  sys     0m0.012s
-  $ time emacs -q -f kill-emacs
-  real    0m0.137s
-  user    0m0.116s
-  sys     0m0.016s
-  $ time emacs -Q -f kill-emacs
-  real    0m0.051s
-  user    0m0.028s
-  sys     0m0.020s
-
-#+begin_src shell
-time emacs -f kill-emacs 2>&1
-#+end_src
-
-#+begin_src shell
-time emacs -q -f kill-emacs 2>&1
-#+end_src
-
-#+begin_src shell
-time emacs -Q -f kill-emacs 2>&1
-#+end_src
-
-Note that your first test is going to be dramatically slower than subsequent
-tests.
-
-#+begin_note
-You can use ESUP - Emacs Start Up Profiler
-#+end_note
-
-** TODO Add 'alert' emphasis and font-lock support
-
-#+begin_src emacs-lisp
-  ;; Add 'alert' emphasis. The text enclosed by '!' will be displayed in bold
-  ;; and red to indicate emphasis.
-  (add-to-list 'org-emphasis-alist
-               '("!" (bold :foreground "red")))
-#+end_src
-
-See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis in org-emphasis-alist]]
-
-** TODO Check out Emacs key bindings for Atom editor
+*** TODO Check out Emacs key bindings for Atom editor
 
 https://github.com/dvorka/atom-editor-emacs-key-bindings
+
+*** TODO Explore the features and capabilities of IntelliJ IDEA for possible workflow improvements
+
+https://www.jetbrains.com/help/idea/2016.1/intellij-idea-editor.html (bookmarks,
+breakpoints, syntax highlighting, code completion, zooming, folding code blocks,
+macros, highlighted TODO items, code analysis, intention actions, intelligent
+and fast navigation, etc.)
+
+- https://dzone.com/articles/why-idea-better-eclipse
+  Auto-complete, debugging, refactoring, how to...
+
+- https://www.catalysts.cc/wissenswertes/intellij-idea-and-eclipse-shortcuts/
+
+** Tasks
+
+- [ ] https://www.jetbrains.com/help/rider/Navigation_and_Search__Navigating_Between_To_do_Items.html
+  (Emacs, Dev, TODO Lists)
+- [ ] http://www.jetbrains.com/idea/webhelp/highlighting-usages.html (Emacs,
+  Dev, Search for usages)
+- [ ] http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
 
 * Notes
 
