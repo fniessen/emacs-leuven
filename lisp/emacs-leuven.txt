@@ -10752,15 +10752,14 @@ can use the following keys to navigate historic versions of the file:
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For Git.
-  (defun lvn--vcs-goto-top-directory-advice (orig-fun &rest args)
-    (let* ((backend (nth 2 args))
-           (vcs-dir (nth 1 args))
-           (vcs-top-dir (vc-call-backend backend 'responsible-p vcs-dir)))
+  (defun lvn--vcs-goto-top-directory-advice (orig-fun buffer dir backend &rest rest)
+    (let ((vcs-top-dir (when backend
+                         (vc-call-backend backend 'responsible-p dir))))
       (if (stringp vcs-top-dir)
-          (apply orig-fun (list (car args) vcs-top-dir (nth 2 args) (nth 3 args)))
-        (apply orig-fun args))))
+          (apply orig-fun buffer vcs-top-dir backend rest)
+        (apply orig-fun buffer dir backend rest))))
 
-  (advice-add 'vc-dir-prepare-status-buffer :before #'lvn--vcs-goto-top-directory-advice)
+  (advice-add 'vc-dir-prepare-status-buffer :around #'lvn--vcs-goto-top-directory-advice)
 
   (defun lvn--ediff-revision (file rev1 &optional rev2)
     "Run Ediff by comparing two revisions of FILE (rev1 and rev2).

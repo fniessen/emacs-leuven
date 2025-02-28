@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250228.1057>
+;; Version: <20250228.1924>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250228.1057>"
+(defconst lvn--emacs-version "<20250228.1924>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5894,15 +5894,14 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; http://www.emacswiki.org/emacs/VcTopDirectory
   ;; For Git.
-  (defun lvn--vcs-goto-top-directory-advice (orig-fun &rest args)
-    (let* ((backend (nth 2 args))
-           (vcs-dir (nth 1 args))
-           (vcs-top-dir (vc-call-backend backend 'responsible-p vcs-dir)))
+  (defun lvn--vcs-goto-top-directory-advice (orig-fun buffer dir backend &rest rest)
+    (let ((vcs-top-dir (when backend
+                         (vc-call-backend backend 'responsible-p dir))))
       (if (stringp vcs-top-dir)
-          (apply orig-fun (list (car args) vcs-top-dir (nth 2 args) (nth 3 args)))
-        (apply orig-fun args))))
+          (apply orig-fun buffer vcs-top-dir backend rest)
+        (apply orig-fun buffer dir backend rest))))
 
-  (advice-add 'vc-dir-prepare-status-buffer :before #'lvn--vcs-goto-top-directory-advice)
+  (advice-add 'vc-dir-prepare-status-buffer :around #'lvn--vcs-goto-top-directory-advice)
 
   (defun lvn--ediff-revision (file rev1 &optional rev2)
     "Run Ediff by comparing two revisions of FILE (rev1 and rev2).
