@@ -15,6 +15,392 @@
 
 See issue #144
 
+** TODO Open file with default Windows application in Emacs
+
+#+begin_src emacs-lisp
+(defun open-file-with-default-windows-application ()
+  "Open the selected file with the default Windows application."
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (message (format "Opening file: %s" file))
+    (let* ((windows-path (shell-command-to-string (format "wsl.exe wslpath -w %s" file)))
+           (windows-path (string-trim-right windows-path)) ; Remove trailing newline.
+           (command (format "explorer.exe '%s'" windows-path)))
+      (shell-command command))))
+
+;; (eval-after-load 'dired
+;;   '(define-key dired-mode-map "e" 'open-file-with-default-windows-application))
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map "e" 'open-file-with-default-windows-application))
+#+end_src
+
+TODO: Use wslview
+See https://stackoverflow.com/questions/66513720/wsl2-gui-emacs-open-file-with-explorer-exe-instead-of-xdg-open
+
+Also:
+
+#+begin_src emacs-lisp
+(defun dired-open-marked-files-with-explorer ()
+  ;; dired-open-marked-files-with-explorer
+  "Open marked files in Dired using Explorer on Windows."
+  (interactive)
+  (if-let ((marks (dired-get-marked-files)))
+      (dolist (file marks)
+        (shell-command (format "explorer.exe %s" (file-name-nondirectory file))))
+    (user-error "No marked files; aborting")))
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map "o" 'dired-open-marked-files-with-explorer))
+#+end_src
+
+** TODO Shell
+
+e=emacsclient -n -a emacs
+
+EDITOR
+
+VISUAL
+
+editor='emacsclient' (sans le -n) dans .gitconfig
+
+** TODO Voir infos sur Emacs
+
+- https://emacsconf.org/2021/talks/forever/
+- https://www.win.tue.nl/~aeb/linux/misc/emacs.html
+
+** TODO WSL Emacs
+
+- [ ] https://emacsredux.com/blog/2021/12/19/using-emacs-on-windows-11-with-wsl2/
+- [ ] https://shelper.github.io/posts/setup-emacs-in-wsl2/#copy-paste-sharing-between-wsl2-and-windows-host
+- [ ] https://doc.ubuntu-fr.org/emacs
+- [ ] https://emacs.stackexchange.com/questions/59226/emacs-as-editor-under-win10-wsl-2
+- [ ] https://github.com/microsoft/wslg/issues/1068
+- [ ] https://hkvim.com/post/windows-setup/
+
+** TODO Suivre les tâches discutées avec Denis Bitouzé lors de sa visite à Leuven
+
+- [ ] Renommer ~init.el~ en ~.emacs~
+- [ ] Définir des variables locales
+- [ ] Utiliser ~S~ pour les semi-colonnes (| awk, comme A1, T1, etc.)
+- [ ] Configurer ~e~ pour lancer le serveur Emacs si Emacs n'est pas lancé
+
+** TODO ripgrep
+
+** TODO Utiliser Orgstruct++
+
+** TODO Highlight source line avec C-c 3
+
+** TODO Refresh list of recent files (remove files which don't exist anymore)
+
+** TODO Écrire une fonction qui ajoute des demi-espaces fines pour Denis
+
+#+begin_src emacs-lisp
+(defun remplace-espace-fine-on-the-fly ()
+  "Remplace les espaces avant la ponctuation par un espace fine non breaking lors de la frappe."
+  (interactive)
+  (when (and (boundp 'ispell-minor-mode) ispell-minor-mode
+             (eq ispell-dictionary "francais")
+             (not (or (eq major-mode 'latex-mode)
+                      (eq major-mode 'markdown-mode)))
+             (not (org-in-src-block-p)))
+    (save-excursion
+      (while (looking-back "\\(\\s-\\)\\([;:?!]\\)" (point-at-bol))
+        (backward-delete-char 1)
+        (insert (concat (match-string 1) "\u202F" (match-string 2)))))))
+
+(add-hook 'post-self-insert-hook 'remplace-espace-fine-on-the-fly)
+#+end_src
+
+** TODO Rajouter / retirer des packages dans Emacs-Leuven
+
+*** Packages à retirer (plantent de Laurent Pantera)
+
+1. auctex
+
+   auctex n'est pas dans la liste MELPA. D'après Internet, il est dans la liste
+   gnu-ELPA. J'ai donc ajouté comme tu nous as dit le dépôt gnu comme suit :
+
+   #+begin_src emacs-lisp
+   (setq package-archives
+      '(("melpa" . "http://melpa.org/packages/")))
+   (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+   #+end_src
+
+   Mais lorsque je fais M-x package-list-packages il ne peut pas charger le dépôt
+   gnu car il y a un problème de signature (?). J'ai le message suivant :
+   package--check-signature-content: Failed to verify signature:
+   "archive-contents.sig"
+
+   et donc ensuite je n'est toujours que les packages de MELPA dans la liste avec
+   package-list-packages.
+
+2. paradox
+
+   Il est dans la liste MELPA mais il est labellisé statut=incompat et je ne
+   peut pas l'installer.
+
+3. git-commit,
+   git-commit-insert-issue et
+   git-timemachine
+   ne sont pas dans la liste MELPA
+
+*** Packages à rajouter
+
+- [ ] unbound
+- [ ] tidy
+- [ ] info+
+- [ ] hideshowvis
+- [ ] bookmark+
+- [ ] dired+
+- [ ] dired-sort-map
+- [ ] hl-tags-mode
+
+** TODO Retirer text-only output from Gnus e-mails
+
+pour output correct sur téléphone
+
+** TODO [#A] Fixer les warnings (cl is deprecated)
+
+ ■  Emergency (emacsql): Uninstall the `git-commit' package.
+
+The "git-commit.el" library is no longer distributed as a separate
+package.  It is now distributed as part of the `magit' package.
+
+The `git-commit' package now does nothing but display this warning.
+If it is located earlier on the `load-path' than `magit' is, then that
+prevents the proper "git-commit.el" libraries from `magit' from being
+loaded.
+
+Please uninstalling `git-commit' and then restart Emacs.
+
+ ■  Warning (comp): auto-highlight-symbol.el:446:2: Warning: custom-declare-variable `ahs-include' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): auto-highlight-symbol.el:470:2: Warning: custom-declare-variable `ahs-exclude' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): back-button.el:436:12: Warning: `inhibit-changing-match-data' is an obsolete variable (as of 29.1); use `save-match-data' instead.
+ ■  Warning (comp): back-button.el:577:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): back-button.el:622:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): back-button.el:640:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): back-button.el:676:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): back-button.el:718:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): bitbucket-issues.el:38:25: Warning: the function ‘perform-bitbucket-request’ is not known to be defined.
+ ■  Warning (comp): circe.el:1065:16: Warning: reference to free variable ‘circe-server-buffer’
+ ■  Warning (comp): circe.el:134:2: Warning: custom-declare-variable `circe-default-ip-family' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): circe.el:2451:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): circe.el:2498:38: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:2505:41: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:2520:39: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:2575:38: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:2771:36: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:2830:40: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:2865:32: Warning: reference to free variable ‘circe-netsplit-list’
+ ■  Warning (comp): circe.el:2911:35: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:2939:35: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:2952:35: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): circe.el:308:2: Warning: custom-declare-variable `circe-highlight-nick-type' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): circe.el:3339:9: Warning: Variable ‘circe-netsplit-list’ declared after its first use
+ ■  Warning (comp): company-quickhelp.el:245:14: Warning: `focus-out-hook' is an obsolete variable (as of 27.1); after-focus-change-function
+ ■  Warning (comp): company-quickhelp.el:252:17: Warning: `focus-out-hook' is an obsolete variable (as of 27.1); after-focus-change-function
+ ■  Warning (comp): dashboard-widgets.el:1082:5: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dashboard-widgets.el:1126:5: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dashboard-widgets.el:1181:5: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dashboard-widgets.el:1299:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dashboard-widgets.el:1485:5: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dashboard-widgets.el:1504:4: Warning: docstring wider than 80 characters
+ ■  Warning (comp): diff-hl-inline-popup.el:55:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): diff-hl-inline-popup.el:71:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): diff-hl-show-hunk.el:402:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:105:2: Warning: custom-declare-variable `dumb-jump-force-searcher' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:130:2: Warning: custom-declare-variable `dumb-jump-ag-cmd' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:136:2: Warning: custom-declare-variable `dumb-jump-rg-cmd' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:142:2: Warning: custom-declare-variable `dumb-jump-git-grep-cmd' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:148:2: Warning: custom-declare-variable `dumb-jump-ag-word-boundary' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:154:2: Warning: custom-declare-variable `dumb-jump-rg-word-boundary' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:160:2: Warning: custom-declare-variable `dumb-jump-git-grep-word-boundary' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:166:2: Warning: custom-declare-variable `dumb-jump-grep-word-boundary' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:1697:2: Warning: custom-declare-variable `dumb-jump-language-contexts' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:172:2: Warning: custom-declare-variable `dumb-jump-fallback-regex' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:1742:2: Warning: custom-declare-variable `dumb-jump-project' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:1784:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:1829:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:1829:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:1997:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2024:31: Warning: Use -zip-pair instead of -zip to get a list of pairs
+ ■  Warning (comp): dumb-jump.el:2024:4: Warning: the function `ivy-read' is not known to be defined.
+ ■  Warning (comp): dumb-jump.el:2029:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:2040:14: Warning: the function `helm-make-source' is not known to be defined.
+ ■  Warning (comp): dumb-jump.el:2068:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:206:2: Warning: custom-declare-variable `dumb-jump-max-find-time' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2084:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:2084:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2107:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2243:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2249:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:2256:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:2275:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:2275:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:230:2: Warning: custom-declare-variable `dumb-jump-git-grep-search-untracked' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2434:4: Warning: More than one doc string
+ ■  Warning (comp): dumb-jump.el:2517:28: Warning: the function `tramp-file-name-localname' is not known to be defined.
+ ■  Warning (comp): dumb-jump.el:2518:29: Warning: the function `tramp-dissect-file-name' is not known to be defined.
+ ■  Warning (comp): dumb-jump.el:2545:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2558:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:255:2: Warning: custom-declare-variable `dumb-jump-find-rules' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2594:18: Warning: reference to free variable `find-tag-marker-ring'
+ ■  Warning (comp): dumb-jump.el:2594:6: Warning: the function `ring-insert' is not known to be defined.
+ ■  Warning (comp): dumb-jump.el:2721:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2746:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2826:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2885:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2889:33: Warning: the function `first' is not known to be defined.
+ ■  Warning (comp): dumb-jump.el:2899:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2943:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2963:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:2978:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:3076:53: Warning: `point-at-bol' is an obsolete function (as of 29.1); use `line-beginning-position' or `pos-bol' instead.
+ ■  Warning (comp): dumb-jump.el:3119:27: Warning: the function `xref-make' is not known to be defined.
+ ■  Warning (comp): dumb-jump.el:3121:28: Warning: the function `xref-make-file-location' is not known to be defined.
+ ■  Warning (comp): dumb-jump.el:65:2: Warning: custom-declare-variable `dumb-jump-window' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): dumb-jump.el:65:2: Warning: custom-declare-variable `dumb-jump-window' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:72:2: Warning: custom-declare-variable `dumb-jump-use-visible-window' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:78:2: Warning: custom-declare-variable `dumb-jump-selector' docstring wider than 80 characters
+ ■  Warning (comp): dumb-jump.el:93:2: Warning: custom-declare-variable `dumb-jump-prefer-searcher' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): emr-elisp.el:1050:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): emr-elisp.el:1191:35: Warning: Use -zip-pair instead of -zip to get a list of pairs
+ ■  Warning (comp): emr-elisp.el:1516:40: Warning: the function ‘find-function-library’ is not known to be defined.
+ ■  Warning (comp): emr-elisp.el:38:12: Warning: defcustom for ‘emr-el-definition-macro-names’ fails to specify type
+ ■  Warning (comp): emr-elisp.el:392:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): emr-elisp.el:448:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): emr.el:166:20: Warning: Use -zip-pair instead of -zip to get a list of pairs
+ ■  Warning (comp): emr.el:82:16: Warning: ‘point-at-eol’ is an obsolete function (as of 29.1); use ‘line-end-position’ or ‘pos-eol’ instead.
+ ■  Warning (comp): epl.el:441:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): expand-region-core.el:116:23: Warning: reference to free variable ‘er--show-expansion-message’
+ ■  Warning (comp): expand-region-core.el:207:8: Warning: the function ‘er/set-temporary-overlay-map’ is not known to be defined.
+ ■  Warning (comp): expand-region-core.el:276:11: Warning: defsubst ‘er--first-invocation’ was used before it was defined
+ ■  Warning (comp): expand-region-custom.el:33:12: Warning: defcustom for ‘expand-region-preferred-python-mode’ has syntactically odd type ‘'(choice (const :tag Emacs' python.el 'python) (const :tag fgallina's python.el 'fgallina-python) (const :tag python-mode.el 'python-mode))’
+ ■  Warning (comp): expand-region-custom.el:89:2: Warning: custom-declare-variable `expand-region-exclude-text-mode-expansions' docstring wider than 80 characters
+ ■  Warning (comp): google-this.el:104:2: Warning: custom-declare-variable `google-this-suspend-after-search' docstring wider than 80 characters
+ ■  Warning (comp): google-this.el:130:43: Warning: the function `google-this-maps' is not known to be defined.
+ ■  Warning (comp): google-this.el:132:43: Warning: the function `google-maps' is not known to be defined.
+ ■  Warning (comp): google-this.el:136:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): google-this.el:468:20: Warning: Use keywords rather than deprecated positional arguments to `define-minor-mode'
+ ■  Warning (comp): google-translate-core-ui.el:304:2: Warning: custom-declare-variable `google-translate-enable-ido-completion' docstring wider than 80 characters
+ ■  Warning (comp): google-translate-core-ui.el:349:12: Warning: defcustom for ‘google-translate-pop-up-buffer-set-focus’ fails to specify type
+ ■  Warning (comp): google-translate-core-ui.el:357:12: Warning: defcustom for ‘google-translate-display-translation-phonetic’ fails to specify type
+ ■  Warning (comp): google-translate-core-ui.el:411:2: Warning: defvar `google-translate-preferable-input-methods-alist' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): google-translate-core-ui.el:446:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): google-translate-core-ui.el:797:47: Warning: ‘previous-line’ is for interactive use only; use ‘forward-line’ with negative argument instead.
+ ■  Warning (comp): google-translate-core.el:162:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): google-translate-default-ui.el:263:61: Warning: the function ‘pdf-view-active-region-text’ is not known to be defined.
+ ■  Warning (comp): google-translate-default-ui.el:303:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): google-translate-default-ui.el:314:25: Warning: the function ‘org-element-at-point’ is not known to be defined.
+ ■  Warning (comp): google-translate-default-ui.el:316:18: Warning: the function ‘org-mark-element’ is not known to be defined.
+ ■  Warning (comp): google-translate-default-ui.el:337:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): helm-core.el:6651:14: Warning: `inhibit-point-motion-hooks' is an obsolete variable (as of 25.1); use `cursor-intangible-mode' or `cursor-sensor-mode' instead
+ ■  Warning (comp): helm-core.el:7239:23: Warning: `special-display-regexps' is an obsolete variable (as of 24.3); use `display-buffer-alist' instead.
+ ■  Warning (comp): helm-core.el:7239:47: Warning: `special-display-buffer-names' is an obsolete variable (as of 24.3); use `display-buffer-alist' instead.
+ ■  Warning (comp): helm-projectile.el:1014:19: Warning: Unused lexical variable `helm-rg--extra-args'
+ ■  Warning (comp): html-mode-expansions.el:38:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): idle-require.el:88:20: Warning: Use keywords rather than deprecated positional arguments to `define-minor-mode'
+ ■  Warning (comp): iedit-lib.el:1029:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): iedit-lib.el:135:2: Warning: defvar `iedit-search-invisible' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): iedit.el:175:2: Warning: defvar `iedit-default-occurrence-local' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): iedit.el:537:12: Warning: Case 'regexp will match ‘quote’.  If that’s intended, write (regexp quote) instead.  Otherwise, don’t quote ‘regexp’.
+ ■  Warning (comp): iedit.el:537:12: Warning: Case 'symbol will match ‘quote’.  If that’s intended, write (symbol quote) instead.  Otherwise, don’t quote ‘symbol’.
+ ■  Warning (comp): iedit.el:537:12: Warning: Case 'word will match ‘quote’.  If that’s intended, write (word quote) instead.  Otherwise, don’t quote ‘word’.
+ ■  Warning (comp): irc.el:1198:59: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): irc.el:1496:60: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): irc.el:612:57: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): irc.el:671:13: Warning: assignment to free variable ‘circe-server-inhibit-auto-reconnect-p’
+ ■  Warning (comp): irc.el:672:27: Warning: reference to free variable ‘circe-default-quit-message’
+ ■  Warning (comp): list-utils.el:1001:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): list-utils.el:288:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): lui-irc-colors.el:196:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): lui-track.el:97:14: Warning: Case 'bar will match ‘quote’.  If that’s intended, write (bar quote) instead.  Otherwise, don’t quote ‘bar’.
+ ■  Warning (comp): lui-track.el:97:14: Warning: Case 'fringe will match ‘quote’.  If that’s intended, write (fringe quote) instead.  Otherwise, don’t quote ‘fringe’.
+ ■  Warning (comp): lui.el:1184:28: Warning: ‘point-at-bol’ is an obsolete function (as of 29.1); use ‘line-beginning-position’ or ‘pos-bol’ instead.
+ ■  Warning (comp): lui.el:1245:21: Warning: ‘point-at-eol’ is an obsolete function (as of 29.1); use ‘line-end-position’ or ‘pos-eol’ instead.
+ ■  Warning (comp): lui.el:1293:23: Warning: ‘point-at-eol’ is an obsolete function (as of 29.1); use ‘line-end-position’ or ‘pos-eol’ instead.
+ ■  Warning (comp): lui.el:1320:10: Warning: ‘inhibit-point-motion-hooks’ is an obsolete variable (as of 25.1); use ‘cursor-intangible-mode’ or ‘cursor-sensor-mode’ instead
+ ■  Warning (comp): lui.el:246:2: Warning: custom-declare-variable `lui-fill-type' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): lui.el:288:2: Warning: custom-declare-variable `lui-time-stamp-position' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): lui.el:315:2: Warning: custom-declare-variable `lui-time-stamp-only-when-changed-p' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): lui.el:694:10: Warning: ‘help-xref-interned’ is an obsolete function (as of 25.1); use ‘describe-symbol’ instead.
+ ■  Warning (comp): lui.el:715:16: Warning: ‘point-at-bol’ is an obsolete function (as of 29.1); use ‘line-beginning-position’ or ‘pos-bol’ instead.
+ ■  Warning (comp): lui.el:790:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): lui.el:961:17: Warning: ‘inhibit-point-motion-hooks’ is an obsolete variable (as of 25.1); use ‘cursor-intangible-mode’ or ‘cursor-sensor-mode’ instead
+ ■  Warning (comp): nav-flash.el:195:14: Warning: `inhibit-point-motion-hooks' is an obsolete variable (as of 25.1); use `cursor-intangible-mode' or `cursor-sensor-mode' instead
+ ■  Warning (comp): nav-flash.el:195:14: Warning: ‘inhibit-point-motion-hooks’ is an obsolete variable (as of 25.1); use ‘cursor-intangible-mode’ or ‘cursor-sensor-mode’ instead
+ ■  Warning (comp): pcache.el:116:23: Warning: Unused lexical argument `k'
+ ■  Warning (comp): pcache.el:120:38: Warning: Unused lexical argument `cache'
+ ■  Warning (comp): pcache.el:143:39: Warning: Unused lexical argument `entry'
+ ■  Warning (comp): pcache.el:229:21: Warning: Unused lexical argument `k'
+ ■  Warning (comp): pcache.el:76:45: Warning: Ambiguous initform needs quoting: pcache-entry
+ ■  Warning (comp): pcache.el:80:34: Warning: Unknown slot ‘:save-delay’
+ ■  Warning (comp): popup.el:120:12: Warning: Unused lexical variable `kinsoku-limit'
+ ■  Warning (comp): popup.el:1211:29: Warning: Unused lexical argument `event'
+ ■  Warning (comp): popup.el:1211:35: Warning: Unused lexical argument `default'
+ ■  Warning (comp): popup.el:1359:34: Warning: Unused lexical variable `event'
+ ■  Warning (comp): popup.el:543:13: Warning: Unused lexical variable `window-start'
+ ■  Warning (comp): popup.el:682:21: Warning: Unused lexical variable `i'
+ ■  Warning (comp): popup.el:690:20: Warning: Unused lexical variable `olddisplay'
+ ■  Warning (comp): popup.el:862:13: Warning: Unused lexical variable `counter'
+ ■  Warning (comp): popup.el:868:13: Warning: Unused lexical variable `counter'
+ ■  Warning (comp): popup.el:982:10: Warning: Unused lexical variable `list'
+ ■  Warning (comp): projectile.el:6232:19: Warning: assignment to free variable `savehist-additional-variables'
+ ■  Warning (comp): projectile.el:6232:19: Warning: assignment to free variable ‘savehist-additional-variables’
+ ■  Warning (comp): projectile.el:6232:19: Warning: reference to free variable `savehist-additional-variables'
+ ■  Warning (comp): projectile.el:6232:19: Warning: reference to free variable ‘savehist-additional-variables’
+ ■  Warning (comp): smartparens.el: Warning: avoid `lsh'; use `ash' instead
+ ■  Warning (comp): smartparens.el:1880:39: Warning: avoid `lsh'; use `ash' instead
+ ■  Warning (comp): smartparens.el:1882:39: Warning: avoid `lsh'; use `ash' instead
+ ■  Warning (comp): smartparens.el:1884:39: Warning: avoid `lsh'; use `ash' instead
+ ■  Warning (comp): smartparens.el:1886:39: Warning: avoid `lsh'; use `ash' instead
+ ■  Warning (comp): smartparens.el:2756:22: Warning: value returned from (< (sp--get-overlay-length nil) (sp--get-overlay-length nil)) is unused
+ ■  Warning (comp): smartparens.el:2838:37: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): smartparens.el:3333:49: Warning: Unused lexical argument `ignored'
+ ■  Warning (comp): smartparens.el:3752:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): smartparens.el:4422:43: Warning: avoid `lsh'; use `ash' instead
+ ■  Warning (comp): smartparens.el:4425:43: Warning: avoid `lsh'; use `ash' instead
+ ■  Warning (comp): smartparens.el:7883:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): smartparens.el:9268:34: Warning: `point-at-eol' is an obsolete function (as of 29.1); use `line-end-position' or `pos-eol' instead.
+ ■  Warning (comp): smartrep.el:110:4: Warning: `destructuring-bind' is an obsolete alias (as of 27.1); use `cl-destructuring-bind' instead.
+ ■  Warning (comp): smartrep.el:110:4: Warning: ‘destructuring-bind’ is an obsolete alias (as of 27.1); use ‘cl-destructuring-bind’ instead.
+ ■  Warning (comp): smartrep.el:184:4: Warning: `loop' is an obsolete alias (as of 27.1); use `cl-loop' instead.
+ ■  Warning (comp): smartrep.el:184:4: Warning: ‘loop’ is an obsolete alias (as of 27.1); use ‘cl-loop’ instead.
+ ■  Warning (comp): smartrep.el:47:2: Warning: *Package cl is deprecated*
+ ■  Warning (comp): smartrep.el:47:2: Warning: Package cl is deprecated
+ ■  Warning (comp): tex-site.el:138:31: Warning: the function `BibTeX-auto-store' is not known to be defined.
+ ■  Warning (comp): tex-site.el:138:31: Warning: the function ‘BibTeX-auto-store’ is not known to be defined.
+ ■  Warning (comp): tracking.el:52:2: Warning: custom-declare-variable `tracking-shorten-modes' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): tracking.el:71:2: Warning: custom-declare-variable `tracking-position' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): volatile-highlights.el:388:32: Warning: Unused lexical argument `maparg'
+ ■  Warning (comp): volatile-highlights.el:409:10: Warning: Unused lexical variable `fn-on'
+ ■  Warning (comp): volatile-highlights.el:410:10: Warning: Unused lexical variable `fn-off'
+ ■  Warning (comp): volatile-highlights.el:455:40: Warning: Unused lexical argument `fn-name'
+ ■  Warning (comp): volatile-highlights.el:466:41: Warning: Unused lexical argument `fn-name'
+ ■  Warning (comp): volatile-highlights.el:517:47: Warning: Unused lexical argument `filename'
+ ■  Warning (comp): volatile-highlights.el:518:19: Warning: Unused lexical variable `c'
+ ■  Warning (comp): ws-butler.el:151:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): ws-butler.el:186:20: Warning: `point-at-eol' is an obsolete function (as of 29.1); use `line-end-position' or `pos-eol' instead.
+ ■  Warning (comp): ws-butler.el:245:28: Warning: `point-at-bol' is an obsolete function (as of 29.1); use `line-beginning-position' or `pos-bol' instead.
+ ■  Warning (comp): ws-butler.el:249:28: Warning: `point-at-eol' is an obsolete function (as of 29.1); use `line-end-position' or `pos-eol' instead.
+ ■  Warning (comp): ws-butler.el:320:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
+ ■  Warning (comp): yasnippet.el:1810:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): yasnippet.el:2982:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): yasnippet.el:3732:4: Warning: `declare' after `interactive'
+ ■  Warning (comp): yasnippet.el:4735:2: Warning: docstring wider than 80 characters
+ ■  Warning (comp): yasnippet.el:475:2: Warning: defvar `yas-after-exit-snippet-hook' docstring wider than 80 characters
+ ■  Warning (comp): yasnippet.el:557:2: Warning: custom-declare-variable `yas-keymap-disable-hook' docstring wider than 80 characters
+
+** TODO Avoir un git-file-history sur C-S-f ?
+
+** TODO Fixer M-u, M-SPC et M-^ (pour Marc Boyer) dans Emacs Linux
+
+Problème pour taper ~M-^~ (il faut taper 2 x ~^~)
+
+Tenter de modifier la configuration d'Emacs pour utiliser un autre raccourci
+clavier que ~M-^~, par exemple ~M-6~.
+
 ** TODO Investigate intermittent error when using M-w on a single line
 
 #+begin_src emacs-lisp
