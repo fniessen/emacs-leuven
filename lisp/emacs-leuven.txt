@@ -10533,9 +10533,12 @@ it into the commit buffer. So there is no need to "write the same thing twice".
   (autoload 'vc-git-root "vc-git")
 
   (with-eval-after-load 'vc-git
-    ;; Check if 'git-commit' is available before loading.
+    ;; Align with Git's 50-character commit summary convention.
+    (setq vc-git-log-edit-summary-max-len 50)
+
+    ;; Load 'git-commit' if available (now provided by Magit).
     (when (locate-library "git-commit")
-      ;; Major mode for editing git commit messages (now available via Magit).
+      ;; Major mode for editing Git commit messages.
       (idle-require 'git-commit)))
 
   (with-eval-after-load 'git-commit

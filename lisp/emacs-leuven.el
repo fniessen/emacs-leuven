@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250228.1949>
+;; Version: <20250228.2356>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250228.1949>"
+(defconst lvn--emacs-version "<20250228.2356>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5766,9 +5766,12 @@ a clean buffer we're an order of magnitude laxer about checking."
   (autoload 'vc-git-root "vc-git")
 
   (with-eval-after-load 'vc-git
-    ;; Check if 'git-commit' is available before loading.
+    ;; Align with Git's 50-character commit summary convention.
+    (setq vc-git-log-edit-summary-max-len 50)
+
+    ;; Load 'git-commit' if available (now provided by Magit).
     (when (locate-library "git-commit")
-      ;; Major mode for editing git commit messages (now available via Magit).
+      ;; Major mode for editing Git commit messages.
       (idle-require 'git-commit)))
 
   (with-eval-after-load 'git-commit
