@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250228.1924>
+;; Version: <20250228.1949>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250228.1924>"
+(defconst lvn--emacs-version "<20250228.1949>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -5816,6 +5816,15 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1.9 VC Directory Mode")
 
+  ;; Ensure `vc-dir` always operates from the top-level VCS directory.
+  (defun lvn--vcs-goto-top-directory-advice (orig-fun buffer dir backend &rest rest)
+    (let ((vcs-top-dir (vc-call-backend backend 'responsible-p dir)))
+      (if (stringp vcs-top-dir)
+          (apply orig-fun buffer vcs-top-dir backend rest)
+        (apply orig-fun buffer dir backend rest))))
+
+  (advice-add 'vc-dir-prepare-status-buffer :around #'lvn--vcs-goto-top-directory-advice)
+
   (defun lvn-jump-to-vc-status-buffer-for-current-directory ()
     "Jump to the VC status buffer for the current directory."
     (interactive)
@@ -5891,17 +5900,6 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   ;; Files covered by VC get backups (as with other files).
   (setq vc-make-backup-files t)
-
-  ;; http://www.emacswiki.org/emacs/VcTopDirectory
-  ;; For Git.
-  (defun lvn--vcs-goto-top-directory-advice (orig-fun buffer dir backend &rest rest)
-    (let ((vcs-top-dir (when backend
-                         (vc-call-backend backend 'responsible-p dir))))
-      (if (stringp vcs-top-dir)
-          (apply orig-fun buffer vcs-top-dir backend rest)
-        (apply orig-fun buffer dir backend rest))))
-
-  (advice-add 'vc-dir-prepare-status-buffer :around #'lvn--vcs-goto-top-directory-advice)
 
   (defun lvn--ediff-revision (file rev1 &optional rev2)
     "Run Ediff by comparing two revisions of FILE (rev1 and rev2).
