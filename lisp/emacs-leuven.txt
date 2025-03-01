@@ -1630,44 +1630,42 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 #+end_src
 
-With the following functions, you can conveniently kill or copy the line where
-the cursor is located using simple key combinations:
+With the following functions, you can easily cut or copy the line where the
+cursor is located using simple key combinations:
 
-- Press ~C-w~ to kill (delete) the current line.
-- Press ~M-w~ to copy the current line.
+- ~C-w~ cuts (kills) the current line.
+- ~M-w~ copies the current line.
 
 #+begin_note
-If there is an active region (text selected), the standard ~kill-region~ and
-~kill-ring-save~ commands will continue to perform their usual functions: killing
-or copying the selected text.
+If a region is active (text is selected), the standard ~kill-region~ and
+~kill-ring-save~ commands will retain their usual behavior: cutting or copying the
+selected text.
 #+end_note
 
 #+begin_src emacs-lisp
   ;; Function to perform slick cut for the kill-region command.
-  (defun lvn-slick-cut-region (beg end &optional region)
-    "Cut the selected region or the current line if REGION is nil.
-  BEG and END specify the region to cut if a region is selected."
-    (interactive
-     (if (use-region-p)
-         (list (region-beginning) (region-end))
-       (progn
-         (message "[Cut the current line]")
-         (list (line-beginning-position) (line-beginning-position 2))))))
-  ;; Add advice to execute lvn-slick-cut-region before the kill-region command.
-  (advice-add 'kill-region :before #'lvn-slick-cut-region)
+  (defun lvn-slick-cut-region (orig-fn &rest args)
+    "Cut the selected region or the current line if no region is active."
+    (interactive)
+    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
+          (end (if (use-region-p) (region-end) (line-beginning-position 2))))
+      (unless (use-region-p)
+        (message "[Cut the current line]"))
+      (apply orig-fn beg end args)))
+
+  (advice-add 'kill-region :around #'lvn-slick-cut-region)
 
   ;; Function to perform slick copy for the kill-ring-save command.
-  (defun lvn-slick-copy-region (beg end &optional region)
-    "Copy the selected region or the current line if REGION is nil.
-  BEG and END specify the region to copy if a region is selected."
-    (interactive
-     (if (use-region-p)
-         (list (region-beginning) (region-end))
-       (progn
-         (message "[Copied the current line]")
-         (list (line-beginning-position) (line-beginning-position 2))))))
-  ;; Add advice to execute lvn-slick-copy-region before the kill-ring-save command.
-  (advice-add 'kill-ring-save :before #'lvn-slick-copy-region)
+  (defun lvn-slick-copy-region (orig-fn &rest args)
+    "Copy the selected region or the current line if no region is active."
+    (interactive)
+    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
+          (end (if (use-region-p) (region-end) (line-beginning-position 2))))
+      (unless (use-region-p)
+        (message "[Copied the current line]"))
+      (apply orig-fn beg end args)))
+
+  (advice-add 'kill-ring-save :around #'lvn-slick-copy-region)
 #+end_src
 
 | Command                     | Emacs | Sublime Text | TextMate |

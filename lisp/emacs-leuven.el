@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250228.2356>
+;; Version: <20250301.1047>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250228.2356>"
+(defconst lvn--emacs-version "<20250301.1047>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1014,30 +1014,28 @@ original state of line numbers after navigation."
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
   ;; Function to perform slick cut for the kill-region command.
-  (defun lvn-slick-cut-region (beg end &optional region)
-    "Cut the selected region or the current line if REGION is nil.
-  BEG and END specify the region to cut if a region is selected."
-    (interactive
-     (if (use-region-p)
-         (list (region-beginning) (region-end))
-       (progn
-         (message "[Cut the current line]")
-         (list (line-beginning-position) (line-beginning-position 2))))))
-  ;; Add advice to execute lvn-slick-cut-region before the kill-region command.
-  (advice-add 'kill-region :before #'lvn-slick-cut-region)
+  (defun lvn-slick-cut-region (orig-fn &rest args)
+    "Cut the selected region or the current line if no region is active."
+    (interactive)
+    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
+          (end (if (use-region-p) (region-end) (line-beginning-position 2))))
+      (unless (use-region-p)
+        (message "[Cut the current line]"))
+      (apply orig-fn beg end args)))
+
+  (advice-add 'kill-region :around #'lvn-slick-cut-region)
 
   ;; Function to perform slick copy for the kill-ring-save command.
-  (defun lvn-slick-copy-region (beg end &optional region)
-    "Copy the selected region or the current line if REGION is nil.
-  BEG and END specify the region to copy if a region is selected."
-    (interactive
-     (if (use-region-p)
-         (list (region-beginning) (region-end))
-       (progn
-         (message "[Copied the current line]")
-         (list (line-beginning-position) (line-beginning-position 2))))))
-  ;; Add advice to execute lvn-slick-copy-region before the kill-ring-save command.
-  (advice-add 'kill-ring-save :before #'lvn-slick-copy-region)
+  (defun lvn-slick-copy-region (orig-fn &rest args)
+    "Copy the selected region or the current line if no region is active."
+    (interactive)
+    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
+          (end (if (use-region-p) (region-end) (line-beginning-position 2))))
+      (unless (use-region-p)
+        (message "[Copied the current line]"))
+      (apply orig-fn beg end args)))
+
+  (advice-add 'kill-ring-save :around #'lvn-slick-copy-region)
 
   (defun lvn-duplicate-line-or-region ()
     "Duplicate the current line or region."
