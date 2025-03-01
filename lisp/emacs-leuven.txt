@@ -152,62 +152,64 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 ;; This file is only provided as an example.  Customize it to your own taste!
 #+end_src
 
-* Pre-init
+* Initialization
 
-** Startup Time
-
-#+begin_src emacs-lisp
-;; Start recording the load time.
-(defconst emacs-leuven--load-start-time (current-time)
-  "Value of `current-time' before loading the Emacs-Leuven library.")
-#+end_src
-
-** GNU Emacs Internals: Garbage Collection
-
-*** Optimize garbage collection for faster Emacs startup
-
-By default, Emacs triggers garbage collection (GC) every 0.76 MB allocated
-(~gc-cons-threshold~ == 800,000 bytes). While this keeps memory usage low, it can
-also slow down startup due to frequent GC interruptions.
-
-On modern machines, we can optimize this by temporarily setting
-~gc-cons-threshold~ to its highest possible value (~most-positive-fixnum~),
-effectively disabling GC during startup. This allows Emacs to load more
-efficiently without unnecessary pauses.
-
-Once Emacs has fully initialized, we restore the default GC settings and trigger
-an initial garbage collection pass to clean up any accumulated memory.
-Additionally, we reset ~gc-cons-percentage~ to ensure *efficient memory management*
-post-startup. Using ~emacs-startup-hook~ ensures these adjustments occur only
-after the *UI* and all *initialization processes* have completed.
-
-#+begin_src emacs-lisp
-;; Disable GC messages to keep the messages clean.
-(setq garbage-collection-messages nil)
-
-;; Temporarily disable garbage collection during startup for speed.
-(setq gc-cons-threshold most-positive-fixnum)
-
-(defun lvn--restore-gc-settings-and-collect ()
-  "Restore default garbage collection settings and perform collection."
-  (setq gc-cons-threshold 800000)       ; Default value (0.76 MB).
-  (setq gc-cons-percentage 0.1)         ; Default percentage.
-  ;; Trigger garbage collection.
-  (garbage-collect)
-  ;; Log the completion.
-  (message "[Startup optimization: GC settings restored, GC performed.]"))
-
-;; Reset GC settings and trigger GC after full startup.
-(add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
-#+end_src
-
-* Init
+This section marks the official start of Emacs-Leuven loading, displaying the
+version (timestamped with the last modification date) to the user.
 
 #+begin_src emacs-lisp :noweb yes
+;; Define the version as the current timestamp of the last change.
 (defconst lvn--emacs-version "<<current-time()>>"
-  "Emacs-Leuven version (date of the last change).")
+  "Emacs-Leuven version, represented as the date and time of the last change.")
 
-(message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
+;; Announce the start of the loading process.
+(message "* --[ Loading Emacs-Leuven %s ]--" lvn--emacs-version)
+#+end_src
+
+** Measuring Startup Time
+
+To track the time taken to load Emacs-Leuven, we record the start time before
+initialization begins.
+
+#+begin_src emacs-lisp
+;; Record the start time for measuring load duration.
+(defconst emacs-leuven--load-start-time (current-time)
+  "Timestamp before loading Emacs-Leuven, used to calculate startup duration.")
+#+end_src
+
+** Optimizing Garbage Collection
+
+*** Background
+
+Emacs triggers garbage collection (GC) by default whenever 0.76 MB
+(~gc-cons-threshold~ = 800,000 bytes) of memory is allocated. While this conserves
+memory, it can slow startup due to frequent GC pauses. On modern systems with
+ample resources, we can optimize this behavior.
+
+*** Strategy
+
+During startup, we temporarily disable GC by setting ~gc-cons-threshold~ to
+~most-positive-fixnum~ (the largest integer Emacs supports). This prevents
+interruptions, speeding up the loading process. After *initialization completes*,
+we restore default GC settings and perform an initial cleanup via
+~emacs-startup-hook~, ensuring *efficient memory management* post-startup.
+
+#+begin_src emacs-lisp
+;; Suppress GC messages for a cleaner startup log.
+(setq garbage-collection-messages nil)
+
+;; Disable garbage collection during startup for performance.
+(setq gc-cons-threshold most-positive-fixnum)
+
+(defun lvn--restore-gc-settings-and-clean ()
+  "Restore default GC settings and perform an initial garbage collection."
+  (setq gc-cons-threshold 800000)       ; Restore default threshold (0.76 MB).
+  (setq gc-cons-percentage 0.1)         ; Restore default percentage.
+  (garbage-collect)                     ; Perform cleanup.
+  (message "[GC optimization complete: Settings restored, memory cleaned.]"))
+
+;; Restore GC settings (and trigger GC) after full startup.
+(add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-clean t)
 #+end_src
 
 #+begin_src emacs-lisp

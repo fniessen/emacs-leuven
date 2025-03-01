@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1538>
+;; Version: <20250301.1555>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -66,32 +66,32 @@
 
 ;; This file is only provided as an example.  Customize it to your own taste!
 
-;; Start recording the load time.
-(defconst emacs-leuven--load-start-time (current-time)
-  "Value of `current-time' before loading the Emacs-Leuven library.")
+;; Define the version as the current timestamp of the last change.
+(defconst lvn--emacs-version "<20250301.1555>"
+  "Emacs-Leuven version, represented as the date and time of the last change.")
 
-;; Disable GC messages to keep the messages clean.
+;; Announce the start of the loading process.
+(message "* --[ Loading Emacs-Leuven %s ]--" lvn--emacs-version)
+
+;; Record the start time for measuring load duration.
+(defconst emacs-leuven--load-start-time (current-time)
+  "Timestamp before loading Emacs-Leuven, used to calculate startup duration.")
+
+;; Suppress GC messages for a cleaner startup log.
 (setq garbage-collection-messages nil)
 
-;; Temporarily disable garbage collection during startup for speed.
+;; Disable garbage collection during startup for performance.
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defun lvn--restore-gc-settings-and-collect ()
-  "Restore default garbage collection settings and perform collection."
-  (setq gc-cons-threshold 800000)       ; Default value (0.76 MB).
-  (setq gc-cons-percentage 0.1)         ; Default percentage.
-  ;; Trigger garbage collection.
-  (garbage-collect)
-  ;; Log the completion.
-  (message "[Startup optimization: GC settings restored, GC performed.]"))
+(defun lvn--restore-gc-settings-and-clean ()
+  "Restore default GC settings and perform an initial garbage collection."
+  (setq gc-cons-threshold 800000)       ; Restore default threshold (0.76 MB).
+  (setq gc-cons-percentage 0.1)         ; Restore default percentage.
+  (garbage-collect)                     ; Perform cleanup.
+  (message "[GC optimization complete: Settings restored, memory cleaned.]"))
 
-;; Reset GC settings and trigger GC after full startup.
-(add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
-
-(defconst lvn--emacs-version "<20250301.1538>"
-  "Emacs-Leuven version (date of the last change).")
-
-(message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
+;; Restore GC settings (and trigger GC) after full startup.
+(add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-clean t)
 
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
