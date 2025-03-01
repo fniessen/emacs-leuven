@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1420>
+;; Version: <20250301.1438>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250301.1420>"
+(defconst lvn--emacs-version "<20250301.1438>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -2877,10 +2877,6 @@ in the current buffer."
     ;; (define-key helm-map (kbd "C-z")       #'helm-select-action)
     (define-key helm-map (kbd "<backtab>") #'helm-select-action)
 
-    (define-key helm-map (kbd "C-M-n") #'helm-next-source)
-
-    (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
-
     ;; @ reserved for searching inside buffers! (See C-h m)
 
     ;; Various functions for Helm (Shell history, etc.).
@@ -2905,10 +2901,9 @@ in the current buffer."
     ;; ;; source.
     ;; (setq helm-move-to-line-cycle-in-source t)
 
-    ;; Candidates separator of `multiline' source (such as
-    ;; `helm-show-kill-ring').
-    (setq helm-candidate-separator
-          "--8<-----------------------separator------------------------>8---")
+    ;; Separator showing up between candidate groups or entries in commands like
+    ;; `helm-show-kill-ring', or anything displaying multi-line candidates.
+    (setq helm-candidate-separator "────────")
 
     ;; Suppress displaying sources which are out of screen at first.
     (setq helm-quick-update t)

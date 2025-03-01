@@ -5151,10 +5151,6 @@ before running helm-flycheck"
 #+end_src
 
 #+begin_src emacs-lisp
-    (define-key helm-map (kbd "C-M-n") #'helm-next-source)
-
-    (define-key helm-map (kbd "C-M-p") #'helm-previous-source)
-
     ;; @ reserved for searching inside buffers! (See C-h m)
 
     ;; Various functions for Helm (Shell history, etc.).
@@ -5179,10 +5175,9 @@ before running helm-flycheck"
     ;; ;; source.
     ;; (setq helm-move-to-line-cycle-in-source t)
 
-    ;; Candidates separator of `multiline' source (such as
-    ;; `helm-show-kill-ring').
-    (setq helm-candidate-separator
-          "--8<-----------------------separator------------------------>8---")
+    ;; Separator showing up between candidate groups or entries in commands like
+    ;; `helm-show-kill-ring', or anything displaying multi-line candidates.
+    (setq helm-candidate-separator "────────")
 
     ;; Suppress displaying sources which are out of screen at first.
     (setq helm-quick-update t)
