@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1723>
+;; Version: <20250301.1727>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250301.1723>"
+(defconst lvn--emacs-version "<20250301.1727>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -4792,7 +4792,7 @@ the parent element."
       :group 'leuven
       :type 'integer)
 
-    (defun leuven--which-func-current ()
+    (defun lvn--which-func-current ()
       "Return the current function name, truncated to `lvn-which-func-max-length'."
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
@@ -4802,7 +4802,7 @@ the parent element."
           which-func-unknown)))
 
     (setq which-func-format
-          `("[" (:propertize (:eval (leuven--which-func-current))
+          `("[" (:propertize (:eval (lvn--which-func-current))
                              local-map ,which-func-keymap
                              face which-func
                              mouse-face mode-line-highlight

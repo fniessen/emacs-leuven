@@ -8208,7 +8208,7 @@ Truncate the current function name (for the mode line):
       :group 'leuven
       :type 'integer)
 
-    (defun leuven--which-func-current ()
+    (defun lvn--which-func-current ()
       "Return the current function name, truncated to `lvn-which-func-max-length'."
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
@@ -8218,7 +8218,7 @@ Truncate the current function name (for the mode line):
           which-func-unknown)))
 
     (setq which-func-format
-          `("[" (:propertize (:eval (leuven--which-func-current))
+          `("[" (:propertize (:eval (lvn--which-func-current))
                              local-map ,which-func-keymap
                              face which-func
                              mouse-face mode-line-highlight
