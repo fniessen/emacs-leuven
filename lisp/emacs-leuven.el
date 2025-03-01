@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1616>
+;; Version: <20250301.1625>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250301.1616>"
+(defconst lvn--emacs-version "<20250301.1625>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -551,7 +551,7 @@ Shows a warning message if the file does not exist or is not executable."
                 (package-refresh-contents)
                 (dolist (pkg (reverse missing-elpa-packages))
                   (leuven-install-package pkg)))
-            (message "No internet connection available. Cannot refresh package archives.")))))
+            (message "[No internet connection available. Cannot refresh package archives.]")))))
 
     (defun leuven-install-package (pkg)
       "Install the specified package and handle errors."
@@ -1967,7 +1967,7 @@ Should be selected from `fringe-bitmaps'.")
             (progn
               (occur (format "\\_<%s\\_>" (regexp-quote (symbol-name symbol))))
               (switch-to-buffer "*Occur*"))
-          (message "No symbol at point"))))
+          (message "[No symbol at point]"))))
 
     (global-set-key (kbd "<C-M-f7>") 'lvn-find-usages)
 
@@ -2860,7 +2860,7 @@ in the current buffer."
       (cond ((derived-mode-p 'org-mode)
              (if (fboundp 'helm-org-in-buffer-headings)
                  (helm-org-in-buffer-headings)
-               (message "helm-org-in-buffer-headings is not available")))
+               (message "[helm-org-in-buffer-headings is not available]")))
             ((derived-mode-p 'tex-mode)
              (helm-imenu))
             (t
@@ -4337,7 +4337,7 @@ scrolling to the bottom."
                      (progn (save-excursion
                               (goto-char (point-min))
                               (re-search-forward "\\(usepackage.*french.*babel\\)" nil t)))))
-        (message "Switched dictionary to français")
+        (message "[Switched dictionary to français]")
         (sit-for 0.5)
         (save-excursion
           (ispell-change-dictionary "francais")
@@ -6467,11 +6467,11 @@ Without ARG, prompt for a revision and use `lvn--ediff-revision`."
       (progn
         (auto-complete-mode -1)
         (company-mode 1)
-        (message "Disable AC.  Enable Company")
+        (message "[Disable AC.  Enable Company]")
         (sit-for 2))
     (auto-complete-mode 1)
     (company-mode -1)
-    (message "Disable Company.  Enable AC")
+    (message "[Disable Company.  Enable AC]")
     (sit-for 2)))
 
 (global-set-key (kbd "<M-f1>") #'toggle-auto-complete-company-modes)
@@ -6869,7 +6869,7 @@ This example lists Azerty layout second row keys."
         (if (or (< (buffer-size) 1400000)
                 (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
             (apply orig-fun args)
-          (message "Operation cancelled.")))
+          (message "[Operation cancelled.]")))
 
       (advice-add 'dired-jump :around #'lvn--dired-jump-advice)))
 
@@ -7971,7 +7971,7 @@ Git repository directory."
             (if (not (string-empty-p unstaged-changes))
                 (progn
                   (message "[WARN- You have unstaged changes. Please commit or stash them before updating.]")
-                  (message "Unstaged changes:\n%s" unstaged-changes))
+                  (message "[Unstaged changes:\n%s]" unstaged-changes))
               (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" el-file-directory))))
                 (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
                     (message "[Configuration is already up-to-date]")
