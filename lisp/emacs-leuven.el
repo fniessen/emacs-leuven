@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1718>
+;; Version: <20250301.1723>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250301.1718>"
+(defconst lvn--emacs-version "<20250301.1723>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -4787,10 +4787,18 @@ the parent element."
     ;; based on Imenu.
     (which-function-mode 1)             ; ~ Stickyfunc mode (in header line).
 
+    (defcustom lvn-which-func-max-length 30
+      "Maximum length of the function name displayed in the modeline."
+      :group 'leuven
+      :type 'integer)
+
     (defun leuven--which-func-current ()
+      "Return the current function name, truncated to `lvn-which-func-max-length'."
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
-            (truncate-string-to-width current 30 nil nil "...") ; 30 = OK!
+            (truncate-string-to-width current
+                                      lvn-which-func-max-length
+                                      nil nil "...")
           which-func-unknown)))
 
     (setq which-func-format
@@ -5002,8 +5010,8 @@ mouse-3: go to end") "]")))
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
-      :type 'face
-      :group 'hideshow)
+      :group 'hideshow
+      :type 'face)
 
     (defface hs-face
       '((t :box "#777777" :foreground "#9A9A6A" :background "#F3F349"))

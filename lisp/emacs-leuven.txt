@@ -8203,10 +8203,18 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
 Truncate the current function name (for the mode line):
 
 #+begin_src emacs-lisp
+    (defcustom lvn-which-func-max-length 30
+      "Maximum length of the function name displayed in the modeline."
+      :group 'leuven
+      :type 'integer)
+
     (defun leuven--which-func-current ()
+      "Return the current function name, truncated to `lvn-which-func-max-length'."
       (let ((current (gethash (selected-window) which-func-table)))
         (if current
-            (truncate-string-to-width current 30 nil nil "...") ; 30 = OK!
+            (truncate-string-to-width current
+                                      lvn-which-func-max-length
+                                      nil nil "...")
           which-func-unknown)))
 
     (setq which-func-format
@@ -8636,8 +8644,8 @@ Keyboard shortcuts:
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
-      :type 'face
-      :group 'hideshow)
+      :group 'hideshow
+      :type 'face)
 
     (defface hs-face
       '((t :box "#777777" :foreground "#9A9A6A" :background "#F3F349"))
