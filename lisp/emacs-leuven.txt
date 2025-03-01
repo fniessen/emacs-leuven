@@ -1644,25 +1644,43 @@ selected text.
 
 #+begin_src emacs-lisp
   ;; Function to perform slick cut for the kill-region command.
-  (defun lvn-slick-cut-region (orig-fn &rest args)
-    "Cut the selected region or the current line if no region is active."
-    (interactive)
-    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
-          (end (if (use-region-p) (region-end) (line-beginning-position 2))))
-      (unless (use-region-p)
-        (message "[Cut the current line]"))
+  (defun lvn-slick-cut-region (orig-fn beg end &rest args)
+    "Cut the selected region or the current line if no region is active and
+called interactively."
+    (interactive (if (use-region-p)
+                     (list (region-beginning) (region-end))
+                   (list (line-beginning-position) (line-beginning-position 2))))
+    (if (called-interactively-p 'any)
+        (let ((region-active (and (mark t) (use-region-p))))
+          (if region-active
+              ;; Region is active and mark is set, use the region bounds.
+              (apply orig-fn (region-beginning) (region-end) args)
+            ;; No active region or mark not set, cut the current line.
+            (progn
+              (message "[Cut the current line]")
+              (apply orig-fn (line-beginning-position) (line-beginning-position 2) args))))
+      ;; If not called interactively, pass the original arguments unchanged.
       (apply orig-fn beg end args)))
 
   (advice-add 'kill-region :around #'lvn-slick-cut-region)
 
   ;; Function to perform slick copy for the kill-ring-save command.
-  (defun lvn-slick-copy-region (orig-fn &rest args)
-    "Copy the selected region or the current line if no region is active."
-    (interactive)
-    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
-          (end (if (use-region-p) (region-end) (line-beginning-position 2))))
-      (unless (use-region-p)
-        (message "[Copied the current line]"))
+  (defun lvn-slick-copy-region (orig-fn beg end &rest args)
+    "Copy the selected region or the current line if no region is active and
+called interactively."
+    (interactive (if (use-region-p)
+                     (list (region-beginning) (region-end))
+                   (list (line-beginning-position) (line-beginning-position 2))))
+    (if (called-interactively-p 'any)
+        (let ((region-active (and (mark t) (use-region-p))))
+          (if region-active
+              ;; Region is active and mark is set, use the region bounds.
+              (apply orig-fn (region-beginning) (region-end) args)
+            ;; No active region or mark not set, copy the current line.
+            (progn
+              (message "[Copied the current line]")
+              (apply orig-fn (line-beginning-position) (line-beginning-position 2) args))))
+      ;; If not called interactively, pass the original arguments unchanged.
       (apply orig-fn beg end args)))
 
   (advice-add 'kill-ring-save :around #'lvn-slick-copy-region)

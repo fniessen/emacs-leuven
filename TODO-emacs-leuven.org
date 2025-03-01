@@ -313,18 +313,6 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
 
 *** TODO [#A] Fixer les warnings (cl is deprecated)
 
- ■  Emergency (emacsql): Uninstall the `git-commit' package.
-
-The "git-commit.el" library is no longer distributed as a separate
-package.  It is now distributed as part of the `magit' package.
-
-The `git-commit' package now does nothing but display this warning.
-If it is located earlier on the `load-path' than `magit' is, then that
-prevents the proper "git-commit.el" libraries from `magit' from being
-loaded.
-
-Please uninstalling `git-commit' and then restart Emacs.
-
  ■  Warning (comp): auto-highlight-symbol.el:446:2: Warning: custom-declare-variable `ahs-include' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): auto-highlight-symbol.el:470:2: Warning: custom-declare-variable `ahs-exclude' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): back-button.el:436:12: Warning: `inhibit-changing-match-data' is an obsolete variable (as of 29.1); use `save-match-data' instead.
@@ -542,20 +530,6 @@ Please uninstalling `git-commit' and then restart Emacs.
  ■  Warning (comp): yasnippet.el:4735:2: Warning: docstring wider than 80 characters
  ■  Warning (comp): yasnippet.el:475:2: Warning: defvar `yas-after-exit-snippet-hook' docstring wider than 80 characters
  ■  Warning (comp): yasnippet.el:557:2: Warning: custom-declare-variable `yas-keymap-disable-hook' docstring wider than 80 characters
-
-*** TODO Investigate intermittent error when using M-w on a single line
-
-#+begin_src emacs-lisp
-Debugger entered--Lisp error: (wrong-type-argument integer-or-marker-p nil)
-  indicate-copied-region()
-  #<subr kill-ring-save>(455056 455119 nil)
-  apply(#<subr kill-ring-save> (455056 455119))
-  kill-ring-save(455056 455119)
-  funcall-interactively(kill-ring-save 455056 455119)
-  command-execute(kill-ring-save)
-#+end_src
-
-Les chiffres sont des positions dans mon buffer...
 
 *** TODO Test and integrate 'leuven-remove-matching-lines-between-buffers'
 

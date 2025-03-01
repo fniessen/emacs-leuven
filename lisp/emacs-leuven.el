@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1047>
+;; Version: <20250301.1116>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250301.1047>"
+(defconst lvn--emacs-version "<20250301.1116>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -1014,25 +1014,43 @@ original state of line numbers after navigation."
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
   ;; Function to perform slick cut for the kill-region command.
-  (defun lvn-slick-cut-region (orig-fn &rest args)
-    "Cut the selected region or the current line if no region is active."
-    (interactive)
-    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
-          (end (if (use-region-p) (region-end) (line-beginning-position 2))))
-      (unless (use-region-p)
-        (message "[Cut the current line]"))
+  (defun lvn-slick-cut-region (orig-fn beg end &rest args)
+    "Cut the selected region or the current line if no region is active and
+called interactively."
+    (interactive (if (use-region-p)
+                     (list (region-beginning) (region-end))
+                   (list (line-beginning-position) (line-beginning-position 2))))
+    (if (called-interactively-p 'any)
+        (let ((region-active (and (mark t) (use-region-p))))
+          (if region-active
+              ;; Region is active and mark is set, use the region bounds.
+              (apply orig-fn (region-beginning) (region-end) args)
+            ;; No active region or mark not set, cut the current line.
+            (progn
+              (message "[Cut the current line]")
+              (apply orig-fn (line-beginning-position) (line-beginning-position 2) args))))
+      ;; If not called interactively, pass the original arguments unchanged.
       (apply orig-fn beg end args)))
 
   (advice-add 'kill-region :around #'lvn-slick-cut-region)
 
   ;; Function to perform slick copy for the kill-ring-save command.
-  (defun lvn-slick-copy-region (orig-fn &rest args)
-    "Copy the selected region or the current line if no region is active."
-    (interactive)
-    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
-          (end (if (use-region-p) (region-end) (line-beginning-position 2))))
-      (unless (use-region-p)
-        (message "[Copied the current line]"))
+  (defun lvn-slick-copy-region (orig-fn beg end &rest args)
+    "Copy the selected region or the current line if no region is active and
+called interactively."
+    (interactive (if (use-region-p)
+                     (list (region-beginning) (region-end))
+                   (list (line-beginning-position) (line-beginning-position 2))))
+    (if (called-interactively-p 'any)
+        (let ((region-active (and (mark t) (use-region-p))))
+          (if region-active
+              ;; Region is active and mark is set, use the region bounds.
+              (apply orig-fn (region-beginning) (region-end) args)
+            ;; No active region or mark not set, copy the current line.
+            (progn
+              (message "[Copied the current line]")
+              (apply orig-fn (line-beginning-position) (line-beginning-position 2) args))))
+      ;; If not called interactively, pass the original arguments unchanged.
       (apply orig-fn beg end args)))
 
   (advice-add 'kill-ring-save :around #'lvn-slick-copy-region)
