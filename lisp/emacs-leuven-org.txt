@@ -1902,21 +1902,6 @@ at the end of your =.emacs= file.
                 (local-unset-key (kbd "C-c ]"))))
 #+end_example
 
-Otherwise, through this hook, every org file is automatically "filed" and any to
-do items inside will be found by the org-mode agenda builder.
-
-#+begin_src emacs-lisp :tangle no
-  ;; Add Org files to the agenda when we save them.
-  (defun to-agenda-on-save-org-mode-file()
-    "XXX"
-    (when (string= (message "%s" major-mode) "org-mode")
-      (org-agenda-file-to-front)))
-
-  (add-hook 'after-save-hook 'to-agenda-on-save-org-mode-file)
-#+end_src
-
-This does mean that when files are deleted or moved the org agenda complains.
-
 ** The agenda dispatcher
 
 #+begin_src emacs-lisp
