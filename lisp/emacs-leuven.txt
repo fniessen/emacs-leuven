@@ -2356,16 +2356,22 @@ Testing it -- Example usage:
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Just-in-time fontification.
-  (with-eval-after-load 'jit-lock
+  ;; Just-in-time (JIT) fontification.
+  (use-package jit-lock
+    ;; 'jit-lock' is built into Emacs, so no installation is needed.
+    :ensure nil
 
-    ;; Stealth fontification should show status messages.
+    ;; Load lazily, since JIT fontification isn't needed immediately.
+    :defer t
+
+    ;; Configuration to apply after the package is loaded.
+    :config
+    ;; Enable status messages during stealth fontification for better feedback.
     (setq jit-lock-stealth-verbose t)
 
-    ;; ;; Idle time after which deferred fontification should take place.
-    ;; (setq jit-lock-defer-time 0.05)     ; Improve the scrolling speed in large
-    ;;                                     ; files.
-    )
+    ;; Define idle time (in seconds) before deferred fontification occurs.
+    (setq jit-lock-defer-time 0.05)     ; Improve scrolling speed in large files.
+  )
 #+end_src
 
 ** Interactive Highlighting

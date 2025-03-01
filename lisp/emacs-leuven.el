@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1555>
+;; Version: <20250301.1616>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250301.1555>"
+(defconst lvn--emacs-version "<20250301.1616>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -1366,16 +1366,22 @@ called interactively."
   ;; See also `org-agenda-custom-command' '1'.
 )
 
-  ;; Just-in-time fontification.
-  (with-eval-after-load 'jit-lock
+  ;; Just-in-time (JIT) fontification.
+  (use-package jit-lock
+    ;; 'jit-lock' is built into Emacs, so no installation is needed.
+    :ensure nil
 
-    ;; Stealth fontification should show status messages.
+    ;; Load lazily, since JIT fontification isn't needed immediately.
+    :defer t
+
+    ;; Configuration to apply after the package is loaded.
+    :config
+    ;; Enable status messages during stealth fontification for better feedback.
     (setq jit-lock-stealth-verbose t)
 
-    ;; ;; Idle time after which deferred fontification should take place.
-    ;; (setq jit-lock-defer-time 0.05)     ; Improve the scrolling speed in large
-    ;;                                     ; files.
-    )
+    ;; Define idle time (in seconds) before deferred fontification occurs.
+    (setq jit-lock-defer-time 0.05)     ; Improve scrolling speed in large files.
+  )
 
 ;;** 14.13 (info "(emacs)Highlight Interactively") by Matching
 
