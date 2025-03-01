@@ -2369,8 +2369,8 @@ Testing it -- Example usage:
     ;; Enable status messages during stealth fontification for better feedback.
     (setq jit-lock-stealth-verbose t)
 
-    ;; Define idle time (in seconds) before deferred fontification occurs.
-    (setq jit-lock-defer-time 0.05)     ; Improve scrolling speed in large files.
+    ;; ;; Define idle time (in seconds) before deferred fontification occurs.
+    ;; (setq jit-lock-defer-time 0.01)     ; Improve scrolling speed in large files.
   )
 #+end_src
 
@@ -2855,9 +2855,6 @@ We build our mode line:
 - percent
 - buffer size
 - dictionary
-
-*************** TODO Don't show full clock line title (only the first nn characters)
-*************** END
 
 #+begin_src emacs-lisp
   (defface powerline-modified-face

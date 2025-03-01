@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1659>
+;; Version: <20250301.1718>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250301.1659>"
+(defconst lvn--emacs-version "<20250301.1718>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -1379,8 +1379,8 @@ called interactively."
     ;; Enable status messages during stealth fontification for better feedback.
     (setq jit-lock-stealth-verbose t)
 
-    ;; Define idle time (in seconds) before deferred fontification occurs.
-    (setq jit-lock-defer-time 0.05)     ; Improve scrolling speed in large files.
+    ;; ;; Define idle time (in seconds) before deferred fontification occurs.
+    ;; (setq jit-lock-defer-time 0.01)     ; Improve scrolling speed in large files.
   )
 
 ;;** 14.13 (info "(emacs)Highlight Interactively") by Matching
