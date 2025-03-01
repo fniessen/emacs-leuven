@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1625>
+;; Version: <20250301.1659>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250301.1625>"
+(defconst lvn--emacs-version "<20250301.1659>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -5939,31 +5939,35 @@ a clean buffer we're an order of magnitude laxer about checking."
   (setq vc-make-backup-files t)
 
   (defun lvn--ediff-revision (file rev1 &optional rev2)
-    "Run Ediff by comparing two revisions of FILE (rev1 and rev2).
-  If the buffer is modified, prompt to save it before proceeding."
+    "Compare two revisions of FILE (REV1 and REV2) using Ediff.
+  If the current buffer is modified, prompt to save it before proceeding."
     (require 'ediff)
-    (find-file file)
-    (if (and (buffer-modified-p)
-             (y-or-n-p (format "Buffer %s is modified.  Save buffer? "
-                               (buffer-name))))
-        (save-buffer (current-buffer)))
-    (ediff-load-version-control)
-    (funcall
-     (intern (format "ediff-%S-internal" ediff-version-control-package))
-     rev1 rev2 nil))
+    (let ((buffer (find-file-noselect file)))
+      (with-current-buffer buffer
+        (when (and (buffer-modified-p)
+                   (y-or-n-p (format "Buffer %s is modified. Save it? "
+                                     (buffer-name))))
+          (save-buffer)))
+      (ediff-load-version-control)
+      (funcall (intern (format "ediff-%s-internal" ediff-version-control-package))
+               rev1 (rev2 "" nil))))
 
-  (defun lvn-vc-diff (&optional arg)
-    "Diff current file with another revision or perform `vc-diff` interactively.
-With ARG, run `vc-diff`.
-Without ARG, prompt for a revision and use `lvn--ediff-revision`."
+  (defun lvn-vc-diff-buffer-file (arg)
+    "Diff the current file against a revision using Ediff, or run
+ `vc-diff' with prefix ARG.
+  With prefix ARG, call `vc-diff' interactively.
+  Without ARG, prompt for a revision to compare against the current file
+  using Ediff."
     (interactive "P")
-    (if arg
-        (vc-diff nil)
-      (lvn--ediff-revision (buffer-file-name)
-                              (read-string "Revision? " "HEAD" nil "HEAD")
-                              "")))
+    (let ((file (or (buffer-file-name)
+                    (error "No file associated with this buffer"))))
+      (if arg
+          (vc-diff nil)
+        (lvn--ediff-revision file
+                            (read-string "Revision? " "HEAD" nil "HEAD")
+                            ""))))
 
-  (define-key vc-prefix-map (kbd "=") #'lvn-vc-diff)
+  (define-key vc-prefix-map (kbd "=") #'lvn-vc-diff-buffer-file)
 
 (setq vc-annotate-display-mode nil)
 

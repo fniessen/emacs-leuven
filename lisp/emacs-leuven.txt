@@ -2592,8 +2592,6 @@ If you need to know what lines changed in latest commit as well, you can enable
 ~diff-hl-amend-mode~ to *show changes against the second-last revision*.
 #+end_tip
 
-azazer
-
 #+begin_src emacs-lisp
   (with-eval-after-load 'diff-hl-autoloads
     (idle-require 'diff-hl))
@@ -2631,19 +2629,6 @@ Act on changes:
 
     ;; Revert current hunk (also on `C-x v n').
     (define-key diff-hl-mode-map (kbd "C-x v u") #'diff-hl-revert-hunk))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-    (defun magit-refresh--diff-hl-refresh-after ()
-      (dolist (buffer (buffer-list))
-        (with-current-buffer buffer
-          (when diff-hl-mode
-            (diff-hl-update)))))
-    (advice-add 'magit-refresh :after #'magit-refresh--diff-hl-refresh-after)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 #+end_src
 
 #+begin_tip
@@ -4148,21 +4133,6 @@ XXX Add explanation about what to do when a file is opened in red background!
 See https://www.diffchecker.com/diff for an online solution.
 
 *** Diff
-
-If you want a Magit diff buffer for the current file, you can call
-magit-diff-buffer-file directly, or use the "diff" option (d) in
-magit-file-popup. e.g.:
-
-(global-set-key (kbd "C-c m d") #'magit-diff-buffer-file)
-(global-set-key (kbd "C-c m f") #'magit-file-popup)
-
-#+begin_tip
-To compare Excel files, go to =File= / =Options= / =Advanced= / =Display options for
-this worksheet= / =Show formulas in cells instead of their calculated
-results=.  Then, =File= / =Save As= / =CSV=.
-
-Or, even easier, use *Spreadsheet Compare 2016*!
-#+end_tip
 
 #+begin_src emacs-lisp
 ;;** 18.9 (info "(emacs)Comparing Files")
@@ -10800,37 +10770,40 @@ can use the following keys to navigate historic versions of the file:
   (setq vc-make-backup-files t)
 
   (defun lvn--ediff-revision (file rev1 &optional rev2)
-    "Run Ediff by comparing two revisions of FILE (rev1 and rev2).
-  If the buffer is modified, prompt to save it before proceeding."
+    "Compare two revisions of FILE (REV1 and REV2) using Ediff.
+  If the current buffer is modified, prompt to save it before proceeding."
     (require 'ediff)
-    (find-file file)
-    (if (and (buffer-modified-p)
-             (y-or-n-p (format "Buffer %s is modified.  Save buffer? "
-                               (buffer-name))))
-        (save-buffer (current-buffer)))
-    (ediff-load-version-control)
-    (funcall
-     (intern (format "ediff-%S-internal" ediff-version-control-package))
-     rev1 rev2 nil))
+    (let ((buffer (find-file-noselect file)))
+      (with-current-buffer buffer
+        (when (and (buffer-modified-p)
+                   (y-or-n-p (format "Buffer %s is modified. Save it? "
+                                     (buffer-name))))
+          (save-buffer)))
+      (ediff-load-version-control)
+      (funcall (intern (format "ediff-%s-internal" ediff-version-control-package))
+               rev1 (rev2 "" nil))))
 
-  (defun lvn-vc-diff (&optional arg)
-    "Diff current file with another revision or perform `vc-diff` interactively.
-With ARG, run `vc-diff`.
-Without ARG, prompt for a revision and use `lvn--ediff-revision`."
+  (defun lvn-vc-diff-buffer-file (arg)
+    "Diff the current file against a revision using Ediff, or run
+ `vc-diff' with prefix ARG.
+  With prefix ARG, call `vc-diff' interactively.
+  Without ARG, prompt for a revision to compare against the current file
+  using Ediff."
     (interactive "P")
-    (if arg
-        (vc-diff nil)
-      (lvn--ediff-revision (buffer-file-name)
-                              (read-string "Revision? " "HEAD" nil "HEAD")
-                              "")))
+    (let ((file (or (buffer-file-name)
+                    (error "No file associated with this buffer"))))
+      (if arg
+          (vc-diff nil)
+        (lvn--ediff-revision file
+                            (read-string "Revision? " "HEAD" nil "HEAD")
+                            ""))))
 
-  (define-key vc-prefix-map (kbd "=") #'lvn-vc-diff)
+  (define-key vc-prefix-map (kbd "=") #'lvn-vc-diff-buffer-file)
 #+end_src
 
-Today I learned that it is also interactive. I can cycle through revisions using
-p and n, open the file at a specified revision with f, view the log with l, and
-show a diff with d or changeset diff with D. (Unfortunately, the diff is ugly
-and not in color.)
+It is also interactive. I can cycle through revisions using p and n, open the
+file at a specified revision with f, view the log with l, and show a diff with
+d or changeset diff with D. (Unfortunately, the diff is ugly and not in color.)
 
 
 The best command in vc-annotate is "a": Reruns annotate from the revision _prior_
