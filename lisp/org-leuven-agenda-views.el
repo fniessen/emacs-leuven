@@ -220,14 +220,14 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
     ;; Update `org-agenda-files` with the found files.
     (setq org-agenda-files todo-files)
     ;; Message and return the list of files for verification.
-    (message "Org agenda files set to: %s" org-agenda-files)
+    (message "[Org agenda files set to: %s]" org-agenda-files)
     org-agenda-files))
 
 (defun lvn-set-org-agenda-files ()
   "Set `org-agenda-files` to all `.org` files in `org-directory`."
   (interactive)
   (setq org-agenda-files (directory-files org-directory t "\\.org$"))
-  (message "Org agenda files set to: %s" org-agenda-files))
+  (message "[Org agenda files set to: %s]" org-agenda-files))
 
 ;;; org-leuven-agenda-views.el --- Org customized views
 
