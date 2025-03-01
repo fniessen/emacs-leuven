@@ -7275,7 +7275,10 @@ Region Marked>~.
 --8<---------------cut here---------------end--------------->8---
 #+end_example
 
-** Phonetic
+** Phonetic alphabet
+
+This configuration uses the ~phonetic~ package to enable the translation of text
+in the region into the phonetic alphabet.
 
 #+begin_src emacs-lisp
 ;;** (info "phonetic")
@@ -7283,9 +7286,10 @@ Region Marked>~.
   (leuven--section "phonetic")
 
   ;; Phonetic spelling.
-  (when (locate-library "phonetic")
-    (autoload 'phonetize-region "phonetic"
-      "Translate the region according to the phonetic alphabet." t))
+  (use-package phonetic
+    :if (locate-library "phonetic")
+    ;; Translate the region according to the phonetic alphabet.
+    :commands phonetize-region)
 #+end_src
 
 #+begin_src emacs-lisp
