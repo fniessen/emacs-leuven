@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1438>
+;; Version: <20250301.1538>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250301.1438>"
+(defconst lvn--emacs-version "<20250301.1538>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -225,18 +225,18 @@ but only if it meets certain criteria:
     (let ((abs-directory (expand-file-name directory)))
       (cond
        ((not (file-directory-p abs-directory))
-        (message "[WARN- Directory '%s' does not exist or is not a directory."
+        (message "[WARN- Directory '%s' does not exist or is not a directory.]"
                  abs-directory)
         nil)
 
        ((file-exists-p (expand-file-name ".nosearch" abs-directory))
-        (message "[INFO- Skipping '%s' due to .nosearch file."
+        (message "[INFO- Skipping '%s' due to .nosearch file.]"
                  abs-directory)
         nil)
 
        (t
         (add-to-list 'load-path abs-directory)
-        (message "[INFO- Added '%s' to `load-path'."
+        (message "[INFO- Added '%s' to `load-path'.]"
                  abs-directory)
         t))))
 
@@ -364,12 +364,12 @@ Shows a warning message if the file does not exist or is not executable."
 
     (cond
      ((not (file-exists-p file))
-      (message "[WARN] File `%s' does not exist." file)
+      (message "[WARN- File `%s' does not exist.]" file)
       (sit-for 1.5)
       nil)
 
      ((not (file-executable-p file))
-      (message "[WARN] File `%s' is not executable." file)
+      (message "[WARN- File `%s' is not executable.]" file)
       (sit-for 1.5)
       nil)
 
@@ -611,13 +611,15 @@ Shows a warning message if the file does not exist or is not executable."
   (with-eval-after-load 'idle-require
 
     ;; Idle time in seconds after which autoload functions will be loaded.
-    (setq idle-require-idle-delay 5)
+    (setq idle-require-idle-delay 2.0)
 
     ;; Time in seconds between automatically loaded functions.
-    (setq idle-require-load-break 2)
+    (setq idle-require-load-break 0.5)
 
     ;; Start loading after full startup.
     (add-hook 'emacs-startup-hook #'idle-require-mode))
+
+  (setq use-package-idle-delay 2.0)
 
 ;;* 1 The Organization of the (info "(emacs)Screen")
 
@@ -2408,12 +2410,26 @@ After initiating the grep search, the isearch is aborted."
     ;; Disable file notification functions.
     (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
-  ;; Enable Global Auto-Revert mode (auto refresh buffers).
+  (use-package autorevert
+    ;; Defer loading until explicitly needed or triggered.
+    :defer t
+    :init
+    ;; Load autorevert after 2 seconds of idle time.
+    (run-with-idle-timer 2 nil (lambda () (require 'autorevert)))
+    :config
+    ;; This runs when autorevert is loaded.
+    ;; Enable Global Auto-Revert mode to auto-refresh buffers.
+    (global-auto-revert-mode 1)
+    ;; Check and warn about remote files setting.
+    (when (and (boundp 'auto-revert-remote-files)
+               auto-revert-remote-files)
+      (message "[WARN] `auto-revert-remote-files' is non-nil, this may generate significant network traffic.")))
+
+  ;; Consider setting `auto-revert-remote-files' to nil to reduce network
+  ;; traffic.
+
+  ;; Load autorevert after 2 seconds of idle time.
   (idle-require 'autorevert)
-  (with-eval-after-load 'autorevert
-    (global-auto-revert-mode 1))        ; Can generate a lot of network traffic
-                                        ; if `auto-revert-remote-files' is set
-                                        ; to non-nil.
 
   ;; Global Auto-Revert mode operates on all buffers (Dired, etc.)
   (setq global-auto-revert-non-file-buffers t)
@@ -7948,7 +7964,7 @@ Git repository directory."
           (progn
             (if (not (string-empty-p unstaged-changes))
                 (progn
-                  (message "[Warning: You have unstaged changes. Please commit or stash them before updating.]")
+                  (message "[WARN- You have unstaged changes. Please commit or stash them before updating.]")
                   (message "Unstaged changes:\n%s" unstaged-changes))
               (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" el-file-directory))))
                 (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
