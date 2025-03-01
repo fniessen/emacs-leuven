@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1116>
+;; Version: <20250301.1406>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -88,7 +88,7 @@
 ;; Reset GC settings and trigger GC after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-collect t)
 
-(defconst lvn--emacs-version "<20250301.1116>"
+(defconst lvn--emacs-version "<20250301.1406>"
   "Emacs-Leuven version (date of the last change).")
 
 (message "* --[ Loading Emacs-Leuven %s]--" lvn--emacs-version)
@@ -498,6 +498,7 @@ Shows a warning message if the file does not exist or is not executable."
             tern
             toc-org
             ;; undo-tree
+            use-package
             volatile-highlights
             web-mode
             wgrep
@@ -4157,10 +4158,9 @@ you will be prompted to enter the desired fill column width."
 
   (leuven--section "(emacs-goodies-el)boxquote")
 
-  (with-eval-after-load 'boxquote-autoloads
-    (global-set-key (kbd "C-c q") #'boxquote-region))
-
-  (with-eval-after-load 'boxquote
+  (use-package boxquote
+    :bind (("C-c b" . boxquote-region))
+    :config
     (setq boxquote-top-and-tail  "────")
     (setq boxquote-title-format  " %s")
     (setq boxquote-top-corner    "  ┌")

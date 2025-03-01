@@ -732,6 +732,7 @@ like this into your configuration file:
             tern
             toc-org
             ;; undo-tree
+            use-package
             volatile-highlights
             web-mode
             wgrep
@@ -7242,23 +7243,25 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 ** Boxquote
 
-Use Unicode characters.
+This section configures the ~boxquote~ package, which provides functions for
+wrapping text in a visually appealing box, often used for code or comments.
 
 #+begin_src emacs-lisp
 ;;** (info "(emacs-goodies-el)boxquote")
 
   (leuven--section "(emacs-goodies-el)boxquote")
 
-  (with-eval-after-load 'boxquote-autoloads
-    (global-set-key (kbd "C-c q") #'boxquote-region))
-
-  (with-eval-after-load 'boxquote
+  (use-package boxquote
+    :bind (("C-c b" . boxquote-region))
+    :config
     (setq boxquote-top-and-tail  "────")
     (setq boxquote-title-format  " %s")
     (setq boxquote-top-corner    "  ┌")
     (setq boxquote-side          "  │ ")
     (setq boxquote-bottom-corner "  └"))
 #+end_src
+
+This configuration makes use of Unicode box-drawing characters.
 
 In Gnus, you can mark some region with enclosing tags by pressing ~C-c M-m~
 (~message-mark-inserted-region~) or by clicking on ~<menu-bar> <Message> <Insert
@@ -15171,6 +15174,63 @@ part of the word (depending on the current major mode).
 
 #+begin_src emacs-lisp
 )                                       ; Chapter 49 ends here.
+#+end_src
+
+* Integrating AI tools into Emacs
+
+If you heavily use org-mode, org-ai might be particularly beneficial. If you
+prefer a straightforward chat interface, GPTel could be more suitable.
+
+See also https://www.armindarvish.com/post/use_emacs_as_a_chatgpt_client/
+
+#+begin_src emacs-lisp :tangle no
+;; Load gptel.
+(require 'gptel)
+
+;; ;; Set OpenAI API key.
+;; (setq gptel-api-key "your-api-key-here")  ;; Replace with your actual key.
+
+;; Optionally, fetch the key from auth-source.
+(setq gptel-api-key (lambda () (auth-source-pick-first-password :host "api.openai.com")))
+
+;; Set default model and parameters.
+(setq gptel-model "gpt-4")   ;; Use "gpt-3.5-turbo" if preferred.
+(setq gptel-temperature 0.7) ;; Controls randomness (lower = more deterministic).
+(setq gptel-max-tokens 1000) ;; Limit response length.
+
+;; Set default mode for response buffer.
+(setq gptel-default-mode 'org-mode)
+
+;; Keybinding for quick access.
+(global-set-key (kbd "C-c q") 'gptel-send)
+
+;; Optional: Enable inline responses in Org mode.
+(add-hook 'org-mode-hook (lambda () (local-set-key (kbd "C-c C-q") 'gptel-send)))
+#+end_src
+
+Usage:
+- ~M-x gptel~ → Open GPT chat buffer.
+- ~M-x gptel-send~ → Send input to the AI.
+- ~C-c q~ → Quick send a query from any buffer.
+
+** Org-ai
+
+#+begin_src emacs-lisp :tangle no
+;; Load org-ai.
+(require 'org-ai)
+
+;; Enable org-ai-mode in Org mode.
+(add-hook 'org-mode-hook #'org-ai-mode)
+
+;; Set OpenAI API key (store it securely!).
+(setq org-ai-openai-api-key "your-api-key-here")
+(setq org-ai-openai-api-key (getenv "OPENAI_API_KEY"))  ;; Use an environment variable.
+
+;; Set default model (optional).
+(setq org-ai-default-chat-model "gpt-4")
+
+;; Install Yasnippet templates for org-ai (optional).
+(org-ai-install-yasnippets)
 #+end_src
 
 * Emacs Display
