@@ -768,7 +768,7 @@ a parent headline."
   ;; (org-clock-persistence-insinuate)
 
   ;; Set the maximum length of the clocked task string in the modeline.
-  (setq org-clock-string-limit 30)
+  (setq org-clock-string-limit 35)
 
   ;; Resume clocking task on clock-in if the clock is open.
   (setq org-clock-in-resume t)
