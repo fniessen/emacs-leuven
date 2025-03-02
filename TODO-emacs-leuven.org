@@ -417,11 +417,6 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
  ■  Warning (comp): expand-region-core.el:276:11: Warning: defsubst ‘er--first-invocation’ was used before it was defined
  ■  Warning (comp): expand-region-custom.el:33:12: Warning: defcustom for ‘expand-region-preferred-python-mode’ has syntactically odd type ‘'(choice (const :tag Emacs' python.el 'python) (const :tag fgallina's python.el 'fgallina-python) (const :tag python-mode.el 'python-mode))’
  ■  Warning (comp): expand-region-custom.el:89:2: Warning: custom-declare-variable `expand-region-exclude-text-mode-expansions' docstring wider than 80 characters
- ■  Warning (comp): google-this.el:104:2: Warning: custom-declare-variable `google-this-suspend-after-search' docstring wider than 80 characters
- ■  Warning (comp): google-this.el:130:43: Warning: the function `google-this-maps' is not known to be defined.
- ■  Warning (comp): google-this.el:132:43: Warning: the function `google-maps' is not known to be defined.
- ■  Warning (comp): google-this.el:136:2: Warning: docstring wider than 80 characters
- ■  Warning (comp): google-this.el:468:20: Warning: Use keywords rather than deprecated positional arguments to `define-minor-mode'
  ■  Warning (comp): google-translate-core-ui.el:304:2: Warning: custom-declare-variable `google-translate-enable-ido-completion' docstring wider than 80 characters
  ■  Warning (comp): google-translate-core-ui.el:349:12: Warning: defcustom for ‘google-translate-pop-up-buffer-set-focus’ fails to specify type
  ■  Warning (comp): google-translate-core-ui.el:357:12: Warning: defcustom for ‘google-translate-display-translation-phonetic’ fails to specify type
