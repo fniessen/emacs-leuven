@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250302.1709>
+;; Version: <20250302.1749>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250302.1709>"
+(defconst lvn--emacs-version "<20250302.1749>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -1402,14 +1402,13 @@ Should be selected from `fringe-bitmaps'.")
 
     (defun lvn-hilit-chg-add-fringe-marker ()
       "Add a fringe marker to overlays with the 'hilit-chg property."
-      (mapc (lambda (ov)
-              (when (overlay-get ov 'hilit-chg)
-                (let ((fringe-anchor (make-string 1 ?x)))
-                  (put-text-property 0 1 'display
-                                     (list 'left-fringe lvn-highlight-fringe-mark)
-                                     fringe-anchor)
-                  (overlay-put ov 'before-string fringe-anchor))))
-            (overlays-at (ad-get-arg 1))))
+      (dolist (ov (overlays-at (ad-get-arg 1)))
+        (when (overlay-get ov 'hilit-chg)
+          (let ((fringe-anchor (make-string 1 ?x)))
+            (put-text-property 0 1 'display
+                               (list 'left-fringe lvn-highlight-fringe-mark)
+                               fringe-anchor)
+            (overlay-put ov 'before-string fringe-anchor)))))
 
     (advice-add 'hilit-chg-make-ov :after #'lvn-hilit-chg-add-fringe-marker))
 
@@ -1471,9 +1470,8 @@ Should be selected from `fringe-bitmaps'.")
                                    ess-mode)) ; R.
 
       ;; Add the modes to ahs-modes list.
-      (mapc (lambda (mode)
-              (add-to-list 'ahs-modes mode :append))
-            lvn--extra-ahs-modes)
+      (dolist (mode lvn--extra-ahs-modes)
+        (add-to-list 'ahs-modes mode :append))
 
       ;; Number of seconds to wait before highlighting the current symbol.
       (setq ahs-idle-interval 0.2) ; 0.35.
@@ -4024,11 +4022,11 @@ you will be prompted to enter the desired fill column width."
   (leuven--section "25.6 (emacs)Case Conversion Commands")
 
   ;; Enable the use of some commands without confirmation.
-  (mapc (lambda (command)
-          (put command 'disabled nil))
-        ;; Disabled commands.
-        '(downcase-region
-          upcase-region))
+  (dolist (command
+           ;; Disabled commands.
+           '(downcase-region
+             upcase-region))
+    (put command 'disabled nil))
 
 ;;** 25.8 (info "(emacs)Outline Mode")
 

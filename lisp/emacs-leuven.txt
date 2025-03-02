@@ -2398,14 +2398,13 @@ Should be selected from `fringe-bitmaps'.")
 
     (defun lvn-hilit-chg-add-fringe-marker ()
       "Add a fringe marker to overlays with the 'hilit-chg property."
-      (mapc (lambda (ov)
-              (when (overlay-get ov 'hilit-chg)
-                (let ((fringe-anchor (make-string 1 ?x)))
-                  (put-text-property 0 1 'display
-                                     (list 'left-fringe lvn-highlight-fringe-mark)
-                                     fringe-anchor)
-                  (overlay-put ov 'before-string fringe-anchor))))
-            (overlays-at (ad-get-arg 1))))
+      (dolist (ov (overlays-at (ad-get-arg 1)))
+        (when (overlay-get ov 'hilit-chg)
+          (let ((fringe-anchor (make-string 1 ?x)))
+            (put-text-property 0 1 'display
+                               (list 'left-fringe lvn-highlight-fringe-mark)
+                               fringe-anchor)
+            (overlay-put ov 'before-string fringe-anchor)))))
 
     (advice-add 'hilit-chg-make-ov :after #'lvn-hilit-chg-add-fringe-marker))
 
@@ -2550,9 +2549,8 @@ point, the highlighting goes away.
                                    ess-mode)) ; R.
 
       ;; Add the modes to ahs-modes list.
-      (mapc (lambda (mode)
-              (add-to-list 'ahs-modes mode :append))
-            lvn--extra-ahs-modes)
+      (dolist (mode lvn--extra-ahs-modes)
+        (add-to-list 'ahs-modes mode :append))
 
       ;; Number of seconds to wait before highlighting the current symbol.
       (setq ahs-idle-interval 0.2) ; 0.35.
@@ -6957,11 +6955,11 @@ you will be prompted to enter the desired fill column width."
   (leuven--section "25.6 (emacs)Case Conversion Commands")
 
   ;; Enable the use of some commands without confirmation.
-  (mapc (lambda (command)
-          (put command 'disabled nil))
-        ;; Disabled commands.
-        '(downcase-region
-          upcase-region))
+  (dolist (command
+           ;; Disabled commands.
+           '(downcase-region
+             upcase-region))
+    (put command 'disabled nil))
 #+end_src
 
 ** Outline Mode
@@ -8532,10 +8530,9 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
 #+begin_src emacs-lisp :tangle no
     ;; ;; Enable smartparens-strict-mode in all Lisp modes.
-    ;; (mapc (lambda (mode)
-    ;;         (add-hook (intern (format "%s-hook" (symbol-name mode)))
-    ;;                   #'smartparens-strict-mode))
-    ;;       sp--lisp-modes)
+    ;; (dolist (mode sp--lisp-modes)
+    ;;   (add-hook (intern (format "%s-hook" (symbol-name mode)))
+    ;;             #'smartparens-strict-mode))
 #+end_src
 
 #+begin_src emacs-lisp
