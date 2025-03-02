@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250302.1749>
+;; Version: <20250302.2223>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250302.1749>"
+(defconst lvn--emacs-version "<20250302.2223>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -4309,7 +4309,7 @@ scrolling to the bottom."
     (leuven--section "4.1 Executing (auctex)Commands")
 
     ;; Add a command to execute on the LaTeX document.
-    (add-to-list 'TeX-command-list
+    (add-to-list 'TeX-command-list      ; ~ `tex-compile-commands'.
                  '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
 
     ;; (add-to-list 'TeX-command-list
@@ -4339,25 +4339,23 @@ scrolling to the bottom."
           (goto-char (point-min))
           (re-search-forward regex limit t))))
 
-    (defun lvn--change-dictionary-to-fr ()
-      "Change the local dictionary to French if the babel package is set to French."
-      (interactive)
-      (when (and (eq major-mode 'latex-mode)
-                 (or (progn (save-excursion
-                              (goto-char (point-min))
-                              (re-search-forward "\\(documentclass.*french\\)" nil t)))
-                     (progn (save-excursion
-                              (goto-char (point-min))
-                              (re-search-forward "\\(usepackage.*french.*babel\\)" nil t)))))
-        (message "[Switched dictionary to français]")
-        (sit-for 0.5)
-        (save-excursion
-          (ispell-change-dictionary "francais")
-          (force-mode-line-update)
-          (when flyspell-mode
-            (flyspell-buffer)))))
+    ;; Automatically switch to French dictionary when LaTeX document uses French.
+    (defun lvn--switch-to-french-dictionary ()
+      "Change the local dictionary to French when using French in LaTeX babel package."
+      (when (eq major-mode 'latex-mode)
+        (when (save-excursion
+                (goto-char (point-min))
+                (or (re-search-forward "\\(documentclass.*french\\)" nil t)
+                    (re-search-forward "\\(usepackage.*french.*babel\\)" nil t)))
+          (message "[Switched dictionary to français]")
+          (sit-for 0.5)
+          (save-excursion
+            (ispell-change-dictionary "francais")
+            (force-mode-line-update)
+            (when flyspell-mode
+              (flyspell-buffer))))))
 
-    (add-hook 'LaTeX-mode-hook #'lvn--change-dictionary-to-fr)
+    (add-hook 'LaTeX-mode-hook #'lvn--switch-to-french-dictionary)
 
     ;; Don't ask user for permission to save files before starting TeX.
     (setq TeX-save-query nil)
