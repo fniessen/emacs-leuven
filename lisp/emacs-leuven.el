@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250302.1110>
+;; Version: <20250302.1709>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250302.1110>"
+(defconst lvn--emacs-version "<20250302.1709>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -413,7 +413,7 @@ Shows a warning message if the file does not exist or is not executable."
 
     ;; Archives from which to fetch.
     ;; (add-to-list 'package-archives
-    ;;              '("melpa" . "https://melpa.org/packages/") t)
+    ;;              '("melpa" . "https://melpa.org/packages/") :append)
     (setq package-archives
           '(("melpa" . "http://melpa.org/packages/")))
 
@@ -846,10 +846,10 @@ original state of line numbers after navigation."
       (let ((org-info-dir (expand-file-name
                            (concat (file-name-directory (locate-library "org")) "../doc/"))))
         (when (file-directory-p org-info-dir)
-          (add-to-list 'Info-directory-list org-info-dir t)))
+          (add-to-list 'Info-directory-list org-info-dir :append)))
       (let ((cygwin-info-dir "c:/cygwin/usr/share/info/"))
         (when (file-directory-p cygwin-info-dir)
-          (add-to-list 'Info-directory-list cygwin-info-dir t))))
+          (add-to-list 'Info-directory-list cygwin-info-dir :append))))
 
   (with-eval-after-load 'info+-autoloads-XXX
     (idle-require 'info+)
@@ -1472,7 +1472,7 @@ Should be selected from `fringe-bitmaps'.")
 
       ;; Add the modes to ahs-modes list.
       (mapc (lambda (mode)
-              (add-to-list 'ahs-modes mode t))
+              (add-to-list 'ahs-modes mode :append))
             lvn--extra-ahs-modes)
 
       ;; Number of seconds to wait before highlighting the current symbol.
@@ -4316,7 +4316,7 @@ scrolling to the bottom."
 
     ;; (add-to-list 'TeX-command-list
     ;;              '("latexmk" "(run-latexmk)"
-    ;;                TeX-run-function nil t :help "Run latexmk") t)
+    ;;                TeX-run-function nil t :help "Run latexmk") :append)
     ;; (setq TeX-command-default "latexmk")
 
     ;; Not called?

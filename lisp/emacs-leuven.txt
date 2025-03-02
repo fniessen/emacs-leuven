@@ -649,7 +649,7 @@ like this into your configuration file:
 
     ;; Archives from which to fetch.
     ;; (add-to-list 'package-archives
-    ;;              '("melpa" . "https://melpa.org/packages/") t)
+    ;;              '("melpa" . "https://melpa.org/packages/") :append)
     (setq package-archives
           '(("melpa" . "http://melpa.org/packages/")))
 
@@ -827,7 +827,7 @@ like this into your configuration file:
 ;; Add MELPA repository.
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+             '("melpa" . "https://melpa.org/packages/") :append)
 (package-initialize)
 
 ;; Install ESS if not already installed.
@@ -1294,10 +1294,10 @@ Emacs). XXX Could we set ~Info-default-directory-list~ instead???
       (let ((org-info-dir (expand-file-name
                            (concat (file-name-directory (locate-library "org")) "../doc/"))))
         (when (file-directory-p org-info-dir)
-          (add-to-list 'Info-directory-list org-info-dir t)))
+          (add-to-list 'Info-directory-list org-info-dir :append)))
       (let ((cygwin-info-dir "c:/cygwin/usr/share/info/"))
         (when (file-directory-p cygwin-info-dir)
-          (add-to-list 'Info-directory-list cygwin-info-dir t))))
+          (add-to-list 'Info-directory-list cygwin-info-dir :append))))
 #+end_src
 
 ~Info+~ fontifies entries for reference items (functions, macros, commands,
@@ -2551,7 +2551,7 @@ point, the highlighting goes away.
 
       ;; Add the modes to ahs-modes list.
       (mapc (lambda (mode)
-              (add-to-list 'ahs-modes mode t))
+              (add-to-list 'ahs-modes mode :append))
             lvn--extra-ahs-modes)
 
       ;; Number of seconds to wait before highlighting the current symbol.
@@ -7461,7 +7461,7 @@ file, AUCTeX gives you a ~Command~ menu.
 
     ;; (add-to-list 'TeX-command-list
     ;;              '("latexmk" "(run-latexmk)"
-    ;;                TeX-run-function nil t :help "Run latexmk") t)
+    ;;                TeX-run-function nil t :help "Run latexmk") :append)
     ;; (setq TeX-command-default "latexmk")
 
     ;; Not called?
