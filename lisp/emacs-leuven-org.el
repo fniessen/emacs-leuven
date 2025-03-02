@@ -2084,20 +2084,19 @@ parent."
         (when (member "ignore" (org-element-property :tags object))
           (let ((level-top (org-element-property :level object))
                 level-diff)
-            (mapc (lambda (el)
-                    ;; Recursively promote all nested headlines.
-                    (org-element-map el 'headline
-                      (lambda (el)
-                        (when (equal 'headline (org-element-type el))
-                          (unless level-diff
-                            (setq level-diff (- (org-element-property :level el)
-                                                level-top)))
-                          (org-element-put-property el
-                                                    :level (- (org-element-property :level el)
-                                                              level-diff)))))
-                    ;; Insert back into parse tree.
-                    (org-element-insert-before el object))
-                  (org-element-contents object)))
+            (dolist (el (org-element-contents object))
+              ;; Recursively promote all nested headlines.
+              (org-element-map el 'headline
+                                (lambda (el)
+                                  (when (equal 'headline (org-element-type el))
+                                    (unless level-diff
+                                      (setq level-diff (- (org-element-property :level el)
+                                                          level-top)))
+                                    (org-element-put-property el
+                                                              :level (- (org-element-property :level el)
+                                                                        level-diff)))))
+              ;; Insert back into parse tree.
+              (org-element-insert-before el object)))
           (org-element-extract-element object)))
       info nil)
     data)
@@ -2243,7 +2242,8 @@ parent."
 (defun show-non-code ()
   "Show non-code-block content of the current Org mode buffer."
   (interactive)
-  (mapc 'delete-overlay only-code-overlays))
+  (dolist (ov only-code-overlays)
+    (delete-overlay ov)))
 
 (with-eval-after-load 'org
   (defun lvn-org-copy-current-code-block ()
