@@ -2075,31 +2075,20 @@ buffer."
     "Automatically select the LaTeX packages to include (depending on PDFLaTeX
 vs. XeLaTeX) when exporting When exporting to LaTeX."
 
-    ;; Unconditionally remove `inputenc' from all the default packages.
-    (setq org-latex-packages-alist
-          (delete '("AUTO" "inputenc" t)
-                  org-latex-packages-alist))
+    ;; Remove specified LaTeX packages from `org-latex-packages-alist'.
+    (dolist (pkg '(("AUTO" "inputenc" t)
+                   ("T1" "fontenc" t)
+                   ("" "textcomp" t)))
+      (setq org-latex-packages-alist
+            (delete pkg org-latex-packages-alist)))
 
-    ;; Unconditionally remove `fontenc' from all the default packages.
-    (setq org-latex-packages-alist
-          (delete '("T1" "fontenc" t)
-                  org-latex-packages-alist))
-
-    ;; Unconditionally remove `textcomp' from all the default packages.
-    (setq org-latex-packages-alist
-          (delete '("" "textcomp" t)
-                  org-latex-packages-alist))
-
-    (if (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-        ;; Packages to include when XeLaTeX is used.
-        (setq org-export-latex-packages-alist
+    (setq org-export-latex-packages-alist
+          (if (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
+              ;; XeLaTeX-specific packages.
               '(("" "fontspec" t)
-                ("" "xunicode" t)
+                ("" "xunicode" t))
                 ;; Add here things like `\setmainfont{Georgia}'.
-                ))
-
-      ;; Packages to include when PDFLaTeX is used.
-      (setq org-export-latex-packages-alist
+            ;; PDFLaTeX-specific packages.
             '(("AUTO" "inputenc" t)
               ("T1" "fontenc" t)
               ("" "textcomp" t))))
