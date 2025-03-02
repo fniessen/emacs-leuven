@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250302.2223>
+;; Version: <20250302.2233>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250302.2223>"
+(defconst lvn--emacs-version "<20250302.2233>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -3192,63 +3192,59 @@ in the current buffer."
     ;; Filtering groups.
     (setq ibuffer-saved-filter-groups
           '(("default"
-             ("Chat"
-              (mode . circe-mode))
-             ("Org"
-              (or (mode . diary-mode)
-                  (mode . org-mode)
-                  (mode . org-agenda-mode)))
-             ("LaTeX"
-              (or (mode . latex-mode)
-                  (mode . LaTeX-mode)
-                  (mode . bibtex-mode)
-                  (mode . reftex-mode)))
-             ("Gnus & News"
-              (or (mode . message-mode)
-                  (mode . bbdb-mode)
-                  (mode . mail-mode)
-                  (mode . gnus-group-mode)
-                  (mode . gnus-summary-mode)
-                  (mode . gnus-article-mode)
-                  (name . "^\\(\\.bbdb\\|dot-bbdb\\)$")
-                  (name . "^\\.newsrc-dribble$")
-                  (mode . newsticker-mode)))
-             ("Files"
-              (filename . ".*"))
-             ("Dired"
-              (mode . dired-mode))
-             ("Shell"
-              (mode . shell-mode))
-             ("Version Control"
-              (or (mode . svn-status-mode)
-                  (mode . svn-log-edit-mode)
-                  (name . "^\\*svn-")
-                  (name . "^\\*vc\\*$")
-                  (name . "^\\*Annotate")
-                  (name . "^\\*git-")
-                  (name . "^\\*vc-")))
-             ("Emacs"
-              (or (name . "^\\*scratch\\*$")
-                  (name . "^\\*Messages\\*$")
-                  (name . "^TAGS\\(<[0-9]+>\\)?$")
-                  (name . "^\\*Occur\\*$")
-                  (name . "^\\*grep\\*$")
-                  (name . "^\\*Compile-Log\\*$")
-                  (name . "^\\*Backtrace\\*$")
-                  (name . "^\\*Process List\\*$")
-                  (name . "^\\*gud\\*$")
-                  (name . "^\\*Kill Ring\\*$")
-                  (name . "^\\*Completions\\*$")
-                  (name . "^\\*tramp")
-                  (name . "^\\*compilation\\*$")))
-             ("Emacs Source"
-              (mode . emacs-lisp-mode))
-             ("Documentation"
-              (or (mode . Info-mode)
-                  (mode . apropos-mode)
-                  (mode . woman-mode)
-                  (mode . help-mode)
-                  (mode . Man-mode))))))
+             ;; Communication.
+             ("Chat" (mode . circe-mode))
+
+             ;; Organization and planning.
+             ("Org" (or (mode . diary-mode)
+                        (mode . org-mode)
+                        (mode . org-agenda-mode)))
+
+             ;; Document preparation.
+             ("LaTeX" (or (mode . latex-mode)
+                          (mode . LaTeX-mode)
+                          (mode . bibtex-mode)
+                          (mode . reftex-mode)))
+
+             ;; Email and news.
+             ("Gnus & News" (or (mode . message-mode)
+                                (mode . bbdb-mode)
+                                (mode . mail-mode)
+                                (mode . gnus-group-mode)
+                                (mode . gnus-summary-mode)
+                                (mode . gnus-article-mode)
+                                (name . "^\\(\\.bbdb\\|dot-bbdb\\)$")
+                                (name . "^\\.newsrc-dribble$")
+                                (mode . newsticker-mode)))
+
+             ;; File management.
+             ("Files" (filename . ".*"))
+             ("Dired" (mode . dired-mode))
+
+             ;; Development tools.
+             ("Shell" (mode . shell-mode))
+             ("Version Control" (or (mode . svn-status-mode)
+                                    (mode . svn-log-edit-mode)
+                                    (name . "^\\*\\(svn-\\|vc\\)")
+                                    (name . "^\\*Annotate")
+                                    (name . "^\\*git-")
+                                    (name . "^\\*vc-")))
+
+             ;; Emacs-related.
+             ("Emacs" (or (name . "^\\*scratch\\*$")
+                          (name . "^\\*Messages\\*$")
+                          (name . "^TAGS\\(<[0-9]+>\\)?$")
+                          (name . "^\\*\\(Occur\\|grep\\|Compile-Log\\|Backtrace\\|Process List\\|gud\\|Kill Ring\\|Completions\\)\\*$")
+                          (name . "^\\*tramp")
+                          (name . "^\\*compilation\\*$")))
+             ("Emacs Source" (mode . emacs-lisp-mode))
+
+             ;; Documentation and help.
+             ("Documentation" (or (mode . Info-mode)
+                                  (mode . apropos-mode)
+                                  (mode . woman-mode)
+                                  (mode . help-mode)
+                                  (mode . Man-mode))))))
 
     (add-hook 'ibuffer-mode-hook
               (lambda ()
