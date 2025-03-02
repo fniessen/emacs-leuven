@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250301.1727>
+;; Version: <20250302.1110>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250301.1727>"
+(defconst lvn--emacs-version "<20250302.1110>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -438,6 +438,7 @@ Shows a warning message if the file does not exist or is not executable."
             company-quickhelp
             ;; csv-mode
             dashboard
+            ;; delight                     ; Instead of diminish.
             diff-hl
             diminish
             docker-compose-mode
@@ -511,72 +512,78 @@ Shows a warning message if the file does not exist or is not executable."
     ;;   (package-install-selected-packages))
 
     (defcustom leuven-excluded-packages nil
-      "List of packages that should be ignored by Emacs-Leuven."
+      "List of packages to exclude from installation."
       :group 'leuven
       :type '(repeat string))
 
     (defcustom leuven-install-all-missing-elpa-packages nil
-      "Force the installation (without query) of all missing packages."
+      "If non-nil, install all missing packages without individual confirmation."
       :group 'leuven
       :type 'boolean)
 
     ;; Define a function to check if there are any missing ELPA packages.
-    (defun leuven--missing-elpa-packages ()
-      "Return a list of missing ELPA packages for Emacs-Leuven."
-      (let (missing-elpa-packages)
+    (defun lvn--missing-elpa-packages ()
+      "Return a list of missing ELPA packages for Emacs-Leuven.
+    Packages are considered missing if they are in `package-selected-packages'
+    but not installed, not available as a library, and not in `leuven-excluded-packages'."
+      (let (missing-packages)
         (dolist (pkg package-selected-packages)
           (unless (or (package-installed-p pkg)
                       (locate-library (symbol-name pkg))
                       (member pkg leuven-excluded-packages))
-            (push pkg missing-elpa-packages)))
-        missing-elpa-packages))
+            (push pkg missing-packages)))))
 
-    (defun internet-connection-available-p ()
-      "Check if there is an internet connection by attempting to retrieve a website."
-      (ignore-errors (url-retrieve "http://www.google.com/"
-                                   '(lambda (retrieved) t))))
+    (defun lvn--internet-available-p ()
+      "Check internet connectivity by attempting to reach a reliable website.
+    Returns t if successful, nil if an error occurs."
+      (ignore-errors
+        (url-retrieve "http://www.google.com/"
+                      (lambda (_status) t))))
 
-    (defun leuven-install-missing-elpa-packages ()
-      "Install missing ELPA packages for Emacs-Leuven if any."
-      (let ((missing-elpa-packages (leuven--missing-elpa-packages)))
-        (when missing-elpa-packages
+    (defun lvn--install-package-quietly (package)
+      "Install PACKAGE silently and handle any errors.
+    Displays success or failure message accordingly."
+      (condition-case err
+          (progn
+            (package-install package)
+            (message "[Installed package `%s']" package))
+        (error
+         (message "[Failed to install package `%s': %s]"
+                  package
+                  (error-message-string err)))))
+
+    (defun lvn--install-package (package)
+      "Install PACKAGE with optional user confirmation.
+    If `leuven-install-all-missing-elpa-packages' is non-nil, installs silently.
+    Otherwise, prompts for confirmation."
+      (if leuven-install-all-missing-elpa-packages
+          (lvn--install-package-quietly package)
+        (when (yes-or-no-p (format "Install ELPA package `%s'? " package))
+          (lvn--install-package-quietly package))
+        (unless leuven-install-all-missing-elpa-packages
+          (message "[Customize Emacs-Leuven to ignore `%s' next time]" package)
+          (sit-for 1.5))))
+
+    (defun lvn--install-missing-elpa-packages ()
+      "Install missing ELPA packages for Emacs-Leuven.
+    Prompts to install all at once if multiple packages are missing and
+    internet is available."
+      (let ((missing-packages (lvn--missing-elpa-packages)))
+        (when missing-packages
           (setq leuven-install-all-missing-elpa-packages
                 (or leuven-install-all-missing-elpa-packages
                     (yes-or-no-p
-                     (format "Install the %s missing ELPA package(s) without confirming each? "
-                             (length missing-elpa-packages)))))
-
-          (if (internet-connection-available-p)
+                     (format "Install all %d missing ELPA package(s) without individual confirmation? "
+                             (length missing-packages)))))
+          (if (lvn--internet-available-p)
               (progn
                 (package-refresh-contents)
-                (dolist (pkg (reverse missing-elpa-packages))
-                  (leuven-install-package pkg)))
-            (message "[No internet connection available. Cannot refresh package archives.]")))))
+                (dolist (pkg (reverse missing-packages))
+                  (lvn--install-package pkg)))
+            (message "[No internet connection. Cannot refresh package archives.]")))))
 
-    (defun leuven-install-package (pkg)
-      "Install the specified package and handle errors."
-      (if leuven-install-all-missing-elpa-packages
-          (leuven-install-package-quietly pkg)
-        (if (yes-or-no-p (format "Install ELPA package `%s'? " pkg))
-            (leuven-install-package-quietly pkg)
-          (progn
-            (message "[Customize Emacs-Leuven to ignore the `%s' package next time...]" pkg)
-            (sit-for 1.5)))))
-
-    (defun leuven-install-package-quietly (pkg)
-      "Install the specified package without user confirmation and handle errors."
-      (condition-case err
-          (progn
-            (package-install pkg)
-            (message "[Installed package `%s'.]" pkg))
-        (error
-         (message "[Failed to install package `%s': %s]" pkg (error-message-string err)))))
-
-    (defun internet-connection-available-p ()
-      "Check if there is an internet connection by attempting to retrieve a website."
-      (ignore-errors (url-retrieve "http://www.google.com/" '(lambda (retrieved) t))))
-
-    (leuven-install-missing-elpa-packages)
+    ;; Start the installation process.
+    (lvn--install-missing-elpa-packages)
 
     )
 
@@ -1520,6 +1527,12 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "14.15 (emacs)Displaying Boundaries")
 
+  ;; Set vertical indicator at column 80.
+  (setq-default display-fill-column-indicator-column 80)
+
+  ;; Enable column indicator display for all modes.
+  (global-display-fill-column-indicator-mode 1)
+
   ;; Visually indicate buffer boundaries and scrolling in the fringe.
   (setq-default indicate-buffer-boundaries '((top . left) (t . right)))
 
@@ -1630,6 +1643,7 @@ Should be selected from `fringe-bitmaps'.")
     (with-eval-after-load 'hilit-chg    (diminish 'highlight-changes-mode))
     ;; (with-eval-after-load 'isearch      (diminish 'isearch-mode (string 32 ?\u279c)))
     (with-eval-after-load 'paredit      (diminish 'paredit-mode " Pe"))
+    (with-eval-after-load 'projectile-mode (diminish 'projectile-mode))
     (with-eval-after-load 'rainbow-mode (diminish 'rainbow-mode))
     (with-eval-after-load 'simple       (diminish 'auto-fill-function))
     (with-eval-after-load 'whitespace   (diminish 'whitespace-mode))
