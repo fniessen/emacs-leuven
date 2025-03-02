@@ -3249,34 +3249,32 @@ the ~#+LANGUAGE:~ keyword (only) if:
 What about ~apacite~ and ~tikz~ in ~org-latex-packages-alist~?
 
 #+begin_src emacs-lisp
-  (defun leuven--change-pdflatex-packages (backend)
-    "Automatically select the LaTeX packages to include (depending on PDFLaTeX
-vs. XeLaTeX) when exporting When exporting to LaTeX."
+  (defun lvn--configure-latex-packages (backend)
+    "Configure LaTeX packages for export based on the LaTeX compiler.
+  Selects appropriate packages depending on whether XeLaTeX or PDFLaTeX is used."
+    (let ((use-xelatex (string-match-p "^#\\+LATEX_CMD: xelatex" (buffer-string))))
+      ;; Clear default packages.
+      (dolist (pkg '(("AUTO" "inputenc" t)
+                     ("T1" "fontenc" t)
+                     ("" "textcomp" t)))
+        (setq org-latex-packages-alist
+              (delete pkg org-latex-packages-alist)))
 
-    ;; Remove specified LaTeX packages from `org-latex-packages-alist'.
-    (dolist (pkg '(("AUTO" "inputenc" t)
-                   ("T1" "fontenc" t)
-                   ("" "textcomp" t)))
-      (setq org-latex-packages-alist
-            (delete pkg org-latex-packages-alist)))
+      ;; Set compiler-specific packages.
+      (setq org-export-latex-packages-alist
+            (if use-xelatex
+                '(("" "fontspec" t)          ; XeLaTeX packages.
+                  ("" "xunicode" t))
+                  ;; Add here things like `\setmainfont{Georgia}'.
+                '(("AUTO" "inputenc" t)      ; PDFLaTeX packages.
+                  ("T1" "fontenc" t)
+                  ("" "textcomp" t))))
 
-    (setq org-export-latex-packages-alist
-          (if (string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-              ;; XeLaTeX-specific packages.
-              '(("" "fontspec" t)
-                ("" "xunicode" t))
-                ;; Add here things like `\setmainfont{Georgia}'.
-            ;; PDFLaTeX-specific packages.
-            '(("AUTO" "inputenc" t)
-              ("T1" "fontenc" t)
-              ("" "textcomp" t))))
+      ;; Add common packages.
+      (add-to-list 'org-export-latex-packages-alist '("frenchb" "babel") t)))
 
-    ;; Packages to always include.
-    (add-to-list 'org-export-latex-packages-alist
-                 '("frenchb" "babel") t))
-
-  ;; Hook run before parsing an export buffer.
-  (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-packages)
+  ;; Register hook for export preprocessing.
+  (add-hook 'org-export-before-parsing-hook #'lvn--configure-latex-packages)
 #+end_src
 
 #+begin_src emacs-lisp
