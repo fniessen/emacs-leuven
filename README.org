@@ -100,71 +100,70 @@ prompts, insert the following line before requiring Emacs-Leuven:
 (setq leuven-install-all-missing-elpa-packages t)
 #+end_src
 
-| Subject                              | Package                | Description |
-|--------------------------------------+------------------------+-------------|
-| Basic editing commands               | undo-tree              |             |
-| Help                                 | info+                  |             |
-| The mark and the region              | goto-chg               |             |
-|                                      | expand-region          |             |
-|                                      | multiple-cursors       |             |
-|                                      | ace-jump-mode          |             |
-|                                      | ace-link               |             |
-| Controlling the display              | pager                  |             |
-|                                      | fancy-narrow           |             |
-|                                      | highlight-symbol       |             |
-|                                      | color-identifiers-mode |             |
-|                                      | diff-hl                |             |
-|                                      | ws-butler              |             |
-|                                      | powerline              |             |
-|                                      | interaction-log        |             |
-| Searching and replacement            | fuzzy                  |             |
-|                                      | anzu                   |             |
-| Commands for fixing typos            | dictionary             |             |
-| Files Handling                       | helm                   |             |
-|                                      | helm-swoop             |             |
-| Major and minor modes                | csv-mode               |             |
-|                                      | helm-descbinds         |             |
-| Indentation                          | indent-guide           |             |
-| Commands for human languages         | key-chord              |             |
-|                                      | boxquote               |             |
-| SGML and HTML modes                  | tidy                   |             |
-| Editing Programs                     | imenu-anywhere         |             |
-|                                      | hideshowvis            |             |
-|                                      | flycheck               |             |
-| Maintaining programs                 | litable                |             |
-|                                      | git-timemachine        |             |
-|                                      | git-messenger          |             |
-| Abbrevs                              | yasnippet              |             |
-|                                      | auto-complete          |             |
-|                                      | company                |             |
-|                                      | company-quickhelp      |             |
-| Gnus                                 | bbdb                   |             |
-| Document viewing                     | pdf-tools              |             |
-| Running shell commands from Emacs    | multi-term             |             |
-|                                      | cygwin-mount           |             |
-| Hyperlinking and navigation features | google-this            |             |
-|                                      | google-translate       |             |
-| Customization                        | guide-key              |             |
-|--------------------------------------+------------------------+-------------|
-|                                      | ace-window             |             |
-|                                      | auctex                 |             |
-|                                      | bookmark+              |             |
-|                                      | circe                  |             |
-|                                      | diminish               |             |
-|                                      | dired+                 |             |
-|                                      | dired-single           |             |
-|                                      | ess                    |             |
-|                                      | fill-column-indicator  |             |
-|                                      | flycheck               |             |
-|                                      | flycheck-ledger        |             |
-|                                      | git-commit-mode        |             |
-|                                      | graphviz-dot-mode      |             |
-|                                      | htmlize                |             |
-|                                      | idle-require           |             |
-|                                      | ledger-mode            |             |
-|                                      | leuven-theme           |             |
-|                                      | rainbow-mode           |             |
-|                                      | unbound                |             |
+| Subject                           | Package                | Description |
+|-----------------------------------+------------------------+-------------|
+| Basic editing commands            | undo-tree              |             |
+| Help                              | info+                  |             |
+| The mark and the region           | goto-chg               |             |
+|                                   | expand-region          |             |
+|                                   | multiple-cursors       |             |
+|                                   | ace-jump-mode          |             |
+|                                   | ace-link               |             |
+| Controlling the display           | pager                  |             |
+|                                   | fancy-narrow           |             |
+|                                   | highlight-symbol       |             |
+|                                   | color-identifiers-mode |             |
+|                                   | diff-hl                |             |
+|                                   | ws-butler              |             |
+|                                   | powerline              |             |
+|                                   | interaction-log        |             |
+| Searching and replacement         | fuzzy                  |             |
+|                                   | anzu                   |             |
+| Commands for fixing typos         | dictionary             |             |
+| Files Handling                    | helm                   |             |
+|                                   | helm-swoop             |             |
+| Major and minor modes             | csv-mode               |             |
+|                                   | helm-descbinds         |             |
+| Indentation                       | indent-guide           |             |
+| Commands for human languages      | key-chord              |             |
+|                                   | boxquote               |             |
+| SGML and HTML modes               | tidy                   |             |
+| Editing Programs                  | imenu-anywhere         |             |
+|                                   | hideshowvis            |             |
+|                                   | flycheck               |             |
+| Maintaining programs              | litable                |             |
+|                                   | git-timemachine        |             |
+|                                   | git-messenger          |             |
+| Abbrevs                           | yasnippet              |             |
+|                                   | auto-complete          |             |
+|                                   | company                |             |
+|                                   | company-quickhelp      |             |
+| Gnus                              | bbdb                   |             |
+| Document viewing                  | pdf-tools              |             |
+| Running shell commands from Emacs | multi-term             |             |
+|                                   | cygwin-mount           |             |
+|                                   | google-translate       |             |
+| Customization                     | guide-key              |             |
+|-----------------------------------+------------------------+-------------|
+|                                   | ace-window             |             |
+|                                   | auctex                 |             |
+|                                   | bookmark+              |             |
+|                                   | circe                  |             |
+|                                   | diminish               |             |
+|                                   | dired+                 |             |
+|                                   | dired-single           |             |
+|                                   | ess                    |             |
+|                                   | fill-column-indicator  |             |
+|                                   | flycheck               |             |
+|                                   | flycheck-ledger        |             |
+|                                   | git-commit-mode        |             |
+|                                   | graphviz-dot-mode      |             |
+|                                   | htmlize                |             |
+|                                   | idle-require           |             |
+|                                   | ledger-mode            |             |
+|                                   | leuven-theme           |             |
+|                                   | rainbow-mode           |             |
+|                                   | unbound                |             |
 
 To specify packages that should be excluded from installation by Emacs Leuven
 (and not suggested for installation), incorporate a configuration snippet like
@@ -358,7 +357,7 @@ I still have to sort them out, by mode (when applicable).
 | C-)           | match-paren                                    |
 | x             | leuven-vc-dir-hide-up-to-date-and-unregistered |
 | E             | vc-ediff                                       |
-| =             | leuven-vc-diff                                 |
+| =             | lvn-vc-diff-buffer-file                        |
 | M-?           | etags-select-find-tag-at-point                 |
 | C-c e         | ecb-minor-mode                                 |
 | M-/           | hippie-expand                                  |
