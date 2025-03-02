@@ -2071,33 +2071,6 @@ buffer."
   (add-to-list 'org-export-filter-plain-text-functions
                'leuven--latex-filter-nbsp)
 
-  (defun lvn--configure-latex-packages (backend)
-    "Configure LaTeX packages for export based on the LaTeX compiler.
-  Selects appropriate packages depending on whether XeLaTeX or PDFLaTeX is used."
-    (let ((use-xelatex (string-match-p "^#\\+LATEX_CMD: xelatex" (buffer-string))))
-      ;; Clear default packages.
-      (dolist (pkg '(("AUTO" "inputenc" t)
-                     ("T1" "fontenc" t)
-                     ("" "textcomp" t)))
-        (setq org-latex-packages-alist
-              (delete pkg org-latex-packages-alist)))
-
-      ;; Set compiler-specific packages.
-      (setq org-export-latex-packages-alist
-            (if use-xelatex
-                '(("" "fontspec" t)          ; XeLaTeX packages.
-                  ("" "xunicode" t))
-                  ;; Add here things like `\setmainfont{Georgia}'.
-                '(("AUTO" "inputenc" t)      ; PDFLaTeX packages.
-                  ("T1" "fontenc" t)
-                  ("" "textcomp" t))))
-
-      ;; Add common packages.
-      (add-to-list 'org-export-latex-packages-alist '("frenchb" "babel") :append)))
-
-  ;; Register hook for export preprocessing.
-  (add-hook 'org-export-before-parsing-hook #'lvn--configure-latex-packages)
-
   ;; 12.6.5 Default position for LaTeX figures.
   (setq org-latex-default-figure-position "!htbp")
 
