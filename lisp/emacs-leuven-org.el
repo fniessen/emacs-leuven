@@ -902,7 +902,7 @@ a parent headline."
                `("t" "New task" entry
                  (file+headline ,org-default-notes-file "Tasks")
                  "* MAYB %^{Task}%?\n  CREATED: %U\n  DEADLINE: %^t\n  %a"
-                 :empty-lines 1) t)
+                 :empty-lines 1) :append)
 
   (add-to-list 'org-capture-templates
                `("T" "New task in current file" entry
@@ -911,7 +911,7 @@ a parent headline."
                   "Tasks")
                  "* TODO %?
 %U %a %n"
-                 :prepend t) t)
+                 :prepend t) :append)
 
   (add-to-list 'org-capture-templates
                `("a" "New appt" entry
@@ -920,14 +920,14 @@ a parent headline."
 %^T
 
 %i"
-                 :empty-lines 1) t)
+                 :empty-lines 1) :append)
   ;; TODO Prompt only for date, not time...
 
   (add-to-list 'org-capture-templates
                `("Z" "Refile me!" entry
                  (function leuven--find-location)
                  "** TODO Put this in some other file\n\n"
-                 :prepend t) t)
+                 :prepend t) :append)
 
   (defun leuven--find-location ()
     "Find the Inbox file and navigate to a headline in the current buffer."
@@ -937,7 +937,7 @@ a parent headline."
     (org-forward-heading-same-level 1))
 
   (add-to-list 'org-capture-templates
-               `("m" "Email processing") t)
+               `("m" "Email processing") :append)
 
   (add-to-list 'org-capture-templates
                `("mT" "Create a TODO Action + edit" entry
@@ -950,7 +950,7 @@ a parent headline."
 #+end_verse
 
 From the address <%a>"
-                 :empty-lines 1) t)
+                 :empty-lines 1) :append)
 
   (add-to-list 'org-capture-templates
                `("mt" "Create a TODO Action" entry
@@ -964,7 +964,7 @@ From the address <%a>"
 
 From the address <%a>"
                  :empty-lines 1
-                 :immediate-finish t) t)
+                 :immediate-finish t) :append)
 
   (add-to-list 'org-capture-templates
                `("mn" "Create a note" entry
@@ -978,7 +978,7 @@ From the address <%a>"
 
 From the address <%a>"
                  :empty-lines 1
-                 :immediate-finish t) t)
+                 :immediate-finish t) :append)
 
   (add-to-list 'org-capture-templates
                `("p" "Phone call" entry
@@ -986,14 +986,14 @@ From the address <%a>"
                  "* %?"
                  :clock-in t
                  :clock-resume t
-                 :empty-lines 1) t)
+                 :empty-lines 1) :append)
 
   (add-to-list 'org-capture-templates
                `("i" "Interruption" entry
                  (file ,org-default-notes-file)
                  "A TEMPLATE HERE"
                  :clock-in t
-                 :clock-resume t) t)
+                 :clock-resume t) :append)
 
   ;; Thought.
   (add-to-list 'org-capture-templates
@@ -1002,18 +1002,18 @@ From the address <%a>"
                  "* %^{Thought}%?
 
 %i"
-                 :empty-lines 1) t)
+                 :empty-lines 1) :append)
 
   (add-to-list 'org-capture-templates
                `("n" "New quick note (with timestamp)" entry
                  (file+headline ,org-default-notes-file "Notes")
                  "* %?\n   CREATED: %U\n  %a"
-                 :empty-lines 1))
+                 :empty-lines 1) :append)
 
   ;; Shopping list (stuff to buy).
   (add-to-list 'org-capture-templates
                `("b" "Buy" checkitem
-                 (file+headline ,org-default-notes-file "Shopping")) t)
+                 (file+headline ,org-default-notes-file "Shopping")) :append)
 
   ;; Add a note to the currently clocked task.
   (add-to-list 'org-capture-templates
@@ -1023,7 +1023,7 @@ From the address <%a>"
 %U
 %a
 
-%i") t)
+%i") :append)
 
   ;;          ("w" "org-protocol" entry
   ;;           (file ,org-default-notes-file)
@@ -1061,7 +1061,7 @@ From the address <%a>"
                  :online-suffix ".html"
                  :working-suffix ".org"
                  :base-url "http://orgmode.org/worg/"
-                 :working-directory "~/Public/Repositories/worg/") t))
+                 :working-directory "~/Public/Repositories/worg/") :append))
 
 (with-eval-after-load 'org
   (message "[... Org Refile]")
@@ -2093,7 +2093,7 @@ buffer."
                   ("" "textcomp" t))))
 
       ;; Add common packages.
-      (add-to-list 'org-export-latex-packages-alist '("frenchb" "babel") t)))
+      (add-to-list 'org-export-latex-packages-alist '("frenchb" "babel") :append)))
 
   ;; Register hook for export preprocessing.
   (add-hook 'org-export-before-parsing-hook #'lvn--configure-latex-packages)
