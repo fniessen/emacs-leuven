@@ -2043,20 +2043,24 @@ buffer."
   (setq org-latex-listings t)
 
   ;; 12.6.2 Default packages to be inserted in the header.
-  ;; Add the `listings' package (for fontified source code) to the end of the
-  ;; list.
-  (push '("" "listings") org-latex-packages-alist)
+  ;; Include the `babel' package first for language-specific hyphenation and
+  ;; typography.
+  (add-to-list 'org-latex-packages-alist '("french" "babel") :append)
 
-  ;; Include the `xcolor' package for colored source code.
-  (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
+  ;; Include the `xcolor' package next for colored source code.
+  (add-to-list 'org-latex-packages-alist '("" "xcolor") :append)
 
-  ;; XXX To sort out...
-  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
-                                      (code . "\\lstinline|%s|")
-                                      (italic . "\\emph{%s}")
-                                      (strike-through . "\\sout{%s}")
-                                      (underline . "\\uline{%s}")
-                                      (verbatim . "\\verb|%s|")))
+  ;; Add the `listings' package last (for fontified source code).
+  (add-to-list 'org-latex-packages-alist '("" "listings") :append)
+
+  ;; Customize Org-mode LaTeX export for text markup styles.
+  (setq org-latex-text-markup-alist
+        '((bold          . "\\textbf{%s}")     ;; Bold text.
+          (code          . "\\lstinline|%s|")  ;; Inline code (requires `listings').
+          (italic        . "\\emph{%s}")       ;; Italicized text.
+          (strike-through . "\\sout{%s}")      ;; Strikethrough (requires `ulem').
+          (underline     . "\\uline{%s}")      ;; Underlined text (requires `ulem').
+          (verbatim      . "\\verb|%s|")))     ;; Verbatim text.
 
   ;; Filter for no-break spaces.
   (defun leuven--latex-filter-nbsp (text backend info)
@@ -2066,10 +2070,6 @@ buffer."
 
   (add-to-list 'org-export-filter-plain-text-functions
                'leuven--latex-filter-nbsp)
-
-  ;; Include the `babel' package for language-specific hyphenation and
-  ;; typography.
-  (add-to-list 'org-latex-packages-alist '("french" "babel") t)
 
   (defun lvn--configure-latex-packages (backend)
     "Configure LaTeX packages for export based on the LaTeX compiler.

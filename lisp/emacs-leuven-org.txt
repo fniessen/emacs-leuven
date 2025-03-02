@@ -3187,22 +3187,41 @@ is not necessary to rebuild index and/or bibliography.
   (setq org-latex-listings t)
 
   ;; 12.6.2 Default packages to be inserted in the header.
-  ;; Add the `listings' package (for fontified source code) to the end of the
-  ;; list.
-  (push '("" "listings") org-latex-packages-alist)
-
-  ;; Include the `xcolor' package for colored source code.
-  (add-to-list 'org-latex-packages-alist '("" "xcolor") t)
+  ;; Include the `babel' package first for language-specific hyphenation and
+  ;; typography.
+  (add-to-list 'org-latex-packages-alist '("french" "babel") :append)
 #+end_src
 
+The exporter will *add* a language option to the LaTeX ~babel~ package according to
+the ~#+LANGUAGE:~ keyword (only) if:
+
+- The ~babel~ package is explicitly loaded (in preamble), _and_
+- The language is different from the one set by the user.
+
 #+begin_src emacs-lisp
-  ;; XXX To sort out...
-  (setq org-latex-text-markup-alist '((bold . "\\textbf{%s}")
-                                      (code . "\\lstinline|%s|")
-                                      (italic . "\\emph{%s}")
-                                      (strike-through . "\\sout{%s}")
-                                      (underline . "\\uline{%s}")
-                                      (verbatim . "\\verb|%s|")))
+  ;; Include the `xcolor' package next for colored source code.
+  (add-to-list 'org-latex-packages-alist '("" "xcolor") :append)
+#+end_src
+
+: Package french.ldf Warning: Please load the "listings" package
+: (french.ldf)                AFTER babel/french.
+
+#+begin_src emacs-lisp
+  ;; Add the `listings' package last (for fontified source code).
+  (add-to-list 'org-latex-packages-alist '("" "listings") :append)
+#+end_src
+
+What about ~apacite~ and ~tikz~ in ~org-latex-packages-alist~?
+
+#+begin_src emacs-lisp
+  ;; Customize Org-mode LaTeX export for text markup styles.
+  (setq org-latex-text-markup-alist
+        '((bold          . "\\textbf{%s}")     ;; Bold text.
+          (code          . "\\lstinline|%s|")  ;; Inline code (requires `listings').
+          (italic        . "\\emph{%s}")       ;; Italicized text.
+          (strike-through . "\\sout{%s}")      ;; Strikethrough (requires `ulem').
+          (underline     . "\\uline{%s}")      ;; Underlined text (requires `ulem').
+          (verbatim      . "\\verb|%s|")))     ;; Verbatim text.
 #+end_src
 
 When using the ~utf8~ option to ~inputenc~ (and not ~utf8x~ which should be avoided,
@@ -3231,22 +3250,6 @@ the UTF-8 *no-break space*:
                        "\\DeclareUnicodeCharacter{00A0}{~}"
                        "}\\fi") t)
   #+end_src
-
-XXX The first one is better because ... (see mail of Daniel Flipo)
-
-The exporter will *add* a language option to the LaTeX ~babel~ package according to
-the ~#+LANGUAGE:~ keyword (only) if:
-
-- The ~babel~ package is explicitly loaded (in preamble), _and_
-- The language is different from the one set by the user.
-
-#+begin_src emacs-lisp
-  ;; Include the `babel' package for language-specific hyphenation and
-  ;; typography.
-  (add-to-list 'org-latex-packages-alist '("french" "babel") t)
-#+end_src
-
-What about ~apacite~ and ~tikz~ in ~org-latex-packages-alist~?
 
 #+begin_src emacs-lisp
   (defun lvn--configure-latex-packages (backend)
@@ -3280,6 +3283,25 @@ What about ~apacite~ and ~tikz~ in ~org-latex-packages-alist~?
 #+begin_src emacs-lisp
   ;; 12.6.5 Default position for LaTeX figures.
   (setq org-latex-default-figure-position "!htbp")
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(defun my-org-latex-debug-info (orig-fun &rest args)
+  "Advice function to debug LaTeX preamble generation in Org-mode.
+Shows the values of `org-latex-packages-alist' and `org-latex-default-packages-alist'."
+  ;; Log debug information to the *Messages* buffer.
+  (message "Debugging org-latex-make-preamble:")
+  (message "  org-latex-default-packages-alist:")
+  (dolist (pkg org-latex-default-packages-alist)
+    (message "    %S" pkg))
+  (message "  org-latex-packages-alist:")
+  (dolist (pkg org-latex-packages-alist)
+    (message "    %S" pkg))
+  ;; Call the original function with its arguments.
+  (apply orig-fun args))
+
+;; Add the advice to org-latex-make-preamble.
+(advice-add 'org-latex-make-preamble :around #'my-org-latex-debug-info)
 #+end_src
 
 ** "Ignore heading + promote children" tag
