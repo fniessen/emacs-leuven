@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250303.1712>
+;; Version: <20250303.2224>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250303.1712>"
+(defconst lvn--emacs-version "<20250303.2224>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -2375,33 +2375,31 @@ After initiating the grep search, the isearch is aborted."
   ;; Always use copying to create backup files (don't clobber symlinks).
   (setq backup-by-copying t)
 
-  ;; Ensure newline at the end of file when it is saved (in Text or Fundamental mode).
-  (defun leuven--text-mode-hook ()
-    "Customize `text-mode' buffers."
+  ;; Ensure newline at end of file for text-based modes.
+  (defun lvn--ensure-final-newline ()
+    "Ensure a final newline is added when saving text-based buffers."
     (setq-local mode-require-final-newline t))
 
-  (add-hook 'text-mode-hook #'leuven--text-mode-hook)
-  (add-hook 'fundamental-mode-hook #'leuven--text-mode-hook)
+  (dolist (hook '(text-mode-hook fundamental-mode-hook))
+    (add-hook hook #'lvn--ensure-final-newline))
 
-  ;; Update time stamps every time you save a buffer.
-  (add-hook 'before-save-hook #'time-stamp)
+  ;; Automatically update timestamps and copyright notices before saving.
+  (defun lvn--update-timestamps-and-copyright ()
+    "Update timestamps and copyright notices in the buffer before saving.
+  Skips updates in `diff-mode' buffers."
+    (unless (derived-mode-p 'diff-mode)
+      (time-stamp)
+      (copyright-update)))
 
-  ;; Maintain last change time stamps (`Time-stamp: <>' occurring within
-  ;; the first 8 lines) in files edited by Emacs.
+  ;; Configure timestamp format after loading `time-stamp'.
   (with-eval-after-load 'time-stamp
+    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M")
+    ;; %:y = 4-digit year, %02m = 2-digit month, %02d = 2-digit day,
+    ;; %3a = 3-letter day abbreviation, %02H:%02M = 24-hour:minutes.
+  )
 
-    ;; Format of the string inserted by `M-x time-stamp':
-    ;; `YYYY-MM-DD Day HH:MM' (see `system-time-locale' for non-numeric
-    ;; formatted items of time).
-    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M"))
-
-  ;; Update the copyright notice to indicate the current year.
-  (add-hook 'before-save-hook
-            (lambda ()                  ; Except for ...
-              (unless (derived-mode-p 'diff-mode)
-                                        ; ... where the patch file can't be
-                                        ; changed!
-                (copyright-update))))
+  ;; Add update function to `before-save-hook'.
+  (add-hook 'before-save-hook #'lvn--update-timestamps-and-copyright)
 
 ;;** 18.4 (info "(emacs)Reverting") a Buffer
 
@@ -2415,26 +2413,22 @@ After initiating the grep search, the isearch is aborted."
   ;; ;; other version control related information, may not be properly updated
   ;; (setq auto-revert-check-vc-info t)
 
-  ;; Synchronize.  Reload the file from disk (replacing current buffer text with
-  ;; the text of the visited file on disk).
-  (defun lvn-revert-buffer-and-clean-highlights ()
-    "Revert the current buffer unconditionally and remove specified highlights."
+  ;; Sync buffer with disk and clear specific highlights.
+  (defun lvn-sync-buffer-and-clear-overlays ()
+    "Revert buffer from disk and remove specified overlays in visible area."
     (interactive)
-    (revert-buffer t t)                 ; ignore-auto(-save), noconfirm
-
-    (dolist (overlay (overlays-in (window-start) (window-end)))
-      (when (memq (overlay-get overlay 'face)
+    (revert-buffer t t) ;; Ignore auto-save and confirm prompts.
+    (dolist (ov (overlays-in (window-start) (window-end)))
+      (when (memq (overlay-get ov 'face)
                   '(recover-this-file
                     highlight-changes
                     highlight-changes-delete
-                    org-block-executing)) ; Useful when our advice of function
-                                        ; `org-babel-execute-src-block' fails to
-                                        ; remove the background color.
-        (delete-overlay overlay)))
+                    org-block-executing))
+        (delete-overlay ov)))
+    (message "[Buffer synced with disk]"))
 
-    (message "[Buffer is up to date with the file on disk]"))
-
-  (global-set-key (kbd "C-S-y") #'lvn-revert-buffer-and-clean-highlights)
+  ;; Bind to C-S-y globally.
+  (global-set-key (kbd "C-S-y") #'lvn-sync-buffer-and-clear-overlays)
 
   (when (and (bound-and-true-p lvn--cygwin-p)
                                         ; Cygwin Emacs uses gfilenotify (based
