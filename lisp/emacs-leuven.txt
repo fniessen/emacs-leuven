@@ -11196,129 +11196,62 @@ The commands to display *symbol references* are:
      ~semantic-symref~ (current tag).
 
 #+begin_src emacs-lisp
-  (unless (string< emacs-version "23.2")
-    ;; ;; Enable global EDE (project management) features.
-    ;; (global-ede-mode 1)
+  ;; Configure Semantic default submodes.
+  (setq semantic-default-submodes
+        '(global-semanticdb-minor-mode           ; Store parse results in DB.
+          global-semantic-idle-scheduler-mode    ; Auto-reparse in idle time.
+          global-semantic-idle-summary-mode      ; Show symbol summary.
+          global-semantic-idle-completions-mode  ; Show completion tooltips.
+          global-semantic-mru-bookmark-mode      ; Track recent tags.
+          global-semantic-stickyfunc-mode        ; Show function header.
+          global-semantic-highlight-func-mode    ; Highlight current function.
+          global-semantic-decoration-mode))      ; Show method separators.
 
-    (setq semantic-default-submodes
-          '(
-            ;; Turn Semantic DB mode on (Semantic parsers store the results of
-            ;; parsing source code in a database file, which can be saved for
-            ;; future Emacs sessions).
-            global-semanticdb-minor-mode
+  ;; Enable Semantic mode for Java.
+  (add-hook 'java-mode-hook #'semantic-mode)
+                                        ; Avoid enabling it for prog-mode, as
+                                        ; this would trigger Semantic to start
+                                        ; after Emacs initialization, since the
+                                        ; scratch buffer uses Emacs Lisp...
 
-            ;; The idle scheduler will automatically reparse buffers in idle
-            ;; time.
-            global-semantic-idle-scheduler-mode ; [minimum-features]
+  ;; Configure Semantic features after loading.
+  (with-eval-after-load 'semantic
+    ;; General programming mode keybindings.
+    (defun leuven-setup-semantic-keys ()
+      "Set up Semantic keybindings for programming modes."
+      (local-set-key (kbd "C-c ?") #'semantic-ia-complete-symbol)    ; Complete symbol.
+      (local-set-key (kbd "C-c j") #'semantic-ia-fast-jump)          ; Jump to definition.
+      (local-set-key (kbd "C-c q") #'semantic-ia-show-doc)           ; Show documentation.
+      (local-set-key (kbd "C-c s") #'semantic-ia-show-summary)       ; Show summary.
+      (local-set-key (kbd "C-c >") #'semantic-complete-analyze-inline) ; Member completion.
+      ;; (local-set-key (kbd "C-c p") #'semantic-analyze-proto-impl-toggle) ; Conflict with projectile.
+      (local-set-key (kbd "C-c =") #'semantic-decoration-include-visit) ; Visit header.
+      (local-set-key (kbd "C-c +") #'semantic-tag-folding-show-block)  ; Unfold block.
+      (local-set-key (kbd "C-c -") #'semantic-tag-folding-fold-block) ; Fold block.
+      ;; (local-set-key (kbd "C-c C-c +") #'semantic-tag-folding-show-all)
+      ;; (local-set-key (kbd "C-c C-c -") #'semantic-tag-folding-fold-all)
+      )
 
-            ;; Display a summary of the symbol at point in the echo area
-            ;; (~ ElDoc).
-            global-semantic-idle-summary-mode ; [code-helpers]
+    (add-hook 'prog-mode-hook #'leuven-setup-semantic-keys)
 
-            ;; Display a tooltip with a list of possible completions near the
-            ;; cursor.
-            global-semantic-idle-completions-mode ; [gaudy-code-helpers]
+    ;; C-specific Semantic configuration.
+    (defun leuven-setup-c-semantic ()
+      "Set up C-specific Semantic keybindings and completion."
+      (local-set-key (kbd ".") #'semantic-complete-self-insert)  ; Complete on ..
+      (local-set-key (kbd ">") #'semantic-complete-self-insert)  ; Complete on ->.
+      (local-set-key (kbd "C-c C-r") #'semantic-symref))         ; Symbol references.
 
-            ;; Turn Semantic MRU Bookmarks on (keep track of the Most
-            ;; Recently Used tags).
-            global-semantic-mru-bookmark-mode
+    (add-hook 'c-mode-common-hook #'leuven-setup-c-semantic))
+                                        ; Be aware that this will affect all
+                                        ; cc-modes, such as c-mode, c++-mode,
+                                        ; php-mode, csharp-mode, and awk-mode.
 
-            ;; Enable Semantic-Stickyfunc mode (display a header line that shows
-            ;; the declaration line of the function or tag).
-            global-semantic-stickyfunc-mode ; [gaudy-code-helpers]
+  ;; Semantic Imenu configuration.
+  (defun leuven-setup-semantic-imenu ()
+    "Add Semantic tags to Imenu menu."
+    (imenu-add-to-menubar "TAGS"))
 
-            ;; Enable Semantic-Highlight-Func mode.
-            global-semantic-highlight-func-mode ; [excessive-code-helpers]
-
-            ;; Turn on all active decorations.  Show Method Separators.
-            global-semantic-decoration-mode ; [gaudy-code-helpers]
-            ))
-
-    ;; XXX If prog-mode, then Semantic will be launched after Emacs init, as
-    ;; the scratch buffer is in Emacs Lisp...
-    (add-hook 'java-mode-hook #'semantic-mode)
-                                        ; Enable parser features (Semantic mode)
-                                        ; and install a `Development' menu on
-                                        ; the menu-bar.
-
-    ;; ;; Smart completion, and display of information for tags & classes.
-    ;; (require 'semantic/ia)
-    ;;
-    ;; (require 'semantic/db)
-
-    (with-eval-after-load 'semantic
-
-      (defun leuven--semantic ()
-        ;; Automatically complete whatever symbol you are typing.
-        (local-set-key
-          (kbd "C-c ?") #'semantic-ia-complete-symbol) ; Better binding: `M-/'?
-
-        ;; Jump to the definition of the symbol under cursor.
-        (local-set-key
-          (kbd "C-c j") #'semantic-ia-fast-jump) ; Where a symbol is declared.
-
-        ;; Show the documentation of the symbol under cursor.
-        (local-set-key
-          (kbd "C-c q") #'semantic-ia-show-doc) ; Show javadoc of the right method.
-
-        ;; Show a summary about the symbol under cursor.
-        (local-set-key
-          (kbd "C-c s") #'semantic-ia-show-summary)
-
-
-        ;; Show possible public member functions or data members (when at `.'
-        ;; or `->' after an object name).
-        (local-set-key
-          (kbd "C-c >") #'semantic-complete-analyze-inline)
-
-        ;; ;; Toggle between the implementation and a prototype of symbol under
-        ;; ;; cursor.
-        ;; (local-set-key
-        ;;   (kbd "C-c p") #'semantic-analyze-proto-impl-toggle) ; vs Projectile.
-
-        ;; Visit the header file under cursor.
-        (local-set-key
-          (kbd "C-c =") #'semantic-decoration-include-visit)
-
-
-        ;; Unfold the block under cursor.
-        (local-set-key
-          (kbd "C-c +") #'semantic-tag-folding-show-block)
-
-        ;; Fold the block under cursor.
-        (local-set-key
-          (kbd "C-c -") #'semantic-tag-folding-fold-block)
-
-        ;; C-c C-c is not a prefix key!
-        ;; ;; Unfold all.
-        ;; (local-set-key
-        ;;   (kbd "C-c C-c +") #'semantic-tag-folding-show-all)
-        ;;
-        ;; ;; Fold all.
-        ;; (local-set-key
-        ;;   (kbd "C-c C-c -") #'semantic-tag-folding-fold-all)
-        )
-
-      (add-hook 'prog-mode-hook #'leuven--semantic)
-
-      (defun leuven--c-mode-semantic ()
-        "Completion on `.' or `->'."
-        (local-set-key (kbd ".") #'semantic-complete-self-insert)
-        (local-set-key (kbd ">") #'semantic-complete-self-insert)
-        (local-set-key (kbd "C-c C-r") #'semantic-symref))
-
-      (add-hook 'c-mode-common-hook #'leuven--c-mode-semantic))
-                                        ; Note that this will apply to all
-                                        ; cc-modes, e.g. c-mode, c++-mode,
-                                        ; php-mode, csharp-mode, awk-mode.
-
-    ;; Hooks, specific for Semantic.
-    (defun leuven--semantic-imenu ()
-      (imenu-add-to-menubar "TAGS"))
-
-    (add-hook 'semantic-init-hook #'leuven--semantic-imenu)
-
-    )
+  (add-hook 'semantic-init-hook #'leuven-setup-semantic-imenu)
 #+end_src
 
 *** Advanced Code Browsing
