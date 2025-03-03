@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250303.1359>
+;; Version: <20250303.1421>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250303.1359>"
+(defconst lvn--emacs-version "<20250303.1421>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -111,8 +111,7 @@
   :group 'leuven
   :type 'boolean)
 
-(when (and (string-match "GNU Emacs" (version))
-           lvn-verbose-loading)
+(when lvn-verbose-loading
   (defun lvn--add-timestamp-to-message (old-fun &rest args)
     "Add timestamps to `message' output."
     (when (car args)
@@ -7811,17 +7810,15 @@ NOTIFICATION-STRING: Message(s) to display."
 ;; (use-package ert
 ;;   :bind ("C-c e t" . ert-run-tests-interactively))
 
-(when (and (string-match "GNU Emacs" (version))
-           lvn-verbose-loading)
-  (ad-disable-advice 'message 'before 'leuven-when-was-that)
-  (ad-update 'message))
+;; Stop timestamping messages post-initialization.
+(when lvn-verbose-loading
+  (advice-remove 'message #'lvn--add-timestamp-to-message))
 
 (when lvn-verbose-loading
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar (lambda (el)                  ; FIXME Use `mapc' or `dolist'.
-            (message el))
-          (nreverse leuven--load-times-list))
+  (dolist (el (nreverse leuven--load-times-list))
+    (message el))
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
 

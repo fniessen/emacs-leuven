@@ -235,8 +235,7 @@ we restore default GC settings and perform an initial cleanup via
 #+end_src
 
 #+begin_src emacs-lisp
-(when (and (string-match "GNU Emacs" (version))
-           lvn-verbose-loading)
+(when lvn-verbose-loading
   (defun lvn--add-timestamp-to-message (old-fun &rest args)
     "Add timestamps to `message' output."
     (when (car args)
@@ -15710,25 +15709,23 @@ calls to message), set the variable ~debug-on-message~.
 ;;   :bind ("C-c e t" . ert-run-tests-interactively))
 #+end_src
 
+* Post-Initialization
+
 #+begin_src emacs-lisp
-(when (and (string-match "GNU Emacs" (version))
-           lvn-verbose-loading)
-  (ad-disable-advice 'message 'before 'leuven-when-was-that)
-  (ad-update 'message))
+;; Stop timestamping messages post-initialization.
+(when lvn-verbose-loading
+  (advice-remove 'message #'lvn--add-timestamp-to-message))
 #+end_src
 
 #+begin_src emacs-lisp
 (when lvn-verbose-loading
   (message "| Chapter | Time |")
   (message "|---------+------|")
-  (mapcar (lambda (el)                  ; FIXME Use `mapc' or `dolist'.
-            (message el))
-          (nreverse leuven--load-times-list))
+  (dolist (el (nreverse leuven--load-times-list))
+    (message el))
   (message "|---------+------|")
   (message "|         | =vsum(@-I..@-II) |"))
 #+end_src
-
-* Post Init
 
 #+begin_src emacs-lisp
 ;; Compute and display the load time.
