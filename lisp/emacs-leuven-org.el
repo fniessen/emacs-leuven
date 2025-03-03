@@ -303,14 +303,14 @@ If not, just print a message."
 
 (with-eval-after-load 'org
   (defun lvn-org-reveal (&optional all-siblings)
-    "Show all siblings of the current level.
-With a prefix argument (C-u C-c C-r), show all hidden siblings."
+    "Reveal siblings of the current Org heading.
+With a prefix argument (e.g., C-u C-c C-r), reveal all hidden entries in the buffer."
     (interactive "P")
     (if all-siblings
-        (org-reveal t)
-      (org-show-siblings)))
+        (org-reveal t)            ; Reveal all hidden content in the buffer.
+      (org-fold-show-siblings)))  ; Reveal only siblings at the current level.
 
-  ;; Bind `C-c C-r' to the `lvn-org-reveal' function in org-mode.
+  ;; Bind `C-c C-r' to `lvn-org-reveal' in Org-mode keymap.
   (define-key org-mode-map (kbd "C-c C-r") #'lvn-org-reveal))
 
 ;;** (info "(org)Structure editing")
@@ -653,9 +653,6 @@ a parent headline."
                (org-toggle-tag tag 'off)))))
        t nil))))
 
-;; ;; Always offer completion for all tags of all agenda files.
-;; (setq org-complete-tags-always-offer-all-agenda-tags t)
-
 ;;* 7 (info "(org)Properties and Columns")
 
 ;;** 7.1 (info "(org)Property syntax")
@@ -723,9 +720,6 @@ a parent headline."
 
 ;; ~8.3 Don't select item by time stamp or -range if it is DONE.
 (setq org-agenda-skip-timestamp-if-done t)
-
-;; ;; Show all days between the first and the last date.
-;; (setq org-timeline-show-empty-dates t)
 
 ;; TODO state to which a repeater should return the repeating task.
 (setq org-todo-repeat-to-state "TODO")
@@ -1713,75 +1707,98 @@ or added into the given directory, defaulting to the current one."
   (define-key org-mode-map (kbd "C-c C-e") #'org-export-dispatch))
 
 (with-eval-after-load 'org
+  ;; Helper function to measure execution time.
+  (defun measure-time-wrapper (message fn &rest args)
+    "Wrapper to measure and report execution time of a function."
+    (measure-time message (apply fn args)))
 
+  ;; Helper function to check if export is needed.
+  (defun needs-export-p (source-file target-file)
+    "Check if export is needed based on file timestamps."
+    (and (file-exists-p target-file)
+         (file-newer-than-file-p source-file target-file)))
+
+  ;; Main function.
   (defun org-save-buffer-and-do-related ()
-    "Save buffer, execute/tangle code blocks, and export to HTML/PDF."
+    "Save buffer, execute/tangle code blocks, and export to various
+formats (Markdown, HTML, or PDF)."
     (interactive)
+    (when (not (derived-mode-p 'org-mode))
+      (user-error "Not in Org mode"))
+
     (let* ((orgfile (buffer-file-name))
            (base-name (file-name-base orgfile))
            (mdfile (concat base-name ".md"))
            (htmlfile (concat base-name ".html"))
            (texfile (concat base-name ".tex"))
            (pdffile (concat base-name ".pdf")))
-      (save-buffer)                     ; See other commands in
-                                        ; `before-save-hook':
-                                        ; `org-update-all-dblocks'
-                                        ; `org-table-iterate-buffer-tables'.
-      (when (derived-mode-p 'org-mode)
-        (measure-time "Restarted Org mode" (org-mode-restart))
-                                        ; Update information from one of the
-                                        ; special #+KEYWORD lines
-                                        ; (like `C-c C-c')
 
-        ;; Linting for Org documents.
-        (when (try-require "org-lint")
-          (measure-time "Linted Org mode"
-                        (if (org-lint)
-                            (progn
-                              (message "[You should run `org-lint'!!!]")
-                              (beep)
-                              (sit-for 1)))))
+      ;; Initial save buffer.
+      (save-buffer)
 
-        ;; ;; Update the results in the Org buffer.
-        ;; (org-babel-execute-buffer)    ; In this case, better than
-        ;;                               ; (add-hook 'org-export-first-hook
-        ;;                               ;           #'org-babel-execute-buffer):
-        ;;                               ; executed only once for both exports.
+      ;; Restart Org mode (useful for refreshing settings).
+      (measure-time-wrapper "Restarted Org mode" (org-mode))
 
-        ;; It'd make sense to eval all code blocks which have :cache yes or :exports
-        ;; results or both... And, before that, to delete all code block results!?
-        ;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
-        ;; taken a long time to be computed, or may not be computable another time), nor
-        ;; the ones with a caption on the results block...
+      ;; Run Org lint if available.
+      (when (try-require "org-lint")
+        (measure-time-wrapper "Linted Org mode"
+                             (lambda ()
+                               (when (org-lint)
+                                 (message "[You should run `org-lint'!!!]")
+                                 (beep)
+                                 (sit-for 1)))))
 
-        (measure-time "Buffer saved"
-                      (let ((before-save-hook nil))
-                        (save-buffer)))
-        (measure-time "Buffer tangled"
-                      (org-babel-tangle))
-        (when (file-exists-p mdfile)
-          (if (file-newer-than-file-p orgfile mdfile)
-              (measure-time "Buffer exported to Markdown"
-                            (org-md-export-to-markdown))
-            (message "[Markdown is up to date with Org file]")))
-        (when (file-exists-p htmlfile)
-          (if (file-newer-than-file-p orgfile htmlfile)
-              (measure-time "Buffer exported to HTML"
-                            (org-html-export-to-html))
-            (message "[HTML is up to date with Org file]")))
-        (when (or (file-exists-p texfile) (file-exists-p pdffile))
-          (if (or (and (file-exists-p pdffile)
-                       (file-newer-than-file-p orgfile pdffile))
-                  (and (file-exists-p texfile)
-                       (not (file-exists-p pdffile))))
-                                        ; Previous PDF export failed.
-              (measure-time "Buffer exported to PDF LaTeX"
-                            (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
-                                (org-beamer-export-to-pdf)
-                              (org-latex-export-to-pdf)))
-            (message "[PDF is up to date with Org file]")))
-        (beep))))
+      ;; ;; Update the results in the Org buffer.
+      ;; (org-babel-execute-buffer)    ; In this case, better than
+      ;;                               ; (add-hook 'org-export-first-hook
+      ;;                               ;           #'org-babel-execute-buffer):
+      ;;                               ; executed only once for both exports.
 
+      ;; It'd make sense to eval all code blocks which have :cache yes or :exports
+      ;; results or both... And, before that, to delete all code block results!?
+      ;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
+      ;; taken a long time to be computed, or may not be computable another time), nor
+      ;; the ones with a caption on the results block...
+
+      ;; Save buffer again to ensure updates.
+      (measure-time-wrapper "Buffer saved"
+                           (lambda ()
+                             (let ((before-save-hook nil))
+                               (save-buffer))))
+
+      ;; Tangle code blocks.
+      (measure-time-wrapper "Buffer tangled" #'org-babel-tangle)
+
+      ;; Export to Markdown if necessary.
+      (when (file-exists-p mdfile)
+        (if (needs-export-p orgfile mdfile)
+            (measure-time-wrapper "Buffer exported to Markdown"
+                                 #'org-md-export-to-markdown)
+          (message "[Markdown is up to date with Org file]")))
+
+      ;; Export to HTML if necessary.
+      (when (file-exists-p htmlfile)
+        (if (needs-export-p orgfile htmlfile)
+            (measure-time-wrapper "Buffer exported to HTML"
+                                 #'org-html-export-to-html)
+          (message "[HTML is up to date with Org file]")))
+
+      ;; Export to PDF if necessary.
+      (when (or (file-exists-p texfile) (file-exists-p pdffile))
+        (if (or (and (file-exists-p pdffile)
+                    (needs-export-p orgfile pdffile))
+                (and (file-exists-p texfile)
+                     (not (file-exists-p pdffile))))
+            (measure-time-wrapper "Buffer exported to PDF LaTeX"
+                                 (lambda ()
+                                   (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
+                                       (org-beamer-export-to-pdf)
+                                     (org-latex-export-to-pdf))))
+          (message "[PDF is up to date with Org file]")))
+
+      (beep)))
+
+  ;; Bind function to F9 key in Org mode.
   (define-key org-mode-map (kbd "<f9>") #'org-save-buffer-and-do-related))
 
 ;;** 12.2 (info "(org)Export options")
@@ -1811,15 +1828,6 @@ or added into the given directory, defaulting to the current one."
 
   ;; Allow #+BIND to define local variable values for export.
   (setq org-export-allow-bind-keywords t)
-
-  ;; ;; Exported stuff will not be pushed onto the kill ring.
-  ;; (setq org-export-copy-to-kill-ring nil) ; new default since 2014-04-17
-
-  ;; ;; Export and publishing commands will run in background.
-  ;; (setq org-export-in-background t)
-
-  ;; ;; Use a non-intrusive export dispatcher.
-  ;; (setq org-export-dispatch-use-expert-ui t)
 
   ;; Export snippet translations.
   (add-to-list 'org-export-snippet-translation-alist
@@ -2614,10 +2622,11 @@ Ignore non Org buffers."
 ;; (org-end-of-subtree nil t)
 
 ;; Backend aware export preprocess hook.
-(defun leuven--org-export-preprocess-hook ()
-  "Backend-aware export preprocess hook."
+(defun leuven--org-export-preprocess-hook (backend)
+  "Backend-aware export preprocess hook.
+BACKEND is the current export backend."
   (save-excursion
-    (when (eq org-export-current-backend 'latex)
+    (when (eq backend 'latex)
       ;; ignoreheading tag for bibliographies and appendices.
       (let* ((tag "ignoreheading"))
         ;; (goto-char (point-min))
@@ -2627,15 +2636,15 @@ Ignore non Org buffers."
          (lambda ()
            (delete-region (point-at-bol) (point-at-eol)))
          (concat ":" tag ":"))))
-    (when (eq org-export-current-backend 'html)
-      ;; set custom css style class based on matched tag
+    (when (eq backend 'html)
+      ;; Set custom CSS style class based on matched tag.
       (let* ((match "Qn"))
         (org-map-entries
          (lambda ()
            (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
          match)))))
 
-(add-hook 'org-export-preprocess-hook #'leuven--org-export-preprocess-hook)
+(add-hook 'org-export-before-parsing-hook #'leuven--org-export-preprocess-hook)
 
 (defun insert-one-equal-or-two ()
   "XXX"
@@ -2716,7 +2725,7 @@ Ignore non Org buffers."
       (when flyspell-state (flyspell-mode -1))
 
       ;; Perform buffer updates.
-      (measure-time "Realigned all tags" (org-align-all-tags))
+      (measure-time "Realigned all tags" (org-align-tags t))
       (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
       (measure-time "Re-applied formulas to all tables"
                     (org-table-iterate-buffer-tables))
