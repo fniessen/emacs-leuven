@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250303.1638>
+;; Version: <20250303.1641>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250303.1638>"
+(defconst lvn--emacs-version "<20250303.1641>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -5984,7 +5984,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; Configure Semantic features after loading.
   (with-eval-after-load 'semantic
     ;; General programming mode keybindings.
-    (defun leuven-setup-semantic-keys ()
+    (defun lvn--setup-semantic-keys ()
       "Set up Semantic keybindings for programming modes."
       (local-set-key (kbd "C-c ?") #'semantic-ia-complete-symbol)    ; Complete symbol.
       (local-set-key (kbd "C-c j") #'semantic-ia-fast-jump)          ; Jump to definition.
@@ -5999,26 +5999,26 @@ a clean buffer we're an order of magnitude laxer about checking."
       ;; (local-set-key (kbd "C-c C-c -") #'semantic-tag-folding-fold-all)
       )
 
-    (add-hook 'prog-mode-hook #'leuven-setup-semantic-keys)
+    (add-hook 'prog-mode-hook #'lvn--setup-semantic-keys)
 
     ;; C-specific Semantic configuration.
-    (defun leuven-setup-c-semantic ()
+    (defun lvn--setup-c-semantic ()
       "Set up C-specific Semantic keybindings and completion."
       (local-set-key (kbd ".") #'semantic-complete-self-insert)  ; Complete on ..
       (local-set-key (kbd ">") #'semantic-complete-self-insert)  ; Complete on ->.
       (local-set-key (kbd "C-c C-r") #'semantic-symref))         ; Symbol references.
 
-    (add-hook 'c-mode-common-hook #'leuven-setup-c-semantic))
+    (add-hook 'c-mode-common-hook #'lvn--setup-c-semantic))
                                         ; Be aware that this will affect all
                                         ; cc-modes, such as c-mode, c++-mode,
                                         ; php-mode, csharp-mode, and awk-mode.
 
   ;; Semantic Imenu configuration.
-  (defun leuven-setup-semantic-imenu ()
+  (defun lvn--setup-semantic-imenu ()
     "Add Semantic tags to Imenu menu."
     (imenu-add-to-menubar "TAGS"))
 
-  (add-hook 'semantic-init-hook #'leuven-setup-semantic-imenu)
+  (add-hook 'semantic-init-hook #'lvn--setup-semantic-imenu)
 
   (with-eval-after-load 'projectile-autoloads
     (idle-require 'projectile)

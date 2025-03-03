@@ -11217,7 +11217,7 @@ The commands to display *symbol references* are:
   ;; Configure Semantic features after loading.
   (with-eval-after-load 'semantic
     ;; General programming mode keybindings.
-    (defun leuven-setup-semantic-keys ()
+    (defun lvn--setup-semantic-keys ()
       "Set up Semantic keybindings for programming modes."
       (local-set-key (kbd "C-c ?") #'semantic-ia-complete-symbol)    ; Complete symbol.
       (local-set-key (kbd "C-c j") #'semantic-ia-fast-jump)          ; Jump to definition.
@@ -11232,26 +11232,26 @@ The commands to display *symbol references* are:
       ;; (local-set-key (kbd "C-c C-c -") #'semantic-tag-folding-fold-all)
       )
 
-    (add-hook 'prog-mode-hook #'leuven-setup-semantic-keys)
+    (add-hook 'prog-mode-hook #'lvn--setup-semantic-keys)
 
     ;; C-specific Semantic configuration.
-    (defun leuven-setup-c-semantic ()
+    (defun lvn--setup-c-semantic ()
       "Set up C-specific Semantic keybindings and completion."
       (local-set-key (kbd ".") #'semantic-complete-self-insert)  ; Complete on ..
       (local-set-key (kbd ">") #'semantic-complete-self-insert)  ; Complete on ->.
       (local-set-key (kbd "C-c C-r") #'semantic-symref))         ; Symbol references.
 
-    (add-hook 'c-mode-common-hook #'leuven-setup-c-semantic))
+    (add-hook 'c-mode-common-hook #'lvn--setup-c-semantic))
                                         ; Be aware that this will affect all
                                         ; cc-modes, such as c-mode, c++-mode,
                                         ; php-mode, csharp-mode, and awk-mode.
 
   ;; Semantic Imenu configuration.
-  (defun leuven-setup-semantic-imenu ()
+  (defun lvn--setup-semantic-imenu ()
     "Add Semantic tags to Imenu menu."
     (imenu-add-to-menubar "TAGS"))
 
-  (add-hook 'semantic-init-hook #'leuven-setup-semantic-imenu)
+  (add-hook 'semantic-init-hook #'lvn--setup-semantic-imenu)
 #+end_src
 
 *** Advanced Code Browsing
