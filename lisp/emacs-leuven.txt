@@ -14719,19 +14719,8 @@ Pick up where you left off.
 
 (leuven--chapter leuven-load-chapter-44-saving-emacs-sessions "44 Saving Emacs Sessions"
 
-  ;; Remember cursor position.
-  (if (version< emacs-version "25.0")
-
-      (progn
-        ;; Automatically save place in each file.
-        (setq-default save-place t)     ; Default value for all buffers.
-
-        ;; Name of the file that records `save-place-alist' value.
-        (setq save-place-file "~/.emacs.d/places")
-
-        (require 'saveplace))
-
-    (save-place-mode 1))
+  ;; Remember cursor position in each file.
+  (save-place-mode 1)
 
 )                                       ; Chapter 44 ends here.
 #+end_src
@@ -15424,17 +15413,6 @@ For animated GIF (or multi-page TIFF):
 - ~f~ steps through image frame frame, and
 - ~RET~ animates.
 No need for ImageMagick.
-
-* Emacs Lisp
-
-** Variables
-
-*** Local Variables
-
-#+begin_src emacs-lisp
-  ;; Limit on number of Lisp variable bindings & unwind-protects.
-  (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
-#+end_src
 
 * Calc
 

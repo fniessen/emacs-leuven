@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250303.1043>
+;; Version: <20250303.1359>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250303.1043>"
+(defconst lvn--emacs-version "<20250303.1359>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7503,19 +7503,8 @@ NOTIFICATION-STRING: Message(s) to display."
 
 (leuven--chapter leuven-load-chapter-44-saving-emacs-sessions "44 Saving Emacs Sessions"
 
-  ;; Remember cursor position.
-  (if (version< emacs-version "25.0")
-
-      (progn
-        ;; Automatically save place in each file.
-        (setq-default save-place t)     ; Default value for all buffers.
-
-        ;; Name of the file that records `save-place-alist' value.
-        (setq save-place-file "~/.emacs.d/places")
-
-        (require 'saveplace))
-
-    (save-place-mode 1))
+  ;; Remember cursor position in each file.
+  (save-place-mode 1)
 
 )                                       ; Chapter 44 ends here.
 
@@ -7795,9 +7784,6 @@ NOTIFICATION-STRING: Message(s) to display."
   (global-set-key (kbd "<C-mouse-5>")    #'text-scale-decrease)
 
 )
-
-  ;; Limit on number of Lisp variable bindings & unwind-protects.
-  (setq max-specpdl-size 3000)          ; XEmacs 21.5.29
 
 ;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
 
