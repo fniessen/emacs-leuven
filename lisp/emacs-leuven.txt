@@ -303,23 +303,30 @@ we restore default GC settings and perform an initial cleanup via
   "List of chapters and time to load them.")
 
 (defmacro leuven--chapter (chapterid chaptername &rest body)
-  "When CHAPTERID is not nil, report as CHAPTERNAME the evaluation of BODY.
-Save execution times in the global list `leuven--load-times-list'."
+  "Evaluate BODY as CHAPTERNAME when CHAPTERID is non-nil.
+Records execution time in `leuven--load-times-list'."
   `(when ,chapterid
-     (let (before-chapter-time
-           this-chapter-time)
+     (let ((before-time (float-time))
+           (section-start-time (float-time))
+           chapter-duration)
+       ;; Display chapter start message if verbose mode is enabled.
        (when lvn-verbose-loading
          (message "[** %s]" ,chaptername))
-       (setq before-chapter-time (float-time))
-       (setq leuven--before-section-time (float-time)) ; Init section time.
-       (progn ,@body)
+
+       ;; Initialize section timing.
+       (setq leuven--before-section-time section-start-time)
+
+       ;; Execute the chapter body.
+       ,@body
+
+       ;; Mark chapter end with a fake section.
        (leuven--section (concat "[" ,chaptername " ends here]") 'end-of-chapter)
-                                        ; Add fake closing section.
-       (setq this-chapter-time
-             (format "%.2f" (- (float-time) before-chapter-time)))
+
+       ;; Calculate and store duration.
+       (setq chapter-duration (format "%.2f" (- (float-time) before-time)))
        (add-to-list 'leuven--load-times-list
                     (concat "| " ,chaptername " "
-                            "| " this-chapter-time " |")))))
+                            "| " chapter-duration " |")))))
 
 (defvar leuven--before-section-time (float-time)
   "Value of `float-time' before loading some section.")
@@ -3240,24 +3247,35 @@ the user see truly invisible matches before replacing them.
     (setq anzu-replace-to-string-separator " => ")
 
     ;; Function which returns mode-line string.
-    (defun leuven--anzu-update-mode-line (here total)
+    (defun lvn--anzu-format-mode-line (here total)
+      "Return a mode-line string based on anzu search state.
+    HERE is the current position, TOTAL is the number of matches."
       (when anzu--state
-        (let ((status (cl-case anzu--state
-                        (search (format (if (> total 1)
-                                            " %s of %d%s matches "
-                                          " %s of %d%s match ")
-                                        (anzu--format-here-position here total)
-                                        total (if anzu--overflow-p "+" "")))
-                        (replace-query (format " %d replace " total))
-                        (replace (format (if (> total 1)
-                                             " %d of %d matches "
-                                           " %d of %d match ")
-                                         here total))))
-              (face (if (and (zerop total) (not (string= isearch-string "")))
-                        'anzu-mode-line-no-match
-                      'anzu-mode-line)))
-          (propertize status 'face face))))
-    (setq anzu-mode-line-update-function #'leuven--anzu-update-mode-line)
+        (let* ((format-string
+                (cl-case anzu--state
+                  (search (if (> total 1)
+                              " %s of %d%s matches "
+                            " %s of %d%s match "))
+                  (replace-query " %d replace ")
+                  (replace (if (> total 1)
+                               " %d of %d matches "
+                             " %d of %d match "))))
+               (status-text
+                (format format-string
+                        (if (eq anzu--state 'search)
+                            (anzu--format-here-position here total)
+                          here)
+                        total
+                        (if (and (eq anzu--state 'search) anzu--overflow-p)
+                            "+"
+                          "")))
+               (face (if (and (zerop total) (not (string= isearch-string "")))
+                         'anzu-mode-line-no-match
+                       'anzu-mode-line)))
+          (propertize status-text 'face face))))
+
+    ;; Set the update function.
+    (setq anzu-mode-line-update-function #'lvn--anzu-format-mode-line)
 
     ;; Enable Global-Anzu mode.
     (global-anzu-mode 1)
