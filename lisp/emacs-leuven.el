@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250302.2233>
+;; Version: <20250303.1043>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -67,7 +67,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250302.2233>"
+(defconst lvn--emacs-version "<20250303.1043>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -3176,87 +3176,6 @@ in the current buffer."
 
   (leuven--section "19.2 (emacs)List Buffers")
 
-  (unless (locate-library "helm-autoloads")
-
-    ;; Operate on buffers like Dired.
-    (global-set-key (kbd "C-x C-b") #'ibuffer))
-
-  (with-eval-after-load 'ibuffer
-
-    ;; Completely replaces `list-buffer'.
-    (defalias 'ibuffer-list-buffers 'list-buffer)
-
-    ;; Don't show the names of filter groups which are empty.
-    (setq ibuffer-show-empty-filter-groups nil)
-
-    ;; Filtering groups.
-    (setq ibuffer-saved-filter-groups
-          '(("default"
-             ;; Communication.
-             ("Chat" (mode . circe-mode))
-
-             ;; Organization and planning.
-             ("Org" (or (mode . diary-mode)
-                        (mode . org-mode)
-                        (mode . org-agenda-mode)))
-
-             ;; Document preparation.
-             ("LaTeX" (or (mode . latex-mode)
-                          (mode . LaTeX-mode)
-                          (mode . bibtex-mode)
-                          (mode . reftex-mode)))
-
-             ;; Email and news.
-             ("Gnus & News" (or (mode . message-mode)
-                                (mode . bbdb-mode)
-                                (mode . mail-mode)
-                                (mode . gnus-group-mode)
-                                (mode . gnus-summary-mode)
-                                (mode . gnus-article-mode)
-                                (name . "^\\(\\.bbdb\\|dot-bbdb\\)$")
-                                (name . "^\\.newsrc-dribble$")
-                                (mode . newsticker-mode)))
-
-             ;; File management.
-             ("Files" (filename . ".*"))
-             ("Dired" (mode . dired-mode))
-
-             ;; Development tools.
-             ("Shell" (mode . shell-mode))
-             ("Version Control" (or (mode . svn-status-mode)
-                                    (mode . svn-log-edit-mode)
-                                    (name . "^\\*\\(svn-\\|vc\\)")
-                                    (name . "^\\*Annotate")
-                                    (name . "^\\*git-")
-                                    (name . "^\\*vc-")))
-
-             ;; Emacs-related.
-             ("Emacs" (or (name . "^\\*scratch\\*$")
-                          (name . "^\\*Messages\\*$")
-                          (name . "^TAGS\\(<[0-9]+>\\)?$")
-                          (name . "^\\*\\(Occur\\|grep\\|Compile-Log\\|Backtrace\\|Process List\\|gud\\|Kill Ring\\|Completions\\)\\*$")
-                          (name . "^\\*tramp")
-                          (name . "^\\*compilation\\*$")))
-             ("Emacs Source" (mode . emacs-lisp-mode))
-
-             ;; Documentation and help.
-             ("Documentation" (or (mode . Info-mode)
-                                  (mode . apropos-mode)
-                                  (mode . woman-mode)
-                                  (mode . help-mode)
-                                  (mode . Man-mode))))))
-
-    (add-hook 'ibuffer-mode-hook
-              (lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default")))
-
-    ;; Order the groups so the order is: [Default], [agenda], [emacs].
-    (defun lvn--reverse-ibuffer-groups (orig-fun &rest args)
-      "Reverse the order of ibuffer filter groups."
-      (nreverse (apply orig-fun args)))
-
-    (advice-add 'ibuffer-generate-filter-groups :around #'lvn--reverse-ibuffer-groups))
-
 ;;** 19.4 (info "(emacs)Kill Buffer")
 
   (leuven--section "19.4 (emacs)Kill Buffer")
@@ -4373,33 +4292,21 @@ scrolling to the bottom."
 
     (leuven--section "4.2 (auctex)Viewing the formatted output")
 
+    ;; Use a saner PDF viewer (SumatraPDF, evince).
     (defvar leuven--sumatrapdf-command
       (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
       "Path to the SumatraPDF executable.")
 
-    ;; Incompatible with TeX 13. Viewer configuration is now only supported via
-    ;; TeX-view-program-selection.
-    ;; ;; Use a saner PDF viewer (evince, SumatraPDF).
-    ;; (setcdr (assoc "^pdf$" TeX-output-view-style)
-    ;;         (cond ((or lvn--win32-p
-    ;;                    lvn--wsl-p
-    ;;                    lvn--cygwin-p)
-    ;;                `("." (concat "\"" ,leuven--sumatrapdf-command "\" %o")))
-    ;;               (t
-    ;;                '("." "evince %o"))))
-
-    ;; For AUCTeX 11.86+.
+    ;; Configure SumatraPDF as the PDF viewer for Windows-based systems.
     (when (or lvn--win32-p
               lvn--wsl-p
               lvn--cygwin-p)
+      ;; Add SumatraPDF to available viewers (AUCTeX 11.86+).
       (when (boundp 'TeX-view-program-list)
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
-                       ,(list (concat "\"" leuven--sumatrapdf-command "\" %o"))))))
-
-    (when (or lvn--win32-p
-              lvn--wsl-p
-              lvn--cygwin-p)
+                       ,(list (concat "\"" leuven--sumatrapdf-command "\" %o")))))
+      ;; Set SumatraPDF as default PDF viewer.
       (setcdr (assoc 'output-pdf TeX-view-program-selection)
               '("SumatraPDF")))
 
