@@ -1219,32 +1219,40 @@ From the address <%a>"
           (tags     . " %i %-12:c")   ; Tags, tags-todo, stuck.
           (search   . " %i %-12:c"))) ; Search.
 
-  ;; Type "(" in agenda and todo buffers to show category name and task
-  ;; length for each task.
-  (defvar leuven--org-agenda-show-tasks-details nil)
-  (defun leuven-org-agenda-toggle-tasks-details ()
-    "Hide/show tasks details (category and time estimate) in agenda views."
-    (interactive)
-    (if leuven--org-agenda-show-tasks-details
-        (progn
-          (setq leuven--org-agenda-show-tasks-details nil)
-          (setq org-agenda-prefix-format
-                '((agenda    . " %-11s%i %?-12t")
-                  (timeline  . " % s")
-                  (todo      . " ")
-                  (search    . " ")
-                  (tags      . " "))))
-      (setq leuven--org-agenda-show-tasks-details t)
-      (setq org-agenda-prefix-format
-            '((agenda   . " %-11s%i %-12:c%?-12t%7e ")
-              (timeline . " % s")
-              (todo     . " %i %-12:c")
-              (search   . " %i %-12:c")
-              (tags     . " %i %-12:c"))))
-    (org-agenda-redo))
+  (defvar lvn--org-agenda-show-details nil
+    "Non-nil means show category and time estimates in agenda views.")
 
+  (defun lvn-org-agenda-toggle-details ()
+    "Toggle display of task details (category and time estimate) in agenda views.
+  When enabled, shows category names and estimated task duration.
+  When disabled, shows a more compact view."
+    (interactive)
+    (setq lvn--org-agenda-show-details (not lvn--org-agenda-show-details))
+    (setq org-agenda-prefix-format
+          (if lvn--org-agenda-show-details
+              ;; Detailed view: Show category, and effort estimate.
+              '((agenda   . " %-11s%i %-12:c%?-12t%7e ")
+                (timeline . " % s")
+                (todo     . " %i %-12:c")
+                (search   . " %i %-12:c")
+                (tags     . " %i %-12:c"))
+            ;; Minimal view.
+            '((agenda   . " %-11s%i %?-12t")
+              (timeline . " % s")
+              (todo     . " ")
+              (search   . " ")
+              (tags     . " "))))
+    (org-agenda-redo)
+    (message "Task details %s" (if lvn--org-agenda-show-details "enabled" "disabled")))
+
+  ;; Keybinding in Org Agenda mode.
   (define-key org-agenda-mode-map
-    (kbd "(") #'leuven-org-agenda-toggle-tasks-details)
+    (kbd "(") #'lvn-org-agenda-toggle-details)
+                                        ; Alternative keybinding suggestions:
+                                        ; - C-c d (for "details")
+                                        ; - C-c v (for "view")
+                                        ; - M-d (for "details")
+                                        ; - C-c t d (for "toggle details")
 
   ;; Text preceding scheduled items in the agenda view.
   (setq org-agenda-scheduled-leaders
