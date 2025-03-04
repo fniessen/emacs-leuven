@@ -1737,7 +1737,7 @@ formats (Markdown, HTML, or PDF)."
       (save-buffer)
 
       ;; Restart Org mode (useful for refreshing settings).
-      (measure-time-wrapper "Restarted Org mode" (org-mode))
+      (measure-time-wrapper "Restarted Org mode" #'org-mode)
 
       ;; Run Org lint if available.
       (when (try-require "org-lint")
