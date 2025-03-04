@@ -1,18 +1,14 @@
 ;; Require a feature/library if available; if not, fail silently.
 (unless (fboundp 'try-require)
   (defun try-require (feature)
-    "Attempt to load a FEATURE (or library).
-Return true if the library given as argument is successfully loaded.
-If not, just print a message."
+    "Attempt to load FEATURE, warn on failure."
     (condition-case err
         (progn
-          (if (stringp feature)
-              (load-library feature)
-            (require feature))
+          (require feature)
           t)                            ; Necessary for correct behavior in
                                         ; conditional expressions.
       (file-error
-       (message "[Requiring `%s'... missing]" feature)
+       (warn "[Failed to load `%s': %s]" feature err)
        nil))))
 
 ;; (info "(org)Top") outline-based notes management and organizer
@@ -36,9 +32,8 @@ If not, just print a message."
 (global-set-key (kbd "C-c L") #'org-insert-link-global)
 (global-set-key (kbd "C-c O") #'org-open-at-point-global)
 
-(when (or (not (boundp 'org-agenda-files))
-          (null org-agenda-files))
-  (message "[Found no entries in `org-agenda-files']")
+(unless (and (boundp 'org-agenda-files) org-agenda-files)
+  (message "[No agenda files found.]")
   (sit-for 1.5))
 
 (with-eval-after-load 'org
@@ -223,11 +218,10 @@ If not, just print a message."
 (setq org-goto-interface 'outline-path-completion)
 
 (with-eval-after-load 'org
-  (defun lvn-org-reveal (&optional all-siblings)
-    "Reveal siblings of the current Org heading.
-With a prefix argument (e.g., C-u C-c C-r), reveal all hidden entries in the buffer."
+  (defun lvn-org-reveal (&optional all)
+    "Reveal siblings or all hidden entries with prefix arg."
     (interactive "P")
-    (if all-siblings
+    (if all
         (org-reveal t)            ; Reveal all hidden content in the buffer.
       (org-fold-show-siblings)))  ; Reveal only siblings at the current level.
 
@@ -346,7 +340,7 @@ With a prefix argument (e.g., C-u C-c C-r), reveal all hidden entries in the buf
 
   ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on 320px
   ;; width if none is found.
-  ;; (setq org-image-actual-width '(320)) ; crashes Emacs with Org 9?
+  (setq org-image-actual-width '(320))
 
   (defun leuven-org-search-backlinks ()
     "Show all entries that point to the current node.  Also show the current
@@ -729,7 +723,7 @@ a parent headline."
   ;; 8.4.3 Set task to todo state STRT while clocking it.
   (setq org-clock-in-switch-to-state 'lvn--org-switch-to-started)
 
-  ;; Prevent automatic clock-out when task is marked DONE.
+  ;; Disable clock-out on DONE to avoid interrupting workflows.
   (setq org-clock-out-when-done nil)
 
   ;; Configure mode line clock display.
@@ -798,15 +792,20 @@ a parent headline."
 
 ;; 9.1.2 Default target for storing notes.
 (with-eval-after-load 'org
+  (defvar lvn-org-inbox-file
+    (expand-file-name "inbox.org" org-directory)
+    "Path to the default Org inbox file.")
+
+  (defvar lvn-org-refile-file
+    (expand-file-name "refile.org" org-directory)
+    "Path to the refile Org file.")
+
   (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
-        (or (and (file-exists-p (concat org-directory "/inbox.org"))
-                 (concat org-directory "/inbox.org"))
-            (and (file-exists-p (concat org-directory "/refile.org"))
-                 (concat org-directory "/refile.org"))
-            (and (file-exists-p (concat org-directory "/notes.org"))
-                 (concat org-directory "/notes.org"))
-            org-default-notes-file)))
+        (cond
+         ((file-exists-p lvn-org-inbox-file) lvn-org-inbox-file)
+         ((file-exists-p lvn-org-refile-file) lvn-org-refile-file)
+         (t (expand-file-name "notes.org" org-directory)))))
 
 ;; 9.1.2 templates for the creation of capture buffers
 
@@ -2502,7 +2501,8 @@ Ignore non Org buffers."
   (setq org-tags-exclude-from-inheritance '("crypt")))
 
 (defun leuven-org-scramble-contents ()
-  "XXX"
+  "Scramble alphanumeric characters in the buffer for privacy testing.
+Example: 'Hello' becomes 'xxxxx'."
   (interactive)
   (let ((tree (org-element-parse-buffer)))
     (org-element-map tree
@@ -2637,8 +2637,8 @@ BACKEND is the current export backend."
 ;;** A.6 (info "(org)Dynamic blocks")
 
 (defun leuven--org-update-buffer-before-save ()
-  "Update all dynamic blocks and tables in the Org buffer before saving."
-  (when (derived-mode-p 'org-mode)
+  "Update dynamic blocks and tables only if modified."
+  (when (and (derived-mode-p 'org-mode) (buffer-modified-p))
     (message "[Updating Org buffer: %s]"
              (file-name-nondirectory (buffer-file-name)))
 
@@ -2654,7 +2654,7 @@ BACKEND is the current export backend."
       (when flyspell-state (flyspell-mode -1))
 
       ;; Perform buffer updates.
-      (measure-time "Realigned all tags" (org-align-tags t))
+      (measure-time "Realigned all tags" (org-align-tags :all))
       (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
       (measure-time "Re-applied formulas to all tables"
                     (org-table-iterate-buffer-tables))
