@@ -1,4 +1,29 @@
-(defun lvn-open-org-agenda-for-current-buffer (&optional arg)
+(defun lvn-org-git-root-todo ()
+  "Display an Org agenda view of unscheduled TODO items from the Git root directory."
+  (interactive)
+  (let* ((git-root (vc-git-root default-directory))
+         (org-files (when git-root
+                      (directory-files-recursively
+                       git-root
+                       "\\.\\(org\\|txt\\)$"))))
+    (if git-root
+        (progn
+          (let ((org-agenda-files org-files)
+                (org-agenda-sorting-strategy '(todo-state-up priority-down))
+                (org-agenda-overriding-header
+                 (format "Unscheduled TODO items in directory: %s" git-root))
+                (org-agenda-sticky nil)
+                (org-agenda-skip-scheduled-if-done t)
+                (org-agenda-skip-deadline-if-done t)
+                (org-agenda-todo-ignore-scheduled 'future))
+            (message "[%s...]" org-agenda-overriding-header)
+            (org-todo-list)))
+      (message "Error: Not in a Git repository"))))
+
+;; Bind to <M-S-f6>.
+(global-set-key (kbd "<M-S-f6>") #'lvn-org-git-root-todo)
+
+(defun lvn-org-agenda-for-current-buffer (&optional arg)
   "Open the Org mode agenda with entries restricted based on ARG.
 ARG determines the scope:
 - No ARG (nil): Restrict to the current buffer's file.
@@ -40,19 +65,19 @@ use the project's root directory instead of the current directory."
 (global-set-key (kbd "<S-f6>")
                 (lambda ()
                   (interactive)
-                  (lvn-open-org-agenda-for-current-buffer nil)))
+                  (lvn-org-agenda-for-current-buffer nil)))
                                         ; Without arg: current buffer only.
 
 (global-set-key (kbd "<C-f6>")
                 (lambda ()
                   (interactive)
-                  (lvn-open-org-agenda-for-current-buffer '(4))))
+                  (lvn-org-agenda-for-current-buffer '(4))))
                                         ; With C-u: current buffer + .org files.
 
 (global-set-key (kbd "<M-f6>")
                 (lambda ()
                   (interactive)
-                  (lvn-open-org-agenda-for-current-buffer '(16))))
+                  (lvn-org-agenda-for-current-buffer '(16))))
                                         ; With C-u C-u: current buffer + .org + .txt files.
 
 (add-to-list 'org-agenda-custom-commands
