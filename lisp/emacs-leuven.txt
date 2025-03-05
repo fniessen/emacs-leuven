@@ -109,34 +109,21 @@ details.
 
 ;;; Commentary:
 
-;; Emacs 24.4+ configuration file with many packages already enabled and a more
-;; pleasant set of defaults.
+;; Emacs-Leuven enhances GNU Emacs with pleasant defaults and many packages.
+;; Features include improved navigation, editing, and package management.
+;; Works on Windows, Linux, and macOS.
 ;;
-;; Operating systems: supposed to work both for Windows and for Linux.
-;;
-;; Minimal .emacs configuration file:
+;; Minimal setup:
 ;;
 ;;     (add-to-list 'load-path "/path/to/emacs-leuven/")
 ;;     (require 'emacs-leuven)
 ;;
-;; To get more debug info about the packages getting loaded, add the following
-;; line before requiring Emacs-Leuven.
+;; Optional:
+;;   (setq lvn-verbose-loading t)                  ; Show loading progress
+;;   (setq package-selected-packages nil)          ; Skip package installs
+;;   (setq leuven-install-all-missing-elpa-packages t) ; Auto-install all packages
 ;;
-;;     ;; Show messages describing progress of loading Emacs-Leuven.
-;;     (setq lvn-verbose-loading t)
-;;
-;; To avoid being questioned about packages to add to your local Emacs
-;; installation (though, I think you should install them), add the following
-;; line before requiring Emacs-Leuven.
-;;
-;;     ;; Do not (try to) install extra Emacs packages.
-;;     (setq package-selected-packages nil)
-;;
-;; To install all the extra packages used hereunder, without being questioned,
-;; add the following line before requiring Emacs-Leuven.
-;;
-;;     ;; Install all extra Emacs packages without asking for confirmation.
-;;     (setq leuven-install-all-missing-elpa-packages t)
+;; See https://github.com/fniessen/emacs-leuven for details.
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
 
@@ -206,7 +193,7 @@ we restore default GC settings and perform an initial cleanup via
   (setq gc-cons-threshold 800000)       ; Restore default threshold (0.76 MB).
   (setq gc-cons-percentage 0.1)         ; Restore default percentage.
   (garbage-collect)                     ; Perform cleanup.
-  (message "[GC optimization complete: Settings restored, memory cleaned.]"))
+  (message "[GC optimization complete: Settings restored, memory cleaned]"))
 
 ;; Restore GC settings (and trigger GC) after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-clean t)
@@ -370,31 +357,16 @@ need to load a single file that define autoloaded functions.
 
 #+begin_src emacs-lisp
   ;; Load-path enhancement.
-  (defun lvn--add-directory-to-load-path (directory)
-    "Add DIRECTORY to `load-path' if it's a valid, searchable directory.
-
-This function enhances the `load-path' by adding the specified DIRECTORY,
-but only if it meets certain criteria:
-
-1. The DIRECTORY must exist and be a directory.
-2. It must not contain a '.nosearch' file (which indicates it should be skipped)."
-    (let ((abs-directory (expand-file-name directory)))
-      (cond
-       ((not (file-directory-p abs-directory))
-        (message "[WARN- Directory '%s' does not exist or is not a directory.]"
-                 abs-directory)
-        nil)
-
-       ((file-exists-p (expand-file-name ".nosearch" abs-directory))
-        (message "[INFO- Skipping '%s' due to .nosearch file.]"
-                 abs-directory)
-        nil)
-
-       (t
-        (add-to-list 'load-path abs-directory)
-        (message "[INFO- Added '%s' to `load-path'.]"
-                 abs-directory)
-        t))))
+  (defun lvn--add-to-load-path (dir)
+    "Add DIR to `load-path' if it exists and is searchable.
+  Warn if DIR does not exist."
+    (let ((abs-dir (expand-file-name dir)))
+      (if (file-directory-p abs-dir)
+          (unless (file-exists-p (expand-file-name ".nosearch" abs-dir))
+            (add-to-list 'load-path abs-dir)
+            (when lvn-verbose-loading
+              (message "[Added '%s' to load-path]" abs-dir)))
+        (warn "Directory '%s' does not exist" abs-dir))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -403,11 +375,11 @@ but only if it meets certain criteria:
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (lvn--add-directory-to-load-path lvn--directory)
-  (lvn--add-directory-to-load-path (concat lvn--directory "../site-lisp"))
+  (lvn--add-to-load-path lvn--directory)
+  (lvn--add-to-load-path (concat lvn--directory "../site-lisp"))
 
-  ;; (lvn--add-directory-to-load-path "~/lisp")
-  ;; (lvn--add-directory-to-load-path "~/site-lisp")
+  ;; (lvn--add-to-load-path "~/lisp")
+  ;; (lvn--add-to-load-path "~/site-lisp")
 #+end_src
 
 ~leuven-user-lisp-directory~ is there so that you have an easy way of installing
@@ -423,25 +395,21 @@ distro) without impacting on stuff you have added by hand.
     :group 'leuven
     :type 'directory)
 
-  (lvn--add-directory-to-load-path leuven-user-lisp-directory)
+  (lvn--add-to-load-path leuven-user-lisp-directory)
 #+end_src
 
 #+begin_src emacs-lisp
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
     (defun try-require (feature)
-      "Attempt to load a FEATURE (or library).
-Return true if the library given as argument is successfully loaded.
-If not, just print a message."
+      "Attempt to load FEATURE, warn on failure."
       (condition-case err
           (progn
-            (if (stringp feature)
-                (load-library feature)
-              (require feature))
+            (require feature)
             t)                          ; Necessary for correct behavior in
                                         ; conditional expressions.
         (file-error
-         (message "[Requiring `%s'... missing]" feature)
+         (warn "Failed to load `%s': %s" feature err)
          nil))))
 #+end_src
 
@@ -549,12 +517,12 @@ Shows a warning message if the file does not exist or is not executable."
 
     (cond
      ((not (file-exists-p file))
-      (message "[WARN- File `%s' does not exist.]" file)
+      (warn "File `%s' does not exist." file)
       (sit-for 1.5)
       nil)
 
      ((not (file-executable-p file))
-      (message "[WARN- File `%s' is not executable.]" file)
+      (warn "File `%s' is not executable." file)
       (sit-for 1.5)
       nil)
 
@@ -650,14 +618,16 @@ like this into your configuration file:
   (leuven--section "48.2 Package Installation")
 
   ;; Simple package system for GNU Emacs.
+  (use-package package
+    :ensure nil ;; Built-in, no need to install.
+    :config
+    ;; Archives from which to fetch.
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") :append))
+#+end_src
+
+#+begin_src emacs-lisp
   (try-require 'package)
   (with-eval-after-load 'package
-
-    ;; Archives from which to fetch.
-    ;; (add-to-list 'package-archives
-    ;;              '("melpa" . "https://melpa.org/packages/") :append)
-    (setq package-archives
-          '(("melpa" . "http://melpa.org/packages/")))
 
     ;; Packages which were installed by the user (as opposed to installed as
     ;; dependencies).
@@ -1354,26 +1324,22 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
 
 #+begin_src emacs-lisp
   ;; Load which-key dynamically when idle.
-  (with-eval-after-load 'which-key-autoloads
-    (idle-require 'which-key))
-
-  ;; Configure which-key after it’s loaded.
-  (with-eval-after-load 'which-key
+  (use-package which-key
+    :ensure t
+    :defer t
     ;; Enable which-key mode globally.
-    (which-key-mode 1)
-
+    :hook (after-init . which-key-mode)
+    :custom
+    ;; Set the delay (in seconds) before the which-key popup appears.
+    (which-key-idle-delay 0.4)
+    ;; Sort keybindings by local bindings first, then by key order.
+    (which-key-sort-order 'which-key-local-then-key-order)
+    ;; Limit the maximum length of key descriptions to 33 characters.
+    (which-key-max-description-length 33)
+    :config
     ;; Use a side window, preferring the right side when space is available,
     ;; falling back to the bottom otherwise.
-    (which-key-setup-side-window-right-bottom)
-
-    ;; Set the delay (in seconds) before the which-key popup appears.
-    (setq which-key-idle-delay 0.4)
-
-    ;; Sort keybindings by local bindings first, then by key order.
-    (setq which-key-sort-order 'which-key-local-then-key-order)
-
-    ;; Limit the maximum length of key descriptions to 33 characters.
-    (setq which-key-max-description-length 33))
+    (which-key-setup-side-window-right-bottom))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1605,7 +1571,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
             js2-mode-show-node
             just-one-space
             kill-region
-            lvn-fill-or-unfill-paragraph
+            lvn-toggle-paragraph-fill
             leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
@@ -1840,7 +1806,7 @@ See [[https://stackoverflow.com/questions/11186370/symbols-function-definition-i
   ;;     (kill-new region-text)
   ;;     (shell-command-on-region beg end "clip.exe")
   ;;     (deactivate-mark)
-  ;;     (message "[Copied to Windows clipboard and kill-ring.]")))
+  ;;     (message "[Copied to Windows clipboard and kill-ring]")))
 
   ;; ;; Override the kill-ring-save command when in WSL config.
   ;; (when lvn--wsl-p
@@ -1860,7 +1826,7 @@ See [[https://stackoverflow.com/questions/11186370/symbols-function-definition-i
   ;;       (delete-region (region-beginning) (region-end)))
   ;;
   ;;     (insert clipboard))
-  ;;   (message "[Pasted from Windows clipboard.]"))
+  ;;   (message "[Pasted from Windows clipboard]"))
 
   ;; ;; Override the yank command when in WSL config.
   ;; (when lvn--wsl-p
@@ -3235,17 +3201,14 @@ the user see truly invisible matches before replacing them.
 
 #+begin_src emacs-lisp
   ;; Show number of matches in mode-line while searching.
-  (with-eval-after-load 'anzu-autoloads
-
-    ;; Lighter of anzu-mode.
-    (setq anzu-mode-lighter "")
-
-    ;; Deactive region if you use anzu a replace command with region.
-    (setq anzu-deactivate-region t)
-
+  (use-package anzu
+    :ensure t
+    ;; Enable Global-Anzu mode.
+    :hook (after-init . global-anzu-mode)
+    :custom
     ;; Separator of `to' string.
-    (setq anzu-replace-to-string-separator " => ")
-
+    (anzu-replace-to-string-separator " => ")
+    :config
     ;; Function which returns mode-line string.
     (defun lvn--anzu-format-mode-line (here total)
       "Return a mode-line string based on anzu search state.
@@ -3273,19 +3236,20 @@ the user see truly invisible matches before replacing them.
                          'anzu-mode-line-no-match
                        'anzu-mode-line)))
           (propertize status-text 'face face))))
-
     ;; Set the update function.
-    (setq anzu-mode-line-update-function #'lvn--anzu-format-mode-line)
+    (setq anzu-mode-line-update-function #'lvn--anzu-format-mode-line))
 
-    ;; Enable Global-Anzu mode.
-    (global-anzu-mode 1)
-
-    ;; Override binding for `query-replace'.
-    (global-set-key (kbd "M-%")   #'anzu-query-replace)
-    (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
-
-    ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
-    )
+    ;; ;; Lighter of anzu-mode.
+    ;; (setq anzu-mode-lighter "")
+    ;;
+    ;; ;; Deactive region if you use anzu a replace command with region.
+    ;; (setq anzu-deactivate-region t)
+    ;;
+    ;; ;; Override binding for `query-replace'.
+    ;; (global-set-key (kbd "M-%")   #'anzu-query-replace)
+    ;; (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
+    ;;
+    ;; ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
 #+end_src
 
 The following code checks if the ~anzu-mode~ function is defined. If it's not, it
@@ -3468,7 +3432,7 @@ than once* in the buffer, removing all other lines (that are not duplicated).
         (erase-buffer)
         (dolist (l (reverse duplicated-lines))
           (insert l "\n"))
-        (message "[Non-duplicated lines deleted from the buffer.]"))))
+        (message "[Non-duplicated lines deleted from the buffer]"))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4040,7 +4004,7 @@ Turn on auto-revert mode globally.
     ;; Check and warn about remote files setting.
     (when (and (boundp 'auto-revert-remote-files)
                auto-revert-remote-files)
-      (message "[WARN] `auto-revert-remote-files' is non-nil, this may generate significant network traffic.")))
+      (warn "`auto-revert-remote-files' is non-nil, this may generate significant network traffic.")))
 
   ;; Consider setting `auto-revert-remote-files' to nil to reduce network
   ;; traffic.
@@ -4871,10 +4835,6 @@ structure of your working directory; you can focus on more important things.
 The /default/ prefix for the preconfigured Helm commands is ~C-x c~.  In
 Emacs-Leuven, we changed it to ~C-c h~.
 
-#+begin_note
-We cannot change ~helm-command-prefix-key~ once ~helm-config~ is loaded.
-#+end_note
-
 #+begin_src emacs-lisp
   (leuven--section "Helm")
 
@@ -4882,8 +4842,7 @@ We cannot change ~helm-command-prefix-key~ once ~helm-config~ is loaded.
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   ;; Open Helm (QuickSilver-like candidate-selection framework).
-  (when (or (try-require 'helm-config)
-            (locate-library "helm-autoloads"))
+  (when (locate-library "helm-autoloads")
                                         ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
@@ -5097,21 +5056,11 @@ in the current buffer."
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; (global-set-key (kbd "M-5") #'helm-etags-select)
-#+end_src
-
-#+begin_src emacs-lisp
     (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
 #+end_src
 
 #+begin_src emacs-lisp
     (global-set-key (kbd "C-h i") #'helm-info-emacs) ; OK.
-    ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
-    ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
-#+end_src
-
-#+begin_src emacs-lisp
-    ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5139,7 +5088,7 @@ before running helm-flycheck"
 #+end_src
 
 #+begin_src emacs-lisp
-  )                                     ; require 'helm-config ends here.
+  )                                     ; require 'helm-autoloads ends here.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5853,7 +5802,7 @@ down.
     "If you have 2 windows, swap them."
     (interactive)
     (cond ((not (= (count-windows) 2))
-           (message "[You need exactly 2 windows to swap them.]"))
+           (message "[You need exactly 2 windows to swap them]"))
           (t
            (let* ((wind-1 (first (window-list)))
                   (wind-2 (second (window-list)))
@@ -5879,7 +5828,7 @@ windows.  Useful when Emacs opens the window below instead at the side.
   This code only works for frames with exactly two windows."
     (interactive)
     (cond ((not (= (count-windows) 2))
-           (message "[You need exactly 2 windows to toggle the window split.]"))
+           (message "[You need exactly 2 windows to toggle the window split]"))
           (t
            (let* ((this-win-buffer (window-buffer))
                   (next-win-buffer (window-buffer (next-window)))
@@ -6069,8 +6018,7 @@ one.
 
   (leuven--section "21.9 (emacs)Speedbar Frames")
 
-  (unless (or (featurep 'helm-config)       ; Helm is better than speedbar!
-              (locate-library "helm-autoloads"))
+  (unless (locate-library "helm-autoloads")  ; Helm is better than speedbar!
 
     ;; Jump to speedbar frame.
     (global-set-key (kbd "<f4>") #'speedbar-get-focus))
@@ -6098,8 +6046,7 @@ one.
                                       (background-color . "white")))
 
     ;; Speedbar in the current frame (vs in a new frame).
-    (when (and (not (locate-library "helm-config"))
-               (not (locate-library "helm-autoloads"))
+    (when (and (not (locate-library "helm-autoloads"))
                                         ; Helm is better than speedbar!
                (locate-library "sr-speedbar"))
 
@@ -6702,35 +6649,29 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   ;; Line-wrapping beyond that column (when pressing `M-q').
   (setq-default fill-column 80)
 
-  ;; (Un-)fill paragraph.
-  (defun lvn-fill-or-unfill-paragraph (arg)
-    "Fill paragraph or region with a customizable fill column width.
-With prefix ARG, set fill column width explicitly.
-
-When called twice consecutively without a prefix argument, the
-paragraph will be unfilled.
-
-In Org mode, the function uses `org-fill-paragraph` to handle specialized
-formatting.
-
-When called with a prefix argument (e.g., \\[universal-argument] \\[lvn-fill-or-unfill-paragraph]),
-you will be prompted to enter the desired fill column width."
+  ;; Toggle paragraph filling/unfilling with optional custom width.
+  (defun lvn-toggle-paragraph-fill (arg)
+    "Fill or unfill paragraph/region with customizable column width.
+  With numeric ARG (e.g., C-u 80), set fill column width explicitly.
+  When called twice consecutively without prefix, unfills the paragraph.
+  In Org mode, uses `org-fill-paragraph` for specialized formatting."
     (interactive "P")
-    (let ((fill-column
-           (if arg
-               (prefix-numeric-value arg)
-             (if (eq last-command 'lvn-fill-or-unfill-paragraph)
-                 (progn (setq this-command nil)
-                        (point-max))
-               fill-column))))
+    (let ((fill-column (cond
+                        (arg
+                         (prefix-numeric-value arg))
+                        ((eq last-command 'lvn-toggle-paragraph-fill)
+                         (setq this-command nil)
+                         (point-max))
+                        (t
+                         fill-column))))
       (if (derived-mode-p 'org-mode)
           (org-fill-paragraph)
         (fill-paragraph))))
-  
+
   ;; M-q.
-  (global-set-key [remap fill-paragraph] #'lvn-fill-or-unfill-paragraph)
+  (global-set-key [remap fill-paragraph] #'lvn-toggle-paragraph-fill)
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "M-q") #'lvn-fill-or-unfill-paragraph))
+    (define-key org-mode-map (kbd "M-q") #'lvn-toggle-paragraph-fill))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -9601,20 +9542,20 @@ noticeable.
 
 1. Start with ~ping~:
 
-:  ping myhost
+   :  ping myhost
 
 2. Test with ~telnet~:
 
-:  telnet myhost 1433
+   :  telnet myhost 1433
 
 3. Test with ~tsql~:
 
-:  tsql -H myhost -p 1433 -U sa   # Bypassing `/etc/freetds/freetds.conf'.
-:  tsql -S myserver -U sa         # Using `/etc/freetds/freetds.conf'.
+   :  tsql -H myhost -p 1433 -U sa   # Bypassing `/etc/freetds/freetds.conf'.
+   :  tsql -S myserver -U sa         # Using `/etc/freetds/freetds.conf'.
 
    or ~sqsh~:
 
-:  sqsh -S myhost -p 1433 -U sa   # Bypassing `/etc/freetds/freetds.conf'.
+   :  sqsh -S myhost -p 1433 -U sa   # Bypassing `/etc/freetds/freetds.conf'.
 
 You need to write your command like this
 
@@ -10503,12 +10444,11 @@ VC can show you the *history of changes* to a *particular line of code*:
 
 1. Run the command ~vc-annotate~ (with either ~M-x vc-annotate~ or ~C-x v g~).
 2. Each line will show up with its *revision*, like a normal ~blame~, and a *heatmap*.
-
-*************** TODO Customize vc-annotate colors to be cold after 90 days
-*************** END
-
 3. Pressing ~a~ (~vc-annotate-revision-previous-to-line~) will navigate to the
    revision before the revision at the line you're on.
+
+*************** TODO About #2: Customize vc-annotate colors to be cold after 90 days
+*************** END
 
 #+begin_src emacs-lisp
 ;;*** 28.1.6 (info "(emacs)Old Revisions")
@@ -13028,7 +12968,7 @@ Extra Dired functionality:
         (if (or (< (buffer-size) 1400000)
                 (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
             (apply orig-fun args)
-          (message "[Operation cancelled.]")))
+          (message "[Operation cancelled]")))
 
       (advice-add 'dired-jump :around #'lvn--dired-jump-advice)))
 #+end_src
@@ -14461,7 +14401,7 @@ You need the ~emacs-server~ functionality enabled for this to work.
 
 *** cate - Print the contents of the current buffer in Emacs to the terminal
 
-#+begin_src shell :tangle :tangle ../bin/cate
+#+begin_src shell :tangle ../bin/cate
 #!/usr/bin/env bash
 
 # Print the contents of the current buffer in Emacs to the terminal.
@@ -14727,8 +14667,7 @@ Pick up where you left off.
 #+begin_src emacs-lisp
   (leuven--section "FFAP")
 
-  (unless (or (featurep 'helm-config)
-              (locate-library "helm-autoloads"))
+  (unless (locate-library "helm-autoloads")
 
     ;; Visit a file.
     (global-set-key (kbd "<f3>") #'find-file-at-point))
@@ -15759,7 +15698,7 @@ Git repository directory."
           (progn
             (if (not (string-empty-p unstaged-changes))
                 (progn
-                  (message "[WARN- You have unstaged changes. Please commit or stash them before updating.]")
+                  (warn "You have unstaged changes. Please commit or stash them before updating.")
                   (message "[Unstaged changes:\n%s]" unstaged-changes))
               (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" el-file-directory))))
                 (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
@@ -15768,11 +15707,11 @@ Git repository directory."
                       (progn
                         (sit-for 1.5)
                         (message "[Configuration updated.  Please restart Emacs to complete the update]"))
-                    (message "[Error: Failed to update configuration.]"))))))
+                    (warn "Error: Failed to update configuration"))))))
         (message "[Error: 'emacs-leuven.el' file not found]"))
       (kill-buffer status-buffer)))
 
-  (defun lvn-display-emacs-levuen-latest-commits ()
+  (defun lvn-display-emacs-leuven-latest-commits ()
     "Display the latest commits in the Emacs-Leuven configuration.
 
 This function fetches the latest changes from the remote Git repository and

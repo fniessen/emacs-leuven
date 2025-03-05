@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250303.2224>
+;; Version: <20250305.2017>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -31,34 +31,21 @@
 
 ;;; Commentary:
 
-;; Emacs 24.4+ configuration file with many packages already enabled and a more
-;; pleasant set of defaults.
+;; Emacs-Leuven enhances GNU Emacs with pleasant defaults and many packages.
+;; Features include improved navigation, editing, and package management.
+;; Works on Windows, Linux, and macOS.
 ;;
-;; Operating systems: supposed to work both for Windows and for Linux.
-;;
-;; Minimal .emacs configuration file:
+;; Minimal setup:
 ;;
 ;;     (add-to-list 'load-path "/path/to/emacs-leuven/")
 ;;     (require 'emacs-leuven)
 ;;
-;; To get more debug info about the packages getting loaded, add the following
-;; line before requiring Emacs-Leuven.
+;; Optional:
+;;   (setq lvn-verbose-loading t)                  ; Show loading progress
+;;   (setq package-selected-packages nil)          ; Skip package installs
+;;   (setq leuven-install-all-missing-elpa-packages t) ; Auto-install all packages
 ;;
-;;     ;; Show messages describing progress of loading Emacs-Leuven.
-;;     (setq lvn-verbose-loading t)
-;;
-;; To avoid being questioned about packages to add to your local Emacs
-;; installation (though, I think you should install them), add the following
-;; line before requiring Emacs-Leuven.
-;;
-;;     ;; Do not (try to) install extra Emacs packages.
-;;     (setq package-selected-packages nil)
-;;
-;; To install all the extra packages used hereunder, without being questioned,
-;; add the following line before requiring Emacs-Leuven.
-;;
-;;     ;; Install all extra Emacs packages without asking for confirmation.
-;;     (setq leuven-install-all-missing-elpa-packages t)
+;; See https://github.com/fniessen/emacs-leuven for details.
 ;;
 ;; For help on the Emacs Editor, see (info "(emacs)")  <== `C-x C-e' here!
 
@@ -67,7 +54,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250303.2224>"
+(defconst lvn--emacs-version "<20250305.2017>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -88,7 +75,7 @@
   (setq gc-cons-threshold 800000)       ; Restore default threshold (0.76 MB).
   (setq gc-cons-percentage 0.1)         ; Restore default percentage.
   (garbage-collect)                     ; Perform cleanup.
-  (message "[GC optimization complete: Settings restored, memory cleaned.]"))
+  (message "[GC optimization complete: Settings restored, memory cleaned]"))
 
 ;; Restore GC settings (and trigger GC) after full startup.
 (add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-clean t)
@@ -220,65 +207,46 @@ Last time is saved in global variable `leuven--before-section-time'."
 (leuven--chapter leuven-load-chapter-0-loading-libraries "0 Loading Libraries"
 
   ;; Load-path enhancement.
-  (defun lvn--add-directory-to-load-path (directory)
-    "Add DIRECTORY to `load-path' if it's a valid, searchable directory.
-
-This function enhances the `load-path' by adding the specified DIRECTORY,
-but only if it meets certain criteria:
-
-1. The DIRECTORY must exist and be a directory.
-2. It must not contain a '.nosearch' file (which indicates it should be skipped)."
-    (let ((abs-directory (expand-file-name directory)))
-      (cond
-       ((not (file-directory-p abs-directory))
-        (message "[WARN- Directory '%s' does not exist or is not a directory.]"
-                 abs-directory)
-        nil)
-
-       ((file-exists-p (expand-file-name ".nosearch" abs-directory))
-        (message "[INFO- Skipping '%s' due to .nosearch file.]"
-                 abs-directory)
-        nil)
-
-       (t
-        (add-to-list 'load-path abs-directory)
-        (message "[INFO- Added '%s' to `load-path'.]"
-                 abs-directory)
-        t))))
+  (defun lvn--add-to-load-path (dir)
+    "Add DIR to `load-path' if it exists and is searchable.
+  Warn if DIR does not exist."
+    (let ((abs-dir (expand-file-name dir)))
+      (if (file-directory-p abs-dir)
+          (unless (file-exists-p (expand-file-name ".nosearch" abs-dir))
+            (add-to-list 'load-path abs-dir)
+            (when lvn-verbose-loading
+              (message "[Added '%s' to load-path]" abs-dir)))
+        (warn "Directory '%s' does not exist" abs-dir))))
 
   ;; Remember this directory.
   (defconst lvn--directory
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (lvn--add-directory-to-load-path lvn--directory)
-  (lvn--add-directory-to-load-path (concat lvn--directory "../site-lisp"))
+  (lvn--add-to-load-path lvn--directory)
+  (lvn--add-to-load-path (concat lvn--directory "../site-lisp"))
 
-  ;; (lvn--add-directory-to-load-path "~/lisp")
-  ;; (lvn--add-directory-to-load-path "~/site-lisp")
+  ;; (lvn--add-to-load-path "~/lisp")
+  ;; (lvn--add-to-load-path "~/site-lisp")
 
   (defcustom leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages."
     :group 'leuven
     :type 'directory)
 
-  (lvn--add-directory-to-load-path leuven-user-lisp-directory)
+  (lvn--add-to-load-path leuven-user-lisp-directory)
 
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
     (defun try-require (feature)
-      "Attempt to load a FEATURE (or library).
-Return true if the library given as argument is successfully loaded.
-If not, just print a message."
+      "Attempt to load FEATURE, warn on failure."
       (condition-case err
           (progn
-            (if (stringp feature)
-                (load-library feature)
-              (require feature))
+            (require feature)
             t)                          ; Necessary for correct behavior in
                                         ; conditional expressions.
         (file-error
-         (message "[Requiring `%s'... missing]" feature)
+         (warn "Failed to load `%s': %s" feature err)
          nil))))
 
   (unless (fboundp 'with-eval-after-load)
@@ -370,12 +338,12 @@ Shows a warning message if the file does not exist or is not executable."
 
     (cond
      ((not (file-exists-p file))
-      (message "[WARN- File `%s' does not exist.]" file)
+      (warn "File `%s' does not exist." file)
       (sit-for 1.5)
       nil)
 
      ((not (file-executable-p file))
-      (message "[WARN- File `%s' is not executable.]" file)
+      (warn "File `%s' is not executable." file)
       (sit-for 1.5)
       nil)
 
@@ -414,14 +382,14 @@ Shows a warning message if the file does not exist or is not executable."
   (leuven--section "48.2 Package Installation")
 
   ;; Simple package system for GNU Emacs.
+  (use-package package
+    :ensure nil ;; Built-in, no need to install.
+    :config
+    ;; Archives from which to fetch.
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") :append))
+
   (try-require 'package)
   (with-eval-after-load 'package
-
-    ;; Archives from which to fetch.
-    ;; (add-to-list 'package-archives
-    ;;              '("melpa" . "https://melpa.org/packages/") :append)
-    (setq package-archives
-          '(("melpa" . "http://melpa.org/packages/")))
 
     ;; Packages which were installed by the user (as opposed to installed as
     ;; dependencies).
@@ -884,26 +852,22 @@ original state of line numbers after navigation."
     (setq woman-imenu t))
 
   ;; Load which-key dynamically when idle.
-  (with-eval-after-load 'which-key-autoloads
-    (idle-require 'which-key))
-
-  ;; Configure which-key after it’s loaded.
-  (with-eval-after-load 'which-key
+  (use-package which-key
+    :ensure t
+    :defer t
     ;; Enable which-key mode globally.
-    (which-key-mode 1)
-
+    :hook (after-init . which-key-mode)
+    :custom
+    ;; Set the delay (in seconds) before the which-key popup appears.
+    (which-key-idle-delay 0.4)
+    ;; Sort keybindings by local bindings first, then by key order.
+    (which-key-sort-order 'which-key-local-then-key-order)
+    ;; Limit the maximum length of key descriptions to 33 characters.
+    (which-key-max-description-length 33)
+    :config
     ;; Use a side window, preferring the right side when space is available,
     ;; falling back to the bottom otherwise.
-    (which-key-setup-side-window-right-bottom)
-
-    ;; Set the delay (in seconds) before the which-key popup appears.
-    (setq which-key-idle-delay 0.4)
-
-    ;; Sort keybindings by local bindings first, then by key order.
-    (setq which-key-sort-order 'which-key-local-then-key-order)
-
-    ;; Limit the maximum length of key descriptions to 33 characters.
-    (setq which-key-max-description-length 33))
+    (which-key-setup-side-window-right-bottom))
 
 )                                       ; Chapter 10 ends here.
 
@@ -998,7 +962,7 @@ original state of line numbers after navigation."
             js2-mode-show-node
             just-one-space
             kill-region
-            lvn-fill-or-unfill-paragraph
+            lvn-toggle-paragraph-fill
             leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
@@ -1134,7 +1098,7 @@ called interactively."
   ;;     (kill-new region-text)
   ;;     (shell-command-on-region beg end "clip.exe")
   ;;     (deactivate-mark)
-  ;;     (message "[Copied to Windows clipboard and kill-ring.]")))
+  ;;     (message "[Copied to Windows clipboard and kill-ring]")))
 
   ;; ;; Override the kill-ring-save command when in WSL config.
   ;; (when lvn--wsl-p
@@ -1154,7 +1118,7 @@ called interactively."
   ;;       (delete-region (region-beginning) (region-end)))
   ;;
   ;;     (insert clipboard))
-  ;;   (message "[Pasted from Windows clipboard.]"))
+  ;;   (message "[Pasted from Windows clipboard]"))
 
   ;; ;; Override the yank command when in WSL config.
   ;; (when lvn--wsl-p
@@ -1927,17 +1891,14 @@ Should be selected from `fringe-bitmaps'.")
     (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch))
 
   ;; Show number of matches in mode-line while searching.
-  (with-eval-after-load 'anzu-autoloads
-
-    ;; Lighter of anzu-mode.
-    (setq anzu-mode-lighter "")
-
-    ;; Deactive region if you use anzu a replace command with region.
-    (setq anzu-deactivate-region t)
-
+  (use-package anzu
+    :ensure t
+    ;; Enable Global-Anzu mode.
+    :hook (after-init . global-anzu-mode)
+    :custom
     ;; Separator of `to' string.
-    (setq anzu-replace-to-string-separator " => ")
-
+    (anzu-replace-to-string-separator " => ")
+    :config
     ;; Function which returns mode-line string.
     (defun lvn--anzu-format-mode-line (here total)
       "Return a mode-line string based on anzu search state.
@@ -1965,19 +1926,20 @@ Should be selected from `fringe-bitmaps'.")
                          'anzu-mode-line-no-match
                        'anzu-mode-line)))
           (propertize status-text 'face face))))
-
     ;; Set the update function.
-    (setq anzu-mode-line-update-function #'lvn--anzu-format-mode-line)
+    (setq anzu-mode-line-update-function #'lvn--anzu-format-mode-line))
 
-    ;; Enable Global-Anzu mode.
-    (global-anzu-mode 1)
-
-    ;; Override binding for `query-replace'.
-    (global-set-key (kbd "M-%")   #'anzu-query-replace)
-    (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
-
-    ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
-    )
+    ;; ;; Lighter of anzu-mode.
+    ;; (setq anzu-mode-lighter "")
+    ;;
+    ;; ;; Deactive region if you use anzu a replace command with region.
+    ;; (setq anzu-deactivate-region t)
+    ;;
+    ;; ;; Override binding for `query-replace'.
+    ;; (global-set-key (kbd "M-%")   #'anzu-query-replace)
+    ;; (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
+    ;;
+    ;; ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
 
 (unless (fboundp 'anzu-mode)
 
@@ -2069,7 +2031,7 @@ After initiating the grep search, the isearch is aborted."
         (erase-buffer)
         (dolist (l (reverse duplicated-lines))
           (insert l "\n"))
-        (message "[Non-duplicated lines deleted from the buffer.]"))))
+        (message "[Non-duplicated lines deleted from the buffer]"))))
 
 )                                       ; Chapter 15 ends here.
 
@@ -2452,7 +2414,7 @@ After initiating the grep search, the isearch is aborted."
     ;; Check and warn about remote files setting.
     (when (and (boundp 'auto-revert-remote-files)
                auto-revert-remote-files)
-      (message "[WARN] `auto-revert-remote-files' is non-nil, this may generate significant network traffic.")))
+      (warn "`auto-revert-remote-files' is non-nil, this may generate significant network traffic.")))
 
   ;; Consider setting `auto-revert-remote-files' to nil to reduce network
   ;; traffic.
@@ -2827,8 +2789,7 @@ After initiating the grep search, the isearch is aborted."
   (global-set-key (kbd "C-c h") #'helm-command-prefix)
 
   ;; Open Helm (QuickSilver-like candidate-selection framework).
-  (when (or (try-require 'helm-config)
-            (locate-library "helm-autoloads"))
+  (when (locate-library "helm-autoloads")
                                         ; [default `helm-command-prefix-key']
                                         ; Explicitly loads `helm-autoloads'!
                                         ; CAUTION for recursive loads...
@@ -2897,19 +2858,13 @@ in the current buffer."
     (when (fboundp 'helm-org-agenda-files-headings)
       (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings))
 
-    ;; (global-set-key (kbd "M-5") #'helm-etags-select)
-
     (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
 
     (global-set-key (kbd "C-h i") #'helm-info-emacs) ; OK.
-    ;; (global-set-key (kbd "C-h d") #'helm-info-at-point)
-    ;; (global-set-key (kbd "C-h 4") #'helm-info-elisp)
-
-    ;; (global-set-key (kbd "C-S-h C-c") #'helm-wikipedia-suggest)
 
     (global-set-key (kbd "C-h b") #'helm-descbinds) ; OK.
 
-  )                                     ; require 'helm-config ends here.
+  )                                     ; require 'helm-autoloads ends here.
 
   (with-eval-after-load 'helm
 
@@ -3285,7 +3240,7 @@ windows, leaving only the currently active window visible."
     "If you have 2 windows, swap them."
     (interactive)
     (cond ((not (= (count-windows) 2))
-           (message "[You need exactly 2 windows to swap them.]"))
+           (message "[You need exactly 2 windows to swap them]"))
           (t
            (let* ((wind-1 (first (window-list)))
                   (wind-2 (second (window-list)))
@@ -3306,7 +3261,7 @@ windows, leaving only the currently active window visible."
   This code only works for frames with exactly two windows."
     (interactive)
     (cond ((not (= (count-windows) 2))
-           (message "[You need exactly 2 windows to toggle the window split.]"))
+           (message "[You need exactly 2 windows to toggle the window split]"))
           (t
            (let* ((this-win-buffer (window-buffer))
                   (next-win-buffer (window-buffer (next-window)))
@@ -3424,8 +3379,7 @@ windows, leaving only the currently active window visible."
 
   (leuven--section "21.9 (emacs)Speedbar Frames")
 
-  (unless (or (featurep 'helm-config)       ; Helm is better than speedbar!
-              (locate-library "helm-autoloads"))
+  (unless (locate-library "helm-autoloads")  ; Helm is better than speedbar!
 
     ;; Jump to speedbar frame.
     (global-set-key (kbd "<f4>") #'speedbar-get-focus))
@@ -3453,8 +3407,7 @@ windows, leaving only the currently active window visible."
                                       (background-color . "white")))
 
     ;; Speedbar in the current frame (vs in a new frame).
-    (when (and (not (locate-library "helm-config"))
-               (not (locate-library "helm-autoloads"))
+    (when (and (not (locate-library "helm-autoloads"))
                                         ; Helm is better than speedbar!
                (locate-library "sr-speedbar"))
 
@@ -3781,35 +3734,29 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   ;; Line-wrapping beyond that column (when pressing `M-q').
   (setq-default fill-column 80)
 
-  ;; (Un-)fill paragraph.
-  (defun lvn-fill-or-unfill-paragraph (arg)
-    "Fill paragraph or region with a customizable fill column width.
-With prefix ARG, set fill column width explicitly.
-
-When called twice consecutively without a prefix argument, the
-paragraph will be unfilled.
-
-In Org mode, the function uses `org-fill-paragraph` to handle specialized
-formatting.
-
-When called with a prefix argument (e.g., \\[universal-argument] \\[lvn-fill-or-unfill-paragraph]),
-you will be prompted to enter the desired fill column width."
+  ;; Toggle paragraph filling/unfilling with optional custom width.
+  (defun lvn-toggle-paragraph-fill (arg)
+    "Fill or unfill paragraph/region with customizable column width.
+  With numeric ARG (e.g., C-u 80), set fill column width explicitly.
+  When called twice consecutively without prefix, unfills the paragraph.
+  In Org mode, uses `org-fill-paragraph` for specialized formatting."
     (interactive "P")
-    (let ((fill-column
-           (if arg
-               (prefix-numeric-value arg)
-             (if (eq last-command 'lvn-fill-or-unfill-paragraph)
-                 (progn (setq this-command nil)
-                        (point-max))
-               fill-column))))
+    (let ((fill-column (cond
+                        (arg
+                         (prefix-numeric-value arg))
+                        ((eq last-command 'lvn-toggle-paragraph-fill)
+                         (setq this-command nil)
+                         (point-max))
+                        (t
+                         fill-column))))
       (if (derived-mode-p 'org-mode)
           (org-fill-paragraph)
         (fill-paragraph))))
-  
+
   ;; M-q.
-  (global-set-key [remap fill-paragraph] #'lvn-fill-or-unfill-paragraph)
+  (global-set-key [remap fill-paragraph] #'lvn-toggle-paragraph-fill)
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "M-q") #'lvn-fill-or-unfill-paragraph))
+    (define-key org-mode-map (kbd "M-q") #'lvn-toggle-paragraph-fill))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -6738,7 +6685,7 @@ This example lists Azerty layout second row keys."
         (if (or (< (buffer-size) 1400000)
                 (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
             (apply orig-fun args)
-          (message "[Operation cancelled.]")))
+          (message "[Operation cancelled]")))
 
       (advice-add 'dired-jump :around #'lvn--dired-jump-advice)))
 
@@ -7497,8 +7444,7 @@ NOTIFICATION-STRING: Message(s) to display."
 
   (leuven--section "FFAP")
 
-  (unless (or (featurep 'helm-config)
-              (locate-library "helm-autoloads"))
+  (unless (locate-library "helm-autoloads")
 
     ;; Visit a file.
     (global-set-key (kbd "<f3>") #'find-file-at-point))
@@ -7823,7 +7769,7 @@ Git repository directory."
           (progn
             (if (not (string-empty-p unstaged-changes))
                 (progn
-                  (message "[WARN- You have unstaged changes. Please commit or stash them before updating.]")
+                  (warn "You have unstaged changes. Please commit or stash them before updating.")
                   (message "[Unstaged changes:\n%s]" unstaged-changes))
               (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" el-file-directory))))
                 (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
@@ -7832,11 +7778,11 @@ Git repository directory."
                       (progn
                         (sit-for 1.5)
                         (message "[Configuration updated.  Please restart Emacs to complete the update]"))
-                    (message "[Error: Failed to update configuration.]"))))))
+                    (warn "Error: Failed to update configuration"))))))
         (message "[Error: 'emacs-leuven.el' file not found]"))
       (kill-buffer status-buffer)))
 
-  (defun lvn-display-emacs-levuen-latest-commits ()
+  (defun lvn-display-emacs-leuven-latest-commits ()
     "Display the latest commits in the Emacs-Leuven configuration.
 
 This function fetches the latest changes from the remote Git repository and
