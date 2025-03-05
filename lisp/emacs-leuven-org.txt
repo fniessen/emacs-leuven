@@ -16,14 +16,15 @@
 ;; Require a feature/library if available; if not, fail silently.
 (unless (fboundp 'try-require)
   (defun try-require (feature)
-    "Attempt to load FEATURE, warn on failure."
+    "Attempt to load FEATURE, returning t on success or nil on failure.
+FEATURE should be a symbol representing an Emacs library or feature.
+On failure, issue a warning with the error details."
     (condition-case err
         (progn
           (require feature)
-          t)                            ; Necessary for correct behavior in
-                                        ; conditional expressions.
-      (file-error
-       (warn "Failed to load `%s': %s" feature err)
+          t)                          ; Return t for success in conditionals.
+      (error
+       (warn "Failed to load feature `%s': %s" feature (error-message-string err))
        nil))))
 #+end_src
 
@@ -110,14 +111,22 @@ work and tasks with Org mode.
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c L") #'org-insert-link-global)
 (global-set-key (kbd "C-c O") #'org-open-at-point-global)
+#+end_src
 
-(when (bound-and-true-p org-agenda-files)
-  (if (null org-agenda-files)
-      (progn
+Agenda file check logic:
+
+#+begin_src emacs-lisp
+(defun leuven-org-check-agenda-files ()
+  "Check and report the status of `org-agenda-files'."
+  (when (boundp 'org-agenda-files)
+    (if (null org-agenda-files)
         (message "[No agenda files found]")
-        (sit-for 2))  ;; Delay for 2 seconds.
-    (message "[Found %d agenda files]" (length org-agenda-files))))
+      (message "Found %d agenda files" (length org-agenda-files)))))
 
+(add-hook 'after-init-hook #'leuven-org-check-agenda-files)
+#+end_src
+
+#+begin_src emacs-lisp
 (with-eval-after-load 'org
   ;; Unbind default keys in Org mode.
   (define-key org-mode-map (kbd "C-j") nil)
@@ -196,18 +205,22 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 ~org-id-locations-file~).
 
 #+begin_src emacs-lisp
-;; Check that org-checklist is found before adding it!
-;;
-;;   ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
-;;   ;; needed.
-;;   (add-to-list 'org-modules 'org-checklist) ; From org-contrib.
+(defun lvn-org-module-available-p (module)
+  "Return t if MODULE is available for loading."
+  (or (featurep module) (locate-library (symbol-name module))))
+
+(when (lvn-org-module-available-p 'org-checklist)
+  ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
+  ;; needed.
+  (add-to-list 'org-modules 'org-checklist))
 #+end_src
 
 #+begin_src emacs-lisp
 ;; Globally unique ID for Org mode entries (see `org-store-link')
 ;; (takes care of automatically creating unique targets for internal
 ;; links, see `C-h v org-id-link-to-org-use-id RET').
-(add-to-list 'org-modules 'org-id)
+(when (lvn-org-module-available-p 'org-id)
+  (add-to-list 'org-modules 'org-id))
 #+end_src
 
 #+begin_note
@@ -705,20 +718,21 @@ To use it, position your cursor on an Org entry with an ~ID~ property and invoke
   ;; (define-key org-mode-map (kbd "C-c C-x l") #'lvn-org-show-id-references)
 
   (defun lvn-org-show-id-references (&optional all-files)
-    "Display all Org entries linking to the current entry's ID, including the current entry.
-  This effectively makes ID links quasi-bidirectional by showing back-references.
+    "Display Org entries linking to the current entry's ID, including itself.
+  This makes ID links quasi-bidirectional by showing back-references.
 
-  If ALL-FILES is non-nil, search across all agenda files; otherwise, limit to the current file."
-    (interactive "P") ; Prefix arg (C-u) sets all-files to t.
-    (let* ((current-id (org-entry-get nil "ID" t)) ; Inherit ID from parent if needed.
+  If ALL-FILES (non-nil with prefix arg C-u), search all `org-agenda-files';
+  otherwise, limit to the current file. Signals an error if no ID or file is found."
+    (interactive "P")
+    (let* ((current-id (or (org-entry-get nil "ID" t) ; Ensure ID exists.
+                           (user-error "No ID found at point")))
+           (current-file (or (buffer-file-name) ; Ensure file exists.
+                             (user-error "No file associated with buffer")))
            (search-files (if (and all-files (boundp 'org-agenda-files))
                              org-agenda-files
-                           (list (buffer-file-name)))))
-      (if (and current-id (car search-files)) ; Ensure ID and file exist.
-          (progn
-            (let ((org-agenda-inhibit-startup t)) ; Faster loading.
-              (org-search-view nil current-id)))
-        (message "[No ID found at point or no file associated with buffer]"))))
+                           (list current-file))))
+      (let ((org-agenda-inhibit-startup t)) ; Faster loading.
+        (org-search-view nil current-id))))
 #+end_src
 
 ** Link abbreviations
@@ -4280,35 +4294,36 @@ corresponding LaTeX tables.
 * A.6 Dynamic blocks
 
 #+begin_note
-For some (yet) unknown reason, ~leuven--org-update-buffer-before-save~ gets added
-to a local copy of the global variable ~before-save-hook~.  We now decided to add
-it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
+For some (yet) unknown reason, ~lvn--org-update-buffer-before-save~ gets added to
+a local copy of the global variable ~before-save-hook~.  We now decided to add it
+to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 #+end_note
 
 #+begin_src emacs-lisp
 ;;** A.6 (info "(org)Dynamic blocks")
 
-(defun leuven--org-update-buffer-before-save ()
-  "Update dynamic blocks and tables only if modified."
-  (when (and (derived-mode-p 'org-mode)  ; Check if in org-mode.
-             (buffer-file-name)          ; Check if associated with a file.
-             (buffer-modified-p))        ; Check if modified.
+(defun lvn--org-update-buffer-before-save ()
+  "Update dynamic blocks, tables, and tags in Org buffer before saving, if modified."
+  (when (and (derived-mode-p 'org-mode) ; Check if in org-mode.
+             (buffer-file-name)         ; Check if associated with a file.
+             (buffer-modified-p))       ; Check if modified.
     (message "[Updating Org buffer: %s]"
              (file-name-nondirectory (buffer-file-name)))
-
-    (let (;; Optimize line navigation operations.
-          (cache-long-scans nil)        ; Make `forward-line' much faster and
+    (let ((cache-long-scans nil)        ; Optimize line navigation.
+                                        ; Make `forward-line' much faster and
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
-          (flyspell-state (and (boundp 'flyspell-mode) flyspell-mode))
+          (modes-to-disable '(flyspell-mode)) ; List extensible for other modes.
           ;; Preserve undo history (for goto-chg).
-          (buffer-undo-list buffer-undo-list))
-
-      ;; Temporarily disable Flyspell to avoid unnecessary spell checks.
-      (when flyspell-state (flyspell-mode -1))
-
-      ;; Perform buffer updates.
-      (lvn-org-remove-redundant-local-tags)  ; Remove redundant local tags.
+          (buffer-undo-list buffer-undo-list)
+          mode-states)
+      ;; Temporarily disable interfering modes.
+      (dolist (mode modes-to-disable)
+        (when (and (boundp mode) (symbol-value mode))
+          (push (cons mode t) mode-states)
+          (funcall mode -1)))
+      ;; Perform buffer updates only if relevant content exists.
+      (lvn-org-remove-redundant-local-tags) ; Remove redundant local tags.
       (measure-time "Realigned all tags" (org-align-tags :all))
       (when (org-element-map (org-element-parse-buffer) 'dynamic-block #'identity nil t)
         ;; Skip unnecessary updates: update only if dynamic blocks exist.
@@ -4317,12 +4332,12 @@ it to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
         ;; Skip unnecessary updates: update only if tables exist.
         (measure-time "Re-applied formulas to all tables"
                       (org-table-iterate-buffer-tables)))
-
-      ;; Restore Flyspell mode if it was enabled.
-      (when flyspell-state (flyspell-mode 1)))))
+      ;; Restore disabled modes.
+      (dolist (mode-state mode-states)
+        (when (cdr mode-state) (funcall (car mode-state) 1))))))
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
-(add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)
+(add-hook 'before-save-hook #'lvn--org-update-buffer-before-save)
 #+end_src
 
 * Org-contrib
