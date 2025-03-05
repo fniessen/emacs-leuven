@@ -1,7 +1,6 @@
-
 ;;;; org-test-fni.el --- Extra tests for Org mode
 
-;; Copyright (C) 2014-2016 Fabrice Niessen. All rights reserved.
+;; Copyright (C) 2014-2025 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen
 
@@ -22,8 +21,10 @@
 
 ;;; Commentary:
 
-;; Command:
-;; emacs -Q --batch -L lisp/ -L testing/ -l ~/src/emacs-leuven/org-test-fni.el --eval '(setq org-confirm-babel-evaluate nil)' -f ert-run-tests-batch-and-exit
+;; This file provides tests for Org mode exports using ERT.
+;;
+;; Run with: emacs -Q --batch -L lisp/ -L testing/ -l org-test-fni.el \
+;;   --eval '(setq org-confirm-babel-evaluate nil)' -f ert-run-tests-batch-and-exit
 
 ;;; Code:
 
@@ -32,46 +33,62 @@
 (add-to-list 'load-path "~/Public/Repositories/org-mode/testing")
 (add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp") ; htmlize
 (add-to-list 'load-path "~/Public/Repositories/org-mode/lisp")
-;; XXX This shoud be on the command-line!
+;; XXX This should be on the command-line!
 
 (require 'ert)
 (require 'ox)
 
 ;;; Functions for writing tests.
 
-(defun compare-org-html-export-files (org-file)
-  "Compare current export of ORG-FILE with HTML file already present on disk."
-  (require 'ox-html)
-  (let* ((html-file (concat (file-name-directory org-file)
-                            (file-name-base org-file) ".html"))
-         html-contents)
-    ;; Should have a `.html' file.
-    (should
-     (file-exists-p html-file))
-    ;; Should have the same `.html' exported file.
-    (should
-     (equal
-      ;; New export.
-      (with-temp-buffer
-        (insert-file-contents org-file)
-        (setq html-contents
-              (let ((org-export-allow-bind-keywords t))
-                (org-export-as 'html)))
-        (delete-region (point-min) (point-max))
-        (insert html-contents)
-        (buffer-string))
-      ;; Old export.
-      (with-temp-buffer
-        (insert-file-contents html-file)
-        (buffer-string))))))
+(defun compare-org-export-files (org-file backend &optional update-reference)
+  "Compare ORG-FILE export with its reference file for BACKEND.
+If UPDATE-REFERENCE is non-nil, generate and save the reference file."
+  (require (intern (format "ox-%s" backend)))
+  (let* ((full-org-file (org-test-fni-full-path org-file))
+         (ext-file (concat (file-name-sans-extension full-org-file)
+                           (if (eq backend 'html) ".html" (format ".%s" backend))))
+         export-contents)
+    (with-temp-buffer
+      (should (file-readable-p full-org-file))
+      (insert-file-contents full-org-file)
+      (setq export-contents
+            (condition-case err
+                (let ((org-export-allow-bind-keywords t))
+                  (org-export-as backend))
+              (error (ert-fail (format "Export failed: %s" err)))))
+      (if update-reference
+          (write-region export-contents nil ext-file)
+        (should (file-exists-p ext-file))
+        ;; Should have the same exported file.
+        (should
+         (equal
+          ;; New export.
+          export-contents
+          ;; Old export.
+          (with-temp-buffer
+            (insert-file-contents ext-file)
+            (buffer-string))))))))
 
 ;;; Internal tests.
 
-(ert-deftest test-org-export/export-html-backend-test-file ()
-  "Compare current export of ORG-FILE with HTML file already present on disk."
-  (compare-org-html-export-files "~/src/emacs-leuven/org-test-sample.org"))
+(defvar org-test-fni-test-files
+  '(("org-test-sample.org" . "~/src/emacs-leuven/")
+    ("example.txt"         . "~/src/org-style/")
+    ("ERT-refcard.txt"     . "~/src/reference-cards/"))
+  "Alist of test files and their base directories for Org export tests.")
 
-;; (ert 'test-org-export/export-html-backend-test-file)
+(defun org-test-fni-full-path (filename)
+  "Return the full path for FILENAME based on `org-test-fni-test-files`."
+  (let ((entry (assoc filename org-test-fni-test-files)))
+    (if entry
+        (expand-file-name filename (cdr entry))
+      (error "No base directory defined for %s" filename))))
+
+(ert-deftest test-org-export/html-sample-file ()
+  "Test that HTML export of `org-test-sample.org` matches its reference file."
+  (compare-org-export-files (org-test-fni-full-path "org-test-sample.org") 'html))
+
+;; (ert 'test-org-export/html-sample-file)
 
 (provide 'org-test-fni)
 
