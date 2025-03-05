@@ -8,7 +8,7 @@
           t)                            ; Necessary for correct behavior in
                                         ; conditional expressions.
       (file-error
-       (warn "[Failed to load `%s': %s]" feature err)
+       (warn "Failed to load `%s': %s" feature err)
        nil))))
 
 ;; (info "(org)Top") outline-based notes management and organizer
@@ -24,20 +24,22 @@
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 
+;; Keybindings outside org-mode-hook (global).
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c a") #'org-agenda)
-
-;; Using links outside Org.
 (global-set-key (kbd "C-c L") #'org-insert-link-global)
 (global-set-key (kbd "C-c O") #'org-open-at-point-global)
 
-(unless (and (boundp 'org-agenda-files) org-agenda-files)
-  (message "[No agenda files found.]")
-  (sit-for 1.5))
+(when (bound-and-true-p org-agenda-files)
+  (if (null org-agenda-files)
+      (progn
+        (message "[No agenda files found]")
+        (sit-for 2))  ;; Delay for 2 seconds.
+    (message "[Found %d agenda files]" (length org-agenda-files))))
 
 (with-eval-after-load 'org
-  ;; Unbind `C-j' and `C-''.
+  ;; Unbind default keys in Org mode.
   (define-key org-mode-map (kbd "C-j") nil)
   (define-key org-mode-map (kbd "C-'") nil) ; Unbind `org-cycle-agenda-files'.
   (define-key org-mode-map (kbd "<C-S-down>") nil)
@@ -108,10 +110,8 @@
 
             ))
 
-(add-to-list 'package-selected-packages 'helm-org)
-(add-to-list 'package-selected-packages 'org-contrib)
-(add-to-list 'package-selected-packages 'orgalist)
-(add-to-list 'package-selected-packages 'ox-jira)
+(use-package helm-org)
+(use-package ox-jira)
 
 (with-eval-after-load 'org
   (message "[... Org Introduction]")
@@ -141,10 +141,10 @@
        :background "#FFF8C0"
        :underline nil)))
 
-  ;; Set the Org mode ellipsis.
+  ;; Set custom ellipsis character.
   (if lvn-right-pointing-char
       (setq org-ellipsis lvn-right-pointing-char)
-    (apply #'set-face-attribute 'org-ellipsis lvn-org-ellipsis-face-attributes)
+    (apply #'set-face-attribute 'org-ellipsis nil lvn-org-ellipsis-face-attributes)
     (setq org-ellipsis 'org-ellipsis)))
 
 ;; RET follows links (except in tables, where you must use `C-c C-o').
@@ -186,11 +186,12 @@
 ;; Switch to OVERVIEW (fold all) at startup.
 (setq org-startup-folded t)
 
-;; Inhibit startup when preparing agenda buffers -- agenda optimization.
-(setq org-agenda-inhibit-startup t)   ; XXX
+;; Disable startup processes when loading agenda buffers for better performance.
+(setq org-agenda-inhibit-startup t)     ; Faster loading.
 
-(setq w32-pass-apps-to-system nil)
-(setq w32-apps-modifier 'hyper)       ; Apps key.
+(when lvn--win32-p
+  (setq w32-pass-apps-to-system nil)
+  (setq w32-apps-modifier 'hyper))      ; Apps key.
 
 (with-eval-after-load 'org
   ;; Create indirect buffer and narrow it to current subtree.
@@ -219,7 +220,9 @@
 
 (with-eval-after-load 'org
   (defun lvn-org-reveal (&optional all)
-    "Reveal siblings or all hidden entries with prefix arg."
+    "Reveal hidden Org entries.
+  If ALL is non-nil (e.g., with prefix arg C-u), reveal all hidden content in the buffer.
+  Otherwise, reveal only siblings at the current level."
     (interactive "P")
     (if all
         (org-reveal t)            ; Reveal all hidden content in the buffer.
@@ -335,43 +338,50 @@
 (with-eval-after-load 'org
   (message "[... Handling links]")
 
-  ;; 4.4 Show inline images when loading a new Org file.
-  (setq org-startup-with-inline-images t) ; Invokes org-display-inline-images.
+  ;; 4.4 Show inline images.
+  (setq org-startup-with-inline-images t)
 
-  ;; 4.4 Try to get the width from an #+ATTR.* keyword and fall back on 320px
-  ;; width if none is found.
+  ;; 4.4 Default image width if none is found from an #+ATTR.* keyword.
   (setq org-image-actual-width '(320))
 
-  (defun leuven-org-search-backlinks ()
-    "Show all entries that point to the current node.  Also show the current
-node itself.
+  ;; (define-key org-mode-map (kbd "C-c C-x l") #'lvn-org-show-id-references)
 
-This makes ID links quasi-bidirectional."
-    (interactive)
-    (let ((org-agenda-files
-           (add-to-list 'org-agenda-files (buffer-file-name))))
-      (org-search-view nil (org-entry-get nil "ID" t))))
+  (defun lvn-org-show-id-references (&optional all-files)
+    "Display all Org entries linking to the current entry's ID, including the current entry.
+  This effectively makes ID links quasi-bidirectional by showing back-references.
 
-  ;; Shortcut links.
+  If ALL-FILES is non-nil, search across all agenda files; otherwise, limit to the current file."
+    (interactive "P") ; Prefix arg (C-u) sets all-files to t.
+    (let* ((current-id (org-entry-get nil "ID" t)) ; Inherit ID from parent if needed.
+           (search-files (if (and all-files (boundp 'org-agenda-files))
+                             org-agenda-files
+                           (list (buffer-file-name)))))
+      (if (and current-id (car search-files)) ; Ensure ID and file exist.
+          (progn
+            (let ((org-agenda-inhibit-startup t)) ; Faster loading.
+              (org-search-view nil current-id)))
+        (message "[No ID found at point or no file associated with buffer]"))))
+
+  ;; Define Org-mode link abbreviations for quick access to web resources.
   (setq org-link-abbrev-alist
-        '(("cache" .
-           "http://www.google.com/search?q=cache:%s")
-          ("dictionary" .
-           "http://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=%s")
-          ("google" .
-           "http://www.google.com/search?q=%s")
-          ("googlegroups" .
-           "http://groups.google.com/groups?q=%s")
-          ("googlemaps" .
-           "http://maps.google.com/maps?q=%s")
-          ("imdb" .
-           "http://us.imdb.com/Title?%s")
-          ("openstreetmap" .
-           "http://nominatim.openstreetmap.org/search?q=%s&polygon=1")
-          ("wpen" .
-           "http://en.wikipedia.org/wiki/%s")
-          ("wpfr" .
-           "http://fr.wikipedia.org/wiki/%s"))))
+        (append
+         ;; Search engines and cached content.
+         '(("google"     . "https://www.google.com/search?q=%s")
+           ;; ("cache"      . "https://webcache.googleusercontent.com/search?q=cache:%s")
+           ;; http://web.archive.org/web/http://www.yahoo.com/ ?
+           ("googlegroups" . "https://groups.google.com/groups?q=%s"))
+
+         ;; Maps and location services.
+         '(("googlemaps" . "https://maps.google.com/maps?q=%s")
+           ("openstreetmap" . "https://nominatim.openstreetmap.org/search?q=%s&polygon=1"))
+
+         ;; Reference and dictionaries.
+         '(("dictionary" . "https://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=%s")
+           ("wpen"       . "https://en.wikipedia.org/wiki/%s")
+           ("wpfr"       . "https://fr.wikipedia.org/wiki/%s"))
+
+         ;; Entertainment.
+         '(("imdb"       . "https://www.imdb.com/title/%s")))))
 
 ;;* 5 (info "(org)TODO Items")
 
@@ -399,8 +409,12 @@ This makes ID links quasi-bidirectional."
                   "DONE(d!)"            ; Completed, closed, resolved.
                   "CANX(x@)")))         ; Won't fix, rejected, ignored.
 
+;; Faces configuration.
+;; (use-package org-faces
+;;   :after org
+;;   :ensure t
+;;   :config
 (with-eval-after-load 'org-faces
-
   ;; Define non-standard faces for specific TODO states.
   (defface leuven-org-mayb-kwd
     '((t :weight bold :box "#BBBBBB"
@@ -784,11 +798,17 @@ a parent headline."
 (message "9.1 (org)Capture")
 
 ;; 9.1.2 Directory with Org files.
-(setq org-directory
-      (directory-file-name            ; This function removes the final slash.
-       (cond ((file-directory-p "~/org/") "~/org/")
-             ((file-directory-p "~/org-files/") "~/org-files/")
-             (t "~/"))))
+(defvar lvn-org-directory
+  (directory-file-name                  ; This function removes the final slash.
+   (cond ((file-directory-p "~/org/") "~/org/")
+         ((file-directory-p "~/org-files/") "~/org-files/")
+         (t "~/")))
+  "Base directory for Org files.")
+(setq org-directory lvn-org-directory)
+
+(unless (and (file-directory-p org-directory) (file-writable-p org-directory))
+  (warn "Org directory '%s' is not accessible" org-directory)
+  (setq org-directory "~/"))
 
 ;; 9.1.2 Default target for storing notes.
 (with-eval-after-load 'org
@@ -909,19 +929,10 @@ From the address <%a>"
                  :clock-in t
                  :clock-resume t) :append)
 
-  ;; Thought.
-  (add-to-list 'org-capture-templates
-               `("n" "Note" entry
-                 (file+headline ,org-default-notes-file "Notes")
-                 "* %^{Thought}%?
-
-%i"
-                 :empty-lines 1) :append)
-
   (add-to-list 'org-capture-templates
                `("n" "New quick note (with timestamp)" entry
                  (file+headline ,org-default-notes-file "Notes")
-                 "* %?\n   CREATED: %U\n  %a"
+                 "* %^{Note}%?\n   CREATED: %U\n  %a\n%i"
                  :empty-lines 1) :append)
 
   ;; Shopping list (stuff to buy).
@@ -1231,11 +1242,6 @@ From the address <%a>"
   (add-hook 'org-agenda-finalize-hook #'leuven--org-agenda-right-justify-tags))
 
 ;; 10.4.2 Settings for time grid for agenda display.
-(setq org-agenda-time-grid '((daily remove-match)
-                             ""
-                             (0800 1000 1200 1400 1600 1800 2000)))
-
-;; Recent Org-mode.
 (setq org-agenda-time-grid '((daily today remove-match)
                              (0800 1000 1200 1400 1600 1800 2000)
                              "...... " ""))
@@ -1405,6 +1411,7 @@ Examples:
 - Exclude 'personal' tag during working hours.
 - Exclude 'work' tag outside of working hours.
 - Exclude 'errands' and 'call' tags outside of calling hours."
+  ;; List of tags and conditions for auto-exclusion in agenda.
   (and (cond
         ((string= tag "personal")
          (leuven--org-working-p))
@@ -1436,24 +1443,6 @@ Examples:
     (when (file-exists-p leuven-org-agenda-views)
       (load-file leuven-org-agenda-views))))
                                         ; with-eval-after-load "org-agenda" ends here.
-
-(defun leuven-org-agenda-git-root-todo-list ()
-  "Produce an Org agenda view of unscheduled TODO items in the Git root directory."
-  (interactive)
-  (let* ((git-root (vc-git-root default-directory))
-         (org-files (directory-files-recursively git-root "\\.\\(org\\|txt\\)$"))
-         (org-agenda-sorting-strategy '(todo-state-up priority-down))
-         (org-agenda-overriding-header
-          (format "Unscheduled TODO items in directory: %s" git-root))
-         (org-agenda-sticky nil)
-         (org-agenda-skip-scheduled-if-done t)
-         (org-agenda-skip-deadline-if-done t)
-         (org-agenda-todo-ignore-scheduled 'future))
-    (message "[%s...]" org-agenda-overriding-header)
-    (org-todo-list)))
-
-;; "TODO list" without asking for a directory.
-(global-set-key (kbd "<M-S-f6>") #'leuven-org-agenda-git-root-todo-list)
 
 ;;** 10.7 (info "(org)Exporting Agenda Views")
 
@@ -1664,17 +1653,20 @@ formats (Markdown, HTML, or PDF)."
       ;; Initial save buffer.
       (save-buffer)
 
-      ;; Restart Org mode (useful for refreshing settings).
-      (measure-time-wrapper "Restarted Org mode" #'org-mode)
+      ;; ;; Restart Org mode (useful for refreshing settings).
+      ;; (measure-time-wrapper "Restarted Org mode" #'org-mode)
 
       ;; Run Org lint if available.
-      (when (try-require "org-lint")
+      (when (try-require 'org-lint)
         (measure-time-wrapper "Linted Org mode"
-                             (lambda ()
-                               (when (org-lint)
-                                 (message "[You should run `org-lint'!!!]")
-                                 (beep)
-                                 (sit-for 1)))))
+          (lambda ()
+            (let ((lint-result (org-lint)))
+              (when lint-result
+                (warn "Org-lint found issues! Run `org-lint' to review.")
+                (beep)
+                (sit-for 1))
+              (unless lint-result
+                (message "[Org-lint completed: No issues found]"))))))
 
       ;; ;; Update the results in the Org buffer.
       ;; (org-babel-execute-buffer)    ; In this case, better than
@@ -1690,9 +1682,9 @@ formats (Markdown, HTML, or PDF)."
 
       ;; Save buffer again to ensure updates.
       (measure-time-wrapper "Buffer saved"
-                           (lambda ()
-                             (let ((before-save-hook nil))
-                               (save-buffer))))
+        (lambda ()
+          (let ((before-save-hook nil))
+            (save-buffer))))
 
       ;; Tangle code blocks.
       (measure-time-wrapper "Buffer tangled" #'org-babel-tangle)
@@ -1718,10 +1710,10 @@ formats (Markdown, HTML, or PDF)."
                 (and (file-exists-p texfile)
                      (not (file-exists-p pdffile))))
             (measure-time-wrapper "Buffer exported to PDF LaTeX"
-                                 (lambda ()
-                                   (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
-                                       (org-beamer-export-to-pdf)
-                                     (org-latex-export-to-pdf))))
+              (lambda ()
+                (if (string-match "^#\\+BEAMER_THEME: " (buffer-string))
+                    (org-beamer-export-to-pdf)
+                  (org-latex-export-to-pdf))))
           (message "[PDF is up to date with Org file]")))
 
       (beep)))
@@ -1975,13 +1967,13 @@ buffer."
   ;; Hook run before parsing an export buffer.
   (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 
-  ;; Export source code using `listings' (instead of `verbatim').
-  (setq org-latex-listings t)
-
   ;; 12.6.2 Default packages to be inserted in the header.
   ;; Include the `babel' package first for language-specific hyphenation and
   ;; typography.
   (add-to-list 'org-latex-packages-alist '("french" "babel") :append)
+
+  ;; Export source code using `listings' (instead of `verbatim').
+  (setq org-latex-src-block-backend 'listings)
 
   ;; Include the `xcolor' package next for colored source code.
   (add-to-list 'org-latex-packages-alist '("" "xcolor") :append)
@@ -2554,24 +2546,24 @@ Example: 'Hello' becomes 'xxxxx'."
 (defun leuven--org-export-preprocess-hook (backend)
   "Backend-aware export preprocess hook.
 BACKEND is the current export backend."
-  (save-excursion
-    (when (eq backend 'latex)
-      ;; ignoreheading tag for bibliographies and appendices.
-      (let* ((tag "ignoreheading"))
-        ;; (goto-char (point-min))
-        ;; (while (re-search-forward (concat ":" tag ":") nil t)
-        ;; (delete-region (point-at-bol) (point-at-eol)))
-        (org-map-entries
-         (lambda ()
-           (delete-region (point-at-bol) (point-at-eol)))
-         (concat ":" tag ":"))))
-    (when (eq backend 'html)
-      ;; Set custom CSS style class based on matched tag.
-      (let* ((match "Qn"))
-        (org-map-entries
-         (lambda ()
-           (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
-         match)))))
+  (condition-case err
+      (save-excursion
+        (when (eq backend 'latex)
+          ;; (goto-char (point-min))
+          ;; (while (re-search-forward ":ignoreheading:" nil t)
+          ;; (delete-region (point-at-bol) (point-at-eol)))
+          (org-map-entries
+           (lambda ()
+             (delete-region (point-at-bol) (point-at-eol)))
+           ;; ignoreheading tag for bibliographies and appendices.
+           ":ignoreheading:"))
+        (when (eq backend 'html)
+          ;; Set custom CSS style class based on matched tag.
+          (org-map-entries
+           (lambda ()
+             (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
+           "Qn")))
+    (error (message "Error in export preprocess: %s" err))))
 
 (add-hook 'org-export-before-parsing-hook #'leuven--org-export-preprocess-hook)
 
@@ -2638,7 +2630,9 @@ BACKEND is the current export backend."
 
 (defun leuven--org-update-buffer-before-save ()
   "Update dynamic blocks and tables only if modified."
-  (when (and (derived-mode-p 'org-mode) (buffer-modified-p))
+  (when (and (derived-mode-p 'org-mode)  ; Check if in org-mode.
+             (buffer-file-name)          ; Check if associated with a file.
+             (buffer-modified-p))        ; Check if modified.
     (message "[Updating Org buffer: %s]"
              (file-name-nondirectory (buffer-file-name)))
 
@@ -2654,31 +2648,21 @@ BACKEND is the current export backend."
       (when flyspell-state (flyspell-mode -1))
 
       ;; Perform buffer updates.
+      (lvn-org-remove-redundant-local-tags)  ; Remove redundant local tags.
       (measure-time "Realigned all tags" (org-align-tags :all))
-      (measure-time "Updated all dynamic blocks" (org-update-all-dblocks))
-      (measure-time "Re-applied formulas to all tables"
-                    (org-table-iterate-buffer-tables))
-
-      ;; Remove redundant local tags if the buffer is associated with a file.
-      (when (buffer-file-name)
-        (lvn-org-remove-redundant-local-tags))
+      (when (org-element-map (org-element-parse-buffer) 'dynamic-block #'identity nil t)
+        ;; Skip unnecessary updates: update only if dynamic blocks exist.
+        (measure-time "Updated all dynamic blocks" (org-update-all-dblocks)))
+      (when (org-element-map (org-element-parse-buffer) 'table #'identity nil t)
+        ;; Skip unnecessary updates: update only if tables exist.
+        (measure-time "Re-applied formulas to all tables"
+                      (org-table-iterate-buffer-tables)))
 
       ;; Restore Flyspell mode if it was enabled.
       (when flyspell-state (flyspell-mode 1)))))
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
 (add-hook 'before-save-hook #'leuven--org-update-buffer-before-save)
-
-;; (with-eval-after-load 'org
-;;   (message "[... Org Effectiveness]")
-;;
-;;   (try-require 'org-effectiveness)
-;;   (with-eval-after-load 'org-effectiveness
-;;
-;;     (add-hook 'org-mode-hook
-;;               (lambda ()
-;;                 (org-effectiveness-count-todo)
-;;                 (sit-for 0.2)))))
 
 ;; Add weather forecast in your Org agenda.
 (autoload 'org-google-weather "org-google-weather"
