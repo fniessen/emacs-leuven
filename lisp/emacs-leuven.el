@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250305.2017>
+;; Version: <20250306.1921>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -43,7 +43,6 @@
 ;; Optional:
 ;;   (setq lvn-verbose-loading t)                  ; Show loading progress
 ;;   (setq package-selected-packages nil)          ; Skip package installs
-;;   (setq leuven-install-all-missing-elpa-packages t) ; Auto-install all packages
 ;;
 ;; See https://github.com/fniessen/emacs-leuven for details.
 ;;
@@ -54,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250305.2017>"
+(defconst lvn--emacs-version "<20250306.1921>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -234,19 +233,20 @@ Last time is saved in global variable `leuven--before-section-time'."
     :group 'leuven
     :type 'directory)
 
-  (lvn--add-to-load-path leuven-user-lisp-directory)
+  ;; (lvn--add-to-load-path leuven-user-lisp-directory)
 
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
     (defun try-require (feature)
-      "Attempt to load FEATURE, warn on failure."
+      "Attempt to load FEATURE, returning t on success or nil on failure.
+  FEATURE should be a symbol representing an Emacs library or feature.
+  On failure, issue a warning with the error details."
       (condition-case err
           (progn
             (require feature)
-            t)                          ; Necessary for correct behavior in
-                                        ; conditional expressions.
-        (file-error
-         (warn "Failed to load `%s': %s" feature err)
+            t)                          ; Return t for success in conditionals.
+        (error
+         (warn "Failed to load feature `%s': %s" feature (error-message-string err))
          nil))))
 
   (unless (fboundp 'with-eval-after-load)
@@ -391,96 +391,99 @@ Shows a warning message if the file does not exist or is not executable."
   (try-require 'package)
   (with-eval-after-load 'package
 
-    ;; Packages which were installed by the user (as opposed to installed as
-    ;; dependencies).
-    (setq package-selected-packages
-          '(ag
-            ant
-            anzu
-            ;; auctex
-            ;; auto-complete
-            auto-highlight-symbol
-            auto-package-update
-            avy
-            back-button
-            bbdb
-            boxquote
-            ;; calfw
-            circe
-            color-identifiers-mode
-            company
-            company-quickhelp
-            ;; csv-mode
-            dashboard
-            ;; delight                     ; Instead of diminish.
-            diff-hl
-            diminish
-            docker-compose-mode
-            dumb-jump
-            ;; emacs-eclim
-            emr
-            expand-region
-            fancy-narrow
-            flycheck
-            flycheck-color-mode-line
-            fuzzy
-            ;; git-commit-insert-issue
-            git-messenger
-            ;; git-timemachine
-            google-translate
-            goto-chg
-            graphviz-dot-mode
-            helm
-            helm-ag
-            helm-descbinds
-            helm-ls-git
-            helm-org
-            helm-projectile ; Obsolete package?
-            helm-swoop
-            hide-lines
-            highlight-numbers
-            hl-anything                 ; Better than `highlight-symbol'.
-            hl-todo
-            htmlize
-            indent-guide
-            ;; jabber
-            jquery-doc
-            js2-mode
-            ;; js2-refactor
-            json-mode
-            key-chord
-            litable
-            idle-require
-            interaction-log
-            leuven-theme
-            magit
-            markdown-mode
-            ;; multi-term
-            multiple-cursors
-            pager
-            ;; paredit
-            ;; pdf-tools
-            powerline
-            rainbow-delimiters
-            ;; rainbow-mode
-            ;; redshank
-            skewer-mode
-            smart-comment
-            smartparens
-            ;; sql-indent
-            sqlup-mode
-            symbol-overlay
-            tern
-            toc-org
-            ;; undo-tree
-            use-package
-            volatile-highlights
-            web-mode
-            wgrep
-            which-key
-            ws-butler
-            yasnippet
-            ztree))
+
+    (defcustom leuven-default-packages
+      '(ag
+        ant
+        anzu
+        ;; auctex
+        ;; auto-complete
+        auto-highlight-symbol
+        auto-package-update
+        avy
+        back-button
+        bbdb
+        boxquote
+        ;; calfw
+        circe
+        color-identifiers-mode
+        company
+        company-quickhelp
+        ;; csv-mode
+        dashboard
+        ;; delight                     ; Instead of diminish.
+        diff-hl
+        diminish
+        docker-compose-mode
+        dumb-jump
+        ;; emacs-eclim
+        emr
+        expand-region
+        fancy-narrow
+        flycheck
+        flycheck-color-mode-line
+        fuzzy
+        ;; git-commit-insert-issue
+        git-messenger
+        ;; git-timemachine
+        google-translate
+        goto-chg
+        graphviz-dot-mode
+        helm
+        helm-ag
+        helm-descbinds
+        helm-ls-git
+        helm-org
+        helm-projectile ; Obsolete package?
+        helm-swoop
+        hide-lines
+        highlight-numbers
+        hl-anything                 ; Better than `highlight-symbol'.
+        hl-todo
+        htmlize
+        indent-guide
+        ;; jabber
+        jquery-doc
+        js2-mode
+        ;; js2-refactor
+        json-mode
+        key-chord
+        litable
+        idle-require
+        interaction-log
+        leuven-theme
+        magit
+        markdown-mode
+        ;; multi-term
+        multiple-cursors
+        pager
+        ;; paredit
+        ;; pdf-tools
+        powerline
+        rainbow-delimiters
+        ;; rainbow-mode
+        ;; redshank
+        skewer-mode
+        smart-comment
+        smartparens
+        ;; sql-indent
+        sqlup-mode
+        symbol-overlay
+        tern
+        toc-org
+        ;; undo-tree
+        use-package
+        volatile-highlights
+        web-mode
+        wgrep
+        which-key
+        ws-butler
+        yasnippet
+        ztree)
+      "Default packages to install with Emacs-Leuven."
+      :group 'leuven
+      :type '(repeat symbol))
+    (setq package-selected-packages leuven-default-packages)
 
     ;; (when (fboundp 'package-install-selected-packages) ; Emacs-v25
     ;;   (package-install-selected-packages))
@@ -489,11 +492,6 @@ Shows a warning message if the file does not exist or is not executable."
       "List of packages to exclude from installation."
       :group 'leuven
       :type '(repeat string))
-
-    (defcustom leuven-install-all-missing-elpa-packages nil
-      "If non-nil, install all missing packages without individual confirmation."
-      :group 'leuven
-      :type 'boolean)
 
     ;; Define a function to check if there are any missing ELPA packages.
     (defun lvn--missing-elpa-packages ()
@@ -507,14 +505,22 @@ Shows a warning message if the file does not exist or is not executable."
                       (member pkg leuven-excluded-packages))
             (push pkg missing-packages)))))
 
-    (defun lvn--internet-available-p ()
-      "Check internet connectivity by attempting to reach a reliable website.
-    Returns t if successful, nil if an error occurs."
-      (ignore-errors
-        (url-retrieve "http://www.google.com/"
-                      (lambda (_status) t))))
+    (defun lvn--internet-available-p (&optional url timeout)
+      "Check internet connectivity by attempting to reach a specified URL.
+    URL defaults to 'http://www.google.com/' if not provided.
+    TIMEOUT specifies the maximum wait time in seconds (defaults to 5).
+    Returns t if successful, nil if an error occurs or the request times out."
+      (let ((url (or url "http://www.google.com/"))
+            (timeout (or timeout 5)))
+        (condition-case err
+            (with-timeout (timeout nil)
+              (url-retrieve-synchronously url t t)
+              t)
+          (error
+           (message "[Internet check failed: %s]" (error-message-string err))
+           nil))))
 
-    (defun lvn--install-package-quietly (package)
+    (defun lvn--install-package (package)
       "Install PACKAGE silently and handle any errors.
     Displays success or failure message accordingly."
       (condition-case err
@@ -526,38 +532,21 @@ Shows a warning message if the file does not exist or is not executable."
                   package
                   (error-message-string err)))))
 
-    (defun lvn--install-package (package)
-      "Install PACKAGE with optional user confirmation.
-    If `leuven-install-all-missing-elpa-packages' is non-nil, installs silently.
-    Otherwise, prompts for confirmation."
-      (if leuven-install-all-missing-elpa-packages
-          (lvn--install-package-quietly package)
-        (when (yes-or-no-p (format "Install ELPA package `%s'? " package))
-          (lvn--install-package-quietly package))
-        (unless leuven-install-all-missing-elpa-packages
-          (message "[Customize Emacs-Leuven to ignore `%s' next time]" package)
-          (sit-for 1.5))))
-
     (defun lvn--install-missing-elpa-packages ()
-      "Install missing ELPA packages for Emacs-Leuven.
-    Prompts to install all at once if multiple packages are missing and
-    internet is available."
-      (let ((missing-packages (lvn--missing-elpa-packages)))
-        (when missing-packages
-          (setq leuven-install-all-missing-elpa-packages
-                (or leuven-install-all-missing-elpa-packages
-                    (yes-or-no-p
-                     (format "Install all %d missing ELPA package(s) without individual confirmation? "
-                             (length missing-packages)))))
-          (if (lvn--internet-available-p)
-              (progn
-                (package-refresh-contents)
-                (dolist (pkg (reverse missing-packages))
-                  (lvn--install-package pkg)))
-            (message "[No internet connection. Cannot refresh package archives.]")))))
+      "Install missing ELPA packages with error handling."
+      (condition-case err
+          (let ((missing-packages (lvn--missing-elpa-packages)))
+            (when missing-packages
+              (if (lvn--internet-available-p)
+                  (progn
+                    (package-refresh-contents)
+                    (dolist (pkg missing-packages)
+                      (lvn--install-package pkg)))
+                  (error "No internet connection"))))
+        (error (message "[Failed to install packages: %s]" err))))
 
     ;; Start the installation process.
-    (lvn--install-missing-elpa-packages)
+    (add-hook 'after-init-hook #'lvn--install-missing-elpa-packages)
 
     )
 
@@ -1104,6 +1093,16 @@ called interactively."
   ;; (when lvn--wsl-p
   ;;   (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
 
+
+  ;; (when lvn--wsl-p
+  ;;   (defun lvn-wsl-slick-copy-region (beg end &rest args)
+  ;;     "Copy region to Windows clipboard in WSL."
+  ;;     (interactive "r")
+  ;;     (shell-command-on-region beg end "clip.exe")
+  ;;     (message "[Copied to Windows clipboard]"))
+  ;;   (advice-add 'kill-ring-save :before #'lvn-wsl-slick-copy-region))
+
+
   ;; ;; Define the paste command for WSL.
   ;; (defun lvn-wsl-paste-region ()
   ;;   "Paste the contents of the Windows clipboard in WSL."
@@ -1149,7 +1148,7 @@ called interactively."
     (setq bookmark-save-flag 1)
 
     ;; Extensions to standard library `bookmark.el'.
-    (when (and (try-require 'bookmark+-XXX) ; XXX + needs bookmark+-mac
+    (when (and (try-require 'bookmark+)
                (locate-library "dired-aux"))
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
@@ -1518,22 +1517,6 @@ Should be selected from `fringe-bitmaps'.")
       (add-hook hook #'ws-butler-mode)))
 
   (with-eval-after-load 'ws-butler
-
-    ;; ;; Remove all tab/space indent conversion.
-    ;; (defun ws-butler-clean-region (beg end)
-    ;;   "Delete trailing blanks in region BEG END."
-    ;;   (interactive "*r")
-    ;;   (ws-butler-with-save
-    ;;    (narrow-to-region beg end)
-    ;;    ;;  _much slower would be:       (replace-regexp "[ \t]+$" "")
-    ;;    (goto-char (point-min))
-    ;;    (while (not (eobp))
-    ;;      (end-of-line)
-    ;;      (delete-horizontal-space)
-    ;;      (forward-line 1)))
-    ;;   ;; clean return code for hooks
-    ;;   nil)
-
     (diminish 'ws-butler-mode))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
@@ -1785,31 +1768,28 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "14.20 (emacs)The Cursor Display")
 
-  ;; Customize cursor color and type based on buffer state (read-only,
-  ;; overwrite, and normal insert modes).
-  (defun lvn--customize-cursor-style ()
-    "Change cursor color and type based on buffer state."
-    (let* ((light-theme (is-light-theme))
-           (read-only-color "purple1")
-           (overwrite-color "#7F7F7F")
-           (default-color (if light-theme "black" "white"))
-           (color (cond (buffer-read-only read-only-color)
-                        (overwrite-mode overwrite-color)
-                        (t default-color)))
-           (type (if (null overwrite-mode) 'bar 'box)))
-      (set-cursor-color color)
-      (setq cursor-type type)))
+  ;; Cursor customization based on buffer state.
+  (defun lvn--update-cursor-appearance ()
+    "Update cursor color and shape based on buffer state (read-only, overwrite, or insert)."
+    (interactive)  ; Allow manual invocation if needed.
+    (let* ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
+           (cursor-colors `((read-only . "purple1")
+                           (overwrite . "#7F7F7F")
+                           (default . ,(if is-light-theme "black" "white"))))
+           (current-color (cond (buffer-read-only (alist-get 'read-only cursor-colors))
+                                (overwrite-mode (alist-get 'overwrite cursor-colors))
+                                (t (alist-get 'default cursor-colors))))
+           (current-type (if overwrite-mode 'box 'bar)))
+      (set-cursor-color current-color)
+      (setq cursor-type current-type)))
 
-  (defun is-light-theme ()
-    "Check if the current Emacs theme is light."
-    (eq (frame-parameter nil 'background-mode) 'light))
+  ;; Update cursor on every command.
+  (add-hook 'post-command-hook #'lvn--update-cursor-appearance)
 
-  (add-hook 'post-command-hook #'lvn--customize-cursor-style)
-
-  ;; Cursor to use.
+  ;; Default to bar cursor.
   (setq-default cursor-type 'bar)
 
-  ;; Cursor blinks forever.
+  ;; Cursor blinks indefinitely.
   (setq blink-cursor-blinks 0)
 
   ;; Enable highlighting of the current line in all buffers.
@@ -4139,7 +4119,7 @@ scrolling to the bottom."
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  (try-require 'tex-site) ; XXX
+  ;; (try-require 'tex-site)
 
   ;; Support for LaTeX documents.
   (with-eval-after-load 'latex
@@ -6689,29 +6669,6 @@ This example lists Azerty layout second row keys."
 
       (advice-add 'dired-jump :around #'lvn--dired-jump-advice)))
 
-;;** Dired+
-
-  (leuven--section "30.XX Dired+")
-
-  (when (and (try-require 'dired+-XXX) ; XXX
-             (locate-library "dired-aux"))
-
-    ;; Don't hide details in Dired.
-    (setq diredp-hide-details-initially-flag nil)
-
-    ;; Don't display the next Dired buffer the same way as the last.
-    (setq diredp-hide-details-propagate-flag nil)
-
-    ;; Don't wrap "next" command around to buffer beginning.
-    (setq diredp-wrap-around-flag nil)
-
-    ;; Dired `find-file' commands reuse directories.
-    (diredp-toggle-find-file-reuse-dir 1)
-
-    ;; Up, reusing Dired buffers.
-    (define-key dired-mode-map (kbd "C-x C-j")
-      #'diredp-up-directory-reuse-dir-buffer))
-
 ;;** Diff-hl
 
   (leuven--section "30.XX Diff-hl")
@@ -7286,17 +7243,20 @@ NOTIFICATION-STRING: Message(s) to display."
   ;; Print text from the buffer as PostScript.
   (with-eval-after-load 'ps-print
 
-    (defvar gsprint-program
-      (concat leuven--windows-program-files-dir "Ghostgum/gsview/gsprint.exe")
-      "Defines the Windows path to the gsview executable.")
+    (defvar leuven--print-program
+      (cond (lvn--win32-p (executable-find "gsprint.exe"))
+            (lvn--mac-p (executable-find "lp"))
+            (t (executable-find "enscript")))
+      "Path to the printing program.")
+    (setq ps-lpr-command leuven--print-program)
 
-    (lvn--validate-file-executable-p gsprint-program)
+    (lvn--validate-file-executable-p leuven--print-program)
 
-    (if (and gsprint-program (executable-find gsprint-program))
+    (if (and leuven--print-program (executable-find leuven--print-program))
         (progn
           ;; Use Ghostscript for printing PostScript files.
           (setq ps-printer-name t)      ; Adjusted to run Ghostscript.
-          (setq ps-lpr-command gsprint-program) ; Set Ghostscript as the command for printing.
+          (setq ps-lpr-command leuven--print-program) ; Set Ghostscript as the command for printing.
           (setq ps-lpr-switches '("-query"))) ; Tell Ghostscript to query which printer to use.
       (progn
         ;; Default printer settings.
