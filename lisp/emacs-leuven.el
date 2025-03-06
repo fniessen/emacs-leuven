@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250306.1931>
+;; Version: <20250306.2134>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250306.1931>"
+(defconst lvn--emacs-version "<20250306.2134>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -1147,69 +1147,7 @@ called interactively."
     ;; Each command that sets a bookmark will also save your bookmarks.
     (setq bookmark-save-flag 1)
 
-    ;; Extensions to standard library `bookmark.el'.
-    (when (and (try-require 'bookmark+)
-               (locate-library "dired-aux"))
-
-      ;; Toggle an ANONYMOUS bookmark on the current line.
-      (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
-
-      (global-set-key (kbd "<S-f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
-
-      ;; Delete all ANONYMOUS bookmarks in a buffer.
-      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
-
-    (when (fboundp 'helm-bookmarks)
-      ;; View all bookmarks.
-      (global-set-key (kbd "<M-f2>") #'helm-bookmarks))
-
-    (with-eval-after-load 'bookmark+
-
-      (add-hook 'find-file-hook #'bmkp-light-this-buffer)
-
-      ;; Priorities of bookmark highlighting overlay types.
-      (setq bmkp-light-priorities '((bmkp-autonamed-overlays     . 150)
-                                    (bmkp-non-autonamed-overlays . 160)))
-
-      ;; Symbols for the fringe bitmaps to use to highlight a bookmark.
-      (setq bmkp-light-left-fringe-bitmap 'filled-square)
-      (setq bmkp-light-right-fringe-bitmap 'filled-square)
-
-      ;; Default highlight style for ANONYMOUS (= default) bookmarks.
-      (setq bmkp-light-style-autonamed 'line+lfringe)
-
-      ;; Default highlight style for bookmarks WITH MNEMONICS.
-      (setq bmkp-light-style-non-autonamed 'line+lfringe)
-
-      ;; Automatically highlight bookmarks when set.
-      (setq bmkp-auto-light-when-set 'all-in-buffer)
-
-      ;; Automatically highlight bookmarks when jumped to.
-      (setq bmkp-auto-light-when-jump 'all-in-buffer)
-
-      ;; Don't propertize bookmark names to hold full bookmark data.
-      (setq bmkp-propertize-bookmark-names-flag nil)
-                                        ; We will often be going back and forth
-                                        ; between using Bookmark+ and using
-                                        ; vanilla Emacs.
-
-      (setq bmkp-last-as-first-bookmark-file nil)
-
-      ;; Name ANONYMOUS bookmarks with buffer name and line number.
-      (setq bmkp-autoname-format "^%B:[0-9]+: %s")
-
-      (setq bmkp-autoname-bookmark-function #'leuven-bmkp-autoname-line)
-
-      (defun leuven-bmkp-autoname-line (position)
-        "Name autonamed bookmark at POSITION using line number."
-        (let ((line  (line-number-at-pos position)))
-          ;; (format "%s:%d (%s)" (buffer-name) line (buffer-file-name))
-          (format "%s:%d: %s"
-                  (buffer-name)
-                  line
-                  (buffer-substring-no-properties
-                   (line-beginning-position)
-                   (1- (line-beginning-position 2))))))))
+    )
 
     (with-eval-after-load 'helm-autoloads
       ;; Helm for bookmarks (filtered by category).

@@ -2040,7 +2040,7 @@ Buffer-local nature of the bookmarks.
 
 Annotating bookmarks.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; Extensions to standard library `bookmark.el'.
     (when (and (try-require 'bookmark+)
                (locate-library "dired-aux"))
@@ -2103,7 +2103,11 @@ Annotating bookmarks.
                   line
                   (buffer-substring-no-properties
                    (line-beginning-position)
-                   (1- (line-beginning-position 2))))))))
+                   (1- (line-beginning-position 2))))))
+#+end_src
+
+#+begin_src emacs-lisp
+    )
 #+end_src
 
 XXX They should always be in color when opening a buffer... not only when
