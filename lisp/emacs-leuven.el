@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250306.1921>
+;; Version: <20250306.1931>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250306.1921>"
+(defconst lvn--emacs-version "<20250306.1931>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -6754,28 +6754,26 @@ This example lists Azerty layout second row keys."
     ;; Display appointment reminders in a separate window.
     (setq appt-display-format 'window)
 
-    ;; Function to display appointment reminders in a window.
-    (setq appt-disp-window-function #'lvn--appt-show-reminder)
+    ;; Show appointment reminders via desktop notifications or echo area.
+    (defun lvn--appt-notify (mins-to-appt current-time notification-string)
+      "Display an appointment reminder using desktop notifications or echo area.
+    MINS-TO-APPT is the time in minutes until the appointment (converted to a list if scalar).
+    CURRENT-TIME is the current timestamp (currently unused).
+    NOTIFICATION-STRING is the message or list of messages to display."
+      (let ((messages (if (listp notification-string)
+                          notification-string
+                        (list notification-string))))
+        (dolist (msg messages)
+          (if (and (display-graphic-p) (executable-find "notify-send"))
+              (let ((escaped-msg (shell-quote-argument msg)))
+                (shell-command
+                 (format "notify-send -i /usr/share/icons/gnome/32x32/status/appointment-soon.png -t 1000 'Appointment' %s"
+                         escaped-msg)))
+            (message "[%s]" msg)
+            (sit-for 1)))))
 
-    (defun lvn--appt-show-reminder (mins-to-appt current-time notification-string)
-      "Display a reminder for appointments.
-If available and running in a graphical display, use `notify-send`.
-Otherwise, show a message in the echo area.
-
-MINS-TO-APPT: Time in minutes until the appointment.
-CURRENT-TIME: Current timestamp (unused).
-NOTIFICATION-STRING: Message(s) to display."
-      (unless (listp mins-to-appt)
-        (setq notification-string (list notification-string)))
-
-      (dolist (message notification-string)
-        (if (and (display-graphic-p) (executable-find "notify-send"))
-            (let ((escaped-message (shell-quote-argument message)))
-              (shell-command
-               (format "notify-send -i /usr/share/icons/gnome/32x32/status/appointment-soon.png -t 1000 'Appointment' %s"
-                       escaped-message)))
-          (message "[%s]" message)
-          (sit-for 1))))
+    ;; Set custom function to display appointment reminders in a window.
+    (setq appt-disp-window-function #'lvn--appt-notify)
 
     ;; Turn appointment checking on (enable reminders).
     (when lvn-verbose-loading
