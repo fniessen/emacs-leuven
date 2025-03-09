@@ -4858,6 +4858,8 @@ In default Helm:
 
 - Choose with ~RET~.
 
+- ~S-TAB~ displays the available *contextual actions*.
+
 - ~C-z~ executes an action without quitting the Helm session (persistent action).
 
   #+begin_note
@@ -8075,8 +8077,8 @@ mouse-2: toggle rest visibility\n\
 mouse-3: go to end") "]")))
 #+end_src
 
-~helm-imenu-in-all-buffers~ command pops an Helm interface with all the *Imenu tags*
-*across all buffers with the same mode as the current one*.
+~M-x helm-imenu-in-all-buffers~ (~C-c h I~) command pops an Helm interface with all
+the *Imenu tags* *across all buffers with the same mode as the current one*.
 
 #+begin_note
 In a sense, it is similar to ~etag~ selection, but works only for the /open/
@@ -8088,11 +8090,7 @@ is often more convenient as you don't have to explicitly build the ~etags~ table
   (with-eval-after-load 'helm-autoloads
 
     ;; Keybinding to quickly jump to a symbol in buffer.
-    (global-set-key [remap imenu] #'helm-imenu)
-
-    ;; Helm Imenu tag selection across all buffers (with the same mode).
-    (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers)
-  )
+    (global-set-key [remap imenu] #'helm-imenu))
 
   ;; Helm interface for Imenu.
   (with-eval-after-load 'helm-imenu
@@ -8492,10 +8490,10 @@ Change those really awkward key bindings with ~@~ in the middle:
     (define-key hs-minor-mode-map (kbd "C-c f S") #'hs-show-all)
 
     ;; Alternative numpad shortcuts.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; C--
-    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; C-+
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)    ;; C-S--
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)    ;; C-S-+
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; `C--'.
+    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; `C-+'.
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)    ;; `C-S--'.
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)    ;; `C-S-+'.
 
     ;; Remove default `C-c @' prefix.
     (define-key hs-minor-mode-map (kbd "C-c @") nil)

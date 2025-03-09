@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250309.1151>
+;; Version: <20250309.1748>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250309.1151>"
+(defconst lvn--emacs-version "<20250309.1748>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -4563,11 +4563,7 @@ mouse-3: go to end") "]")))
   (with-eval-after-load 'helm-autoloads
 
     ;; Keybinding to quickly jump to a symbol in buffer.
-    (global-set-key [remap imenu] #'helm-imenu)
-
-    ;; Helm Imenu tag selection across all buffers (with the same mode).
-    (global-set-key (kbd "C-c i") #'helm-imenu-in-all-buffers)
-  )
+    (global-set-key [remap imenu] #'helm-imenu))
 
   ;; Helm interface for Imenu.
   (with-eval-after-load 'helm-imenu
@@ -4750,10 +4746,10 @@ mouse-3: go to end") "]")))
     (define-key hs-minor-mode-map (kbd "C-c f S") #'hs-show-all)
 
     ;; Alternative numpad shortcuts.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; C--
-    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; C-+
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)    ;; C-S--
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)    ;; C-S-+
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; `C--'.
+    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; `C-+'.
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)    ;; `C-S--'.
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)    ;; `C-S-+'.
 
     ;; Remove default `C-c @' prefix.
     (define-key hs-minor-mode-map (kbd "C-c @") nil)
