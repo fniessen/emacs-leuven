@@ -14,7 +14,9 @@
 
 See http://www.randomsample.de:4457/waterfall.
 
-* Header
+* Library
+
+** Header
 
 #+begin_src emacs-lisp
 ;;;; org-test-fni.el --- Extra tests for Org mode
@@ -58,7 +60,7 @@ See http://www.randomsample.de:4457/waterfall.
 (require 'ox)
 #+end_src
 
-* Helper functions
+** Helper functions
 
 #+begin_src emacs-lisp
 ;;; Functions for writing tests.
@@ -126,7 +128,7 @@ For inspiration:
     (when (get-buffer name) (kill-buffer name))))
 #+end_src
 
-* Tests
+** Tests
 
 #+begin_src emacs-lisp
 ;;; Internal tests.
@@ -178,10 +180,27 @@ Files to test:
 ;; (ert 'test-org-export/html-ert-refcard-file)
 #+end_src
 
-* Footer
+** Footer
 
 #+begin_src emacs-lisp
 (provide 'org-test-fni)
 
 ;;; org-test-fni.el ends here
+#+end_src
+
+* Shell integration
+
+#+begin_src shell :tangle no
+# Run org-mode tests using Emacs batch mode.
+org_test() {
+    local tmpdir="/tmp/tmp-orgtest"
+    (
+        cd "$HOME"/Public/Repositories/org-mode" \
+            || { echo "Error: Could not change directory to $HOME/Public/Repositories/org-mode"; return 1; }
+        mkdir "$tmpdir" 2> /dev/null \
+            || { echo "Error: Could not create temporary directory"; return 1; } # TMPDIR must exist!
+        TMPDIR="$tmpdir" \
+            emacs -Q --batch -L lisp/ -L testing/ -l org-test.el --eval '(setq org-confirm-babel-evaluate nil)' -f org-test-run-batch-tests || { echo "Error: Failed to run org-mode tests"; return 1; }
+    )
+}
 #+end_src
