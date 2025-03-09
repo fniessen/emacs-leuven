@@ -2467,42 +2467,42 @@ such a background behind or underneath the text.  Think of a marker pen
 (highlighter) instead: the highlighting goes on top.
 #+end_note
 
-#+begin_src emacs-lisp
-  ;; ;; Highlight symbols, selections, enclosing parens and more.
-  ;; (with-eval-after-load 'hl-anything-autoloads
-  ;;
-  ;;   (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
-  ;;   ;; See the very good hl-paren-mode.
-  ;;
-  ;;   ;; Don't save and restore highlight.
-  ;;   (setq hl-highlight-save-file nil)
-  ;;
-  ;;   ;; Emulation of Vim's `*' search.
-  ;;   (global-set-key (kbd "C-*")      #'hl-highlight-thingatpt-global)
-  ;;   (global-set-key (kbd "C-<f4>")   #'hl-find-next-thing)
-  ;;   (global-set-key (kbd "S-<f4>")   #'hl-find-prev-thing)
-  ;;   (global-set-key (kbd "C-M-*")    #'hl-unhighlight-all-global))
-  ;;
-  ;;   ;; ;; Find Next / Move to Next Occurrence.
-  ;;   ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
-  ;;   ;;
-  ;;   ;; ;; Find Previous / Move to Previous Occurrence.
-  ;;   ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
-  ;;   ;;
-  ;;   ;; ;; Find Word at Caret.
-  ;;   ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
-  ;;   ;;
-  ;;   ;; ;; Highlight Usages in File.
-  ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
+#+begin_src emacs-lisp :tangle no
+;; ;; Highlight symbols, selections, enclosing parens and more.
+;; (with-eval-after-load 'hl-anything-autoloads
+;;
+;;   (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
+;;   ;; See the very good hl-paren-mode.
+;;
+;;   ;; Don't save and restore highlight.
+;;   (setq hl-highlight-save-file nil)
+;;
+;;   ;; Emulation of Vim's `*' search.
+;;   (global-set-key (kbd "C-*")      #'hl-highlight-thingatpt-global)
+;;   (global-set-key (kbd "C-<f4>")   #'hl-find-next-thing)
+;;   (global-set-key (kbd "S-<f4>")   #'hl-find-prev-thing)
+;;   (global-set-key (kbd "C-M-*")    #'hl-unhighlight-all-global))
+;;
+;;   ;; ;; Find Next / Move to Next Occurrence.
+;;   ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
+;;   ;;
+;;   ;; ;; Find Previous / Move to Previous Occurrence.
+;;   ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
+;;   ;;
+;;   ;; ;; Find Word at Caret.
+;;   ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
+;;   ;;
+;;   ;; ;; Highlight Usages in File.
+;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
+#+end_src
 
-
-  (when (try-require 'symbol-overlay) ; XXX
-    (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
-    (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
-    (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
-    ;; (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
-    ;; (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
-    )
+#+begin_src emacs-lisp :tangle no
+;; (when (try-require 'symbol-overlay)
+;;   (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
+;;   (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
+;;   (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
+;;   (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+;;   (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all))
 #+end_src
 
 Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
@@ -5418,16 +5418,10 @@ you were.
   ;; List Git files.
   (with-eval-after-load 'helm-ls-git-autoloads
 
-    ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
-    (global-set-key (kbd "M-+")    #'helm-ls-git-ls)
-    ;; (global-set-key (kbd "<S-f3>") #'helm-ls-git-ls)
-
     ;; Browse files and see status of project with its VCS.
-    (global-set-key (kbd "C-x C-d") #'helm-browse-project))
+    (global-set-key (kbd "C-x g") #'helm-browse-project) ; uses `helm-ls-git'.
+    (global-set-key (kbd "<S-f3>") #'helm-browse-project))
 #+end_src
-
-See http://edvorg.com/edvorg/emacs-configs/blob/master/init.d/init-helm.el for
-much more configs with Git...
 
 **** Imenu
 
@@ -8479,22 +8473,35 @@ Keyboard shortcuts:
 
     (advice-add 'goto-line :after #'lvn--expand-after-goto)
     (advice-add 'xref-find-definitions :after #'lvn--expand-after-goto)
+#+end_src
 
-    ;; Change those really awkward key bindings with `@' in the middle.
+| Command     | Description                          |
+|-------------+--------------------------------------|
+| C-c @ C-h   | Hide a block / Collapse current fold |
+| C-c @ C-s   | Show a block / Expand current fold   |
+| C-c @ C-M-h | Hide all blocks / Collapse all folds |
+| C-c @ C-M-s | Show all blocks / Expand all folds   |
 
-    ;; Folding / Expand block.
-    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
-                                        ; `C-c @ C-s' (expand current fold)
-    ;; Folding / Collapse block.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
-                                        ; `C-c @ C-h' (collapse current fold)
-    ;; Folding / Expand All.
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)
-                                        ; `C-c @ C-M-s' (expand all folds)
-    ;; Folding / Collapse All.
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
-                                        ; `C-c @ C-M-h' (collapse all folds)
+Change those really awkward key bindings with ~@~ in the middle:
 
+#+begin_src emacs-lisp
+    ;; Define prefix `C-c f' for folding commands.
+    (define-key hs-minor-mode-map (kbd "C-c f h") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C-c f s") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-c f H") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "C-c f S") #'hs-show-all)
+
+    ;; Alternative numpad shortcuts.
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; C--
+    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; C-+
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)    ;; C-S--
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)    ;; C-S-+
+
+    ;; Remove default `C-c @' prefix.
+    (define-key hs-minor-mode-map (kbd "C-c @") nil)
+#+end_src
+
+#+begin_src emacs-lisp
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
       :group 'hideshow
@@ -9803,7 +9810,7 @@ thereafter.
   (with-eval-after-load 'grep
 
     ;; Run `grep' via `find', with user-friendly interface.
-    (global-set-key (kbd "C-c f 3") #'rgrep)
+    (global-set-key (kbd "C-c 3") #'rgrep)
 
     ;; Ignore case distinctions in the default `grep' command.
     (grep-apply-setting 'grep-command "grep -i -H -n -e ")
@@ -9812,11 +9819,6 @@ thereafter.
     (grep-apply-setting 'grep-use-null-device nil)
                                         ; Not necessary if the `grep' program
                                         ; used supports the `-H' option.
-
-    ;; For Windows.
-    (when lvn--win32-p
-      ;; Default find command for `M-x grep-find'.
-      (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 #+end_src
 
 To exclude files from ~lgrep~ and ~rgrep~ results (if you use ~rgrep~ instead of
@@ -10515,15 +10517,31 @@ can use the following keys to navigate historic versions of the file:
     (global-set-key (kbd "C-x v t") #'git-timemachine))
 #+end_src
 
+**** Git Messenger integration
+
+The command ~git-messenger:popup-message~ allows for an instant *pop-up displaying
+the last commit message* affecting the current line in a Git-tracked file,
+helping with code review and debugging.
+
+The keybinding is set to ~C-x v p~ (for "popup").
+
 #+begin_src emacs-lisp
-  ;; Pop up last commit information of current line.
-  (with-eval-after-load 'git-messenger-autoloads
+  ;; Show the last commit information for the current line.
+  (with-eval-after-load 'git-messenger
+    ;; Keybinding.
+    (global-set-key (kbd "C-x v p") #'git-messenger:popup-message)
+                                        ; 'p' for "popup".
 
-    (global-set-key (kbd "C-x v p") #'git-messenger:popup-message) ; `C-h g'.
-
-    ;; Pop up commit ID and author name too.
+    ;; Show commit ID, author and date.
     (setq git-messenger:show-detail t))
 #+end_src
+
+Shortcuts in the popup (once displayed):
+
+- ~d~: Display the commit diff.
+- ~c~: Copy the commit hash to the clipboard.
+- ~,~: Go to the previous commit in the line's history.
+- ~q~: Close the popup.
 
 *** VC Directory Mode
 
@@ -12840,7 +12858,7 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 #+begin_src emacs-lisp
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c f 1") #'find-name-dired)
+    (global-set-key (kbd "C-c 1") #'find-name-dired)
                                         ; Case insensitive if
                                         ; `read-file-name-completion-ignore-case'
                                         ; is non-nil.
@@ -12850,7 +12868,7 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 
     ;; Search for files with contents matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c f 2") #'find-grep-dired)
+    (global-set-key (kbd "C-c 2") #'find-grep-dired)
 #+end_src
 
 ** Editing the Dired Buffer

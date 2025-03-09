@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250306.2134>
+;; Version: <20250309.1151>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250306.2134>"
+(defconst lvn--emacs-version "<20250309.1151>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -1330,42 +1330,6 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; ;; Enable Hi Lock mode for all buffers.
   ;; (global-hi-lock-mode 1)
-
-  ;; ;; Highlight symbols, selections, enclosing parens and more.
-  ;; (with-eval-after-load 'hl-anything-autoloads
-  ;;
-  ;;   (setq hl-highlight-background-colors '("#C7FF85" "#FFFA85" "#85FFFA" "#FCACFF"))
-  ;;   ;; See the very good hl-paren-mode.
-  ;;
-  ;;   ;; Don't save and restore highlight.
-  ;;   (setq hl-highlight-save-file nil)
-  ;;
-  ;;   ;; Emulation of Vim's `*' search.
-  ;;   (global-set-key (kbd "C-*")      #'hl-highlight-thingatpt-global)
-  ;;   (global-set-key (kbd "C-<f4>")   #'hl-find-next-thing)
-  ;;   (global-set-key (kbd "S-<f4>")   #'hl-find-prev-thing)
-  ;;   (global-set-key (kbd "C-M-*")    #'hl-unhighlight-all-global))
-  ;;
-  ;;   ;; ;; Find Next / Move to Next Occurrence.
-  ;;   ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
-  ;;   ;;
-  ;;   ;; ;; Find Previous / Move to Previous Occurrence.
-  ;;   ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
-  ;;   ;;
-  ;;   ;; ;; Find Word at Caret.
-  ;;   ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
-  ;;   ;;
-  ;;   ;; ;; Highlight Usages in File.
-  ;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
-
-
-  (when (try-require 'symbol-overlay) ; XXX
-    (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
-    (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
-    (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
-    ;; (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
-    ;; (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)
-    )
 
   ;; Automatic highlighting occurrences of the current symbol under cursor.
   (with-eval-after-load 'auto-highlight-symbol-autoloads
@@ -2969,12 +2933,9 @@ in the current buffer."
   ;; List Git files.
   (with-eval-after-load 'helm-ls-git-autoloads
 
-    ;; (global-set-key (kbd "C-c C-f") #'helm-ls-git-ls) ; used by Org!
-    (global-set-key (kbd "M-+")    #'helm-ls-git-ls)
-    ;; (global-set-key (kbd "<S-f3>") #'helm-ls-git-ls)
-
     ;; Browse files and see status of project with its VCS.
-    (global-set-key (kbd "C-x C-d") #'helm-browse-project))
+    (global-set-key (kbd "C-x g") #'helm-browse-project) ; uses `helm-ls-git'.
+    (global-set-key (kbd "<S-f3>") #'helm-browse-project))
 
   ;; Emacs Helm Interface for quick Google searches
   (with-eval-after-load 'helm-google-autoloads
@@ -4782,20 +4743,20 @@ mouse-3: go to end") "]")))
     (advice-add 'goto-line :after #'lvn--expand-after-goto)
     (advice-add 'xref-find-definitions :after #'lvn--expand-after-goto)
 
-    ;; Change those really awkward key bindings with `@' in the middle.
+    ;; Define prefix `C-c f' for folding commands.
+    (define-key hs-minor-mode-map (kbd "C-c f h") #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C-c f s") #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-c f H") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "C-c f S") #'hs-show-all)
 
-    ;; Folding / Expand block.
-    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
-                                        ; `C-c @ C-s' (expand current fold)
-    ;; Folding / Collapse block.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
-                                        ; `C-c @ C-h' (collapse current fold)
-    ;; Folding / Expand All.
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)
-                                        ; `C-c @ C-M-s' (expand all folds)
-    ;; Folding / Collapse All.
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)
-                                        ; `C-c @ C-M-h' (collapse all folds)
+    ;; Alternative numpad shortcuts.
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; C--
+    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; C-+
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)    ;; C-S--
+    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)    ;; C-S-+
+
+    ;; Remove default `C-c @' prefix.
+    (define-key hs-minor-mode-map (kbd "C-c @") nil)
 
     (defcustom hs-face 'hs-face
       "*Specify the face to to use for the hidden region indicator"
@@ -5313,7 +5274,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   (with-eval-after-load 'grep
 
     ;; Run `grep' via `find', with user-friendly interface.
-    (global-set-key (kbd "C-c f 3") #'rgrep)
+    (global-set-key (kbd "C-c 3") #'rgrep)
 
     ;; Ignore case distinctions in the default `grep' command.
     (grep-apply-setting 'grep-command "grep -i -H -n -e ")
@@ -5322,11 +5283,6 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     (grep-apply-setting 'grep-use-null-device nil)
                                         ; Not necessary if the `grep' program
                                         ; used supports the `-H' option.
-
-    ;; For Windows.
-    (when lvn--win32-p
-      ;; Default find command for `M-x grep-find'.
-      (grep-apply-setting 'grep-find-command '("findstr /sn *" . 13)))
 
   (with-eval-after-load 'grep
     ;; Files to ignore for MEPLA.
@@ -5638,12 +5594,13 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (global-set-key (kbd "C-x v t") #'git-timemachine))
 
-  ;; Pop up last commit information of current line.
-  (with-eval-after-load 'git-messenger-autoloads
+  ;; Show the last commit information for the current line.
+  (with-eval-after-load 'git-messenger
+    ;; Keybinding.
+    (global-set-key (kbd "C-x v p") #'git-messenger:popup-message)
+                                        ; 'p' for "popup".
 
-    (global-set-key (kbd "C-x v p") #'git-messenger:popup-message) ; `C-h g'.
-
-    ;; Pop up commit ID and author name too.
+    ;; Show commit ID, author and date.
     (setq git-messenger:show-detail t))
 
 ;;*** 28.1.9 (info "(emacs)VC Directory Mode")
@@ -6547,7 +6504,7 @@ This example lists Azerty layout second row keys."
 
     ;; Search for files with names matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c f 1") #'find-name-dired)
+    (global-set-key (kbd "C-c 1") #'find-name-dired)
                                         ; Case insensitive if
                                         ; `read-file-name-completion-ignore-case'
                                         ; is non-nil.
@@ -6557,7 +6514,7 @@ This example lists Azerty layout second row keys."
 
     ;; Search for files with contents matching a wild card pattern and Dired the
     ;; output.
-    (global-set-key (kbd "C-c f 2") #'find-grep-dired)
+    (global-set-key (kbd "C-c 2") #'find-grep-dired)
 
 ;;** (info "(emacs)Wdired")
 
