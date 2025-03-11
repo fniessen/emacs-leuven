@@ -5,6 +5,8 @@
 
 ** Configuration de base et personnalisation
 
+*** TODO Activer la correction orthographique (Ispell) dans les buffers Org
+
 *** TODO Remove obsolete variables
 
 | Item                                | Type     | Status          | Replacement                                                |
@@ -204,6 +206,7 @@ editor='emacsclient' (sans le -n) dans .gitconfig
   ;;       'leuven--org-latex-format-inlinetask)
 #+end_src
 
+*** MAYB Replace 'diminish' by 'delight'
 
 ** Gestion des packages
 
@@ -250,6 +253,8 @@ editor='emacsclient' (sans le -n) dans .gitconfig
 - [ ] dired+
 - [ ] dired-sort-map
 - [ ] hl-tags-mode
+
+*** TODO Fixer le problème avec l'indentation (cond mal fermé) dans Powerline
 
 *** TODO Install the 'format-all' package for Emacs to format code automatically
 
