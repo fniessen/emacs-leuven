@@ -381,6 +381,7 @@ I still have to sort them out, by mode (when applicable).
 | C-c .         | leuven-insert-current-date                     |
 | C-c C-c       | tidy-buffer                                    |
 | C-c C-x nil   |                                                |
+| C-c b         | boxquote-region                                |
 | C-c d l       | dictionary-lookup-definition                   |
 | C-c d m       | dictionary-match-words                         |
 | C-c d s       | dictionary-search                              |
@@ -389,7 +390,6 @@ I still have to sort them out, by mode (when applicable).
 | C-c g s       | google                                         |
 | C-c g w       | leuven-google-search-word-at-point             |
 | C-c n         |                                                |
-| C-c q         | boxquote-region                                |
 | C-c s         | yas-insert-snippet                             |
 | C-c t         | toggle-truncate-lines                          |
 | C-c T         | multi-term                                     |
@@ -400,7 +400,7 @@ I still have to sort them out, by mode (when applicable).
 | C-S-p         | hlt-previous-highlight                         |
 | C-x b         | helm-buffers-list                              |
 | C-x C-b       | electric-buffer-list                           |
-| C-x C-b       | ibuffer                                        |
+| C-x C-b       | helm-mini                                      |
 | C-x p         | proced                                         |
 | M-o           |                                                |
 | M-p           | ps-print-buffer-with-faces                     |
