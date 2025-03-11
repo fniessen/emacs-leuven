@@ -2781,6 +2781,7 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
   ;; Unclutter the mode line.
   (with-eval-after-load 'diminish-autoloads
     (with-eval-after-load 'abbrev       (diminish 'abbrev-mode " Ab"))
+    (with-eval-after-load 'anzu         (diminish 'anzu-mode))
     (with-eval-after-load 'back-button  (diminish 'back-button-mode))
     (with-eval-after-load 'volatile-highlights (diminish 'volatile-highlights-mode))
     (with-eval-after-load 'checkdoc     (diminish 'checkdoc-minor-mode " Cd"))

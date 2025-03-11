@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250309.1748>
+;; Version: <20250311.0951>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250309.1748>"
+(defconst lvn--emacs-version "<20250311.0951>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -1482,6 +1482,7 @@ Should be selected from `fringe-bitmaps'.")
   ;; Unclutter the mode line.
   (with-eval-after-load 'diminish-autoloads
     (with-eval-after-load 'abbrev       (diminish 'abbrev-mode " Ab"))
+    (with-eval-after-load 'anzu         (diminish 'anzu-mode))
     (with-eval-after-load 'back-button  (diminish 'back-button-mode))
     (with-eval-after-load 'volatile-highlights (diminish 'volatile-highlights-mode))
     (with-eval-after-load 'checkdoc     (diminish 'checkdoc-minor-mode " Cd"))
