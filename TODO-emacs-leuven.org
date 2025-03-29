@@ -11,18 +11,18 @@
 
 | Item                                | Type     | Status          | Replacement                                                |
 |-------------------------------------+----------+-----------------+------------------------------------------------------------|
+| menu-bar-enable-clipboard           | Function | Obsolete (23.2) | Remove; clipboard is default                               |
 | garbage-collection-messages         | Variable | Obsolete (24.4) | Remove; use after-gc-hook if needed                        |
-| resize-mini-windows                 | Variable | Obsolete (27.1) | Remove; use resize-mini-frames if graphical                |
 | apropos-do-all                      | Variable | Obsolete (24.4) | Remove; customize specific apropos commands                |
+| comint-use-prompt-regexp            | Variable | Obsolete (24.4) | Not set; rely on comint-prompt-read-only                   |
+| ad-disable-advice, ad-update        | Function | Obsolete (24.4) | Remove; already using advice-add                           |
 | save-interprogram-paste-before-kill | Variable | Obsolete (25.1) | Remove; default behavior now                               |
 | yank-pop-change-selection           | Variable | Obsolete (25.1) | Remove (commented out); clipboard handling is automatic    |
-| comint-use-prompt-regexp            | Variable | Obsolete (24.4) | Not set; rely on comint-prompt-read-only                   |
-| w32-quote-process-args              | Variable | Obsolete (27.1) | Remove; argument quoting is internal                       |
-| menu-bar-enable-clipboard           | Function | Obsolete (23.2) | Remove; clipboard is default                               |
-| w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start" |
 | find-tag-default                    | Function | Obsolete (25.1) | Use symbol-at-point or thing-at-point 'symbol              |
+| resize-mini-windows                 | Variable | Obsolete (27.1) | Remove; use resize-mini-frames if graphical                |
+| w32-quote-process-args              | Variable | Obsolete (27.1) | Remove; argument quoting is internal                       |
+| w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start" |
 | w32-register-hot-key                | Function | Obsolete (27.1) | Remove; handle via keybindings or external tools           |
-| ad-disable-advice, ad-update        | Function | Obsolete (24.4) | Remove; already using advice-add                           |
 
 *** TODO Remove obsolete variables and functions for Orgstruct
 
@@ -340,6 +340,7 @@ needs.
 
 ** Fonctionnalités spécifiques et personnalisation avancée
 
+*** TODO Check Function to apply org agenda custom views on current buffer / current folder / current folder + subdirs / all agenda files
 *** TODO Écrire une fonction qui ajoute des demi-espaces fines pour Denis
 
 #+begin_src emacs-lisp
