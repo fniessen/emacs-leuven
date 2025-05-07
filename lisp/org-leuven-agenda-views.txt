@@ -23,8 +23,6 @@ deadline and scheduled for what they're meant.
 (setq org-agenda-custom-commands nil)
 #+end_src
 
-* Priorities or Must-Do Today
-
 * Key bindings
 
 #+begin_src emacs-lisp
