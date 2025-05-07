@@ -208,6 +208,8 @@ editor='emacsclient' (sans le -n) dans .gitconfig
 
 *** MAYB Replace 'diminish' by 'delight'
 
+*** MAYB Read infos from https://github.com/thinkhuman/writingwithemacs
+
 ** Gestion des packages
 
 *** TODO Rajouter / retirer des packages dans Emacs-Leuven
@@ -341,6 +343,19 @@ needs.
 ** Fonctionnalités spécifiques et personnalisation avancée
 
 *** TODO Check Function to apply org agenda custom views on current buffer / current folder / current folder + subdirs / all agenda files
+
+*** TODO Faire fonction ELisp pour setter org-agenda-files à tous les TODO.org des racines des repos dotfiles
+
+Nouvelle convention pour ne checker les tâches que dans les fichiers TODO-xxx.org ?
+
+#+begin_src emacs-lisp
+(setq org-agenda-files
+      (directory-files-recursively "~/.dotfiles" "TODO.*\\.org$"))
+
+(setq org-agenda-files
+      (directory-files-recursively "~/.dotfiles" "TODO-home\\.org$"))
+#+end_src
+
 *** TODO Écrire une fonction qui ajoute des demi-espaces fines pour Denis
 
 #+begin_src emacs-lisp
