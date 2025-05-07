@@ -2248,6 +2248,28 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
 
 ** Adapted From Bastien
 
+#+begin_src emacs-lisp :tangle no
+(defun lvn-make-org-agenda-daily-review (key description header-suffix tag-filter)
+  "Create a daily review agenda command with KEY, DESCRIPTION, HEADER-SUFFIX, and TAG-FILTER."
+  (list key description
+        (append
+         `((agenda ""
+                   ((org-agenda-span 'week)
+                    (org-agenda-entry-types '(:deadline :scheduled))
+                    (org-agenda-prefix-format "  %?-12t% s")
+                    (org-agenda-overriding-header ,(concat "1. Scheduled/Deadline this week (" header-suffix ")"))))
+           (tags-todo "TODO={STRT\\|NEXT}"
+                      ((org-agenda-overriding-header ,(concat "2. Tasks with STRT or NEXT (" header-suffix ")")))))
+         (when tag-filter
+           `((org-agenda-tag-filter-preset ,tag-filter))))))
+
+(dolist (cmd '(("@d" "Daily review (Personal focus)" "no work" '("-work"))
+               ("$d" "Daily review (Work focus)" "work" '("+work"))
+               ("!d" "Daily review (All)" "all" nil)))
+  (add-to-list 'org-agenda-custom-commands
+               (apply #'lvn-make-org-agenda-daily-review cmd)))
+#+end_src
+
 #+begin_src emacs-lisp
 (add-to-list 'org-agenda-custom-commands
              `("@d" "Daily review (Personal focus)"
@@ -2296,8 +2318,8 @@ individual blocks does not work reliably...
 
 #+begin_src emacs-lisp
 (add-to-list 'org-agenda-custom-commands
-             `("$w" "Weekly routine"
-               (;; Weekly routine #1.
+             `("$w" "Weekly review"
+               (;; Weekly review #1.
                 (agenda ""
                         ((org-deadline-warning-days 30)))
                 (todo "TODO"
@@ -2310,8 +2332,8 @@ individual blocks does not work reliably...
                ((org-agenda-tag-filter-preset '("+work")))))
 
 (add-to-list 'org-agenda-custom-commands
-             `("!w" "Weekly routine"
-               (;; Weekly routine #1.
+             `("!w" "Weekly review"
+               (;; Weekly review #1.
                 (agenda ""
                         ((org-deadline-warning-days 30)))
                 (todo "TODO"

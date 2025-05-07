@@ -1026,8 +1026,8 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
                ))
 
 (add-to-list 'org-agenda-custom-commands
-             `("$w" "Weekly routine"
-               (;; Weekly routine #1.
+             `("$w" "Weekly review"
+               (;; Weekly review #1.
                 (agenda ""
                         ((org-deadline-warning-days 30)))
                 (todo "TODO"
@@ -1040,8 +1040,8 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
                ((org-agenda-tag-filter-preset '("+work")))))
 
 (add-to-list 'org-agenda-custom-commands
-             `("!w" "Weekly routine"
-               (;; Weekly routine #1.
+             `("!w" "Weekly review"
+               (;; Weekly review #1.
                 (agenda ""
                         ((org-deadline-warning-days 30)))
                 (todo "TODO"
