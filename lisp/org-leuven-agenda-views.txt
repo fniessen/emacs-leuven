@@ -23,645 +23,6 @@ deadline and scheduled for what they're meant.
 (setq org-agenda-custom-commands nil)
 #+end_src
 
-* NEW views and thoughts
-
-I do have an Org mode file full of tasks, in the statusses:
-
-"MAYB"
-"TODO"
-"NEXT"
-"STRT"
-"WAIT"
-"DONE"
-"CANX"
-
-Some of them have:
-
-- a scheduled date
-- a deadline date
-- both
-- no date at all
-
-Some of them have a priority #A cookie; others a #B or a #C or nothing at all.
-
-** Doc
-
-- ~tags-todo~ ::
-     Applies only to *TOOD headlines* (headlines marked with TODO keywords; e.g.,
-     ~TODO~, ~DONE~).
-
-- ~tags "*"~ (with a star) ::
-      Applies to *any headline*, regardless of TODO status.
-
-#+begin_note
-You must use ~tags-todo~ to combine TODO keyword and tag filtering properly.
-#+end_note
-
-** Priority cookies
-
-Priority cookies in Org mode are primarily used for marking the *importance* of
-tasks rather than their urgency. The priority system in Org mode consists of
-three levels by default:
-
-- A (HIGHEST),
-- B (Medium), and
-- C (lowest).
-
-These priorities help you distinguish the relative importance of tasks,
-especially when viewing them in the agenda.
-
-It's important to note that a task without a priority cookie is equivalent to
-a task with priority B.
-
-** Urgency
-
-Use deadlines or tags
-
-** Display all TODO items from the current directory
-
-The function ~lvn-org-git-root-todo~ will display your tasks from the Git root
-directory (including from local files =TODO.org= and =BUGS.org=, for example).
-
-#+begin_src emacs-lisp
-(defun lvn-org-git-root-todo ()
-  "Display an Org agenda view of unscheduled TODO items from the Git root directory."
-  (interactive)
-  (let* ((git-root (vc-git-root default-directory))
-         (org-files (when git-root
-                      (directory-files-recursively
-                       git-root
-                       "\\.\\(org\\|txt\\)$"))))
-    (if git-root
-        (progn
-          (let ((org-agenda-files org-files)
-                (org-agenda-sorting-strategy '(todo-state-up priority-down))
-                (org-agenda-overriding-header
-                 (format "Unscheduled TODO items in directory: %s" git-root))
-                (org-agenda-sticky nil)
-                (org-agenda-skip-scheduled-if-done t)
-                (org-agenda-skip-deadline-if-done t)
-                (org-agenda-todo-ignore-scheduled 'future))
-            (message "[%s...]" org-agenda-overriding-header)
-            (org-todo-list)))
-      (message "Error: Not in a Git repository"))))
-
-;; Bind to <M-S-f6>.
-(global-set-key (kbd "<M-S-f6>") #'lvn-org-git-root-todo)
-#+end_src
-
-** Custom agenda views based on directory scope
-
-The function ~lvn-org-agenda-for-current-buffer~ adjusts the agenda view based on
-the scope of Org files in the current directory and its subdirectories.
-
-#+begin_src emacs-lisp
-(defun lvn-org-agenda-for-current-buffer (&optional arg)
-  "Open the Org mode agenda with entries restricted based on ARG.
-ARG determines the scope:
-- No ARG (nil): Restrict to the current buffer's file.
-- Single C-u (4): Restrict to the current buffer's file and all .org files
-  in the current directory and its subdirectories.
-- Double C-u (16): Restrict to the current buffer's file, all .org files,
-  and all .txt files in the current directory and its subdirectories.
-If the buffer is in a version-controlled project (e.g., vc-dir),
-use the project's root directory instead of the current directory."
-  (interactive "P")
-  (let* ((current-dir
-          (or (when (buffer-file-name) (file-name-directory (buffer-file-name)))
-                                        ; File's directory.
-              (when (vc-root-dir) (vc-root-dir))))
-                                        ; Git root directory.
-         (org-agenda-files
-          (cond
-           ((not current-dir)
-            (error "Cannot determine a directory for this buffer"))
-           ;; No argument: Restrict to the current buffer's file.
-           ((not arg)
-            (list (buffer-file-name)))
-           ;; Single C-u: Current buffer + .org files in current dir/subdirs.
-           ((equal arg '(4))
-            (delete-dups
-             (append (when (buffer-file-name) (list (buffer-file-name)))
-                     (directory-files-recursively current-dir ".*\\.org$"))))
-           ;; Double C-u: Current buffer + .org and .txt files in current dir/subdirs.
-           ((equal arg '(16))
-            (delete-dups
-             (append (when (buffer-file-name) (list (buffer-file-name)))
-                     (directory-files-recursively current-dir ".*\\(\\.org\\|\\.txt\\)$"))))))
-         (org-default-notes-file nil))  ; Disable default notes file temporarily
-    (org-agenda))                       ; Open the standard agenda view.
-    ;; Uncomment below line if custom agenda view is needed:
-    ;; (org-agenda nil "f.")               ; Generate a custom Org agenda view.
-)
-#+end_src
-
-Usage:
-- ~M-x lvn-org-agenda-for-current-buffer~ → Agenda for current buffer only.
-- ~C-u M-x lvn-org-agenda-for-current-buffer~ → Agenda for current buffer + all
-  =.org= files in the current directory and subdirectories.
-- ~C-u C-u M-x lvn-org-agenda-for-current-buffer~ → Agenda for current
-  buffer + all =.org= and =.txt= files in the current directory and subdirectories.
-
-This way, you can dynamically adjust the scope of the agenda view based on the
-level of the universal argument.
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "<S-f6>")
-                (lambda ()
-                  (interactive)
-                  (lvn-org-agenda-for-current-buffer nil)))
-                                        ; Without arg: current buffer only.
-
-(global-set-key (kbd "<C-f6>")
-                (lambda ()
-                  (interactive)
-                  (lvn-org-agenda-for-current-buffer '(4))))
-                                        ; With C-u: current buffer + .org files.
-
-(global-set-key (kbd "<M-f6>")
-                (lambda ()
-                  (interactive)
-                  (lvn-org-agenda-for-current-buffer '(16))))
-                                        ; With C-u C-u: current buffer + .org + .txt files.
-#+end_src
-
-** Custom agenda views in Org mode
-
-#+begin_src emacs-lisp
-(add-to-list 'org-agenda-custom-commands
-             `("d" "Dashboard" ; Shows all tasks...
-               ;; High Priority Tasks.
-               ((tags-todo "+PRIORITY={A}"
-                           ((org-agenda-overriding-header "High Priority Tasks:")))
-                ;; Tasks Due This Week.
-                (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
-                           ((org-agenda-overriding-header "Tasks Due This Week:")))
-                ;; Scheduled Tasks (Next 14 Days).
-                (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
-                           ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days):")
-                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX") 'deadline))))
-                ;; Tasks with Future Deadlines.
-                (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY={A}"
-                           ((org-agenda-overriding-header "Tasks with Future Deadlines:")
-                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX")))
-                            (org-agenda-sorting-strategy '(deadline-up))))
-                ;; Task states: WAIT, STRT, NEXT, TODO, MAYB.
-                ,@(mapcar (lambda (state)
-                            `(todo ,state
-                                   ((org-agenda-overriding-header (concat ,state " Tasks:"))
-                                    (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
-                                                                   (org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))))
-                          '("WAIT" "STRT" "NEXT" "TODO" "MAYB"))
-                ;; Completed or Cancelled Tasks (Inactive tasks with clock entries this week).
-                (todo "DONE|CANX"
-                      ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
-                       ;; Show tasks with clock entries in the current week.
-                       (org-agenda-log-mode-items '(clock)) ; Show clocked entries.
-                       (org-agenda-span 'week)              ; Filter to current week.
-                       (org-agenda-skip-function
-                        '(org-agenda-skip-entry-if 'notregexp "CLOCK:")) ; Only tasks with clock entries.
-                       ;; (org-agenda-skip-function
-                       ;;  '(org-agenda-skip-entry-if 'notregexp "CLOSED:")) ; Ensure the task is closed (completed or cancelled).
-                       )))
-               ;; ;; Compact blocks.
-               ;; ((org-agenda-compact-blocks t))
-               ))
-#+end_src
-
-#+begin_src emacs-lisp
-(setq org-agenda-custom-commands
-      '(("d" "Dashboard"
-         ((tags-todo "+PRIORITY={A}"
-                     ((org-agenda-overriding-header "High Priority Tasks")))
-          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
-                     ((org-agenda-overriding-header "Tasks Due This Week")))
-          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
-                     ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days)")))
-          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY={A}"
-                     ((org-agenda-overriding-header "Future Deadlines")
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))  ; Skip tasks with SCHEDULED property.
-                      (org-agenda-sorting-strategy '(deadline-up))))
-          (todo "DONE|CANX"
-                ((org-agenda-overriding-header "Completed or Cancelled Tasks")
-                 (org-agenda-span 'week))))))) ; OK -- No duplicates!!!
-
-(setq org-agenda-custom-commands
-      '(("d" "Dashboard"
-         ((tags-todo "+PRIORITY={A}"
-                     ((org-agenda-overriding-header "High Priority Tasks")))
-          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
-                     ((org-agenda-overriding-header "Tasks Due This Week")))
-          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
-                     ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days)")))
-          (tags-todo "+DEADLINE>\"<+7d>\"-SCHEDULED>\"<+14d>\"-PRIORITY={A}" ; Exclude tasks scheduled within the next 14 days.
-                     ((org-agenda-overriding-header "Future Deadlines")
-                      (org-agenda-sorting-strategy '(deadline-up))))
-          (todo "DONE|CANX"
-                ((org-agenda-overriding-header "Completed or Cancelled Tasks")
-                 (org-agenda-span 'week))))))) ; NOK -- Duplicates!!!
-#+end_src
-
-#+begin_src emacs-lisp
-(setq org-agenda-custom-commands
-      '(("h" "High priority tasks"
-         ((tags-todo "+PRIORITY={A}-SCHEDULED>=\"<today>\"-DEADLINE>=\"<today>\""
-                     ((org-agenda-overriding-header "High Priority Tasks")
-                      (org-agenda-skip-function
-                       '(org-agenda-skip-entry-if 'scheduled 'deadline))))
-          (tags-todo "-SCHEDULED>=\"<today>\"-DEADLINE>=\"<today>\""
-                     ((org-agenda-overriding-header "Other Current Tasks")
-                      (org-agenda-skip-function
-                       '(org-agenda-skip-entry-if 'scheduled 'deadline)))))
-         nil)))
-#+end_src
-
-#+begin_src emacs-lisp
-(setq org-agenda-custom-commands
-      '(("p" . "Priority views")
-        ("pa" "A items" tags-todo "+PRIORITY={A}")
-        ("pb" "B items" tags-todo "+PRIORITY={B}")
-        ("pc" "C items" tags-todo "+PRIORITY={C}")))
-#+end_src
-
-** Next actions
-
-The next action tasks are either:
-- high priority,
-- due soon (e.g., within the next 7 days),
-- scheduled for the near future (e.g., within the next 14 days), or
-- don't have specific dates but are marked as STRT or TODO,
-
-making them potential next actions.
-
-** Weekly review
-
-MAYB tasks are not shown here... Nor future schedules or deadlines
-
-#+begin_src emacs-lisp
-(add-to-list 'org-agenda-custom-commands
-             '("r" "Weekly Review Cgpt"
-               ((tags-todo "+PRIORITY={A}"
-                           ((org-agenda-overriding-header "High Priority Tasks (Unscheduled or Within 1 Week):")
-                            (org-agenda-skip-function
-                             '(lvn--org-skip-tasks-scheduled-over-n-days))))
-                ;; Tasks from the past week.
-                (tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
-                           ((org-agenda-overriding-header "Tasks from the Past Week:")))
-                ;; Tasks due this week.
-                (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
-                           ((org-agenda-overriding-header "Tasks Due This Week:")))
-                ;; Tasks scheduled for this week (Not due this week).
-                (tags-todo "+SCHEDULED<=\"<+7d>\"-DEADLINE<=\"<+7d>\"-PRIORITY={A}"
-                           ((org-agenda-overriding-header "Tasks Scheduled for This Week:")))
-                ;; Active tasks (TODO, STRT, WAIT).
-                (todo "TODO|STRT|WAIT"
-                      ((org-agenda-overriding-header "Active Tasks:")
-                       (org-agenda-skip-function
-                        '(or (org-agenda-skip-entry-if 'deadline '("<+7d>"))
-                             (org-agenda-skip-entry-if 'scheduled '("<+7d>"))
-                             (org-agenda-skip-entry-if 'regexp "\\[#A\\]")))))
-                ;; Completed tasks for review (can be adjusted as needed).
-                (todo "DONE|CANX"
-                      ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
-                       ;; XXX Does not work!
-                       (org-agenda-span 'week)))
-                )
-               ;; ;; Display in a compact view.
-               ;; ((org-agenda-compact-blocks t))
-               ))
-
-(defun lvn--org-skip-tasks-scheduled-over-n-days (&optional days)
-  "Skip entries scheduled more than DAYS (default 7) in the future."
-  (let* ((days (or days 7))
-         (scheduled-time (org-get-scheduled-time (point)))
-         (n-days-later (time-add (current-time) (* days 24 60 60)))
-         (headline (org-element-at-point))
-         (skip (org-element-property :end headline))
-         (dont-skip nil))
-
-    (cond
-     ;; Tasks without a scheduled time are never skipped.
-     ((and (not scheduled-time))
-      dont-skip)
-
-     ;; Tasks scheduled within DAYS are not skipped.
-     ((and scheduled-time
-           (not (time-less-p n-days-later scheduled-time)))
-      dont-skip)
-
-     ;; All other cases.
-     (t skip))))
-#+end_src
-
-https://stackoverflow.com/questions/21118288/making-org-agenda-list-hide-items-scheduled-for-the-future
-
-Explanation of Sections
-
-1. High Priority Tasks
-   - Displays tasks marked with ~PRIORITY={A}~ that need immediate attention.
-2. Tasks from the Past Week
-   - Lists tasks that were scheduled or had deadlines in the past week,
-     excluding high-priority tasks. This helps ensure that nothing was missed in
-     previous planning.
-3. Tasks Due This Week
-   - Shows tasks with deadlines within the next 7 days.
-4. Tasks Scheduled for This Week
-   - Highlights tasks scheduled for this week but without imminent
-     deadlines. This is useful for planning ahead and balancing workload.
-5. Active Tasks \\
-   Includes tasks with statuses of ~TODO~, ~STRT~, or ~WAIT~, excluding:
-   - Future deadlines or schedules (beyond 7 days).
-   - Tasks already marked as high-priority (~[#A]~).
-6. Completed or Cancelled Tasks
-   - Allows for a quick review of tasks marked as ~DONE~ or ~CANX~ within the past
-     week to identify any follow-ups or additional actions that might be
-     required.
-
-Notes
-- Excluded Items: Tasks marked with ~MAYB~, or tasks scheduled or due in the
-  future, are intentionally omitted from this view. This keeps the focus on
-  actionable and relevant tasks for the current week.
-- Review Process: Use the "Completed or Cancelled Tasks" section to assess
-  whether there are any post-action steps for *recently completed* work.
-
-Review *recently completed or cancelled tasks* for any post-action steps that need
-attention.
-
-*** Other
-
-#+begin_src emacs-lisp :tangle no
-(add-to-list 'org-agenda-custom-commands
-             '("w" "Weekly Review Perp"
-               ((agenda "" ((org-agenda-span 7)
-                            (org-agenda-start-on-weekday 1)
-                            (org-agenda-start-day "-1d")
-                            (org-agenda-overriding-header "This Week's Schedule:")))
-                (tags-todo "+PRIORITY=\"A\""
-                           ((org-agenda-overriding-header "High Priority Tasks:")))
-                (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
-                           ((org-agenda-overriding-header "Tasks Due This Week:")))
-                (todo "WAIT"
-                      ((org-agenda-overriding-header "Waiting Tasks:")
-                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))
-                (todo "STRT"
-                      ((org-agenda-overriding-header "In-Progress Tasks:")
-                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))
-                ;; XXX Does not work!
-                ;; (todo "DONE|CANX"
-                ;;       ((org-agenda-overriding-header "Completed or Cancelled Tasks:")
-                ;;        (org-agenda-span 7)))
-                )
-               ;; ((org-agenda-compact-blocks t))
-               ))
-#+end_src
-
-This approach ensures that *high-priority tasks* are only *kept in the "High
-Priority Tasks" section* while avoiding duplicating them in other more general
-sections (such as "Started Tasks" or "Waiting Tasks"). It maintains the emphasis
-on urgent and important tasks without losing any information.
-
-** Dotfiles-based Org agenda management
-
-#+begin_src emacs-lisp
-(defun lvn-set-org-agenda-files-dotfiles-todo (&optional root-dir)
-  "Set `org-agenda-files` to all TODO.org and TODO-xxx.org files
-in the root directories of repositories under ROOT-DIR.
-If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
-  (interactive
-   (list (read-directory-name "Root directory: " "~/.dotfiles/" nil t)))
-                                        ; Prompt interactively for ROOT-DIR,
-                                        ; defaulting to `~/.dotfiles/`.
-  (let ((todo-files '())) ;; Temporary list to store the found files.
-    ;; Set ROOT-DIR to default if not provided.
-    (setq root-dir (or root-dir "~/.dotfiles/"))
-    ;; Iterate over the immediate subdirectories of ROOT-DIR.
-    (dolist (subdir (directory-files root-dir t "^[^.]" t))
-                                        ; Exclude hidden files ("." and "..").
-      (when (and (file-directory-p subdir) ; Ensure it's a directory.
-                 (not (file-symlink-p subdir))) ; Ignore symbolic links.
-        ;; Look for files matching the pattern `TODO.org` or `TODO-xxx.org` in
-        ;; the subdir.
-        (dolist (todo-file (directory-files subdir t "^TODO\\(-.*\\)?\\.org$"))
-          (push todo-file todo-files)))) ; Add each matching file to the list.
-    ;; Update `org-agenda-files` with the found files.
-    (setq org-agenda-files todo-files)
-    ;; Message and return the list of files for verification.
-    (message "[Org agenda files set to: %s]" org-agenda-files)
-    org-agenda-files))
-#+end_src
-
-#+begin_src emacs-lisp
-(defun lvn-set-org-agenda-files ()
-  "Set `org-agenda-files` to all `.org` files in `org-directory`."
-  (interactive)
-  (setq org-agenda-files (directory-files org-directory t "\\.org$"))
-  (message "[Org agenda files set to: %s]" org-agenda-files))
-#+end_src
-
-** Adapted From Bastien
-
-#+begin_src emacs-lisp
-(add-to-list 'org-agenda-custom-commands
-             `("@d" "Daily review (Personal focus)"
-               ((agenda ""
-                        ((org-agenda-span 'week)
-                         (org-agenda-entry-types '(:deadline :scheduled))
-                         (org-agenda-prefix-format "  %?-12t% s")
-                         (org-agenda-overriding-header "1. Scheduled/Deadline this week (no work)")))
-                (tags-todo "TODO={STRT\\|NEXT}"
-                           ((org-agenda-overriding-header "2. Tasks with STRT or NEXT (no work)"))))
-               ;; Globally exclude 'work' tagged entries, including inherited
-               ;; tags, from both blocks.
-               ((org-agenda-tag-filter-preset '("-work")))))
-
-(add-to-list 'org-agenda-custom-commands
-             `("$d" "Daily review (Work focus)"
-               ((agenda ""
-                        ((org-agenda-span 'week)
-                         (org-agenda-entry-types '(:deadline :scheduled))
-                         (org-agenda-prefix-format "  %?-12t% s")
-                         (org-agenda-overriding-header "1. Scheduled/Deadline this week (work)")))
-                (tags-todo "TODO={STRT\\|NEXT}"
-                           ((org-agenda-overriding-header "2. Tasks with STRT or NEXT (work)"))))
-               ;; Globally include 'work' tagged entries, including inherited
-               ;; tags, from both blocks.
-               ((org-agenda-tag-filter-preset '("+work")))))
-
-(add-to-list 'org-agenda-custom-commands
-             `("!d" "Daily review (Full focus - Work + Personal)"
-               ((agenda ""
-                        ((org-agenda-span 'week)
-                         (org-agenda-entry-types '(:deadline :scheduled))
-                         (org-agenda-prefix-format "  %?-12t% s")
-                         (org-agenda-overriding-header "1. Scheduled/Deadline this week (all)")))
-                (tags-todo "TODO={STRT\\|NEXT}"
-                           ((org-agenda-overriding-header "2. Tasks with STRT or NEXT (all)"))))
-               ;; No org-agenda-tag-filter-preset, so nothing filtered.
-               ))
-#+end_src
-
-#+begin_note
-In a block agenda, the variable ~org-agenda-tag-filter-preset~ should be set in
-the global options to apply it across the entire view. Defining it for
-individual blocks does not work reliably...
-#+end_note
-
-#+begin_src emacs-lisp
-(add-to-list 'org-agenda-custom-commands
-             `("$w" "Weekly routine"
-               (;; Weekly routine #1.
-                (agenda ""
-                        ((org-deadline-warning-days 30)))
-                (todo "TODO"
-                      ((org-agenda-skip-function
-                        '(or (org-entry-is-done-p)
-                             (org-agenda-skip-if nil '(scheduled deadline))))
-                       (org-agenda-overriding-header "2. Unscheduled TODOs"))))
-               ;; Globally exclude 'work' tagged entries, including inherited
-               ;; tags, from both blocks.
-               ((org-agenda-tag-filter-preset '("+work")))))
-
-(add-to-list 'org-agenda-custom-commands
-             `("!w" "Weekly routine"
-               (;; Weekly routine #1.
-                (agenda ""
-                        ((org-deadline-warning-days 30)))
-                (todo "TODO"
-                      ((org-agenda-skip-function
-                        '(or (org-entry-is-done-p)
-                             (org-agenda-skip-if nil '(scheduled deadline))))
-                       (org-agenda-overriding-header "2. Unscheduled TODOs")))
-                )))
-#+end_src
-
-#+begin_src emacs-lisp
-(add-to-list 'org-agenda-custom-commands
-             `("$W" "Weekly Review"
-               (
-                ;; Show completed tasks from the past 7 days.
-                (agenda ""
-                        ((org-agenda-span 7)
-                         (org-agenda-start-day "-7d")
-                         (org-agenda-entry-types '(:timestamp :sexp))
-                         (org-agenda-show-log 'closed)
-                         (org-agenda-overriding-header "1. Completed Tasks (Past 7 Days)")
-                         (org-agenda-skip-function
-                          '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|CANCELLED"))))
-                ;; Show NEXT tasks (immediately actionable).
-                (todo "NEXT"
-                      ((org-agenda-overriding-header "2. Next Actions")
-                       (org-agenda-skip-function
-                        '(org-agenda-skip-entry-if 'scheduled 'deadline))))
-                ;; Show TODO and WAIT tasks (pending, not immediately actionable).
-                (todo "TODO|WAIT"
-                      ((org-agenda-overriding-header "3. Other Pending Tasks")
-                       (org-agenda-skip-function
-                        '(org-agenda-skip-entry-if 'scheduled 'deadline))))
-                ;; Show upcoming deadlines in the next 7 days.
-                (agenda ""
-                        ((org-agenda-span 7)
-                         (org-agenda-start-day "0d")
-                         (org-agenda-entry-types '(:deadline))
-                         (org-agenda-overriding-header "4. Upcoming Deadlines (Next 7 Days)")))
-                ;; Show events or scheduled items for the next 7 days.
-                (agenda ""
-                        ((org-agenda-span 7)
-                         (org-agenda-start-day "0d")
-                         (org-agenda-entry-types '(:timestamp :sexp))
-                         (org-agenda-overriding-header "5. Upcoming Events (Next 7 Days)"))))
-               ;; Globally exclude 'work' tagged entries, including inherited tags.
-               ((org-agenda-tag-filter-preset '("+work")))))
-#+end_src
-
-Merged into:
-
-#+begin_src emacs-lisp
-(add-to-list 'org-agenda-custom-commands
-             `("$F" "Weekly Plan & Review"
-               (
-                ;; 1. Completed tasks (past 7 days) from $W
-                (agenda ""
-                        ((org-agenda-span 7)
-                         (org-agenda-start-day "-7d")
-                         (org-agenda-entry-types '(:timestamp :sexp))
-                         (org-agenda-show-log 'closed)
-                         (org-agenda-overriding-header "1. Completed Tasks (Past 7 Days)")
-                         (org-agenda-skip-function
-                          '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|CANCELLED"))))
-                ;; 2. Main agenda with deadlines (30-day warning) from !w
-                (agenda ""
-                        ((org-agenda-span 7)
-                         (org-agenda-start-day "0d")
-                         (org-deadline-warning-days 30)
-                         (org-agenda-overriding-header "2. Upcoming Schedule & Deadlines")))
-                ;; 3. NEXT tasks from $W
-                (todo "NEXT"
-                      ((org-agenda-overriding-header "3. Next Actions")
-                       (org-agenda-skip-function
-                        '(org-agenda-skip-entry-if 'scheduled 'deadline))))
-                ;; 4. Unscheduled TODOs from !w
-                (todo "TODO"
-                      ((org-agenda-skip-function
-                        '(or (org-entry-is-done-p)
-                             (org-agenda-skip-if nil '(scheduled deadline))))
-                       (org-agenda-overriding-header "4. Unscheduled TODOs")))
-                ;; 5. Optional: Pending WAIT tasks from $W
-                (todo "WAIT"
-                      ((org-agenda-overriding-header "5. Pending Tasks")
-                       (org-agenda-skip-function
-                        '(org-agenda-skip-entry-if 'scheduled 'deadline)))))
-               ;; Optional: Work tag filter from $W
-               ((org-agenda-tag-filter-preset '("+work")))))
-#+end_src
-
-(add-to-list org-agenda-custom-commands
-      `("w" "Weekly Review"
-         (
-          ;; 1. Capturing (custom entry, not agenda)
-          (tags "inbox"
-                ((org-agenda-overriding-header "1. Capturing: Process your Inbox")
-                 (org-agenda-files '("~/org/inbox.org"))))
-          ;; 2. Clarifying (could be a checklist or manual step)
-          (tags "clarify"
-                ((org-agenda-overriding-header "2. Clarifying: Clarify and process captured items")
-                 (org-agenda-files '("~/org/inbox.org"))))
-          ;; 3. Past Events
-          (agenda ""
-                  ((org-agenda-span 'week)
-                   (org-agenda-start-day "-7d")
-                   (org-agenda-overriding-header "3. Past Events: Review last week's calendar")))
-          ;; 4. Next Events
-          (agenda ""
-                  ((org-agenda-span 'week)
-                   (org-agenda-start-day "+0d")
-                   (org-agenda-overriding-header "4. Next Events: Prepare for upcoming week")))
-          ;; 5. Next Actions
-          (tags-todo "NEXT"
-                     ((org-agenda-overriding-header "5. Next Actions: Review next actions")))
-          ;; 6. Waiting For
-          (tags-todo "WAITING"
-                     ((org-agenda-overriding-header "6. Waiting For: Review waiting items")))
-          ;; 7. Projects
-          (tags-todo "PROJECT"
-                     ((org-agenda-overriding-header "7. Projects: Review project list")))
-          ;; 8. Someday/Maybe
-          (tags-todo "SOMEDAY"
-                     ((org-agenda-overriding-header "8. Someday/Maybe: Review someday/maybe")))
-          ;; 9. Ideas
-          (tags "idea"
-                ((org-agenda-overriding-header "9. Ideas: Review and capture new ideas")
-                 (org-agenda-files '("~/org/ideas.org"))))
-          ;; 10. Finishing (custom entry, not agenda)
-          ))
-        )
-
-#+begin_src emacs-lisp
-;; (global-set-key (kbd "C-c $") (lambda () (interactive) (org-agenda nil "w")))  ;; Work view
-;; (global-set-key (kbd "C-c @") (lambda () (interactive) (org-agenda nil "p")))  ;; Personal view
-#+end_src
-
-*** TODO Use a prefix like "c" (for custom) to group all custom agenda views, e.g., "cwt" and "cpn", to further avoid conflicts?
-
 * Priorities or Must-Do Today
 
 * Key bindings
@@ -2451,6 +1812,645 @@ buffer, helping you manage tasks more effectively.
                ((occur-tree "\\<\\(TODO\\|FIXME\\|XXX\\|BUG\\)\\>")))
              t)
 #+end_src
+
+* NEW views and thoughts
+
+I do have an Org mode file full of tasks, in the statusses:
+
+"MAYB"
+"TODO"
+"NEXT"
+"STRT"
+"WAIT"
+"DONE"
+"CANX"
+
+Some of them have:
+
+- a scheduled date
+- a deadline date
+- both
+- no date at all
+
+Some of them have a priority #A cookie; others a #B or a #C or nothing at all.
+
+** Doc
+
+- ~tags-todo~ ::
+     Applies only to *TOOD headlines* (headlines marked with TODO keywords; e.g.,
+     ~TODO~, ~DONE~).
+
+- ~tags "*"~ (with a star) ::
+      Applies to *any headline*, regardless of TODO status.
+
+#+begin_note
+You must use ~tags-todo~ to combine TODO keyword and tag filtering properly.
+#+end_note
+
+** Priority cookies
+
+Priority cookies in Org mode are primarily used for marking the *importance* of
+tasks rather than their urgency. The priority system in Org mode consists of
+three levels by default:
+
+- A (HIGHEST),
+- B (Medium), and
+- C (lowest).
+
+These priorities help you distinguish the relative importance of tasks,
+especially when viewing them in the agenda.
+
+It's important to note that a task without a priority cookie is equivalent to
+a task with priority B.
+
+** Urgency
+
+Use deadlines or tags
+
+** Display all TODO items from the current directory
+
+The function ~lvn-org-git-root-todo~ will display your tasks from the Git root
+directory (including from local files =TODO.org= and =BUGS.org=, for example).
+
+#+begin_src emacs-lisp
+(defun lvn-org-git-root-todo ()
+  "Display an Org agenda view of unscheduled TODO items from the Git root directory."
+  (interactive)
+  (let* ((git-root (vc-git-root default-directory))
+         (org-files (when git-root
+                      (directory-files-recursively
+                       git-root
+                       "\\.\\(org\\|txt\\)$"))))
+    (if git-root
+        (progn
+          (let ((org-agenda-files org-files)
+                (org-agenda-sorting-strategy '(todo-state-up priority-down))
+                (org-agenda-overriding-header
+                 (format "Unscheduled TODO items in directory: %s" git-root))
+                (org-agenda-sticky nil)
+                (org-agenda-skip-scheduled-if-done t)
+                (org-agenda-skip-deadline-if-done t)
+                (org-agenda-todo-ignore-scheduled 'future))
+            (message "[%s...]" org-agenda-overriding-header)
+            (org-todo-list)))
+      (message "Error: Not in a Git repository"))))
+
+;; Bind to <M-S-f6>.
+(global-set-key (kbd "<M-S-f6>") #'lvn-org-git-root-todo)
+#+end_src
+
+** Custom agenda views based on directory scope
+
+The function ~lvn-org-agenda-for-current-buffer~ adjusts the agenda view based on
+the scope of Org files in the current directory and its subdirectories.
+
+#+begin_src emacs-lisp
+(defun lvn-org-agenda-for-current-buffer (&optional arg)
+  "Open the Org mode agenda with entries restricted based on ARG.
+ARG determines the scope:
+- No ARG (nil): Restrict to the current buffer's file.
+- Single C-u (4): Restrict to the current buffer's file and all .org files
+  in the current directory and its subdirectories.
+- Double C-u (16): Restrict to the current buffer's file, all .org files,
+  and all .txt files in the current directory and its subdirectories.
+If the buffer is in a version-controlled project (e.g., vc-dir),
+use the project's root directory instead of the current directory."
+  (interactive "P")
+  (let* ((current-dir
+          (or (when (buffer-file-name) (file-name-directory (buffer-file-name)))
+                                        ; File's directory.
+              (when (vc-root-dir) (vc-root-dir))))
+                                        ; Git root directory.
+         (org-agenda-files
+          (cond
+           ((not current-dir)
+            (error "Cannot determine a directory for this buffer"))
+           ;; No argument: Restrict to the current buffer's file.
+           ((not arg)
+            (list (buffer-file-name)))
+           ;; Single C-u: Current buffer + .org files in current dir/subdirs.
+           ((equal arg '(4))
+            (delete-dups
+             (append (when (buffer-file-name) (list (buffer-file-name)))
+                     (directory-files-recursively current-dir ".*\\.org$"))))
+           ;; Double C-u: Current buffer + .org and .txt files in current dir/subdirs.
+           ((equal arg '(16))
+            (delete-dups
+             (append (when (buffer-file-name) (list (buffer-file-name)))
+                     (directory-files-recursively current-dir ".*\\(\\.org\\|\\.txt\\)$"))))))
+         (org-default-notes-file nil))  ; Disable default notes file temporarily
+    (org-agenda))                       ; Open the standard agenda view.
+    ;; Uncomment below line if custom agenda view is needed:
+    ;; (org-agenda nil "f.")               ; Generate a custom Org agenda view.
+)
+#+end_src
+
+Usage:
+- ~M-x lvn-org-agenda-for-current-buffer~ → Agenda for current buffer only.
+- ~C-u M-x lvn-org-agenda-for-current-buffer~ → Agenda for current buffer + all
+  =.org= files in the current directory and subdirectories.
+- ~C-u C-u M-x lvn-org-agenda-for-current-buffer~ → Agenda for current
+  buffer + all =.org= and =.txt= files in the current directory and subdirectories.
+
+This way, you can dynamically adjust the scope of the agenda view based on the
+level of the universal argument.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "<S-f6>")
+                (lambda ()
+                  (interactive)
+                  (lvn-org-agenda-for-current-buffer nil)))
+                                        ; Without arg: current buffer only.
+
+(global-set-key (kbd "<C-f6>")
+                (lambda ()
+                  (interactive)
+                  (lvn-org-agenda-for-current-buffer '(4))))
+                                        ; With C-u: current buffer + .org files.
+
+(global-set-key (kbd "<M-f6>")
+                (lambda ()
+                  (interactive)
+                  (lvn-org-agenda-for-current-buffer '(16))))
+                                        ; With C-u C-u: current buffer + .org + .txt files.
+#+end_src
+
+** Custom agenda views in Org mode
+
+#+begin_src emacs-lisp
+(add-to-list 'org-agenda-custom-commands
+             `("d" "Dashboard" ; Shows all tasks...
+               ;; High Priority Tasks.
+               ((tags-todo "+PRIORITY={A}"
+                           ((org-agenda-overriding-header "High Priority Tasks:")))
+                ;; Tasks Due This Week.
+                (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                           ((org-agenda-overriding-header "Tasks Due This Week:")))
+                ;; Scheduled Tasks (Next 14 Days).
+                (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
+                           ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days):")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX") 'deadline))))
+                ;; Tasks with Future Deadlines.
+                (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY={A}"
+                           ((org-agenda-overriding-header "Tasks with Future Deadlines:")
+                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo '("DONE" "CANX")))
+                            (org-agenda-sorting-strategy '(deadline-up))))
+                ;; Task states: WAIT, STRT, NEXT, TODO, MAYB.
+                ,@(mapcar (lambda (state)
+                            `(todo ,state
+                                   ((org-agenda-overriding-header (concat ,state " Tasks:"))
+                                    (org-agenda-skip-function '(or (org-agenda-skip-entry-if 'scheduled 'deadline)
+                                                                   (org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))))
+                          '("WAIT" "STRT" "NEXT" "TODO" "MAYB"))
+                ;; Completed or Cancelled Tasks (Inactive tasks with clock entries this week).
+                (todo "DONE|CANX"
+                      ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
+                       ;; Show tasks with clock entries in the current week.
+                       (org-agenda-log-mode-items '(clock)) ; Show clocked entries.
+                       (org-agenda-span 'week)              ; Filter to current week.
+                       (org-agenda-skip-function
+                        '(org-agenda-skip-entry-if 'notregexp "CLOCK:")) ; Only tasks with clock entries.
+                       ;; (org-agenda-skip-function
+                       ;;  '(org-agenda-skip-entry-if 'notregexp "CLOSED:")) ; Ensure the task is closed (completed or cancelled).
+                       )))
+               ;; ;; Compact blocks.
+               ;; ((org-agenda-compact-blocks t))
+               ))
+#+end_src
+
+#+begin_src emacs-lisp
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+         ((tags-todo "+PRIORITY={A}"
+                     ((org-agenda-overriding-header "High Priority Tasks")))
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks Due This Week")))
+          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days)")))
+          (tags-todo "+DEADLINE>\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Future Deadlines")
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))  ; Skip tasks with SCHEDULED property.
+                      (org-agenda-sorting-strategy '(deadline-up))))
+          (todo "DONE|CANX"
+                ((org-agenda-overriding-header "Completed or Cancelled Tasks")
+                 (org-agenda-span 'week))))))) ; OK -- No duplicates!!!
+
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+         ((tags-todo "+PRIORITY={A}"
+                     ((org-agenda-overriding-header "High Priority Tasks")))
+          (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Tasks Due This Week")))
+          (tags-todo "+SCHEDULED<=\"<+14d>\"-PRIORITY={A}"
+                     ((org-agenda-overriding-header "Scheduled Tasks (Next 14 Days)")))
+          (tags-todo "+DEADLINE>\"<+7d>\"-SCHEDULED>\"<+14d>\"-PRIORITY={A}" ; Exclude tasks scheduled within the next 14 days.
+                     ((org-agenda-overriding-header "Future Deadlines")
+                      (org-agenda-sorting-strategy '(deadline-up))))
+          (todo "DONE|CANX"
+                ((org-agenda-overriding-header "Completed or Cancelled Tasks")
+                 (org-agenda-span 'week))))))) ; NOK -- Duplicates!!!
+#+end_src
+
+#+begin_src emacs-lisp
+(setq org-agenda-custom-commands
+      '(("h" "High priority tasks"
+         ((tags-todo "+PRIORITY={A}-SCHEDULED>=\"<today>\"-DEADLINE>=\"<today>\""
+                     ((org-agenda-overriding-header "High Priority Tasks")
+                      (org-agenda-skip-function
+                       '(org-agenda-skip-entry-if 'scheduled 'deadline))))
+          (tags-todo "-SCHEDULED>=\"<today>\"-DEADLINE>=\"<today>\""
+                     ((org-agenda-overriding-header "Other Current Tasks")
+                      (org-agenda-skip-function
+                       '(org-agenda-skip-entry-if 'scheduled 'deadline)))))
+         nil)))
+#+end_src
+
+#+begin_src emacs-lisp
+(setq org-agenda-custom-commands
+      '(("p" . "Priority views")
+        ("pa" "A items" tags-todo "+PRIORITY={A}")
+        ("pb" "B items" tags-todo "+PRIORITY={B}")
+        ("pc" "C items" tags-todo "+PRIORITY={C}")))
+#+end_src
+
+** Next actions
+
+The next action tasks are either:
+- high priority,
+- due soon (e.g., within the next 7 days),
+- scheduled for the near future (e.g., within the next 14 days), or
+- don't have specific dates but are marked as STRT or TODO,
+
+making them potential next actions.
+
+** Weekly review
+
+MAYB tasks are not shown here... Nor future schedules or deadlines
+
+#+begin_src emacs-lisp
+(add-to-list 'org-agenda-custom-commands
+             '("r" "Weekly Review Cgpt"
+               ((tags-todo "+PRIORITY={A}"
+                           ((org-agenda-overriding-header "High Priority Tasks (Unscheduled or Within 1 Week):")
+                            (org-agenda-skip-function
+                             '(lvn--org-skip-tasks-scheduled-over-n-days))))
+                ;; Tasks from the past week.
+                (tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
+                           ((org-agenda-overriding-header "Tasks from the Past Week:")))
+                ;; Tasks due this week.
+                (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                           ((org-agenda-overriding-header "Tasks Due This Week:")))
+                ;; Tasks scheduled for this week (Not due this week).
+                (tags-todo "+SCHEDULED<=\"<+7d>\"-DEADLINE<=\"<+7d>\"-PRIORITY={A}"
+                           ((org-agenda-overriding-header "Tasks Scheduled for This Week:")))
+                ;; Active tasks (TODO, STRT, WAIT).
+                (todo "TODO|STRT|WAIT"
+                      ((org-agenda-overriding-header "Active Tasks:")
+                       (org-agenda-skip-function
+                        '(or (org-agenda-skip-entry-if 'deadline '("<+7d>"))
+                             (org-agenda-skip-entry-if 'scheduled '("<+7d>"))
+                             (org-agenda-skip-entry-if 'regexp "\\[#A\\]")))))
+                ;; Completed tasks for review (can be adjusted as needed).
+                (todo "DONE|CANX"
+                      ((org-agenda-overriding-header "Completed or Cancelled Tasks (This Week):")
+                       ;; XXX Does not work!
+                       (org-agenda-span 'week)))
+                )
+               ;; ;; Display in a compact view.
+               ;; ((org-agenda-compact-blocks t))
+               ))
+
+(defun lvn--org-skip-tasks-scheduled-over-n-days (&optional days)
+  "Skip entries scheduled more than DAYS (default 7) in the future."
+  (let* ((days (or days 7))
+         (scheduled-time (org-get-scheduled-time (point)))
+         (n-days-later (time-add (current-time) (* days 24 60 60)))
+         (headline (org-element-at-point))
+         (skip (org-element-property :end headline))
+         (dont-skip nil))
+
+    (cond
+     ;; Tasks without a scheduled time are never skipped.
+     ((and (not scheduled-time))
+      dont-skip)
+
+     ;; Tasks scheduled within DAYS are not skipped.
+     ((and scheduled-time
+           (not (time-less-p n-days-later scheduled-time)))
+      dont-skip)
+
+     ;; All other cases.
+     (t skip))))
+#+end_src
+
+https://stackoverflow.com/questions/21118288/making-org-agenda-list-hide-items-scheduled-for-the-future
+
+Explanation of Sections
+
+1. High Priority Tasks
+   - Displays tasks marked with ~PRIORITY={A}~ that need immediate attention.
+2. Tasks from the Past Week
+   - Lists tasks that were scheduled or had deadlines in the past week,
+     excluding high-priority tasks. This helps ensure that nothing was missed in
+     previous planning.
+3. Tasks Due This Week
+   - Shows tasks with deadlines within the next 7 days.
+4. Tasks Scheduled for This Week
+   - Highlights tasks scheduled for this week but without imminent
+     deadlines. This is useful for planning ahead and balancing workload.
+5. Active Tasks \\
+   Includes tasks with statuses of ~TODO~, ~STRT~, or ~WAIT~, excluding:
+   - Future deadlines or schedules (beyond 7 days).
+   - Tasks already marked as high-priority (~[#A]~).
+6. Completed or Cancelled Tasks
+   - Allows for a quick review of tasks marked as ~DONE~ or ~CANX~ within the past
+     week to identify any follow-ups or additional actions that might be
+     required.
+
+Notes
+- Excluded Items: Tasks marked with ~MAYB~, or tasks scheduled or due in the
+  future, are intentionally omitted from this view. This keeps the focus on
+  actionable and relevant tasks for the current week.
+- Review Process: Use the "Completed or Cancelled Tasks" section to assess
+  whether there are any post-action steps for *recently completed* work.
+
+Review *recently completed or cancelled tasks* for any post-action steps that need
+attention.
+
+*** Other
+
+#+begin_src emacs-lisp :tangle no
+(add-to-list 'org-agenda-custom-commands
+             '("w" "Weekly Review Perp"
+               ((agenda "" ((org-agenda-span 7)
+                            (org-agenda-start-on-weekday 1)
+                            (org-agenda-start-day "-1d")
+                            (org-agenda-overriding-header "This Week's Schedule:")))
+                (tags-todo "+PRIORITY=\"A\""
+                           ((org-agenda-overriding-header "High Priority Tasks:")))
+                (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY=\"A\""
+                           ((org-agenda-overriding-header "Tasks Due This Week:")))
+                (todo "WAIT"
+                      ((org-agenda-overriding-header "Waiting Tasks:")
+                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))
+                (todo "STRT"
+                      ((org-agenda-overriding-header "In-Progress Tasks:")
+                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#A\\]"))))
+                ;; XXX Does not work!
+                ;; (todo "DONE|CANX"
+                ;;       ((org-agenda-overriding-header "Completed or Cancelled Tasks:")
+                ;;        (org-agenda-span 7)))
+                )
+               ;; ((org-agenda-compact-blocks t))
+               ))
+#+end_src
+
+This approach ensures that *high-priority tasks* are only *kept in the "High
+Priority Tasks" section* while avoiding duplicating them in other more general
+sections (such as "Started Tasks" or "Waiting Tasks"). It maintains the emphasis
+on urgent and important tasks without losing any information.
+
+** Dotfiles-based Org agenda management
+
+#+begin_src emacs-lisp
+(defun lvn-set-org-agenda-files-dotfiles-todo (&optional root-dir)
+  "Set `org-agenda-files` to all TODO.org and TODO-xxx.org files
+in the root directories of repositories under ROOT-DIR.
+If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
+  (interactive
+   (list (read-directory-name "Root directory: " "~/.dotfiles/" nil t)))
+                                        ; Prompt interactively for ROOT-DIR,
+                                        ; defaulting to `~/.dotfiles/`.
+  (let ((todo-files '())) ;; Temporary list to store the found files.
+    ;; Set ROOT-DIR to default if not provided.
+    (setq root-dir (or root-dir "~/.dotfiles/"))
+    ;; Iterate over the immediate subdirectories of ROOT-DIR.
+    (dolist (subdir (directory-files root-dir t "^[^.]" t))
+                                        ; Exclude hidden files ("." and "..").
+      (when (and (file-directory-p subdir) ; Ensure it's a directory.
+                 (not (file-symlink-p subdir))) ; Ignore symbolic links.
+        ;; Look for files matching the pattern `TODO.org` or `TODO-xxx.org` in
+        ;; the subdir.
+        (dolist (todo-file (directory-files subdir t "^TODO\\(-.*\\)?\\.org$"))
+          (push todo-file todo-files)))) ; Add each matching file to the list.
+    ;; Update `org-agenda-files` with the found files.
+    (setq org-agenda-files todo-files)
+    ;; Message and return the list of files for verification.
+    (message "[Org agenda files set to: %s]" org-agenda-files)
+    org-agenda-files))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun lvn-set-org-agenda-files ()
+  "Set `org-agenda-files` to all `.org` files in `org-directory`."
+  (interactive)
+  (setq org-agenda-files (directory-files org-directory t "\\.org$"))
+  (message "[Org agenda files set to: %s]" org-agenda-files))
+#+end_src
+
+** Adapted From Bastien
+
+#+begin_src emacs-lisp
+(add-to-list 'org-agenda-custom-commands
+             `("@d" "Daily review (Personal focus)"
+               ((agenda ""
+                        ((org-agenda-span 'week)
+                         (org-agenda-entry-types '(:deadline :scheduled))
+                         (org-agenda-prefix-format "  %?-12t% s")
+                         (org-agenda-overriding-header "1. Scheduled/Deadline this week (no work)")))
+                (tags-todo "TODO={STRT\\|NEXT}"
+                           ((org-agenda-overriding-header "2. Tasks with STRT or NEXT (no work)"))))
+               ;; Globally exclude 'work' tagged entries, including inherited
+               ;; tags, from both blocks.
+               ((org-agenda-tag-filter-preset '("-work")))))
+
+(add-to-list 'org-agenda-custom-commands
+             `("$d" "Daily review (Work focus)"
+               ((agenda ""
+                        ((org-agenda-span 'week)
+                         (org-agenda-entry-types '(:deadline :scheduled))
+                         (org-agenda-prefix-format "  %?-12t% s")
+                         (org-agenda-overriding-header "1. Scheduled/Deadline this week (work)")))
+                (tags-todo "TODO={STRT\\|NEXT}"
+                           ((org-agenda-overriding-header "2. Tasks with STRT or NEXT (work)"))))
+               ;; Globally include 'work' tagged entries, including inherited
+               ;; tags, from both blocks.
+               ((org-agenda-tag-filter-preset '("+work")))))
+
+(add-to-list 'org-agenda-custom-commands
+             `("!d" "Daily review (Full focus - Work + Personal)"
+               ((agenda ""
+                        ((org-agenda-span 'week)
+                         (org-agenda-entry-types '(:deadline :scheduled))
+                         (org-agenda-prefix-format "  %?-12t% s")
+                         (org-agenda-overriding-header "1. Scheduled/Deadline this week (all)")))
+                (tags-todo "TODO={STRT\\|NEXT}"
+                           ((org-agenda-overriding-header "2. Tasks with STRT or NEXT (all)"))))
+               ;; No org-agenda-tag-filter-preset, so nothing filtered.
+               ))
+#+end_src
+
+#+begin_note
+In a block agenda, the variable ~org-agenda-tag-filter-preset~ should be set in
+the global options to apply it across the entire view. Defining it for
+individual blocks does not work reliably...
+#+end_note
+
+#+begin_src emacs-lisp
+(add-to-list 'org-agenda-custom-commands
+             `("$w" "Weekly routine"
+               (;; Weekly routine #1.
+                (agenda ""
+                        ((org-deadline-warning-days 30)))
+                (todo "TODO"
+                      ((org-agenda-skip-function
+                        '(or (org-entry-is-done-p)
+                             (org-agenda-skip-if nil '(scheduled deadline))))
+                       (org-agenda-overriding-header "2. Unscheduled TODOs"))))
+               ;; Globally exclude 'work' tagged entries, including inherited
+               ;; tags, from both blocks.
+               ((org-agenda-tag-filter-preset '("+work")))))
+
+(add-to-list 'org-agenda-custom-commands
+             `("!w" "Weekly routine"
+               (;; Weekly routine #1.
+                (agenda ""
+                        ((org-deadline-warning-days 30)))
+                (todo "TODO"
+                      ((org-agenda-skip-function
+                        '(or (org-entry-is-done-p)
+                             (org-agenda-skip-if nil '(scheduled deadline))))
+                       (org-agenda-overriding-header "2. Unscheduled TODOs")))
+                )))
+#+end_src
+
+#+begin_src emacs-lisp
+(add-to-list 'org-agenda-custom-commands
+             `("$W" "Weekly Review"
+               (
+                ;; Show completed tasks from the past 7 days.
+                (agenda ""
+                        ((org-agenda-span 7)
+                         (org-agenda-start-day "-7d")
+                         (org-agenda-entry-types '(:timestamp :sexp))
+                         (org-agenda-show-log 'closed)
+                         (org-agenda-overriding-header "1. Completed Tasks (Past 7 Days)")
+                         (org-agenda-skip-function
+                          '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|CANCELLED"))))
+                ;; Show NEXT tasks (immediately actionable).
+                (todo "NEXT"
+                      ((org-agenda-overriding-header "2. Next Actions")
+                       (org-agenda-skip-function
+                        '(org-agenda-skip-entry-if 'scheduled 'deadline))))
+                ;; Show TODO and WAIT tasks (pending, not immediately actionable).
+                (todo "TODO|WAIT"
+                      ((org-agenda-overriding-header "3. Other Pending Tasks")
+                       (org-agenda-skip-function
+                        '(org-agenda-skip-entry-if 'scheduled 'deadline))))
+                ;; Show upcoming deadlines in the next 7 days.
+                (agenda ""
+                        ((org-agenda-span 7)
+                         (org-agenda-start-day "0d")
+                         (org-agenda-entry-types '(:deadline))
+                         (org-agenda-overriding-header "4. Upcoming Deadlines (Next 7 Days)")))
+                ;; Show events or scheduled items for the next 7 days.
+                (agenda ""
+                        ((org-agenda-span 7)
+                         (org-agenda-start-day "0d")
+                         (org-agenda-entry-types '(:timestamp :sexp))
+                         (org-agenda-overriding-header "5. Upcoming Events (Next 7 Days)"))))
+               ;; Globally exclude 'work' tagged entries, including inherited tags.
+               ((org-agenda-tag-filter-preset '("+work")))))
+#+end_src
+
+Merged into:
+
+#+begin_src emacs-lisp
+(add-to-list 'org-agenda-custom-commands
+             `("$F" "Weekly Plan & Review"
+               (
+                ;; 1. Completed tasks (past 7 days) from $W
+                (agenda ""
+                        ((org-agenda-span 7)
+                         (org-agenda-start-day "-7d")
+                         (org-agenda-entry-types '(:timestamp :sexp))
+                         (org-agenda-show-log 'closed)
+                         (org-agenda-overriding-header "1. Completed Tasks (Past 7 Days)")
+                         (org-agenda-skip-function
+                          '(org-agenda-skip-entry-if 'notregexp "\\* DONE\\|CANCELLED"))))
+                ;; 2. Main agenda with deadlines (30-day warning) from !w
+                (agenda ""
+                        ((org-agenda-span 7)
+                         (org-agenda-start-day "0d")
+                         (org-deadline-warning-days 30)
+                         (org-agenda-overriding-header "2. Upcoming Schedule & Deadlines")))
+                ;; 3. NEXT tasks from $W
+                (todo "NEXT"
+                      ((org-agenda-overriding-header "3. Next Actions")
+                       (org-agenda-skip-function
+                        '(org-agenda-skip-entry-if 'scheduled 'deadline))))
+                ;; 4. Unscheduled TODOs from !w
+                (todo "TODO"
+                      ((org-agenda-skip-function
+                        '(or (org-entry-is-done-p)
+                             (org-agenda-skip-if nil '(scheduled deadline))))
+                       (org-agenda-overriding-header "4. Unscheduled TODOs")))
+                ;; 5. Optional: Pending WAIT tasks from $W
+                (todo "WAIT"
+                      ((org-agenda-overriding-header "5. Pending Tasks")
+                       (org-agenda-skip-function
+                        '(org-agenda-skip-entry-if 'scheduled 'deadline)))))
+               ;; Optional: Work tag filter from $W
+               ((org-agenda-tag-filter-preset '("+work")))))
+#+end_src
+
+(add-to-list org-agenda-custom-commands
+      `("w" "Weekly Review"
+         (
+          ;; 1. Capturing (custom entry, not agenda)
+          (tags "inbox"
+                ((org-agenda-overriding-header "1. Capturing: Process your Inbox")
+                 (org-agenda-files '("~/org/inbox.org"))))
+          ;; 2. Clarifying (could be a checklist or manual step)
+          (tags "clarify"
+                ((org-agenda-overriding-header "2. Clarifying: Clarify and process captured items")
+                 (org-agenda-files '("~/org/inbox.org"))))
+          ;; 3. Past Events
+          (agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-day "-7d")
+                   (org-agenda-overriding-header "3. Past Events: Review last week's calendar")))
+          ;; 4. Next Events
+          (agenda ""
+                  ((org-agenda-span 'week)
+                   (org-agenda-start-day "+0d")
+                   (org-agenda-overriding-header "4. Next Events: Prepare for upcoming week")))
+          ;; 5. Next Actions
+          (tags-todo "NEXT"
+                     ((org-agenda-overriding-header "5. Next Actions: Review next actions")))
+          ;; 6. Waiting For
+          (tags-todo "WAITING"
+                     ((org-agenda-overriding-header "6. Waiting For: Review waiting items")))
+          ;; 7. Projects
+          (tags-todo "PROJECT"
+                     ((org-agenda-overriding-header "7. Projects: Review project list")))
+          ;; 8. Someday/Maybe
+          (tags-todo "SOMEDAY"
+                     ((org-agenda-overriding-header "8. Someday/Maybe: Review someday/maybe")))
+          ;; 9. Ideas
+          (tags "idea"
+                ((org-agenda-overriding-header "9. Ideas: Review and capture new ideas")
+                 (org-agenda-files '("~/org/ideas.org"))))
+          ;; 10. Finishing (custom entry, not agenda)
+          ))
+        )
+
+#+begin_src emacs-lisp
+;; (global-set-key (kbd "C-c $") (lambda () (interactive) (org-agenda nil "w")))  ;; Work view
+;; (global-set-key (kbd "C-c @") (lambda () (interactive) (org-agenda nil "p")))  ;; Personal view
+#+end_src
+
+*** TODO Use a prefix like "c" (for custom) to group all custom agenda views, e.g., "cwt" and "cpn", to further avoid conflicts?
 
 * Buggy commands
 :PROPERTIES:
