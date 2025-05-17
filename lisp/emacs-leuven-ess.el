@@ -1,16 +1,9 @@
 ;; ESS: Emacs Speaks Statistics
 (add-to-list 'package-selected-packages 'ess)
+(package-install-selected-packages)
 
-;; Load ESS package.
-(try-require 'ess)
-
-(autoload 'R "ess-site"
-  "Call 'R', the 'GNU S' system from the R Foundation." t)
-
-(autoload 'R-mode "ess-site"
-  "Major mode for editing R source." t)
-
-(add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
+;; Load ESS package for R-specific features only.
+(try-require 'ess-r-mode)
 
 ;; Don't ask for directory when starting R.
 (setq ess-ask-for-ess-directory nil)

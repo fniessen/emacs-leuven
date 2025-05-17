@@ -23,21 +23,12 @@ See:
 #+begin_src emacs-lisp
 ;; ESS: Emacs Speaks Statistics
 (add-to-list 'package-selected-packages 'ess)
+(package-install-selected-packages)
 #+end_src
 
 #+begin_src emacs-lisp
-;; Load ESS package.
-(try-require 'ess)
-#+end_src
-
-#+begin_src emacs-lisp
-(autoload 'R "ess-site"
-  "Call 'R', the 'GNU S' system from the R Foundation." t)
-
-(autoload 'R-mode "ess-site"
-  "Major mode for editing R source." t)
-
-(add-to-list 'auto-mode-alist '("\\.[rR]\\'" . R-mode))
+;; Load ESS package for R-specific features only.
+(try-require 'ess-r-mode)
 #+end_src
 
 ** 3 Interacting with statistical programs
