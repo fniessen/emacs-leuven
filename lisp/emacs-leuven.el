@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250517.1227>
+;; Version: <20250517.1248>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250517.1227>"
+(defconst lvn--emacs-version "<20250517.1248>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -1022,6 +1022,18 @@ original state of line numbers after navigation."
       (apply orig-fn beg end args)))
 
   (advice-add 'kill-ring-save :around #'lvn-slick-copy-region)
+
+  (defun wsl-paste-from-windows-clipboard ()
+    "Paste text from Windows clipboard using powershell.exe in WSL."
+    (interactive)
+    (let ((clip-text (string-trim-right (shell-command-to-string "powershell.exe -command Get-Clipboard"))))
+      (if (> (length clip-text) 0)
+          (insert clip-text)
+        (message "Windows clipboard is empty"))))
+
+  (when (lvn--wsl-p)
+    ;; Override the default yank to use Windows clipboard in WSL only.
+    (global-set-key (kbd "C-y") #'wsl-paste-from-windows-clipboard))
 
   (defun lvn-duplicate-line-or-region ()
     "Duplicate the current line or region."

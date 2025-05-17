@@ -1660,6 +1660,20 @@ selected text.
   (advice-add 'kill-ring-save :around #'lvn-slick-copy-region)
 #+end_src
 
+#+begin_src emacs-lisp
+  (defun wsl-paste-from-windows-clipboard ()
+    "Paste text from Windows clipboard using powershell.exe in WSL."
+    (interactive)
+    (let ((clip-text (string-trim-right (shell-command-to-string "powershell.exe -command Get-Clipboard"))))
+      (if (> (length clip-text) 0)
+          (insert clip-text)
+        (message "Windows clipboard is empty"))))
+
+  (when (lvn--wsl-p)
+    ;; Override the default yank to use Windows clipboard in WSL only.
+    (global-set-key (kbd "C-y") #'wsl-paste-from-windows-clipboard))
+#+end_src
+
 | Command                     | Emacs | Sublime Text | TextMate |
 |-----------------------------+-------+--------------+----------|
 | Duplicate line or selection | C-S-d | C-S-d        | C-S-d    |
