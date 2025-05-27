@@ -982,26 +982,26 @@ original state of line numbers after navigation."
   ;; Manipulate whitespace around point in a smart way.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
-  ;; Function to perform slick cut for the kill-region command.
-  (defun lvn-slick-cut-region (orig-fn beg end &rest args)
-    "Cut the selected region or current line, and send it to Windows clipboard via clip.exe."
-    (if (called-interactively-p 'any)
-        (let* ((region-active (use-region-p))
-               (start (if region-active (region-beginning) (line-beginning-position)))
-               (end   (if region-active (region-end)       (line-beginning-position 2)))
-               (text  (buffer-substring-no-properties start end)))
-          ;; Send to Windows clipboard
-          (with-temp-buffer
-            (insert text)
-            (call-process-region (point-min) (point-max) "clip.exe"))
-          ;; Message for user
-          (message (if region-active "[Cut region]" "[Cut the current line]"))
-          ;; Call the original kill-region to actually remove the text
-          (apply orig-fn start end args))
-      ;; Not interactive: just pass through
-      (apply orig-fn beg end args)))
-
-  (advice-add 'kill-region :around #'lvn-slick-cut-region)
+  ;; ;; Function to perform slick cut for the kill-region command.
+  ;; (defun lvn-slick-cut-region (orig-fn beg end &rest args)
+  ;;   "Cut the selected region or current line, and send it to Windows clipboard via clip.exe."
+  ;;   (if (called-interactively-p 'any)
+  ;;       (let* ((region-active (use-region-p))
+  ;;              (start (if region-active (region-beginning) (line-beginning-position)))
+  ;;              (end   (if region-active (region-end)       (line-beginning-position 2)))
+  ;;              (text  (buffer-substring-no-properties start end)))
+  ;;         ;; Send to Windows clipboard
+  ;;         (with-temp-buffer
+  ;;           (insert text)
+  ;;           (call-process-region (point-min) (point-max) "clip.exe"))
+  ;;         ;; Message for user
+  ;;         (message (if region-active "[Cut region]" "[Cut the current line]"))
+  ;;         ;; Call the original kill-region to actually remove the text
+  ;;         (apply orig-fn start end args))
+  ;;     ;; Not interactive: just pass through
+  ;;     (apply orig-fn beg end args)))
+  ;;
+  ;; (advice-add 'kill-region :around #'lvn-slick-cut-region)
 
   ;; Function to perform slick copy for the kill-ring-save command.
   (defun lvn-slick-copy-region (orig-fn beg end &rest args)
