@@ -1031,7 +1031,7 @@ original state of line numbers after navigation."
           (insert clip-text)
         (message "Windows clipboard is empty"))))
 
-  (when (lvn--wsl-p)
+  (when lvn--wsl-p
     ;; Override the default yank to use Windows clipboard in WSL only.
     (global-set-key (kbd "C-y") #'wsl-paste-from-windows-clipboard))
 
