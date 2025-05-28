@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250517.1248>
+;; Version: <20250311.0951>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250517.1248>"
+(defconst lvn--emacs-version "<20250311.0951>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -982,58 +982,47 @@ original state of line numbers after navigation."
   ;; Manipulate whitespace around point in a smart way.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 
-  ;; ;; Function to perform slick cut for the kill-region command.
-  ;; (defun lvn-slick-cut-region (orig-fn beg end &rest args)
-  ;;   "Cut the selected region or current line, and send it to Windows clipboard via clip.exe."
-  ;;   (if (called-interactively-p 'any)
-  ;;       (let* ((region-active (use-region-p))
-  ;;              (start (if region-active (region-beginning) (line-beginning-position)))
-  ;;              (end   (if region-active (region-end)       (line-beginning-position 2)))
-  ;;              (text  (buffer-substring-no-properties start end)))
-  ;;         ;; Send to Windows clipboard
-  ;;         (with-temp-buffer
-  ;;           (insert text)
-  ;;           (call-process-region (point-min) (point-max) "clip.exe"))
-  ;;         ;; Message for user
-  ;;         (message (if region-active "[Cut region]" "[Cut the current line]"))
-  ;;         ;; Call the original kill-region to actually remove the text
-  ;;         (apply orig-fn start end args))
-  ;;     ;; Not interactive: just pass through
-  ;;     (apply orig-fn beg end args)))
-  ;;
-  ;; (advice-add 'kill-region :around #'lvn-slick-cut-region)
+  ;; Function to perform slick cut for the kill-region command.
+  (defun lvn-slick-cut-region (orig-fn beg end &rest args)
+    "Cut the selected region or the current line if no region is active and
+called interactively."
+    (interactive (if (use-region-p)
+                     (list (region-beginning) (region-end))
+                   (list (line-beginning-position) (line-beginning-position 2))))
+    (if (called-interactively-p 'any)
+        (let ((region-active (and (mark t) (use-region-p))))
+          (if region-active
+              ;; Region is active and mark is set, use the region bounds.
+              (apply orig-fn (region-beginning) (region-end) args)
+            ;; No active region or mark not set, cut the current line.
+            (progn
+              (message "[Cut the current line]")
+              (apply orig-fn (line-beginning-position) (line-beginning-position 2) args))))
+      ;; If not called interactively, pass the original arguments unchanged.
+      (apply orig-fn beg end args)))
+
+  (advice-add 'kill-region :around #'lvn-slick-cut-region)
 
   ;; Function to perform slick copy for the kill-ring-save command.
   (defun lvn-slick-copy-region (orig-fn beg end &rest args)
-    "Copy selected region or current line, and send it to Windows clipboard via clip.exe."
+    "Copy the selected region or the current line if no region is active and
+called interactively."
+    (interactive (if (use-region-p)
+                     (list (region-beginning) (region-end))
+                   (list (line-beginning-position) (line-beginning-position 2))))
     (if (called-interactively-p 'any)
-        (let ((text (if (use-region-p)
-                        (buffer-substring-no-properties (region-beginning) (region-end))
-                      (buffer-substring-no-properties (line-beginning-position)
-                                                      (line-beginning-position 2)))))
-          (with-temp-buffer
-            (insert text)
-            ;; Send to Windows clipboard using clip.exe.
-            (call-process-region (point-min) (point-max) "clip.exe"))
-          (message (if (use-region-p) "[Copied region]" "[Copied the current line]"))
-          ;; Still call the original to update kill-ring.
-          (apply orig-fn beg end args))
-      ;; Not interactive, behave normally.
+        (let ((region-active (and (mark t) (use-region-p))))
+          (if region-active
+              ;; Region is active and mark is set, use the region bounds.
+              (apply orig-fn (region-beginning) (region-end) args)
+            ;; No active region or mark not set, copy the current line.
+            (progn
+              (message "[Copied the current line]")
+              (apply orig-fn (line-beginning-position) (line-beginning-position 2) args))))
+      ;; If not called interactively, pass the original arguments unchanged.
       (apply orig-fn beg end args)))
 
   (advice-add 'kill-ring-save :around #'lvn-slick-copy-region)
-
-  (defun wsl-paste-from-windows-clipboard ()
-    "Paste text from Windows clipboard using powershell.exe in WSL."
-    (interactive)
-    (let ((clip-text (string-trim-right (shell-command-to-string "powershell.exe -command Get-Clipboard"))))
-      (if (> (length clip-text) 0)
-          (insert clip-text)
-        (message "Windows clipboard is empty"))))
-
-  (when lvn--wsl-p
-    ;; Override the default yank to use Windows clipboard in WSL only.
-    (global-set-key (kbd "C-y") #'wsl-paste-from-windows-clipboard))
 
   (defun lvn-duplicate-line-or-region ()
     "Duplicate the current line or region."
