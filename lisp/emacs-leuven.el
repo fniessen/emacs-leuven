@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250311.0951>
+;; Version: <20250802.1237>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250311.0951>"
+(defconst lvn--emacs-version "<20250802.1237>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -1400,7 +1400,7 @@ Should be selected from `fringe-bitmaps'.")
   (setq-default display-fill-column-indicator-column 80)
 
   ;; Enable column indicator display for all modes.
-  (global-display-fill-column-indicator-mode 1)
+  (global-display-fill-column-indicator-mode 1) ; Available in Emacs 27+.
 
   ;; Visually indicate buffer boundaries and scrolling in the fringe.
   (setq-default indicate-buffer-boundaries '((top . left) (t . right)))
@@ -1672,9 +1672,8 @@ Should be selected from `fringe-bitmaps'.")
   (leuven--section "14.20 (emacs)The Cursor Display")
 
   ;; Cursor customization based on buffer state.
-  (defun lvn--update-cursor-appearance ()
+  (defun lvn-update-cursor-appearance ()
     "Update cursor color and shape based on buffer state (read-only, overwrite, or insert)."
-    (interactive)  ; Allow manual invocation if needed.
     (let* ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
            (cursor-colors `((read-only . "purple1")
                            (overwrite . "#7F7F7F")
@@ -1687,7 +1686,7 @@ Should be selected from `fringe-bitmaps'.")
       (setq cursor-type current-type)))
 
   ;; Update cursor on every command.
-  (add-hook 'post-command-hook #'lvn--update-cursor-appearance)
+  (add-hook 'post-command-hook #'lvn-update-cursor-appearance)
 
   ;; Default to bar cursor.
   (setq-default cursor-type 'bar)
@@ -5632,7 +5631,7 @@ a clean buffer we're an order of magnitude laxer about checking."
             (lambda ()
               ;; Hide up-to-date and unregistered files.
               (define-key vc-dir-mode-map
-                          (kbd "x") #'lvn-hide-up-to-date-and-unregistered-files-in-vc-dir)
+                          (kbd "x") #'lvn-vc-dir-hide-up-to-date-and-unregistered-files)
               (define-key vc-dir-mode-map
                           (kbd "E") #'vc-ediff)
               (define-key vc-dir-mode-map
@@ -5640,7 +5639,7 @@ a clean buffer we're an order of magnitude laxer about checking."
                                         ; ediff-windows-wordwise?
               ))
 
-  (defun lvn-hide-up-to-date-and-unregistered-files-in-vc-dir ()
+  (defun lvn-vc-dir-hide-up-to-date-and-unregistered-files ()
     "Hide up-to-date and unregistered files in VC directory buffer."
     (interactive)
     (vc-dir-hide-up-to-date)

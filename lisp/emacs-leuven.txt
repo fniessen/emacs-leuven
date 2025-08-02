@@ -71,7 +71,7 @@ details.
 * Header
 
 #+name: current-time
-#+begin_src emacs-lisp :eval yes :results silent :tangle no :exports none
+#+begin_src emacs-lisp :eval yes :results value :tangle no
 (format-time-string "<%Y%m%d.%H%M>")
 #+end_src
 
@@ -2627,7 +2627,7 @@ http://stackoverflow.com/questions/16114700/is-it-possible-to-replace-fringe-bit
   (setq-default display-fill-column-indicator-column 80)
 
   ;; Enable column indicator display for all modes.
-  (global-display-fill-column-indicator-mode 1)
+  (global-display-fill-column-indicator-mode 1) ; Available in Emacs 27+.
 
   ;; Visually indicate buffer boundaries and scrolling in the fringe.
   (setq-default indicate-buffer-boundaries '((top . left) (t . right)))
@@ -3010,9 +3010,8 @@ Colorize cursor according to buffer state.
 
 #+begin_src emacs-lisp
   ;; Cursor customization based on buffer state.
-  (defun lvn--update-cursor-appearance ()
+  (defun lvn-update-cursor-appearance ()
     "Update cursor color and shape based on buffer state (read-only, overwrite, or insert)."
-    (interactive)  ; Allow manual invocation if needed.
     (let* ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
            (cursor-colors `((read-only . "purple1")
                            (overwrite . "#7F7F7F")
@@ -3025,7 +3024,7 @@ Colorize cursor according to buffer state.
       (setq cursor-type current-type)))
 
   ;; Update cursor on every command.
-  (add-hook 'post-command-hook #'lvn--update-cursor-appearance)
+  (add-hook 'post-command-hook #'lvn-update-cursor-appearance)
 #+end_src
 
 Default cursor settings:
@@ -10577,7 +10576,7 @@ Shortcuts in the popup (once displayed):
             (lambda ()
               ;; Hide up-to-date and unregistered files.
               (define-key vc-dir-mode-map
-                          (kbd "x") #'lvn-hide-up-to-date-and-unregistered-files-in-vc-dir)
+                          (kbd "x") #'lvn-vc-dir-hide-up-to-date-and-unregistered-files)
               (define-key vc-dir-mode-map
                           (kbd "E") #'vc-ediff)
               (define-key vc-dir-mode-map
@@ -10585,7 +10584,7 @@ Shortcuts in the popup (once displayed):
                                         ; ediff-windows-wordwise?
               ))
 
-  (defun lvn-hide-up-to-date-and-unregistered-files-in-vc-dir ()
+  (defun lvn-vc-dir-hide-up-to-date-and-unregistered-files ()
     "Hide up-to-date and unregistered files in VC directory buffer."
     (interactive)
     (vc-dir-hide-up-to-date)
