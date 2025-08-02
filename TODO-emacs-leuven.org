@@ -458,6 +458,8 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
 
 ** Optimisation et débogage
 
+*** TODO Replace mapcar with mapc when return values are unused
+
 *** TODO [#A] Fixer les warnings (cl is deprecated)
 
  ■  Warning (comp): auto-highlight-symbol.el:446:2: Warning: custom-declare-variable `ahs-include' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
@@ -988,3 +990,383 @@ https://emacs.stackexchange.com/questions/371/how-do-i-use-emacsclient-to-connec
 - TRAMP* Design
 
 - http://www.slideshare.net/UserStudio/1-facture-6-heures-2-cocas-1-visualisation-11204436
+
+* Inbox
+
+** Org
+
+*** MAYB Improve output of RTO
+
+See https://docs.readthedocs.io/en/stable/webhooks.html#github and make
+a "ReadTheProject" version (where the whole web site is a one-file Org)...
+
+Convert a real MkDocs site, such as
+https://github.com/mkdocs/mkdocs/tree/master/docs
+to compare between their output and my output.
+
+*** Disable effect of parent hook
+
+Org mode is derived from outline-mode, which is derived from text mode. A
+derived mode runs all the hooks from the parent modes.
+
+I don't know how to turn this off, but you can work around this by changing
+the function you put into the text-mode-hook:
+
+#+begin_src emacs-lisp
+(defun lvn/turn-on-flyspell-not-in-org-though ()
+  (or (eq major-mode 'org-mode) (turn-on-flyspell)))
+#+end_src
+
+*** TODO Add org block background color
+
+https://writequit.org/eos/eos-appearance.html#variable-width-fonts
+
+*** Literate programming
+
+The very attempt of communicating one's work clearly to other people
+considerably improves the work itself.
+
+By trying to document program during writing you can substantially improve the
+quality of the program even if nobody, except the author of the program, ever
+reads the resulting documentation.
+
+*** TODO Déployer dernier CSS RTO sur le site Pirilampo
+
+*** Inline formulas go in the TBLFM line in tables
+
+> I wanted to combine a table of text and a generated result (in org to
+> LaTaX using the new exporter).  It would seem src_R snips would be
+> perfect for this.  However, it does not seem to work.  I.e. src_R is
+> translated correctly in the text, but not in the table.
+
+That's because inline src blocks are not allowed in table cells.
+Appropriate place for formulas in the spreadsheet is the TBLFM line.
+
+*** Org time grid
+
+My values:
+http://screencast.com/t/KCrAHxCTJo
+
+Default values:
+http://screencast.com/t/OXBjlIZgkTz
+
+*** Babel, sbe calls, table
+
+It seems unlikely that inline src blocks will be allowed in table cells.
+
+In org-element.el, there is this in org-element-object-restrictions - the
+alist of objects restrictions:
+
+  ┌────
+  │ ;; Ignore inline babel call and inline src block as formulas are
+  │ ;; possible.  Also ignore line breaks and statistics cookies.
+  │ (table-cell export-snippet footnote-reference latex-or-entity link macro
+  │ radio-target sub/superscript target text-markup timestamp)
+  └────
+
+Another way to get where you want to go is to use the =brew= R package. The
+markup is very simple - use <%= code %> in place of src_R{ code }.
+
+Example:
+
+  ┌────
+  │ #+DRAWERS: TABLEDRAWER
+  │
+  │ * jay's query
+  │ :PROPERTIES:
+  │ :session:  *R:2*
+  │ :exports:  both
+  │ :END:
+  │
+  │ #+BEGIN_SRC R :results value
+  │ A <- matrix(sample(100, size = 6), nrow = 2)
+  │ #+END_SRC
+  │
+  │ #+RESULTS:
+  │ | 51 | 77 | 63 |
+  │ | 65 | 20 | 56 |
+  │
+  │ Put a table with brew markup in an example block in a drawer, so it
+  │ will not appear in the output.
+  │
+  │ :TABLEDRAWER:
+  │ #+NAME: src-blk-out
+  │ #+BEGIN_EXAMPLE
+  │ |  a |  b | <%= A[1,3] %> |
+  │ |  c |  d |         eeeee |
+  │ #+END_EXAMPLE
+  │ :END:
+  │
+  │ Then use a call to ~brew()~ to run it. Note =:results output raw=
+  │
+  │ #+NAME: test-src-blk-out
+  │ #+BEGIN_SRC R :results output raw :var tab=src-blk-out
+  │ require(brew)
+  │ brew(text=tab)
+  │ #+END_SRC
+  └────
+
+With point in or below the headline,
+
+  C-c C-e C-s C-b l L
+
+exports the above as
+
+  ┌────
+  │ \begin{verbatim}
+  │ A <- matrix(sample(100, size = 6), nrow = 2)
+  │ \end{verbatim}
+  │
+  │ \begin{center}
+  │ \begin{tabular}{rrr}
+  │ 2 & 16 & 30\\
+  │ 11 & 81 & 86\\
+  │ \end{tabular}
+  │ \end{center}
+  │
+  │ Put a table with brew markup in an example block in a drawer, so it
+  │ will not appear in the output.
+  │
+  │ Then use a call to \verb~brew()~ to run it. Note \texttt{:results output raw}
+  │ \label{test-src-blk-out}
+  │ \begin{verbatim}
+  │ require(brew)
+  │ brew(text=tab)
+  │ \end{verbatim}
+  │
+  │ \begin{center}
+  │ \begin{tabular}{llr}
+  │ a & b & 30\\
+  │ c & d & eeeee\\
+  │ \end{tabular}
+  │ \end{center}
+  └────
+
+** Emacs
+
+Emacs Introduction and Demonstration:
+https://www.youtube.com/watch?v=B6jfrrwR10k
+(de tout... custos, Org mode, Emmet mode !)
+
+*** TODO Convert Emacs-Leuven to RTD
+
+See https://github.com/mkdocs/mkdocs/issues/2166 for "A README.md file is now
+treated as an index file within a directory and will be rendered to index.html
+(#608)".
+
+https://github.com/mkdocs/mkdocs/issues/321
+
+*** TODO Cannot find image file ‘~/.dotfiles/icons/inbox.png’
+
+*** TODO Install best fonts for source code (for Emacs, fixed width)
+
+Recommended Fonts for *Programming*:
+
+1. Monaco
+2. *Consolas*
+3. Inconsolata or *InconsolataGo*, minor tweak
+4. Anonymous Pro
+5. *DejaVu Sans Mono*, because, it's the most functional. Containing the most
+   Unicode chars, math, brackets, bullets, etc.
+6. Terminus
+7. Source Code Pro, or *Office Code Pro* is an interesting fork of Source Code Pro
+   that includes changes "made specifically for text editors and coding
+   environments" (sensible changes!).
+
+8. Envy Code R
+
+Others:
+
+1. Droid Sans Mono Slashed
+2. Liberation Mono
+3. chrissimpkins/ *Hack*: A typeface designed for source code
+4. *Fantasque Sans mono* (unique look especially at smallish sizes, thick font)
+5. https://github.com/be5invis/Iosevka (*GREAT*, can't go back to another!)
+6. *FiraCode* + FiraCode Symbol
+7. *Ubunto Mono* (great best thing)
+8. Sauce Code Pro Nerd https://github.com/ryanoasis/nerd-fonts
+9. Go Mono
+10. *Input* (not open source)
+11. *PragmataPro* (expensive, 200 EUR -- but Essential is good enough)
+12. Operator Mono
+13. Hasklig
+14. Noto
+15. Dina
+16. Osaka-Mono
+17. M+
+
+#+begin_src emacs-lisp
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8-unix)
+
+;; Set a default font.
+(when (member "DejaVu Sans Mono" (font-family-list))
+  (set-face-attribute 'default nil :font "DejaVu Sans Mono"))
+
+;; Specify font for all unicode characters.
+(when (member "Symbola" (font-family-list))
+  (set-fontset-font t 'unicode "Symbola" nil 'prepend))
+
+;; Specify font for Chinese characters using default chinese font on Linux.
+(when (member "WenQuanYi Micro Hei" (font-family-list))
+  (set-fontset-font t '(#x4e00 . #x9fff) "WenQuanYi Micro Hei" ))
+#+end_src
+
+*** MAYB Web mode SQL Wish list
+
+#+begin_src xml
+<dataSource id="dsRefreshmentSummary">
+    <table name="reserve_rs" role="main"     />
+    <sql dialect="generic">
+      SELECT
+          resource_id,
+          SUM(quantity) AS quantity,
+          SUM(nr_coffees) AS nr_coffees,
+          SUM(nr_teas) AS nr_teas,
+          SUM(nr_waters) AS nr_waters,
+          SUM(nr_cookies) AS nr_cookies
+      FROM calc) meta
+      GROUP BY resource_id
+    </sql>
+    <parameter name="requestedFor" dataType="verbatim" value="0=0"/>
+    <parameter name="resourceCode" dataType="verbatim" value="0=0"/>
+</dataSource>
+
+<panel type="console" id="pnlConsole" columns="4" dataSource="dsConsole" region="north">
+    <title>Filter</title>
+    <action id="pnlConsoleSearch">
+        <title>Show</title>
+    </action>
+    <field table="reserve"    name="user_requested_for" />
+    <field table="reserve_rs"  name="resource_id">
+        <action id="selectResCode">
+            <command type="selectValue" visibleFieldNames="resource_id" fieldNames="resource_id" selectFieldNames="resource_id"
+                     restriction="resource_id IN (SELECT resource_id FROM resources WHERE resource_std IN ('STD-REFRESHMENT', 'SPECIAL CATERING'))" >
+                </command>
+        </action>
+    </field>
+    <field/>
+    <field table="meetings_view" name="confirmation_status" dataType="text">
+        <sql dialect="generic">
+              (  IIF(meetings_view.meetings_view_id=0 and meetings_view.status='CONFIRMED','Relocated', 'Approved') )
+        </sql>
+    </field>
+    <restriction type="parsed">
+        <clause relop="AND" op=">=" table="bl" name="area_rm" value="100" />
+    </restriction>
+    <restriction type="sql" sql="meetings_view.status = 'CONFIRMED'
+                                AND meetings_view.res_request_id IS NOT NULL"/>
+</panel>
+#+end_src
+
+*** TODO Improve Emacs configuration
+
+**** Shortcuts
+
+https://www.viget.com/articles/my-overused-sublime-text-keyboard-shortcuts
+
+**** Emacs speedup to 1000% (in RAM on Linux)
+
+http://blog.binchen.org/index-20.html
+
+**** Helm
+
+https://github.com/emacs-helm/helm/wiki
+
+***** Helm
+
+- http://tuhdo.github.io/helm-projectile.html
+- Imenu-anywhere.
+
+***** Helm wishlist
+
+Put a different color when the number of candidates is stable (red when still
+searching, green when list is full)
+
+How to search for multiple strings in the open buffers?  @first @second does not
+work: only @first is used (I can write whatever I want after that). Using comma
+does not help.
+
+How to search for a name part in files of different extensions?  Searching for
+files named "...test... .org" or "...test... .java"?
+Using *org,*java does not work -- syntax supported by the negation operator.
+Nor with a space.
+
+**** Config files
+
+- https://github.com/jwiegley/dot-emacs/blob/master/init.el
+- https://bitbucket.org/holgerschurig/emacsconf/src (excellent, voir notmuch, etc.)
+
+**** JS environment
+
+https://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs
+
+JS Snippets (from Dmitry)
+https://github.com/dgutov/js-snippets/tree/3ae682074b596d7c4808319e1574a98312907f33/js-mode
+
+**** Dynamic YASnippets (for Java and JS?)
+
+http://stackoverflow.com/questions/39860336/dynamic-yasnippet-inserting-method-name-and-arguments
+
+Voir aussi comment Imenu s'y prend : il récupère le type de chaque argument, et
+l'affiche dans sa liste...
+
+**** Debugging without a Debugger
+
+If you like to debug your code by inserting output statements at
+critical/interesting points, have a look at ll-debug.el, available at
+
+http://www.cbrunzema.de/software.html#ll-debug
+
+It has functions to insert output statements that display unique strings and
+skeletons to construct code to print out values of variables. There are some
+routines to comment lines or regions of code in an uniform way, too. Among the
+supported languages are Lisp, C, C++, Perl etc.
+
+**** Configurable color theme
+
+https://github.com/alezost/alect-themes/blob/master/alect-themes.el
+
+**** Web mode
+
+Auto-pairing, etc.
+
+http://web-mode.org/
+
+HTML Outline: https://www.emacswiki.org/emacs/HtmlOutline
+
+**** Adding tilde to electric pairs in org mode
+
+http://emacs.stackexchange.com/questions/17284/adding-tilde-to-electric-pairs-in-org-mode/17341#17341
+
+**** New link features in org 9
+
+http://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/
+
+**** Super interesting posts
+
+- http://blog.binchen.org/categories/emacs.html
+- http://whattheemacsd.com/
+
+*** TODO Make Org background face like web-mode
+
+Hl-line visible on it; ahs-mode also visible on it!
+
+*** TODO Noter les YASnippets de SQL Complete
+
+Idem avec https://www.devart.com/dbforge/sql/sqlcomplete/docs/index.html?sql_snippets.htm
+
+** Gnus
+
+*** Sioux
+
+The Latin phrase "Pax et bonum" works as a "yours truly" or a "Good Bye!".
+
+*** Missing mails from Gnus
+
+Actually, a new development. I entered the group and used Z G to rescan the
+group, then / o to show the old messages - and now I have more messages in the
+summary buffer!
+- Alex Schroeder 2020-02
+
+https://alexschroeder.ch/wiki/Comments_on_2019-12-14_Gnus_IMAP_issues
