@@ -18,22 +18,21 @@
 #+begin_quote
 [!TIP]
 
-*** Elevate your Emacs skills in Paris, Utrecht, Leuven or Valencia!
-*Unlock the power of Emacs!  Join my next exclusive "Emacs Boost" course!*
+*** Elevate your Emacs skills in Paris, Utrecht, Leuven, or Valencia!
+Unlock the power of Emacs!  Join my next exclusive "Emacs Boost" course!*
 
-Ready to /supercharge your productivity/ and become an Emacs ninja?  Look no
+Ready to /supercharge your productivity/ and become an Emacs power user? Look no
 further!
 
 *What you'll learn:*
-- Master Emacs from the basics to advanced tricks.
+- Master Emacs, from the basics to advanced techniques.
 - /Boost your editing efficiency/ and streamline your workflow.
 - Customize Emacs to fit your unique needs.
 - And much more!
 
 *Audience:*
 
-Open to anyone interested in Emacs, from beginners to advanced
-users.
+Ideal for anyone interested in Emacs -- beginners and experienced users alike.
 
 *Why choose my course?*
 - Expert instructor with 25 years of Emacs experience.
@@ -49,13 +48,13 @@ to /reserve your seat/.
 
 * Emacs Leuven: Boost your productivity
 
-Are you in search of an Emacs *configuration file* that comes with numerous
-*pre-enabled packages* and a more *user-friendly default setup*?  Look no further!
-This resource will spare you countless hours of manual configuration.
+Looking for an Emacs *configuration file* with numerous *pre-enabled packages* and
+a more *user-friendly default setup*? Look no further! This resource will spare
+you countless hours of manual configuration.
 
 Introducing the "*Emacs Leuven*" configuration file, packaged as an *Emacs Lisp
-library* and ready for your use. What's more, it's finely tuned to ensure
-a swift *Emacs startup time* of approximately *2 seconds*!
+library* and ready for your use. It’s finely tuned for a swift *Emacs startup
+time* -- typically around *2 seconds*!
 
 #+begin_note
 *Emacs Leuven* meticulously avoids overshadowing any default Emacs key
@@ -65,8 +64,7 @@ while retaining everything from the Emacs manual.
 
 * Installation
 
-Incorporating the Emacs Leuven library into your Emacs environment is
-a straightforward process:
+Adding the Emacs Leuven library to your Emacs environment is straightforward:
 
 - Download or clone the Emacs-Leuven repository from [[https://github.com/fniessen/emacs-leuven][GitHub]].
 
@@ -165,9 +163,9 @@ prompts, insert the following line before requiring Emacs-Leuven:
 |                                   | rainbow-mode           |             |
 |                                   | unbound                |             |
 
-To specify packages that should be excluded from installation by Emacs Leuven
-(and not suggested for installation), incorporate a configuration snippet like
-the following into your Emacs configuration file:
+To prevent specific packages from being installed or suggested by Emacs Leuven,
+incorporate a configuration snippet like the following into your Emacs
+configuration file:
 
 #+begin_src emacs-lisp
 (setq leuven-excluded-packages '(some-useless-package
@@ -181,8 +179,7 @@ Unlock time-saving techniques and enhance your productivity using the Emacs
 Leuven keyboard shortcuts. Experience a streamlined workflow that puts you in
 control.
 
-Key binding conventions:
-http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
+See [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html][Emacs key binding conventions]].
 
 # https://scotch.io/bar-talk/sublime-text-keyboard-shortcuts
 # http://sweetme.at/2013/08/08/sublime-text-keyboard-shortcuts/
@@ -380,7 +377,7 @@ I still have to sort them out, by mode (when applicable).
 | C-c !         | shell                                          |
 | C-c .         | leuven-insert-current-date                     |
 | C-c C-c       | tidy-buffer                                    |
-| C-c C-x nil   |                                                |
+| C-c C-x nil   | XXX                                            |
 | C-c b         | boxquote-region                                |
 | C-c d l       | dictionary-lookup-definition                   |
 | C-c d m       | dictionary-match-words                         |
@@ -415,22 +412,21 @@ Found a bug or have an idea for a new feature?  Share your thoughts on the
 
 ** Submit patches
 
-I welcome contributions in any form!  Feel free to submit patches to enhance the
-project.
+Contributions of any kind are welcome! Feel free to submit patches to help
+improve the project.
 
 ** Support development with a donation!
 
-If you find the emacs-leuven project enhancing your Emacs experience and
-simplifying your workflow, seize the opportunity to express your appreciation!
-Help fuel future development by making a [[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted][donation]] through PayPal. Your support
-is invaluable — thank you!
+If the emacs-leuven project has enhanced your Emacs experience and simplified
+your workflow, consider showing your appreciation! Help fuel future development
+by making a [[https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VCVAS6KPDQ4JC&lc=BE&item_number=emacs%2dleuven&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted][donation]] through PayPal. Your support is invaluable -- thank you!
 
 Remember, regardless of donations, emacs-leuven will always remain freely
 accessible, both as in Belgian beer and as in speech.
 
 * License
 
-Copyright (C) 1999-2024 Free Software Foundation, Inc.
+Copyright (C) 1999-2025 Free Software Foundation, Inc.
 
 Author: Fabrice Niessen \\
 Keywords: emacs configuration file
