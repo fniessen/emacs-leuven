@@ -1,34 +1,50 @@
 # Hey Emacs, this is a -*- org -*- file ...
 #+TITLE:     TODO
 
+* TODO Inbox: Priorities or Must-Do Today                       :urgent:FLAGGED:
+
+- Voir les réponses de ChatGPT en tant qu'expert en catégories de TODO listes
+- "Scanner" mes classeurs et voir où je rangerais tous les docs, s'ils étaient électroniques
+- Effacer infos sur Ledger, sauf liste des accounts
+- Colors of org-todo / done dans Emacs Leuven theme
+- "(No Area of Focus)" ne peut pas exister : Misc categ if needed
+- Dder à Cgpt quels sont les rapports courants sous Todoist, Monday.com, Trello
+  et Jira, par exemple
+- Preset "-MAYB" de manière auto; voir impact
+- Assignee tag (@nnn) permet de grepper dans tous les fichhiers et de voir tout
+  d'un coup, et aussi d'utiliser les tags highlightés dans Bigblow (avantage par
+  rapport à une propriété que l'on ne verrait pas dans Bigblow)
+  + Sans assignee tag = "pour moi", ou "on ne sait pas pour qui" selon une
+    variable à setter pour savoir comment interpréter...
+
 * Tasks
 
 ** Configuration de base et personnalisation
 
 *** TODO Activer la correction orthographique (Ispell) dans les buffers Org
 
-*** TODO Remove obsolete variables
+*** NEXT Remove obsolete variables
 
-| Item                                | Type     | Status          | Replacement                                                |
-|-------------------------------------+----------+-----------------+------------------------------------------------------------|
-| menu-bar-enable-clipboard           | Function | Obsolete (23.2) | Remove; clipboard is default                               |
-| garbage-collection-messages         | Variable | Obsolete (24.4) | Remove; use after-gc-hook if needed                        |
-| apropos-do-all                      | Variable | Obsolete (24.4) | Remove; customize specific apropos commands                |
-| comint-use-prompt-regexp            | Variable | Obsolete (24.4) | Not set; rely on comint-prompt-read-only                   |
-| ad-disable-advice, ad-update        | Function | Obsolete (24.4) | Remove; already using advice-add                           |
-| save-interprogram-paste-before-kill | Variable | Obsolete (25.1) | Remove; default behavior now                               |
-| yank-pop-change-selection           | Variable | Obsolete (25.1) | Remove (commented out); clipboard handling is automatic    |
-| find-tag-default                    | Function | Obsolete (25.1) | Use symbol-at-point or thing-at-point 'symbol              |
-| resize-mini-windows                 | Variable | Obsolete (27.1) | Remove; use resize-mini-frames if graphical                |
-| w32-quote-process-args              | Variable | Obsolete (27.1) | Remove; argument quoting is internal                       |
-| w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start" |
-| w32-register-hot-key                | Function | Obsolete (27.1) | Remove; handle via keybindings or external tools           |
+| Item                                | Type     | Status          | Replacement                                                                   |
+|-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
+| menu-bar-enable-clipboard           | Function | Obsolete (23.2) | Remove; clipboard is default                                                  |
+| garbage-collection-messages         | Variable | Obsolete (24.4) | Remove; use after-gc-hook if needed                                           |
+| apropos-do-all                      | Variable | Obsolete (24.4) | Remove; customize specific apropos commands                                   |
+| comint-use-prompt-regexp            | Variable | Obsolete (24.4) | Not set; rely on comint-prompt-read-only                                      |
+| ad-disable-advice, ad-update        | Function | Obsolete (24.4) | Remove; already using advice-add                                              |
+| save-interprogram-paste-before-kill | Variable | Obsolete (25.1) | Remove; default behavior now                                                  |
+| yank-pop-change-selection           | Variable | Obsolete (25.1) | Remove (commented out); clipboard handling is automatic                       |
+| find-tag-default                    | Function | Obsolete (25.1) | Use symbol-at-point or thing-at-point 'symbol                                 |
+| resize-mini-windows                 | Variable | Obsolete (27.1) | Remove; use resize-mini-frames if Emacs is running in a graphical environment |
+| w32-quote-process-args              | Variable | Obsolete (27.1) | Remove; argument quoting is internal                                          |
+| w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start"                    |
+| w32-register-hot-key                | Function | Obsolete (27.1) | Remove; handle via keybindings or external tools                              |
 
 *** TODO Remove obsolete variables and functions for Orgstruct
 
 Obsolete Variables
 - org-emphasis-alist
-  Status: Not fully obsolete, but its format customization has evolved.
+  Status: Not completely obsolete; however, its customization approach has evolved.
   Details: In older Org versions (pre-9.0), org-emphasis-alist was used to define markup for emphasis (e.g., bold, italic). While it still exists, its use for HTML export has been superseded by org-html-text-markup-alist for finer control in HTML backends since Org 9.0 (2016). Your code modifies it directly, which might still work but isn’t the recommended approach for export-specific customization.
   Replacement: Use org-html-text-markup-alist for HTML, org-latex-text-markup-alist for LaTeX, etc., depending on the backend.
   Line Reference: (setq org-emphasis-alist ...) under ;; These variables need to be set before org.el is loaded....
@@ -51,8 +67,7 @@ starting Emacs with ~emacs -q~, set up your ~load-path~, and then evaluate
 The first number appearing in the echo area will be the time needed to run that
 command.
 
-Use autoloads, which delay the loading of the complete package until one of the
-interactive functions is used.
+Use autoloads to defer package loading until an interactive function is invoked.
 
 If you want to set options which need to be evaluated after a package is loaded,
 you can use ~eval-after-load~.
@@ -206,7 +221,7 @@ editor='emacsclient' (sans le -n) dans .gitconfig
   ;;       'leuven--org-latex-format-inlinetask)
 #+end_src
 
-*** MAYB Replace 'diminish' by 'delight'
+*** MAYB Investigate whether 'delight' is a full drop-in replacement for 'diminish'
 
 *** MAYB Read infos from https://github.com/thinkhuman/writingwithemacs
 
