@@ -2230,39 +2230,33 @@ on urgent and important tasks without losing any information.
 ** Dotfiles-based Org agenda management
 
 #+begin_src emacs-lisp
-(defun lvn-set-org-agenda-files-dotfiles-todo (&optional root-dir)
-  "Set `org-agenda-files` to all TODO.org and TODO-xxx.org files
+(defun eboost-set-org-agenda-files-dotfiles-todo (&optional root-dir)
+  "Set `org-agenda-files` to all TODO.org and TODO-*.org files
 in the root directories of repositories under ROOT-DIR.
 If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
   (interactive
    (list (read-directory-name "Root directory: " "~/.dotfiles/" nil t)))
                                         ; Prompt interactively for ROOT-DIR,
                                         ; defaulting to `~/.dotfiles/`.
-  (let ((todo-files '())) ;; Temporary list to store the found files.
-    ;; Set ROOT-DIR to default if not provided.
-    (setq root-dir (or root-dir "~/.dotfiles/"))
-    ;; Iterate over the immediate subdirectories of ROOT-DIR.
-    (dolist (subdir (directory-files root-dir t "^[^.]" t))
-                                        ; Exclude hidden files ("." and "..").
-      (when (and (file-directory-p subdir) ; Ensure it's a directory.
-                 (not (file-symlink-p subdir))) ; Ignore symbolic links.
-        ;; Look for files matching the pattern `TODO.org` or `TODO-xxx.org` in
-        ;; the subdir.
-        (dolist (todo-file (directory-files subdir t "^TODO\\(-.*\\)?\\.org$"))
-          (push todo-file todo-files)))) ; Add each matching file to the list.
-    ;; Update `org-agenda-files` with the found files.
-    (setq org-agenda-files todo-files)
-    ;; Message and return the list of files for verification.
-    (message "[Org agenda files set to: %s]" org-agenda-files)
-    org-agenda-files))
+  (setq root-dir (or root-dir "~/.dotfiles/"))
+  (setq org-agenda-files
+        (mapcan
+         (lambda (subdir)
+           (when (and (file-directory-p subdir)
+                      (not (file-symlink-p subdir)))
+             (directory-files subdir t "^TODO\\(-.*\\)?\\.org$")))
+         (directory-files root-dir t "^[^.]" t)))
+  (message "[Org agenda files set to: %s]" org-agenda-files)
+  org-agenda-files)
 #+end_src
 
 #+begin_src emacs-lisp
-(defun lvn-set-org-agenda-files ()
-  "Set `org-agenda-files` to all `.org` files in `org-directory`."
+(defun eboost-set-org-agenda-files ()
+  "Set `org-agenda-files` to all `.org` files directly inside `org-directory`."
   (interactive)
-  (setq org-agenda-files (directory-files org-directory t "\\.org$"))
-  (message "[Org agenda files set to: %s]" org-agenda-files))
+  (let ((files (directory-files org-directory t "\\`[^.].*\\.org\\'")))
+    (setq org-agenda-files files)
+    (message "[Org agenda files set to: %s]" org-agenda-files)))
 #+end_src
 
 ** Adapted From Bastien
