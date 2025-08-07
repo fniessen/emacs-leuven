@@ -122,9 +122,8 @@
 
 ;; = (org-agenda-skip-entry-if 'scheduled)
 (defun lvn--org-entry-is-scheduled-p ()
-  "Return non-nil if the current Org entry has a scheduled timestamp."
-  (let ((scheduled-time (org-get-scheduled-time (point))))
-    (and scheduled-time t)))
+  "Return t if the current Org entry has a scheduled timestamp, nil otherwise."
+  (org-get-scheduled-time (point)))
 
 (add-to-list 'org-agenda-custom-commands
              '("W" "Work"
@@ -734,11 +733,15 @@ N should be a non-negative integer representing the number of days."
 (defun lvn-org-git-root-todo ()
   "Display an Org agenda view of unscheduled TODO items from the Git root directory."
   (interactive)
+  (require 'vc-git)
   (let* ((git-root (vc-git-root default-directory))
          (org-files (when git-root
                       (directory-files-recursively
                        git-root
-                       "\\.\\(org\\|txt\\)$"))))
+                       "\\.\\(org\\|txt\\)$"
+                       nil              ; Include-directories.
+                       (lambda (file)
+                         (not (string-match-p "/\\.git/" file)))))))
     (if git-root
         (progn
           (let ((org-agenda-files org-files)
@@ -767,11 +770,10 @@ ARG determines the scope:
 If the buffer is in a version-controlled project (e.g., vc-dir),
 use the project's root directory instead of the current directory."
   (interactive "P")
+  (require 'vc)
   (let* ((current-dir
           (or (when (buffer-file-name) (file-name-directory (buffer-file-name)))
-                                        ; File's directory.
-              (when (vc-root-dir) (vc-root-dir))))
-                                        ; Git root directory.
+              (vc-root-dir)))  ; Git root directory if available.
          (org-agenda-files
           (cond
            ((not current-dir)
@@ -782,36 +784,42 @@ use the project's root directory instead of the current directory."
            ;; Single C-u: Current buffer + .org files in current dir/subdirs.
            ((equal arg '(4))
             (delete-dups
-             (append (when (buffer-file-name) (list (buffer-file-name)))
-                     (directory-files-recursively current-dir ".*\\.org$"))))
+             (append
+              (when (buffer-file-name) (list (buffer-file-name)))
+              (directory-files-recursively
+               current-dir ".*\\.org$" nil
+               (lambda (file)
+                 (not (string-match-p "/\\.git/" file)))))))
            ;; Double C-u: Current buffer + .org and .txt files in current dir/subdirs.
            ((equal arg '(16))
             (delete-dups
-             (append (when (buffer-file-name) (list (buffer-file-name)))
-                     (directory-files-recursively current-dir ".*\\(\\.org\\|\\.txt\\)$"))))))
+             (append
+              (when (buffer-file-name) (list (buffer-file-name)))
+              (directory-files-recursively
+               current-dir ".*\\(\\.org\\|\\.txt\\)$" nil
+               (lambda (file)
+                 (not (string-match-p "/\\.git/" file)))))))))
          (org-default-notes-file nil))  ; Disable default notes file temporarily
-    (org-agenda))                       ; Open the standard agenda view.
-    ;; Uncomment below line if custom agenda view is needed:
-    ;; (org-agenda nil "f.")               ; Generate a custom Org agenda view.
-)
+    (org-agenda)))                      ; Open the standard agenda view.
 
-(global-set-key (kbd "<S-f6>")
-                (lambda ()
-                  (interactive)
-                  (lvn-org-agenda-for-current-buffer nil)))
-                                        ; Without arg: current buffer only.
+(defun lvn-open-agenda-current-buffer ()
+  "Show the Org agenda for the current buffer only (no additional files)."
+  (interactive)
+  (lvn-org-agenda-for-current-buffer nil))
 
-(global-set-key (kbd "<C-f6>")
-                (lambda ()
-                  (interactive)
-                  (lvn-org-agenda-for-current-buffer '(4))))
-                                        ; With C-u: current buffer + .org files.
+(defun lvn-open-agenda-buffer-and-org-files ()
+  "Show the Org agenda for the current buffer and all .org files in the current directory (recursively)."
+  (interactive)
+  (lvn-org-agenda-for-current-buffer '(4)))
 
-(global-set-key (kbd "<M-f6>")
-                (lambda ()
-                  (interactive)
-                  (lvn-org-agenda-for-current-buffer '(16))))
-                                        ; With C-u C-u: current buffer + .org + .txt files.
+(defun lvn-open-agenda-buffer-org-and-txt-files ()
+  "Show the Org agenda for the current buffer, all .org and .txt files in the current directory (recursively)."
+  (interactive)
+  (lvn-org-agenda-for-current-buffer '(16)))
+
+(global-set-key (kbd "<S-f6>") #'lvn-open-agenda-current-buffer)            ; Current buffer only.
+(global-set-key (kbd "<C-f6>") #'lvn-open-agenda-buffer-and-org-files)      ; + .org files.
+(global-set-key (kbd "<M-f6>") #'lvn-open-agenda-buffer-org-and-txt-files)  ; + .org + .txt files.
 
 (add-to-list 'org-agenda-custom-commands
              `("d" "Dashboard" ; Shows all tasks...
@@ -910,14 +918,19 @@ use the project's root directory instead of the current directory."
                 ;; Tasks from the past week.
                 (tags-todo "+SCHEDULED<\"<+7d>\"+DEADLINE<\"<+7d>\"-PRIORITY={A}"
                            ((org-agenda-overriding-header "Tasks from the Past Week:")))
+                            ;; On [2025-06-24 Tue], I do see:
+                            ;;   *** TODO Submit invoice to AREMIS (Monthly)
+                            ;;   SCHEDULED: <2025-06-30 Mon +1m -3d> DEADLINE: <2025-06-30 Mon +1m -3d>
+                            ;; in both "Tasks from the Past Week" and "Tasks Due This Week"...
+
                 ;; Tasks due this week.
                 (tags-todo "+DEADLINE<=\"<+7d>\"-PRIORITY={A}"
                            ((org-agenda-overriding-header "Tasks Due This Week:")))
                 ;; Tasks scheduled for this week (Not due this week).
                 (tags-todo "+SCHEDULED<=\"<+7d>\"-DEADLINE<=\"<+7d>\"-PRIORITY={A}"
                            ((org-agenda-overriding-header "Tasks Scheduled for This Week:")))
-                ;; Active tasks (TODO, STRT, WAIT).
-                (todo "TODO|STRT|WAIT"
+                ;; Active tasks (TODO, NEXT, STRT, WAIT).
+                (todo "TODO|NEXT|STRT|WAIT"
                       ((org-agenda-overriding-header "Active Tasks:")
                        (org-agenda-skip-function
                         '(or (org-agenda-skip-entry-if 'deadline '("<+7d>"))
@@ -1131,3 +1144,64 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
 (provide 'org-leuven-agenda-views)
 
 ;;; org-leuven-agenda-views.el ends here
+
+(org-super-agenda-mode)
+
+(setq org-agenda-custom-commands
+      '(("g" "Grouped agenda by category (or derived from filename)"
+         ((agenda "")
+          (alltodo ""
+                   ((org-super-agenda-groups
+                     '((:auto-category t)))))))))
+
+(let ((org-super-agenda-groups
+       '(;; Each group has an implicit boolean OR operator between its selectors.
+         (:name "Today"  ; Optionally specify section name
+                :time-grid t  ; Items that appear on the time grid
+                :todo "TODAY")  ; Items that have this TODO keyword
+         (:name "Important"
+                ;; Single arguments given alone
+                :tag "bills"
+                :priority "A")
+         ;; Set order of multiple groups at once
+         (:order-multi (2 (:name "Shopping in town"
+                                 ;; Boolean AND group matches items that match all subgroups
+                                 :and (:tag "shopping" :tag "@town"))
+                          (:name "Food-related"
+                                 ;; Multiple args given in list with implicit OR
+                                 :tag ("food" "dinner"))
+                          (:name "Personal"
+                                 :habit t
+                                 :tag "personal")
+                          (:name "Space-related (non-moon-or-planet-related)"
+                                 ;; Regexps match case-insensitively on the entire entry
+                                 :and (:regexp ("space" "NASA")
+                                               ;; Boolean NOT also has implicit OR between selectors
+                                               :not (:regexp "moon" :tag "planet")))))
+         ;; Groups supply their own section names when none are given
+         (:todo "WAIT" :order 8)  ; Set order of this section
+         (:todo ("MAYB")
+                ;; Show this group at the end of the agenda (since it has the
+                ;; highest number). If you specified this group last, items
+                ;; with these todo keywords that e.g. have priority A would be
+                ;; displayed in that group instead, because items are grouped
+                ;; out in the order the groups are listed.
+                :order 9)
+         (:priority<= "B"
+                      ;; Show this section after "Today" and "Important", because
+                      ;; their order is unspecified, defaulting to 0. Sections
+                      ;; are displayed lowest-number-first.
+                      :order 1)
+         ;; After the last group, the agenda will display items that didn't
+         ;; match any of these groups, with the default order position of 99
+         )))
+  (org-agenda nil "a"))
+
+(setq org-agenda-custom-commands
+      '(("g" "Grouped Agenda by Tag"
+         ((alltodo ""
+                   ((org-super-agenda-groups
+                     '((:name "💼 Work"     :tag "work")
+                       (:name "🏠 Personal" :tag "personal")
+                       (:name "📌 Other"    :discard nil)))  ;; catch everything else
+                    ))))))
