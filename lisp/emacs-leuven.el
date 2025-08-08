@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250802.1237>
+;; Version: <20250808.2134>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250802.1237>"
+(defconst lvn--emacs-version "<20250808.2134>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -206,9 +206,10 @@ Last time is saved in global variable `leuven--before-section-time'."
 (leuven--chapter leuven-load-chapter-0-loading-libraries "0 Loading Libraries"
 
   ;; Load-path enhancement.
-  (defun lvn--add-to-load-path (dir)
-    "Add DIR to `load-path' if it exists and is searchable.
-  Warn if DIR does not exist."
+  (defun lvn--add-dir-to-load-path (dir)
+    "Add DIR to `load-path` if it exists and is a directory.
+  If DIR does not exist, issue a warning.
+  If DIR contains a '.nosearch' file, it will not be added."
     (let ((abs-dir (expand-file-name dir)))
       (if (file-directory-p abs-dir)
           (unless (file-exists-p (expand-file-name ".nosearch" abs-dir))
@@ -222,18 +223,18 @@ Last time is saved in global variable `leuven--before-section-time'."
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (lvn--add-to-load-path lvn--directory)
-  (lvn--add-to-load-path (concat lvn--directory "../site-lisp"))
+  (lvn--add-dir-to-load-path lvn--directory)
+  (lvn--add-dir-to-load-path (concat lvn--directory "../site-lisp"))
 
-  ;; (lvn--add-to-load-path "~/lisp")
-  ;; (lvn--add-to-load-path "~/site-lisp")
+  ;; (lvn--add-dir-to-load-path "~/lisp")
+  ;; (lvn--add-dir-to-load-path "~/site-lisp")
 
   (defcustom leuven-user-lisp-directory (concat user-emacs-directory "lisp/")
     "Directory containing personal additional Emacs Lisp packages."
     :group 'leuven
     :type 'directory)
 
-  ;; (lvn--add-to-load-path leuven-user-lisp-directory)
+  ;; (lvn--add-dir-to-load-path leuven-user-lisp-directory)
 
   ;; Require a feature/library if available; if not, fail silently.
   (unless (fboundp 'try-require)
@@ -263,14 +264,17 @@ Example usage:
       `(eval-after-load ,feature
          '(progn ,@body))))
 
-  (defun lvn--switch-or-start (fn buffer)
-    "If BUFFER is the current buffer, bury it. If a buffer with the name BUFFER
-exists, switch to it; otherwise, invoke FN."
-    (if (equal (buffer-name (current-buffer)) buffer)
-        (bury-buffer)
-      (if (get-buffer buffer)
-          (switch-to-buffer buffer)
-        (funcall fn))))
+  (defun eboost--switch-or-start (fn buffer)
+    "If BUFFER is the current buffer, bury it.
+  If a buffer with the name BUFFER exists, switch to it;
+  otherwise, invoke FN, which should be a function to run."
+    (let ((current-buffer-name (buffer-name (current-buffer))))
+      (if (string= current-buffer-name buffer)
+          (bury-buffer)
+        (if (get-buffer buffer)
+            (switch-to-buffer buffer)
+          (when (functionp fn)
+            (funcall fn))))))
 
 )                                       ; Chapter 0-loading-libraries ends here.
 
@@ -637,22 +641,28 @@ Shows a warning message if the file does not exist or is not executable."
   ;; Print the current buffer line number.
   (global-set-key (kbd "M-G") #'what-line)
 
-  (defun lvn-goto-line-with-line-numbers-feedback ()
+  (defun eboost-goto-line-with-line-numbers ()
     "Go to a specific line while temporarily enabling line numbers.
 
-This function prompts the user to enter a line number to navigate to. It temporarily
-enables line numbers, moves the point to the specified line, and then restores the
-original state of line numbers after navigation."
+  This function prompts the user to enter a line number to navigate to.
+  It temporarily enables line numbers, moves the point to the specified line,
+  and then restores the original state of line numbers after navigation."
     (interactive)
-    (let ((line-numbers-enabled (display-line-numbers-mode)))
+    (let ((line-numbers-enabled (display-line-numbers-mode))
+          (line-number (read-number "Goto line: ")))
       (unwind-protect
           (progn
             (display-line-numbers-mode 1)
-            (goto-char (point-min))
-            (forward-line (1- (read-number "Goto line: "))))
+            (let ((line-count (count-lines (point-min) (point-max))))
+              (if (or (< line-number 1) (> line-number line-count))
+                  (error "Line number must be between 1 and %d" line-count)
+                (goto-char (point-min))
+                (forward-line (1- line-number))
+                (message "Moved to line %d" line-number))))
         (display-line-numbers-mode line-numbers-enabled))))
 
-  (global-set-key [remap goto-line] #'lvn-goto-line-with-line-numbers-feedback)
+  ;; Remap goto-line.
+  (global-set-key [remap goto-line] #'eboost-goto-line-with-line-numbers)
 
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
 
@@ -6807,7 +6817,7 @@ This example lists Azerty layout second row keys."
   (global-set-key (kbd "C-c n")
                   (lambda ()
                     (interactive)
-                    (lvn--switch-or-start 'gnus "*Group*")))
+                    (eboost--switch-or-start 'gnus "*Group*")))
 
   ;; Directory beneath which additional per-user Gnus-specific files are placed.
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
@@ -7038,7 +7048,7 @@ This example lists Azerty layout second row keys."
   (global-set-key (kbd "C-!")
                   (lambda ()
                     (interactive)
-                    (lvn--switch-or-start 'shell "*shell*")))
+                    (eboost--switch-or-start 'shell "*shell*")))
 
 ;;** 38.10 Remote Host Shell
 

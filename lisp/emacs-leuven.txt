@@ -356,9 +356,10 @@ need to load a single file that define autoloaded functions.
 
 #+begin_src emacs-lisp
   ;; Load-path enhancement.
-  (defun lvn--add-to-load-path (dir)
-    "Add DIR to `load-path' if it exists and is searchable.
-  Warn if DIR does not exist."
+  (defun lvn--add-dir-to-load-path (dir)
+    "Add DIR to `load-path` if it exists and is a directory.
+  If DIR does not exist, issue a warning.
+  If DIR contains a '.nosearch' file, it will not be added."
     (let ((abs-dir (expand-file-name dir)))
       (if (file-directory-p abs-dir)
           (unless (file-exists-p (expand-file-name ".nosearch" abs-dir))
@@ -374,11 +375,11 @@ need to load a single file that define autoloaded functions.
     (file-name-directory (or load-file-name (buffer-file-name)))
     "Directory path of Emacs-Leuven installation.")
 
-  (lvn--add-to-load-path lvn--directory)
-  (lvn--add-to-load-path (concat lvn--directory "../site-lisp"))
+  (lvn--add-dir-to-load-path lvn--directory)
+  (lvn--add-dir-to-load-path (concat lvn--directory "../site-lisp"))
 
-  ;; (lvn--add-to-load-path "~/lisp")
-  ;; (lvn--add-to-load-path "~/site-lisp")
+  ;; (lvn--add-dir-to-load-path "~/lisp")
+  ;; (lvn--add-dir-to-load-path "~/site-lisp")
 #+end_src
 
 ~leuven-user-lisp-directory~ is there so that you have an easy way of installing
@@ -394,7 +395,7 @@ distro) without impacting on stuff you have added by hand.
     :group 'leuven
     :type 'directory)
 
-  ;; (lvn--add-to-load-path leuven-user-lisp-directory)
+  ;; (lvn--add-dir-to-load-path leuven-user-lisp-directory)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -432,14 +433,17 @@ Example usage:
 ** Creating and selecting buffers
 
 #+begin_src emacs-lisp
-  (defun lvn--switch-or-start (fn buffer)
-    "If BUFFER is the current buffer, bury it. If a buffer with the name BUFFER
-exists, switch to it; otherwise, invoke FN."
-    (if (equal (buffer-name (current-buffer)) buffer)
-        (bury-buffer)
-      (if (get-buffer buffer)
-          (switch-to-buffer buffer)
-        (funcall fn))))
+  (defun eboost--switch-or-start (fn buffer)
+    "If BUFFER is the current buffer, bury it.
+  If a buffer with the name BUFFER exists, switch to it;
+  otherwise, invoke FN, which should be a function to run."
+    (let ((current-buffer-name (buffer-name (current-buffer))))
+      (if (string= current-buffer-name buffer)
+          (bury-buffer)
+        (if (get-buffer buffer)
+            (switch-to-buffer buffer)
+          (when (functionp fn)
+            (funcall fn))))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -927,22 +931,28 @@ Show line numbers temporarily -- just when you're going to a line number with
 ~goto-line~.
 
 #+begin_src emacs-lisp
-  (defun lvn-goto-line-with-line-numbers-feedback ()
+  (defun eboost-goto-line-with-line-numbers ()
     "Go to a specific line while temporarily enabling line numbers.
 
-This function prompts the user to enter a line number to navigate to. It temporarily
-enables line numbers, moves the point to the specified line, and then restores the
-original state of line numbers after navigation."
+  This function prompts the user to enter a line number to navigate to.
+  It temporarily enables line numbers, moves the point to the specified line,
+  and then restores the original state of line numbers after navigation."
     (interactive)
-    (let ((line-numbers-enabled (display-line-numbers-mode)))
+    (let ((line-numbers-enabled (display-line-numbers-mode))
+          (line-number (read-number "Goto line: ")))
       (unwind-protect
           (progn
             (display-line-numbers-mode 1)
-            (goto-char (point-min))
-            (forward-line (1- (read-number "Goto line: "))))
+            (let ((line-count (count-lines (point-min) (point-max))))
+              (if (or (< line-number 1) (> line-number line-count))
+                  (error "Line number must be between 1 and %d" line-count)
+                (goto-char (point-min))
+                (forward-line (1- line-number))
+                (message "Moved to line %d" line-number))))
         (display-line-numbers-mode line-numbers-enabled))))
 
-  (global-set-key [remap goto-line] #'lvn-goto-line-with-line-numbers-feedback)
+  ;; Remap goto-line.
+  (global-set-key [remap goto-line] #'eboost-goto-line-with-line-numbers)
 #+end_src
 
 ** Basic Undoing Changes
@@ -13355,7 +13365,7 @@ Minimal configuration for sending a bug report, for example.
   (global-set-key (kbd "C-c n")
                   (lambda ()
                     (interactive)
-                    (lvn--switch-or-start 'gnus "*Group*")))
+                    (eboost--switch-or-start 'gnus "*Group*")))
 
   ;; Directory beneath which additional per-user Gnus-specific files are placed.
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
@@ -13947,7 +13957,7 @@ inside it."
   (global-set-key (kbd "C-!")
                   (lambda ()
                     (interactive)
-                    (lvn--switch-or-start 'shell "*shell*")))
+                    (eboost--switch-or-start 'shell "*shell*")))
 #+end_src
 
 ** Remote Host
@@ -14975,20 +14985,29 @@ See also https://www.armindarvish.com/post/use_emacs_as_a_chatgpt_client/
 
 ;; ;; Set OpenAI API key.
 ;; (setq gptel-api-key "your-api-key-here")  ;; Replace with your actual key.
-(let ((api-key (getenv "OPENAI_API_KEY")))
-  (if (and api-key (> (length api-key) 0))
-      (setq gptel-api-key api-key)
-    (error "OPENAI_API_KEY environment variable is not set or empty!")))
+(let ((api-key (or (getenv "OPENAI_API_KEY")
+                   (and (file-exists-p "~/.openai_api_key")
+                        (with-temp-buffer
+                          (insert-file-contents "~/.openai_api_key")
+                          (string-trim (buffer-string)))))))
+  (if (and api-key (not (string-empty-p (string-trim api-key))))
+      (setq gptel-api-key (string-trim api-key))
+    (warn "OPENAI_API_KEY environment variable is not set or empty, and no key found in ~/.openai_api_key file!")))
 
-;; Set default model and parameters.
-(setq gptel-temperature 0.7) ;; Controls randomness (lower = more deterministic).
-(setq gptel-max-tokens 1000) ;; Limit response length.
+;; Controls randomness (lower = more deterministic).
+(setq gptel-temperature 0.7)
+
+;; Limit response length.
+(setq gptel-max-tokens 1000)
 
 ;; Set default mode for response buffer.
 (setq gptel-default-mode 'org-mode)
 
 ;; Keybinding for quick access to gptel-send.
 (global-set-key (kbd "C-c q") 'gptel-send)
+
+;; Automatically move cursor to end of response.
+(add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 #+end_src
 
 Usage:
@@ -15019,9 +15038,12 @@ Usage:
     ;; Prepare output buffer.
     (let ((buffer (get-buffer-create "*ChatGPT*")))
       (with-current-buffer buffer
-        (erase-buffer)
-        ;; (goto-char (point-max))
-        (insert "\n\n=== New request ===\n\n" text "\n=== New response ===")
+        ;; (erase-buffer)
+        (goto-char (point-max))
+        (insert (format-time-string "\n\n=== User request [%Y-%m-%d %H:%M] ===\n\n")
+                text
+                "\n\n=== Response ===")
+        (goto-char (point-max))
 
         ;; ;; Envoyer le texte sans l'insérer.
         ;; (gptel-request text nil :display nil)
@@ -15031,11 +15053,23 @@ Usage:
             (gptel-send)
           (error
            (message "Failed to send text to GPTel: %s"
-                    (error-message-string err)))))
+                    (error-message-string err))))
+
+        (insert "\n\n-------------------- Tour --------------------"))
 
       ;; Display the buffer and provide user feedback.
       (pop-to-buffer buffer)
-      (message "New request sent to GPTel"))))
+      (message "GPTel: Request sent..."))))
+
+;; Display message in echo area when processing is done.
+(defun gptel-notify-done (beg end)
+  "Display a message in the echo area when gptel processing is complete."
+  (when (fboundp 'gptel-mode)
+    (message "GPTel: Response received.")
+    (sit-for 1.5)
+    (message "")))
+
+(add-hook 'gptel-post-response-functions #'gptel-notify-done)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -15054,21 +15088,32 @@ Format the output responses generated by the GPTel package: truncates lines to
 a maximum of 80 characters.
 
 #+begin_src emacs-lisp :tangle no
+;; Format responses for better readability.
 (defun my/gptel-fill-response (&rest _)
-  "Fill the GPT response region to wrap lines at `fill-column` (80 chars)."
-   (let ((inhibit-read-only t)
-         (fill-column 80)) ;; Localize fill-column.
-     (save-excursion
-       (fill-region gptel-response-begin gptel-response-end))))
+  "Fill the GPT response region to wrap lines at `fill-column`."
+  (let ((inhibit-read-only t)
+        (fill-column 80))
+    (save-excursion
+      (goto-char (point-max))
+      (when (search-backward "=== Response ===" nil t)
+        ;; Saute la ligne du séparateur :
+        (forward-line 1)
+        (let ((start (point))
+              (end (if (search-forward "-------------------- " nil t)
+                       (match-beginning 0)
+                     (point-max))))
+          (fill-region start end)))))
+)
 
-(add-hook 'gptel-post-response-hook #'my/gptel-fill-response)
+;; (add-hook 'gptel-post-response-functions #'my/gptel-fill-response)
+;; BUG: It does fill code blocks!
 #+end_src
 
 ** Org-ai
 
 #+begin_src emacs-lisp :tangle no
 ;; Load org-ai.
-(require 'org-ai)
+(try-require 'org-ai)
 
 ;; Enable org-ai-mode in Org mode.
 (add-hook 'org-mode-hook #'org-ai-mode)
@@ -15363,7 +15408,7 @@ See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay 
   (defun leuven-start-irc ()
     "Start IRC."
     (interactive)
-    (lvn--switch-or-start 'leuven-irc-connect "irc.freenode.net:6667"))
+    (eboost--switch-or-start 'leuven-irc-connect "irc.freenode.net:6667"))
 
   (with-eval-after-load 'circe
 
