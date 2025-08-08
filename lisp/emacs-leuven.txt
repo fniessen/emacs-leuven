@@ -14971,27 +14971,24 @@ See also https://www.armindarvish.com/post/use_emacs_as_a_chatgpt_client/
 
 #+begin_src emacs-lisp :tangle no
 ;; Load gptel.
-(require 'gptel)
+(try-require 'gptel)
 
 ;; ;; Set OpenAI API key.
 ;; (setq gptel-api-key "your-api-key-here")  ;; Replace with your actual key.
-
-;; Optionally, fetch the key from auth-source.
-(setq gptel-api-key (lambda () (auth-source-pick-first-password :host "api.openai.com")))
+(let ((api-key (getenv "OPENAI_API_KEY")))
+  (if (and api-key (> (length api-key) 0))
+      (setq gptel-api-key api-key)
+    (error "OPENAI_API_KEY environment variable is not set or empty!")))
 
 ;; Set default model and parameters.
-(setq gptel-model "gpt-4")   ;; Use "gpt-3.5-turbo" if preferred.
 (setq gptel-temperature 0.7) ;; Controls randomness (lower = more deterministic).
 (setq gptel-max-tokens 1000) ;; Limit response length.
 
 ;; Set default mode for response buffer.
 (setq gptel-default-mode 'org-mode)
 
-;; Keybinding for quick access.
+;; Keybinding for quick access to gptel-send.
 (global-set-key (kbd "C-c q") 'gptel-send)
-
-;; Optional: Enable inline responses in Org mode.
-(add-hook 'org-mode-hook (lambda () (local-set-key (kbd "C-c C-q") 'gptel-send)))
 #+end_src
 
 Usage:
@@ -15000,67 +14997,71 @@ Usage:
 - ~C-c q~ → Quick send a query from any buffer.
 
 #+begin_src emacs-lisp :tangle no
-;; Enable responses to be inserted directly into an org-mode buffer
-(defun gptel-org-insert-response ()
-  "Send selected region or current paragraph to GPT and insert response below."
+;; Org-mode specific integration.
+(defun eboost-org-gptel-send-to-chatgpt ()
+  "Send selected region or Org subtree to the *ChatGPT* buffer."
   (interactive)
-  (let ((text (if (use-region-p)
-                  (buffer-substring-no-properties (region-beginning) (region-end))
-                (thing-at-point 'paragraph t))))
-    (gptel-request
-     text
-     :callback (lambda (response)
-                 (save-excursion
-                   (goto-char (if (use-region-p) (region-end) (point-at-eol)))
-                   (insert "\n\n#+BEGIN_QUOTE\n" response "\n#+END_QUOTE\n"))))))
 
-;; Keybinding to send prompt from org-mode
-(define-key org-mode-map (kbd "C-c C-q") 'gptel-org-insert-response)
+  ;; Validate context.
+  (unless (or (use-region-p) (org-at-heading-p))
+    (user-error "Please place point on an Org heading or select a region"))
+
+  ;; Extract text.
+  (let ((text
+         (if (use-region-p)
+             (buffer-substring-no-properties (region-beginning) (region-end))
+           (save-excursion
+             (org-back-to-heading t)
+             (let ((beg (point))
+                   (end (save-excursion (org-end-of-subtree t) (point))))
+               (buffer-substring-no-properties beg end))))))
+
+    ;; Prepare output buffer.
+    (let ((buffer (get-buffer-create "*ChatGPT*")))
+      (with-current-buffer buffer
+        (erase-buffer)
+        ;; (goto-char (point-max))
+        (insert "\n\n=== New request ===\n\n" text "\n=== New response ===")
+
+        ;; ;; Envoyer le texte sans l'insérer.
+        ;; (gptel-request text nil :display nil)
+
+        ;; Send to GPTel with error handling.
+        (condition-case err
+            (gptel-send)
+          (error
+           (message "Failed to send text to GPTel: %s"
+                    (error-message-string err)))))
+
+      ;; Display the buffer and provide user feedback.
+      (pop-to-buffer buffer)
+      (message "New request sent to GPTel"))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-;; Org-mode specific integration
-(defun my/org-gptel-send ()
-  "Send the current Org entry or selection to GPT-4 for processing."
-  (interactive)
-  (let ((org-content (if (use-region-p)
-                         (buffer-substring-no-properties (region-beginning) (region-end))
-                       (thing-at-point 'line t))))
-    (gptel-send org-content)))
+;; Keybinding to trigger eboost-org-gptel-send-to-chatgpt within Org-mode.
+(with-eval-after-load 'org
 
-;; Keybinding to trigger gptel-send within Org-mode
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-c C-q") 'my/org-gptel-send)))
+  ;; Check if the keybinding is already in use.
+  (when (lookup-key org-mode-map (kbd "C-c C-q"))
+    (warn "Keybinding C-c C-q is already in use in Org mode!"))
 
-;; Optionally: You can add a custom response function for Org mode.
-(defun my/org-gptel-response (response)
-  "Insert GPT-4's response at the end of the Org buffer."
-  (interactive "sResponse: ")
-  (goto-char (point-max))
-  (insert (format "\n* GPT-4 Response: %s" response)))
-
-;; Bind response insertion to a key
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-c C-r") 'my/org-gptel-response))
+  ;; Define the keybinding if it's not already in use.
+  (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt))
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-(defun gptel-org-insert-tagged-response ()
-  "Send region or paragraph to GPT and insert response under an AI tag."
-  (interactive)
-  (let ((text (if (use-region-p)
-                  (buffer-substring-no-properties (region-beginning) (region-end))
-                (thing-at-point 'paragraph t))))
-    (gptel-request
-     text
-     :callback (lambda (response)
-                 (save-excursion
-                   (goto-char (if (use-region-p) (region-end) (point-at-eol)))
-                   (insert "\n\n* AI Response\n#+BEGIN_QUOTE\n" response "\n#+END_QUOTE\n"))))))
+Format the output responses generated by the GPTel package: truncates lines to
+a maximum of 80 characters.
 
-(define-key org-mode-map (kbd "C-c C-r") 'gptel-org-insert-tagged-response)
+#+begin_src emacs-lisp :tangle no
+(defun my/gptel-fill-response (&rest _)
+  "Fill the GPT response region to wrap lines at `fill-column` (80 chars)."
+   (let ((inhibit-read-only t)
+         (fill-column 80)) ;; Localize fill-column.
+     (save-excursion
+       (fill-region gptel-response-begin gptel-response-end))))
+
+(add-hook 'gptel-post-response-hook #'my/gptel-fill-response)
 #+end_src
 
 ** Org-ai
@@ -15080,7 +15081,8 @@ Usage:
 (setq org-ai-default-chat-model "gpt-4")
 
 ;; Install Yasnippet templates for org-ai (optional).
-(org-ai-install-yasnippets)
+(when (try-require 'yasnippet)
+  (org-ai-install-yasnippets))
 #+end_src
 
 * Emacs Display
