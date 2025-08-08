@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250808.2134>
+;; Version: <20250808.2215>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250808.2134>"
+(defconst lvn--emacs-version "<20250808.2215>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7502,6 +7502,119 @@ This example lists Azerty layout second row keys."
     (setq truncate-lines t))
 
 )                                       ; Chapter 49 ends here.
+
+;; Load gptel.
+(try-require 'gptel)
+
+;; Set OpenAI API key.
+(let ((api-key (or (getenv "OPENAI_API_KEY")
+                   (and (file-exists-p "~/.openai_api_key")
+                        (with-temp-buffer
+                          (insert-file-contents "~/.openai_api_key")
+                          (string-trim (buffer-string)))))))
+  (if (and api-key (not (string-empty-p (string-trim api-key))))
+      (setq gptel-api-key (string-trim api-key))
+    (warn "OPENAI_API_KEY environment variable is not set or empty, and no key found in ~/.openai_api_key file!")))
+
+;; Controls randomness (lower = more deterministic).
+(setq gptel-temperature 0.7)
+
+;; Limit response length.
+(setq gptel-max-tokens 1000)
+
+;; Set default mode for response buffer.
+(setq gptel-default-mode 'org-mode)
+
+;; Keybinding for quick access to gptel-send.
+(global-set-key (kbd "C-c q") 'gptel-send)
+
+;; Automatically move cursor to end of response.
+(add-hook 'gptel-post-response-functions #'gptel-end-of-response)
+
+;; Org-mode specific integration.
+(defun eboost-org-gptel-send-to-chatgpt ()
+  "Send selected region or Org subtree to the *ChatGPT* buffer."
+  (interactive)
+
+  ;; Validate context.
+  (unless (or (use-region-p) (org-at-heading-p))
+    (user-error "Please place point on an Org heading or select a region"))
+
+  ;; Extract text.
+  (let ((text
+         (if (use-region-p)
+             (buffer-substring-no-properties (region-beginning) (region-end))
+           (save-excursion
+             (org-back-to-heading t)
+             (let ((beg (point))
+                   (end (save-excursion (org-end-of-subtree t) (point))))
+               (buffer-substring-no-properties beg end))))))
+
+    ;; Prepare output buffer.
+    (let ((buffer (get-buffer-create "*ChatGPT*")))
+      (with-current-buffer buffer
+        ;; (erase-buffer)
+        (goto-char (point-max))
+        (insert (format-time-string "\n\n=== User request [%Y-%m-%d %H:%M] ===\n\n")
+                text
+                "\n\n=== Response ===")
+        (goto-char (point-max))
+
+        ;; ;; Envoyer le texte sans l'insérer.
+        ;; (gptel-request text nil :display nil)
+
+        ;; Send to GPTel with error handling.
+        (condition-case err
+            (gptel-send)
+          (error
+           (message "Failed to send text to GPTel: %s"
+                    (error-message-string err))))
+
+        (insert "\n\n-------------------- Tour --------------------"))
+
+      ;; Display the buffer and provide user feedback.
+      (pop-to-buffer buffer)
+      (message "GPTel: Request sent..."))))
+
+;; Display message in echo area when processing is done.
+(defun gptel-notify-done (beg end)
+  "Display a message in the echo area when gptel processing is complete."
+  (when (fboundp 'gptel-mode)
+    (message "GPTel: Response received.")
+    (sit-for 1.5)
+    (message "")))
+
+(add-hook 'gptel-post-response-functions #'gptel-notify-done)
+
+;; Keybinding to trigger eboost-org-gptel-send-to-chatgpt within Org-mode.
+(with-eval-after-load 'org
+
+  ;; Check if the keybinding is already in use.
+  (when (lookup-key org-mode-map (kbd "C-c C-q"))
+    (warn "Keybinding C-c C-q is already in use in Org mode!"))
+
+  ;; Define the keybinding if it's not already in use.
+  (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt))
+
+;; Format responses for better readability.
+(defun eboost-gptel-fill-response (&rest _)
+  "Fill the GPT response region to wrap lines at `fill-column`."
+  (let ((inhibit-read-only t)
+        (fill-column 80))
+    (save-excursion
+      (goto-char (point-max))
+      (when (search-backward "=== Response ===" nil t)
+        ;; Saute la ligne du séparateur :
+        (forward-line 1)
+        (let ((start (point))
+              (end (if (search-forward "-------------------- " nil t)
+                       (match-beginning 0)
+                     (point-max))))
+          (fill-region start end)))))
+)
+
+;; (add-hook 'gptel-post-response-functions #'eboost-gptel-fill-response)
+;; BUG: It does fill code blocks!
 
 ;;* Emacs Display
 
