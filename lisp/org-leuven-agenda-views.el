@@ -15,15 +15,15 @@
 
 ;; Display the calendar and tasks for today.
 (global-set-key
- (kbd "<f7>") (kbd "C-c a f ."))
+ (kbd "<f7>") (lambda () (interactive) (org-agenda nil "f.")))
 
-;; Display the hotlist.
-(global-set-key
- (kbd "<S-f7>") (kbd "C-c a f h"))
+ ;; Display the hotlist.
+ (global-set-key
+  (kbd "<S-f7>") (lambda () (interactive) (org-agenda nil "fh")))
 
-;; Display calendar for 7 days.
-(global-set-key
- (kbd "<C-f7>") (kbd "C-c a r c 7"))
+ ;; Display calendar for 7 days.
+ (global-set-key
+  (kbd "<C-f7>") (lambda () (interactive) (org-agenda nil "rc7")))
 
 (defconst leuven-org-completed-date-regexp
   (concat " \\("
@@ -734,16 +734,21 @@ N should be a non-negative integer representing the number of days."
   "Display an Org agenda view of unscheduled TODO items from the Git root directory."
   (interactive)
   (require 'vc-git)
-  (let* ((git-root (vc-git-root default-directory))
-         (org-files (when git-root
-                      (directory-files-recursively
-                       git-root
-                       "\\.\\(org\\|txt\\)$"
-                       nil              ; Include-directories.
-                       (lambda (file)
-                         (not (string-match-p "/\\.git/" file)))))))
-    (if git-root
-        (progn
+  (let* ((git-root (vc-git-root default-directory)))
+    (cond
+     ((not git-root)
+      (user-error "Not in a Git repository"))
+     (t
+      (let* ((org-files (condition-case err
+                            (directory-files-recursively
+                             git-root "\\.\\(org\\|txt\\)$" nil
+                             (lambda (file)
+                               (not (string-match-p "/\\.git/" file))))
+                          (error
+                           (message "Error reading files: %s" err)
+                           nil))))
+        (if (not (and org-files (seq-some #'file-exists-p org-files)))
+            (message "No .org or .txt files found under Git root: %s" git-root)
           (let ((org-agenda-files org-files)
                 (org-agenda-sorting-strategy '(todo-state-up priority-down))
                 (org-agenda-overriding-header
@@ -752,9 +757,8 @@ N should be a non-negative integer representing the number of days."
                 (org-agenda-skip-scheduled-if-done t)
                 (org-agenda-skip-deadline-if-done t)
                 (org-agenda-todo-ignore-scheduled 'future))
-            (message "[%s...]" org-agenda-overriding-header)
-            (org-todo-list)))
-      (message "Error: Not in a Git repository"))))
+            (message "[%s]" org-agenda-overriding-header)
+            (org-todo-list))))))))
 
 ;; Bind to <M-S-f6>.
 (global-set-key (kbd "<M-S-f6>") #'lvn-org-git-root-todo)
@@ -995,17 +999,15 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
     (message "[Org agenda files set to: %s]" org-agenda-files)))
 
 (add-to-list 'org-agenda-custom-commands
-             `("@d" "Daily review (Personal focus)"
+             '("@d" "Daily Review - Personal Focus"
                ((agenda ""
                         ((org-agenda-span 'week)
-                         (org-agenda-entry-types '(:deadline :scheduled))
-                         (org-agenda-prefix-format "  %?-12t% s")
-                         (org-agenda-overriding-header "1. Scheduled/Deadline this week (no work)")))
-                (tags-todo "TODO={STRT\\|NEXT}"
-                           ((org-agenda-overriding-header "2. Tasks with STRT or NEXT (no work)"))))
-               ;; Globally exclude 'work' tagged entries, including inherited
-               ;; tags, from both blocks.
-               ((org-agenda-tag-filter-preset '("-work")))))
+                         (org-agenda-tag-filter '("-work"))  ; Plus robuste que preset
+                         (org-agenda-overriding-header "📅 This Week (Personal)")
+                         (org-agenda-prefix-format "  %?-12t% s")))
+                (tags-todo "TODO={STRT\\|NEXT}-work"  ; Filter intégré dans la requête
+                           ((org-agenda-overriding-header "🎯 Active Tasks (Personal)"))))
+               ((org-agenda-sorting-strategy '(priority-down deadline-up)))))
 
 (add-to-list 'org-agenda-custom-commands
              `("$d" "Daily review (Work focus)"
@@ -1139,7 +1141,8 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
 
 ;;; org-leuven-agenda-views.el ends here
 
-(org-super-agenda-mode)
+(try-require 'org-super-agenda)
+(org-super-agenda-mode 1)
 
 (setq org-agenda-custom-commands
       '(("g" "Grouped agenda by category (or derived from filename)"
