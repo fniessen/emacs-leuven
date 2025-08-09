@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1559>
+;; Version: <20250809.1656>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1559>"
+(defconst lvn--emacs-version "<20250809.1656>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7637,6 +7637,39 @@ This example lists Azerty layout second row keys."
 
 ;; (add-hook 'gptel-post-response-functions #'eboost-gptel-fill-response)
 ;; BUG: It does fill code blocks!
+
+(defun eboost-gptel-send-diff-for-commit-msg ()
+  "Send current region or buffer as a diff to GPT for a commit message.
+Does not show GPTel menu; opens result in a new buffer."
+  (interactive)
+  (let* ((diff-text (if (use-region-p)
+                        (buffer-substring-no-properties (region-beginning) (region-end))
+                      (buffer-string)))
+         (prompt (concat "Write a concise git commit message for the following diff:\n\n"
+                         diff-text)))
+    ;; Notify user that the process has started.
+    (message "Generating commit message...")
+    ;; Create and clear the buffer initially.
+    (with-current-buffer (get-buffer-create "*Commit Message*")
+      (erase-buffer))
+    ;; Send request without menu.
+    (gptel-request prompt
+      :callback (lambda (response _error)
+                  (let ((output-buffer (get-buffer-create "*Commit Message*")))
+                                        ; Create a new reference to the buffer
+                                        ; to avoid closure dependency.
+                    (with-current-buffer output-buffer
+                      (erase-buffer)
+                      (if response
+                          (progn
+                            (insert (string-trim response))
+                            (goto-char (point-min))
+                            (message "Commit message generated successfully."))
+                        (message "Failed to generate commit message."))
+                      (display-buffer output-buffer)))))))
+
+(global-set-key (kbd "C-x v m") 'eboost-gptel-send-diff-for-commit-msg)
+(define-key diff-mode-map (kbd "m") 'eboost-gptel-send-diff-for-commit-msg)
 
 ;;* Emacs Display
 
