@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1733>
+;; Version: <20250809.1828>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1733>"
+(defconst lvn--emacs-version "<20250809.1828>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7319,37 +7319,6 @@ This example lists Azerty layout second row keys."
 
   (leuven--section "Web search")
 
-  (defun leuven-google-search-active-region-or-word-at-point ()
-    "Create a Google search URL and send it to your web browser.
-  If `transient-mark-mode' is non-nil and the mark is active, it defaults to the
-  current region, else to the word at or before point."
-    (interactive)
-    (let ((query
-           (if (use-region-p)
-               (buffer-substring-no-properties (region-beginning) (region-end))
-             (find-tag-default))))      ; or (current-word) for word at point?
-      (browse-url
-       (concat
-        "http://www.google.com/search?q="
-        (url-hexify-string query)))))
-
-  (defun leuven-duckduckgo-search-active-region-or-word-at-point ()
-    "Create a DuckDuckGo search URL and send it to your web browser.
-  If `transient-mark-mode' is non-nil and the mark is active, it defaults to the
-  current region, else to the word at or before point."
-    (interactive)
-    (let ((query
-           (if (use-region-p)
-               (buffer-substring-no-properties (region-beginning) (region-end))
-             (find-tag-default))))      ; or (current-word) for word at point?
-      (browse-url
-       (concat
-        "https://duckduckgo.com/?q="
-        (url-hexify-string query)))))
-
-  (global-set-key (kbd "C-c g G") #'leuven-google-search-active-region-or-word-at-point)
-  (global-set-key (kbd "C-c g D") #'leuven-duckduckgo-search-active-region-or-word-at-point)
-
   ;; Emacs interface to Google Translate.
   (with-eval-after-load 'google-translate-autoloads
 
@@ -7526,152 +7495,182 @@ This example lists Azerty layout second row keys."
   "Load OpenAI API key from environment variable or file.")
 
 ;; Load gptel.
-(try-require 'gptel)
+(when (try-require 'gptel)
 
-;; Set OpenAI API key.
-(setq gptel-api-key eboost-openai-api-key)
+  ;; Set OpenAI API key.
+  (setq gptel-api-key eboost-openai-api-key)
 
-;; Controls randomness (lower = more deterministic).
-(setq gptel-temperature 0.7)
+  ;; Controls randomness (lower = more deterministic).
+  (setq gptel-temperature 0.7)
 
-;; Limit response length.
-(setq gptel-max-tokens 1000)
+  ;; Limit response length.
+  (setq gptel-max-tokens 1000)
 
-;; Set default mode for response buffer.
-(setq gptel-default-mode 'org-mode)
+  ;; Set default mode for response buffer.
+  (setq gptel-default-mode 'org-mode)
 
-;; Keybinding for quick access to gptel-send.
-(global-set-key (kbd "C-c q") 'gptel-send)
+  (defvar eboost-gptel-prompt-prefix "** --- User prompt ---\n\n"
+    "Custom prompt prefix for GPTel in Org mode.")
 
-;; Automatically move cursor to end of response.
-(add-hook 'gptel-post-response-functions #'gptel-end-of-response)
+  (defvar eboost-gptel-response-prefix "** --- AI response ---\n\n"
+    "Custom response prefix for GPTel in Org mode.")
 
-(defvar eboost-gptel-prompt-prefix "** --- User prompt ---\n\n"
-  "Custom prompt prefix for GPTel in Org mode.")
+  ;; Association list mapping modes to prompt prefixes for GPTel.
+  (setq gptel-prompt-prefix-alist
+        `((org-mode . ,eboost-gptel-prompt-prefix)))
 
-;; Association list mapping modes to prompt prefixes for GPTel.
-(setq gptel-prompt-prefix-alist
-      `((org-mode . ,eboost-gptel-prompt-prefix)))
+  ;; Association list mapping modes to response prefixes for GPTel.
+  (setq gptel-response-prefix-alist
+        `((org-mode . ,eboost-gptel-response-prefix)))
 
-(defvar eboost-gptel-response-prefix "** --- AI response ---\n\n"
-  "Custom response prefix for GPTel in Org mode.")
+  ;; Automatically move cursor to end of response.
+  (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
-;; Association list mapping modes to response prefixes for GPTel.
-(setq gptel-response-prefix-alist
-      `((org-mode . ,eboost-gptel-response-prefix)))
+  ;; Display message in echo area when processing is done.
+  (defun gptel-notify-done (beg end)
+    "Display a message in the echo area when gptel processing is complete."
+    (when (fboundp 'gptel-mode)
+      (message "[GPTel: Response received.]")
+      (sit-for 1.5)
+      (message "")))
 
-;; Org-mode specific integration.
-(defun eboost-org-gptel-send-to-chatgpt ()
-  "Send selected region or Org subtree to the *ChatGPT* buffer."
-  (interactive)
+  (add-hook 'gptel-post-response-functions #'gptel-notify-done)
 
-  ;; Validate context.
-  (unless (or (use-region-p) (org-at-heading-p))
-    (user-error "Please place point on an Org heading or select a region"))
+  ;; Coding preset.
+  (gptel-make-preset 'gpt4coding
+    :description "A preset optimized for coding tasks"
+    :backend "ChatGPT"
+    :model 'gpt-4.1-mini
+    :system
+    "You are an expert coding assistant. Your role is to provide
+   high-quality code solutions, refactorings, and explanations."
+    :tools '("read_buffer" "modify_buffer")
+    :temperature 0.7)
 
-  ;; Extract text.
-  (let ((text
-         (if (use-region-p)
-             (buffer-substring-no-properties (region-beginning) (region-end))
-           (save-excursion
-             (org-back-to-heading t)
-             (let ((beg (point))
-                   (end (save-excursion (org-end-of-subtree t) (point))))
-               (buffer-substring-no-properties beg end))))))
+  ;; Proofreading Preset.
+  (gptel-make-preset "proofreading"
+    :description "Preset for proofreading tasks"
+    :backend "Claude"
+    :model 'claude-sonnet-4-20250514
+    :system
+    "You are a professional proofreader. Your task is to correct spelling,
+   grammar, and improve clarity and style."
+    :tools '("read_buffer" "spell_check" "grammar_check")
+    :temperature 0.7
+    :use-context 'system)
 
-    ;; Prepare output buffer.
-    (let ((buffer (get-buffer-create "*ChatGPT*")))
-      (with-current-buffer buffer
-        ;; (erase-buffer)
-        (goto-char (point-max))
-        (insert
-         (format-time-string "\n\n* -------------------- Session [%Y-%m-%d %H:%M] --------------------")
-         "\n\n" eboost-gptel-prompt-prefix
-         text
-         "\n\n" eboost-gptel-response-prefix)
-        (goto-char (point-max))
+  ;; General-purpose chat preset.
+  (gptel-make-preset 'general-chat
+    :description "A preset for general-purpose LLM interactions"
+    :backend "ChatGPT"
+    :model 'o4-mini
+    :system
+    "You are a helpful assistant providing clear and concise answers to a
+   wide range of questions."
+    :temperature 0.9)
 
-        ;; ;; Send the text without inserting it.
-        ;; (gptel-request text nil :display nil)
+  ;; Project-specific preset (within '.dir-locals.el').
+  (gptel-make-preset 'project-agent
+    :description "Preset for project-specific AI tasks"
+    :backend "Claude"
+    :model 'claude-sonnet-4-20250514
+    :system
+    "You are an AI assistant for a software project. Provide insights
+   based on the project’s code and documentation."
+    :tools '("read_buffer" "lsp_context")
+    :context 'gptel-context-lsp)
 
-        ;; Send to GPTel with error handling.
-        (condition-case err
-            (gptel-send)
-          (error
-           (message "[Failed to send text to GPTel: %s]"
-                    (error-message-string err)))))
+  ;; Org-mode specific integration.
+  (defun eboost-org-gptel-send-to-chatgpt ()
+    "Send selected region or Org subtree to the *ChatGPT* buffer."
+    (interactive)
 
-      ;; Display the buffer and provide user feedback.
-      (pop-to-buffer buffer)
-      (message "[GPTel: Prompt sent. Awaiting response...]"))))
+    ;; Validate context.
+    (unless (or (use-region-p) (org-at-heading-p))
+      (user-error "Please place point on an Org heading or select a region"))
 
-;; Display message in echo area when processing is done.
-(defun gptel-notify-done (beg end)
-  "Display a message in the echo area when gptel processing is complete."
-  (when (fboundp 'gptel-mode)
-    (message "[GPTel: Response received.]")
-    (sit-for 1.5)
-    (message "")))
+    ;; Extract text.
+    (let ((text
+           (if (use-region-p)
+               (buffer-substring-no-properties (region-beginning) (region-end))
+             (save-excursion
+               (org-back-to-heading t)
+               (let ((beg (point))
+                     (end (save-excursion (org-end-of-subtree t) (point))))
+                 (buffer-substring-no-properties beg end))))))
 
-(add-hook 'gptel-post-response-functions #'gptel-notify-done)
+      ;; Prepare output buffer.
+      (let ((buffer (get-buffer-create "*ChatGPT*")))
+        (with-current-buffer buffer
+          ;; (erase-buffer)
+          (goto-char (point-max))
+          (insert
+           (format-time-string "\n\n* -------------------- Session [%Y-%m-%d %H:%M] --------------------")
+           "\n\n" eboost-gptel-prompt-prefix
+           text
+           "\n\n" eboost-gptel-response-prefix)
+          (goto-char (point-max))
 
-;; Keybinding to trigger eboost-org-gptel-send-to-chatgpt within Org-mode.
-(with-eval-after-load 'org
-  (if (null (lookup-key org-mode-map (kbd "C-c C-q")))
-      (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt)
-    (warn "Keybinding C-c C-q is already in use in Org mode!")))
+          ;; Send to GPTel with error handling.
+          (condition-case err
+              ;; ;; Send the text without inserting it.
+              ;; (gptel-request text nil :display nil)
+              (gptel-send)
+            (error
+             (message "[Failed to send text to GPTel: %s]"
+                      (error-message-string err)))))
 
-;; Format responses for better readability.
-(defun eboost-gptel-fill-response (&rest _)
-  "Fill the GPT response region to wrap lines at `fill-column`."
-  (let ((inhibit-read-only t)
-        (fill-column 80))
-    (save-excursion
-      (goto-char (point-max))
-      (when (search-backward "** --- AI response ---" nil t)
-        ;; Saute la ligne du séparateur :
-        (forward-line 1)
-        (let ((start (point))
-              (end (point-max)))
-          (fill-region start end))))))
+        ;; Display the buffer and provide user feedback.
+        (pop-to-buffer buffer)
+        (message "[GPTel: Prompt sent. Awaiting response...]"))))
 
-;; (add-hook 'gptel-post-response-functions #'eboost-gptel-fill-response)
-;; BUG: It does fill code blocks!
+  ;; Org mode keybinding.
+  (with-eval-after-load 'org
+    (if (null (lookup-key org-mode-map (kbd "C-c C-q")))
+        (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt)
+      (warn "Keybinding C-c C-q is already in use in Org mode!")))
 
-(defun eboost-gptel-send-diff-for-commit-msg ()
-  "Send current region or buffer as a diff to GPT for a commit message.
-Does not show GPTel menu; opens result in a new buffer and adds it to the kill ring."
-  (interactive)
-  (let* ((diff-text (if (use-region-p)
-                        (buffer-substring-no-properties (region-beginning) (region-end))
-                      (buffer-string)))
-         (prompt (concat "Write a concise git commit message for the following diff:\n\n"
-                         diff-text)))
-    ;; Notify user that the process has started.
-    (message "[Generating commit message...]")
-    ;; Create and clear the buffer initially.
-    (with-current-buffer (get-buffer-create "*Commit Message*")
-      (erase-buffer))
-    ;; Send request without menu.
-    (gptel-request prompt
-      :callback (lambda (response _error)
-                  (let ((output-buffer (get-buffer-create "*Commit Message*")))
-                                        ; Create a new reference to the buffer
-                                        ; to avoid closure dependency.
-                    (with-current-buffer output-buffer
-                      (erase-buffer)
-                      (if response
-                          (progn
-                            (let ((trimmed-response (string-trim response)))
-                              (kill-new trimmed-response) ; Add to kill ring.
-                              (insert trimmed-response)
-                              (goto-char (point-min))
-                              (message "[Commit message generated and copied to kill ring.]")))
-                        (message "[Failed to generate commit message.]"))
-                      (display-buffer output-buffer)))))))
+  (defun eboost-gptel-send-diff-for-commit-msg ()
+    "Send current region or buffer as a diff to GPT for a commit message.
+  Does not show GPTel menu; opens result in a new buffer and adds it to the kill ring."
+    (interactive)
+    (let* ((diff-text (if (use-region-p)
+                          (buffer-substring-no-properties (region-beginning) (region-end))
+                        (buffer-string)))
+           (prompt (concat "Write a concise git commit message for the following diff:\n\n"
+                           diff-text)))
+      ;; Notify user that the process has started.
+      (message "[Generating commit message...]")
+      ;; Create and clear the buffer initially.
+      (with-current-buffer (get-buffer-create "*Commit Message*")
+        (erase-buffer))
+      ;; Send request without menu.
+      (gptel-request prompt
+        :callback (lambda (response _error)
+                    (let ((output-buffer (get-buffer-create "*Commit Message*")))
+                                          ; Create a new reference to the buffer
+                                          ; to avoid closure dependency.
+                      (with-current-buffer output-buffer
+                        (erase-buffer)
+                        (if response
+                            (progn
+                              (let ((trimmed-response (string-trim response)))
+                                (kill-new trimmed-response) ; Add to kill ring.
+                                (insert trimmed-response)
+                                (goto-char (point-min))
+                                (message "[Commit message generated and copied to kill ring.]")))
+                          (message "[Failed to generate commit message.]"))
+                        (display-buffer output-buffer)))))))
 
-(global-set-key (kbd "C-x v m") 'eboost-gptel-send-diff-for-commit-msg)
-(define-key diff-mode-map (kbd "m") 'eboost-gptel-send-diff-for-commit-msg)
+  ;; Diff mode keybinding.
+  (with-eval-after-load 'diff-mode
+    (define-key diff-mode-map (kbd "m") 'eboost-gptel-send-diff-for-commit-msg))
+  (global-set-key (kbd "C-x v m") 'eboost-gptel-send-diff-for-commit-msg)
+
+  ;; Keybinding for quick access to gptel-send.
+  (global-set-key (kbd "C-c q") 'gptel-send)
+
+)
 
 ;; Load org-ai.
 (try-require 'org-ai)
