@@ -319,13 +319,19 @@ Records execution time in `leuven--load-times-list'."
 
 (defun leuven--section (sectionname &optional end-of-chapter)
   "Report under SECTIONNAME the time taken since it was last saved.
-Last time is saved in global variable `leuven--before-section-time'."
+The last time is saved in the global variable `leuven--before-section-time`.
+If END-OF-CHAPTER is non-nil, it will not print the section name."
+  (unless (numberp leuven--before-section-time)
+    (error "leuven--before-section-time is not a valid number."))
+
   (let ((this-section-time (- (float-time)
-                              leuven--before-section-time)))
-    (when lvn-verbose-loading
+                              leuven--before-section-time))
+        (verbose lvn-verbose-loading))  ;; Store verbose mode in a local variable
+    (when verbose
       (when (not (equal this-section-time 0.00))
-        (message "[    Section time: %.2f s]" this-section-time))
-      (unless end-of-chapter (message "[*** %s]" sectionname)))
+        (message "[    Section time: %.2f seconds]" this-section-time))
+      (unless end-of-chapter
+        (message "[*** %s]" sectionname)))
     ;; For next one.
     (setq leuven--before-section-time (float-time))))
 #+end_src
@@ -3779,7 +3785,7 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
            (find-file-time-start (float-time)))
       (message "[Finding file %s...]" filename)
       (let ((result (apply orig-fun args)))
-        (message "[Found file %s in %.2f s]" filename
+        (message "[Found file %s in %.2f seconds]" filename
                  (- (float-time) find-file-time-start))
         result)))
 
@@ -3866,7 +3872,7 @@ a remote location.
            (start-time (float-time)))
       (message "[Saving file %s...]" filename)
       (let ((result (apply orig-fun args)))
-        (message "[Saved file %s in %.2f s]" filename
+        (message "[Saved file %s in %.2f seconds]" filename
                  (- (float-time) start-time))
         result)))
 
@@ -10702,44 +10708,32 @@ changes.
 (setq vc-annotate-very-old-color "black")
 
 (setq vc-annotate-color-map
-  '((  1.0 . "#FFCCCC") ; red
-    (  2.0 . "#FFE4CC") ; orange
-    (  7.0 . "#FFE4CC") ; yellow
-    ( 32.0 . "#DEFFCC") ; green
-    ( 92.0 . "#CCE4FF") ; blue
-    (366.0 . "#C9C9C9"))) ; gray
+      '((  1 . "#9B0000")  ; Deep Red for today's changes
+        (  2 . "#FF8C00")  ; Dark Orange for yesterday's changes
+        (  8 . "#FFD700")  ; Dark Yellow for recent changes (2-7 days)
+        ( 31 . "#006400")  ; Dark Green for moderate age (8-30 days)
+        ( 91 . "#00008B")  ; Dark Blue for moderate to old changes (31-90 days)
+        (366 . "#6A5ACD")  ; Dark Purple for old changes (91-365 days)
+        (t   . "#C9C9C9")))  ; Gray for older than one year
 #+end_src
 
 We should use:
 
-| Age Range                            | Background Color |
-|--------------------------------------+------------------|
-| Today's Changes (0 days)             | Deep Red         |
-| Yesterday's Changes (1 day)          | Dark Orange      |
-| Recent Changes (2-7 days)            | Dark Yellow      |
-| Moderate Age (8-30 days)             | Dark Green       |
-| Moderate to Old Changes (31-90 days) | Dark Blue        |
-| Old Changes (91-365 days)            | Dark Purple      |
-| Older than One Year (1+ years)       | Gray             |
+| Age Range                            | Background Color | XXX To check XXX   |
+|--------------------------------------+------------------+--------------------|
+| Today's Changes (0 days)             | Deep Red         | vc-annotate-0-face |
+| Yesterday's Changes (1 day)          | Dark Orange      | vc-annotate-1-face |
+| Recent Changes (2-7 days)            | Dark Yellow      | vc-annotate-2-face |
+| Moderate Age (8-30 days)             | Dark Green       | vc-annotate-3-face |
+| Moderate to Old Changes (31-90 days) | Dark Blue        | vc-annotate-4-face |
+| Old Changes (91-365 days)            | Dark Purple      | vc-annotate-5-face |
+| Older than One Year (1+ years)       | Gray             | vc-annotate-6-face |
 
 #+begin_src emacs-lisp :tangle no
 (defun my-vc-annotate-apply-faces ()
-  "Apply custom faces based on commit date in vc-annotate."
-  (let ((age (time-to-number-of-days (time-since (vc-annotate-extract-revision)))))
-    (cond
-     ((= age 0) (set-face-attribute 'vc-annotate-0-face nil :foreground "white" :background "red"))
-     ((= age 1) (set-face-attribute 'vc-annotate-1-face nil :foreground "white" :background "orange"))
-     ((<= 2 age 7) (set-face-attribute 'vc-annotate-2-face nil :foreground "white" :background "yellow"))
-     ((<= 8 age 30) (set-face-attribute 'vc-annotate-3-face nil :foreground "white" :background "green"))
-     ((<= 31 age 90) (set-face-attribute 'vc-annotate-4-face nil :foreground "white" :background "blue"))
-     (t (set-face-attribute 'vc-annotate-5-face nil :foreground "white" :background "gray")))))
-
-(add-hook 'vc-annotate-mode-hook 'my-vc-annotate-apply-faces)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-(defun my-vc-annotate-apply-faces ()
-  "Apply custom faces based on commit date in vc-annotate."
+  "Apply custom faces based on commit date in vc-annotate.
+This function iterates through each line in the vc-annotate buffer
+and applies a different face depending on the age of the commit."
   (save-excursion
     (goto-char (point-min))
     (while (not (eobp))
@@ -10749,18 +10743,21 @@ We should use:
         (cond
          ((= age 0) (vc-annotate-apply-face-at-line 'vc-annotate-0-face))
          ((= age 1) (vc-annotate-apply-face-at-line 'vc-annotate-1-face))
-         ((<= 2 age 7) (vc-annotate-apply-face-at-line 'vc-annotate-2-face))
-         ((<= 8 age 30) (vc-annotate-apply-face-at-line 'vc-annotate-3-face))
-         ((<= 31 age 90) (vc-annotate-apply-face-at-line 'vc-annotate-4-face))
-         (t (vc-annotate-apply-face-at-line 'vc-annotate-5-face)))))
+         ((and (<= 2 age) (<= age 7)) (vc-annotate-apply-face-at-line 'vc-annotate-2-face))
+         ((and (<= 8 age) (<= age 30)) (vc-annotate-apply-face-at-line 'vc-annotate-3-face))
+         ((and (<= 31 age) (<= age 90)) (vc-annotate-apply-face-at-line 'vc-annotate-4-face))
+         ((and (<= 91 age) (<= age 365)) (vc-annotate-apply-face-at-line 'vc-annotate-5-face))
+         (t (vc-annotate-apply-face-at-line 'vc-annotate-6-face)))))
     (goto-char (point-min))))
 
 (defun my-vc-annotate-get-commit-age (revision)
-  "Get the age of a commit in days."
-  (string-to-number
-   (shell-command-to-string
-    (format "git show -s --format=%%ct %s | xargs -I{} echo $(( (($(date +%s) - {})) / (24 * 60 * 60) ))"
-            revision))))
+  "Get the age of a commit in days for REVISION.
+Returns the age as an integer."
+  (let ((output (shell-command-to-string
+                 (format "git show -s --format=%%ct %s" revision))))
+    (unless (string-empty-p output)
+      (string-to-number
+       (format "%.0f" (/ (- (float-time) (string-to-number output)) (* 24 60 60)))))))
 
 (defun vc-annotate-apply-face-at-line (face)
   "Apply FACE to the current line in vc-annotate buffer."
@@ -11389,23 +11386,23 @@ Projectile's features.
     (idle-require 'projectile)
 
     (with-eval-after-load 'projectile
-      ;; Turn on projectile mode by default for all file types
+      ;; Turn on projectile mode by default for all file types.
       (projectile-mode)
-      ;; (projectile-global-mode) ??
 
-      ;; Add keymap prefix.
+      ;; Add keymap prefix for projectile commands.
       (define-key projectile-mode-map (kbd "C-c p")   #'projectile-command-map)
-
       (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
 
+      ;; Set the completion system for projectile.
       (setq projectile-completion-system 'helm)
       (setq projectile-completion-system 'helm-comp-read)
 
-      ;; Turn on Helm key bindings for projectile.
+      ;; Turn on Helm key bindings for projectile if helm-projectile is
+      ;; available.
       (when (locate-library "helm-projectile")
         (helm-projectile-on))
 
-      ;; ;; For large projects.
+      ;; ;; Uncomment the following lines for large projects if needed.
       ;; (setq helm-projectile-sources-list
       ;;       '(helm-source-projectile-projects
       ;;         helm-source-projectile-files-list))
@@ -14985,9 +14982,9 @@ See also https://www.armindarvish.com/post/use_emacs_as_a_chatgpt_client/
 
 ;; Set OpenAI API key.
 (let ((api-key (or (getenv "OPENAI_API_KEY")
-                   (and (file-exists-p "~/.openai_api_key")
+                   (and (file-exists-p (expand-file-name "~/.openai_api_key"))
                         (with-temp-buffer
-                          (insert-file-contents "~/.openai_api_key")
+                          (insert-file-contents (expand-file-name "~/.openai_api_key"))
                           (string-trim (buffer-string)))))))
   (if (and api-key (not (string-empty-p (string-trim api-key))))
       (setq gptel-api-key (string-trim api-key))
@@ -15014,6 +15011,24 @@ Usage:
 - ~M-x gptel-send~ → Send input to the AI.
 - ~C-c q~ → Quick send a query from any buffer.
 
+#+begin_src emacs-lisp :tangle no
+(defun eboost--gptel-prompt-prefix ()
+  "Generate a custom prompt prefix for GPTel in Org mode, including a timestamp."
+  (let ((timestamp (format-time-string "%Y-%m-%d %H:%M")))
+    (format "** --- User prompt [%s] ---\n\n" timestamp)))
+
+;; Association list mapping modes to prompt prefixes for GPTel.
+(setq gptel-prompt-prefix-alist
+      '((org-mode . eboost--gptel-prompt-prefix)))
+
+(defvar eboost-gptel-response-prefix "** --- AI response ---\n\n"
+  "Custom response prefix for GPTel in Org mode.")
+
+;; Association list mapping modes to response prefixes for GPTel.
+(setq gptel-response-prefix-alist
+      `((org-mode . ,eboost-gptel-response-prefix)))
+#+end_src
+
 #+begin_src emacs-lisp
 ;; Org-mode specific integration.
 (defun eboost-org-gptel-send-to-chatgpt ()
@@ -15039,9 +15054,10 @@ Usage:
       (with-current-buffer buffer
         ;; (erase-buffer)
         (goto-char (point-max))
-        (insert (format-time-string "\n\n=== User request [%Y-%m-%d %H:%M] ===\n\n")
+        (insert "\n\n* -------------------- Tour --------------------")
+        (insert (format-time-string "\n\n** --- User prompt [%Y-%m-%d %H:%M] ---\n\n")
                 text
-                "\n\n=== Response ===")
+                "\n\n** --- AI response ---")
         (goto-char (point-max))
 
         ;; ;; Envoyer le texte sans l'insérer.
@@ -15052,13 +15068,11 @@ Usage:
             (gptel-send)
           (error
            (message "Failed to send text to GPTel: %s"
-                    (error-message-string err))))
-
-        (insert "\n\n-------------------- Tour --------------------"))
+                    (error-message-string err)))))
 
       ;; Display the buffer and provide user feedback.
       (pop-to-buffer buffer)
-      (message "GPTel: Request sent..."))))
+      (message "GPTel: Request sent. Awaiting response..."))))
 
 ;; Display message in echo area when processing is done.
 (defun gptel-notify-done (beg end)
@@ -15074,13 +15088,9 @@ Usage:
 #+begin_src emacs-lisp
 ;; Keybinding to trigger eboost-org-gptel-send-to-chatgpt within Org-mode.
 (with-eval-after-load 'org
-
-  ;; Check if the keybinding is already in use.
-  (when (lookup-key org-mode-map (kbd "C-c C-q"))
-    (warn "Keybinding C-c C-q is already in use in Org mode!"))
-
-  ;; Define the keybinding if it's not already in use.
-  (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt))
+  (if (null (lookup-key org-mode-map (kbd "C-c q")))
+      (define-key org-mode-map (kbd "C-c q") #'eboost-org-gptel-send-to-chatgpt)
+    (warn "Keybinding C-c q is already in use in Org mode!")))
 #+end_src
 
 Format the output responses generated by the GPTel package: truncates lines to
@@ -15094,15 +15104,12 @@ a maximum of 80 characters.
         (fill-column 80))
     (save-excursion
       (goto-char (point-max))
-      (when (search-backward "=== Response ===" nil t)
+      (when (search-backward "** --- AI response ---" nil t)
         ;; Saute la ligne du séparateur :
         (forward-line 1)
         (let ((start (point))
-              (end (if (search-forward "-------------------- " nil t)
-                       (match-beginning 0)
-                     (point-max))))
-          (fill-region start end)))))
-)
+              (end (point-max)))
+          (fill-region start end))))))
 
 ;; (add-hook 'gptel-post-response-functions #'eboost-gptel-fill-response)
 ;; BUG: It does fill code blocks!
@@ -15118,13 +15125,12 @@ a maximum of 80 characters.
 (add-hook 'org-mode-hook #'org-ai-mode)
 
 ;; Set OpenAI API key (store it securely!).
-(setq org-ai-openai-api-key "your-api-key-here")
-(setq org-ai-openai-api-key (getenv "OPENAI_API_KEY"))  ;; Use an environment variable.
+(setq org-ai-openai-api-key (getenv "OPENAI_API_KEY"))
 
 ;; Set default model (optional).
 (setq org-ai-default-chat-model "gpt-4")
 
-;; Install Yasnippet templates for org-ai (optional).
+;; Install YASnippet templates for org-ai (optional).
 (when (try-require 'yasnippet)
   (org-ai-install-yasnippets))
 #+end_src
@@ -15179,34 +15185,8 @@ Now Emacs should start with that font.
 ;;** (info "(elisp)Faces")
 
   (leuven--section "Faces")
-#+end_src
 
-For reasons unknown to me, Emacs takes a long time to change fonts in an X
-environment.
-
-Rather than using ~(set-default-font ...)~ in =.emacs=, stick the font definition in
-your =.Xresources= file (key 'Emacs*font') and then use ~xrdb -load~ to activate it.
-You will find that startup time is greatly improved!
-
-Edit your =~/.Xresources= file to have a line with "Emacs.font".  Then do a
-
-~xrdb -merge ~/.Xresources~
-
-or restart your X11 to validate the modification.  I let Emacs do this for me:
-
-#+begin_src emacs-lisp
-  (defun leuven--merge-x-resources ()
-    (let ((file (file-name-nondirectory (buffer-file-name))))
-      (when (or (string= file ".Xdefaults")
-                (string= file ".Xresources"))
-        (start-process "xrdb" nil "xrdb" "-merge" (buffer-file-name))
-        (message (format "[Merged %s into X resource database]" file)))))
-
-  (add-hook 'after-save-hook #'leuven--merge-x-resources)
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; allow any scalable font
+  ;; Allow any scalable font.
   (setq scalable-fonts-allowed t)
 #+end_src
 
@@ -15245,14 +15225,8 @@ Zoom in/out (increase/decrease the font size) with ~Ctrl~ key and scroll wheel o
 the mouse:
 
 #+begin_src emacs-lisp
-  ;; (global-set-key (kbd "C-+")            #'text-scale-increase)
-  ;; (global-set-key (kbd "C--")            #'text-scale-decrease)
   (global-set-key (kbd "<C-wheel-up>")   #'text-scale-increase)
   (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
-
-  ;; For Linux.
-  (global-set-key (kbd "<C-mouse-4>")    #'text-scale-increase)
-  (global-set-key (kbd "<C-mouse-5>")    #'text-scale-decrease)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -15382,222 +15356,6 @@ Similar commands: in place of ~e~,
 
 You need to type ~C-x * e~ again to exit the Embedded mode.
 
-* IRC client for Emacs
-
-See [[http://en.wikipedia.org/wiki/List_of_IRC_commands][List of Internet Relay Chat commands]]:
-- ~/whois~
-- ~/leave~
-
-#+begin_src emacs-lisp :tangle no
-;;* Emacs IRC client
-
-;; Other IRC for Emacs: rcirc, circe, bitlbee, liece, riece, zenirc, erc
-;; Circe is advised by Tassilo (contributor).
-
-  (autoload 'circe "circe"
-    "Connect to an IRC server." t)
-
-  ;; Connect to the Freenode network
-  (defun leuven-irc-connect ()
-    "Connect to Freenode."
-    (interactive)
-    (circe "irc.freenode.net" "6667" "freenode"))
-
-  ;; ... upon hitting `M-x leuven-start-irc'.
-  (defun leuven-start-irc ()
-    "Start IRC."
-    (interactive)
-    (eboost--switch-or-start 'leuven-irc-connect "irc.freenode.net:6667"))
-
-  (with-eval-after-load 'circe
-
-;;** 1 Basics
-
-    ;; Default channels to join whenever connecting to Freenode.
-    (setq circe-server-auto-join-channels
-          '(("^freenode$"
-             "#emacs"
-             ;; "#gnus"
-             ;; "#latex"
-             "#org-mode"
-             ;; "#stumpwm"
-             ;; "#zsh"
-             )))
-
-;;** 2 Reference
-
-;;*** 2.3 Configuration
-
-    ;; Default nick.
-    (setq circe-default-nick "johndoe")
-
-    ;; Your "real name" on IRC.
-    (setq circe-default-realname "John Doe")
-
-    ;; Authentication info.
-    (setq freenode-passwd "")
-    (setq circe-nickserv-passwords
-          `(("freenode" ,freenode-passwd)))
-
-;;** 3 Fighting Information Overload
-
-;;*** 3.1 Channels
-
-    ;; When other people say things in buffers that are currently buried (no
-    ;; window is showing them), the mode line will now show you the abbreviated
-    ;; channel or nick name.  Use `C-c C-SPC' to switch to these buffers.
-
-;;*** 3.3 Keywords
-
-    ;; List of keywords to highlight.
-    (setq lui-highlight-keywords '("org" "beamer" "ledger" "tikz"))
-
-    ;; Add IRC color support to LUI.
-    (try-require 'lui-irc-colors)
-    (with-eval-after-load 'lui-irc-colors
-      (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
-
-;;** 4 Hacking and Tweaking
-
-;;*** 4.2 Using fly spell mode
-
-    (when (lvn--executable-ispell-program-name-p)
-      (setq lui-flyspell-p t)
-      (setq lui-flyspell-alist '(("." "american"))))
-
-;;** Others
-
-    (setq circe-highlight-nick-type 'occurrence)
-
-    (try-require 'circe-highlight-all-nicks)
-    (with-eval-after-load 'circe-highlight-all-nicks
-      (enable-circe-highlight-all-nicks))
-
-    ;; Format for messages to queries or channels.
-    (setq circe-format-self-say "<{nick}> {body}")
-
-    ;; Truncate the buffer (at the top) if it grows too much.
-    (setq lui-max-buffer-size 30000)
-
-    ;; Column at which Lui should break output.
-    (setq lui-fill-column fill-column)
-
-    )                                   ; with-eval-after-load "circe" ends here.
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-(use-package erc
-  :commands (erc erc-tls)
-  :bind (:map erc-mode-map
-              ("C-c r" . reset-erc-track-mode))
-  :preface
-  (defun irc (&optional arg)
-    (interactive "P")
-    (if arg
-        (pcase-dolist (`(,server . ,nick)
-                       '(("irc.freenode.net"     . "johnw")
-                         ("irc.gitter.im"        . "jwiegley")
-                         ;; ("irc.oftc.net"         . "johnw")
-                         ))
-          (erc-tls :server server :port 6697 :nick (concat nick "_")
-                   :password (lookup-password server nick 6697)))
-      (let ((pass (lookup-password "irc.freenode.net" "johnw" 6697)))
-        (when (> (length pass) 32)
-          (error "Failed to read ZNC password"))
-        (erc :server "127.0.0.1" :port 6697 :nick "johnw"
-             :password (concat "johnw/gitter:" pass))
-        (sleep-for 5)
-        (erc :server "127.0.0.1" :port 6697 :nick "johnw"
-             :password (concat "johnw/freenode:" pass)))))
-
-  (defun reset-erc-track-mode ()
-    (interactive)
-    (setq erc-modified-channels-alist nil)
-    (erc-modified-channels-update)
-    (erc-modified-channels-display)
-    (force-mode-line-update))
-
-  (defun setup-irc-environment ()
-    (set (make-local-variable 'scroll-conservatively) 100)
-    (setq erc-timestamp-only-if-changed-flag nil
-          erc-timestamp-format "%H:%M "
-          erc-fill-prefix "          "
-          erc-fill-column 78
-          erc-insert-timestamp-function 'erc-insert-timestamp-left
-          ivy-use-virtual-buffers nil))
-
-  (defcustom erc-foolish-content '()
-    "Regular expressions to identify foolish content.
-    Usually what happens is that you add the bots to
-    `erc-ignore-list' and the bot commands to this list."
-    :group 'erc
-    :type '(repeat regexp))
-
-  (defun erc-foolish-content (msg)
-    "Check whether MSG is foolish."
-    (erc-list-match erc-foolish-content msg))
-
-  :init
-  (add-hook 'erc-mode-hook #'setup-irc-environment)
-  (when alternate-emacs
-    (add-hook 'emacs-startup-hook 'irc))
-
-  (eval-after-load 'erc-identd
-    '(defun erc-identd-start (&optional port)
-       "Start an identd server listening to port 8113.
-  Port 113 (auth) will need to be redirected to port 8113 on your
-  machine -- using iptables, or a program like redir which can be
-  run from inetd. The idea is to provide a simple identd server
-  when you need one, without having to install one globally on
-  your system."
-       (interactive (list (read-string "Serve identd requests on port: " "8113")))
-       (unless port (setq port erc-identd-port))
-       (when (stringp port)
-         (setq port (string-to-number port)))
-       (when erc-identd-process
-         (delete-process erc-identd-process))
-       (setq erc-identd-process
-             (make-network-process :name "identd"
-                                   :buffer nil
-                                   :host 'local :service port
-                                   :server t :noquery t
-                                   :filter 'erc-identd-filter))
-       (set-process-query-on-exit-flag erc-identd-process nil)))
-
-  :config
-  (erc-track-minor-mode 1)
-  (erc-track-mode 1)
-
-  (add-hook 'erc-insert-pre-hook
-            (lambda (s)
-              (when (erc-foolish-content s)
-                (setq erc-insert-this nil)))))
-
-(use-package erc-alert
-  :disabled t
-  :after erc)
-
-(use-package erc-highlight-nicknames
-  :after erc)
-
-(use-package erc-macros
-  :after erc)
-
-(use-package erc-patch
-  :disabled t
-  :after erc)
-
-(use-package erc-question
-  :disabled t
-  :after erc)
-
-(use-package erc-yank
-  :load-path "lisp/erc-yank"
-  :after erc
-  :bind (:map erc-mode-map
-              ("C-y" . erc-yank )))
-#+end_src
-
 * Emacs and Microsoft Windows/MS-DOS
 
 Eventually have a look as well at ~input-decode-map~.
@@ -15621,10 +15379,22 @@ Eventually have a look as well at ~input-decode-map~.
 - View the results by running ~M-x profiler-report~.
 
 #+begin_src emacs-lisp :tangle no
+(defvar eboost-profiler-delay 5
+  "Delay in seconds before generating the profiler report.")
+
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (profiler-start 'cpu)
-            (run-at-time 5 nil (lambda () (profiler-report) (profiler-stop)))))
+            (message "Starting CPU profiling...")
+            (condition-case err
+                (progn
+                  (profiler-start 'cpu)
+                  (run-at-time eboost-profiler-delay nil
+                               (lambda ()
+                                 (profiler-report)
+                                 (profiler-stop))))
+              (error
+               (message "Profiler encountered an error: %s"
+                        (error-message-string err))))))
 #+end_src
 
 * Reporting Bugs
@@ -15672,8 +15442,8 @@ calls to message), set the variable ~debug-on-message~.
 #+begin_src emacs-lisp
 ;; Compute and display the load time.
 (let ((load-time (float-time (time-subtract (current-time) emacs-leuven--load-start-time))))
-  (message "[Loaded %s in %.2f s]" load-file-name load-time))
-(sit-for 0.5)
+  (message "[Loaded %s in %.2f seconds]" load-file-name load-time)
+  (sit-for 0.5))
 #+end_src
 
 See https://github.com/emacs-dashboard/emacs-dashboard/issues/57 (very nice
@@ -15705,7 +15475,7 @@ dashboard):
 (add-hook 'emacs-startup-hook
           (lambda ()
             (let ((init-time (string-to-number (emacs-init-time))))
-              (message "[Emacs startup time: %.2f s; GC done: %S]"
+              (message "[Emacs startup time: %.2f seconds; GC done: %S]"
                        init-time gcs-done)
               (sit-for 0.5)))
           t)

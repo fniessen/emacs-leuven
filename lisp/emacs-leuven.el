@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250808.2215>
+;; Version: <20250809.1159>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250808.2215>"
+(defconst lvn--emacs-version "<20250809.1159>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -191,13 +191,19 @@ Records execution time in `leuven--load-times-list'."
 
 (defun leuven--section (sectionname &optional end-of-chapter)
   "Report under SECTIONNAME the time taken since it was last saved.
-Last time is saved in global variable `leuven--before-section-time'."
+The last time is saved in the global variable `leuven--before-section-time`.
+If END-OF-CHAPTER is non-nil, it will not print the section name."
+  (unless (numberp leuven--before-section-time)
+    (error "leuven--before-section-time is not a valid number."))
+
   (let ((this-section-time (- (float-time)
-                              leuven--before-section-time)))
-    (when lvn-verbose-loading
+                              leuven--before-section-time))
+        (verbose lvn-verbose-loading))  ;; Store verbose mode in a local variable
+    (when verbose
       (when (not (equal this-section-time 0.00))
-        (message "[    Section time: %.2f s]" this-section-time))
-      (unless end-of-chapter (message "[*** %s]" sectionname)))
+        (message "[    Section time: %.2f seconds]" this-section-time))
+      (unless end-of-chapter
+        (message "[*** %s]" sectionname)))
     ;; For next one.
     (setq leuven--before-section-time (float-time))))
 
@@ -2127,7 +2133,7 @@ After initiating the grep search, the isearch is aborted."
            (find-file-time-start (float-time)))
       (message "[Finding file %s...]" filename)
       (let ((result (apply orig-fun args)))
-        (message "[Found file %s in %.2f s]" filename
+        (message "[Found file %s in %.2f seconds]" filename
                  (- (float-time) find-file-time-start))
         result)))
 
@@ -2192,7 +2198,7 @@ After initiating the grep search, the isearch is aborted."
            (start-time (float-time)))
       (message "[Saving file %s...]" filename)
       (let ((result (apply orig-fun args)))
-        (message "[Saved file %s in %.2f s]" filename
+        (message "[Saved file %s in %.2f seconds]" filename
                  (- (float-time) start-time))
         result)))
 
@@ -5736,12 +5742,13 @@ a clean buffer we're an order of magnitude laxer about checking."
 (setq vc-annotate-very-old-color "black")
 
 (setq vc-annotate-color-map
-  '((  1.0 . "#FFCCCC") ; red
-    (  2.0 . "#FFE4CC") ; orange
-    (  7.0 . "#FFE4CC") ; yellow
-    ( 32.0 . "#DEFFCC") ; green
-    ( 92.0 . "#CCE4FF") ; blue
-    (366.0 . "#C9C9C9"))) ; gray
+      '((  1 . "#9B0000")  ; Deep Red for today's changes
+        (  2 . "#FF8C00")  ; Dark Orange for yesterday's changes
+        (  8 . "#FFD700")  ; Dark Yellow for recent changes (2-7 days)
+        ( 31 . "#006400")  ; Dark Green for moderate age (8-30 days)
+        ( 91 . "#00008B")  ; Dark Blue for moderate to old changes (31-90 days)
+        (366 . "#6A5ACD")  ; Dark Purple for old changes (91-365 days)
+        (t   . "#C9C9C9")))  ; Gray for older than one year
 
 ;;** 28.2 (info "(emacs)Change Log")
 
@@ -5864,23 +5871,23 @@ a clean buffer we're an order of magnitude laxer about checking."
     (idle-require 'projectile)
 
     (with-eval-after-load 'projectile
-      ;; Turn on projectile mode by default for all file types
+      ;; Turn on projectile mode by default for all file types.
       (projectile-mode)
-      ;; (projectile-global-mode) ??
 
-      ;; Add keymap prefix.
+      ;; Add keymap prefix for projectile commands.
       (define-key projectile-mode-map (kbd "C-c p")   #'projectile-command-map)
-
       (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
 
+      ;; Set the completion system for projectile.
       (setq projectile-completion-system 'helm)
       (setq projectile-completion-system 'helm-comp-read)
 
-      ;; Turn on Helm key bindings for projectile.
+      ;; Turn on Helm key bindings for projectile if helm-projectile is
+      ;; available.
       (when (locate-library "helm-projectile")
         (helm-projectile-on))
 
-      ;; ;; For large projects.
+      ;; ;; Uncomment the following lines for large projects if needed.
       ;; (setq helm-projectile-sources-list
       ;;       '(helm-source-projectile-projects
       ;;         helm-source-projectile-files-list))
@@ -7508,9 +7515,9 @@ This example lists Azerty layout second row keys."
 
 ;; Set OpenAI API key.
 (let ((api-key (or (getenv "OPENAI_API_KEY")
-                   (and (file-exists-p "~/.openai_api_key")
+                   (and (file-exists-p (expand-file-name "~/.openai_api_key"))
                         (with-temp-buffer
-                          (insert-file-contents "~/.openai_api_key")
+                          (insert-file-contents (expand-file-name "~/.openai_api_key"))
                           (string-trim (buffer-string)))))))
   (if (and api-key (not (string-empty-p (string-trim api-key))))
       (setq gptel-api-key (string-trim api-key))
@@ -7555,9 +7562,10 @@ This example lists Azerty layout second row keys."
       (with-current-buffer buffer
         ;; (erase-buffer)
         (goto-char (point-max))
-        (insert (format-time-string "\n\n=== User request [%Y-%m-%d %H:%M] ===\n\n")
+        (insert "\n\n* -------------------- Tour --------------------")
+        (insert (format-time-string "\n\n** --- User prompt [%Y-%m-%d %H:%M] ---\n\n")
                 text
-                "\n\n=== Response ===")
+                "\n\n** --- AI response ---")
         (goto-char (point-max))
 
         ;; ;; Envoyer le texte sans l'insérer.
@@ -7568,13 +7576,11 @@ This example lists Azerty layout second row keys."
             (gptel-send)
           (error
            (message "Failed to send text to GPTel: %s"
-                    (error-message-string err))))
-
-        (insert "\n\n-------------------- Tour --------------------"))
+                    (error-message-string err)))))
 
       ;; Display the buffer and provide user feedback.
       (pop-to-buffer buffer)
-      (message "GPTel: Request sent..."))))
+      (message "GPTel: Request sent. Awaiting response..."))))
 
 ;; Display message in echo area when processing is done.
 (defun gptel-notify-done (beg end)
@@ -7588,13 +7594,9 @@ This example lists Azerty layout second row keys."
 
 ;; Keybinding to trigger eboost-org-gptel-send-to-chatgpt within Org-mode.
 (with-eval-after-load 'org
-
-  ;; Check if the keybinding is already in use.
-  (when (lookup-key org-mode-map (kbd "C-c C-q"))
-    (warn "Keybinding C-c C-q is already in use in Org mode!"))
-
-  ;; Define the keybinding if it's not already in use.
-  (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt))
+  (if (null (lookup-key org-mode-map (kbd "C-c q")))
+      (define-key org-mode-map (kbd "C-c q") #'eboost-org-gptel-send-to-chatgpt)
+    (warn "Keybinding C-c q is already in use in Org mode!")))
 
 ;; Format responses for better readability.
 (defun eboost-gptel-fill-response (&rest _)
@@ -7603,15 +7605,12 @@ This example lists Azerty layout second row keys."
         (fill-column 80))
     (save-excursion
       (goto-char (point-max))
-      (when (search-backward "=== Response ===" nil t)
+      (when (search-backward "** --- AI response ---" nil t)
         ;; Saute la ligne du séparateur :
         (forward-line 1)
         (let ((start (point))
-              (end (if (search-forward "-------------------- " nil t)
-                       (match-beginning 0)
-                     (point-max))))
-          (fill-region start end)))))
-)
+              (end (point-max)))
+          (fill-region start end))))))
 
 ;; (add-hook 'gptel-post-response-functions #'eboost-gptel-fill-response)
 ;; BUG: It does fill code blocks!
@@ -7624,26 +7623,11 @@ This example lists Azerty layout second row keys."
 
   (leuven--section "Faces")
 
-  (defun leuven--merge-x-resources ()
-    (let ((file (file-name-nondirectory (buffer-file-name))))
-      (when (or (string= file ".Xdefaults")
-                (string= file ".Xresources"))
-        (start-process "xrdb" nil "xrdb" "-merge" (buffer-file-name))
-        (message (format "[Merged %s into X resource database]" file)))))
-
-  (add-hook 'after-save-hook #'leuven--merge-x-resources)
-
-  ;; allow any scalable font
+  ;; Allow any scalable font.
   (setq scalable-fonts-allowed t)
 
-  ;; (global-set-key (kbd "C-+")            #'text-scale-increase)
-  ;; (global-set-key (kbd "C--")            #'text-scale-decrease)
   (global-set-key (kbd "<C-wheel-up>")   #'text-scale-increase)
   (global-set-key (kbd "<C-wheel-down>") #'text-scale-decrease)
-
-  ;; For Linux.
-  (global-set-key (kbd "<C-mouse-4>")    #'text-scale-increase)
-  (global-set-key (kbd "<C-mouse-5>")    #'text-scale-decrease)
 
 )
 
@@ -7687,8 +7671,8 @@ This example lists Azerty layout second row keys."
 
 ;; Compute and display the load time.
 (let ((load-time (float-time (time-subtract (current-time) emacs-leuven--load-start-time))))
-  (message "[Loaded %s in %.2f s]" load-file-name load-time))
-(sit-for 0.5)
+  (message "[Loaded %s in %.2f seconds]" load-file-name load-time)
+  (sit-for 0.5))
 
 ;; ;; (use-package dashboard
 ;; ;;   :if (< (length command-line-args) 2)
@@ -7713,7 +7697,7 @@ This example lists Azerty layout second row keys."
 (add-hook 'emacs-startup-hook
           (lambda ()
             (let ((init-time (string-to-number (emacs-init-time))))
-              (message "[Emacs startup time: %.2f s; GC done: %S]"
+              (message "[Emacs startup time: %.2f seconds; GC done: %S]"
                        init-time gcs-done)
               (sit-for 0.5)))
           t)
