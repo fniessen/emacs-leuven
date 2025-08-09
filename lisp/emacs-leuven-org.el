@@ -409,13 +409,15 @@ On failure, issue a warning with the error details."
 
 ;; Define TODO keyword sequences with fast access keys and state change logging.
 (setq org-todo-keywords
-      '((sequence "MAYB(m)"             ; Proposal, idea, someday/maybe, wish.
-                  "TODO(t)"             ; Open, not yet started.
-                  "STRT(s)"             ; In progress, working on.
-                  "WAIT(w@/!)"          ; On hold, needs discussion or feedback.
-                  "|"
-                  "DONE(d!)"            ; Completed, closed, resolved.
-                  "CANX(x@)")))         ; Won't fix, rejected, ignored.
+      '((sequence
+         "MAYB(m)"                      ; 
+         "TODO(t)"                      ; New task (not yet started).
+         "NEXT(n)"                      ; Immediate next action to focus on (priority work).
+         "STRT(s)"                      ; Actively working (in progress).
+         "WAIT(w@/!)"                   ; Paused (waiting on someone/something).
+         "|"
+         "DONE(d!)"                     ; Successfully completed (with time logging).
+         "CANX(x@)")))                  ; Canceled or not applicable (requires note explaining why).
 
 ;; Faces configuration.
 ;; (use-package org-faces
@@ -424,10 +426,10 @@ On failure, issue a warning with the error details."
 ;;   :config
 (with-eval-after-load 'org-faces
   ;; Define non-standard faces for specific TODO states.
-  (defface leuven-org-mayb-kwd
+  (defface leuven-org-todo-kwd
     '((t :weight bold :box "#BBBBBB"
          :foreground "#BBBBBB" :background "#F0F0F0"))
-    "Face used to display state MAYB.")
+    "Face used to display state TODO.")
   (defface leuven-org-strt-kwd
     '((t :weight bold :box "#D9D14A"
          :foreground "#D9D14A" :background "#FCFCDC"))
@@ -443,8 +445,9 @@ On failure, issue a warning with the error details."
 
   ;; Set the specific faces for Org TODO keywords.
   (setq org-todo-keyword-faces
-        '(("MAYB" . leuven-org-mayb-kwd)
-          ("TODO" . org-todo)
+        '(("MAYB" . leuven-org-todo-kwd)
+          ("TODO" . leuven-org-todo-kwd)
+          ("NEXT" . org-todo)
           ("STRT" . leuven-org-strt-kwd)
           ("WAIT" . leuven-org-wait-kwd)
           ("DONE" . org-done)
@@ -843,7 +846,7 @@ a parent headline."
   (add-to-list 'org-capture-templates
                `("t" "New task" entry
                  (file+headline ,org-default-notes-file "Tasks")
-                 "* MAYB %^{Task}%?\n  CREATED: %U\n  DEADLINE: %^t\n  %a"
+                 "* TODO %^{Task}%?\n  CREATED: %U\n  DEADLINE: %^t\n  %a"
                  :empty-lines 1) :append)
 
   (add-to-list 'org-capture-templates
@@ -1254,12 +1257,12 @@ From the address <%a>"
                              (0800 1000 1200 1400 1600 1800 2000)
                              "...... " ""))
 
-;; String for the current time marker in the agenda.
+;; String used to indicate the current time in the Org agenda.
 (setq org-agenda-current-time-string
-      ;; Check if character 25C0 is displayable.
-      (if (char-displayable-p ?\u25C0)
-          "\u25C0── Right now ─────────────────────────────────────────"
-        "<── Right now ─────────────────────────────────────────"))
+      (concat
+       (if (char-displayable-p ?\u25C0) "◀──" "<──")
+       " Now "
+       (make-string 50 ?─)))
 
 ;; 10.4.3 Sorting structure for the agenda items of a single day.
 (setq org-agenda-sorting-strategy   ; custom value
@@ -1272,16 +1275,20 @@ From the address <%a>"
 ;; Show agenda in the current window, keeping all other windows.
 (setq org-agenda-window-setup 'current-window)
 
-(defun leuven-org-agenda-change-sorting-strategy (strategy)
-  "Change the sorting strategy."
-  (interactive (list
-                (completing-read "Choose a strategy: "
-                                 (mapcar 'cdr (cdr org-sorting-choice))
-                                 nil t)))
-  ;; adjust the following types as needed - e.g., add 'agenda, etc.
-  (org-agenda-check-type t 'todo 'tags 'search)
-  (let ((org-agenda-sorting-strategy (list (intern strategy))))
+(defun eboost-org-agenda-set-sorting-strategy (strategy)
+  "Interactively set the sorting strategy for the current Org agenda buffer."
+  (interactive
+   (list (completing-read
+          "Choose sorting strategy: "
+          (mapcar #'cdr (cdr org-sorting-choice))
+          nil t)))
+  (org-agenda-check-type t 'todo 'tags 'search 'agenda)
+  (let ((org-agenda-sorting-strategy (list (intern-soft strategy))))
     (org-agenda-redo)))
+
+;; Must come *after* the defun
+(with-eval-after-load 'org-agenda
+  (define-key org-agenda-mode-map (kbd "C-c s") #'eboost-org-agenda-set-sorting-strategy))
 
 ;;** 10.5 (info "(org)Agenda commands")
 
@@ -2672,6 +2679,35 @@ BACKEND is the current export backend."
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
 (add-hook 'before-save-hook #'lvn--org-update-buffer-before-save)
+
+(defvar lvn--org-clean-typography-excluded-files
+  '("emacs.org" "init.org" "emacs-leuven-org.txt")
+  "List of Org filenames where `lvn--org-clean-typography` should NOT run.")
+
+(defun lvn--org-clean-typography ()
+  "Replace typographic characters with ASCII equivalents before saving, unless in excluded Org files."
+  (when (and (derived-mode-p 'org-mode)
+             (not (member (file-name-nondirectory (or buffer-file-name ""))
+                          lvn--org-clean-typography-excluded-files)))
+    (let ((replacements
+           '(("—" . " -- ")    ; Em dash.
+             ("–" . " - ")     ; En dash.
+             ("“" . "\"")      ; Left double quote.
+             ("”" . "\"")      ; Right double quote.
+             ("‟" . "\"")      ; Double high reversed-9.
+             ("‘" . "'")       ; Left single quote.
+             ("’" . "'")       ; Right single quote / apostrophe.
+             ("‛" . "'")       ; Single high reversed-9.
+             ("…" . "..."))))  ; Ellipsis.
+      (save-excursion
+        (goto-char (point-min))
+        (dolist (pair replacements)
+          (while (search-forward (car pair) nil t)
+            (replace-match (cdr pair) nil t)))))))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook #'lvn--org-clean-typography nil 'local)))
 
 ;; Add weather forecast in your Org agenda.
 (autoload 'org-google-weather "org-google-weather"
