@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1700>
+;; Version: <20250809.1713>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1700>"
+(defconst lvn--emacs-version "<20250809.1713>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7666,12 +7666,26 @@ Does not show GPTel menu; opens result in a new buffer and adds it to the kill r
                               (kill-new trimmed-response) ; Add to kill ring.
                               (insert trimmed-response)
                               (goto-char (point-min))
-                              (message "Commit message generated and copied to kill ring."))
+                              (message "Commit message generated and copied to kill ring.")))
                         (message "Failed to generate commit message."))
                       (display-buffer output-buffer)))))))
 
 (global-set-key (kbd "C-x v m") 'eboost-gptel-send-diff-for-commit-msg)
 (define-key diff-mode-map (kbd "m") 'eboost-gptel-send-diff-for-commit-msg)
+
+;; Load org-ai.
+(try-require 'org-ai)
+
+;; Enable org-ai-mode in Org mode.
+(add-hook 'org-mode-hook #'org-ai-mode)
+
+;; Set OpenAI API key.
+(setq org-ai-openai-api-key eboost-openai-api-key)
+(setq org-ai-openai-api-token eboost-openai-api-key)
+
+;; Install YASnippet templates for org-ai.
+(when (try-require 'yasnippet)
+  (org-ai-install-yasnippets))
 
 ;;* Emacs Display
 

@@ -15186,7 +15186,7 @@ Does not show GPTel menu; opens result in a new buffer and adds it to the kill r
 
 ** Org-ai
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 ;; Load org-ai.
 (try-require 'org-ai)
 
