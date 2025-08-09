@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1656>
+;; Version: <20250809.1700>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1656>"
+(defconst lvn--emacs-version "<20250809.1700>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7640,7 +7640,7 @@ This example lists Azerty layout second row keys."
 
 (defun eboost-gptel-send-diff-for-commit-msg ()
   "Send current region or buffer as a diff to GPT for a commit message.
-Does not show GPTel menu; opens result in a new buffer."
+Does not show GPTel menu; opens result in a new buffer and adds it to the kill ring."
   (interactive)
   (let* ((diff-text (if (use-region-p)
                         (buffer-substring-no-properties (region-beginning) (region-end))
@@ -7662,9 +7662,11 @@ Does not show GPTel menu; opens result in a new buffer."
                       (erase-buffer)
                       (if response
                           (progn
-                            (insert (string-trim response))
-                            (goto-char (point-min))
-                            (message "Commit message generated successfully."))
+                            (let ((trimmed-response (string-trim response)))
+                              (kill-new trimmed-response) ; Add to kill ring.
+                              (insert trimmed-response)
+                              (goto-char (point-min))
+                              (message "Commit message generated and copied to kill ring."))
                         (message "Failed to generate commit message."))
                       (display-buffer output-buffer)))))))
 
