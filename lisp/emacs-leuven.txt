@@ -372,7 +372,9 @@ need to load a single file that define autoloaded functions.
             (add-to-list 'load-path abs-dir)
             (when lvn-verbose-loading
               (message "[Added '%s' to load-path]" abs-dir)))
-        (warn "Directory '%s' does not exist" abs-dir))))
+        (display-warning 'eboost
+                         (format "Directory '%s' does not exist" abs-dir)
+                         :warning))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -416,7 +418,11 @@ distro) without impacting on stuff you have added by hand.
             (require feature)
             t)                          ; Return t for success in conditionals.
         (error
-         (warn "Failed to load feature `%s': %s" feature (error-message-string err))
+         (display-warning 'eboost
+                          (format "Failed to load feature `%s': %s"
+                                  feature
+                                  (error-message-string err))
+                          :warning)
          nil))))
 #+end_src
 
@@ -527,12 +533,16 @@ Shows a warning message if the file does not exist or is not executable."
 
     (cond
      ((not (file-exists-p file))
-      (warn "File `%s' does not exist." file)
+      (display-warning 'eboost
+                       (format "File `%s' does not exist." file)
+                       :warning)
       (sit-for 1.5)
       nil)
 
      ((not (file-executable-p file))
-      (warn "File `%s' is not executable." file)
+      (display-warning 'eboost
+                       (format "File `%s' is not executable." file)
+                       :warning)
       (sit-for 1.5)
       nil)
 
@@ -4008,7 +4018,9 @@ Turn on auto-revert mode globally.
     ;; Check and warn about remote files setting.
     (when (and (boundp 'auto-revert-remote-files)
                auto-revert-remote-files)
-      (warn "`auto-revert-remote-files' is non-nil, this may generate significant network traffic.")))
+      (display-warning 'eboost
+                       "`auto-revert-remote-files' is non-nil, this may generate significant network traffic."
+                       :warning)))
 
   ;; Consider setting `auto-revert-remote-files' to nil to reduce network
   ;; traffic.
@@ -4095,8 +4107,8 @@ Make the message "/FILENAME has auto save data/" unmissable:
     "If non-nil, an overlay indicating that the visited file has auto save data.")
 
   (defun leuven--recover-this-file ()
-    (let ((warn (not buffer-read-only)))
-      (when (and warn
+    (let ((warning (not buffer-read-only)))
+      (when (and warning
                  ;; No need to warn if buffer is auto-saved under the name of
                  ;; the visited file.
                  (not (and buffer-file-name
@@ -14956,7 +14968,9 @@ References:
         (progn
           (message "[OpenAI API key successfully loaded.]")
           trimmed-api-key)
-      (warn "No valid OpenAI API key found!")))
+      (display-warning 'eboost
+                       "No valid OpenAI API key found!"
+                       :warning)))
   "Load OpenAI API key from environment variable or file.")
 #+end_src
 
@@ -15594,8 +15608,8 @@ functions implemented in Emacs Lisp.
 "Package can be upgraded"
 
 #+begin_src emacs-lisp
-  (defun lvn-update-emacs-leuven-configuration ()
-    "Update the Leuven configuration for Emacs to its latest version.
+(defun lvn-update-emacs-leuven-configuration ()
+  "Update the Leuven configuration for Emacs to its latest version.
 
 This function checks for unstaged changes in the Emacs-Leuven configuration repository.
 If there are unstaged changes, it recommends committing or stashing them before updating.
@@ -15606,29 +15620,33 @@ After the update, it recommends restarting Emacs to complete the update.
 Before using this function, make sure 'lvn--directory' points to the
 directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
-    (interactive)
-    (lvn-display-emacs-leuven-version)
-    (let* ((el-file-path (locate-library "emacs-leuven.el"))
-           (el-file-directory (file-name-directory (file-truename el-file-path)))
-           (repository-directory el-file-directory)
-           (unstaged-changes (shell-command-to-string "cd %s && git status --porcelain"))
-           (status-buffer (generate-new-buffer "*git-status*")))
-      (if (file-directory-p repository-directory)
-          (progn
-            (if (not (string-empty-p unstaged-changes))
-                (progn
-                  (warn "You have unstaged changes. Please commit or stash them before updating.")
-                  (message "[Unstaged changes:\n%s]" unstaged-changes))
-              (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" el-file-directory))))
-                (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
-                    (message "[Configuration is already up-to-date]")
-                  (if (= status 0)
-                      (progn
-                        (sit-for 1.5)
-                        (message "[Configuration updated.  Please restart Emacs to complete the update]"))
-                    (warn "Error: Failed to update configuration"))))))
-        (message "[Error: 'emacs-leuven.el' file not found]"))
-      (kill-buffer status-buffer)))
+  (interactive)
+  (lvn-display-emacs-leuven-version)
+  (let* ((el-file-path (locate-library "emacs-leuven.el"))
+         (el-file-directory (file-name-directory (file-truename el-file-path)))
+         (repository-directory el-file-directory)
+         (unstaged-changes (shell-command-to-string (format "cd %s && git status --porcelain" repository-directory)))
+         (status-buffer (generate-new-buffer "*git-status*")))
+    (if (file-directory-p repository-directory)
+        (progn
+          (if (not (string-empty-p unstaged-changes))
+              (progn
+                (display-warning 'eboost
+                                 "You have unstaged changes. Please commit or stash them before updating."
+                                 :warning)
+                (message "[Unstaged changes:\n%s]" unstaged-changes))
+            (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" repository-directory))))
+              (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
+                  (message "[Configuration is already up-to-date]")
+                (if (= status 0)
+                    (progn
+                      (sit-for 1.5)
+                      (message "[Configuration updated.  Please restart Emacs to complete the update]"))
+                  (display-warning 'eboost
+                                   "Error: Failed to update configuration"
+                                   :warning))))))
+      (message "[Error: 'emacs-leuven.el' file not found]"))
+    (kill-buffer status-buffer)))
 
   (defun lvn-display-emacs-leuven-latest-commits ()
     "Display the latest commits in the Emacs-Leuven configuration.

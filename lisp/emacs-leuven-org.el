@@ -9,7 +9,11 @@ On failure, issue a warning with the error details."
           (require feature)
           t)                          ; Return t for success in conditionals.
       (error
-       (warn "Failed to load feature `%s': %s" feature (error-message-string err))
+       (display-warning 'eboost
+                        (format "Failed to load feature `%s': %s"
+                                feature
+                                (error-message-string err))
+                        :warning)
        nil))))
 
 ;; (info "(org)Top") outline-based notes management and organizer
@@ -818,7 +822,9 @@ a parent headline."
 (setq org-directory lvn-org-directory)
 
 (unless (and (file-directory-p org-directory) (file-writable-p org-directory))
-  (warn "Org directory '%s' is not accessible" org-directory)
+  (display-warning 'eboost
+                   (format "Org directory '%s' is not accessible" org-directory)
+                   :warning)
   (setq org-directory "~/"))
 
 ;; 9.1.2 Default target for storing notes.
@@ -1677,7 +1683,9 @@ formats (Markdown, HTML, or PDF)."
           (lambda ()
             (let ((lint-result (org-lint)))
               (when lint-result
-                (warn "Org-lint found issues! Run `org-lint' to review.")
+                (display-warning 'eboost
+                                 "Org-lint found issues! Run `org-lint' to review."
+                                 :warning)
                 (beep)
                 (sit-for 1))
               (unless lint-result
