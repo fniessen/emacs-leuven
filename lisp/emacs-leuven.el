@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1223>
+;; Version: <20250809.1420>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1223>"
+(defconst lvn--emacs-version "<20250809.1420>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7510,18 +7510,26 @@ This example lists Azerty layout second row keys."
 
 )                                       ; Chapter 49 ends here.
 
+;; Set OpenAI API key.
+(defvar eboost-openai-api-key
+  (let* ((api-key (or (getenv "OPENAI_API_KEY")
+                      (when (file-exists-p (expand-file-name "~/.openai_api_key"))
+                        (with-temp-buffer
+                          (insert-file-contents (expand-file-name "~/.openai_api_key"))
+                          (string-trim (buffer-string))))))
+         (trimmed-api-key (string-trim api-key)))
+    (if (and trimmed-api-key (not (string-empty-p trimmed-api-key)))
+        (progn
+          (message "OpenAI API key successfully loaded.")
+          trimmed-api-key)
+      (warn "No valid OpenAI API key found!")))
+  "Load OpenAI API key from environment variable or file.")
+
 ;; Load gptel.
 (try-require 'gptel)
 
 ;; Set OpenAI API key.
-(let ((api-key (or (getenv "OPENAI_API_KEY")
-                   (and (file-exists-p (expand-file-name "~/.openai_api_key"))
-                        (with-temp-buffer
-                          (insert-file-contents (expand-file-name "~/.openai_api_key"))
-                          (string-trim (buffer-string)))))))
-  (if (and api-key (not (string-empty-p (string-trim api-key))))
-      (setq gptel-api-key (string-trim api-key))
-    (warn "OPENAI_API_KEY environment variable is not set or empty, and no key found in ~/.openai_api_key file!")))
+(setq gptel-api-key eboost-openai-api-key)
 
 ;; Controls randomness (lower = more deterministic).
 (setq gptel-temperature 0.7)
@@ -7576,13 +7584,14 @@ This example lists Azerty layout second row keys."
       (with-current-buffer buffer
         ;; (erase-buffer)
         (goto-char (point-max))
-        (insert "\n\n* -------------------- Tour --------------------")
-        (insert (format-time-string "\n\n** --- User prompt [%Y-%m-%d %H:%M] ---\n\n")
-                text
-                "\n\n** --- AI response ---")
+        (insert
+         (format-time-string "\n\n* -------------------- Session [%Y-%m-%d %H:%M] --------------------")
+         "\n\n" eboost-gptel-prompt-prefix
+         text
+         "\n\n" eboost-gptel-response-prefix)
         (goto-char (point-max))
 
-        ;; ;; Envoyer le texte sans l'insérer.
+        ;; ;; Send the text without inserting it.
         ;; (gptel-request text nil :display nil)
 
         ;; Send to GPTel with error handling.

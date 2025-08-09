@@ -14971,24 +14971,41 @@ part of the word (depending on the current major mode).
 
 * Integrating AI tools into Emacs
 
-If you heavily use org-mode, org-ai might be particularly beneficial. If you
-prefer a straightforward chat interface, GPTel could be more suitable.
+*************** TODO Research ChatGPT integration with Emacs
+- [ ] Evaluate gptel package
+- [ ] Test c3po integration (recommended)
+- [ ] Evaluate org-ai package
+- [ ] Review CodeGPT capabilities
+- [ ] Explore [[GitHub:ai-boost/awesome-prompts][Awesome Prompts Collection]]
 
-See also https://www.armindarvish.com/post/use_emacs_as_a_chatgpt_client/
+References:
+- [[YouTube:H8jvhz0CGzU][Boost your Emacs productivity with ChatGPT and Copilot]]
+- https://www.armindarvish.com/post/use_emacs_as_a_chatgpt_client/
+*************** END
+
+#+begin_src emacs-lisp
+;; Set OpenAI API key.
+(defvar eboost-openai-api-key
+  (let* ((api-key (or (getenv "OPENAI_API_KEY")
+                      (when (file-exists-p (expand-file-name "~/.openai_api_key"))
+                        (with-temp-buffer
+                          (insert-file-contents (expand-file-name "~/.openai_api_key"))
+                          (string-trim (buffer-string))))))
+         (trimmed-api-key (string-trim api-key)))
+    (if (and trimmed-api-key (not (string-empty-p trimmed-api-key)))
+        (progn
+          (message "OpenAI API key successfully loaded.")
+          trimmed-api-key)
+      (warn "No valid OpenAI API key found!")))
+  "Load OpenAI API key from environment variable or file.")
+#+end_src
 
 #+begin_src emacs-lisp
 ;; Load gptel.
 (try-require 'gptel)
 
 ;; Set OpenAI API key.
-(let ((api-key (or (getenv "OPENAI_API_KEY")
-                   (and (file-exists-p (expand-file-name "~/.openai_api_key"))
-                        (with-temp-buffer
-                          (insert-file-contents (expand-file-name "~/.openai_api_key"))
-                          (string-trim (buffer-string)))))))
-  (if (and api-key (not (string-empty-p (string-trim api-key))))
-      (setq gptel-api-key (string-trim api-key))
-    (warn "OPENAI_API_KEY environment variable is not set or empty, and no key found in ~/.openai_api_key file!")))
+(setq gptel-api-key eboost-openai-api-key)
 
 ;; Controls randomness (lower = more deterministic).
 (setq gptel-temperature 0.7)
@@ -15068,13 +15085,14 @@ Inside a gptel buffer:
       (with-current-buffer buffer
         ;; (erase-buffer)
         (goto-char (point-max))
-        (insert "\n\n* -------------------- Tour --------------------")
-        (insert (format-time-string "\n\n** --- User prompt [%Y-%m-%d %H:%M] ---\n\n")
-                text
-                "\n\n** --- AI response ---")
+        (insert
+         (format-time-string "\n\n* -------------------- Session [%Y-%m-%d %H:%M] --------------------")
+         "\n\n" eboost-gptel-prompt-prefix
+         text
+         "\n\n" eboost-gptel-response-prefix)
         (goto-char (point-max))
 
-        ;; ;; Envoyer le texte sans l'insérer.
+        ;; ;; Send the text without inserting it.
         ;; (gptel-request text nil :display nil)
 
         ;; Send to GPTel with error handling.
@@ -15138,16 +15156,16 @@ a maximum of 80 characters.
 ;; Enable org-ai-mode in Org mode.
 (add-hook 'org-mode-hook #'org-ai-mode)
 
-;; Set OpenAI API key (store it securely!).
-(setq org-ai-openai-api-key (getenv "OPENAI_API_KEY"))
+;; Set OpenAI API key.
+(setq org-ai-openai-api-key eboost-openai-api-key)
+(setq org-ai-openai-api-token eboost-openai-api-key)
 
-;; Set default model (optional).
-(setq org-ai-default-chat-model "gpt-4")
-
-;; Install YASnippet templates for org-ai (optional).
+;; Install YASnippet templates for org-ai.
 (when (try-require 'yasnippet)
   (org-ai-install-yasnippets))
 #+end_src
+
+The package whisper.el is needed for transcribing speech.
 
 * Emacs Display
 
