@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1828>
+;; Version: <20250809.1925>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1828>"
+(defconst lvn--emacs-version "<20250809.1925>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7498,7 +7498,8 @@ This example lists Azerty layout second row keys."
 (when (try-require 'gptel)
 
   ;; Set OpenAI API key.
-  (setq gptel-api-key eboost-openai-api-key)
+  (when (boundp 'eboost-openai-api-key)
+    (setq gptel-api-key eboost-openai-api-key))
 
   ;; Controls randomness (lower = more deterministic).
   (setq gptel-temperature 0.7)
@@ -7516,12 +7517,12 @@ This example lists Azerty layout second row keys."
     "Custom response prefix for GPTel in Org mode.")
 
   ;; Association list mapping modes to prompt prefixes for GPTel.
-  (setq gptel-prompt-prefix-alist
-        `((org-mode . ,eboost-gptel-prompt-prefix)))
+  (add-to-list 'gptel-prompt-prefix-alist
+               `(org-mode . ,eboost-gptel-prompt-prefix))
 
   ;; Association list mapping modes to response prefixes for GPTel.
-  (setq gptel-response-prefix-alist
-        `((org-mode . ,eboost-gptel-response-prefix)))
+  (add-to-list 'gptel-response-prefix-alist
+               `(org-mode . ,eboost-gptel-response-prefix))
 
   ;; Automatically move cursor to end of response.
   (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
@@ -7529,10 +7530,8 @@ This example lists Azerty layout second row keys."
   ;; Display message in echo area when processing is done.
   (defun gptel-notify-done (beg end)
     "Display a message in the echo area when gptel processing is complete."
-    (when (fboundp 'gptel-mode)
-      (message "[GPTel: Response received.]")
-      (sit-for 1.5)
-      (message "")))
+    (message "[GPTel: Response received.]")
+    (run-with-timer 1.5 nil (lambda () (message ""))))
 
   (add-hook 'gptel-post-response-functions #'gptel-notify-done)
 
@@ -7540,7 +7539,7 @@ This example lists Azerty layout second row keys."
   (gptel-make-preset 'gpt4coding
     :description "A preset optimized for coding tasks"
     :backend "ChatGPT"
-    :model 'gpt-4.1-mini
+    :model "gpt-4.1-mini"
     :system
     "You are an expert coding assistant. Your role is to provide
    high-quality code solutions, refactorings, and explanations."
@@ -7548,22 +7547,21 @@ This example lists Azerty layout second row keys."
     :temperature 0.7)
 
   ;; Proofreading Preset.
-  (gptel-make-preset "proofreading"
+  (gptel-make-preset 'proofreading
     :description "Preset for proofreading tasks"
     :backend "Claude"
-    :model 'claude-sonnet-4-20250514
+    :model "claude-sonnet-4-20250514"
     :system
     "You are a professional proofreader. Your task is to correct spelling,
    grammar, and improve clarity and style."
     :tools '("read_buffer" "spell_check" "grammar_check")
-    :temperature 0.7
-    :use-context 'system)
+    :temperature 0.7)
 
   ;; General-purpose chat preset.
   (gptel-make-preset 'general-chat
     :description "A preset for general-purpose LLM interactions"
     :backend "ChatGPT"
-    :model 'o4-mini
+    :model "o4-mini"
     :system
     "You are a helpful assistant providing clear and concise answers to a
    wide range of questions."
@@ -7573,12 +7571,11 @@ This example lists Azerty layout second row keys."
   (gptel-make-preset 'project-agent
     :description "Preset for project-specific AI tasks"
     :backend "Claude"
-    :model 'claude-sonnet-4-20250514
+    :model "claude-sonnet-4-20250514"
     :system
     "You are an AI assistant for a software project. Provide insights
    based on the project’s code and documentation."
-    :tools '("read_buffer" "lsp_context")
-    :context 'gptel-context-lsp)
+    :tools '("read_buffer" "lsp_context"))
 
   ;; Org-mode specific integration.
   (defun eboost-org-gptel-send-to-chatgpt ()
@@ -7602,10 +7599,10 @@ This example lists Azerty layout second row keys."
       ;; Prepare output buffer.
       (let ((buffer (get-buffer-create "*ChatGPT*")))
         (with-current-buffer buffer
-          ;; (erase-buffer)
+          ;; (erase-buffer) ; If we really want to erase the buffer.
           (goto-char (point-max))
           (insert
-           (format-time-string "\n\n* -------------------- Session [%Y-%m-%d %H:%M] --------------------")
+           (format-time-string "\n\n* -------------------- GPT Session [%Y-%m-%d %H:%M] --------------------")
            "\n\n" eboost-gptel-prompt-prefix
            text
            "\n\n" eboost-gptel-response-prefix)
@@ -7613,9 +7610,8 @@ This example lists Azerty layout second row keys."
 
           ;; Send to GPTel with error handling.
           (condition-case err
-              ;; ;; Send the text without inserting it.
-              ;; (gptel-request text nil :display nil)
-              (gptel-send)
+              ;; (gptel-send)
+              (gptel-request text :buffer buffer)
             (error
              (message "[Failed to send text to GPTel: %s]"
                       (error-message-string err)))))
@@ -7626,9 +7622,12 @@ This example lists Azerty layout second row keys."
 
   ;; Org mode keybinding.
   (with-eval-after-load 'org
-    (if (null (lookup-key org-mode-map (kbd "C-c C-q")))
-        (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt)
-      (warn "Keybinding C-c C-q is already in use in Org mode!")))
+    (let ((existing-binding (lookup-key org-mode-map (kbd "C-c C-q"))))
+      (if (or (null existing-binding) (numberp existing-binding))
+          (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt)
+        (display-warning 'eboost
+                         "Keybinding C-c C-q is already in use in Org mode!"
+                         :warning))))
 
   (defun eboost-gptel-send-diff-for-commit-msg ()
     "Send current region or buffer as a diff to GPT for a commit message.
@@ -7673,18 +7672,19 @@ This example lists Azerty layout second row keys."
 )
 
 ;; Load org-ai.
-(try-require 'org-ai)
+(when (try-require 'org-ai)
 
-;; Enable org-ai-mode in Org mode.
-(add-hook 'org-mode-hook #'org-ai-mode)
+  ;; Enable org-ai-mode in Org mode.
+  (add-hook 'org-mode-hook #'org-ai-mode)
 
-;; Set OpenAI API key.
-(setq org-ai-openai-api-key eboost-openai-api-key)
-(setq org-ai-openai-api-token eboost-openai-api-key)
+  ;; Set OpenAI API key.
+  (when (boundp 'eboost-openai-api-key)
+    (setq org-ai-openai-api-key eboost-openai-api-key)
+    (setq org-ai-openai-api-token eboost-openai-api-key))
 
-;; Install YASnippet templates for org-ai.
-(when (try-require 'yasnippet)
-  (org-ai-install-yasnippets))
+  ;; Install YASnippet templates for org-ai.
+  (when (try-require 'yasnippet)
+    (org-ai-install-yasnippets)))
 
 ;;* Emacs Display
 
