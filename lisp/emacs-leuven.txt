@@ -5139,7 +5139,7 @@ before running helm-flycheck"
 
     ;; Separator showing up between candidate groups or entries in commands like
     ;; `helm-show-kill-ring', or anything displaying multi-line candidates.
-    (setq helm-candidate-separator "────────")
+    (setq helm-candidate-separator "━━━━━━━━")
 
     ;; Suppress displaying sources which are out of screen at first.
     (setq helm-quick-update t)

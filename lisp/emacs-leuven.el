@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1420>
+;; Version: <20250809.1559>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1420>"
+(defconst lvn--emacs-version "<20250809.1559>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -2801,7 +2801,7 @@ in the current buffer."
 
     ;; Separator showing up between candidate groups or entries in commands like
     ;; `helm-show-kill-ring', or anything displaying multi-line candidates.
-    (setq helm-candidate-separator "────────")
+    (setq helm-candidate-separator "━━━━━━━━")
 
     ;; Suppress displaying sources which are out of screen at first.
     (setq helm-quick-update t)
