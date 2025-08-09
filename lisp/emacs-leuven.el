@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.2009>
+;; Version: <20250809.2343>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.2009>"
+(defconst lvn--emacs-version "<20250809.2343>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -2936,7 +2936,7 @@ in the current buffer."
     (setq helm-buffer-details-flag nil)
 
     ;; String to display at end of truncated buffer names.
-    (setq helm-buffers-end-truncated-string "…"))
+    (setq helm-buffers-end-truncated-string "..."))
 
   ;; (with-eval-after-load 'helm-adaptive
   ;;
@@ -3906,7 +3906,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
   ;; (setq org-cycle-level-after-item/entry-creation nil)
 
-  ;; ;; ‘org-cycle’ should never emulate TAB.
+  ;; ;; 'org-cycle' should never emulate TAB.
   ;; (setq org-cycle-emulate-tab nil)
 
   (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
@@ -5647,7 +5647,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     )
 
   (defun lvn-vc-dir-hide-unregistered ()
-    "Hide ‘unregistered’ items from display."
+    "Hide 'unregistered' items from display."
     (interactive)
     (let ((current-item (ewoc-nth vc-ewoc -1))
           (first-item (ewoc-nth vc-ewoc 0)))
@@ -7509,22 +7509,17 @@ This example lists Azerty layout second row keys."
   (add-to-list 'gptel-response-prefix-alist
                `(org-mode . ,eboost-gptel-response-prefix))
 
+  ;; Add auto-scrolling after GPTel stream ends.
+  (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
+
   ;; Automatically move cursor to end of response.
   (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
-
-  ;; Display message in echo area when processing is done.
-  (defun gptel-notify-done (beg end)
-    "Display a message in the echo area when gptel processing is complete."
-    (message "[GPTel: Response received.]")
-    (run-with-timer 1.5 nil (lambda () (message ""))))
-
-  (add-hook 'gptel-post-response-functions #'gptel-notify-done)
 
   ;; Coding preset.
   (gptel-make-preset 'gpt4coding
     :description "A preset optimized for coding tasks"
     :backend "ChatGPT"
-    :model "gpt-4.1-mini"
+    :model 'gpt-4.1-mini
     :system
     "You are an expert coding assistant. Your role is to provide
    high-quality code solutions, refactorings, and explanations."
@@ -7535,7 +7530,7 @@ This example lists Azerty layout second row keys."
   (gptel-make-preset 'proofreading
     :description "Preset for proofreading tasks"
     :backend "Claude"
-    :model "claude-sonnet-4-20250514"
+    :model 'claude-sonnet-4-20250514
     :system
     "You are a professional proofreader. Your task is to correct spelling,
    grammar, and improve clarity and style."
@@ -7546,7 +7541,7 @@ This example lists Azerty layout second row keys."
   (gptel-make-preset 'general-chat
     :description "A preset for general-purpose LLM interactions"
     :backend "ChatGPT"
-    :model "o4-mini"
+    :model 'o4-mini
     :system
     "You are a helpful assistant providing clear and concise answers to a
    wide range of questions."
@@ -7556,15 +7551,17 @@ This example lists Azerty layout second row keys."
   (gptel-make-preset 'project-agent
     :description "Preset for project-specific AI tasks"
     :backend "Claude"
-    :model "claude-sonnet-4-20250514"
+    :model 'claude-sonnet-4-20250514
     :system
     "You are an AI assistant for a software project. Provide insights
-   based on the project’s code and documentation."
+   based on the project's code and documentation."
     :tools '("read_buffer" "lsp_context"))
 
   ;; Org-mode specific integration.
   (defun eboost-org-gptel-send-to-chatgpt ()
-    "Send selected region or Org subtree to the *ChatGPT* buffer."
+    "Send selected region or Org subtree to the *ChatGPT* buffer.
+    If a region is selected, send its text; otherwise, send the content of the Org subtree.
+    Displays the response in the *ChatGPT* buffer."
     (interactive)
 
     ;; Validate context.
@@ -7578,13 +7575,12 @@ This example lists Azerty layout second row keys."
              (save-excursion
                (org-back-to-heading t)
                (let ((beg (point))
-                     (end (save-excursion (org-end-of-subtree t) (point))))
+                     (end (org-end-of-subtree t) (point)))
                  (buffer-substring-no-properties beg end))))))
 
       ;; Prepare output buffer.
       (let ((buffer (get-buffer-create "*ChatGPT*")))
         (with-current-buffer buffer
-          ;; (erase-buffer) ; If we really want to erase the buffer.
           (goto-char (point-max))
           (insert
            (format-time-string "\n\n* -------------------- GPT Session [%Y-%m-%d %H:%M] --------------------")
@@ -7607,11 +7603,11 @@ This example lists Azerty layout second row keys."
 
   ;; Org mode keybinding.
   (with-eval-after-load 'org
-    (let ((existing-binding (lookup-key org-mode-map (kbd "C-c C-q"))))
+    (let ((existing-binding (lookup-key org-mode-map (kbd "C-c q"))))
       (if (or (null existing-binding) (numberp existing-binding))
-          (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt)
+          (define-key org-mode-map (kbd "C-c q") #'eboost-org-gptel-send-to-chatgpt)
         (display-warning 'eboost
-                         "Keybinding C-c C-q is already in use in Org mode!"
+                         "Keybinding C-c q is already in use in Org mode!"
                          :warning))))
 
   (defun eboost-gptel-send-diff-for-commit-msg ()
@@ -7651,8 +7647,12 @@ This example lists Azerty layout second row keys."
     (define-key diff-mode-map (kbd "m") 'eboost-gptel-send-diff-for-commit-msg))
   (global-set-key (kbd "C-x v m") 'eboost-gptel-send-diff-for-commit-msg)
 
+  ;; Unbind `C-c RET' in Org mode.
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c RET") nil))
+
   ;; Keybinding for quick access to gptel-send.
-  (global-set-key (kbd "C-c q") 'gptel-send)
+  (global-set-key (kbd "C-c RET") 'gptel-send)
 
 )
 

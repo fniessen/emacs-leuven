@@ -5397,7 +5397,7 @@ You can also use the ~@~ prefix to *search buffer contents*.
     (setq helm-buffer-details-flag nil)
 
     ;; String to display at end of truncated buffer names.
-    (setq helm-buffers-end-truncated-string "…"))
+    (setq helm-buffers-end-truncated-string "..."))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7010,7 +7010,7 @@ demotion* functionality.
 
   ;; (setq org-cycle-level-after-item/entry-creation nil)
 
-  ;; ;; ‘org-cycle’ should never emulate TAB.
+  ;; ;; 'org-cycle' should never emulate TAB.
   ;; (setq org-cycle-emulate-tab nil)
 
   (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
@@ -10566,7 +10566,7 @@ Shortcuts in the popup (once displayed):
     )
 
   (defun lvn-vc-dir-hide-unregistered ()
-    "Hide ‘unregistered’ items from display."
+    "Hide 'unregistered' items from display."
     (interactive)
     (let ((current-item (ewoc-nth vc-ewoc -1))
           (first-item (ewoc-nth vc-ewoc 0)))
@@ -11043,8 +11043,8 @@ Keyboard shortcuts:
 
     ;; (define-key prog-mode-map (kbd "C-M-q") nil)
 
-;; XXX ‘dumb-jump-quick-look’ is an obsolete command (as of 2020-06-26);
-;; XXX ‘dumb-jump-quick-look’ has been obsoleted by the xref interface.
+;; XXX 'dumb-jump-quick-look' is an obsolete command (as of 2020-06-26);
+;; XXX 'dumb-jump-quick-look' has been obsoleted by the xref interface.
 
     (global-set-key (kbd "M-g y") #'dumb-jump-quick-look)
     (global-set-key (kbd "C-M-y") #'dumb-jump-quick-look)
@@ -12061,7 +12061,7 @@ Not all back-ends support these last 2 commands.
 # ;; Hooks
 # (add-hook 'web-mode-hook
 #           (lambda ()
-#             ;; Add ‘company-mode’ backend for ‘yasnippet’.
+#             ;; Add 'company-mode' backend for 'yasnippet'.
 #             (set (make-local-variable 'company-backends)
 #                  (append company-backends '((company-yasnippet))))
 #
@@ -14921,26 +14921,31 @@ References:
 
 ** GPTel
 
-*** Basic configuration
-
 Usage:
-- ~C-c q~ → Quick send a query from any buffer.
-- ~C-u gptel-send~            → Edit stuff before sending prompt.
+- ~M-x gptel-send~ (or ~C-c RET~) :: Send the buffer up to point (or active region)
+  as prompt to the AI and insert the result below.
+- ~C-u M-x gptel-send~ (or ~C-u C-c RET~) :: Set LLM and input/output options (such
+  as "system message") before sending prompt.
+- ~M-x gptel~ :: Open a dedicated chat buffer.
+- ~C-u M-x gptel~ :: Open a second dedicated chat buffer.
+- gptel-mode to restore the rigth mode for a saved chat.
+- gptel-abort :: Cancel query in progress.
+- gptel-menu :: Direct access to menu.
+- gptel-set-topic :: Limit context by Org header.
 - ~gptel-add-file~
-- ~gptel-add~                 → Add to context DWIM
+- ~gptel-add~ → Add to context DWIM
 - ~gptel-make-preset~
 - ~gptel-make-tool~
-- ~gptel-menu~
 - ~gptel-org-set-properties~
 - ~gptel-org-set-topic~
 - ~gptel-rewrite~
 - ~gptel-rewrite~
-- ~gptel-send~                → Send current region as prompt tp the AI and insert the result.
-- ~gptel~                     → Start a dedicated chat buffer (Open GPT chat buffer).
 
 Inside a gptel buffer:
 
 - ~C-u C-x RET~ or ~gptel-menu~ → Menu
+
+*** Basic configuration
 
 #+begin_src emacs-lisp
 ;; Load gptel.
@@ -14985,18 +14990,11 @@ Inside a gptel buffer:
 *** Hooks / post-response handlers
 
 #+begin_src emacs-lisp
+  ;; Add auto-scrolling after GPTel stream ends.
+  (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
+
   ;; Automatically move cursor to end of response.
   (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; Display message in echo area when processing is done.
-  (defun gptel-notify-done (beg end)
-    "Display a message in the echo area when gptel processing is complete."
-    (message "[GPTel: Response received.]")
-    (run-with-timer 1.5 nil (lambda () (message ""))))
-
-  (add-hook 'gptel-post-response-functions #'gptel-notify-done)
 #+end_src
 
 *** Presets configuration
@@ -15015,7 +15013,7 @@ How to use them: =C-u M-x gptel-send=.
   (gptel-make-preset 'gpt4coding
     :description "A preset optimized for coding tasks"
     :backend "ChatGPT"
-    :model "gpt-4.1-mini"
+    :model 'gpt-4.1-mini
     :system
     "You are an expert coding assistant. Your role is to provide
    high-quality code solutions, refactorings, and explanations."
@@ -15026,7 +15024,7 @@ How to use them: =C-u M-x gptel-send=.
   (gptel-make-preset 'proofreading
     :description "Preset for proofreading tasks"
     :backend "Claude"
-    :model "claude-sonnet-4-20250514"
+    :model 'claude-sonnet-4-20250514
     :system
     "You are a professional proofreader. Your task is to correct spelling,
    grammar, and improve clarity and style."
@@ -15037,7 +15035,7 @@ How to use them: =C-u M-x gptel-send=.
   (gptel-make-preset 'general-chat
     :description "A preset for general-purpose LLM interactions"
     :backend "ChatGPT"
-    :model "o4-mini"
+    :model 'o4-mini
     :system
     "You are a helpful assistant providing clear and concise answers to a
    wide range of questions."
@@ -15047,10 +15045,10 @@ How to use them: =C-u M-x gptel-send=.
   (gptel-make-preset 'project-agent
     :description "Preset for project-specific AI tasks"
     :backend "Claude"
-    :model "claude-sonnet-4-20250514"
+    :model 'claude-sonnet-4-20250514
     :system
     "You are an AI assistant for a software project. Provide insights
-   based on the project’s code and documentation."
+   based on the project's code and documentation."
     :tools '("read_buffer" "lsp_context"))
 #+end_src
 
@@ -15061,7 +15059,9 @@ How to use them: =C-u M-x gptel-send=.
 #+begin_src emacs-lisp
   ;; Org-mode specific integration.
   (defun eboost-org-gptel-send-to-chatgpt ()
-    "Send selected region or Org subtree to the *ChatGPT* buffer."
+    "Send selected region or Org subtree to the *ChatGPT* buffer.
+    If a region is selected, send its text; otherwise, send the content of the Org subtree.
+    Displays the response in the *ChatGPT* buffer."
     (interactive)
 
     ;; Validate context.
@@ -15075,13 +15075,12 @@ How to use them: =C-u M-x gptel-send=.
              (save-excursion
                (org-back-to-heading t)
                (let ((beg (point))
-                     (end (save-excursion (org-end-of-subtree t) (point))))
+                     (end (org-end-of-subtree t) (point)))
                  (buffer-substring-no-properties beg end))))))
 
       ;; Prepare output buffer.
       (let ((buffer (get-buffer-create "*ChatGPT*")))
         (with-current-buffer buffer
-          ;; (erase-buffer) ; If we really want to erase the buffer.
           (goto-char (point-max))
           (insert
            (format-time-string "\n\n* -------------------- GPT Session [%Y-%m-%d %H:%M] --------------------")
@@ -15104,15 +15103,15 @@ How to use them: =C-u M-x gptel-send=.
 
   ;; Org mode keybinding.
   (with-eval-after-load 'org
-    (let ((existing-binding (lookup-key org-mode-map (kbd "C-c C-q"))))
+    (let ((existing-binding (lookup-key org-mode-map (kbd "C-c q"))))
       (if (or (null existing-binding) (numberp existing-binding))
-          (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt)
+          (define-key org-mode-map (kbd "C-c q") #'eboost-org-gptel-send-to-chatgpt)
         (display-warning 'eboost
-                         "Keybinding C-c C-q is already in use in Org mode!"
+                         "Keybinding C-c q is already in use in Org mode!"
                          :warning))))
 #+end_src
 
-**** Générateur de message de commit
+**** Commit message generator
 
 #+begin_src emacs-lisp
   (defun eboost-gptel-send-diff-for-commit-msg ()
@@ -15156,8 +15155,12 @@ How to use them: =C-u M-x gptel-send=.
 *** Keybindings
 
 #+begin_src emacs-lisp
+  ;; Unbind `C-c RET' in Org mode.
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c RET") nil))
+
   ;; Keybinding for quick access to gptel-send.
-  (global-set-key (kbd "C-c q") 'gptel-send)
+  (global-set-key (kbd "C-c RET") 'gptel-send)
 #+end_src
 
 #+begin_src emacs-lisp
