@@ -745,10 +745,10 @@ N should be a non-negative integer representing the number of days."
                              (lambda (file)
                                (not (string-match-p "/\\.git/" file))))
                           (error
-                           (message "Error reading files: %s" err)
+                           (message "[Error reading files: %s]" err)
                            nil))))
         (if (not (and org-files (seq-some #'file-exists-p org-files)))
-            (message "No .org or .txt files found under Git root: %s" git-root)
+            (message "[No .org or .txt files found under Git root: %s]" git-root)
           (let ((org-agenda-files org-files)
                 (org-agenda-sorting-strategy '(todo-state-up priority-down))
                 (org-agenda-overriding-header
@@ -1141,8 +1141,8 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
 
 ;;; org-leuven-agenda-views.el ends here
 
-(try-require 'org-super-agenda)
-(org-super-agenda-mode 1)
+(when (try-require 'org-super-agenda)
+  (org-super-agenda-mode 1))
 
 (setq org-agenda-custom-commands
       '(("g" "Grouped agenda by category (or derived from filename)"

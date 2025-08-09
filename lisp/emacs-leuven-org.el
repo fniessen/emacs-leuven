@@ -37,7 +37,7 @@ On failure, issue a warning with the error details."
   (when (boundp 'org-agenda-files)
     (if (null org-agenda-files)
         (message "[No agenda files found]")
-      (message "Found %d agenda files" (length org-agenda-files)))))
+      (message "[Found %d agenda files]" (length org-agenda-files)))))
 
 (add-hook 'after-init-hook #'leuven-org-check-agenda-files)
 
@@ -1185,7 +1185,7 @@ From the address <%a>"
               (search   . " ")
               (tags     . " "))))
     (org-agenda-redo)
-    (message "Task details %s" (if lvn--org-agenda-show-details "enabled" "disabled")))
+    (message "[Task details %s]" (if lvn--org-agenda-show-details "enabled" "disabled")))
 
   ;; Keybinding in Org Agenda mode.
   (define-key org-agenda-mode-map
@@ -2578,7 +2578,7 @@ BACKEND is the current export backend."
            (lambda ()
              (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
            "Qn")))
-    (error (message "Error in export preprocess: %s" err))))
+    (error (message "[Error in export preprocess: %s]" err))))
 
 (add-hook 'org-export-before-parsing-hook #'leuven--org-export-preprocess-hook)
 

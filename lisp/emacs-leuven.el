@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1713>
+;; Version: <20250809.1733>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1713>"
+(defconst lvn--emacs-version "<20250809.1733>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -664,7 +664,7 @@ Shows a warning message if the file does not exist or is not executable."
                   (error "Line number must be between 1 and %d" line-count)
                 (goto-char (point-min))
                 (forward-line (1- line-number))
-                (message "Moved to line %d" line-number))))
+                (message "[Moved to line %d]" line-number))))
         (display-line-numbers-mode line-numbers-enabled))))
 
   ;; Remap goto-line.
@@ -7520,7 +7520,7 @@ This example lists Azerty layout second row keys."
          (trimmed-api-key (string-trim api-key)))
     (if (and trimmed-api-key (not (string-empty-p trimmed-api-key)))
         (progn
-          (message "OpenAI API key successfully loaded.")
+          (message "[OpenAI API key successfully loaded.]")
           trimmed-api-key)
       (warn "No valid OpenAI API key found!")))
   "Load OpenAI API key from environment variable or file.")
@@ -7598,18 +7598,18 @@ This example lists Azerty layout second row keys."
         (condition-case err
             (gptel-send)
           (error
-           (message "Failed to send text to GPTel: %s"
+           (message "[Failed to send text to GPTel: %s]"
                     (error-message-string err)))))
 
       ;; Display the buffer and provide user feedback.
       (pop-to-buffer buffer)
-      (message "GPTel: Request sent. Awaiting response..."))))
+      (message "[GPTel: Prompt sent. Awaiting response...]"))))
 
 ;; Display message in echo area when processing is done.
 (defun gptel-notify-done (beg end)
   "Display a message in the echo area when gptel processing is complete."
   (when (fboundp 'gptel-mode)
-    (message "GPTel: Response received.")
+    (message "[GPTel: Response received.]")
     (sit-for 1.5)
     (message "")))
 
@@ -7648,7 +7648,7 @@ Does not show GPTel menu; opens result in a new buffer and adds it to the kill r
          (prompt (concat "Write a concise git commit message for the following diff:\n\n"
                          diff-text)))
     ;; Notify user that the process has started.
-    (message "Generating commit message...")
+    (message "[Generating commit message...]")
     ;; Create and clear the buffer initially.
     (with-current-buffer (get-buffer-create "*Commit Message*")
       (erase-buffer))
@@ -7666,8 +7666,8 @@ Does not show GPTel menu; opens result in a new buffer and adds it to the kill r
                               (kill-new trimmed-response) ; Add to kill ring.
                               (insert trimmed-response)
                               (goto-char (point-min))
-                              (message "Commit message generated and copied to kill ring.")))
-                        (message "Failed to generate commit message."))
+                              (message "[Commit message generated and copied to kill ring.]")))
+                        (message "[Failed to generate commit message.]"))
                       (display-buffer output-buffer)))))))
 
 (global-set-key (kbd "C-x v m") 'eboost-gptel-send-diff-for-commit-msg)

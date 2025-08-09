@@ -121,7 +121,7 @@ Agenda file check logic:
   (when (boundp 'org-agenda-files)
     (if (null org-agenda-files)
         (message "[No agenda files found]")
-      (message "Found %d agenda files" (length org-agenda-files)))))
+      (message "[Found %d agenda files]" (length org-agenda-files)))))
 
 (add-hook 'after-init-hook #'leuven-org-check-agenda-files)
 #+end_src
@@ -2040,7 +2040,7 @@ headline (to return any kind of string you want).
               (search   . " ")
               (tags     . " "))))
     (org-agenda-redo)
-    (message "Task details %s" (if lvn--org-agenda-show-details "enabled" "disabled")))
+    (message "[Task details %s]" (if lvn--org-agenda-show-details "enabled" "disabled")))
 
   ;; Keybinding in Org Agenda mode.
   (define-key org-agenda-mode-map
@@ -3243,13 +3243,13 @@ the UTF-8 *no-break space*:
   "Advice function to debug LaTeX preamble generation in Org-mode.
 Shows the values of `org-latex-packages-alist' and `org-latex-default-packages-alist'."
   ;; Log debug information to the *Messages* buffer.
-  (message "Debugging org-latex-make-preamble:")
-  (message "  org-latex-default-packages-alist:")
+  (message "[Debugging org-latex-make-preamble:]")
+  (message "[  org-latex-default-packages-alist:]")
   (dolist (pkg org-latex-default-packages-alist)
-    (message "    %S" pkg))
-  (message "  org-latex-packages-alist:")
+    (message "[    %s]" pkg))
+  (message "[  org-latex-packages-alist:]")
   (dolist (pkg org-latex-packages-alist)
-    (message "    %S" pkg))
+    (message "[    %s]" pkg))
   ;; Call the original function with its arguments.
   (apply orig-fun args))
 
@@ -4203,7 +4203,7 @@ BACKEND is the current export backend."
            (lambda ()
              (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
            "Qn")))
-    (error (message "Error in export preprocess: %s" err))))
+    (error (message "[Error in export preprocess: %s]" err))))
 
 (add-hook 'org-export-before-parsing-hook #'leuven--org-export-preprocess-hook)
 #+end_src

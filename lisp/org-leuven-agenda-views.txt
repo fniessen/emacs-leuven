@@ -1891,10 +1891,10 @@ directory (including from local files =TODO.org= and =BUGS.org=, for example).
                              (lambda (file)
                                (not (string-match-p "/\\.git/" file))))
                           (error
-                           (message "Error reading files: %s" err)
+                           (message "[Error reading files: %s]" err)
                            nil))))
         (if (not (and org-files (seq-some #'file-exists-p org-files)))
-            (message "No .org or .txt files found under Git root: %s" git-root)
+            (message "[No .org or .txt files found under Git root: %s]" git-root)
           (let ((org-agenda-files org-files)
                 (org-agenda-sorting-strategy '(todo-state-up priority-down))
                 (org-agenda-overriding-header
@@ -2838,8 +2838,8 @@ devraient être considérés comme erronés...
 * Org-super-agenda
 
 #+begin_src emacs-lisp
-(try-require 'org-super-agenda)
-(org-super-agenda-mode 1)
+(when (try-require 'org-super-agenda)
+  (org-super-agenda-mode 1))
 #+end_src
 
 Group by category:

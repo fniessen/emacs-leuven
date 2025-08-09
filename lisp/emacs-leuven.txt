@@ -954,7 +954,7 @@ Show line numbers temporarily -- just when you're going to a line number with
                   (error "Line number must be between 1 and %d" line-count)
                 (goto-char (point-min))
                 (forward-line (1- line-number))
-                (message "Moved to line %d" line-number))))
+                (message "[Moved to line %d]" line-number))))
         (display-line-numbers-mode line-numbers-enabled))))
 
   ;; Remap goto-line.
@@ -14994,7 +14994,7 @@ References:
          (trimmed-api-key (string-trim api-key)))
     (if (and trimmed-api-key (not (string-empty-p trimmed-api-key)))
         (progn
-          (message "OpenAI API key successfully loaded.")
+          (message "[OpenAI API key successfully loaded.]")
           trimmed-api-key)
       (warn "No valid OpenAI API key found!")))
   "Load OpenAI API key from environment variable or file.")
@@ -15099,18 +15099,18 @@ Inside a gptel buffer:
         (condition-case err
             (gptel-send)
           (error
-           (message "Failed to send text to GPTel: %s"
+           (message "[Failed to send text to GPTel: %s]"
                     (error-message-string err)))))
 
       ;; Display the buffer and provide user feedback.
       (pop-to-buffer buffer)
-      (message "GPTel: Request sent. Awaiting response..."))))
+      (message "[GPTel: Prompt sent. Awaiting response...]"))))
 
 ;; Display message in echo area when processing is done.
 (defun gptel-notify-done (beg end)
   "Display a message in the echo area when gptel processing is complete."
   (when (fboundp 'gptel-mode)
-    (message "GPTel: Response received.")
+    (message "[GPTel: Response received.]")
     (sit-for 1.5)
     (message "")))
 
@@ -15158,7 +15158,7 @@ Does not show GPTel menu; opens result in a new buffer and adds it to the kill r
          (prompt (concat "Write a concise git commit message for the following diff:\n\n"
                          diff-text)))
     ;; Notify user that the process has started.
-    (message "Generating commit message...")
+    (message "[Generating commit message...]")
     ;; Create and clear the buffer initially.
     (with-current-buffer (get-buffer-create "*Commit Message*")
       (erase-buffer))
@@ -15176,8 +15176,8 @@ Does not show GPTel menu; opens result in a new buffer and adds it to the kill r
                               (kill-new trimmed-response) ; Add to kill ring.
                               (insert trimmed-response)
                               (goto-char (point-min))
-                              (message "Commit message generated and copied to kill ring.")))
-                        (message "Failed to generate commit message."))
+                              (message "[Commit message generated and copied to kill ring.]")))
+                        (message "[Failed to generate commit message.]"))
                       (display-buffer output-buffer)))))))
 
 (global-set-key (kbd "C-x v m") 'eboost-gptel-send-diff-for-commit-msg)
@@ -15453,7 +15453,7 @@ Eventually have a look as well at ~input-decode-map~.
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (message "Starting CPU profiling...")
+            (message "[Starting CPU profiling...]")
             (condition-case err
                 (progn
                   (profiler-start 'cpu)
@@ -15462,7 +15462,7 @@ Eventually have a look as well at ~input-decode-map~.
                                  (profiler-report)
                                  (profiler-stop))))
               (error
-               (message "Profiler encountered an error: %s"
+               (message "[Profiler encountered an error: %s]"
                         (error-message-string err))))))
 #+end_src
 
