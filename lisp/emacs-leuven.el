@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1947>
+;; Version: <20250809.2009>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1947>"
+(defconst lvn--emacs-version "<20250809.2009>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -5188,8 +5188,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
         ;; There were errors. Provide a suggestion to visit errors.
         (message "[Compilation errors detected. Press C-x ` to visit.]")
       ;; No errors, close the compilation window after 0.5 seconds.
-      (run-at-time 0.5 nil
-                   #'delete-windows-on buffer)
+      (run-at-time 0.5 nil #'delete-windows-on buffer)
       (message "[No compilation errors!]")))
 
   ;; (add-to-list 'compilation-finish-functions #'lvn--compilation-hide-window-if-successful)
@@ -5210,7 +5209,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
       (when buffer-window
         (select-window buffer-window)
         (with-current-buffer buffer
-          (when (> (line-number-at-pos (point-max)) (window-height))
+          (when (> (line-number-at-pos (point-max)) (1- (window-height)))
             (goto-char (point-max))
             (recenter (window-height))))
         (select-window current-window))))
@@ -5231,34 +5230,6 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     (compile-internal make-clean-command "No more errors"))
 
   (global-set-key (kbd "<S-f9>") #'make-clean)
-
-  (defvar leuven--ant-command-history nil
-    "Ant command history variable")
-
-  (defun leuven-ant (&optional args)
-    "Runs ant in the current project. Starting at the directory
-     where the file being visited resides, a search is made for
-     build.xml recursively. A maven command is made from the first
-     directory where the build.xml file is found is then displayed in
-     the minibuffer. The command can be edited as needed and then
-     executed. Errors are navigate to as in any other compile mode"
-    (interactive)
-    (let ((fn (buffer-file-name)))
-      (let ((dir (file-name-directory fn)))
-        (while (and (not (file-exists-p (concat dir "/build.xml")))
-                    (not (equal dir (file-truename (concat dir "/..")))))
-          (setf dir (file-truename (concat dir "/.."))))
-        (if (not (file-exists-p (concat dir "/build.xml")))
-            (message "[No build.xml found]")
-          (compile (read-from-minibuffer "Command: "
-                                         (concat "ant -emacs -f "
-                                         dir "/build.xml compile") nil
-                                         nil
-                                         'leuven--ant-command-history))))))
-
-  (add-hook 'java-mode-hook
-            (lambda ()
-              (local-set-key "<f9>" 'leuven-ant)))
 
   ;; Use Java for class files decompiled with Jad.
   (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
@@ -5400,10 +5371,9 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     (setq flycheck-check-syntax-automatically
           '(save
             idle-change
-            ;; new-line
             mode-enabled))
 
-    ;; Each buffer get its local `flycheck-idle-change-delay' because of the
+    ;; Each buffer gets its local `flycheck-idle-change-delay' because of the
     ;; buffer-sensitive adjustment above.
     (make-variable-buffer-local 'flycheck-idle-change-delay)
 
@@ -5429,11 +5399,12 @@ a clean buffer we're an order of magnitude laxer about checking."
   (global-set-key (kbd "C-x C-S-e") #'elint-current-buffer)
 
   (with-eval-after-load 'elint
-    (add-to-list 'elint-standard-variables 'current-prefix-arg)
-    (add-to-list 'elint-standard-variables 'command-line-args-left)
-    (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
-    (add-to-list 'elint-standard-variables 'emacs-major-version)
-    (add-to-list 'elint-standard-variables 'window-system))
+    (dolist (var '(current-prefix-arg
+                   command-line-args-left
+                   buffer-file-coding-system
+                   emacs-major-version
+                   window-system))
+      (add-to-list 'elint-standard-variables var)))
 
 ;;** 27.6 Running (info "(emacs)Debuggers") Under Emacs
 
@@ -7801,19 +7772,10 @@ directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
   (interactive)
   (lvn-display-emacs-leuven-version)
-  (let* ((el-file-path (locate-library "emacs-leuven.el"))
-         (el-file-directory (file-name-directory (file-truename el-file-path)))
-         (repository-directory el-file-directory)
-         (unstaged-changes (shell-command-to-string (format "cd %s && git status --porcelain" repository-directory)))
-         (status-buffer (generate-new-buffer "*git-status*")))
+  (let* ((repository-directory (file-name-directory (file-truename (locate-library "emacs-leuven.el"))))
+         (unstaged-changes (shell-command-to-string (format "cd %s && git status --porcelain" repository-directory))))
     (if (file-directory-p repository-directory)
-        (progn
-          (if (not (string-empty-p unstaged-changes))
-              (progn
-                (display-warning 'eboost
-                                 "You have unstaged changes. Please commit or stash them before updating."
-                                 :warning)
-                (message "[Unstaged changes:\n%s]" unstaged-changes))
+        (if (string-empty-p unstaged-changes)
             (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" repository-directory))))
               (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
                   (message "[Configuration is already up-to-date]")
@@ -7821,11 +7783,10 @@ Git repository directory."
                     (progn
                       (sit-for 1.5)
                       (message "[Configuration updated.  Please restart Emacs to complete the update]"))
-                  (display-warning 'eboost
-                                   "Error: Failed to update configuration"
-                                   :warning))))))
-      (message "[Error: 'emacs-leuven.el' file not found]"))
-    (kill-buffer status-buffer)))
+                  (display-warning 'eboost "Error: Failed to update configuration" :warning))))
+          (display-warning 'eboost "You have unstaged changes. Please commit or stash them before updating." :warning)
+          (message "[Unstaged changes:\n%s]" unstaged-changes))
+      (message "[Error: 'emacs-leuven.el' file not found]"))))
 
   (defun lvn-display-emacs-leuven-latest-commits ()
     "Display the latest commits in the Emacs-Leuven configuration.
