@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250809.1159>
+;; Version: <20250809.1223>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250809.1159>"
+(defconst lvn--emacs-version "<20250809.1223>"
   "Emacs-Leuven version, represented as the date and time of the last change.")
 
 ;; Announce the start of the loading process.
@@ -7538,6 +7538,20 @@ This example lists Azerty layout second row keys."
 ;; Automatically move cursor to end of response.
 (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
 
+(defvar eboost-gptel-prompt-prefix "** --- User prompt ---\n\n"
+  "Custom prompt prefix for GPTel in Org mode.")
+
+;; Association list mapping modes to prompt prefixes for GPTel.
+(setq gptel-prompt-prefix-alist
+      `((org-mode . ,eboost-gptel-prompt-prefix)))
+
+(defvar eboost-gptel-response-prefix "** --- AI response ---\n\n"
+  "Custom response prefix for GPTel in Org mode.")
+
+;; Association list mapping modes to response prefixes for GPTel.
+(setq gptel-response-prefix-alist
+      `((org-mode . ,eboost-gptel-response-prefix)))
+
 ;; Org-mode specific integration.
 (defun eboost-org-gptel-send-to-chatgpt ()
   "Send selected region or Org subtree to the *ChatGPT* buffer."
@@ -7594,9 +7608,9 @@ This example lists Azerty layout second row keys."
 
 ;; Keybinding to trigger eboost-org-gptel-send-to-chatgpt within Org-mode.
 (with-eval-after-load 'org
-  (if (null (lookup-key org-mode-map (kbd "C-c q")))
-      (define-key org-mode-map (kbd "C-c q") #'eboost-org-gptel-send-to-chatgpt)
-    (warn "Keybinding C-c q is already in use in Org mode!")))
+  (if (null (lookup-key org-mode-map (kbd "C-c C-q")))
+      (define-key org-mode-map (kbd "C-c C-q") #'eboost-org-gptel-send-to-chatgpt)
+    (warn "Keybinding C-c C-q is already in use in Org mode!")))
 
 ;; Format responses for better readability.
 (defun eboost-gptel-fill-response (&rest _)
