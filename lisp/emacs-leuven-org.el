@@ -1,20 +1,15 @@
 ;; Require a feature/library if available; if not, fail silently.
-(unless (fboundp 'try-require)
-  (defun try-require (feature)
-    "Attempt to load FEATURE, returning t on success or nil on failure.
-FEATURE should be a symbol representing an Emacs library or feature.
-On failure, issue a warning with the error details."
-    (condition-case err
-        (progn
-          (require feature)
-          t)                          ; Return t for success in conditionals.
-      (error
-       (display-warning 'eboost
-                        (format "Failed to load feature `%s': %s"
-                                feature
-                                (error-message-string err))
-                        :warning)
-       nil))))
+(defun eboost-try-require (feature)
+  "Try to (require FEATURE) silently.
+Return t on success, nil on failure. If `init-file-debug' is non-nil,
+emit a warning when the feature can't be loaded."
+  (if (require feature nil 'noerror)
+      t
+    (when init-file-debug
+      (display-warning 'eboost
+                       (format "Cannot load `%s'" feature)
+                       :warning))
+    nil))
 
 ;; (info "(org)Top") outline-based notes management and organizer
 
@@ -23,7 +18,7 @@ On failure, issue a warning with the error details."
 ;;** 1.2 (info "(org)Installation")
 
 ;; Autoloads.
-(try-require 'org-loaddefs)
+(eboost-try-require 'org-loaddefs)
 
 ;; Getting started.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
@@ -121,8 +116,8 @@ On failure, issue a warning with the error details."
 
             ))
 
-(use-package helm-org)
-(use-package ox-jira)
+(eboost-try-require 'helm-org)
+(eboost-try-require 'ox-jira)
 
 (with-eval-after-load 'org
   (message "[... Org Introduction]")
@@ -181,7 +176,7 @@ On failure, issue a warning with the error details."
   (message "[... Org Headlines]")
 
   ;; Insert an inline task (independent of outline hierarchy).
-  (try-require 'org-inlinetask))      ; Needed.
+  (eboost-try-require 'org-inlinetask))      ; Needed.
 
 (with-eval-after-load 'org-inlinetask
 
@@ -619,7 +614,7 @@ a parent headline."
 (with-eval-after-load 'org
   (message "[... Org Dates and Times]")
 
-  (try-require 'appt))
+  (eboost-try-require 'appt))
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
@@ -1678,7 +1673,7 @@ formats (Markdown, HTML, or PDF)."
       ;; (measure-time-wrapper "Restarted Org mode" #'org-mode)
 
       ;; Run Org lint if available.
-      (when (try-require 'org-lint)
+      (when (eboost-try-require 'org-lint)
         (measure-time-wrapper "Linted Org mode"
           (lambda ()
             (let ((lint-result (org-lint)))
@@ -2505,7 +2500,7 @@ Ignore non Org buffers."
 (with-eval-after-load 'org
   (message "[... Org Crypt]")
 
-  (try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
+  (eboost-try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
 
 (with-eval-after-load 'org-crypt
 
@@ -2722,7 +2717,7 @@ BACKEND is the current export backend."
   "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
 (with-eval-after-load 'org-google-weather
-  ;; (try-require 'url)
+  ;; (eboost-try-require 'url)
 
   ;; Add the city.
   (setq org-google-weather-format "%C %i %c, %l°-%h°"))
