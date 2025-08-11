@@ -283,6 +283,8 @@ The result is shown in *Commit Message* and copied to the kill ring."
                         (erase-buffer)
                         (if response
                             (let ((msg (string-trim response)))
+                              ;; Replace backticks with single quotes.
+                              (setq msg (replace-regexp-in-string "`" "'" msg))
                               (kill-new msg) ; Add to kill ring.
                               (insert msg)
                               (message "[Commit message copied to kill ring.]"))
