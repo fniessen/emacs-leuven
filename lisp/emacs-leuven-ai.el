@@ -1,43 +1,75 @@
+;;; emacs-leuven-ai.el --- GPTel & org-ai Integration  -*- lexical-binding: t -*-
+
+;; Author: Fabrice Niessen
+;; Keywords: tools, ai, convenience
+;; URL: https://...
+;; Version: 0.1
+
+;;; Commentary:
+
+;; Provides helpers for GPTel and org-ai.
+
+;;; Code:
+
 ;; Require a feature/library if available; if not, fail silently.
-(unless (fboundp 'try-require)
-  (defun try-require (feature)
-    "Attempt to load FEATURE, returning t on success or nil on failure.
-FEATURE should be a symbol representing an Emacs library or feature.
-On failure, issue a warning with the error details."
-    (condition-case err
-        (progn
-          (require feature)
-          t)                          ; Return t for success in conditionals.
-      (error
-       (display-warning 'eboost
-                        (format "Failed to load feature `%s': %s"
-                                feature
-                                (error-message-string err))
-                        :warning)
-       nil))))
+(defun eboost-try-require (feature)
+  "Try to (require FEATURE) silently.
+Return t on success, nil on failure. If `init-file-debug' is non-nil,
+emit a warning when the feature can't be loaded."
+  (if (require feature nil 'noerror)
+      t
+    (when init-file-debug
+      (display-warning 'eboost
+                       (format "Optional feature `%s' not found; continuing without it."
+                               feature)
+                       :warning))
+    nil))
+
+(defun eboost-define-key-if-free (keymap key command &optional scope)
+  "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
+KEYMAP may be the map itself or a symbol naming it.
+If already bound, emit a warning mentioning SCOPE (string)."
+  (let* ((map (if (keymapp keymap)
+                  keymap
+                (and (symbolp keymap) (boundp keymap) (symbol-value keymap))))
+         (existing-binding (and map (lookup-key map key))))
+    (cond
+     ((not map)
+      (display-warning 'eboost "Keymap not available (yet)" :warning))
+     ((or (null existing-binding) (numberp existing-binding))
+      (define-key map key command))
+     (t
+      (when init-file-debug
+        (display-warning 'eboost
+                         (format "Keybinding %s is already in use%s!"
+                                 (key-description key)
+                                 (if scope (format " in %s" scope) ""))
+                         :warning))))))
 
 ;; Set OpenAI API key.
 (defvar eboost-openai-api-key
   (let* ((api-key (or (getenv "OPENAI_API_KEY")
-                      (when (file-exists-p (expand-file-name "~/.openai_api_key"))
-                        (with-temp-buffer
-                          (insert-file-contents (expand-file-name "~/.openai_api_key"))
-                          (string-trim (buffer-string))))))
-         (trimmed-api-key (string-trim api-key)))
-    (if (and trimmed-api-key (not (string-empty-p trimmed-api-key)))
-        (progn
-          (message "[OpenAI API key successfully loaded.]")
-          trimmed-api-key)
-      (display-warning 'eboost
-                       "No valid OpenAI API key found!"
-                       :warning)))
-  "Load OpenAI API key from environment variable or file.")
+                      (let ((f (expand-file-name "~/.openai_api_key")))
+                        (when (file-exists-p f)
+                          (with-temp-buffer
+                            (insert-file-contents f)
+                            (buffer-string))))))
+         (trimmed-api-key (and (stringp api-key) (string-trim api-key))))
+    (cond
+     ((and (stringp trimmed-api-key) (not (string-empty-p trimmed-api-key)))
+      (message "[OpenAI API key loaded]")
+      trimmed-api-key)
+     (t
+      (when init-file-debug
+        (display-warning 'eboost "No valid OpenAI API key found!" :warning))
+      nil)))
+  "OpenAI API key from env or file; nil if unavailable.")
 
 ;; Load gptel.
-(when (try-require 'gptel)
+(when (eboost-try-require 'gptel)
 
   ;; Set OpenAI API key.
-  (when (boundp 'eboost-openai-api-key)
+  (when (bound-and-true-p eboost-openai-api-key)
     (setq gptel-api-key eboost-openai-api-key))
 
   ;; Controls randomness (lower = more deterministic).
@@ -49,25 +81,49 @@ On failure, issue a warning with the error details."
   ;; Set default mode for response buffer.
   (setq gptel-default-mode 'org-mode)
 
-  (defvar eboost-gptel-prompt-prefix "** --- User prompt ---\n\n"
-    "Custom prompt prefix for GPTel in Org mode.")
+  ;; Enable GPTel's expert/power-user commands.
+  (setq gptel-expert-commands t)
 
-  (defvar eboost-gptel-response-prefix "** --- AI response ---\n\n"
-    "Custom response prefix for GPTel in Org mode.")
+  (defgroup eboost-gptel nil
+    "Eboost tweaks and integration for GPTel."
+    :group 'applications
+    :prefix "eboost-gptel-")
 
-  ;; Association list mapping modes to prompt prefixes for GPTel.
-  (add-to-list 'gptel-prompt-prefix-alist
-               `(org-mode . ,eboost-gptel-prompt-prefix))
+  (defcustom eboost-gptel-prompt-prefix "** --- User prompt ---\n\n"
+    "Prompt prefix inserted before user text in GPTel Org buffers."
+    :type 'string
+    :group 'eboost-gptel)
 
-  ;; Association list mapping modes to response prefixes for GPTel.
-  (add-to-list 'gptel-response-prefix-alist
-               `(org-mode . ,eboost-gptel-response-prefix))
+  (defcustom eboost-gptel-response-prefix "** --- AI response ---\n\n"
+    "Response prefix inserted before AI output in GPTel Org buffers."
+    :type 'string
+    :group 'eboost-gptel)
+
+  ;; Update or create the org-mode entries (no duplicates).
+  (let ((cell (assq 'org-mode gptel-prompt-prefix-alist)))
+    (if cell
+        (setcdr cell eboost-gptel-prompt-prefix)
+      (push (cons 'org-mode eboost-gptel-prompt-prefix)
+            gptel-prompt-prefix-alist)))
+
+  (let ((cell (assq 'org-mode gptel-response-prefix-alist)))
+    (if cell
+        (setcdr cell eboost-gptel-response-prefix)
+      (push (cons 'org-mode eboost-gptel-response-prefix)
+            gptel-response-prefix-alist)))
 
   ;; Add auto-scrolling after GPTel stream ends.
-  (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
+  (when (fboundp 'gptel-auto-scroll)
+    (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll))
 
   ;; Automatically move cursor to end of response.
-  (add-hook 'gptel-post-response-functions #'gptel-end-of-response)
+  (when (fboundp 'gptel-end-of-response)
+    (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
+
+  ;; (gptel-make-preset 'gpt4coding2
+  ;;   :backend "openai"
+  ;;   :model "gpt-4o-mini"
+  ;;   :temperature 0.7)
 
   ;; Coding preset.
   (gptel-make-preset 'gpt4coding
@@ -111,67 +167,68 @@ On failure, issue a warning with the error details."
    based on the project's code and documentation."
     :tools '("read_buffer" "lsp_context"))
 
-  ;; Org-mode specific integration.
-  (defun eboost-org-gptel-send-to-chatgpt ()
+;;;###autoload
+  (defun eboost-gptel-org-send-to-chatgpt ()
     "Send selected region or Org subtree to the *ChatGPT* buffer.
     If a region is selected, send its text; otherwise, send the content of the Org subtree.
     Displays the response in the *ChatGPT* buffer."
     (interactive)
 
     ;; Validate context.
+    (unless (derived-mode-p 'org-mode)
+      (user-error "This command works in Org buffers only"))
     (unless (or (use-region-p) (org-at-heading-p))
-      (user-error "Please place point on an Org heading or select a region"))
+      (user-error "Place point on an Org heading or select a region"))
 
     ;; Extract text.
-    (let ((text
-           (if (use-region-p)
-               (buffer-substring-no-properties (region-beginning) (region-end))
-             (save-excursion
-               (org-back-to-heading t)
-               (let ((beg (point))
-                     (end (org-end-of-subtree t) (point)))
-                 (buffer-substring-no-properties beg end))))))
+    (let ((text (if (use-region-p)
+                    (buffer-substring-no-properties (region-beginning) (region-end))
+                  (save-excursion
+                    (org-back-to-heading t)
+                    (let ((beg (point)))
+                      (org-end-of-subtree t)
+                      (buffer-substring-no-properties beg (point)))))))
 
       ;; Prepare output buffer.
       (let ((buffer (get-buffer-create "*ChatGPT*")))
         (with-current-buffer buffer
           (goto-char (point-max))
-          (insert
-           (format-time-string "\n\n* -------------------- GPT Session [%Y-%m-%d %H:%M] --------------------")
-           "\n\n" eboost-gptel-prompt-prefix
-           text
-           "\n\n" eboost-gptel-response-prefix)
-          (goto-char (point-max))
+          (insert (format-time-string
+                   "\n\n* -------------------- GPT Session [%Y-%m-%d %H:%M] --------------------")
+                  "\n\n" eboost-gptel-prompt-prefix
+                  text
+                  "\n\n" eboost-gptel-response-prefix)
+          (goto-char (point-max)))
 
-          ;; Send to GPTel with error handling.
-          (condition-case err
-              ;; (gptel-send)
-              (gptel-request text :buffer buffer)
-            (error
-             (message "[Failed to send text to GPTel: %s]"
-                      (error-message-string err)))))
+        ;; Send to GPTel with error handling.
+        (condition-case err
+            (gptel-request text :buffer buffer)
+          (error (message "[GPTel error: %s]"
+                          (error-message-string err))))
 
         ;; Display the buffer and provide user feedback.
         (pop-to-buffer buffer)
-        (message "[GPTel: Prompt sent. Awaiting response...]"))))
+        (message "[GPTel: Prompt sent...]"))))
 
-  ;; Org mode keybinding.
+  ;; Org mode keybinding (only if free).
   (with-eval-after-load 'org
-    (let ((existing-binding (lookup-key org-mode-map (kbd "C-c q"))))
-      (if (or (null existing-binding) (numberp existing-binding))
-          (define-key org-mode-map (kbd "C-c q") #'eboost-org-gptel-send-to-chatgpt)
-        (display-warning 'eboost
-                         "Keybinding C-c q is already in use in Org mode!"
-                         :warning))))
+    (eboost-define-key-if-free 'org-mode-map
+                               (kbd "C-c q")
+                               #'eboost-gptel-org-send-to-chatgpt
+                               "Org mode"))
 
-  (defun eboost-gptel-send-diff-for-commit-msg ()
-    "Send current region or buffer as a diff to GPT for a commit message.
-  Does not show GPTel menu; opens result in a new buffer and adds it to the kill ring."
+;;;###autoload
+  (defun eboost-gptel-write-commit-message ()
+    "Generate a Git commit message from the current diff region or buffer.
+The result is shown in *Commit Message* and copied to the kill ring."
     (interactive)
+    (unless (or (use-region-p) (> (buffer-size) 0))
+      (user-error "No content to analyze"))
+
     (let* ((diff-text (if (use-region-p)
                           (buffer-substring-no-properties (region-beginning) (region-end))
-                        (buffer-string)))
-           (prompt (concat "Write a concise git commit message for the following diff:\n\n"
+                        (buffer-substring-no-properties (point-min) (point-max))))
+           (prompt (concat "Write a Git commit message for the following diff:\n\n"
                            diff-text)))
       ;; Notify user that the process has started.
       (message "[Generating commit message...]")
@@ -180,52 +237,63 @@ On failure, issue a warning with the error details."
         (erase-buffer))
       ;; Send request without menu.
       (gptel-request prompt
-        :callback (lambda (response _error)
+        :callback (lambda (response error)
                     (let ((output-buffer (get-buffer-create "*Commit Message*")))
-                                          ; Create a new reference to the buffer
-                                          ; to avoid closure dependency.
+                                        ; Create a new reference to the buffer
+                                        ; to avoid closure dependency.
                       (with-current-buffer output-buffer
                         (erase-buffer)
                         (if response
-                            (progn
-                              (let ((trimmed-response (string-trim response)))
-                                (kill-new trimmed-response) ; Add to kill ring.
-                                (insert trimmed-response)
-                                (goto-char (point-min))
-                                (message "[Commit message generated and copied to kill ring.]")))
-                          (message "[Failed to generate commit message.]"))
+                            (let ((msg (string-trim response)))
+                              (kill-new msg) ; Add to kill ring.
+                              (insert msg)
+                              (message "[Commit message copied to kill ring.]"))
+                          (message "[Failed to generate commit message: %s.]"
+                                   (or error "Unknown error")))
                         (display-buffer output-buffer)))))))
 
-  ;; Diff mode keybinding.
+  ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
-    (define-key diff-mode-map (kbd "m") 'eboost-gptel-send-diff-for-commit-msg))
-  (global-set-key (kbd "C-x v m") 'eboost-gptel-send-diff-for-commit-msg)
+    (eboost-define-key-if-free 'diff-mode-map
+                               (kbd "w")
+                               #'eboost-gptel-write-commit-message
+                               "diff-mode"))
+
+  ;; Global keybinding (only if free).
+  (eboost-define-key-if-free global-map
+                             (kbd "C-x v w")
+                             #'eboost-gptel-write-commit-message
+                             "global map")
 
   ;; Unbind `C-c RET' in Org mode.
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-c RET") nil))
 
-  ;; Keybinding for quick access to gptel-send.
-  (global-set-key (kbd "C-c RET") 'gptel-send)
+  ;; Quick access to gptel-send (only if key is free).
+  (with-eval-after-load 'gptel
+    (eboost-define-key-if-free global-map
+                               (kbd "C-c RET")
+                               #'gptel-send
+                               "global map"))
 
 )
 
 ;; Load org-ai.
-(when (try-require 'org-ai)
+(when (eboost-try-require 'org-ai)
 
   ;; Enable org-ai-mode in Org mode.
   (add-hook 'org-mode-hook #'org-ai-mode)
 
   ;; Set OpenAI API key.
-  (when (boundp 'eboost-openai-api-key)
-    (setq org-ai-openai-api-key eboost-openai-api-key)
+  (when (bound-and-true-p eboost-openai-api-key)
     (setq org-ai-openai-api-token eboost-openai-api-key))
 
   ;; Install YASnippet templates for org-ai.
-  (when (try-require 'yasnippet)
+  (when (eboost-try-require 'yasnippet)
     (org-ai-install-yasnippets)))
 
-(message "* --[ Loaded Emacs-Leuven AI %s]--" lvn--emacs-version)
+(message "* --[ Loaded Emacs-Leuven AI %s ]--"
+         (if (boundp 'lvn--emacs-version) lvn--emacs-version ""))
 
 (provide 'emacs-leuven-ai)
 
