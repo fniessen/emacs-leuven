@@ -28,7 +28,7 @@ See:
 
 #+begin_src emacs-lisp
 ;; Load ESS package for R-specific features only.
-(try-require 'ess-r-mode)
+(eboost-try-require 'ess-r-mode)
 #+end_src
 
 ** 3 Interacting with statistical programs
