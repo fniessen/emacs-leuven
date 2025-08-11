@@ -20,8 +20,7 @@ emit a warning when the feature can't be loaded."
       t
     (when init-file-debug
       (display-warning 'eboost
-                       (format "Optional feature `%s' not found; continuing without it."
-                               feature)
+                       (format "Cannot load `%s'" feature)
                        :warning))
     nil))
 
