@@ -119,6 +119,14 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (when (fboundp 'gptel-end-of-response)
     (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
 
+(require 'subr-x)  ;; string-trim, string-empty-p, etc.
+
+(defcustom eboost-gptel-directives-directory
+  (expand-file-name "~/ai-prompts/")
+  "Répertoire racine contenant des fichiers .txt pour les directives GPTel (recurse)."
+  :type 'directory
+  :group 'eboost-gptel)
+
 (defun eboost--gptel-read-directive-file (name directive-file)
   "Read DIRECTIVE-FILE and set NAME entry in `gptel-directives` as a proper alist cell.
 Return the directive content, or nil on failure."
@@ -134,19 +142,21 @@ Return the directive content, or nil on failure."
   "Populate `gptel-directives` from all .txt files under DIR (recursively).
 Existing entries with the same NAME are overwritten."
   ;; (setq gptel-directives nil)
-  (dolist (directive-file (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
+  (dolist (f (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
     (condition-case err
-        (let ((name (intern (file-name-base directive-file))))
-          (eboost--gptel-read-directive-file name directive-file))
+        (let ((name (intern (file-name-base f))))
+          (eboost--gptel-read-directive-file name f))
       (error
        (display-warning 'eboost
                         (format "Failed to read directive %s: %s"
-                                directive-file (error-message-string err))
+                                f (error-message-string err))
                         :warning))))
   gptel-directives)
 
-;; Usage
-(eboost--gptel-read-directives-from-directory "~/ai-prompts/")
+;; Automatic loading if the folder exists.
+(when (file-directory-p eboost-gptel-directives-directory)
+  (ignore-errors
+    (eboost--gptel-read-directives-from-directory eboost-gptel-directives-directory)))
 
   ;; (gptel-make-preset 'gpt4coding2
   ;;   :backend "openai"
