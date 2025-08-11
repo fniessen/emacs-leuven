@@ -198,6 +198,47 @@ Inside a gptel buffer:
     (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
 #+end_src
 
+*** Directives
+
+#+begin_src emacs-lisp
+(defun eboost--gptel-read-directive-file (name directive-file)
+  "Read DIRECTIVE-FILE and set NAME entry in `gptel-directives` as a proper alist cell.
+Return the directive content, or nil on failure."
+  (when (file-readable-p directive-file)
+    (with-temp-buffer
+      (insert-file-contents directive-file)
+      (let ((content (string-trim (buffer-string))))
+        ;; Create or update (NAME . CONTENT)
+        (setf (alist-get name gptel-directives nil nil #'eq) content)
+        content))))
+
+(defun eboost--gptel-read-directives-from-directory (dir)
+  "Populate `gptel-directives` from all .txt files under DIR (recursively).
+Existing entries with the same NAME are overwritten."
+  ;; (setq gptel-directives nil)
+  (dolist (directive-file (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
+    (condition-case err
+        (let ((name (intern (file-name-base directive-file))))
+          (eboost--gptel-read-directive-file name directive-file))
+      (error
+       (display-warning 'eboost
+                        (format "Failed to read directive %s: %s"
+                                directive-file (error-message-string err))
+                        :warning))))
+  gptel-directives)
+
+;; Usage
+(eboost--gptel-read-directives-from-directory "~/ai-prompts/")
+#+end_src
+
+;; Use the system prompt builder function
+(let ((build-directives-fun "~/projects/ai/AIPIHKAL/gptel-build-directives.el"))
+  (when (f-exists-p build-directives-fun)
+    (load build-directives-fun)
+    ;; (custom-set-variables '(gptel-directives
+    (setq gptel-directives (gjg/gptel-build-directives "~/projects/ai/AIPIHKAL/system-prompts/")
+          gptel-system-message (alist-get 'default gptel-directives))))
+
 *** Presets configuration
 
 How to use them: =C-u M-x gptel-send=.

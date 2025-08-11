@@ -119,6 +119,35 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (when (fboundp 'gptel-end-of-response)
     (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
 
+(defun eboost--gptel-read-directive-file (name directive-file)
+  "Read DIRECTIVE-FILE and set NAME entry in `gptel-directives` as a proper alist cell.
+Return the directive content, or nil on failure."
+  (when (file-readable-p directive-file)
+    (with-temp-buffer
+      (insert-file-contents directive-file)
+      (let ((content (string-trim (buffer-string))))
+        ;; Create or update (NAME . CONTENT)
+        (setf (alist-get name gptel-directives nil nil #'eq) content)
+        content))))
+
+(defun eboost--gptel-read-directives-from-directory (dir)
+  "Populate `gptel-directives` from all .txt files under DIR (recursively).
+Existing entries with the same NAME are overwritten."
+  ;; (setq gptel-directives nil)
+  (dolist (directive-file (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
+    (condition-case err
+        (let ((name (intern (file-name-base directive-file))))
+          (eboost--gptel-read-directive-file name directive-file))
+      (error
+       (display-warning 'eboost
+                        (format "Failed to read directive %s: %s"
+                                directive-file (error-message-string err))
+                        :warning))))
+  gptel-directives)
+
+;; Usage
+(eboost--gptel-read-directives-from-directory "~/ai-prompts/")
+
   ;; (gptel-make-preset 'gpt4coding2
   ;;   :backend "openai"
   ;;   :model "gpt-4o-mini"
