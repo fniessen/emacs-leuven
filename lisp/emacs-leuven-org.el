@@ -5,7 +5,7 @@ Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
   (if (require feature nil 'noerror)
       t
-    (when init-file-debug
+    (when (bound-and-true-p init-file-debug)
       (display-warning 'eboost
                        (format "Cannot load `%s'" feature)
                        :warning))
