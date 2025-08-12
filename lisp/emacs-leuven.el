@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250811.1917>
+;; Version: <20250812.2218>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,11 +53,11 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst lvn--emacs-version "<20250811.1917>"
-  "Emacs-Leuven version, represented as the date and time of the last change.")
+(defconst eboost-version "<20250812.2218>"
+  "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
-(message "* --[ Loading Emacs-Leuven %s ]--" lvn--emacs-version)
+(message "* --[ Loading Emacs-Leuven %s ]--" eboost-version)
 
 ;; Record the start time for measuring load duration.
 (defconst emacs-leuven--load-start-time (current-time)
@@ -251,7 +251,7 @@ Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
     (if (require feature nil 'noerror)
         t
-      (when init-file-debug
+      (when (bound-and-true-p init-file-debug)
         (display-warning 'eboost
                          (format "Cannot load `%s'" feature)
                          :warning))
@@ -7215,22 +7215,23 @@ This example lists Azerty layout second row keys."
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
 
-  (defun lvn-sort-names-by-last-name ()
-    "Sort lines in the region by last name (everything after the first space)."
+  (defun eboost-sort-names-by-last-name ()
+    "Sort lines in the selected region by last name (everything after the first space)."
     (interactive)
-    (save-excursion
-      (let ((region-text (buffer-substring (region-beginning) (region-end)))
-            (lines nil))
-        (setq lines (split-string region-text "\n" t))
-        (setq lines
-              (sort lines
-                    (lambda (a b)
-                      (let* ((last-name-a (car (last (split-string a))))
-                             (last-name-b (car (last (split-string b)))))
-                        (string< last-name-a last-name-b)))))
-        (delete-region (region-beginning) (region-end))
-        (insert (mapconcat 'identity lines "\n"))
-        (insert "\n"))))
+    (if (use-region-p)
+        (save-excursion
+          (let* ((region-text (buffer-substring-no-properties (region-beginning) (region-end)))
+                 (lines (split-string region-text "\n" t)))
+            (setq lines
+                  (sort lines
+                        (lambda (a b)
+                          (let ((last-name-a (car (last (split-string a))))
+                                (last-name-b (car (last (split-string b)))))
+                            (string< last-name-a last-name-b)))))
+            (delete-region (region-beginning) (region-end))
+            (insert (mapconcat 'identity lines "\n"))
+            (insert "\n")))
+      (message "No region selected.")))
 
 )                                       ; Chapter 41 ends here.
 
@@ -7557,7 +7558,7 @@ Before using this function, make sure 'lvn--directory' points to the
 directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
   (interactive)
-  (lvn-display-emacs-leuven-version)
+  (eboost-display-version)
   (let* ((repository-directory (file-name-directory (file-truename (locate-library "emacs-leuven.el"))))
          (unstaged-changes (shell-command-to-string (format "cd %s && git status --porcelain" repository-directory))))
     (if (file-directory-p repository-directory)
@@ -7585,7 +7586,7 @@ Before using this function, make sure 'lvn--directory' points to the
 directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
     (interactive)
-    (lvn-display-emacs-leuven-version)
+    (eboost-display-version)
     (message "[Fetching latest changes in Emacs-Leuven...]")
     (let* ((el-file-path (locate-library "emacs-leuven.el"))
            (el-file-directory (file-name-directory (file-truename el-file-path)))
@@ -7598,12 +7599,14 @@ Git repository directory."
           (shell-command "LC_ALL=C git log --pretty=format:'%h %ad %s' --date=short HEAD..origin" commits-buffer)
           (pop-to-buffer commits-buffer)))))
 
-  (defun lvn-display-emacs-leuven-version ()
-    "Display the current version of the Emacs-Leuven configuration."
+  (defun eboost-display-version ()
+    "Display the current version of the EmacsBoost package."
     (interactive)
-    (message (format "[Emacs-Leuven version %s]" lvn--emacs-version)))
+    (if (and (boundp 'eboost-version) (stringp eboost-version))
+        (message "[EmacsBoost version %s]" eboost-version)
+      (message "Error: EmacsBoost version is not defined.")))
 
-(message "* --[ Loaded Emacs-Leuven %s]--" lvn--emacs-version)
+(message "* --[ Loaded Emacs-Leuven %s]--" eboost-version)
 
 (provide 'emacs-leuven)
 
