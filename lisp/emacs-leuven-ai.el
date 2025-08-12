@@ -275,22 +275,26 @@ The result is shown in *Commit Message* and copied to the kill ring."
         (erase-buffer))
       ;; Send request without menu.
       (gptel-request prompt
-        :callback (lambda (response error)
-                    (let ((output-buffer (get-buffer-create "*Commit Message*")))
+        :callback (lambda (response info)
+                    (if (stringp response)
+                        (let ((output-buffer (get-buffer-create "*Commit Message*")))
                                         ; Create a new reference to the buffer
                                         ; to avoid closure dependency.
-                      (with-current-buffer output-buffer
-                        (erase-buffer)
-                        (if response
+                          (with-current-buffer output-buffer
+                            (erase-buffer)
                             (let ((msg (string-trim response)))
+                              ;; Remove leading and trailing backtick wrappers
+                              ;; from the response, if any.
+                              (setq msg (replace-regexp-in-string "^```\n" "" msg))
+                              (setq msg (replace-regexp-in-string "```$" "" msg))
                               ;; Replace backticks with single quotes.
                               (setq msg (replace-regexp-in-string "`" "'" msg))
                               (kill-new msg) ; Add to kill ring.
                               (insert msg)
                               (message "[Commit message copied to kill ring.]"))
-                          (message "[Failed to generate commit message: %s.]"
-                                   (or error "Unknown error")))
-                        (display-buffer output-buffer)))))))
+                          (display-buffer output-buffer)))
+                      (message "[Failed to generate commit message: %s.]"
+                               (plist-get info :status)))))))
 
   ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
