@@ -319,6 +319,17 @@ The result is shown in *Commit Message* and copied to the kill ring."
                                #'gptel-send
                                "global map"))
 
+  (defun eboost-gptel-chat-buffer ()
+    "Switch to the GPTel chat buffer, creating it if it doesn't exist."
+    (interactive)
+    (let ((buffer-name "*ChatGPT*"))
+      (if (get-buffer buffer-name)
+          (pop-to-buffer buffer-name)
+        (progn
+          (call-interactively 'gptel)))))
+
+  (global-set-key (kbd "C-c g") #'eboost-gptel-chat-buffer)
+
 )
 
 ;; Load org-ai.
