@@ -266,15 +266,14 @@ The result is shown in *Commit Message* and copied to the kill ring."
     (let* ((diff-text (if (use-region-p)
                           (buffer-substring-no-properties (region-beginning) (region-end))
                         (buffer-substring-no-properties (point-min) (point-max))))
-           (prompt (concat "Write a Git commit message for the following diff:\n\n"
-                           diff-text)))
+           (prompt "Write a Git commit message for the following diff:\n\n"))
       ;; Notify user that the process has started.
       (message "[Generating commit message...]")
       ;; Create and clear the buffer initially.
       (with-current-buffer (get-buffer-create "*Commit Message*")
         (erase-buffer))
       ;; Send request without menu.
-      (gptel-request prompt
+      (gptel-request diff-text :system prompt
         :callback (lambda (response info)
                     (if (stringp response)
                         (let ((output-buffer (get-buffer-create "*Commit Message*")))
