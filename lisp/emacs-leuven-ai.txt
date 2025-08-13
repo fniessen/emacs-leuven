@@ -14,21 +14,6 @@
 
 * Tasks
 
-** NEXT Commentaires à envoyer à l'auteur de GPTel
-
-- Envoi vers buffer ChatGPT ne marche pas
-- Pas de trace dans l'echo area que quelque chose a été envoyé (important),
-  voire reçu (nice-to-have)
-- Je ne comprends pas comment utiliser le rewrite
-  + D'ailleurs, il faudrait que ce soit comme org-ai-rewrite, avec un diff
-  + et possibilité d'accepter/refuser des hunks, un par un, avant d'accepter le
-    tout
-- Je ne comprends pas comment changer le prompt à la main et s'en servir de
-  suite
-- À indiquer :
-  + Gestion des placeholders
-  + Write commit message
-
 ** TODO Research ChatGPT integration with Emacs
 
 - [ ] Test c3po integration (recommended)
@@ -468,7 +453,11 @@ The result is shown in *Commit Message* and copied to the kill ring."
         (progn
           (call-interactively 'gptel)))))
 
-  (global-set-key (kbd "C-c g") #'eboost-gptel-chat-buffer)
+  ;; Global keybinding (only if free).
+  (eboost-define-key-if-free global-map
+                             (kbd "C-c g")
+                             #'eboost-gptel-chat-buffer
+                             "global map")
 #+end_src
 
 #+begin_src emacs-lisp

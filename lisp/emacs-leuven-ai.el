@@ -329,7 +329,11 @@ The result is shown in *Commit Message* and copied to the kill ring."
         (progn
           (call-interactively 'gptel)))))
 
-  (global-set-key (kbd "C-c g") #'eboost-gptel-chat-buffer)
+  ;; Global keybinding (only if free).
+  (eboost-define-key-if-free global-map
+                             (kbd "C-c g")
+                             #'eboost-gptel-chat-buffer
+                             "global map")
 
 )
 
