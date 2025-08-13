@@ -2690,18 +2690,19 @@ BACKEND is the current export backend."
 (defun lvn--org-clean-typography ()
   "Replace typographic characters with ASCII equivalents before saving, unless in excluded Org files."
   (when (and (derived-mode-p 'org-mode)
-             (not (member (file-name-nondirectory (or buffer-file-name ""))
+             buffer-file-name           ; Ensure that the file name is not nil.
+             (not (member (file-name-nondirectory buffer-file-name)
                           lvn--org-clean-typography-excluded-files)))
     (let ((replacements
-           '(("—" . " -- ")    ; Em dash.
-             ("–" . " - ")     ; En dash.
-             ("“" . "\"")      ; Left double quote.
-             ("”" . "\"")      ; Right double quote.
-             ("‟" . "\"")      ; Double high reversed-9.
-             ("‘" . "'")       ; Left single quote.
-             ("’" . "'")       ; Right single quote / apostrophe.
-             ("‛" . "'")       ; Single high reversed-9.
-             ("…" . "..."))))  ; Ellipsis.
+           '(("—" . "--")               ; Em dash.
+             ("–" . "-")                ; En dash.
+             ("“" . "\"")               ; Left double quote.
+             ("”" . "\"")               ; Right double quote.
+             ("‟" . "\"")               ; Double high reversed-9.
+             ("‘" . "'")                ; Left single quote.
+             ("’" . "'")                ; Right single quote / apostrophe.
+             ("‛" . "'")                ; Single high reversed-9.
+             ("…" . "..."))))           ; Ellipsis.
       (save-excursion
         (goto-char (point-min))
         (dolist (pair replacements)
