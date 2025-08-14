@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250812.2218>
+;; Version: <20250814.1109>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250812.2218>"
+(defconst eboost-version "<20250814.1109>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1693,21 +1693,28 @@ Should be selected from `fringe-bitmaps'.")
   (leuven--section "14.20 (emacs)The Cursor Display")
 
   ;; Cursor customization based on buffer state.
-  (defun lvn-update-cursor-appearance ()
+  (defun eboost-update-cursor-appearance ()
     "Update cursor color and shape based on buffer state (read-only, overwrite, or insert)."
-    (let* ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
-           (cursor-colors `((read-only . "purple1")
+    (let ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
+          (cursor-colors `((read-only . "purple1")
                            (overwrite . "#7F7F7F")
                            (default . ,(if is-light-theme "black" "white"))))
-           (current-color (cond (buffer-read-only (alist-get 'read-only cursor-colors))
-                                (overwrite-mode (alist-get 'overwrite cursor-colors))
-                                (t (alist-get 'default cursor-colors))))
-           (current-type (if overwrite-mode 'box 'bar)))
-      (set-cursor-color current-color)
+          current-color
+          current-type)
+      (setq current-color
+            (cond (buffer-read-only
+                   (cdr (assoc 'read-only cursor-colors)))
+                  (overwrite-mode
+                   (cdr (assoc 'overwrite cursor-colors)))
+                  (t
+                   (cdr (assoc 'default cursor-colors)))))
+      (setq current-type (if overwrite-mode 'box 'bar))
+      (when (color-defined-p current-color)
+        (set-cursor-color current-color))
       (setq cursor-type current-type)))
 
   ;; Update cursor on every command.
-  (add-hook 'post-command-hook #'lvn-update-cursor-appearance)
+  (add-hook 'post-command-hook #'eboost-update-cursor-appearance)
 
   ;; Default to bar cursor.
   (setq-default cursor-type 'bar)
@@ -1803,7 +1810,7 @@ Should be selected from `fringe-bitmaps'.")
     (anzu-replace-to-string-separator " => ")
     :config
     ;; Function which returns mode-line string.
-    (defun lvn--anzu-format-mode-line (here total)
+    (defun eboost--anzu-format-mode-line (here total)
       "Return a mode-line string based on anzu search state.
     HERE is the current position, TOTAL is the number of matches."
       (when anzu--state
@@ -1815,7 +1822,8 @@ Should be selected from `fringe-bitmaps'.")
                   (replace-query " %d replace ")
                   (replace (if (> total 1)
                                " %d of %d matches "
-                             " %d of %d match "))))
+                             " %d of %d match "))
+                  (t " %s ")))
                (status-text
                 (format format-string
                         (if (eq anzu--state 'search)
@@ -1825,12 +1833,12 @@ Should be selected from `fringe-bitmaps'.")
                         (if (and (eq anzu--state 'search) anzu--overflow-p)
                             "+"
                           "")))
-               (face (if (and (zerop total) (not (string= isearch-string "")))
+               (face (if (and (zerop total) (not (string-empty-p isearch-string)))
                          'anzu-mode-line-no-match
                        'anzu-mode-line)))
           (propertize status-text 'face face))))
     ;; Set the update function.
-    (setq anzu-mode-line-update-function #'lvn--anzu-format-mode-line))
+    (setq anzu-mode-line-update-function #'eboost--anzu-format-mode-line))
 
     ;; ;; Lighter of anzu-mode.
     ;; (setq anzu-mode-lighter "")
@@ -7079,15 +7087,22 @@ This example lists Azerty layout second row keys."
   (with-eval-after-load 'server
     ;; Start the Emacs server if it's not already (definitely) running.
     (unless (equal (server-running-p) t)
-      (server-start))
+      (condition-case err
+          (server-start)
+        (error (message "[Error while starting the server: %s]" err))))
 
-    ;; Save file without confirmation before returning to the client.
-    (defun lvn--server-edit-save-buffer-advice (proc)
-      "Save current buffer before marking it as done if modified."
-      (when (and server-buffer-clients (buffer-modified-p))
+    ;; Define an advice function to save the current buffer without confirmation
+    ;; before returning to the client.
+    (defun eboost--server-edit-save-buffer-advice (proc)
+    "Save the current buffer before marking it as done if it is modified.
+PROC is the process associated with the server."
+      (when (and server-buffer-clients
+                 (buffer-modified-p)
+                 (buffer-live-p (current-buffer)))
         (save-buffer)))
 
-    (advice-add 'server-edit :before #'lvn--server-edit-save-buffer-advice))
+    ;; Add the advice to the 'server-edit' function.
+    (advice-add 'server-edit :before #'eboost--server-edit-save-buffer-advice))
 
 )                                       ; Chapter 39 ends here.
 
