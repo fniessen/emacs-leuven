@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250814.1109>
+;; Version: <20250814.1120>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250814.1109>"
+(defconst eboost-version "<20250814.1120>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -6550,18 +6550,19 @@ This example lists Azerty layout second row keys."
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
     (when lvn--cygwin-p
-      (defun lvn--dired-jump-advice (orig-fun &rest args)
-        "Ask for confirmation before jumping to a Dired buffer.
+      (when (fboundp 'dired-jump)       ; Check if `dired-jump' exists.
+        (defun eboost--dired-jump-advice (orig-fun &rest args)
+          "Ask for confirmation before jumping to a Dired buffer.
 
       This advice checks the buffer size and prompts for confirmation if the buffer
       size is 1,400,000 bytes or more. It helps prevent time-consuming operations.
       Consider using `C-x d' instead for better performance."
-        (if (or (< (buffer-size) 1400000)
-                (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
-            (apply orig-fun args)
-          (message "[Operation cancelled]")))
+          (if (or (< (buffer-size) 1400000)
+                  (y-or-n-p "Proceed with this time-consuming operation?  Consider using `C-x d' instead..."))
+              (apply orig-fun args)
+            (message "[Operation cancelled: Buffer size too large]")))
 
-      (advice-add 'dired-jump :around #'lvn--dired-jump-advice)))
+        (advice-add 'dired-jump :around #'eboost--dired-jump-advice))))
 
 ;;** Diff-hl
 
