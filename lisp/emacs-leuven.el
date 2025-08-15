@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250815.1241>
+;; Version: <20250815.1735>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250815.1241>"
+(defconst eboost-version "<20250815.1735>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2578,7 +2578,7 @@ After initiating the grep search, the isearch is aborted."
 
   ;; The EasyPG Assistant, transparent file encryption.
   (with-eval-after-load 'epa-file
-    (custom-set-variables '(epg-gpg-program "gpg2"))
+    ;; (custom-set-variables '(epg-gpg-program "gpg2"))
                                         ; If you have issues, try uninstalling
                                         ; gnupg, keeping only gnupg2!
 
@@ -2589,18 +2589,10 @@ After initiating the grep search, the isearch is aborted."
                                         ; If no one is selected (""), symmetric
                                         ; encryption will always be performed.
 
-    ;; Cache passphrase for symmetric encryption (VERY important).
-    (setq epa-file-cache-passphrase-for-symmetric-encryption t)
-                                        ; Not to sound paranoid.  But if you
-                                        ; want caching, it's recommended to use
-                                        ; *public-key encryption* instead of
-                                        ; symmetric encryption.  `gpg-agent' is
-                                        ; the preferred way to do this.
-
     ;; Query passphrase through the minibuffer, instead of using an external
     ;; Pinentry program.
-    (setenv "GPG_AGENT_INFO" nil)
-    (setq epa-pinentry-mode 'loopback)
+    ;; (setenv "GPG_AGENT_INFO" nil)
+    (setq epg-pinentry-mode 'loopback)
 
     ;; Enable `epa-file'.
     (epa-file-enable))

@@ -4584,7 +4584,7 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
 #+begin_src emacs-lisp
   ;; The EasyPG Assistant, transparent file encryption.
   (with-eval-after-load 'epa-file
-    (custom-set-variables '(epg-gpg-program "gpg2"))
+    ;; (custom-set-variables '(epg-gpg-program "gpg2"))
                                         ; If you have issues, try uninstalling
                                         ; gnupg, keeping only gnupg2!
 
@@ -4595,30 +4595,29 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
                                         ; If no one is selected (""), symmetric
                                         ; encryption will always be performed.
 
-    ;; Cache passphrase for symmetric encryption (VERY important).
-    (setq epa-file-cache-passphrase-for-symmetric-encryption t)
-                                        ; Not to sound paranoid.  But if you
-                                        ; want caching, it's recommended to use
-                                        ; *public-key encryption* instead of
-                                        ; symmetric encryption.  `gpg-agent' is
-                                        ; the preferred way to do this.
-
     ;; Query passphrase through the minibuffer, instead of using an external
     ;; Pinentry program.
-    (setenv "GPG_AGENT_INFO" nil)
-    (setq epa-pinentry-mode 'loopback)
+    (setq epg-pinentry-mode 'loopback)
+    ;; (setenv "GPG_AGENT_INFO" nil)
 
     ;; Enable `epa-file'.
     (epa-file-enable))
 #+end_src
 
-Password free
+Configuring cache settings in the gpg-agent (=~/.gnupg/gpg-agent.conf= file):
 
-Otherwise:
+- Control how long GPG keeps your passphrase in memory:
 
-#+begin_src shell :tangle no
-gpgconf kill gpg-agent
-#+end_src
+  #+begin_src conf :tangle no
+  default-cache-ttl 3600       # In seconds.
+  max-cache-ttl 7200
+  #+end_src
+
+- After saving, reload the agent to apply the new settings.
+
+  #+begin_src shell :tangle no
+  gpgconf --reload gpg-agent
+  #+end_src
 
 ** Remote Files
 
