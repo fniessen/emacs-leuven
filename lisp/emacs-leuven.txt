@@ -5075,7 +5075,7 @@ XXX Look at helm-dictionary.
 Popup structure of the current file for quick navigation:
 
 #+begin_src emacs-lisp
-    (defun eboost-generic-imenu (arg)
+    (defun eboost-helm-generic-imenu (arg)
       "Jump to a place in the buffer using an Index menu.
 
 For programming mode buffers, this function displays a menu to
@@ -5093,11 +5093,11 @@ in the current buffer."
 
     (eboost-define-key-if-free 'global-map
                                (kbd "C-<f12>")
-                               #'eboost-generic-imenu
+                               #'eboost-helm-generic-imenu
                                "global map")
     ;; (eboost-define-key-if-free 'global-map
     ;;                            (kbd "<f4>")
-    ;;                            #'eboost-generic-imenu
+    ;;                            #'eboost-helm-generic-imenu
     ;;                            "global map")
 #+end_src
 

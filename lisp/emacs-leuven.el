@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250815.1151>
+;; Version: <20250815.1202>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250815.1151>"
+(defconst eboost-version "<20250815.1202>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2769,7 +2769,7 @@ After initiating the grep search, the isearch is aborted."
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
     ;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
 
-    (defun eboost-generic-imenu (arg)
+    (defun eboost-helm-generic-imenu (arg)
       "Jump to a place in the buffer using an Index menu.
 
 For programming mode buffers, this function displays a menu to
@@ -2787,11 +2787,11 @@ in the current buffer."
 
     (eboost-define-key-if-free 'global-map
                                (kbd "C-<f12>")
-                               #'eboost-generic-imenu
+                               #'eboost-helm-generic-imenu
                                "global map")
     ;; (eboost-define-key-if-free 'global-map
     ;;                            (kbd "<f4>")
-    ;;                            #'eboost-generic-imenu
+    ;;                            #'eboost-helm-generic-imenu
     ;;                            "global map")
 
     ;; Org headlines in Org agenda files.
