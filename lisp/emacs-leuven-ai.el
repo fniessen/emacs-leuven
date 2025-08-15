@@ -388,24 +388,45 @@ The result is shown in *Commit Message* and copied to the kill ring."
       (gptel-request prompt)))
 
   (defvar eboost-ai-code-review-prompt
-    "Perform a code review for this Emacs Lisp function:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement."
+    "Perform a code review for this Emacs Lisp code:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement."
     "Prompt template for AI code review.")
 
   (defun eboost-ai-code-review-function (&optional scope)
-    "Perform a code review on the current function or specified SCOPE using GPTel.
-SCOPE can be 'function (default), 'buffer, or 'region."
+    "Perform a code review on the current Emacs Lisp function, region, or buffer using GPTel.
+  SCOPE can be 'function (default), 'region, or 'buffer.
+  The review output is sent to the *Code Review* buffer."
     (interactive "P")
+    (unless (fboundp 'gptel-request)
+      (error "GPTel package is not loaded or configured"))
     (let* ((function-source
             (cond
              ((eq scope 'buffer) (buffer-substring-no-properties (point-min) (point-max)))
-             ((eq scope 'region) (buffer-substring-no-properties (region-beginning) (region-end)))
+             ((eq scope 'region)
+              (if (use-region-p)
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (error "No active region found")))
              (t (save-excursion
-                  (beginning-of-defun)
+                  (unless (beginning-of-defun)
+                    (error "No valid function found at point"))
                   (buffer-substring-no-properties
                    (point)
                    (progn (end-of-defun) (point)))))))
-           (prompt (format eboost-ai-code-review-prompt function-source)))
-      (gptel-request prompt)))
+           (prompt (format eboost-ai-code-review-prompt function-source))
+           (output-buffer (get-buffer-create "*Code Review*")))
+      (when (string-empty-p function-source)
+        (error "No valid code source extracted"))
+      (message "Sending code for AI code review...")
+      (condition-case err
+          (gptel-request prompt
+                         :buffer output-buffer
+                         :callback (lambda (response)
+                                     (with-current-buffer output-buffer
+                                       (erase-buffer)
+                                       (insert (or response "No response received from GPTel"))
+                                       (emacs-lisp-mode) ; Enable syntax highlighting
+                                       (display-buffer output-buffer))
+                                     (message "Code review completed!")))
+        (error (message "Code review failed: %s" err)))))
 
   (defun eboost-ai-generate-companion-function ()
     "Generate a companion function for the current function using GPTel."
