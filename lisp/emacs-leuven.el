@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250815.1103>
+;; Version: <20250815.1151>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250815.1103>"
+(defconst eboost-version "<20250815.1151>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1717,12 +1717,12 @@ Should be selected from `fringe-bitmaps'.")
   ;; Cursor customization based on buffer state.
   (defun eboost-update-cursor-appearance ()
     "Update cursor color and shape based on buffer state (read-only, overwrite, or insert)."
-    (let ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
-          (cursor-colors `((read-only . "purple1")
-                           (overwrite . "#7F7F7F")
-                           (default . ,(if is-light-theme "black" "white"))))
-          current-color
-          current-type)
+    (let* ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
+           (cursor-colors `((read-only . "purple1")
+                            (overwrite . "#7F7F7F")
+                            (default . ,(if is-light-theme "black" "white"))))
+           current-color
+           current-type)
       (setq current-color
             (cond (buffer-read-only
                    (cdr (assoc 'read-only cursor-colors)))
@@ -2769,7 +2769,7 @@ After initiating the grep search, the isearch is aborted."
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
     ;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
 
-    (defun lvn-generic-imenu (arg)
+    (defun eboost-generic-imenu (arg)
       "Jump to a place in the buffer using an Index menu.
 
 For programming mode buffers, this function displays a menu to
@@ -2777,26 +2777,29 @@ navigate through functions, variables, and other relevant items
 in the current buffer."
       (interactive "P")
       (cond ((derived-mode-p 'org-mode)
-             (if (fboundp 'helm-org-in-buffer-headings)
+             (condition-case nil
                  (helm-org-in-buffer-headings)
-               (message "[helm-org-in-buffer-headings is not available]")))
+               (error (message "[The fonction `helm-org-in-buffer-headings' is not available.]"))))
             ((derived-mode-p 'tex-mode)
              (helm-imenu))
             (t
-             (helm-semantic-or-imenu arg))) ; More generic than `helm-imenu'.
-      )
+             (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
     (eboost-define-key-if-free 'global-map
                                (kbd "C-<f12>")
-                               #'lvn-generic-imenu
+                               #'eboost-generic-imenu
                                "global map")
     ;; (eboost-define-key-if-free 'global-map
     ;;                            (kbd "<f4>")
-    ;;                            #'lvn-generic-imenu
+    ;;                            #'eboost-generic-imenu
     ;;                            "global map")
 
+    ;; Org headlines in Org agenda files.
     (when (fboundp 'helm-org-agenda-files-headings)
-      (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings))
+      (eboost-define-key-if-free 'global-map
+                                 (kbd "C-h O")
+                                 #'helm-org-agenda-files-headings
+                                 "global map"))
 
     (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
 
@@ -4568,21 +4571,22 @@ the parent element."
   (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a.
 
   ;; Making buffer indexes as menus.
-  (eboost-try-require 'imenu)           ; Try to load the awesome 'imenu' library.
+  (eboost-try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
 
-  (with-eval-after-load 'imenu
-    ;; Always rescan buffers for Imenu.
-    (setq imenu-auto-rescan t)
+  (when (require 'imenu nil 'noerror)
+    (with-eval-after-load 'imenu
+      ;; Always rescan buffers for Imenu.
+      (setq imenu-auto-rescan t)
 
-    ;; Function to add Imenu to the menu bar in modes that support it.
-    (defun lvn--try-to-add-imenu ()
-      "Attempt to add an Imenu index to the menu bar."
-      (condition-case nil
-          (imenu-add-to-menubar "Outline") ; Add Imenu index.
-        (error nil)))
+      ;; Function to add Imenu to the menu bar in modes that support it.
+      (defun eboost--try-to-add-imenu ()
+        "Attempt to add an Imenu index to the menu bar."
+        (condition-case err
+            (imenu-add-to-menubar "Outline")  ; Add Imenu index.
+          (error (message "[Error adding Imenu index: %s]" err))))
 
-    ;; Add Imenu to the menu bar in any mode that supports it.
-    (add-hook 'font-lock-mode-hook #'lvn--try-to-add-imenu)
+      ;; Add Imenu to the menu bar in any mode that supports it.
+      (add-hook 'after-change-major-mode-hook #'eboost--try-to-add-imenu))
 
     ;; Bind Imenu to the Shift + Right Mouse Button.
     (global-set-key [S-mouse-3] #'imenu)
