@@ -312,15 +312,21 @@ Existing entries with the same NAME are overwritten."
           (eboost--gptel-read-directive-file name f))
       (error
        (display-warning 'eboost
-                        (format "Failed to read directive %s: %s"
+                        (format "[Failed to read directive %s: %s]"
                                 f (error-message-string err))
                         :warning))))
   gptel-directives)
 
-;; Automatic loading if the folder exists.
-(when (file-directory-p eboost-gptel-directives-directory)
-  (ignore-errors
-    (eboost--gptel-read-directives-from-directory eboost-gptel-directives-directory)))
+(defun eboost-load-directives ()
+ "Load directives from the specified directory."
+ (if (file-directory-p eboost-gptel-directives-directory)
+     (condition-case err
+         (eboost--gptel-read-directives-from-directory eboost-gptel-directives-directory)
+       (error (message "[Error reading directives: %s]" (error-message-string err))))
+   (message "[Directory %s does not exist.]" eboost-gptel-directives-directory)))
+
+;; Automatic loading.
+(eboost-load-directives)
 #+end_src
 
 ;; Use the system prompt builder function
@@ -681,32 +687,37 @@ The result is shown in *Commit Message* and copied to the kill ring."
       (error "GPTel package is not loaded or configured"))
     (let* ((function-source
             (cond
-             ((eq scope 'buffer) (buffer-substring-no-properties (point-min) (point-max)))
+             ((eq scope 'buffer)
+              (buffer-substring-no-properties (point-min) (point-max)))
              ((eq scope 'region)
               (if (use-region-p)
                   (buffer-substring-no-properties (region-beginning) (region-end))
                 (error "No active region found")))
-             (t (save-excursion
-                  (unless (beginning-of-defun)
-                    (error "No valid function found at point"))
-                  (buffer-substring-no-properties
-                   (point)
-                   (progn (end-of-defun) (point)))))))
+             (t
+              (save-excursion
+                (unless (beginning-of-defun)
+                  (error "No valid function found at point"))
+                (buffer-substring-no-properties
+                 (point)
+                 (progn (end-of-defun) (point)))))))
            (prompt (format eboost-ai-code-review-prompt function-source))
            (output-buffer (get-buffer-create "*Code Review*")))
       (when (string-empty-p function-source)
         (error "No valid code source extracted"))
       (message "Sending code for AI code review...")
       (condition-case err
-          (gptel-request prompt
-                         :buffer output-buffer
-                         :callback (lambda (response)
-                                     (with-current-buffer output-buffer
-                                       (erase-buffer)
-                                       (insert (or response "No response received from GPTel"))
-                                       (emacs-lisp-mode) ; Enable syntax highlighting
-                                       (display-buffer output-buffer))
-                                     (message "Code review completed!")))
+          (gptel-request
+           prompt
+           :buffer output-buffer
+           :callback
+           (lambda (response info)
+             (let ((buf (or (plist-get info :buffer) output-buffer)))
+               (with-current-buffer buf
+                 (erase-buffer)
+                 (insert (or response "No response received from GPTel"))
+                 (emacs-lisp-mode)
+                 (display-buffer buf)))
+             (message "Code review completed!")))
         (error (message "Code review failed: %s" err)))))
 #+end_src
 
