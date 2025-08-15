@@ -668,15 +668,24 @@ The result is shown in *Commit Message* and copied to the kill ring."
 **** Generate code review comments for current function
 
 #+begin_src emacs-lisp
-  (defun eboost-ai-code-review-function ()
-    "Perform a code review on the current function using GPTel."
-    (interactive)
-    (let* ((function-source (save-excursion
-                              (beginning-of-defun)
-                              (buffer-substring-no-properties
-                               (point)
-                               (progn (end-of-defun) (point)))))
-           (prompt (format "Perform a code review for this Emacs Lisp function:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement." function-source)))
+  (defvar eboost-ai-code-review-prompt
+    "Perform a code review for this Emacs Lisp function:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement."
+    "Prompt template for AI code review.")
+
+  (defun eboost-ai-code-review-function (&optional scope)
+    "Perform a code review on the current function or specified SCOPE using GPTel.
+SCOPE can be 'function (default), 'buffer, or 'region."
+    (interactive "P")
+    (let* ((function-source
+            (cond
+             ((eq scope 'buffer) (buffer-substring-no-properties (point-min) (point-max)))
+             ((eq scope 'region) (buffer-substring-no-properties (region-beginning) (region-end)))
+             (t (save-excursion
+                  (beginning-of-defun)
+                  (buffer-substring-no-properties
+                   (point)
+                   (progn (end-of-defun) (point)))))))
+           (prompt (format eboost-ai-code-review-prompt function-source)))
       (gptel-request prompt)))
 #+end_src
 
