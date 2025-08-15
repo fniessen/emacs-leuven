@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250814.1120>
+;; Version: <20250815.1103>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250814.1120>"
+(defconst eboost-version "<20250815.1103>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -270,6 +270,28 @@ Example usage:
     (setq magit-auto-revert-mode nil))"
       `(eval-after-load ,feature
          '(progn ,@body))))
+
+(defun eboost-define-key-if-free (keymap key command &optional scope)
+  "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
+KEYMAP may be the map itself or a symbol naming it.
+If already bound, emit a warning mentioning SCOPE (string)."
+  (let* ((map (if (keymapp keymap)
+                  keymap
+                (when (and (symbolp keymap) (boundp keymap))
+                  (symbol-value keymap))))
+         (existing-binding (and map (lookup-key map key))))
+    (cond
+     ((not map)
+      (display-warning 'eboost "Keymap not available (yet)" :warning))
+     ((or (null existing-binding) (numberp existing-binding))
+      (define-key map key command))
+     (t
+      (when init-file-debug
+        (display-warning 'eboost
+                         (format "Keybinding %s is already in use%s!"
+                                 (key-description key)
+                                 (if scope (format " in %s" scope) ""))
+                         :warning))))))
 
   (defun eboost--switch-or-start (fn buffer)
     "If BUFFER is the current buffer, bury it.
@@ -627,7 +649,7 @@ Shows a warning message if the file does not exist or is not executable."
   (global-unset-key (kbd "C-z"))
 
   ;; Quit with Alt + F4.
-  (global-set-key (kbd "<M-f4>") #'save-buffers-kill-terminal)
+  (global-set-key (kbd "M-<f4>") #'save-buffers-kill-terminal)
 
 )                                       ; Chapter 6 ends here.
 
@@ -704,7 +726,7 @@ Shows a warning message if the file does not exist or is not executable."
 
     ;; Keybindings for redo.
     (global-set-key (kbd "C-S-z")   #'undo-tree-redo)
-    (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
+    (global-set-key (kbd "S-<f11>") #'undo-tree-redo))
 
   (with-eval-after-load 'volatile-highlights-autoloads
     (idle-require 'volatile-highlights))
@@ -820,7 +842,7 @@ Shows a warning message if the file does not exist or is not executable."
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info).
-  ;; (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
+  ;; (global-set-key (kbd "C-<f1>") #'info-lookup-symbol)
 
   (with-eval-after-load 'info
     ;; List of directories to search for Info documentation files (in the order
@@ -847,7 +869,7 @@ Shows a warning message if the file does not exist or is not executable."
     )
 
   ;; Get a Unix manual page of the item under point.
-  ;; (global-set-key (kbd "<S-f1>") #'man-follow)
+  ;; (global-set-key (kbd "S-<f1>") #'man-follow)
 
   (with-eval-after-load 'man
     ;; Make the manpage the current buffer in the current window.
@@ -1871,7 +1893,7 @@ Should be selected from `fringe-bitmaps'.")
               (switch-to-buffer "*Occur*"))
           (message "[No symbol at point]"))))
 
-    (global-set-key (kbd "<C-M-f7>") 'lvn-find-usages)
+    (global-set-key (kbd "C-M-<f7>") 'lvn-find-usages)
 
 ;;** 15.5 (info "(emacs)Regexp Search")
 
@@ -2099,26 +2121,26 @@ After initiating the grep search, the isearch is aborted."
     (interactive)
     (if defining-kbd-macro
         (progn
-          (global-set-key (kbd "<S-f8>") #'lvn-kmacro-turn-on-recording)
+          (global-set-key (kbd "S-<f8>") #'lvn-kmacro-turn-on-recording)
           (kmacro-end-macro nil))
       (progn
-        (global-set-key (kbd "<S-f8>") #'lvn-kmacro-turn-off-recording)
+        (global-set-key (kbd "S-<f8>") #'lvn-kmacro-turn-off-recording)
         (kmacro-start-macro nil))))
 
   (defun lvn-kmacro-turn-on-recording ()
     "Start recording a keyboard macro."
     (interactive)
-    (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
+    (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
     (kmacro-start-macro nil))
 
   (defun lvn-kmacro-turn-off-recording ()
     "Stop recording a keyboard macro."
     (interactive)
-    (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
+    (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
     (kmacro-end-macro nil))
 
   ;; Start/stop recording a keyboard macro.
-  (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
+  (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
 
   ;; Execute the most recent keyboard macro.
   (global-set-key (kbd "<f8>") #'kmacro-call-macro)
@@ -2128,7 +2150,7 @@ After initiating the grep search, the isearch is aborted."
   (leuven--section "17.5 (emacs)Name and Save Keyboard Macros")
 
   ;; Assign a name to the last keyboard macro defined.
-  (global-set-key (kbd "<C-f8>") #'kmacro-name-last-macro)
+  (global-set-key (kbd "C-<f8>") #'kmacro-name-last-macro)
 
 )                                       ; Chapter 17 ends here.
 
@@ -2764,9 +2786,14 @@ in the current buffer."
              (helm-semantic-or-imenu arg))) ; More generic than `helm-imenu'.
       )
 
-    (global-set-key (kbd "<C-f12>") #'lvn-generic-imenu) ; Awesome.
-    ;; (global-set-key (kbd "<f4>") #'lvn-generic-imenu)
-                                        ; And `C-c =' (like in RefTeX)?
+    (eboost-define-key-if-free 'global-map
+                               (kbd "C-<f12>")
+                               #'lvn-generic-imenu
+                               "global map")
+    ;; (eboost-define-key-if-free 'global-map
+    ;;                            (kbd "<f4>")
+    ;;                            #'lvn-generic-imenu
+    ;;                            "global map")
 
     (when (fboundp 'helm-org-agenda-files-headings)
       (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings))
@@ -2966,7 +2993,7 @@ in the current buffer."
 
     ;; Browse files and see status of project with its VCS.
     (global-set-key (kbd "C-x g") #'helm-browse-project) ; uses `helm-ls-git'.
-    (global-set-key (kbd "<S-f3>") #'helm-browse-project))
+    (global-set-key (kbd "S-<f3>") #'helm-browse-project))
 
   ;; Emacs Helm Interface for quick Google searches
   (with-eval-after-load 'helm-google-autoloads
@@ -3063,14 +3090,14 @@ in the current buffer."
     (kill-buffer nil))
 
   ;; Key binding.
-  (global-set-key (kbd "<S-f12>") #'lvn-kill-current-buffer-no-confirm)
+  (global-set-key (kbd "S-<f12>") #'lvn-kill-current-buffer-no-confirm)
 
 ;;** 19.5 (info "(emacs)Several Buffers")
 
   (leuven--section "19.5 (emacs)Several Buffers")
 
   ;; Put the current buffer at the end of the list of all buffers.
-  (global-set-key (kbd "<M-f12>") #'bury-buffer)
+  (global-set-key (kbd "M-<f12>") #'bury-buffer)
 
 ;;** 19.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
 
@@ -3283,7 +3310,7 @@ windows, leaving only the currently active window visible."
   ;; (modify-all-frames-parameters '((fullscreen . maximized)))
 
   ;; Full screen.
-  (global-set-key (kbd "<C-S-f12>") #'toggle-frame-fullscreen)
+  (global-set-key (kbd "C-S-<f12>") #'toggle-frame-fullscreen)
 
 ;;** 21.9 (info "(emacs)Speedbar")
 
@@ -4557,7 +4584,7 @@ the parent element."
     ;; Add Imenu to the menu bar in any mode that supports it.
     (add-hook 'font-lock-mode-hook #'lvn--try-to-add-imenu)
 
-    ;; Bind Imenu to the mouse.
+    ;; Bind Imenu to the Shift + Right Mouse Button.
     (global-set-key [S-mouse-3] #'imenu)
 
     ;; Set the string to display in the mode line when the current function is
@@ -5232,7 +5259,7 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
     (save-some-buffers (not compilation-ask-about-save) nil)
     (compile-internal make-clean-command "No more errors"))
 
-  (global-set-key (kbd "<S-f9>") #'make-clean)
+  (global-set-key (kbd "S-<f9>") #'make-clean)
 
   ;; Use Java for class files decompiled with Jad.
   (add-to-list 'auto-mode-alist '("\\.jad\\'" . java-mode))
@@ -5253,11 +5280,11 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
                                         ; Also on `M-g n', `M-g M-n' and `C-x `'.
 
   ;; Display the previous compiler error message.
-  (global-set-key (kbd "<S-f10>") #'previous-error) ; C-M-up in IntelliJ IDEA.
+  (global-set-key (kbd "S-<f10>") #'previous-error) ; C-M-up in IntelliJ IDEA.
                                         ; Also on `M-g p' and `M-g M-p'.
 
   ;; Display the first compiler error message.
-  (global-set-key (kbd "<C-f10>") #'first-error)
+  (global-set-key (kbd "C-<f10>") #'first-error)
 
   ;; ;; Prefer fringe.
   ;; (setq next-error-highlight 'fringe-arrow)
@@ -5627,7 +5654,7 @@ a clean buffer we're an order of magnitude laxer about checking."
       (vc-dir directory)))
 
   ;; VC status without asking for a directory.
-  (global-set-key (kbd "<C-f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
+  (global-set-key (kbd "C-<f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
 
   (add-hook 'vc-dir-mode-hook
             (lambda ()
@@ -6164,7 +6191,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     (message "[Disable Company.  Enable AC]")
     (sit-for 2)))
 
-(global-set-key (kbd "<M-f1>") #'toggle-auto-complete-company-modes)
+(global-set-key (kbd "M-<f1>") #'toggle-auto-complete-company-modes)
 
   ;; Modular text completion framework.
   (with-eval-after-load 'company-autoloads

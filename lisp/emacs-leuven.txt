@@ -437,6 +437,30 @@ Example usage:
          '(progn ,@body))))
 #+end_src
 
+#+begin_src emacs-lisp
+(defun eboost-define-key-if-free (keymap key command &optional scope)
+  "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
+KEYMAP may be the map itself or a symbol naming it.
+If already bound, emit a warning mentioning SCOPE (string)."
+  (let* ((map (if (keymapp keymap)
+                  keymap
+                (when (and (symbolp keymap) (boundp keymap))
+                  (symbol-value keymap))))
+         (existing-binding (and map (lookup-key map key))))
+    (cond
+     ((not map)
+      (display-warning 'eboost "Keymap not available (yet)" :warning))
+     ((or (null existing-binding) (numberp existing-binding))
+      (define-key map key command))
+     (t
+      (when init-file-debug
+        (display-warning 'eboost
+                         (format "Keybinding %s is already in use%s!"
+                                 (key-description key)
+                                 (if scope (format " in %s" scope) ""))
+                         :warning))))))
+#+end_src
+
 ** Creating and selecting buffers
 
 #+begin_src emacs-lisp
@@ -894,7 +918,7 @@ like this into your configuration file:
   (global-unset-key (kbd "C-z"))
 
   ;; Quit with Alt + F4.
-  (global-set-key (kbd "<M-f4>") #'save-buffers-kill-terminal)
+  (global-set-key (kbd "M-<f4>") #'save-buffers-kill-terminal)
 
 )                                       ; Chapter 6 ends here.
 #+end_src
@@ -973,7 +997,7 @@ Shortcuts:
 | Command | Emacs | Emacs-Leuven   |
 |---------+-------+----------------|
 | Undo    | C-/   | <f11>          |
-| Redo    |       | C-S-z, <S-f11> |
+| Redo    |       | C-S-z, S-<f11> |
 
 #+begin_src emacs-lisp
 ;;** 7.4 (info "(emacs)Basic Undo")ing Changes
@@ -1007,7 +1031,7 @@ Shortcuts:
 
     ;; Keybindings for redo.
     (global-set-key (kbd "C-S-z")   #'undo-tree-redo)
-    (global-set-key (kbd "<S-f11>") #'undo-tree-redo))
+    (global-set-key (kbd "S-<f11>") #'undo-tree-redo))
 #+end_src
 
 Visual feedback on some operations (~undo~, ~yank~, etc.).
@@ -1250,7 +1274,7 @@ In a manual, these key bindings will make your life easier:
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
   ;; have documentation in Info).
-  ;; (global-set-key (kbd "<C-f1>") #'info-lookup-symbol)
+  ;; (global-set-key (kbd "C-<f1>") #'info-lookup-symbol)
 #+end_src
 
 When Info is called, the variable ~Info-directory-list~ is populated from:
@@ -1315,7 +1339,7 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
 
 #+begin_src emacs-lisp
   ;; Get a Unix manual page of the item under point.
-  ;; (global-set-key (kbd "<S-f1>") #'man-follow)
+  ;; (global-set-key (kbd "S-<f1>") #'man-follow)
 
   (with-eval-after-load 'man
     ;; Make the manpage the current buffer in the current window.
@@ -2067,16 +2091,16 @@ Annotating bookmarks.
                (locate-library "dired-aux"))
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
-      (global-set-key (kbd "<C-f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
+      (global-set-key (kbd "C-<f2>") #'bmkp-toggle-autonamed-bookmark-set/delete)
 
-      (global-set-key (kbd "<S-f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
+      (global-set-key (kbd "S-<f2>") #'bmkp-next-bookmark-this-file/buffer-repeat)
 
       ;; Delete all ANONYMOUS bookmarks in a buffer.
-      (global-set-key (kbd "<C-S-f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
+      (global-set-key (kbd "C-S-<f2>") #'bmkp-delete-all-autonamed-for-this-buffer))
 
     (when (fboundp 'helm-bookmarks)
       ;; View all bookmarks.
-      (global-set-key (kbd "<M-f2>") #'helm-bookmarks))
+      (global-set-key (kbd "M-<f2>") #'helm-bookmarks))
 
     (with-eval-after-load 'bookmark+
 
@@ -2508,20 +2532,20 @@ such a background behind or underneath the text.  Think of a marker pen
 ;;   ;; (global-set-key (kbd "<f3>")     #'hl-find-next-thing)
 ;;   ;;
 ;;   ;; ;; Find Previous / Move to Previous Occurrence.
-;;   ;; (global-set-key (kbd "<S-f3>")   #'hl-find-prev-thing)
+;;   ;; (global-set-key (kbd "S-<f3>")   #'hl-find-prev-thing)
 ;;   ;;
 ;;   ;; ;; Find Word at Caret.
-;;   ;; (global-set-key (kbd "<C-f3>")   #'hl-highlight-thingatpt-global)
+;;   ;; (global-set-key (kbd "C-<f3>")   #'hl-highlight-thingatpt-global)
 ;;   ;;
 ;;   ;; ;; Highlight Usages in File.
-;;   ;; (global-set-key (kbd "<C-S-f7>") #'hl-highlight-thingatpt-global)
+;;   ;; (global-set-key (kbd "C-S-<f7>") #'hl-highlight-thingatpt-global)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
 ;; (when (eboost-try-require 'symbol-overlay)
-;;   (global-set-key (kbd "<C-S-f7>") 'symbol-overlay-put)
+;;   (global-set-key (kbd "C-S-<f7>") 'symbol-overlay-put)
 ;;   (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
-;;   (global-set-key (kbd "<S-f3>") 'symbol-overlay-switch-backward)
+;;   (global-set-key (kbd "S-<f3>") 'symbol-overlay-switch-backward)
 ;;   (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
 ;;   (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all))
 #+end_src
@@ -3302,7 +3326,7 @@ the search count periodically.
               (switch-to-buffer "*Occur*"))
           (message "[No symbol at point]"))))
 
-    (global-set-key (kbd "<C-M-f7>") 'lvn-find-usages)
+    (global-set-key (kbd "C-M-<f7>") 'lvn-find-usages)
 #+end_src
 
 ** Regexp Search
@@ -3723,26 +3747,26 @@ If you want to repeat forever or until error, type ~C-u 0 <F8>~.
     (interactive)
     (if defining-kbd-macro
         (progn
-          (global-set-key (kbd "<S-f8>") #'lvn-kmacro-turn-on-recording)
+          (global-set-key (kbd "S-<f8>") #'lvn-kmacro-turn-on-recording)
           (kmacro-end-macro nil))
       (progn
-        (global-set-key (kbd "<S-f8>") #'lvn-kmacro-turn-off-recording)
+        (global-set-key (kbd "S-<f8>") #'lvn-kmacro-turn-off-recording)
         (kmacro-start-macro nil))))
 
   (defun lvn-kmacro-turn-on-recording ()
     "Start recording a keyboard macro."
     (interactive)
-    (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
+    (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
     (kmacro-start-macro nil))
 
   (defun lvn-kmacro-turn-off-recording ()
     "Stop recording a keyboard macro."
     (interactive)
-    (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
+    (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
     (kmacro-end-macro nil))
 
   ;; Start/stop recording a keyboard macro.
-  (global-set-key (kbd "<S-f8>") #'lvn-kmacro-toggle-recording)
+  (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
 
   ;; Execute the most recent keyboard macro.
   (global-set-key (kbd "<f8>") #'kmacro-call-macro)
@@ -3770,7 +3794,7 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
   (leuven--section "17.5 (emacs)Name and Save Keyboard Macros")
 
   ;; Assign a name to the last keyboard macro defined.
-  (global-set-key (kbd "<C-f8>") #'kmacro-name-last-macro)
+  (global-set-key (kbd "C-<f8>") #'kmacro-name-last-macro)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -4932,7 +4956,7 @@ to happen.  Now look for substitute for ~TAB~.  Something not ~TAB~ can be ~C-z~
 ~C-TAB~, and ~SPC~.
 
 #+begin_src emacs-lisp :tangle no
-(define-key helm-find-files-map (kbd "<C-tab>") #'helm-select-action)
+(define-key helm-find-files-map (kbd "C-<tab>") #'helm-select-action)
 (define-key helm-find-files-map (kbd "<SPC>")   #'helm-select-action)
 (define-key helm-find-files-map (kbd "<RET>")   #'helm-confirm-and-exit-minibuffer)
 (define-key helm-find-files-map (kbd "^")       #'helm-find-files-up-one-level)
@@ -5068,9 +5092,14 @@ in the current buffer."
              (helm-semantic-or-imenu arg))) ; More generic than `helm-imenu'.
       )
 
-    (global-set-key (kbd "<C-f12>") #'lvn-generic-imenu) ; Awesome.
-    ;; (global-set-key (kbd "<f4>") #'lvn-generic-imenu)
-                                        ; And `C-c =' (like in RefTeX)?
+    (eboost-define-key-if-free 'global-map
+                               (kbd "C-<f12>")
+                               #'lvn-generic-imenu
+                               "global map")
+    ;; (eboost-define-key-if-free 'global-map
+    ;;                            (kbd "<f4>")
+    ;;                            #'lvn-generic-imenu
+    ;;                            "global map")
 
     (when (fboundp 'helm-org-agenda-files-headings)
       (global-set-key (kbd "C-c o") #'helm-org-agenda-files-headings))
@@ -5453,7 +5482,7 @@ you were.
 
     ;; Browse files and see status of project with its VCS.
     (global-set-key (kbd "C-x g") #'helm-browse-project) ; uses `helm-ls-git'.
-    (global-set-key (kbd "<S-f3>") #'helm-browse-project))
+    (global-set-key (kbd "S-<f3>") #'helm-browse-project))
 #+end_src
 
 **** Imenu
@@ -5688,7 +5717,7 @@ Get EXIF data with ~image-dired-get-exif-data~.
     (kill-buffer nil))
 
   ;; Key binding.
-  (global-set-key (kbd "<S-f12>") #'lvn-kill-current-buffer-no-confirm)
+  (global-set-key (kbd "S-<f12>") #'lvn-kill-current-buffer-no-confirm)
 #+end_src
 
 ** Operating on Several Buffers
@@ -5699,7 +5728,7 @@ Get EXIF data with ~image-dired-get-exif-data~.
   (leuven--section "19.5 (emacs)Several Buffers")
 
   ;; Put the current buffer at the end of the list of all buffers.
-  (global-set-key (kbd "<M-f12>") #'bury-buffer)
+  (global-set-key (kbd "M-<f12>") #'bury-buffer)
 #+end_src
 
 ** Convenience Features and Customization of Buffer Handling
@@ -6023,7 +6052,7 @@ one.
   ;; (modify-all-frames-parameters '((fullscreen . maximized)))
 
   ;; Full screen.
-  (global-set-key (kbd "<C-S-f12>") #'toggle-frame-fullscreen)
+  (global-set-key (kbd "C-S-<f12>") #'toggle-frame-fullscreen)
 #+end_src
 
 ** Speedbar Frames
@@ -8067,7 +8096,7 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
     ;; Add Imenu to the menu bar in any mode that supports it.
     (add-hook 'font-lock-mode-hook #'lvn--try-to-add-imenu)
 
-    ;; Bind Imenu to the mouse.
+    ;; Bind Imenu to the Shift + Right Mouse Button.
     (global-set-key [S-mouse-3] #'imenu)
 #+end_src
 
@@ -9704,7 +9733,7 @@ Make the compilation window go away -- if there were no compilation errors:
     (save-some-buffers (not compilation-ask-about-save) nil)
     (compile-internal make-clean-command "No more errors"))
 
-  (global-set-key (kbd "<S-f9>") #'make-clean)
+  (global-set-key (kbd "S-<f9>") #'make-clean)
 #+end_src
 
 You're debugging Bash code?  I normally use =mode-compile.el= for this.
@@ -9746,11 +9775,11 @@ variable ~next-error-highlight~.
                                         ; Also on `M-g n', `M-g M-n' and `C-x `'.
 
   ;; Display the previous compiler error message.
-  (global-set-key (kbd "<S-f10>") #'previous-error) ; C-M-up in IntelliJ IDEA.
+  (global-set-key (kbd "S-<f10>") #'previous-error) ; C-M-up in IntelliJ IDEA.
                                         ; Also on `M-g p' and `M-g M-p'.
 
   ;; Display the first compiler error message.
-  (global-set-key (kbd "<C-f10>") #'first-error)
+  (global-set-key (kbd "C-<f10>") #'first-error)
 
   ;; ;; Prefer fringe.
   ;; (setq next-error-highlight 'fringe-arrow)
@@ -10086,13 +10115,6 @@ mode line on bottom.  Make it blue!
 
     ;; Enable Gdb-Many-Windows mode.
     (setq gdb-many-windows t))          ; The only important parameter for GDB.
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-  (define-key jde-mode-map [f8]   'jdibug-step-over)
-  (define-key jde-mode-map [M-f8] 'jdibug-step-into)
-  (define-key jde-mode-map [f7]   'jdibug-step-out)
-  (define-key jde-mode-map [M-f7] 'jdibug-resume)
 #+end_src
 
 Highlight the current GUD line in GDB/Emacs:
@@ -10546,7 +10568,7 @@ Shortcuts in the popup (once displayed):
       (vc-dir directory)))
 
   ;; VC status without asking for a directory.
-  (global-set-key (kbd "<C-f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
+  (global-set-key (kbd "C-<f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
 
   (add-hook 'vc-dir-mode-hook
             (lambda ()
@@ -12011,7 +12033,7 @@ The best alternative to Auto-Complete seems to be Company mode.
     (message "[Disable Company.  Enable AC]")
     (sit-for 2)))
 
-(global-set-key (kbd "<M-f1>") #'toggle-auto-complete-company-modes)
+(global-set-key (kbd "M-<f1>") #'toggle-auto-complete-company-modes)
 #+end_src
 
 Besides that the maintainer of company-mode is incredibly competent and
