@@ -25,6 +25,82 @@ References:
 - [[YouTube:H8jvhz0CGzU][Boost your Emacs productivity with ChatGPT and Copilot]]
 - https://www.armindarvish.com/post/use_emacs_as_a_chatgpt_client/
 
+** Sort out
+
+(gptel-make-anthropic "Claude"
+  :stream t
+  :key (getenv "ANTHROPIC_API_KEY"))
+
+(gptel-make-preset 'coding
+  :description "Preset pour coder"
+  :backend "ChatGPT"
+  :model 'gpt-4.1
+  :system "Vous êtes un assistant expert en programmation. Fournissez des solutions de code précises et bien commentées."
+  :tools '("read_buffer" "modify_buffer")
+  :temperature 0.7)
+
+(gptel-make-preset 'proofreading
+  :description "Preset pour relecture"
+  :backend "Claude"
+  :model 'claude-3-7-sonnet-20250219
+  :system "Corrigez la grammaire et améliorez la clarté du texte."
+  :tools '("spell_check" "grammar_check"))
+
+Fonctions Utiles
+gptel-send : Envoie une requête à l'LLM. Avec un préfixe (C-u M-x gptel-send), accédez au menu transient pour ajuster les paramètres (modèle, backend, température, etc.).
+gptel-rewrite : Réécrit ou refactorise une région sélectionnée (idéal pour le code ou la prose).
+gptel-add : Ajoute du contexte (région, buffer, ou fichier) à la requête.
+gptel-add-file : Inclut un fichier (texte ou média) dans la requête. Activez gptel-track-media pour inclure des médias globalement :
+emacs-lisp(setq gptel-track-media t)
+gptel-org-set-topic : Limite le contexte à une section Org.
+gptel-org-set-properties : Définit des propriétés Org pour des configurations spécifiques par section, par exemple :
+
+(gptel-make-tool "web_search"
+  :description "Effectue une recherche web"
+  :function (lambda (query) (my-web-search-function query)))
+
+Les raccourcis associés incluent :
+SPC $ g g : Démarrer une session GPTel.
+SPC $ g s : Envoyer un message.
+SPC $ g m : Ouvrir le menu transient.
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
+  (exec-path-from-shell-copy-env "OPENAI_API_KEY"))
+
+(use-package gptel
+  :ensure t
+  :config
+  (setq gptel-api-key (getenv "OPENAI_API_KEY")
+        gptel-default-mode 'org-mode
+        gptel-log-level 'info
+        gptel-org-branching-context t
+        gptel-curl-file-size-threshold 100000
+        gptel-track-media t)
+  ;; Backend Claude
+  (gptel-make-anthropic "Claude"
+    :stream t
+    :key (getenv "ANTHROPIC_API_KEY"))
+  ;; Preset pour coding
+  (gptel-make-preset 'coding
+    :description "Preset pour coder"
+    :backend "ChatGPT"
+    :model 'gpt-4.1
+    :system "Vous êtes un assistant expert en programmation."
+    :tools '("read_buffer" "modify_buffer"))
+  ;; Auto-formatage des réponses
+  (add-hook 'gptel-post-response-hook
+            (lambda ()
+              (when (eq major-mode 'gptel-mode)
+                (fill-paragraph)))))
+
+;; Raccourcis personnalisés
+(global-set-key (kbd "C-c g") 'gptel-send)
+(global-set-key (kbd "C-c r") 'gptel-rewrite)
+
 * Intro
 
 #+begin_src emacs-lisp
@@ -317,6 +393,61 @@ How to use them: =C-u M-x gptel-send=.
 
 *** Custom functions
 
+**** Templates with placeholders {{Var}} or {{Var|defaut}}
+
+#+begin_src emacs-lisp :tangle no
+(require 'subr-x)
+
+(defvar my/gptel-templates
+  '(("facecam-30s"
+     . "Rôle: maître des scripts viraux. Niche: {{NICHE}} (audience: {{AUDIENCE|débutants}}).
+Écris un script face-cam de {{DUREE|35}}s sur: {{SUJET}}.
+Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'abonner.")
+    ("rewrite-friendly"
+     . "Réécris ce texte pour {{OBJECTIF|clarifier et dynamiser}}, ton {{TON|amical et pro}}:\n\n{{TEXTE}}"))
+  "Alist (NAME . TEMPLATE). Placeholders: {{Nom}} ou {{Nom|valeur-par-défaut}}.")
+
+(defun my/render-template-placeholders (template)
+  "Rend `TEMPLATE' en remplaçant {{Var}} ou {{Var|defaut}} par des saisies interactives."
+  (let ((s template)
+        (re "{{\\([^}|]+\\)\\(?:|\\([^}]*\\)\\)?}}")
+        (seen (make-hash-table :test 'equal)))
+    (while (string-match re s)
+      (let* ((var  (string-trim (match-string 1 s)))
+             (def  (or (match-string 2 s) ""))
+             (prev (gethash var seen))
+             (val  (or prev
+                       (read-string (format "%s%s: " var (if (string-empty-p def) "" (format " (def: %s)" def)))
+                                    nil nil def))))
+        (puthash var val seen)
+        (setq s (replace-match (regexp-quote val) t t s))))
+    s))
+
+(defun my/gptel--send (prompt)
+  "Envoie PROMPT via gptel si disponible, sinon l'insère et le copie."
+  (cond
+   ;; gptel >= 0.9 : gptel-request est dispo
+   ((fboundp 'gptel-request)
+    (gptel-request prompt :stream t)
+    (message "gptel: requête envoyée."))
+   ;; fallback : insérer dans le buffer + copier
+   (t
+    (insert prompt)
+    (kill-new prompt)
+    (message "gptel non trouvé : prompt inséré et copié (yank dans un buffer gptel)."))))
+
+(defun my/gptel-template-run (name)
+  "Choisir un template par NAME, remplir les placeholders, et envoyer via gptel."
+  (interactive
+   (list (completing-read "Template: " (mapcar #'car my/gptel-templates) nil t)))
+  (let* ((tmpl (alist-get name my/gptel-templates nil nil #'string=)))
+    (unless tmpl (user-error "Template introuvable: %s" name))
+    (my/gptel--send (my/render-template-placeholders tmpl))))
+
+;; Raccourcis pratiques
+(global-set-key (kbd "C-c t g") #'my/gptel-template-run)
+#+end_src
+
 **** Intégration Org-mode
 
 #+begin_src emacs-lisp
@@ -426,6 +557,143 @@ The result is shown in *Commit Message* and copied to the kill ring."
                              (kbd "C-x v w")
                              #'eboost-gptel-write-commit-message
                              "global map")
+#+end_src
+
+**** Generate unit tests for current function
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-generate-contextual-test ()
+    "Generate a unit test for the current function by sending its source code to GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Generate a unit test for the following function:\n\n%s"
+                           function-source)))
+      (gptel-request prompt)))
+#+end_src
+
+**** Refactor current function with suggestions
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-refactor-function ()
+    "Refactor the current function with suggestions from GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Suggest a refactored, cleaner version of this function:\n\n%s\n\nProvide the refactored code and explain the improvements." function-source)))
+      (gptel-request prompt)))
+#+end_src
+
+**** Generate function documentation
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-generate-docstring ()
+    "Generate a docstring for the current function using GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Generate a detailed docstring for the following function:\n\n%s\n\nFollow Emacs docstring conventions." function-source)))
+      (gptel-request prompt)))
+#+end_src
+
+**** Debug current function
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-debug-function ()
+    "Analyze the current function for bugs or improvements using GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Analyze this function for potential bugs or improvements:\n\n%s\n\nProvide a list of issues and suggested fixes." function-source)))
+      (gptel-request prompt)))
+#+end_src
+
+**** Generate example usage for current function
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-generate-example-usage ()
+    "Generate example usage for the current function using GPTel."
+    (interactive)
+    (let* ((function-name (which-function))
+           (function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Provide example usage code for the following function named %s:\n\n%s\n\nInclude a brief explanation of each example."
+                           function-name function-source)))
+      (gptel-request prompt)))
+#+end_src
+
+**** Generate function from specification
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-generate-function-from-spec ()
+    "Generate an Emacs Lisp function from a user-provided specification using GPTel."
+    (interactive)
+    (let ((spec (read-string "Enter the function specification (e.g., 'Write a function to reverse a string'): ")))
+      (when spec
+        (let ((prompt (format "Generate an Emacs Lisp function based on this specification: %s\n\nProvide the function code and a brief explanation of how it works."
+                              spec)))
+          (gptel-request prompt)))))
+#+end_src
+
+**** Suggest performance optimizations for current function
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-optimize-function-performance ()
+    "Suggest performance optimizations for the current function using GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Analyze this Emacs Lisp function for performance bottlenecks:\n\n%s\n\nSuggest optimizations with code examples and explain why they improve performance." function-source)))
+      (gptel-request prompt)))
+#+end_src
+
+**** Generate code review comments for current function
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-code-review-function ()
+    "Perform a code review on the current function using GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Perform a code review for this Emacs Lisp function:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement." function-source)))
+      (gptel-request prompt)))
+#+end_src
+
+**** Generate companion function
+
+#+begin_src emacs-lisp
+  (defun eboost-ai-generate-companion-function ()
+    "Generate a companion function for the current function using GPTel."
+    (interactive)
+    (let* ((function-name (which-function))
+           (function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Generate a companion function for this Emacs Lisp function named %s:\n\n%s\n\nThe companion could be an inverse operation, a helper function, or something that logically complements it. Provide the code and explain its purpose." function-name function-source)))
+      (gptel-request prompt)))
 #+end_src
 
 *** Keybindings

@@ -309,6 +309,107 @@ The result is shown in *Commit Message* and copied to the kill ring."
                              #'eboost-gptel-write-commit-message
                              "global map")
 
+  (defun eboost-ai-generate-contextual-test ()
+    "Generate a unit test for the current function by sending its source code to GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Generate a unit test for the following function:\n\n%s"
+                           function-source)))
+      (gptel-request prompt)))
+
+  (defun eboost-ai-refactor-function ()
+    "Refactor the current function with suggestions from GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Suggest a refactored, cleaner version of this function:\n\n%s\n\nProvide the refactored code and explain the improvements." function-source)))
+      (gptel-request prompt)))
+
+  (defun eboost-ai-generate-docstring ()
+    "Generate a docstring for the current function using GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Generate a detailed docstring for the following function:\n\n%s\n\nFollow Emacs docstring conventions." function-source)))
+      (gptel-request prompt)))
+
+  (defun eboost-ai-debug-function ()
+    "Analyze the current function for bugs or improvements using GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Analyze this function for potential bugs or improvements:\n\n%s\n\nProvide a list of issues and suggested fixes." function-source)))
+      (gptel-request prompt)))
+
+  (defun eboost-ai-generate-example-usage ()
+    "Generate example usage for the current function using GPTel."
+    (interactive)
+    (let* ((function-name (which-function))
+           (function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Provide example usage code for the following function named %s:\n\n%s\n\nInclude a brief explanation of each example."
+                           function-name function-source)))
+      (gptel-request prompt)))
+
+  (defun eboost-ai-generate-function-from-spec ()
+    "Generate an Emacs Lisp function from a user-provided specification using GPTel."
+    (interactive)
+    (let ((spec (read-string "Enter the function specification (e.g., 'Write a function to reverse a string'): ")))
+      (when spec
+        (let ((prompt (format "Generate an Emacs Lisp function based on this specification: %s\n\nProvide the function code and a brief explanation of how it works."
+                              spec)))
+          (gptel-request prompt)))))
+
+  (defun eboost-ai-optimize-function-performance ()
+    "Suggest performance optimizations for the current function using GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Analyze this Emacs Lisp function for performance bottlenecks:\n\n%s\n\nSuggest optimizations with code examples and explain why they improve performance." function-source)))
+      (gptel-request prompt)))
+
+  (defun eboost-ai-code-review-function ()
+    "Perform a code review on the current function using GPTel."
+    (interactive)
+    (let* ((function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Perform a code review for this Emacs Lisp function:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement." function-source)))
+      (gptel-request prompt)))
+
+  (defun eboost-ai-generate-companion-function ()
+    "Generate a companion function for the current function using GPTel."
+    (interactive)
+    (let* ((function-name (which-function))
+           (function-source (save-excursion
+                              (beginning-of-defun)
+                              (buffer-substring-no-properties
+                               (point)
+                               (progn (end-of-defun) (point)))))
+           (prompt (format "Generate a companion function for this Emacs Lisp function named %s:\n\n%s\n\nThe companion could be an inverse operation, a helper function, or something that logically complements it. Provide the code and explain its purpose." function-name function-source)))
+      (gptel-request prompt)))
+
   ;; Unbind `C-c RET' in Org mode.
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-c RET") nil))
