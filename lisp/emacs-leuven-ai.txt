@@ -12,6 +12,9 @@
 
 #+SETUPFILE: ~/org/theme-readtheorg.setup
 
+#+LINK: GitHub https://github.com/
+#+LINK: YouTube https://www.youtube.com/watch?v=
+
 * Tasks
 
 ** TODO Research ChatGPT integration with Emacs
@@ -198,31 +201,28 @@ Usage:
 - ~gptel-org-set-properties~
 - ~gptel-org-set-topic~
 - ~gptel-rewrite~
-- ~gptel-rewrite~
 
 Inside a gptel buffer:
 
 - ~C-u C-x RET~ or ~gptel-menu~ → Menu
 
-*** Basic configuration
+*** Core GPTel settings
 
 #+begin_src emacs-lisp
 ;; Load gptel.
 (when (eboost-try-require 'gptel)
-#+end_src
 
-*** Core GPTel settings
-
-#+begin_src emacs-lisp
   ;; Set OpenAI API key.
   (when (bound-and-true-p eboost-openai-api-key)
     (setq gptel-api-key eboost-openai-api-key))
+
+  (setq gptel-model 'o4-mini)
 
   ;; Controls randomness (lower = more deterministic).
   (setq gptel-temperature 0.7)
 
   ;; Limit response length.
-  (setq gptel-max-tokens 1000)
+  (setq gptel-max-tokens 32000)
 
   ;; Set default mode for response buffer.
   (setq gptel-default-mode 'org-mode)
@@ -275,11 +275,11 @@ Inside a gptel buffer:
     (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
 #+end_src
 
-*** Directives
+*** Directives (system prompts)
 
 *************** TODO Add directives with a key like in demo
-https://www.youtube.com/watch?v=yAL0cw1ePqw at 05:35
-(Also in demo of Karthink, see https://www.youtube.com/watch?v=bsRnh_brggM)
+[[YouTube:yAL0cw1ePqw]] at 05:35
+(Also in demo of Karthink, see [[YouTube:bsRnh_brggM]])
 *************** END
 
 #+begin_src emacs-lisp
@@ -324,14 +324,6 @@ Existing entries with the same NAME are overwritten."
       (error (message "[Error reading directives: %s]" (error-message-string err))))
   (message "[Directory %s does not exist.]" eboost-gptel-directives-directory))
 #+end_src
-
-;; Use the system prompt builder function
-(let ((build-directives-fun "~/projects/ai/AIPIHKAL/gptel-build-directives.el"))
-  (when (f-exists-p build-directives-fun)
-    (load build-directives-fun)
-    ;; (custom-set-variables '(gptel-directives
-    (setq gptel-directives (gjg/gptel-build-directives "~/projects/ai/AIPIHKAL/system-prompts/")
-          gptel-system-message (alist-get 'default gptel-directives))))
 
 *** Presets configuration
 
@@ -520,12 +512,14 @@ The result is shown in *Commit Message* and copied to the kill ring."
                         (buffer-substring-no-properties (point-min) (point-max))))
            (prompt "Write a Git commit message for the following diff:\n\n"))
       ;; Notify user that the process has started.
-      (message "[Generating commit message...]")
+      (message "[Writing commit message...]")
       ;; Create and clear the buffer initially.
       (with-current-buffer (get-buffer-create "*Commit Message*")
         (erase-buffer))
       ;; Send request without menu.
-      (gptel-request diff-text :system prompt
+      (gptel-request
+          diff-text
+        :system prompt
         :callback (lambda (response info)
                     (if (stringp response)
                         (let ((output-buffer (get-buffer-create "*Commit Message*")))
@@ -543,9 +537,9 @@ The result is shown in *Commit Message* and copied to the kill ring."
                               (kill-new msg) ; Add to kill ring.
                               (insert msg)
                               (message "[Commit message copied to kill ring.]"))
-                          (display-buffer output-buffer)))
-                      (message "[Failed to generate commit message: %s.]"
-                               (plist-get info :status)))))))
+                            (pop-to-buffer output-buffer)))
+                      (error (message "[Failed to generate commit message: %s.]"
+                               (plist-get info :status))))))))
 
   ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
@@ -706,11 +700,11 @@ The result is shown in *Commit Message* and copied to the kill ring."
       (message "Sending code for AI code review...")
       (condition-case err
           (gptel-request
-           prompt
-           :buffer output-buffer
-           :callback
-           (lambda (response info)
-             (let ((buf (or (plist-get info :buffer) output-buffer)))
+              prompt
+            :buffer output-buffer
+            :callback
+            (lambda (response info)
+              (let ((buf (or (plist-get info :buffer) output-buffer)))
                (with-current-buffer buf
                  (erase-buffer)
                  (insert (or response "No response received from GPTel"))

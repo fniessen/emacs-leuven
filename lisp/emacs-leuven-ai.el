@@ -72,11 +72,13 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (when (bound-and-true-p eboost-openai-api-key)
     (setq gptel-api-key eboost-openai-api-key))
 
+  (setq gptel-model 'o4-mini)
+
   ;; Controls randomness (lower = more deterministic).
   (setq gptel-temperature 0.7)
 
   ;; Limit response length.
-  (setq gptel-max-tokens 1000)
+  (setq gptel-max-tokens 32000)
 
   ;; Set default mode for response buffer.
   (setq gptel-default-mode 'org-mode)
@@ -271,12 +273,14 @@ The result is shown in *Commit Message* and copied to the kill ring."
                         (buffer-substring-no-properties (point-min) (point-max))))
            (prompt "Write a Git commit message for the following diff:\n\n"))
       ;; Notify user that the process has started.
-      (message "[Generating commit message...]")
+      (message "[Writing commit message...]")
       ;; Create and clear the buffer initially.
       (with-current-buffer (get-buffer-create "*Commit Message*")
         (erase-buffer))
       ;; Send request without menu.
-      (gptel-request diff-text :system prompt
+      (gptel-request
+          diff-text
+        :system prompt
         :callback (lambda (response info)
                     (if (stringp response)
                         (let ((output-buffer (get-buffer-create "*Commit Message*")))
@@ -294,9 +298,9 @@ The result is shown in *Commit Message* and copied to the kill ring."
                               (kill-new msg) ; Add to kill ring.
                               (insert msg)
                               (message "[Commit message copied to kill ring.]"))
-                          (display-buffer output-buffer)))
-                      (message "[Failed to generate commit message: %s.]"
-                               (plist-get info :status)))))))
+                            (pop-to-buffer output-buffer)))
+                      (error (message "[Failed to generate commit message: %s.]"
+                               (plist-get info :status))))))))
 
   ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
@@ -425,11 +429,11 @@ The result is shown in *Commit Message* and copied to the kill ring."
       (message "Sending code for AI code review...")
       (condition-case err
           (gptel-request
-           prompt
-           :buffer output-buffer
-           :callback
-           (lambda (response info)
-             (let ((buf (or (plist-get info :buffer) output-buffer)))
+              prompt
+            :buffer output-buffer
+            :callback
+            (lambda (response info)
+              (let ((buf (or (plist-get info :buffer) output-buffer)))
                (with-current-buffer buf
                  (erase-buffer)
                  (insert (or response "No response received from GPTel"))
