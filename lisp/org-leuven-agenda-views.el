@@ -19,11 +19,11 @@
 
  ;; Display the hotlist.
  (global-set-key
-  (kbd "<S-f7>") (lambda () (interactive) (org-agenda nil "fh")))
+  (kbd "S-<f7>") (lambda () (interactive) (org-agenda nil "fh")))
 
  ;; Display calendar for 7 days.
  (global-set-key
-  (kbd "<C-f7>") (lambda () (interactive) (org-agenda nil "rc7")))
+  (kbd "C-<f7>") (lambda () (interactive) (org-agenda nil "rc7")))
 
 (defconst leuven-org-completed-date-regexp
   (concat " \\("
@@ -760,8 +760,8 @@ N should be a non-negative integer representing the number of days."
             (message "[%s]" org-agenda-overriding-header)
             (org-todo-list))))))))
 
-;; Bind to <M-S-f6>.
-(global-set-key (kbd "<M-S-f6>") #'lvn-org-git-root-todo)
+;; Bind to M-S-<f6>.
+(global-set-key (kbd "M-S-<f6>") #'lvn-org-git-root-todo)
 
 (defun lvn-org-agenda-for-current-buffer (&optional arg)
   "Open the Org mode agenda with entries restricted based on ARG.
@@ -821,9 +821,9 @@ use the project's root directory instead of the current directory."
   (interactive)
   (lvn-org-agenda-for-current-buffer '(16)))
 
-(global-set-key (kbd "<S-f6>") #'lvn-open-agenda-current-buffer)            ; Current buffer only.
-(global-set-key (kbd "<C-f6>") #'lvn-open-agenda-buffer-and-org-files)      ; + .org files.
-(global-set-key (kbd "<M-f6>") #'lvn-open-agenda-buffer-org-and-txt-files)  ; + .org + .txt files.
+(global-set-key (kbd "S-<f6>") #'lvn-open-agenda-current-buffer)            ; Current buffer only.
+(global-set-key (kbd "C-<f6>") #'lvn-open-agenda-buffer-and-org-files)      ; + .org files.
+(global-set-key (kbd "M-<f6>") #'lvn-open-agenda-buffer-org-and-txt-files)  ; + .org + .txt files.
 
 (add-to-list 'org-agenda-custom-commands
              `("d" "Dashboard" ; Shows all tasks...
