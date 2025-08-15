@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250815.1202>
+;; Version: <20250815.1241>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example.  Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250815.1202>"
+(defconst eboost-version "<20250815.1241>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2309,21 +2309,29 @@ After initiating the grep search, the isearch is aborted."
   ;; (setq auto-revert-check-vc-info t)
 
   ;; Sync buffer with disk and clear specific highlights.
-  (defun lvn-sync-buffer-and-clear-overlays ()
+  (defun eboost-sync-buffer-and-clear-overlays ()
     "Revert buffer from disk and remove specified overlays in visible area."
     (interactive)
-    (revert-buffer t t) ;; Ignore auto-save and confirm prompts.
+    (condition-case err
+        (revert-buffer t t)  ; Ignore auto-save and confirm prompts.
+      (error (message "[Error while synchronizing the buffer: %s]" err)))
     (dolist (ov (overlays-in (window-start) (window-end)))
-      (when (memq (overlay-get ov 'face)
-                  '(recover-this-file
-                    highlight-changes
-                    highlight-changes-delete
-                    org-block-executing))
-        (delete-overlay ov)))
-    (message "[Buffer synced with disk]"))
+      (when (overlayp ov)
+        (when (member (overlay-get ov 'face)
+                      '(ediff-even-diff-A ediff-even-diff-B
+                        ediff-odd-diff-A ediff-odd-diff-B
+                        highlight-changes
+                        highlight-changes-delete
+                        org-block-executing
+                        recover-this-file))
+          (delete-overlay ov))))
+    (message "[Buffer synchronized with disk and overlays removed]"))
 
-  ;; Bind to C-S-y globally.
-  (global-set-key (kbd "C-S-y") #'lvn-sync-buffer-and-clear-overlays)
+  ;; Bind to `C-S-y' globally.
+  (eboost-define-key-if-free 'global-map
+                             (kbd "C-S-y")
+                             #'eboost-sync-buffer-and-clear-overlays
+                             "global map")
 
   (when (and (bound-and-true-p lvn--cygwin-p)
                                         ; Cygwin Emacs uses gfilenotify (based

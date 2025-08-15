@@ -4003,21 +4003,29 @@ Update time stamps (and copyright notice) automatically.
   ;; (setq auto-revert-check-vc-info t)
 
   ;; Sync buffer with disk and clear specific highlights.
-  (defun lvn-sync-buffer-and-clear-overlays ()
+  (defun eboost-sync-buffer-and-clear-overlays ()
     "Revert buffer from disk and remove specified overlays in visible area."
     (interactive)
-    (revert-buffer t t) ;; Ignore auto-save and confirm prompts.
+    (condition-case err
+        (revert-buffer t t)  ; Ignore auto-save and confirm prompts.
+      (error (message "[Error while synchronizing the buffer: %s]" err)))
     (dolist (ov (overlays-in (window-start) (window-end)))
-      (when (memq (overlay-get ov 'face)
-                  '(recover-this-file
-                    highlight-changes
-                    highlight-changes-delete
-                    org-block-executing))
-        (delete-overlay ov)))
-    (message "[Buffer synced with disk]"))
+      (when (overlayp ov)
+        (when (member (overlay-get ov 'face)
+                      '(ediff-even-diff-A ediff-even-diff-B
+                        ediff-odd-diff-A ediff-odd-diff-B
+                        highlight-changes
+                        highlight-changes-delete
+                        org-block-executing
+                        recover-this-file))
+          (delete-overlay ov))))
+    (message "[Buffer synchronized with disk and overlays removed]"))
 
-  ;; Bind to C-S-y globally.
-  (global-set-key (kbd "C-S-y") #'lvn-sync-buffer-and-clear-overlays)
+  ;; Bind to `C-S-y' globally.
+  (eboost-define-key-if-free 'global-map
+                             (kbd "C-S-y")
+                             #'eboost-sync-buffer-and-clear-overlays
+                             "global map")
 #+end_src
 
 Turn on auto-revert mode globally.
