@@ -154,16 +154,12 @@ Existing entries with the same NAME are overwritten."
                         :warning))))
   gptel-directives)
 
-(defun eboost-load-directives ()
- "Load directives from the specified directory."
- (if (file-directory-p eboost-gptel-directives-directory)
-     (condition-case err
-         (eboost--gptel-read-directives-from-directory eboost-gptel-directives-directory)
-       (error (message "[Error reading directives: %s]" (error-message-string err))))
-   (message "[Directory %s does not exist.]" eboost-gptel-directives-directory)))
-
-;; Automatic loading.
-(eboost-load-directives)
+;; Load directives from the specified directory.
+(if (file-directory-p eboost-gptel-directives-directory)
+    (condition-case err
+        (eboost--gptel-read-directives-from-directory eboost-gptel-directives-directory)
+      (error (message "[Error reading directives: %s]" (error-message-string err))))
+  (message "[Directory %s does not exist.]" eboost-gptel-directives-directory))
 
   ;; (gptel-make-preset 'gpt4coding2
   ;;   :backend "openai"
@@ -397,22 +393,25 @@ The result is shown in *Commit Message* and copied to the kill ring."
     "Perform a code review for this Emacs Lisp code:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement."
     "Prompt template for AI code review.")
 
-  (defun eboost-ai-code-review-function (&optional scope)
+  (defun eboost-ai-code-review-function (&optional arg)
     "Perform a code review on the current Emacs Lisp function, region, or buffer using GPTel.
-  SCOPE can be 'function (default), 'region, or 'buffer.
+  With no prefix argument, review the current function.
+  With one `C-u`, review the active region.
+  With two `C-u` (i.e., `C-u C-u`), review the entire buffer.
+
   The review output is sent to the *Code Review* buffer."
-    (interactive "P")
+    (interactive "p")
     (unless (fboundp 'gptel-request)
       (error "GPTel package is not loaded or configured"))
     (let* ((function-source
             (cond
-             ((eq scope 'buffer)
+             ((= arg 16) ;; C-u C-u
               (buffer-substring-no-properties (point-min) (point-max)))
-             ((eq scope 'region)
+             ((= arg 4)  ;; C-u
               (if (use-region-p)
                   (buffer-substring-no-properties (region-beginning) (region-end))
                 (error "No active region found")))
-             (t
+             (t ;; default: current defun
               (save-excursion
                 (unless (beginning-of-defun)
                   (error "No valid function found at point"))
