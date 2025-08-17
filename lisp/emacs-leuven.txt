@@ -50,7 +50,7 @@ Quotes:
 - "Show me your ~/.emacs and I will tell you who you are." \\
   -- Bogdan Maryniuk
 
-- "Emacs is like a laser guided missile.  It only has to be slightly
+- "Emacs is like a laser guided missile. It only has to be slightly
   mis-configured to ruin your whole day." \\
   -- Sean McGrath
 
@@ -135,7 +135,7 @@ Some things are "activated" by default in =lisp/loaddefs.el=.
 #+begin_src emacs-lisp
 ;;; Code:
 
-;; This file is only provided as an example.  Customize it to your own taste!
+;; This file is only provided as an example. Customize it to your own taste!
 #+end_src
 
 * Initialization
@@ -350,7 +350,7 @@ they become the first of the list)!
 Use ~M-x list-load-path-shadows RET~ to display a list of external Emacs Lisp
 files that shadow Emacs builtins (listing potential load path problems).
 
-Some Emacs modes are over 10K lines of code (e.g. ~nxml-mode~, ~CEDET~).  Many
+Some Emacs modes are over 10K lines of code (e.g. ~nxml-mode~, ~CEDET~). Many
 packages (e.g. ~Org~, ~Gnus~) make use of the ~autoload~ feature, so that you only
 need to load a single file that define autoloaded functions.
 
@@ -392,7 +392,7 @@ need to load a single file that define autoloaded functions.
 
 ~leuven-user-lisp-directory~ is there so that you have an easy way of installing
 *your own Emacs add-ons* (which may be specific to the version of Emacs you're
-running).  This keeps your local add-ons apart from distro supplied ones.
+running). This keeps your local add-ons apart from distro supplied ones.
 
 It also means you can do a complete re-install of Emacs (or even your Linux
 distro) without impacting on stuff you have added by hand.
@@ -636,7 +636,7 @@ HTTP frontends for the Emacs repositories:
 - http://elpa.gnu.org/packages/
 - http://melpa.org/packages/
 
-In Marmalade, the developers themselves do the packaging.  In MELPA, packages
+In Marmalade, the developers themselves do the packaging. In MELPA, packages
 are generated programmatically from upstream Git-based sources.
 
 #+begin_note
@@ -1151,17 +1151,17 @@ functions and documentation.
 XXX Since Emacs 25.1, C-h o = describe-symbol
 
 With all prefix keys, if you follow them with ~C-h~ (~h~ for help), a list of key
-bindings in that prefix map is displayed.  This is automatic and is one of the
+bindings in that prefix map is displayed. This is automatic and is one of the
 self-documenting features of Emacs.
 
-Try, for example ~C-x C-h~ or ~C-c C-x C-h~ to see what it does.  I do use it to
+Try, for example ~C-x C-h~ or ~C-c C-x C-h~ to see what it does. I do use it to
 remind myself of rarely used rectangle commands: ~C-x r C-h~.
 
 FYI, ~catman~ create the database files that are used by ~apropos~ or ~man -k~.
 
 Note about PHP documentation lookup -- PHP Mode has a nice feature to lookup the
 function's definition in PHP's manual in your web browser (~M-x
-php-search-documentation~ or ~C-c C-f~).  You can combine it with EWW to get the
+php-search-documentation~ or ~C-c C-f~). You can combine it with EWW to get the
 relevant manual page without leaving Emacs.
 
 *Close* the help buffer by pressing ~Q~.
@@ -1207,7 +1207,7 @@ RET~.
 
   ;; (defun apropos-user-option (string)
   ;;   "Like apropos, but lists only symbols that are names of user
-  ;; modifiable variables.  Argument REGEXP is a regular expression.
+  ;; modifiable variables. Argument REGEXP is a regular expression.
   ;;    Returns a list of symbols, and documentation found"
   ;;   (interactive "sVariable apropos (regexp): ")
   ;;   (let ((message
@@ -1398,7 +1398,7 @@ Instead of setting the *mark* in order to operate on a region, you can also type
      and
 
 - ~C-u C-SPC~ ::
-     Later *jump* back *to the* previous *mark* in the buffer.  You can use this
+     Later *jump* back *to the* previous *mark* in the buffer. You can use this
      repeatedly to *navigate* through the entire *mark ring*.
 
 #+begin_tip
@@ -1883,7 +1883,7 @@ and xclip.el?
 ** Rectangles
 
 To kill the text of a rectangular area (vertically selected text), use ~C-x r k~
-(~kill-rectangle~).  Or just "delete" the "region-rectangle" (without "killing"
+(~kill-rectangle~). Or just "delete" the "region-rectangle" (without "killing"
 it) with ~C-x r d~.
 
 To copy a (series of) Org column(s) while avoiding the use of registers:
@@ -1931,7 +1931,7 @@ You can customize ~cua-enable-cua-keys~ to completely disable the CUA bindings, 
 ~cua-prefix-override-inhibit-delay~ to change the prefix fallback behavior.
 
 CUA mode also provides enhanced rectangle support with visible rectangle
-highlighting.  Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
+highlighting. Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
 
 - ~<C-RET>~ runs the command ~cua-set-rectangle-mark~
 - ~M-n~ runs the command ~cua-sequence-rectangle~
@@ -1959,11 +1959,11 @@ highlighting.  Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
 *Registers:*
 
 - ~C-x r SPC~ ::
-     ~point-to-register~.  Store point in a register.  Type any character to
+     ~point-to-register~. Store point in a register. Type any character to
      specify a register when prompted.
 
 - ~C-x r j~ ::
-     ~jump-to-register~.  Jump to a point stored in a register.
+     ~jump-to-register~. Jump to a point stored in a register.
 
 Setup registers for files I commonly edit.
 
@@ -1991,11 +1991,11 @@ Emacs bookmarks positions, not (just) lines!
 *Bookmarks:*
 
 - C-x r m ::
-     ~C-x r m RET~ or ~C-x r m BOOKMARK RET~ (~M-x bookmark-set~).  Save a named
+     ~C-x r m RET~ or ~C-x r m BOOKMARK RET~ (~M-x bookmark-set~). Save a named
      bookmark.
 
 - C-x r b ::
-     ~bookmark-jump~.  Jump to a named bookmark.
+     ~bookmark-jump~. Jump to a named bookmark.
 
 - C-x r l ::
      List all bookmarks.
@@ -2035,14 +2035,14 @@ With *Bookmark+* (which offers quite a bit more than =bm.el=):
 - You can bookmark arbitrary sets of files, from any locations.
 
 - You can bookmark Dired buffers (which, again, can actually list arbitrary
-  files, not even necessarily in the same directory).  Markings, subdir
+  files, not even necessarily in the same directory). Markings, subdir
   inclusions, and omissions are all recorded, and restored when you access the
   bookmark.
 
-- You can tag bookmarks or files, using arbitrary strings as tags.  You can do
+- You can tag bookmarks or files, using arbitrary strings as tags. You can do
   this programmatically and interactively, by regexp, name, or Dired markings.
   Tags give you a great way to define sets of bookmarks or files -- sets that
-  can overlap, etc.  They serve to categorize, but they can do more than that.
+  can overlap, etc. They serve to categorize, but they can do more than that.
   You can use tags to, in effect, merge projects, split projects, define
   subprojects, and so on.
 
@@ -2478,10 +2478,10 @@ throughout a buffer.
 
 It is complementary to the features of the library *Hl-anything*.
 
-- Hi Lock uses *text properties*.  Copying and pasting text will also paste the
+- Hi Lock uses *text properties*. Copying and pasting text will also paste the
   highlighting.
 
-- Hl-anything uses *overlays*.  It prevents highlighted things to be hidden by
+- Hl-anything uses *overlays*. It prevents highlighted things to be hidden by
   hl-line mode.
 
   #+begin_note
@@ -2508,7 +2508,7 @@ It is complementary to the features of the library *Hl-anything*.
 
 #+begin_note
 We tend to think of highlighting a buffer region with a background as putting
-such a background behind or underneath the text.  Think of a marker pen
+such a background behind or underneath the text. Think of a marker pen
 (highlighter) instead: the highlighting goes on top.
 #+end_note
 
@@ -2551,7 +2551,7 @@ such a background behind or underneath the text.  Think of a marker pen
 #+end_src
 
 Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
-*symbol at point* in the current file (if you pause on a symbol).  When you move
+*symbol at point* in the current file (if you pause on a symbol). When you move
 point, the highlighting goes away.
 
 #+begin_tip
@@ -2606,7 +2606,7 @@ Color Identifiers Mode: *color* every *variable* in its own, consistent color.
 ** Window Fringes
 
 Show an icon in the fringe of version-controlled files indicating which *lines*
-have been *edited* (inserted, modified or deleted) *since the last commit*.  Similar
+have been *edited* (inserted, modified or deleted) *since the last commit*. Similar
 to Git Gutter.
 
 This feature gives you a really nice at-a-glance view of where you've made
@@ -2628,7 +2628,7 @@ If you need to know what lines changed in latest commit as well, you can enable
 #+end_src
 
 If you're using some package other than ~vc~ to commit changes, it might not run
-~vc-checkin-hook~ after commits.  In that case, you'll need to either add
+~vc-checkin-hook~ after commits. In that case, you'll need to either add
 ~diff-hl-update~ to the hook it does run, or advise some function that's called in
 the buffer after its state has changed.
 
@@ -2801,10 +2801,10 @@ PYTHON_OBJS=	\
 ** Selective Display
 
 Emacs has the ability to *hide lines indented more than a given number of
-columns*.  You can use this to get an overview of a part of a program.
+columns*. You can use this to get an overview of a part of a program.
 
 To hide lines with at least 1 column of indentation (replacing them by an
-ellipsis), type ~C-1 C-x $~ (or ~C-x $~ and give it ~1~ as depth argument).  It gives
+ellipsis), type ~C-1 C-x $~ (or ~C-x $~ and give it ~1~ as depth argument). It gives
 a quick overview any source file.
 
 To make all lines visible again, type ~C-x $~ with no argument.
@@ -3221,7 +3221,7 @@ hidden text (invisible through an overlay), and displays it when prompting the
 user.
 
 We lack a way to reveal truly invisible text when performing a search and
-replace.  The URL of a bracket link in Org is an example of such truly invisible
+replace. The URL of a bracket link in Org is an example of such truly invisible
 text.
 
 Juri's solution to add ~'open-all~ could also be used in ~perform-replace~ to let
@@ -3332,7 +3332,7 @@ the search count periodically.
 ** Regexp Search
 
 Emacs uses basic regular expressions, which means that the extended regexp
-operators have to be escaped.  This means you have to use ~\(~, ~\|~, and ~\)~
+operators have to be escaped. This means you have to use ~\(~, ~\|~, and ~\)~
 instead of ~(~, ~|~, and ~)~.
 
 You can build regexps with visual feedback by using:
@@ -3384,7 +3384,7 @@ white spaces, tab spaces, and line breaks as a simple white space.
 #+end_src
 
 *Char folding* allows simple ASCII characters to match their complex Unicode
-counterparts.  For instance, if you search for "a", you will also match "á" and
+counterparts. For instance, if you search for "a", you will also match "á" and
 "ã"; that is, char folding folds together "a", "á" and "ã".
 
 #+begin_src emacs-lisp :tangle no
@@ -3571,7 +3571,7 @@ it to the *file word list* (~ispell-add-per-file-word-list~).
 #+end_src
 
 Tell ~aspell~ to speed up, though this reduces somewhat the quality of its
-suggestions.  According to the ~aspell~ documentation:
+suggestions. According to the ~aspell~ documentation:
 
 - ~ultra~ is the fastest suggestion mode, which is still twice as slow as ~ispell~.
 
@@ -3633,9 +3633,9 @@ and a *new Ispell process* is *started*, if the language in the next window is
 different from the language in the current window...
 #+end_note
 
-~flyspell-auto-correct-word~ is bound to ~C-.~.  Press it one time to correct the
-word under the cursor.  If several spellings are possible, they appear in the
-minibuffer.  Just keep hitting ~C-.~ to replace the word with the successive
+~flyspell-auto-correct-word~ is bound to ~C-.~. Press it one time to correct the
+word under the cursor. If several spellings are possible, they appear in the
+minibuffer. Just keep hitting ~C-.~ to replace the word with the successive
 suggestions.
 
 #+begin_src emacs-lisp
@@ -3646,10 +3646,10 @@ suggestions.
       (define-key flyspell-mode-map (kbd "C-;") nil))
 #+end_src
 
-~flyspell-goto-next-error~ is bound to "C-,".  Press it to go to the next
+~flyspell-goto-next-error~ is bound to "C-,". Press it to go to the next
 previously detected error.
 
-~flyspell-correct-word-before-point~ is bound to ~C-c $~.  Press it to *pop up a menu*
+~flyspell-correct-word-before-point~ is bound to ~C-c $~. Press it to *pop up a menu*
 of possible corrections for misspelled word before point.
 
 #+begin_src emacs-lisp
@@ -4065,7 +4065,7 @@ Turn on auto-revert mode globally.
 #+end_src
 
 Auto-revert will automatically *reload files* that have been *modified outside of
-Emacs* (externally modified files).  It won't revert a buffer that you've edited
+Emacs* (externally modified files). It won't revert a buffer that you've edited
 inside Emacs, even if the file also changes outside.
 
 #+begin_warning
@@ -4109,8 +4109,8 @@ Disable backups and auto-save only in the current buffer with
     "For sensitive files like password lists.
   It disables backup creation and auto saving in the current buffer.
 
-  With no argument, this command toggles the mode.  Non-null prefix argument
-  turns on the mode.  Null prefix argument turns off the mode."
+  With no argument, this command toggles the mode. Non-null prefix argument
+  turns on the mode. Null prefix argument turns off the mode."
     :init-value nil                     ; Initial value.
     :lighter " Sensitive"               ; Indicator for the mode line.
     :keymap nil                         ; Minor mode bindings.
@@ -4305,14 +4305,14 @@ Since the year 2000, ~vc-resolve-conflict~ is an alias for ~smerge-ediff~, which
 the name suggests starts an Ediff session, not an Emerge session.
 
 By the way, the library header of =ediff.el= acknowledges =emerge.el='s influence
-and then goes on saying "The present version of *Ediff supersedes Emerge*.  It
+and then goes on saying "The present version of *Ediff supersedes Emerge*. It
 provides a superior user interface and has numerous major features not found in
-Emerge.  In particular, it can do patching, and 2-way and 3-way file comparison,
+Emerge. In particular, it can do patching, and 2-way and 3-way file comparison,
 merging, and directory operations."
 
 Also note that ~magit-ediff-resolve~ (~E m~ or ~e~ on a file with conflicts) uses
-~smerge-ediff~ internally.  It does however override the ~ediff-quit-hook~ to
-provide a slightly better session finishing experience.  Instead of telling you
+~smerge-ediff~ internally. It does however override the ~ediff-quit-hook~ to
+provide a slightly better session finishing experience. Instead of telling you
 that you could save "the buffer" (there are several buffers), it asks you
 whether you want to save the buffer (while showing you its name).
 #+end_note
@@ -4472,7 +4472,7 @@ or [[https://diffoscope.org/][diffoscope]]
 ~ediff-directories~ combined with the key sequence == h x= ~= h x~ shows you only the
 files which differ.
 
-It is not recursive, but it gives you also subdirectory pairs to compare.  Just
+It is not recursive, but it gives you also subdirectory pairs to compare. Just
 hit ~RET~ on such a pair.
 
 As bonus, it even works for remote directories.
@@ -4535,11 +4535,11 @@ On Windows, if you are trying to use ~gunzip~ to uncompress a file under Dired,
 you will probably encounter errors.
 
 The problem is due to that ~gunzip~ provided by Cygwin is not an executable
-file.  It is a *symbolic link to ~gzip~*; you can verify this by
+file. It is a *symbolic link to ~gzip~*; you can verify this by
 ~ls -l /usr/bin/gunzip~.
 
 Since *GNU Emacs does not understand Cygwin's symbolic links*, it cannot execute
-~gunzip~.  The solution is to replace ~gunzip~ with ~gzip -d~.
+~gunzip~. The solution is to replace ~gunzip~ with ~gzip -d~.
 
 #+begin_src shell :tangle ~/winbin/gunzip :padline no
 #!/bin/sh
@@ -4561,9 +4561,9 @@ History:
 
 3. EasyPG (= epg) is a GnuPG interface for Emacs.
 
-   It allows you to encrypt/decrypt files within Emacs.  When you use ~C-x C-f~ to
+   It allows you to encrypt/decrypt files within Emacs. When you use ~C-x C-f~ to
    access an encrypted file, Emacs prompts you for the passphrase and then
-   decrypts the file before displaying it.  When you save the file, Emacs
+   decrypts the file before displaying it. When you save the file, Emacs
    automatically encrypts it again with that same key.
 
    It has two aspects:
@@ -4598,7 +4598,6 @@ What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
     ;; Query passphrase through the minibuffer, instead of using an external
     ;; Pinentry program.
     (setq epg-pinentry-mode 'loopback)
-    ;; (setenv "GPG_AGENT_INFO" nil)
 
     ;; Enable `epa-file'.
     (epa-file-enable))
@@ -4627,24 +4626,6 @@ Configuring cache settings in the gpg-agent (=~/.gnupg/gpg-agent.conf= file):
   (leuven--section "18.14 (emacs)Remote Files")
 #+end_src
 
-*** Ange-FTP
-
-*************** TODO Check out why network share aren't accessible
-I should be able to open //SERVER/d/ via SMB!?
-*************** END
-
-#+begin_src emacs-lisp
-;;*** Ange-FTP
-
-  (leuven--section "Ange-FTP")
-
-  ;; Transparent FTP support.
-  (with-eval-after-load 'ange-ftp
-
-    ;; Try to use passive mode in ftp, if the client program supports it.
-    (setq ange-ftp-try-passive-mode t)) ; Needed for Ubuntu.
-#+end_src
-
 *** TRAMP
 
 Open files on a remote machine using [[http://www.gnu.org/software/tramp/][TRAMP]] (other protocols than just FTP) from
@@ -4664,7 +4645,7 @@ remote server and show result in your Emacs).
 
 #+begin_note
 ~sshfs~ can give you the same functionality as TRAMP: it is like a personal NFS
-(another mounted file system) over SSH.  If you can SSH to a server, you can
+(another mounted file system) over SSH. If you can SSH to a server, you can
 probably do ~sshfs~.
 #+end_note
 
@@ -4694,7 +4675,7 @@ As there are *issues with Cygwin ~ssh~* (which only works with Cygwinized Emacs)
 
 #+begin_tip
 You might try out the ~rsync~ /external/ method, which saves the remote files quite
-a bit faster than SSH.  It's based on SSH, so it works the same, just saves
+a bit faster than SSH. It's based on SSH, so it works the same, just saves
 faster.
 #+end_tip
 
@@ -4750,9 +4731,9 @@ edit files on a remote server by going via another server.
 #+end_example
 
 Opening ~/sudo:10.10.13.123:~ would connect first ~10.10.13.123~ via ~ssh~ under your
-account name, and perform ~sudo -u root~ on that host afterwards.  It is important
+account name, and perform ~sudo -u root~ on that host afterwards. It is important
 to know that the given method is applied on the host which has been reached so
-far.  The trick is to think from the end.
+far. The trick is to think from the end.
 
 ***** Reusing passwords for several connections
 
@@ -4806,7 +4787,7 @@ reading from or writing to the remote host.
 
 **** How to Customize Traces
 
-The usual way to debug TRAMP is to set ~tramp-verbose~ to 6.  This will produce a
+The usual way to debug TRAMP is to set ~tramp-verbose~ to 6. This will produce a
 debug buffer, which you can show at ~tramp-devel@gnu.org~.
 
 #+begin_src emacs-lisp
@@ -4877,12 +4858,12 @@ Helm (successor of Anything) is an incremental completion and selection
 narrowing framework for Emacs.
 
 It will help *steer* you in the right direction when you're looking for stuff in
-Emacs (like buffers, files, etc).  You don't have anymore to remember the
+Emacs (like buffers, files, etc). You don't have anymore to remember the
 structure of your working directory; you can focus on more important things.
 
 **** How does it work?
 
-The /default/ prefix for the preconfigured Helm commands is ~C-x c~.  In
+The /default/ prefix for the preconfigured Helm commands is ~C-x c~. In
 Emacs-Leuven, we changed it to ~C-c h~.
 
 #+begin_src emacs-lisp
@@ -4954,12 +4935,12 @@ Switch to ~*Helm Log*~ buffer with ~M-x helm-open-last-log~.
 In ~helm-find-file~, you may want to try using the left arrow to go to the parent
 directory!
 
-You can reassign ~TAB~ only during ~helm-find-file~.  The ~helm-find-file~ almost
-looks like Dired and I assign ~^~ for going up.  Minor side effect is you cannot
+You can reassign ~TAB~ only during ~helm-find-file~. The ~helm-find-file~ almost
+looks like Dired and I assign ~^~ for going up. Minor side effect is you cannot
 type in ~^~ without using ~C-q~.
 
 Sometimes you want to hit ~TAB~ for ~helm-selection-action~; however, you chose not
-to happen.  Now look for substitute for ~TAB~.  Something not ~TAB~ can be ~C-z~,
+to happen. Now look for substitute for ~TAB~. Something not ~TAB~ can be ~C-z~,
 ~C-TAB~, and ~SPC~.
 
 #+begin_src emacs-lisp :tangle no
@@ -4991,7 +4972,7 @@ example:
 **** Vocabulary
 
 - ~volatile~ means your candidates are recomputed each time you enter a character
-  in pattern (cached candidates are not reused).  Async sources are by essence
+  in pattern (cached candidates are not reused). Async sources are by essence
   volatile.
 
 - ~delayed~ means your candidates are computed after ~helm-input-idle-delay~
@@ -5279,7 +5260,7 @@ See [[http://stackoverflow.com/questions/14726601/sublime-text-2s-goto-anything-
 
 **** Descbinds
 
-Use the separate Helm Descbinds to get a quick *key bindings* overview.  It will
+Use the separate Helm Descbinds to get a quick *key bindings* overview. It will
 make your life much easier with million Emacs keys.
 
 #+begin_src emacs-lisp
@@ -5346,7 +5327,7 @@ or if you use ~helm-do-ag~, you can use ~C-u~ prefix for specifying extension.
       (global-set-key (kbd "C-S-f")   #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
       (global-set-key (kbd "C-M-S-f") #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
 
-      ;; ;; Search with Ag.  Ask for directory first.
+      ;; ;; Search with Ag. Ask for directory first.
       ;; (global-set-key (kbd "C-S-d") #'helm-do-ag)
 
       ;; Search with Ag this file (like Swoop).
@@ -5375,7 +5356,7 @@ See https://github.com/dingmingxin/dotfiles/blob/master/config_emacs/config/cust
 **** Helm M-x (search for a command)
 
 There's no denying it: it's really difficult to remember all of these various
-commands.  Rather than falling back to using the mouse and menu selections,
+commands. Rather than falling back to using the mouse and menu selections,
 instead type ~M-x~.
 
 This will bring up a Helm menu, where you can then search for your desired
@@ -5455,7 +5436,7 @@ You can also use the ~@~ prefix to *search buffer contents*.
 
 By pressing ~M-y~, you will see the *clipboard history* (list of all previous
 clipboard contents) and can pick the one you want to paste into the text using
-arrow keys.  Use ~RET~ to insert it.
+arrow keys. Use ~RET~ to insert it.
 
 #+begin_src emacs-lisp
   ;; Paste from History.
@@ -5500,7 +5481,7 @@ you were.
 **** Imenu
 
 Imenu is like an outline tree in regular IDE, but Helm makes it interactive, and
-fast.  You can ask questions such as "Is there a ~function~ whose name contains
+fast. You can ask questions such as "Is there a ~function~ whose name contains
 ~memory~?".
 
 **** Google
@@ -5582,7 +5563,7 @@ Key bindings:
 
 #+begin_warning
 This (from Thierry Volpiatto) seems good, except that it changes the behavior of
-~TAB~ when done in a word.  Instead of indenting, it completes the word at point,
+~TAB~ when done in a word. Instead of indenting, it completes the word at point,
 changing the buffer's contents!
 #+end_warning
 
@@ -5667,7 +5648,7 @@ AFAICT you need to eval something like
     (setq image-type-header-regexps '((".*" . imagemagick)))
 
 to be able to resize images in image-mode with imagemagick (for example, from
-the "Image" menu).  If resizing works for you when visiting an image file,
+the "Image" menu). If resizing works for you when visiting an image file,
 I guess your imagemagick support is ok.
 
 *************** TODO auto-image-file-mode in find-file-hook for performance reasons!?
@@ -5818,7 +5799,7 @@ cyclic order."
 
 ** Deleting and Rearranging Windows
 
-If there is only one window displayed, act like ~C-x 2~ or ~C-x 3~.  If there are
+If there is only one window displayed, act like ~C-x 2~ or ~C-x 3~. If there are
 two (or more) windows displayed, act like ~C-x 1~.
 
 #+begin_src emacs-lisp
@@ -5875,7 +5856,7 @@ down.
 #+end_src
 
 The following code toggles between horizontal and vertical layout of two
-windows.  Useful when Emacs opens the window below instead at the side.
+windows. Useful when Emacs opens the window below instead at the side.
 
 #+begin_src emacs-lisp
   (defun leuven-toggle-window-split ()
@@ -6048,11 +6029,11 @@ one.
 ** Frame Commands
 
 - ~toggle-frame-maximized~ (M-<F10> by default) ::
-     Toggle maximization state of the selected frame.  Respect window manager
+     Toggle maximization state of the selected frame. Respect window manager
      screen decorations.
 
 - ~toggle-frame-fullscreen~ (<F11> by default) ::
-     Toggle fullscreen mode of the selected frame.  *Hide window manager screen
+     Toggle fullscreen mode of the selected frame. *Hide window manager screen
      decorations*, giving slightly more screen space to Emacs itself.
 
 #+begin_src emacs-lisp
@@ -6192,7 +6173,7 @@ See NeoTree as well.
 #+end_src
 
 For any user who needs symbols that are not in the 7-bit ASCII set, our
-recommendation is to move to Unicode UTF-8.  That is the only encoding that is
+recommendation is to move to Unicode UTF-8. That is the only encoding that is
 the same across all platforms and operating systems that support it.
 
 To check your locale settings, you can have a look to what Emacs produce (in a
@@ -6610,7 +6591,7 @@ etc.), see ~uncrustify~.
 
 ** Tabs vs. Spaces
 
-Don't tabify.  Instead, _reindent_ everything, e.g. with ~C-M-\~.
+Don't tabify. Instead, _reindent_ everything, e.g. with ~C-M-\~.
 
 #+begin_src emacs-lisp
 ;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
@@ -6996,7 +6977,7 @@ See https://github.com/zk-phi/dotfiles/blob/master/emacs/init.el.
     ;;
     ;; Now you can add `;;' and `;;*', etc. as headings in your `.emacs'
     ;; and cycle using `<S-tab>', `<M-left>' and `<M-right>' will collapse
-    ;; or expand all headings respectively.  I am guessing you mean to make
+    ;; or expand all headings respectively. I am guessing you mean to make
     ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
     ;; that, but not too much more.
     )
@@ -7020,9 +7001,9 @@ use for opening/closing elements).
 *** org-global-cycle + outline-magic
 
 The visibility-cycling features are written in a way that they are independent
-of the outline setup.  The following setup provides standard Org mode
+of the outline setup. The following setup provides standard Org mode
 functionality (headline folding and unfolding) in ~outline-minor-mode~ on
-~C-TAB~ and ~S-TAB~.  We use ~C-TAB~ instead of ~TAB~, because ~TAB~ usually
+~C-TAB~ and ~S-TAB~. We use ~C-TAB~ instead of ~TAB~, because ~TAB~ usually
 has mode-specific tasks.
 
 Note that for ~C-TAB~ to work, the cursor needs to be on a headline (the line
@@ -7222,7 +7203,7 @@ in the region into the phonetic alphabet.
 #+end_src
 
 #+begin_warning
-Emacs ships with =tex-mode.el= but that's a separate thing from AUCTeX.  All
+Emacs ships with =tex-mode.el= but that's a separate thing from AUCTeX. All
 AUCTeX functions start with ~TeX-*~ or ~LaTeX-*~ (case matters) or ~font-latex-*~.
 #+end_warning
 
@@ -7288,11 +7269,29 @@ scrolling to the bottom."
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Align columns in LaTeX tables within the selected region.
-  (defun lvn-align-latex-tables (start end)
-    "Align columns in LaTeX tables."
-    (interactive "r")
-    (align-regexp start end "\\(\\s-*\\)&" 1 1 t))
+  ;; Align LaTeX table columns and row terminators in the selected region.
+  (defun eboost-align-latex-tables (start end &optional only-rows)
+    "Align LaTeX table columns and row terminators between START and END.
+
+  This command performs two passes:
+  1. Align spaces before `&` so column boundaries line up.
+  2. Align spaces before the trailing `\\\\` so row terminators line up,
+     even if followed by optional whitespace and a `%` comment.
+
+  With prefix argument ONLY-ROWS, align only the trailing `\\\\` markers.
+
+  START and END are region boundaries."
+    (interactive "r\nP")
+    (save-excursion
+      (save-restriction
+        (narrow-to-region start end)
+        ;; Pass 1: align `&` column separators (skip if ONLY-ROWS).
+        (unless only-rows
+          (align-regexp (point-min) (point-max) "\\(\\s-*\\)&" 1 1 t))
+        ;; Pass 2: align trailing `\\` at end of rows, allowing `%` comments.
+        (align-regexp (point-min) (point-max)
+                      "\\(\\s-*\\)\\\\\\\\\\(?:\\s-*%.*\\)?$"
+                      1 1 t))))
 #+end_src
 
 ** AUCTeX
@@ -7301,7 +7300,7 @@ scrolling to the bottom."
      AUCTeX (menus ~Preview~, ~LaTeX~, ~Command~ and ~Ref~; text ~LaTeX/P~ displayed in
      the mode line).
 
-AUCTeX supports TeX and extensions such as LaTeX.  For LaTeX, there is a
+AUCTeX supports TeX and extensions such as LaTeX. For LaTeX, there is a
 (major) ~LaTeX-mode~ in AUCTeX which runs (in this order):
 
 1. ~text-mode-hook~, then
@@ -7566,7 +7565,7 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
 #+end_src
 
 #+begin_note
-This is also called when exporting from Org to PDF.  Why?
+This is also called when exporting from Org to PDF. Why?
 
 To show it, just edit the path to ~gswin32c~ and you'll see a message "Can't find
 executable" in the echo area.
@@ -7583,19 +7582,19 @@ To fill in ~\ref{}~ and ~\cite{}~ commands, you can use ~C-c &~
 *************** END
 
 A Table of Contents of the entire (multifile) document with browsing
-capabilities is available with ~C-c =~.  Hitting ~l~ there will show all the labels
+capabilities is available with ~C-c =~. Hitting ~l~ there will show all the labels
 and cites.
 
-Labels can be created with ~C-c (~ and referenced with ~C-c )~.  When referencing,
+Labels can be created with ~C-c (~ and referenced with ~C-c )~. When referencing,
 you get a menu with all labels of a given type and context of the label
-definition.  The selected label is inserted as a ~\ref~ macro.
+definition. The selected label is inserted as a ~\ref~ macro.
 
 Citations can be made with ~C-c [~ which will use a regular expression to pull out
-a *formatted* list of articles from your BibTeX database.  The selected citation
+a *formatted* list of articles from your BibTeX database. The selected citation
 is inserted as a ~\cite~ macro.
 
 Index entries can be made with ~C-c /~ which indexes the word at point or the
-current selection.  More general index entries are created with ~C-c <~.
+current selection. More general index entries are created with ~C-c <~.
 ~C-c >~ displays the compiled index.
 
 #+begin_src emacs-lisp
@@ -7706,7 +7705,7 @@ tags around a region you've specified.
                                         ; Alias for `nxml-mode'.
 #+end_src
 
-Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode.  It adds a lot
+Alternatively, you can use [[http://ourcomments.org/Emacs/nXhtml/doc/nxhtml.html][nXhtml]] mode, derived from nXML mode. It adds a lot
 of things useful for *XHTML* files with mixed content:
 
 - handling *multiple major modes* (Mumamo) in one buffer (for CSS, JS, PHP and
@@ -8101,10 +8100,13 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
 
       ;; Function to add Imenu to the menu bar in modes that support it.
       (defun eboost--try-to-add-imenu ()
-        "Attempt to add an Imenu index to the menu bar."
+        "Attempt to add an Imenu index to the menu bar, if the current mode supports it."
         (condition-case err
-            (imenu-add-to-menubar "Outline")  ; Add Imenu index.
-          (error (message "[Error adding Imenu index: %s]" err))))
+            (imenu-add-to-menubar "Outline")
+          ;; If the mode doesn't support Imenu, just ignore it.
+          ((imenu-unavailable) nil)
+          ;; For any other error, log it.
+          (error (message "[Error adding Imenu index: %S]" err))))
 
       ;; Add Imenu to the menu bar in any mode that supports it.
       (add-hook 'after-change-major-mode-hook #'eboost--try-to-add-imenu))
@@ -8155,7 +8157,7 @@ the *Imenu tags* *across all buffers with the same mode as the current one*.
 
 #+begin_note
 In a sense, it is similar to ~etag~ selection, but works only for the /open/
-buffers -- you don't get thousands of symbols from ~etags~ to deal with.  And this
+buffers -- you don't get thousands of symbols from ~etags~ to deal with. And this
 is often more convenient as you don't have to explicitly build the ~etags~ table.
 #+end_note
 
@@ -8178,7 +8180,7 @@ is often more convenient as you don't have to explicitly build the ~etags~ table
 ** Indentation for Programs
 
 Changing the "hanginess" of a brace and then reindenting, will not move the
-brace to a different line.  For this, you're better off getting an external
+brace to a different line. For this, you're better off getting an external
 program like GNU ~indent~, which will rearrange brace location, among other
 things.
 
@@ -8362,8 +8364,8 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
   #+begin_note
   If we believe Xiao Hanyu, smartparens is the future, it is the ultimate
-  solution for paren pairs management in Emacs world.  It is flexible, uniform
-  and highly customizable.  It is also bundled with a comprehensive
+  solution for paren pairs management in Emacs world. It is flexible, uniform
+  and highly customizable. It is also bundled with a comprehensive
   documentation, besides a Wiki, you can also ~M-x sp-cheat-sheet~ to get live
   examples, which, I think, is really a innovative feature.
   #+end_note
@@ -8435,7 +8437,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 #+end_src
 
   =turn-on-smartparens-strict-mode= adds years to one's life to allow for more
-  hacking.  Seriously.  XXX
+  hacking. Seriously. XXX
 
 #+begin_src emacs-lisp :tangle no
     ;; ;; Enable smartparens-strict-mode in all Lisp modes.
@@ -8474,7 +8476,7 @@ Balanced editing: inserting two matching parentheses at once, etc.
 
 ** Documentation Lookup
 
-Function argument hint.  Highlight the arguments in
+Function argument hint. Highlight the arguments in
 ~eldoc-highlight-function-argument~.
 
 #+begin_src emacs-lisp
@@ -8506,10 +8508,10 @@ XXX See http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-
 Hideshow can *fold* and unfold (i.e. hide and un-hide) logical blocks of *code* in
 many programming modes.
 
-~hs-minor-mode.el~ collapses code for a lot of languages, not only Lisp.  See
+~hs-minor-mode.el~ collapses code for a lot of languages, not only Lisp. See
 [[id:42ad895e-c049-4710-a877-5014a7f6acfc][outline-minor-mode]] as well.
 
-And the pretty awesome ~hideshow-org~.  Folding made useful.
+And the pretty awesome ~hideshow-org~. Folding made useful.
 
 Keyboard shortcuts:
 
@@ -8704,7 +8706,7 @@ See https://github.com/senny/emacs-eclim/issues/178.
 **** Getting started
 
 You should *create an Eclipse project first*, and then you can create a Java file
-and open it in Emacs.  Open plain Java file without creating an Eclipse project
+and open it in Emacs. Open plain Java file without creating an Eclipse project
 will not work.
 
 #+begin_note
@@ -8715,7 +8717,7 @@ with a Windows Java installation?  ~/cygdrive~ paths won't be understood...
 **** The Eclim daemon
 
 Eclimd (Eclim's daemon) can run without a graphical Eclipse, but you can also
-run it from plain Eclipse.  So whenever you need some eclipse's functionalities
+run it from plain Eclipse. So whenever you need some eclipse's functionalities
 that aren't (yet) supported by either ~emacs-eclim~ or ~eclim~, you can switch to it
 (e.g. the debugger or the profiler).
 
@@ -8875,7 +8877,7 @@ Key bindings:
 #+begin_src emacs-lisp
   (with-eval-after-load 'js2-mode-autoloads
 
-    (add-to-list 'auto-mode-alist '("\\.js\\'\\|\\.json\\'" . js2-mode)))
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8975,7 +8977,7 @@ List of available *refactorings*:
 
 - ~ao~ (~arguments-to-object~) ::
      Replaces arguments to a function call with an object literal of named
-     arguments.  Requires YASnippet.
+     arguments. Requires YASnippet.
 
 - ~3i~ (~ternary-to-if~) ::
      Converts ternary operator to if-statement.
@@ -9002,170 +9004,6 @@ List of available *refactorings*:
 
 #+begin_src emacs-lisp
 ;; Xref-js2
-#+end_src
-
-*** Imenu
-
-http://emacs.stackexchange.com/questions/2658/how-to-display-the-list-of-functions-in-imenu-and-collapse-uncollapse-functions
-NOTE -- Solution 2 refers to (better) outlining support!!
-
-See http://blog.binchen.org/posts/why-emacs-is-better-editor-part-two.html:
-
-#+begin_src emacs-lisp
-;; {{ Patching Imenu in js2-mode
-;; (setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
-
-(defvar js2-imenu-original-item-lines nil
-  "List of line information of original Imenu items.")
-
-(defun js2-imenu--get-line-start-end (pos)
-  (let (b e)
-    (save-excursion
-      (goto-char pos)
-      (setq b (line-beginning-position))
-      (setq e (line-end-position)))
-    (list b e)))
-
-(defun js2-imenu--get-pos (item)
-  (let (val)
-    (cond
-     ((integerp item)
-      (setq val item))
-
-     ((markerp item)
-      (setq val (marker-position item))))
-
-    val))
-
-(defun js2-imenu--get-extra-item-pos (item)
-  (let (val)
-    (cond
-     ((integerp item)
-      (setq val item))
-
-     ((markerp item)
-      (setq val (marker-position item)))
-
-     ;; plist
-     ((and (listp item) (listp (cdr item)))
-      (setq val (js2-imenu--get-extra-item-pos (cadr item))))
-
-     ;; alist
-     ((and (listp item) (not (listp (cdr item))))
-      (setq val (js2-imenu--get-extra-item-pos (cdr item)))))
-
-    val))
-
-(defun js2-imenu--extract-line-info (item)
-  "Recursively parse the original imenu items created by js2-mode.
-The line numbers of items will be extracted."
-  (let (val)
-    (if item
-      (cond
-       ;; Marker or line number
-       ((setq val (js2-imenu--get-pos item))
-        (push (js2-imenu--get-line-start-end val)
-              js2-imenu-original-item-lines))
-
-       ;; The item is Alist, example: (hello . 163)
-       ((and (listp item) (not (listp (cdr item))))
-        (setq val (js2-imenu--get-pos (cdr item)))
-        (if val (push (js2-imenu--get-line-start-end val)
-                      js2-imenu-original-item-lines)))
-
-       ;; The item is a Plist
-       ((and (listp item) (listp (cdr item)))
-        (js2-imenu--extract-line-info (cadr item))
-        (js2-imenu--extract-line-info (cdr item)))
-
-       ;;Error handling
-       (t (message "[Impossible to here! item=%s]" item)
-          )))
-    ))
-
-(defun js2-imenu--item-exist (pos lines)
-  "Try to detect does POS belong to some LINE"
-  (let (rlt)
-    (dolist (line lines)
-      (if (and (< pos (cadr line)) (>= pos (car line)))
-          (setq rlt t)))
-    rlt))
-
-(defun js2-imenu--is-item-already-created (item)
-  (unless (js2-imenu--item-exist
-           (js2-imenu--get-extra-item-pos item)
-           js2-imenu-original-item-lines)
-    item))
-
-(defun js2-imenu--check-single-item (r)
-  (cond
-   ((and (listp (cdr r)))
-    (let (new-types)
-      (setq new-types
-            (delq nil (mapcar 'js2-imenu--is-item-already-created (cdr r))))
-      (if new-types (setcdr r (delq nil new-types))
-        (setq r nil))))
-   (t (if (js2-imenu--item-exist (js2-imenu--get-extra-item-pos r)
-                                 js2-imenu-original-item-lines)
-          (setq r nil))))
-  r)
-
-(defun js2-imenu--remove-duplicate-items (extra-rlt)
-  (delq nil (mapcar 'js2-imenu--check-single-item extra-rlt)))
-
-(defun js2-imenu--merge-imenu-items (rlt extra-rlt)
-  "RLT contains imenu items created from AST.
-EXTRA-RLT contains items parsed with simple regex.
-Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
-  ;; Clear the lines.
-  (set (make-variable-buffer-local 'js2-imenu-original-item-lines) nil)
-  ;; Analyze the original imenu items created from AST,
-  ;; I only care about line number.
-  (dolist (item rlt)
-    (js2-imenu--extract-line-info item))
-
-  ;; @see https://gist.github.com/redguardtoo/558ea0133daa72010b73#file-hello-js
-  ;; EXTRA-RLT sample:
-  ;; ((function ("hello" . #<marker 63>) ("bye" . #<marker 128>))
-  ;;  (controller ("MyController" . #<marker 128))
-  ;;  (hellworld . #<marker 161>))
-  (setq extra-rlt (js2-imenu--remove-duplicate-items extra-rlt))
-  (append rlt extra-rlt))
-
-(with-eval-after-load 'js2-mode
-  (defun lvn--js2-mode-create-imenu-index-advice (orig-fun &rest args)
-    "Advice to enhance js2-mode's imenu index creation."
-    (let* ((original-index (apply orig-fun args))
-           (extra-index (save-excursion
-                          (imenu--generic-function js2-imenu-extra-generic-expression))))
-      (js2-imenu--merge-imenu-items original-index extra-index)))
-
-  (advice-add 'js2-mode-create-imenu-index :around #'lvn--js2-mode-create-imenu-index-advice))
-;; }}
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-    ;; Imenu support for frameworks and structural patterns.
-    (js2-imenu-extras-setup)
-#+end_src
-
-#+begin_src emacs-lisp
-    (defun js2-imenu-record-object-clone-extend ()
-      (let* ((node (js2-node-at-point (1- (point)))))
-      (when (js2-call-node-p node)
-        (let* ((args (js2-call-node-args node))
-               (methods (second args))
-               (super-class (first args))
-               (parent (js2-node-parent node)))
-          (when (js2-object-node-p methods)
-            (let ((subject (cond ((js2-var-init-node-p parent)
-                                  (js2-var-init-node-target parent))
-                                 ((js2-assign-node-p parent)
-                                  (js2-assign-node-left parent)))))
-              (when subject
-                (js2-record-object-literal methods
-                                           (js2-compute-nested-prop-get subject)
-                                           (js2-node-abs-pos methods)))))))))
 #+end_src
 
 *** Others
@@ -9303,7 +9141,7 @@ Install ESLint (globally) using ~npm~:
 
 *** Tern
 
-Tern is a stand-alone *code analyzer* for JavaScript.  Features provided are:
+Tern is a stand-alone *code analyzer* for JavaScript. Features provided are:
 
 - *Auto-completion* on variables and properties.
 - When the point is in a *function argument* list, show *argument names and types*
@@ -9327,7 +9165,7 @@ The following additional keys are bound:
      Find the type of the thing under the cursor.
 
 - C-c C-d ::
-     Find docs of the thing under the cursor.  Press again to open the
+     Find docs of the thing under the cursor. Press again to open the
      associated URL (if any).
 
 #+begin_src emacs-lisp
@@ -9352,7 +9190,7 @@ Kick things off with ~run-skewer~, and then:
 
 - ~C-x C-e~ (~skewer-eval-last-expression~) ::
      *Evaluate the form before the point* and display the result in the
-     minibuffer.  If given a prefix argument, insert the result into the current
+     minibuffer. If given a prefix argument, insert the result into the current
      buffer.
 
 - ~C-M-x~ (~skewer-eval-defun~) ::
@@ -9390,6 +9228,14 @@ You should see an alert box on the page.
 To tell Skewer to load the HTML (as shown in the demo), place your downloaded
 files into =~/public_html= then follow the instructions for [[https://github.com/skeeto/skewer-mode#manual-version][Manual version]]. Once
 that is done, visit ~localhost:8080~ in your browser.
+
+** JSON
+
+With point positioned on any JSON key or value, the command ~M-x jsons-print-path~
+(from ~json-snatcher~) computes the complete JSON "path" to that element, displays
+it in the minibuffer, and copies it to the clipboard (kill-ring). Useful for
+quickly identifying or reusing the hierarchical location of a node within
+complex JSON data.
 
 ** SQL
 
@@ -9662,7 +9508,7 @@ Automatically convert SQL *keywords to* the *upper case* (see general well-known
 My build command: ~cd /path/to/Makefile && make -f Makefile~.
 
 You don't need a =Makefile= to perform simple tasks, because ~make~ knows a lot of
-built in rules out of the box.  For example, to compile a ~.c~ source file =foo.c=
+built in rules out of the box. For example, to compile a ~.c~ source file =foo.c=
 into a program ~foo~, all you need is say ~make -k foo~, and ~make~ will do it even
 without a =Makefile=.
 
@@ -9772,7 +9618,7 @@ See jdc.el
 ** Compilation Mode
 
 When Emacs visits the locus of an error message, it momentarily highlights the
-relevant source line.  The duration of this highlight is determined by the
+relevant source line. The duration of this highlight is determined by the
 variable ~next-error-highlight~.
 
 #+begin_src emacs-lisp
@@ -10021,7 +9867,7 @@ In the error list window the following keybindings are available:
 
 #+begin_note
 ~C-c ! v~ (or ~M-x flycheck-verify-setup~) is a diagnostic tool which displays
-diagnostic information about the active checker in your current buffer.  Useful
+diagnostic information about the active checker in your current buffer. Useful
 if you have ~$PATH~ issues or are missing the checker entirely on your system.
 #+end_note
 
@@ -10091,7 +9937,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 #+end_src
 
 A summary of the inspection results for the current file is shown in the colored
-mode line on bottom.  Make it blue!
+mode line on bottom. Make it blue!
 
 #+begin_src emacs-lisp
     ;; Change mode line color with Flycheck status.
@@ -10172,7 +10018,7 @@ With that source-level debugger for Emacs Lisp, you can:
     ;; (setq edebug-trace t)
 #+end_src
 
-While ~edebug~'ging, use ~T~ to view a trace buffer (~*edebug-trace*~).  Emacs will
+While ~edebug~'ging, use ~T~ to view a trace buffer (~*edebug-trace*~). Emacs will
 quickly execute the rest of your code, printing out the arguments and return
 values for each expression it evaluates.
 
@@ -10196,19 +10042,19 @@ values for each expression it evaluates.
 
 ** Executing Lisp Expressions
 
-Just as in C, C++, Java, Perl, Python, etc, Lisp code is kept in files.  All
-the normal editing operations are performed on files.  In this respect, hacking
-in Lisp is like hacking in any other language that you are used to.  What's
-different is that what you are hacking is a running Lisp program.  When you
+Just as in C, C++, Java, Perl, Python, etc, Lisp code is kept in files. All
+the normal editing operations are performed on files. In this respect, hacking
+in Lisp is like hacking in any other language that you are used to. What's
+different is that what you are hacking is a running Lisp program. When you
 edit a function definition or add a new one, you compile it into a running
-program.  There is no compile, link, run, debug cycle as you know it from C or
+program. There is no compile, link, run, debug cycle as you know it from C or
 Java.
 
 Ponder that for a minute.
 
 When you fix a bug in a C function, you have to recompile, relink, and reload
-your program before you can test the fix.  You don't do that in Lisp.  You make
-the fix and then go straight to testing it.  This process can be even faster
+your program before you can test the fix. You don't do that in Lisp. You make
+the fix and then go straight to testing it. This process can be even faster
 than fixing a bug in a scripting language like Perl.
 
 ** Libraries of Lisp Code for Emacs
@@ -10295,7 +10141,7 @@ See demo of it: http://www.youtube.com/watch?v=TMoPuv-xXMM.
   (setq initial-scratch-message nil)
 #+end_src
 
-Don't use any specific mode for the initial buffer.  That ensure that no Lisp
+Don't use any specific mode for the initial buffer. That ensure that no Lisp
 or Org specific stuff gets loaded at each startup time.
 
 #+begin_src emacs-lisp
@@ -10358,7 +10204,7 @@ Systems) in a generic way -- a real timesaver.
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; Always follow symlinks to files under source-control.  Don't ask.
+  ;; Always follow symlinks to files under source-control. Don't ask.
   (setq vc-follow-symlinks t)
 
   ;; (setq vc-allow-async-revert t)
@@ -10373,13 +10219,13 @@ Systems) in a generic way -- a real timesaver.
 *** Version Control and the Mode Line
 
 "Unmodified-according-to-VC" buffers use ~-~ as a separator in their VC
-indicator, and modified buffers have ~:~ (e.g., ~CVS-1.2~ vs. ~CVS:1.2~).  The
+indicator, and modified buffers have ~:~ (e.g., ~CVS-1.2~ vs. ~CVS:1.2~). The
 tooltip over the VC indicator also says more explicitly.
 
 *************** Lisp expression in mode-line-format
 The Lisp expressions supported in ~mode-line-format~ are those documented in the
-manual, and nothing else.  In particular, the ~:eval~ part must appear
-explicitly, and any symbol stands for its value (which is not eval'ed).  IOW, a
+manual, and nothing else. In particular, the ~:eval~ part must appear
+explicitly, and any symbol stands for its value (which is not eval'ed). IOW, a
 full-blown Lisp evaluation there is not implemented...
 *************** END
 
@@ -10796,11 +10642,11 @@ Returns the age as an integer."
 
 ** Tags Tables (navigating code)
 
-Using tags tables is the most generic approach to setup *code navigation*.  A
+Using tags tables is the most generic approach to setup *code navigation*. A
 "tag" signifies a language object for which an index entry is available.
 
 #+begin_note
-There are many situations when you cannot or might not want to use ~tags~.  You
+There are many situations when you cannot or might not want to use ~tags~. You
 would like to use [[id:ea687cd8-fff0-461f-999e-c9fbc84b5901][Imenu]] because:
 
 - Imenu is meaningful in non-programming modes and for non-visiting buffers.
@@ -10831,7 +10677,7 @@ Comparison of tools:
      Scheme, TeX, TeXinfo, and YACC.
 
      On Windows, Emacs comes with ~etags~ and a similar executable file called
-     ~ctags~.  In the Emacs distribution, =etags.exe= = =ctags.exe= in the =bin=
+     ~ctags~. In the Emacs distribution, =etags.exe= = =ctags.exe= in the =bin=
      directory.
 
 - Exuberant Ctags ::
@@ -10841,11 +10687,11 @@ Comparison of tools:
      SML, SQL, Tcl, TeX, Vera, Verilog, VHDL, Vim, and YACC.
 
      You should download *Exuberant Ctags* from http://ctags.sourceforge.net/ or
-     from Cygwin.  Only *Exuberant* =ctags.exe= recognizes ~-e~ option (/etags mode/,
+     from Cygwin. Only *Exuberant* =ctags.exe= recognizes ~-e~ option (/etags mode/,
      which will create a tag file for use with the Emacs editor).
 
      Exuberant Ctags can be extended to look for other things via regular
-     expression.  It is a wonderful thing!
+     expression. It is a wonderful thing!
 
      For example, I can now look for tags in my shell code to by running:
 
@@ -10859,8 +10705,8 @@ Comparison of tools:
 
 - ebrowse ::
      For C++, you will be better off with ebrowse, a program that also comes
-     with Emacs.  It understands C++ much better than etags does, and provides
-     similar commands (so you don't lose anything).  Check out the Ebrowse
+     with Emacs. It understands C++ much better than etags does, and provides
+     similar commands (so you don't lose anything). Check out the Ebrowse
      manual, which is part of the Emacs distribution, for details.
 
 - GNU Idutils ::
@@ -10872,12 +10718,12 @@ Comparison of tools:
      update.
 
 *Emacs TAGS* and *Exuberant Ctags* don't do fancy stuff, e.g. keeping an index of
-function references.  They record only positions where a function (or variable
+function references. They record only positions where a function (or variable
 etc.) is *defined*.
 
 Recording positions where a function is *called* (finding all *symbol references*)
 is the kind of thing external tools such as *GNU Global*, *GNU Idutils* and *Cscope*
-can do for you, if you're working with a language that they support.  *Grep*
+can do for you, if you're working with a language that they support. *Grep*
 would be the fallback method.
 
 Please also see [[http://hub.opensolaris.org/bin/view/Project+opengrok/][Comparison with Similar Tools]].
@@ -10911,7 +10757,7 @@ TAGS:
                      \) -print | /usr/bin/ctags -e -
 #+end_src
 
-You can create a =TAGS= file by using ~M-x compile RET tags RET~.  Every time
+You can create a =TAGS= file by using ~M-x compile RET tags RET~. Every time
 you changes your source file, you need to regenerate the tag file.
 
 Alternatively,
@@ -10939,11 +10785,11 @@ New package Xref replaces Etags's front-end and UI.
 The new package Xref provides a generic framework and new commands to
 find and move to definitions of functions, macros, data structures
 etc., as well as go back to the location where you were before moving
-to a definition.  It supersedes and obsoletes many Etags commands.
+to a definition. It supersedes and obsoletes many Etags commands.
 #+end_note
 
 You can *go to* the first *definition* of a tag (matching your regexp) -- *according*
-*to TAGS file* -- by using ~M-x xref-find-definitions~ (bound to ~M-.~).  The default
+*to TAGS file* -- by using ~M-x xref-find-definitions~ (bound to ~M-.~). The default
 tag is the identifier under the cursor.
 
 If ~M-.~ brings up the wrong method, you can type ~C-u M-.~ to continue searching
@@ -10972,8 +10818,8 @@ the TAGS table, by using ~M-x tags-search RET~.
 #+end_src
 
 However, the default Emacs' etag feature is not quite good. You should use etags
-provided by Helm.  Instead of activating ~etags-select-goto-tag~, try
-~helm-etags-select~.  If the project is big, it take some time to load tag file.
+provided by Helm. Instead of activating ~etags-select-goto-tag~, try
+~helm-etags-select~. If the project is big, it take some time to load tag file.
 But when it is done, the next search will be very fast.
 
 See http://truongtx.me/2014/04/20/emacs-javascript-completion-and-refactoring/.
@@ -11129,8 +10975,8 @@ It provides:
 
      #+begin_tip
      Projectile is another Emacs library providing easy project management and
-     navigation.  The concept of a project is pretty basic -- just a folder
-     containing special file.  Git repos are considered projects by default.  If
+     navigation. The concept of a project is pretty basic -- just a folder
+     containing special file. Git repos are considered projects by default. If
      you want to mark a folder manually as a project just create an empty
      =.projectile= file in it.
      #+end_tip
@@ -11266,7 +11112,7 @@ If you've installed CEDET and ECB, EmacsAssist is worth trying out:
 http://www.mail-archive.com/gnu-emacs-sources@gnu.org/msg00292.html
 
 It uses CEDET to provide a handy symbols browser for the current file, that
-narrows down the list as you type substrings.  Tastes differ, but I for one
+narrows down the list as you type substrings. Tastes differ, but I for one
 really like this.
 
 #+begin_src emacs-lisp :tangle no
@@ -11468,20 +11314,20 @@ It allows you to write frequently used text more quickly.
 
 ** Controlling Abbrev Expansion
 
-Inspired by [[http://macromates.com/][TextMate]].  In fact, many editors support *snippets* (/quick texts/):
+Inspired by [[http://macromates.com/][TextMate]]. In fact, many editors support *snippets* (/quick texts/):
 Eclipse, Notepad++, etc.
 
 *************** TODO Add rv for "REVIEW[who] text" https://www.jetbrains.com/help/idea/using-live-templates-in-todo-comments.html
 *************** END
 
-For complex templates, I use ~YASnippet~.  For example, new file templates (where
+For complex templates, I use ~YASnippet~. For example, new file templates (where
 it's Lisp evaluation is handy), class and function templates with docblocks,
 etc. I use it to reduce the repetitious parts of programming, and let me focus
 on getting things done.
 
-~YASnippet~ does support mirror fields and transformations.  It also does support
-multiple snippets with same name.  It will also expand snippets containing
-non-word-constituent characters, which ~abbrev~ can't.  So I can't have ~@p~ expand
+~YASnippet~ does support mirror fields and transformations. It also does support
+multiple snippets with same name. It will also expand snippets containing
+non-word-constituent characters, which ~abbrev~ can't. So I can't have ~@p~ expand
 to ~@param~ with ~abbrev~, but I can with ~YASnippet~.
 
 XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el
@@ -11597,7 +11443,7 @@ Insert *code templates* (/snippets/) by pressing ~TAB~.
 #+end_src
 
 YASnippet allows navigating through the data input fields, where you can specify
-your own data.  Use the ~TAB~ key to go forward and the ~Shift+TAB~ keys to go back.
+your own data. Use the ~TAB~ key to go forward and the ~Shift+TAB~ keys to go back.
 
 *** Writing snippets
 
@@ -11752,14 +11598,14 @@ Find it at http://capitaomorte.github.io/yasnippet/snippet-reference.html#yas-ke
 :END:
 
 "Dynamic abbrevs" allow the meanings of abbreviations (expansions) to be
-*determined automatically from the contents of the buffer*.  It is completely
+*determined automatically from the contents of the buffer*. It is completely
 independent of Abbrev mode.
 
-- ~M-/~ runs the command ~dabbrev-expand~ by default.  Expand previous word
-  "dynamically".  *Expands to the most recent, preceding word* for which this is
+- ~M-/~ runs the command ~dabbrev-expand~ by default. Expand previous word
+  "dynamically". *Expands to the most recent, preceding word* for which this is
   a prefix.
 
-- ~C-M-/~ runs the command ~dabbrev-completion~.  Completion on current word.  Like
+- ~C-M-/~ runs the command ~dabbrev-completion~. Completion on current word. Like
   ~M-/~ but finds all expansions in the current buffer and *presents suggestions
   for completion*.
 
@@ -12039,11 +11885,11 @@ The best alternative to Auto-Complete seems to be Company mode.
       (progn
         (auto-complete-mode -1)
         (company-mode 1)
-        (message "[Disable AC.  Enable Company]")
+        (message "[Disable AC. Enable Company]")
         (sit-for 2))
     (auto-complete-mode 1)
     (company-mode -1)
-    (message "[Disable Company.  Enable AC]")
+    (message "[Disable Company. Enable AC]")
     (sit-for 2)))
 
 (global-set-key (kbd "M-<f1>") #'toggle-auto-complete-company-modes)
@@ -12055,7 +11901,7 @@ friendly,
 - Company mode is super easy to extend (whereas you often have to write 3-4
   times as much code to get the equivalent functionality out of AC backend);
 
-- Company "just works", most of the time.  It's incredibly simple to use.
+- Company "just works", most of the time. It's incredibly simple to use.
 
 See https://github.com/company-mode/company-mode/issues/68 for a *feature
 comparison* between both.
@@ -12063,7 +11909,7 @@ comparison* between both.
 Completion will start automatically after you type a few letters.
 
 Company mode has a unique take on auto-completion where it will reject
-keystrokes if it doesn't match any possibilities.  It can also search available
+keystrokes if it doesn't match any possibilities. It can also search available
 completions and filter as well.
 
 When the menu (with completion candidates) is displayed, press:
@@ -12162,7 +12008,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     ;; Completion by TAB (insert the selected candidate).
     (define-key company-active-map (kbd "<tab>")   #'company-complete-selection)
 
-    ;; Temporarily show the documentation buffer for the selection.  Also on F1 or C-h.
+    ;; Temporarily show the documentation buffer for the selection. Also on F1 or C-h.
     (define-key company-active-map (kbd "C-?")     #'company-show-doc-buffer)
 
     ;;! Temporarily display a buffer showing the selected candidate in context.
@@ -12496,7 +12342,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 
 #+begin_note
 [[id:26d881f0-0f56-4259-9b31-eb4fecb08c88][ls-lisp]], Emacs's own *emulation of ~ls~* is used by *default on MS Windows* (which
-does not have an ~ls~ program).  Though, it does not support as many options as
+does not have an ~ls~ program). Though, it does not support as many options as
 GNU ~ls~.
 #+end_note
 
@@ -12542,7 +12388,7 @@ Use Emacs's own emulation of ~ls~ in all versions of Emacs.
 
 ** Navigation in the Dired Buffer
 
-In Dired, ~M->~ and ~M-<~ never took me where I wanted to go.  Now, they do.
+In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
 
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Navigation")
@@ -12607,7 +12453,7 @@ On top of the traditional ways, there are also these add-ons which open files
 using external programs (such as PDF viewers), based on their extension.
 
 One advantage is that using the traditional ~!~ (or ~X~) switch with Dired locks up
-Emacs until you close the other program.  These add-ons do not and leave Emacs
+Emacs until you close the other program. These add-ons do not and leave Emacs
 free for continued used.
 
 #+begin_note
@@ -12649,8 +12495,8 @@ appropriate viewer:
 - ~start~ on MS Windows.
 
   Though, it is a bad idea to use ~start~ on Windows: it has too many quirks
-  regarding quoting of its command line.  Instead, just invoke the existing
-  primitive ~w32-shell-execute~ with the ~open~ verb.  As a nice side effect, this
+  regarding quoting of its command line. Instead, just invoke the existing
+  primitive ~w32-shell-execute~ with the ~open~ verb. As a nice side effect, this
   will support Unicode file names, something that is currently impossible when
   you invoke an external command.
 
@@ -12874,7 +12720,7 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 ** Editing the Dired Buffer
 
 ~Wdired~ mode is *great for renaming (a lot of) files* in a directory, as it allows
-*editing the Dired buffer* like a text file, using all the power of Emacs.  That
+*editing the Dired buffer* like a text file, using all the power of Emacs. That
 is, one can use keyboard macros, search and replace, rectangle mode (great for
 adding prefixes to file names), flip mode bits with the mouse, etc.!
 
@@ -12948,7 +12794,7 @@ Use ~0 w~ to put the *full path*.
 Extra Dired functionality:
 
 - You can *jump to the Dired buffer* corresponding to the current buffer by
-  pressing *~C-x C-j~* (~dired-jump~).  If in Dired already, pop up a level and goto
+  pressing *~C-x C-j~* (~dired-jump~). If in Dired already, pop up a level and goto
   old directory's line.
 
   *Standard* alternative: ~C-x d RET~, though it doesn't set point on the right
@@ -12995,8 +12841,8 @@ There are global key bindings that Dired+ makes:
 - ~C-x C-M-f~ :: ~diredp-fileset~
 - ~C-x R~ :: ~diredp-dired-recent-dirs~
 
-These are not bindings for Dired mode.  They are global bindings that set up
-a Dired buffer.  They are thus similar to the default global bindings ~C-x d~ and
+These are not bindings for Dired mode. They are global bindings that set up
+a Dired buffer. They are thus similar to the default global bindings ~C-x d~ and
 ~C-x C-j~.
 
 #+begin_src emacs-lisp :tangle no
@@ -13116,7 +12962,7 @@ latest commit* -- it supports SVN, Git, and other VC systems!
 ** Diary
 
 The Emacs diary keeps track of appointments or other events on a daily basis, in
-conjunction with the calendar.  To use the diary feature, you must first create
+conjunction with the calendar. To use the diary feature, you must first create
 a "diary file" containing a list of events and their dates.
 
 But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
@@ -13247,7 +13093,7 @@ the command ~M-x holidays~.
 #+begin_src emacs-lisp
   (defun leuven-insert-current-date (prefix)
     "Insert the current date in ISO format.
-  With one PREFIX argument, add day of week.  With two PREFIX arguments, add day
+  With one PREFIX argument, add day of week. With two PREFIX arguments, add day
   of week and time."
     (interactive "P")
     (let ((format (cond ((not prefix) "%Y-%m-%d")
@@ -13399,25 +13245,25 @@ From Tassilo Horn:
 
 >> https://github.com/politza/pdf-tools (available through MELPA).
 >
-> Oh, that looks pretty impressive.  I haven't used it, though, so I
+> Oh, that looks pretty impressive. I haven't used it, though, so I
 > cannot help with this.
 
 Ok, now I had to check it out, and Andreas, it's a really superb
-package.  I'm gonna use that now for reading PDF files instead of
+package. I'm gonna use that now for reading PDF files instead of
 doc-view (where I'm the author) and Evince (which I use due to
 doc-view's limitations).
 
-But Troy is correct.  The PDF he links makes emacs freeze, although I've
-been able to recover by hitting `C-g' repeatedly.  The result was that
+But Troy is correct. The PDF he links makes emacs freeze, although I've
+been able to recover by hitting `C-g' repeatedly. The result was that
 the raw PDF data was shown.
 
 Before I had opened that file successfully with doc-view and then did
-M-x pdf-view-mode.  That worked.  When doing it that way, it seems some
+M-x pdf-view-mode. That worked. When doing it that way, it seems some
 if not all of PDF Tools minor modes aren't active, so I guess one of
 them does something that triggers the freeze.
 
 Andreas, do you plan to propose PDF Tools for inclusion in Emacs?  IMO,
-that's really a package anybody's gonna love.  (Oh my god, how well the
+that's really a package anybody's gonna love. (Oh my god, how well the
 syntex stuff/AUCTeX integration works!)
 #+end_verse
 
@@ -13441,7 +13287,7 @@ It's the best PDF viewer on GNU/Linux (including the ones not running in Emacs).
 
 ** Navigation
 
-~doc-view~ integrates with the usual bookmark facility.  So, simply use ~C-x r m~
+~doc-view~ integrates with the usual bookmark facility. So, simply use ~C-x r m~
 (~bookmark-set~) to jump back to the last page you've read in a PDF document.
 
 ** Conversion
@@ -13475,7 +13321,7 @@ See https://www.gnu.org/software/emacs/manual/html_node/eww/index.html.
      "design" is just too bad).
 
 - F (eww-toggle-fonts) ::
-     Toggle whether to use variable-pitch fonts or not.  The user can also
+     Toggle whether to use variable-pitch fonts or not. The user can also
      customize the ~shr-use-fonts~ variable.
 
 - R (eww-readable) ::
@@ -13525,7 +13371,7 @@ See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
 a shell command, in a subshell made just for that command.
 
 ~M-|~ (~shell-command-on-region~) passes the contents of the region as the standard
-input to the shell command.  By prefixing it with ~C-u~, it deletes the old region
+input to the shell command. By prefixing it with ~C-u~, it deletes the old region
 and *replaces* it with the output from the shell command.
 
 #+begin_src emacs-lisp
@@ -13569,7 +13415,7 @@ are used by the (La)TeX modes (default + AUCTeX) among others.
 
 ** Interactive Subshell
 
-To run a subshell interactively, type ~M-x shell~.  This creates (or reuses)
+To run a subshell interactively, type ~M-x shell~. This creates (or reuses)
 a buffer named ~*shell*~, and runs a shell subprocess with input coming from and
 output going to that buffer.
 
@@ -13815,7 +13661,7 @@ apply: Buffer name `*shell d:/Users/fni/*' is in use
 
 If you ever tried to run a program like ~git~ under ~M-x shell~, you will have come
 across the warning "terminal is not fully functional" followed by unusable
-behavior.  This is because ~git~ sends its output through a pager (probably ~less~),
+behavior. This is because ~git~ sends its output through a pager (probably ~less~),
 which requires a real [[id:d12c2e1e-8147-4b39-8128-aaa70fbf4657][terminal emulator]].
 
 Setting the ~PAGER~ environment variable to =/bin/cat= (but only inside Emacs)
@@ -13830,7 +13676,7 @@ solves this problem:
 :ID:       d12c2e1e-8147-4b39-8128-aaa70fbf4657
 :END:
 
-To run a subshell in a text *terminal emulator*, use ~M-x term~.  This creates (or
+To run a subshell in a text *terminal emulator*, use ~M-x term~. This creates (or
 reuses) a buffer named ~*terminal*~, and runs a subshell with input coming from
 your keyboard, and output going to that buffer.
 
@@ -13845,7 +13691,7 @@ The terminal emulator uses Term mode, which has two input modes.
 #+begin_note
 
 From my experience, none of the terminal emulators in Emacs (~term~, ~ansi-term~,
-~multi-term~) is supported under Windows.  It looks like the main reason is all of
+~multi-term~) is supported under Windows. It looks like the main reason is all of
 them rely on low-level support for terminals (~stty~, etc.) which is not provided
 by Windows.
 
@@ -13863,12 +13709,12 @@ work ("page-at-a-time" feature).
 
 Shell mode buffers do not use PTYs (pseudo-terminals), so programs running in
 such a buffer (the shell, the programs run by the shell, etc.) can't perform
-character-at-a-time input.  Each line is typed in full and only sent when ~RET~
-is pressed.  To see proof, run the ~tty~ command in a Shell mode buffer, and its
+character-at-a-time input. Each line is typed in full and only sent when ~RET~
+is pressed. To see proof, run the ~tty~ command in a Shell mode buffer, and its
 output will be ~not a tty~.
 
 Note that it may seem that this is not true because you can perform command-line
-editing with ~C-b~, ~C-f~, etc.  But this is only because ~shell-mode~ itself
+editing with ~C-b~, ~C-f~, etc. But this is only because ~shell-mode~ itself
 simulates the typical command-line editing features of shells like Bash, Zsh,
 etc. using Emacs own internal editing capabilities.
 
@@ -13881,7 +13727,7 @@ Anyway, you can:
 Or you might just prefer the Emacs key bindings over the ones your shell offers.
 
 On the other hand, *Term mode* provides a proper *terminal emulator* (though not as
-good as the good old ~xterm~).  You must use it for applications that are
+good as the good old ~xterm~). You must use it for applications that are
 interactive with your terminal (such as the command ~top~).
 
 #+begin_note
@@ -13889,13 +13735,13 @@ In Shell mode, use ~M-x proced~ instead of ~top~.
 #+end_note
 
 #+begin_note
-~MPlayer~ commands do not work in the Emacs shell.  Use ~term~ for ~/~ and ~*~ to
+~MPlayer~ commands do not work in the Emacs shell. Use ~term~ for ~/~ and ~*~ to
 decrease / increase volume.
 #+end_note
 
 You can *switch to line mode* (~C-c C-j~) when you need Term to /basically/ act like
 a Shell mode buffer, and move around the buffer pretty much like anywhere else
-in Emacs.  Copy / kill-ring commands, ~isearch~, etc. do work.
+in Emacs. Copy / kill-ring commands, ~isearch~, etc. do work.
 
 Then, you can use ~C-c C-k~ to *switch* back *to character mode*, the default, which
 is like your normal *terminal* emulator except the escape key.
@@ -13976,7 +13822,7 @@ inside it."
 
 ** Serial Terminal
 
-Since GNU Emacs 23, there's now support for serial port access.  The new command
+Since GNU Emacs 23, there's now support for serial port access. The new command
 ~serial-term~ starts an interactive terminal on a serial port.
 
 ** Proced
@@ -14004,12 +13850,12 @@ Since GNU Emacs 23, there's now support for serial port access.  The new command
 
 #+begin_note
 The Emacs version you're using and the ~emacsclient~ version you're using must be
-from the *same Emacs version*...  If the latter is not the cause of a refused
+from the *same Emacs version*... If the latter is not the cause of a refused
 connection, re-try ~M-x server-start~ in Emacs.
 #+end_note
 
 ~emacsclient~ is waiting for Emacs to tell it it's done editing that file.
-That's important if you use ~emacsclient~ as your ~EDITOR~.  If you want
+That's important if you use ~emacsclient~ as your ~EDITOR~. If you want
 ~emacsclient~ to return immediately, use the ~-n~ option.
 
 Do you use ~emacsclient~ in terminals?  If not, just use parameter ~-c -n~, which
@@ -14201,7 +14047,7 @@ export VISUAL="$EDITOR"
 
 *** cde - Go to the directory of the file currently active in Emacs
 
-If you are an avid Emacs user like me, you'll find this function useful.  It
+If you are an avid Emacs user like me, you'll find this function useful. It
 *enters the directory of the file currently active in Emacs* resides in:
 
 #+begin_src shell :tangle ../bin/rc-common-settings-emacs-leuven
@@ -14403,8 +14249,8 @@ You need the ~emacs-server~ functionality enabled for this to work.
 
 * Printing Hard Copies
 
-You can print any buffer with ~C-u M-x ps-print-buffer-with-faces RET~.  Because
-of the ~C-u~, it will prompt for a file to place the PostScript into.  You can
+You can print any buffer with ~C-u M-x ps-print-buffer-with-faces RET~. Because
+of the ~C-u~, it will prompt for a file to place the PostScript into. You can
 then convert PS to PDF, if so desired.
 
 You can print without faces (i.e. no colour) with ~ps-print-buffer~.
@@ -14657,7 +14503,7 @@ Pick up where you left off.
 
 #+begin_tip
 The ~M-s M-w~ key binding (new in Emacs 25) uses ~eww~ to search the web for the
-text in the region.  It is super handy for quick Google and documentation
+text in the region. It is super handy for quick Google and documentation
 searches and this will only make it more useful.
 
 The search engine to use for this is specified by the customizable variable
@@ -14706,7 +14552,7 @@ using ~C-n~ and ~C-p~ key bindings.
 
 * Customization
 
-Emacs 24 custom themes allow loading multiple themes simultaneously.  If you
+Emacs 24 custom themes allow loading multiple themes simultaneously. If you
 don't want the previous theme to stay in effect, you will need to unload it
 first.
 
@@ -14877,8 +14723,8 @@ See as well Print keybindings (pkb).
 ** Syntax Table
 
 The syntax table contains information that tells Emacs how to operate on text,
-words, sentences etc.  It will make Emacs know enough about all the symbols in
-a buffer.  Syntax table is used for example for:
+words, sentences etc. It will make Emacs know enough about all the symbols in
+a buffer. Syntax table is used for example for:
 
 - commands like ~forward-word~ (~M-f~) or ~backward-kill-word~ (~M-DEL~),
 - spell-checking of words,
@@ -14917,7 +14763,7 @@ To check if some font is available in Emacs do following:
 
    ~(prin1-to-string (x-list-fonts "font-you-want-to-check or pattern"))~
 
-3. Place the cursor after the last closing paren and hit ~C-j~.  List of the names
+3. Place the cursor after the last closing paren and hit ~C-j~. List of the names
    of available fonts matching given pattern will appear in the current buffer
    (~*scratch*~).
 
@@ -14932,8 +14778,8 @@ To check if some font is available in Emacs do following:
    for a better output.
 
 Under Linux, use the ~xfontsel~ utility (or the command-line ~xlsfonts~) to try out
-different fonts.  After choosing a font, click the select button in ~xfontsel~
-window.  This will copy font name you choose to copy & paste buffer.
+different fonts. After choosing a font, click the select button in ~xfontsel~
+window. This will copy font name you choose to copy & paste buffer.
 
 Now Emacs should start with that font.
 
@@ -14960,7 +14806,7 @@ and regular, one regular and oblique.
 *** Anti-aliasing
 
 To see if anti-aliasing is active, use ~xmag~ (under Linux) or any of the other
-magnifier applications.  The fonts should have gray edges.
+magnifier applications. The fonts should have gray edges.
 
 *** Adjust the height of the default face
 
@@ -15022,7 +14868,7 @@ alternate filenames for the corresponding external libraries.
 
 Emacs tries to load the libraries in the order they appear on the
 list; if none is loaded, the running session of Emacs won't
-support the image type.  Types 'pbm and 'xbm don't need to be
+support the image type. Types 'pbm and 'xbm don't need to be
 listed; they are always supported.
 
 Value: ((xpm "libxpm.dll" "xpm4.dll" "libXpm-nox4.dll")
@@ -15283,7 +15129,7 @@ Git repository directory."
                 (if (= status 0)
                     (progn
                       (sit-for 1.5)
-                      (message "[Configuration updated.  Please restart Emacs to complete the update]"))
+                      (message "[Configuration updated. Please restart Emacs to complete the update]"))
                   (display-warning 'eboost "Error: Failed to update configuration" :warning))))
           (display-warning 'eboost "You have unstaged changes. Please commit or stash them before updating." :warning)
           (message "[Unstaged changes:\n%s]" unstaged-changes))

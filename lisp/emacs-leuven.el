@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250815.1735>
+;; Version: <20250817.1047>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -50,10 +50,10 @@
 
 ;;; Code:
 
-;; This file is only provided as an example.  Customize it to your own taste!
+;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250815.1735>"
+(defconst eboost-version "<20250817.1047>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -806,7 +806,7 @@ Shows a warning message if the file does not exist or is not executable."
 
   ;; (defun apropos-user-option (string)
   ;;   "Like apropos, but lists only symbols that are names of user
-  ;; modifiable variables.  Argument REGEXP is a regular expression.
+  ;; modifiable variables. Argument REGEXP is a regular expression.
   ;;    Returns a list of symbols, and documentation found"
   ;;   (interactive "sVariable apropos (regexp): ")
   ;;   (let ((message
@@ -2385,8 +2385,8 @@ After initiating the grep search, the isearch is aborted."
     "For sensitive files like password lists.
   It disables backup creation and auto saving in the current buffer.
 
-  With no argument, this command toggles the mode.  Non-null prefix argument
-  turns on the mode.  Null prefix argument turns off the mode."
+  With no argument, this command toggles the mode. Non-null prefix argument
+  turns on the mode. Null prefix argument turns off the mode."
     :init-value nil                     ; Initial value.
     :lighter " Sensitive"               ; Indicator for the mode line.
     :keymap nil                         ; Minor mode bindings.
@@ -2591,7 +2591,6 @@ After initiating the grep search, the isearch is aborted."
 
     ;; Query passphrase through the minibuffer, instead of using an external
     ;; Pinentry program.
-    ;; (setenv "GPG_AGENT_INFO" nil)
     (setq epg-pinentry-mode 'loopback)
 
     ;; Enable `epa-file'.
@@ -2600,16 +2599,6 @@ After initiating the grep search, the isearch is aborted."
 ;;** 18.14 (info "(emacs)Remote Files")
 
   (leuven--section "18.14 (emacs)Remote Files")
-
-;;*** Ange-FTP
-
-  (leuven--section "Ange-FTP")
-
-  ;; Transparent FTP support.
-  (with-eval-after-load 'ange-ftp
-
-    ;; Try to use passive mode in ftp, if the client program supports it.
-    (setq ange-ftp-try-passive-mode t)) ; Needed for Ubuntu.
 
 ;;*** TRAMP - Transparent Remote Access, Multiple Protocols
 
@@ -2918,7 +2907,7 @@ in the current buffer."
       (global-set-key (kbd "C-S-f")   #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
       (global-set-key (kbd "C-M-S-f") #'helm-do-ag-project-root) ;; Find in project. DOES NOT WORK WELL.
 
-      ;; ;; Search with Ag.  Ask for directory first.
+      ;; ;; Search with Ag. Ask for directory first.
       ;; (global-set-key (kbd "C-S-d") #'helm-do-ag)
 
       ;; Search with Ag this file (like Swoop).
@@ -3919,7 +3908,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
     ;;
     ;; Now you can add `;;' and `;;*', etc. as headings in your `.emacs'
     ;; and cycle using `<S-tab>', `<M-left>' and `<M-right>' will collapse
-    ;; or expand all headings respectively.  I am guessing you mean to make
+    ;; or expand all headings respectively. I am guessing you mean to make
     ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
     ;; that, but not too much more.
     )
@@ -4069,11 +4058,29 @@ scrolling to the bottom."
   ;; Add our function to TeX-output-mode-hook.
   (add-hook 'TeX-output-mode-hook #'lvn--setup-latex-output)
 
-  ;; Align columns in LaTeX tables within the selected region.
-  (defun lvn-align-latex-tables (start end)
-    "Align columns in LaTeX tables."
-    (interactive "r")
-    (align-regexp start end "\\(\\s-*\\)&" 1 1 t))
+  ;; Align LaTeX table columns and row terminators in the selected region.
+  (defun eboost-align-latex-tables (start end &optional only-rows)
+    "Align LaTeX table columns and row terminators between START and END.
+
+  This command performs two passes:
+  1. Align spaces before `&` so column boundaries line up.
+  2. Align spaces before the trailing `\\\\` so row terminators line up,
+     even if followed by optional whitespace and a `%` comment.
+
+  With prefix argument ONLY-ROWS, align only the trailing `\\\\` markers.
+
+  START and END are region boundaries."
+    (interactive "r\nP")
+    (save-excursion
+      (save-restriction
+        (narrow-to-region start end)
+        ;; Pass 1: align `&` column separators (skip if ONLY-ROWS).
+        (unless only-rows
+          (align-regexp (point-min) (point-max) "\\(\\s-*\\)&" 1 1 t))
+        ;; Pass 2: align trailing `\\` at end of rows, allowing `%` comments.
+        (align-regexp (point-min) (point-max)
+                      "\\(\\s-*\\)\\\\\\\\\\(?:\\s-*%.*\\)?$"
+                      1 1 t))))
 
   (leuven--section "25.11 (emacs)AUCTeX Mode")
 
@@ -4580,10 +4587,13 @@ the parent element."
 
       ;; Function to add Imenu to the menu bar in modes that support it.
       (defun eboost--try-to-add-imenu ()
-        "Attempt to add an Imenu index to the menu bar."
+        "Attempt to add an Imenu index to the menu bar, if the current mode supports it."
         (condition-case err
-            (imenu-add-to-menubar "Outline")  ; Add Imenu index.
-          (error (message "[Error adding Imenu index: %s]" err))))
+            (imenu-add-to-menubar "Outline")
+          ;; If the mode doesn't support Imenu, just ignore it.
+          ((imenu-unavailable) nil)
+          ;; For any other error, log it.
+          (error (message "[Error adding Imenu index: %S]" err))))
 
       ;; Add Imenu to the menu bar in any mode that supports it.
       (add-hook 'after-change-major-mode-hook #'eboost--try-to-add-imenu))
@@ -4919,7 +4929,7 @@ mouse-3: go to end") "]")))
 
   (with-eval-after-load 'js2-mode-autoloads
 
-    (add-to-list 'auto-mode-alist '("\\.js\\'\\|\\.json\\'" . js2-mode)))
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
   (with-eval-after-load 'js2-mode
 
@@ -4951,154 +4961,6 @@ mouse-3: go to end") "]")))
 )
 
 ;; Xref-js2
-
-;; {{ Patching Imenu in js2-mode
-;; (setq js2-imenu-extra-generic-expression javascript-common-imenu-regex-list)
-
-(defvar js2-imenu-original-item-lines nil
-  "List of line information of original Imenu items.")
-
-(defun js2-imenu--get-line-start-end (pos)
-  (let (b e)
-    (save-excursion
-      (goto-char pos)
-      (setq b (line-beginning-position))
-      (setq e (line-end-position)))
-    (list b e)))
-
-(defun js2-imenu--get-pos (item)
-  (let (val)
-    (cond
-     ((integerp item)
-      (setq val item))
-
-     ((markerp item)
-      (setq val (marker-position item))))
-
-    val))
-
-(defun js2-imenu--get-extra-item-pos (item)
-  (let (val)
-    (cond
-     ((integerp item)
-      (setq val item))
-
-     ((markerp item)
-      (setq val (marker-position item)))
-
-     ;; plist
-     ((and (listp item) (listp (cdr item)))
-      (setq val (js2-imenu--get-extra-item-pos (cadr item))))
-
-     ;; alist
-     ((and (listp item) (not (listp (cdr item))))
-      (setq val (js2-imenu--get-extra-item-pos (cdr item)))))
-
-    val))
-
-(defun js2-imenu--extract-line-info (item)
-  "Recursively parse the original imenu items created by js2-mode.
-The line numbers of items will be extracted."
-  (let (val)
-    (if item
-      (cond
-       ;; Marker or line number
-       ((setq val (js2-imenu--get-pos item))
-        (push (js2-imenu--get-line-start-end val)
-              js2-imenu-original-item-lines))
-
-       ;; The item is Alist, example: (hello . 163)
-       ((and (listp item) (not (listp (cdr item))))
-        (setq val (js2-imenu--get-pos (cdr item)))
-        (if val (push (js2-imenu--get-line-start-end val)
-                      js2-imenu-original-item-lines)))
-
-       ;; The item is a Plist
-       ((and (listp item) (listp (cdr item)))
-        (js2-imenu--extract-line-info (cadr item))
-        (js2-imenu--extract-line-info (cdr item)))
-
-       ;;Error handling
-       (t (message "[Impossible to here! item=%s]" item)
-          )))
-    ))
-
-(defun js2-imenu--item-exist (pos lines)
-  "Try to detect does POS belong to some LINE"
-  (let (rlt)
-    (dolist (line lines)
-      (if (and (< pos (cadr line)) (>= pos (car line)))
-          (setq rlt t)))
-    rlt))
-
-(defun js2-imenu--is-item-already-created (item)
-  (unless (js2-imenu--item-exist
-           (js2-imenu--get-extra-item-pos item)
-           js2-imenu-original-item-lines)
-    item))
-
-(defun js2-imenu--check-single-item (r)
-  (cond
-   ((and (listp (cdr r)))
-    (let (new-types)
-      (setq new-types
-            (delq nil (mapcar 'js2-imenu--is-item-already-created (cdr r))))
-      (if new-types (setcdr r (delq nil new-types))
-        (setq r nil))))
-   (t (if (js2-imenu--item-exist (js2-imenu--get-extra-item-pos r)
-                                 js2-imenu-original-item-lines)
-          (setq r nil))))
-  r)
-
-(defun js2-imenu--remove-duplicate-items (extra-rlt)
-  (delq nil (mapcar 'js2-imenu--check-single-item extra-rlt)))
-
-(defun js2-imenu--merge-imenu-items (rlt extra-rlt)
-  "RLT contains imenu items created from AST.
-EXTRA-RLT contains items parsed with simple regex.
-Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
-  ;; Clear the lines.
-  (set (make-variable-buffer-local 'js2-imenu-original-item-lines) nil)
-  ;; Analyze the original imenu items created from AST,
-  ;; I only care about line number.
-  (dolist (item rlt)
-    (js2-imenu--extract-line-info item))
-
-  ;; @see https://gist.github.com/redguardtoo/558ea0133daa72010b73#file-hello-js
-  ;; EXTRA-RLT sample:
-  ;; ((function ("hello" . #<marker 63>) ("bye" . #<marker 128>))
-  ;;  (controller ("MyController" . #<marker 128))
-  ;;  (hellworld . #<marker 161>))
-  (setq extra-rlt (js2-imenu--remove-duplicate-items extra-rlt))
-  (append rlt extra-rlt))
-
-(with-eval-after-load 'js2-mode
-  (defun lvn--js2-mode-create-imenu-index-advice (orig-fun &rest args)
-    "Advice to enhance js2-mode's imenu index creation."
-    (let* ((original-index (apply orig-fun args))
-           (extra-index (save-excursion
-                          (imenu--generic-function js2-imenu-extra-generic-expression))))
-      (js2-imenu--merge-imenu-items original-index extra-index)))
-
-  (advice-add 'js2-mode-create-imenu-index :around #'lvn--js2-mode-create-imenu-index-advice))
-;; }}
-
-    (defun js2-imenu-record-object-clone-extend ()
-      (let* ((node (js2-node-at-point (1- (point)))))
-      (when (js2-call-node-p node)
-        (let* ((args (js2-call-node-args node))
-               (methods (second args))
-               (super-class (first args))
-               (parent (js2-node-parent node)))
-          (when (js2-object-node-p methods)
-            (let ((subject (cond ((js2-var-init-node-p parent)
-                                  (js2-var-init-node-target parent))
-                                 ((js2-assign-node-p parent)
-                                  (js2-assign-node-left parent)))))
-              (when subject
-                (js2-record-object-literal methods
-                                           (js2-compute-nested-prop-get subject)
-                                           (js2-node-abs-pos methods)))))))))
 
     ;; Color identifiers based on their names.
     (with-eval-after-load 'color-identifiers-mode-autoloads
@@ -5559,7 +5421,7 @@ a clean buffer we're an order of magnitude laxer about checking."
 
   (leuven--section "28.1 (emacs)Version Control")
 
-  ;; Always follow symlinks to files under source-control.  Don't ask.
+  ;; Always follow symlinks to files under source-control. Don't ask.
   (setq vc-follow-symlinks t)
 
   ;; (setq vc-allow-async-revert t)
@@ -6188,11 +6050,11 @@ a clean buffer we're an order of magnitude laxer about checking."
       (progn
         (auto-complete-mode -1)
         (company-mode 1)
-        (message "[Disable AC.  Enable Company]")
+        (message "[Disable AC. Enable Company]")
         (sit-for 2))
     (auto-complete-mode 1)
     (company-mode -1)
-    (message "[Disable Company.  Enable AC]")
+    (message "[Disable Company. Enable AC]")
     (sit-for 2)))
 
 (global-set-key (kbd "M-<f1>") #'toggle-auto-complete-company-modes)
@@ -6250,7 +6112,7 @@ a clean buffer we're an order of magnitude laxer about checking."
     ;; Completion by TAB (insert the selected candidate).
     (define-key company-active-map (kbd "<tab>")   #'company-complete-selection)
 
-    ;; Temporarily show the documentation buffer for the selection.  Also on F1 or C-h.
+    ;; Temporarily show the documentation buffer for the selection. Also on F1 or C-h.
     (define-key company-active-map (kbd "C-?")     #'company-show-doc-buffer)
 
     ;;! Temporarily display a buffer showing the selected candidate in context.
@@ -6754,7 +6616,7 @@ This example lists Azerty layout second row keys."
 
   (defun leuven-insert-current-date (prefix)
     "Insert the current date in ISO format.
-  With one PREFIX argument, add day of week.  With two PREFIX arguments, add day
+  With one PREFIX argument, add day of week. With two PREFIX arguments, add day
   of week and time."
     (interactive "P")
     (let ((format (cond ((not prefix) "%Y-%m-%d")
@@ -7616,7 +7478,7 @@ Git repository directory."
                 (if (= status 0)
                     (progn
                       (sit-for 1.5)
-                      (message "[Configuration updated.  Please restart Emacs to complete the update]"))
+                      (message "[Configuration updated. Please restart Emacs to complete the update]"))
                   (display-warning 'eboost "Error: Failed to update configuration" :warning))))
           (display-warning 'eboost "You have unstaged changes. Please commit or stash them before updating." :warning)
           (message "[Unstaged changes:\n%s]" unstaged-changes))
