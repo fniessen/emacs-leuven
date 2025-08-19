@@ -1209,7 +1209,7 @@ From the address <%a>"
   (setq org-agenda-deadline-leaders
         '("Deadline   "
           "In %d d"                   ; Or "%d d left".
-          "%d d ago"))
+          "Past due   "))
 
   )                                   ; with-eval-after-load "org-agenda" ends here.
 
@@ -1862,7 +1862,7 @@ formats (Markdown, HTML, or PDF)."
   (defun htmlize-region-for-paste (beg end)
     "Htmlize the region and return just the HTML as a string.
 This forces the `css' style and only returns the HTML body, but without the
-BODY tag.  This should make it useful for inserting the text to another HTML
+BODY tag. This should make it useful for inserting the text to another HTML
 buffer."
     (let* ((htmlize-output-type 'css)  ; Was `inline-css'.
            (htmlbuf (htmlize-region beg end)))
@@ -2683,16 +2683,16 @@ BACKEND is the current export backend."
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
 (add-hook 'before-save-hook #'lvn--org-update-buffer-before-save)
 
-(defvar lvn--org-clean-typography-excluded-files
+(defvar eboost--org-clean-typography-excluded-files
   '("emacs.org" "init.org" "emacs-leuven-org.txt")
-  "List of Org filenames where `lvn--org-clean-typography` should NOT run.")
+  "List of Org filenames where `eboost--org-clean-typography` should NOT run.")
 
-(defun lvn--org-clean-typography ()
+(defun eboost--org-clean-typography ()
   "Replace typographic characters with ASCII equivalents before saving, unless in excluded Org files."
   (when (and (derived-mode-p 'org-mode)
              buffer-file-name           ; Ensure that the file name is not nil.
              (not (member (file-name-nondirectory buffer-file-name)
-                          lvn--org-clean-typography-excluded-files)))
+                          eboost--org-clean-typography-excluded-files)))
     (let ((replacements
            '(("—" . "--")               ; Em dash.
              ("–" . "-")                ; En dash.
@@ -2709,9 +2709,7 @@ BACKEND is the current export backend."
           (while (search-forward (car pair) nil t)
             (replace-match (cdr pair) nil t)))))))
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'before-save-hook #'lvn--org-clean-typography nil 'local)))
+(add-hook 'before-save-hook #'eboost--org-clean-typography nil 'local)
 
 ;; Add weather forecast in your Org agenda.
 (autoload 'org-google-weather "org-google-weather"

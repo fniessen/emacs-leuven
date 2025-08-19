@@ -430,7 +430,7 @@ See `org-latex-format-inlinetask-function' for details."
 Why use footnotes when you can use ~todonotes~
 (https://www.ctan.org/pkg/todonotes)?
 
-It can even make a ~list-of-todo-notes~.  See also
+It can even make a ~list-of-todo-notes~. See also
 http://tex.stackexchange.com/questions/9796/how-to-add-todo-notes for more
 options.
 *************** END
@@ -676,11 +676,11 @@ has the equal signs escaped, unless you have:
         'create-if-interactive-and-no-custom-id))
 #+end_src
 
-PDF viewer?  See ~org-file-apps~.  Just change to your favorite viewer.  And make
+PDF viewer?  See ~org-file-apps~. Just change to your favorite viewer. And make
 sure that you're calling ~org-return~ to open (it's bound to ~C-m~).
 
 #+begin_warning
-There is no more "sexp" case in ~org-file-apps~ in development version (9.0).  You
+There is no more "sexp" case in ~org-file-apps~ in development version (9.0). You
 can use a function instead.
 #+end_warning
 
@@ -1597,10 +1597,10 @@ Additional parameters can be included via the commands you use:
      Create a new action.
 
 - Create a ~TODO~ Action Remind 3 ::
-     Create a new action.  Set reminder in 3 days.
+     Create a new action. Set reminder in 3 days.
 
 - Create a ~TODO~ Action Due Date 7 ::
-     Create a new action.  Set due date in 7 days.
+     Create a new action. Set due date in 7 days.
 
 - Create a ~TODO~ Action of an existing Project ::
      Attach it to something that we're already working on.
@@ -1660,7 +1660,7 @@ From the address <%a>"
 The property ~:immediate-finish~, when set, immediately files the item without
 further prompt (skipping ~C-c C-c~); very handy for quick storing of emails.
 
-With the clock options, ~org-capture~ automatically clocks in.  When pressing
+With the clock options, ~org-capture~ automatically clocks in. When pressing
 ~C-c C-c~, it clocks out.
 
 #+begin_src emacs-lisp
@@ -1772,7 +1772,7 @@ Have a look at [[http://vimeo.com/5662410][Store links in Emacs Org using org-pr
 ** Refile and copy
 
 Once a date has been scheduled, *move the task to the appropriate project*, by
-using the *refile* command ~C-c C-w~.  This lets me select (with completion) the
+using the *refile* command ~C-c C-w~. This lets me select (with completion) the
 header under which the entry will be placed.
 
 #+begin_src emacs-lisp
@@ -2066,7 +2066,7 @@ headline (to return any kind of string you want).
   (setq org-agenda-deadline-leaders
         '("Deadline   "
           "In %d d"                   ; Or "%d d left".
-          "%d d ago"))
+          "Past due   "))
 
   )                                   ; with-eval-after-load "org-agenda" ends here.
 
@@ -2135,7 +2135,7 @@ question, so that other sorting parameters will not be outranked by ~time-up~ fo
 the rest of the entries.
 
 #+begin_note
-The file =inbox.org= should come first.  My current workaround is to add
+The file =inbox.org= should come first. My current workaround is to add
 ~:CATEGORY: @inbox~ in its subtrees, as the ~@~ symbol is alphabetically before the
 letters.
 #+end_note
@@ -2167,7 +2167,7 @@ grouped by category)!
 (setq org-agenda-window-setup 'current-window)
 #+end_src
 
-With this function, the new sort order is temporary.  Pressing ~r~ for refresh
+With this function, the new sort order is temporary. Pressing ~r~ for refresh
 will restore the default sort order for the buffer:
 
 #+begin_src emacs-lisp
@@ -2278,7 +2278,7 @@ If you press ~E~, it will *show* the *first notes* about the tasks.
         (?C . (:foreground "#64992C" :background "#FFFFFF"))))
 #+end_src
 
-Contextual auto-exclusion for tags in the Agenda view.  For example, I use the
+Contextual auto-exclusion for tags in the Agenda view. For example, I use the
 following tags for ~TODO~:
 
 - Phone ::
@@ -2407,7 +2407,7 @@ or even:
 
 : [[org-search:+work-boss-TODO="DONE"]]
 
-if you define a new type of link.  See [[http://endlessparentheses.com/use-org-mode-links-for-absolutely-anything.html][Use Org-Mode Links for Absolutely Anything]]
+if you define a new type of link. See [[http://endlessparentheses.com/use-org-mode-links-for-absolutely-anything.html][Use Org-Mode Links for Absolutely Anything]]
 for more.
 
 You can as well use your agenda and use ~/~ to limit the view to what you want
@@ -2981,7 +2981,7 @@ directory.
   (defun htmlize-region-for-paste (beg end)
     "Htmlize the region and return just the HTML as a string.
 This forces the `css' style and only returns the HTML body, but without the
-BODY tag.  This should make it useful for inserting the text to another HTML
+BODY tag. This should make it useful for inserting the text to another HTML
 buffer."
     (let* ((htmlize-output-type 'css)  ; Was `inline-css'.
            (htmlbuf (htmlize-region beg end)))
@@ -3157,8 +3157,8 @@ You can clear out this individual function by calling ~remove-hook~:
 : (remove-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
 #+end_tip
 
-You can easily customize this variable on a per file basis.  If you seldom use
-~bibtex~, have the default be to run ~pdflatex~ just once or twice.  Then, for any
+You can easily customize this variable on a per file basis. If you seldom use
+~bibtex~, have the default be to run ~pdflatex~ just once or twice. Then, for any
 Org file that needs ~bibtex~, simply put in the following line (or a variation
 thereof):
 
@@ -3301,7 +3301,7 @@ parent."
 #+end_src
 
 In addition, it promotes all headlines under the removed ~ignore~-tagged
-headline.  This is useful to support structures like the following:
+headline. This is useful to support structures like the following:
 
 #+begin_src org :tangle no
 # Wrapping an abstract in a headline
@@ -3346,7 +3346,7 @@ headline.  This is useful to support structures like the following:
 
 ** OpenDocument Text (ODT)
 
-ODT export is not loaded by default.  You will have to load it explicitly or to
+ODT export is not loaded by default. You will have to load it explicitly or to
 add it to ~org-export-backends~.
 
 #+begin_src emacs-lisp
@@ -3361,7 +3361,7 @@ add it to ~org-export-backends~.
 #+end_src
 
 #+begin_tip
-With the amazing ~ox-pandoc~, you can *export to ~.docx~ directly*.  No need to go
+With the amazing ~ox-pandoc~, you can *export to ~.docx~ directly*. No need to go
 through LaTeX!
 #+end_tip
 
@@ -3512,7 +3512,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
 #+end_src
 
 C-c TAB
-Toggle the visibility of existing tags in the buffer.  This can be used as a
+Toggle the visibility of existing tags in the buffer. This can be used as a
 cheap preview (sgml-tags-invisible).
 
 View just the source-code blocks within the current Org-babel file (something
@@ -3712,7 +3712,7 @@ languages which can be evaluated in Org mode buffers.
 *************** TODO Check src blocks in  *temp* buffers?
 *************** END
 
-~screen~ offers support for interactive terminals.  Mostly shell scripts.  Heavily
+~screen~ offers support for interactive terminals. Mostly shell scripts. Heavily
 inspired by ~eev~.
 
 Eric Schulte believes ~screen~ has more of a focus on sustained interaction with
@@ -4318,7 +4318,7 @@ corresponding LaTeX tables.
 
 #+begin_note
 For some (yet) unknown reason, ~lvn--org-update-buffer-before-save~ gets added to
-a local copy of the global variable ~before-save-hook~.  We now decided to add it
+a local copy of the global variable ~before-save-hook~. We now decided to add it
 to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 #+end_note
 
@@ -4364,16 +4364,16 @@ to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 #+end_src
 
 #+begin_src emacs-lisp
-(defvar lvn--org-clean-typography-excluded-files
+(defvar eboost--org-clean-typography-excluded-files
   '("emacs.org" "init.org" "emacs-leuven-org.txt")
-  "List of Org filenames where `lvn--org-clean-typography` should NOT run.")
+  "List of Org filenames where `eboost--org-clean-typography` should NOT run.")
 
-(defun lvn--org-clean-typography ()
+(defun eboost--org-clean-typography ()
   "Replace typographic characters with ASCII equivalents before saving, unless in excluded Org files."
   (when (and (derived-mode-p 'org-mode)
              buffer-file-name           ; Ensure that the file name is not nil.
              (not (member (file-name-nondirectory buffer-file-name)
-                          lvn--org-clean-typography-excluded-files)))
+                          eboost--org-clean-typography-excluded-files)))
     (let ((replacements
            '(("—" . "--")               ; Em dash.
              ("–" . "-")                ; En dash.
@@ -4390,9 +4390,7 @@ to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
           (while (search-forward (car pair) nil t)
             (replace-match (cdr pair) nil t)))))))
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'before-save-hook #'lvn--org-clean-typography nil 'local)))
+(add-hook 'before-save-hook #'eboost--org-clean-typography nil 'local)
 #+end_src
 
 * Org-contrib
