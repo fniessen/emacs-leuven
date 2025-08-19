@@ -1194,6 +1194,18 @@ relevant manual page without leaving Emacs.
 You can ask what pertains to a given topic by typing ~M-x apropos RET pattern
 RET~.
 
+
+Instead of apropos-do-all, Emacs now ships with a single "apropos" dispatcher
+and a handful of more specific commands:
+
+ • M-x apropos             search everything (the old "apropos-do-all")
+ • M-x apropos-command   only command names
+ • M-x apropos-function  only functions
+ • M-x apropos-variable  only variables
+ • M-x apropos-option    user options
+ • M-x apropos-value        values of variables
+
+
 #+begin_src emacs-lisp
 ;;** 10.4 (info "(emacs)Apropos")
 
@@ -1201,23 +1213,19 @@ RET~.
 
   (with-eval-after-load 'apropos
 
-    ;; Apropos commands will search more extensively, checking all variables and
-    ;; non-interactive functions as well.
-    (setq apropos-do-all t))
+    ;; (defun apropos-user-option (string)
+    ;;   "Like apropos, but lists only symbols that are names of user
+    ;; modifiable variables. Argument REGEXP is a regular expression.
+    ;;    Returns a list of symbols, and documentation found"
+    ;;   (interactive "sVariable apropos (regexp): ")
+    ;;   (let ((message
+    ;;          (let ((standard-output (get-buffer-create "*Help*")))
+    ;;            (print-help-return-message 'identity))))
+    ;;     (if (apropos string  'user-variable-p)
+    ;;         (and message (message message)))))
 
-  ;; (defun apropos-user-option (string)
-  ;;   "Like apropos, but lists only symbols that are names of user
-  ;; modifiable variables. Argument REGEXP is a regular expression.
-  ;;    Returns a list of symbols, and documentation found"
-  ;;   (interactive "sVariable apropos (regexp): ")
-  ;;   (let ((message
-  ;;          (let ((standard-output (get-buffer-create "*Help*")))
-  ;;            (print-help-return-message 'identity))))
-  ;;     (if (apropos string  'user-variable-p)
-  ;;         (and message (message message)))))
-
-  ;; Show all variables whose name matches the pattern.
-  (define-key help-map (kbd "A") #'apropos-user-option)
+    ;; Show all variables whose name matches the pattern.
+    (define-key help-map (kbd "A") #'apropos-user-option))
 #+end_src
 
 ** Misc Help Commands
@@ -1318,7 +1326,7 @@ With ~Info+~, you can also merge an Info node with its subnodes into the same
 buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 #+begin_src emacs-lisp
-  (with-eval-after-load 'info+-autoloads-XXX
+  (with-eval-after-load 'info+-autoloads
     (idle-require 'info+)
     (with-eval-after-load 'info+
       ;; Show breadcrumbs in the header line.
@@ -1328,8 +1336,8 @@ buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
       (setq Info-breadcrumbs-in-mode-line-mode nil)))
 #+end_src
 
-In an Info page, ~w~ will copy the reference to the current node (the ~(%s)%s~ part
-of your format string).
+In an Info page, ~w~ (~M-x Info-copy-current-node-name~) will copy the reference to
+the current node (the ~(%s)%s~ part of your format string).
 
 When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
 
@@ -1400,6 +1408,46 @@ Instead of setting the *mark* in order to operate on a region, you can also type
 - ~C-u C-SPC~ ::
      Later *jump* back *to the* previous *mark* in the buffer. You can use this
      repeatedly to *navigate* through the entire *mark ring*.
+
+
+
+C-SPC runs the command set-mark-command (found in global-map), which is an
+interactive native-comp-function in
+'/snap/emacs/3130/usr/share/emacs/30.2/lisp/simple.el'.
+
+It is bound to C-@ and C-SPC.
+
+(set-mark-command ARG)
+
+Inferred type: (function (t) t)
+
+Set the mark where point is, and activate it; or jump to the mark.
+Setting the mark also alters the region, which is the text
+between point and mark; this is the closest equivalent in
+Emacs to what some editors call the "selection".
+
+With no prefix argument, set the mark at point, and push the
+old mark position on local mark ring.  Also push the new mark on
+global mark ring, if the previous mark was set in another buffer.
+
+When Transient Mark Mode is off, immediately repeating this
+command activates 'transient-mark-mode' temporarily.
+
+With prefix argument (e.g., C-u C-SPC), jump to the mark, and set the mark from
+position popped off the local mark ring (this does not affect the global
+mark ring).  Use C-x C-@ to jump to a mark popped off the global
+mark ring (see 'pop-global-mark').
+
+If 'set-mark-command-repeat-pop' is non-nil, repeating
+the C-SPC command with no prefix argument pops the next position
+off the local (or global) mark ring and jumps there.
+
+With C-u C-u as prefix
+argument, unconditionally set mark where point is, even if
+'set-mark-command-repeat-pop' is non-nil.
+
+
+
 
 #+begin_tip
 Many commands (especially ones which are liable to move you an an unknown or
@@ -7536,6 +7584,18 @@ Nor a default when point is on a command name...
 
 You can detect the successful activation of ~preview-latex~: after loading a
 LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
+
+#+begin_src emacs-lisp
+(defconst eboost-texlive-bin
+  "/usr/local/texlive/2024/bin/x86_64-linux"
+  "Path to TeX Live executables.")
+
+(add-to-list 'exec-path eboost-texlive-bin)
+(setenv "PATH"
+        (concat (getenv "PATH")
+                path-separator          ; For portability.
+                eboost-texlive-bin))
+#+end_src
 
 #+begin_src emacs-lisp
 ;;** (info "(preview-latex)Top")

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250817.1047>
+;; Version: <20250819.1330>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250817.1047>"
+(defconst eboost-version "<20250819.1330>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -800,23 +800,19 @@ Shows a warning message if the file does not exist or is not executable."
 
   (with-eval-after-load 'apropos
 
-    ;; Apropos commands will search more extensively, checking all variables and
-    ;; non-interactive functions as well.
-    (setq apropos-do-all t))
+    ;; (defun apropos-user-option (string)
+    ;;   "Like apropos, but lists only symbols that are names of user
+    ;; modifiable variables. Argument REGEXP is a regular expression.
+    ;;    Returns a list of symbols, and documentation found"
+    ;;   (interactive "sVariable apropos (regexp): ")
+    ;;   (let ((message
+    ;;          (let ((standard-output (get-buffer-create "*Help*")))
+    ;;            (print-help-return-message 'identity))))
+    ;;     (if (apropos string  'user-variable-p)
+    ;;         (and message (message message)))))
 
-  ;; (defun apropos-user-option (string)
-  ;;   "Like apropos, but lists only symbols that are names of user
-  ;; modifiable variables. Argument REGEXP is a regular expression.
-  ;;    Returns a list of symbols, and documentation found"
-  ;;   (interactive "sVariable apropos (regexp): ")
-  ;;   (let ((message
-  ;;          (let ((standard-output (get-buffer-create "*Help*")))
-  ;;            (print-help-return-message 'identity))))
-  ;;     (if (apropos string  'user-variable-p)
-  ;;         (and message (message message)))))
-
-  ;; Show all variables whose name matches the pattern.
-  (define-key help-map (kbd "A") #'apropos-user-option)
+    ;; Show all variables whose name matches the pattern.
+    (define-key help-map (kbd "A") #'apropos-user-option))
 
 ;;** 10.8 (info "(emacs)Misc Help")
 
@@ -857,7 +853,7 @@ Shows a warning message if the file does not exist or is not executable."
         (when (file-directory-p cygwin-info-dir)
           (add-to-list 'Info-directory-list cygwin-info-dir :append))))
 
-  (with-eval-after-load 'info+-autoloads-XXX
+  (with-eval-after-load 'info+-autoloads
     (idle-require 'info+)
     (with-eval-after-load 'info+
       ;; Show breadcrumbs in the header line.
@@ -4255,6 +4251,16 @@ scrolling to the bottom."
     ;; Directory containing automatically generated TeX information.
     (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
                                         ; Must end with a slash.
+
+(defconst eboost-texlive-bin
+  "/usr/local/texlive/2024/bin/x86_64-linux"
+  "Path to TeX Live executables.")
+
+(add-to-list 'exec-path eboost-texlive-bin)
+(setenv "PATH"
+        (concat (getenv "PATH")
+                path-separator          ; For portability.
+                eboost-texlive-bin))
 
 ;;** (info "(preview-latex)Top")
 
