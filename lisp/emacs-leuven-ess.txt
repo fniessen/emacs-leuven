@@ -110,7 +110,7 @@ Smart underscore:
 *** Integration with auto-complete package
 
 #+begin_note
-R docs are not in Info format.  Though, they are available via the quick help of
+R docs are not in Info format. Though, they are available via the quick help of
 Auto-Complete.
 #+end_note
 
@@ -154,7 +154,7 @@ Since ESS v12.02, ElDoc functionality (to report R function arguments) has been
 moved into the core, and is active by default; so you don't need to configure
 anything...
 
-When you visit a R mode, ElDoc will be turned on.  However, you will *first need
+When you visit a R mode, ElDoc will be turned on. However, you will *first need
 to associate the R buffer with an R process* so that args can be looked up --
 otherwise, ElDoc will silently not report anything.
 
@@ -212,10 +212,10 @@ With your point on the line of a variable,
     "View *R* objects in a dired-like buffer." t)
 #+end_src
 
-You could prefer to have the ~*R dired*~ buffer in a separate frame.  Check out
+You could prefer to have the ~*R dired*~ buffer in a separate frame. Check out
 ~special-display-buffer-names~.
 
-Or have it dedicated in a window.  Check out
+Or have it dedicated in a window. Check out
 https://github.com/emacsmirror/dedicated.
 
 *** Interaction with Org mode
