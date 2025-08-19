@@ -270,7 +270,7 @@ My work = tasks owned by me ("my tasks") + tasks assigned to me.
 
 ** Today
 
-An everyday objective should be to empty this list first, by any mean.  For
+An everyday objective should be to empty this list first, by any mean. For
 example, start /every morning/ by:
 
 - scheduling tasks to another day if you already know it can't be completed
@@ -394,7 +394,7 @@ Disadvantages of this view:
   for now, right?
 
   Note that such a task is well shown in the hotlist (example: "Noter les
-  index de consommation").  A bug would be there, then!
+  index de consommation"). A bug would be there, then!
 
 #+begin_src emacs-lisp :tangle no
 (add-to-list 'org-agenda-custom-commands
@@ -907,7 +907,7 @@ See [[https://www.youtube.com/watch?v=ryuS0fdA2z0&index=3&list=PLQ176FUIyIUbGE72
 
 #+begin_note
 ~org-timeline~ has weaknesses and although not officially deprecated, should be
-best avoided.  See Carsten's comments in
+best avoided. See Carsten's comments in
 http://thread.gmane.org/gmane.emacs.orgmode/39368/focus=39465
 #+end_note
 
@@ -1646,7 +1646,7 @@ Exporting your personal or team task lists.
 ** Print list
 
 The *exported agenda views* are not *stored* when you use one of those commands
-interactively because this might use too much overhead.  Instead, there is a
+interactively because this might use too much overhead. Instead, there is a
 special command to produce all specified files in one step: ~C-c a e~.
 
 #+begin_note
