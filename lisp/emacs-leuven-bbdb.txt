@@ -58,7 +58,7 @@ bbdb3: https://savannah.nongnu.org/projects/bbdb
   ;;   the BBDB when new messages are loaded (required if the BBDB is to be
   ;;   able to display BBDB entries for messages displayed in Gnus).
   ;;
-  ;; - Add a binding for `M-TAB' to Message mode.  This will enable completion
+  ;; - Add a binding for `M-TAB' to Message mode. This will enable completion
   ;;   of addresses based on BBDB records.
 
   ;; What do we do when invoking bbdb interactively (`:' to display sender).
@@ -184,7 +184,7 @@ You can add the author of a mail or posting to the BBDB by hitting ~:~.
 * Utilities
 
 BBDB 3 has a dial interface which allows you to call an external interface to
-make a call.  This is done by modifying ~bbdb-dial-function~.  There are examples
+make a call. This is done by modifying ~bbdb-dial-function~. There are examples
 which interface with Skype to make a phone call.
 
 * Feature
