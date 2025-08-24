@@ -27,25 +27,55 @@
 
 | Item                                | Type     | Status          | Replacement                                                                   |
 |-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
+| w32-quote-process-args              | Variable | Obsolete (27.1) | Remove; argument quoting is internal                                          |
+| w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start"                    |
+| w32-register-hot-key                | Function | Obsolete (27.1) | Remove; handle via keybindings or external tools                              |
+|-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
 | menu-bar-enable-clipboard           | Function | Obsolete (23.2) | Remove; clipboard is default                                                  |
 | garbage-collection-messages         | Variable | Obsolete (24.4) | Remove; use after-gc-hook if needed                                           |
-| apropos-do-all                      | Variable | Obsolete (24.4) | Remove; customize specific apropos commands                                   |
 | comint-use-prompt-regexp            | Variable | Obsolete (24.4) | Not set; rely on comint-prompt-read-only                                      |
 | ad-disable-advice, ad-update        | Function | Obsolete (24.4) | Remove; already using advice-add                                              |
 | save-interprogram-paste-before-kill | Variable | Obsolete (25.1) | Remove; default behavior now                                                  |
 | yank-pop-change-selection           | Variable | Obsolete (25.1) | Remove (commented out); clipboard handling is automatic                       |
 | find-tag-default                    | Function | Obsolete (25.1) | Use symbol-at-point or thing-at-point 'symbol                                 |
 | resize-mini-windows                 | Variable | Obsolete (27.1) | Remove; use resize-mini-frames if Emacs is running in a graphical environment |
-| w32-quote-process-args              | Variable | Obsolete (27.1) | Remove; argument quoting is internal                                          |
-| w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start"                    |
-| w32-register-hot-key                | Function | Obsolete (27.1) | Remove; handle via keybindings or external tools                              |
+
+
+All of those really are marked obsolete in upstream Emacs--you can safely stop setting/removing them in your init and rely on the newer defaults or APIs. Here's the quick rundown:
+
+1. menu-bar-enable-clipboard (obsolete 23.2)
+   • Clipboard support is always on now. Just delete any calls to this.
+
+2. garbage-collection-messages (obsolete 24.4)
+   • If you really want GC logging, use after-gc-hook instead of this variable.
+
+3. comint-use-prompt-regexp (obsolete 24.4)
+   • Emacs now uses comint-prompt-read-only. Remove your setting of the old var.
+
+4. ad-disable-advice, ad-update (both obsolete 24.4)
+   • The new advice API is advice-add/advice-remove. Drop any defadvice or ad-/ calls.
+
+5. save-interprogram-paste-before-kill (obsolete 25.1)
+   • Interprogram paste is always saved by default. You don't need this var.
+
+6. yank-pop-change-selection (obsolete 25.1)
+   • Emacs manages the selection automatically when you yank/yank-pop. Remove it.
+
+7. find-tag-default (obsolete 25.1)
+   • Use (thing-at-point 'symbol) or symbol-at-point, or switch to xref-find-definitions, etc.
+
+8. resize-mini-windows (obsolete 27.1)
+   • In a GUI build use resize-mini-frames. In TTY Emacs respects =resize-mini-windows' invisibly.
+
+
+
 
 *** TODO Remove obsolete variables and functions for Orgstruct
 
 Obsolete Variables
 - org-emphasis-alist
   Status: Not completely obsolete; however, its customization approach has evolved.
-  Details: In older Org versions (pre-9.0), org-emphasis-alist was used to define markup for emphasis (e.g., bold, italic). While it still exists, its use for HTML export has been superseded by org-html-text-markup-alist for finer control in HTML backends since Org 9.0 (2016). Your code modifies it directly, which might still work but isn’t the recommended approach for export-specific customization.
+  Details: In older Org versions (pre-9.0), org-emphasis-alist was used to define markup for emphasis (e.g., bold, italic). While it still exists, its use for HTML export has been superseded by org-html-text-markup-alist for finer control in HTML backends since Org 9.0 (2016). Your code modifies it directly, which might still work but isn't the recommended approach for export-specific customization.
   Replacement: Use org-html-text-markup-alist for HTML, org-latex-text-markup-alist for LaTeX, etc., depending on the backend.
   Line Reference: (setq org-emphasis-alist ...) under ;; These variables need to be set before org.el is loaded....
 
@@ -470,8 +500,8 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
  ■  Warning (comp): back-button.el:640:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): back-button.el:676:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): back-button.el:718:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
- ■  Warning (comp): bitbucket-issues.el:38:25: Warning: the function ‘perform-bitbucket-request’ is not known to be defined.
- ■  Warning (comp): circe.el:1065:16: Warning: reference to free variable ‘circe-server-buffer’
+ ■  Warning (comp): bitbucket-issues.el:38:25: Warning: the function 'perform-bitbucket-request' is not known to be defined.
+ ■  Warning (comp): circe.el:1065:16: Warning: reference to free variable 'circe-server-buffer'
  ■  Warning (comp): circe.el:134:2: Warning: custom-declare-variable `circe-default-ip-family' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): circe.el:2451:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): circe.el:2498:38: Warning: Unused lexical argument `ignored'
@@ -480,12 +510,12 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
  ■  Warning (comp): circe.el:2575:38: Warning: Unused lexical argument `ignored'
  ■  Warning (comp): circe.el:2771:36: Warning: Unused lexical argument `ignored'
  ■  Warning (comp): circe.el:2830:40: Warning: Unused lexical argument `ignored'
- ■  Warning (comp): circe.el:2865:32: Warning: reference to free variable ‘circe-netsplit-list’
+ ■  Warning (comp): circe.el:2865:32: Warning: reference to free variable 'circe-netsplit-list'
  ■  Warning (comp): circe.el:2911:35: Warning: Unused lexical argument `ignored'
  ■  Warning (comp): circe.el:2939:35: Warning: Unused lexical argument `ignored'
  ■  Warning (comp): circe.el:2952:35: Warning: Unused lexical argument `ignored'
  ■  Warning (comp): circe.el:308:2: Warning: custom-declare-variable `circe-highlight-nick-type' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
- ■  Warning (comp): circe.el:3339:9: Warning: Variable ‘circe-netsplit-list’ declared after its first use
+ ■  Warning (comp): circe.el:3339:9: Warning: Variable 'circe-netsplit-list' declared after its first use
  ■  Warning (comp): company-quickhelp.el:245:14: Warning: `focus-out-hook' is an obsolete variable (as of 27.1); after-focus-change-function
  ■  Warning (comp): company-quickhelp.el:252:17: Warning: `focus-out-hook' is an obsolete variable (as of 27.1); after-focus-change-function
  ■  Warning (comp): dashboard-widgets.el:1082:5: Warning: docstring wider than 80 characters
@@ -554,29 +584,29 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
  ■  Warning (comp): dumb-jump.el:93:2: Warning: custom-declare-variable `dumb-jump-prefer-searcher' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): emr-elisp.el:1050:2: Warning: docstring wider than 80 characters
  ■  Warning (comp): emr-elisp.el:1191:35: Warning: Use -zip-pair instead of -zip to get a list of pairs
- ■  Warning (comp): emr-elisp.el:1516:40: Warning: the function ‘find-function-library’ is not known to be defined.
- ■  Warning (comp): emr-elisp.el:38:12: Warning: defcustom for ‘emr-el-definition-macro-names’ fails to specify type
+ ■  Warning (comp): emr-elisp.el:1516:40: Warning: the function 'find-function-library' is not known to be defined.
+ ■  Warning (comp): emr-elisp.el:38:12: Warning: defcustom for 'emr-el-definition-macro-names' fails to specify type
  ■  Warning (comp): emr-elisp.el:392:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): emr-elisp.el:448:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): emr.el:166:20: Warning: Use -zip-pair instead of -zip to get a list of pairs
- ■  Warning (comp): emr.el:82:16: Warning: ‘point-at-eol’ is an obsolete function (as of 29.1); use ‘line-end-position’ or ‘pos-eol’ instead.
+ ■  Warning (comp): emr.el:82:16: Warning: 'point-at-eol' is an obsolete function (as of 29.1); use 'line-end-position' or 'pos-eol' instead.
  ■  Warning (comp): epl.el:441:2: Warning: docstring wider than 80 characters
- ■  Warning (comp): expand-region-core.el:116:23: Warning: reference to free variable ‘er--show-expansion-message’
- ■  Warning (comp): expand-region-core.el:207:8: Warning: the function ‘er/set-temporary-overlay-map’ is not known to be defined.
- ■  Warning (comp): expand-region-core.el:276:11: Warning: defsubst ‘er--first-invocation’ was used before it was defined
- ■  Warning (comp): expand-region-custom.el:33:12: Warning: defcustom for ‘expand-region-preferred-python-mode’ has syntactically odd type ‘'(choice (const :tag Emacs' python.el 'python) (const :tag fgallina's python.el 'fgallina-python) (const :tag python-mode.el 'python-mode))’
+ ■  Warning (comp): expand-region-core.el:116:23: Warning: reference to free variable 'er--show-expansion-message'
+ ■  Warning (comp): expand-region-core.el:207:8: Warning: the function 'er/set-temporary-overlay-map' is not known to be defined.
+ ■  Warning (comp): expand-region-core.el:276:11: Warning: defsubst 'er--first-invocation' was used before it was defined
+ ■  Warning (comp): expand-region-custom.el:33:12: Warning: defcustom for 'expand-region-preferred-python-mode' has syntactically odd type ''(choice (const :tag Emacs' python.el 'python) (const :tag fgallina's python.el 'fgallina-python) (const :tag python-mode.el 'python-mode))'
  ■  Warning (comp): expand-region-custom.el:89:2: Warning: custom-declare-variable `expand-region-exclude-text-mode-expansions' docstring wider than 80 characters
  ■  Warning (comp): google-translate-core-ui.el:304:2: Warning: custom-declare-variable `google-translate-enable-ido-completion' docstring wider than 80 characters
- ■  Warning (comp): google-translate-core-ui.el:349:12: Warning: defcustom for ‘google-translate-pop-up-buffer-set-focus’ fails to specify type
- ■  Warning (comp): google-translate-core-ui.el:357:12: Warning: defcustom for ‘google-translate-display-translation-phonetic’ fails to specify type
+ ■  Warning (comp): google-translate-core-ui.el:349:12: Warning: defcustom for 'google-translate-pop-up-buffer-set-focus' fails to specify type
+ ■  Warning (comp): google-translate-core-ui.el:357:12: Warning: defcustom for 'google-translate-display-translation-phonetic' fails to specify type
  ■  Warning (comp): google-translate-core-ui.el:411:2: Warning: defvar `google-translate-preferable-input-methods-alist' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): google-translate-core-ui.el:446:2: Warning: docstring wider than 80 characters
- ■  Warning (comp): google-translate-core-ui.el:797:47: Warning: ‘previous-line’ is for interactive use only; use ‘forward-line’ with negative argument instead.
+ ■  Warning (comp): google-translate-core-ui.el:797:47: Warning: 'previous-line' is for interactive use only; use 'forward-line' with negative argument instead.
  ■  Warning (comp): google-translate-core.el:162:2: Warning: docstring wider than 80 characters
- ■  Warning (comp): google-translate-default-ui.el:263:61: Warning: the function ‘pdf-view-active-region-text’ is not known to be defined.
+ ■  Warning (comp): google-translate-default-ui.el:263:61: Warning: the function 'pdf-view-active-region-text' is not known to be defined.
  ■  Warning (comp): google-translate-default-ui.el:303:2: Warning: docstring wider than 80 characters
- ■  Warning (comp): google-translate-default-ui.el:314:25: Warning: the function ‘org-element-at-point’ is not known to be defined.
- ■  Warning (comp): google-translate-default-ui.el:316:18: Warning: the function ‘org-mark-element’ is not known to be defined.
+ ■  Warning (comp): google-translate-default-ui.el:314:25: Warning: the function 'org-element-at-point' is not known to be defined.
+ ■  Warning (comp): google-translate-default-ui.el:316:18: Warning: the function 'org-mark-element' is not known to be defined.
  ■  Warning (comp): google-translate-default-ui.el:337:2: Warning: docstring wider than 80 characters
  ■  Warning (comp): helm-core.el:6651:14: Warning: `inhibit-point-motion-hooks' is an obsolete variable (as of 25.1); use `cursor-intangible-mode' or `cursor-sensor-mode' instead
  ■  Warning (comp): helm-core.el:7239:23: Warning: `special-display-regexps' is an obsolete variable (as of 24.3); use `display-buffer-alist' instead.
@@ -587,38 +617,38 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
  ■  Warning (comp): iedit-lib.el:1029:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): iedit-lib.el:135:2: Warning: defvar `iedit-search-invisible' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): iedit.el:175:2: Warning: defvar `iedit-default-occurrence-local' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
- ■  Warning (comp): iedit.el:537:12: Warning: Case 'regexp will match ‘quote’.  If that’s intended, write (regexp quote) instead.  Otherwise, don’t quote ‘regexp’.
- ■  Warning (comp): iedit.el:537:12: Warning: Case 'symbol will match ‘quote’.  If that’s intended, write (symbol quote) instead.  Otherwise, don’t quote ‘symbol’.
- ■  Warning (comp): iedit.el:537:12: Warning: Case 'word will match ‘quote’.  If that’s intended, write (word quote) instead.  Otherwise, don’t quote ‘word’.
+ ■  Warning (comp): iedit.el:537:12: Warning: Case 'regexp will match 'quote'.  If that's intended, write (regexp quote) instead.  Otherwise, don't quote 'regexp'.
+ ■  Warning (comp): iedit.el:537:12: Warning: Case 'symbol will match 'quote'.  If that's intended, write (symbol quote) instead.  Otherwise, don't quote 'symbol'.
+ ■  Warning (comp): iedit.el:537:12: Warning: Case 'word will match 'quote'.  If that's intended, write (word quote) instead.  Otherwise, don't quote 'word'.
  ■  Warning (comp): irc.el:1198:59: Warning: Unused lexical argument `ignored'
  ■  Warning (comp): irc.el:1496:60: Warning: Unused lexical argument `ignored'
  ■  Warning (comp): irc.el:612:57: Warning: Unused lexical argument `ignored'
- ■  Warning (comp): irc.el:671:13: Warning: assignment to free variable ‘circe-server-inhibit-auto-reconnect-p’
- ■  Warning (comp): irc.el:672:27: Warning: reference to free variable ‘circe-default-quit-message’
+ ■  Warning (comp): irc.el:671:13: Warning: assignment to free variable 'circe-server-inhibit-auto-reconnect-p'
+ ■  Warning (comp): irc.el:672:27: Warning: reference to free variable 'circe-default-quit-message'
  ■  Warning (comp): list-utils.el:1001:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): list-utils.el:288:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): lui-irc-colors.el:196:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
- ■  Warning (comp): lui-track.el:97:14: Warning: Case 'bar will match ‘quote’.  If that’s intended, write (bar quote) instead.  Otherwise, don’t quote ‘bar’.
- ■  Warning (comp): lui-track.el:97:14: Warning: Case 'fringe will match ‘quote’.  If that’s intended, write (fringe quote) instead.  Otherwise, don’t quote ‘fringe’.
- ■  Warning (comp): lui.el:1184:28: Warning: ‘point-at-bol’ is an obsolete function (as of 29.1); use ‘line-beginning-position’ or ‘pos-bol’ instead.
- ■  Warning (comp): lui.el:1245:21: Warning: ‘point-at-eol’ is an obsolete function (as of 29.1); use ‘line-end-position’ or ‘pos-eol’ instead.
- ■  Warning (comp): lui.el:1293:23: Warning: ‘point-at-eol’ is an obsolete function (as of 29.1); use ‘line-end-position’ or ‘pos-eol’ instead.
- ■  Warning (comp): lui.el:1320:10: Warning: ‘inhibit-point-motion-hooks’ is an obsolete variable (as of 25.1); use ‘cursor-intangible-mode’ or ‘cursor-sensor-mode’ instead
+ ■  Warning (comp): lui-track.el:97:14: Warning: Case 'bar will match 'quote'.  If that's intended, write (bar quote) instead.  Otherwise, don't quote 'bar'.
+ ■  Warning (comp): lui-track.el:97:14: Warning: Case 'fringe will match 'quote'.  If that's intended, write (fringe quote) instead.  Otherwise, don't quote 'fringe'.
+ ■  Warning (comp): lui.el:1184:28: Warning: 'point-at-bol' is an obsolete function (as of 29.1); use 'line-beginning-position' or 'pos-bol' instead.
+ ■  Warning (comp): lui.el:1245:21: Warning: 'point-at-eol' is an obsolete function (as of 29.1); use 'line-end-position' or 'pos-eol' instead.
+ ■  Warning (comp): lui.el:1293:23: Warning: 'point-at-eol' is an obsolete function (as of 29.1); use 'line-end-position' or 'pos-eol' instead.
+ ■  Warning (comp): lui.el:1320:10: Warning: 'inhibit-point-motion-hooks' is an obsolete variable (as of 25.1); use 'cursor-intangible-mode' or 'cursor-sensor-mode' instead
  ■  Warning (comp): lui.el:246:2: Warning: custom-declare-variable `lui-fill-type' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): lui.el:288:2: Warning: custom-declare-variable `lui-time-stamp-position' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): lui.el:315:2: Warning: custom-declare-variable `lui-time-stamp-only-when-changed-p' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
- ■  Warning (comp): lui.el:694:10: Warning: ‘help-xref-interned’ is an obsolete function (as of 25.1); use ‘describe-symbol’ instead.
- ■  Warning (comp): lui.el:715:16: Warning: ‘point-at-bol’ is an obsolete function (as of 29.1); use ‘line-beginning-position’ or ‘pos-bol’ instead.
+ ■  Warning (comp): lui.el:694:10: Warning: 'help-xref-interned' is an obsolete function (as of 25.1); use 'describe-symbol' instead.
+ ■  Warning (comp): lui.el:715:16: Warning: 'point-at-bol' is an obsolete function (as of 29.1); use 'line-beginning-position' or 'pos-bol' instead.
  ■  Warning (comp): lui.el:790:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
- ■  Warning (comp): lui.el:961:17: Warning: ‘inhibit-point-motion-hooks’ is an obsolete variable (as of 25.1); use ‘cursor-intangible-mode’ or ‘cursor-sensor-mode’ instead
+ ■  Warning (comp): lui.el:961:17: Warning: 'inhibit-point-motion-hooks' is an obsolete variable (as of 25.1); use 'cursor-intangible-mode' or 'cursor-sensor-mode' instead
  ■  Warning (comp): nav-flash.el:195:14: Warning: `inhibit-point-motion-hooks' is an obsolete variable (as of 25.1); use `cursor-intangible-mode' or `cursor-sensor-mode' instead
- ■  Warning (comp): nav-flash.el:195:14: Warning: ‘inhibit-point-motion-hooks’ is an obsolete variable (as of 25.1); use ‘cursor-intangible-mode’ or ‘cursor-sensor-mode’ instead
+ ■  Warning (comp): nav-flash.el:195:14: Warning: 'inhibit-point-motion-hooks' is an obsolete variable (as of 25.1); use 'cursor-intangible-mode' or 'cursor-sensor-mode' instead
  ■  Warning (comp): pcache.el:116:23: Warning: Unused lexical argument `k'
  ■  Warning (comp): pcache.el:120:38: Warning: Unused lexical argument `cache'
  ■  Warning (comp): pcache.el:143:39: Warning: Unused lexical argument `entry'
  ■  Warning (comp): pcache.el:229:21: Warning: Unused lexical argument `k'
  ■  Warning (comp): pcache.el:76:45: Warning: Ambiguous initform needs quoting: pcache-entry
- ■  Warning (comp): pcache.el:80:34: Warning: Unknown slot ‘:save-delay’
+ ■  Warning (comp): pcache.el:80:34: Warning: Unknown slot ':save-delay'
  ■  Warning (comp): popup.el:120:12: Warning: Unused lexical variable `kinsoku-limit'
  ■  Warning (comp): popup.el:1211:29: Warning: Unused lexical argument `event'
  ■  Warning (comp): popup.el:1211:35: Warning: Unused lexical argument `default'
@@ -630,9 +660,9 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
  ■  Warning (comp): popup.el:868:13: Warning: Unused lexical variable `counter'
  ■  Warning (comp): popup.el:982:10: Warning: Unused lexical variable `list'
  ■  Warning (comp): projectile.el:6232:19: Warning: assignment to free variable `savehist-additional-variables'
- ■  Warning (comp): projectile.el:6232:19: Warning: assignment to free variable ‘savehist-additional-variables’
+ ■  Warning (comp): projectile.el:6232:19: Warning: assignment to free variable 'savehist-additional-variables'
  ■  Warning (comp): projectile.el:6232:19: Warning: reference to free variable `savehist-additional-variables'
- ■  Warning (comp): projectile.el:6232:19: Warning: reference to free variable ‘savehist-additional-variables’
+ ■  Warning (comp): projectile.el:6232:19: Warning: reference to free variable 'savehist-additional-variables'
  ■  Warning (comp): smartparens.el: Warning: avoid `lsh'; use `ash' instead
  ■  Warning (comp): smartparens.el:1880:39: Warning: avoid `lsh'; use `ash' instead
  ■  Warning (comp): smartparens.el:1882:39: Warning: avoid `lsh'; use `ash' instead
@@ -647,13 +677,13 @@ See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis i
  ■  Warning (comp): smartparens.el:7883:2: Warning: docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): smartparens.el:9268:34: Warning: `point-at-eol' is an obsolete function (as of 29.1); use `line-end-position' or `pos-eol' instead.
  ■  Warning (comp): smartrep.el:110:4: Warning: `destructuring-bind' is an obsolete alias (as of 27.1); use `cl-destructuring-bind' instead.
- ■  Warning (comp): smartrep.el:110:4: Warning: ‘destructuring-bind’ is an obsolete alias (as of 27.1); use ‘cl-destructuring-bind’ instead.
+ ■  Warning (comp): smartrep.el:110:4: Warning: 'destructuring-bind' is an obsolete alias (as of 27.1); use 'cl-destructuring-bind' instead.
  ■  Warning (comp): smartrep.el:184:4: Warning: `loop' is an obsolete alias (as of 27.1); use `cl-loop' instead.
- ■  Warning (comp): smartrep.el:184:4: Warning: ‘loop’ is an obsolete alias (as of 27.1); use ‘cl-loop’ instead.
+ ■  Warning (comp): smartrep.el:184:4: Warning: 'loop' is an obsolete alias (as of 27.1); use 'cl-loop' instead.
  ■  Warning (comp): smartrep.el:47:2: Warning: *Package cl is deprecated*
  ■  Warning (comp): smartrep.el:47:2: Warning: Package cl is deprecated
  ■  Warning (comp): tex-site.el:138:31: Warning: the function `BibTeX-auto-store' is not known to be defined.
- ■  Warning (comp): tex-site.el:138:31: Warning: the function ‘BibTeX-auto-store’ is not known to be defined.
+ ■  Warning (comp): tex-site.el:138:31: Warning: the function 'BibTeX-auto-store' is not known to be defined.
  ■  Warning (comp): tracking.el:52:2: Warning: custom-declare-variable `tracking-shorten-modes' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): tracking.el:71:2: Warning: custom-declare-variable `tracking-position' docstring has wrong usage of unescaped single quotes (use \= or different quoting)
  ■  Warning (comp): volatile-highlights.el:388:32: Warning: Unused lexical argument `maparg'
@@ -762,7 +792,7 @@ even without not-found checking.
   (format "%ss" (time-to-seconds (time-subtract (current-time) time))))
 #+end_src
 
-** Intégration d’outils externes
+** Intégration d'outils externes
 
 *** TODO ripgrep
 
@@ -1156,7 +1186,7 @@ treated as an index file within a directory and will be rendered to index.html
 
 https://github.com/mkdocs/mkdocs/issues/321
 
-*** TODO Cannot find image file ‘~/.dotfiles/icons/inbox.png’
+*** TODO Cannot find image file '~/.dotfiles/icons/inbox.png'
 
 *** TODO Install best fonts for source code (for Emacs, fixed width)
 
