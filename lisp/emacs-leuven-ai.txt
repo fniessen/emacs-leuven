@@ -502,15 +502,24 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
 ;;;###autoload
   (defun eboost-gptel-write-commit-message ()
     "Generate a Git commit message from the current diff region or buffer.
-The result is shown in *Commit Message* and copied to the kill ring."
+The result is shown in *Commit Message* and copied to the kill ring.
+If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system prompt."
     (interactive)
     (unless (or (use-region-p) (> (buffer-size) 0))
       (user-error "No content to analyze"))
-
-    (let* ((diff-text (if (use-region-p)
-                          (buffer-substring-no-properties (region-beginning) (region-end))
-                        (buffer-substring-no-properties (point-min) (point-max))))
-           (prompt "Write a Git commit message for the following diff:\n\n"))
+    (let* ((prompt-file (expand-file-name "~/ai-prompts/write-commit-message.txt"))
+           (default-prompt
+            "Write a Git commit message for the following diff:\n\n")
+           (system-prompt
+            (if (file-readable-p prompt-file)
+                (with-temp-buffer
+                  (insert-file-contents prompt-file)
+                  (buffer-string))
+              default-prompt))
+           (diff-text
+            (if (use-region-p)
+                (buffer-substring-no-properties (region-beginning) (region-end))
+              (buffer-substring-no-properties (point-min) (point-max)))))
       ;; Notify user that the process has started.
       (message "[Writing commit message...]")
       ;; Create and clear the buffer initially.
@@ -519,7 +528,7 @@ The result is shown in *Commit Message* and copied to the kill ring."
       ;; Send request without menu.
       (gptel-request
           diff-text
-        :system prompt
+        :system system-prompt
         :callback (lambda (response info)
                     (if (stringp response)
                         (let ((output-buffer (get-buffer-create "*Commit Message*")))
@@ -528,18 +537,17 @@ The result is shown in *Commit Message* and copied to the kill ring."
                           (with-current-buffer output-buffer
                             (erase-buffer)
                             (let ((msg (string-trim response)))
-                              ;; Remove leading and trailing backtick wrappers
-                              ;; from the response, if any.
-                              (setq msg (replace-regexp-in-string "^```\n" "" msg))
-                              (setq msg (replace-regexp-in-string "```$" "" msg))
-                              ;; Replace backticks with single quotes.
+                              ;; strip ``` fences if present.
+                              (setq msg (replace-regexp-in-string "^```+ *\n?" "" msg))
+                              (setq msg (replace-regexp-in-string "\n?```+$" "" msg))
+                              ;; optional: convert backticks-quotes.
                               (setq msg (replace-regexp-in-string "`" "'" msg))
                               (kill-new msg) ; Add to kill ring.
                               (insert msg)
-                              (message "[Commit message copied to kill ring.]"))
-                            (pop-to-buffer output-buffer)))
-                      (error (message "[Failed to generate commit message: %s.]"
-                               (plist-get info :status))))))))
+                              (message "[Commit message copied to kill ring.]")))
+                          (pop-to-buffer output-buffer))
+                      (error "[Failed to generate commit message: %s]"
+                             (plist-get info :status)))))))
 
   ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
