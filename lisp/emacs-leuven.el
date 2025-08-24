@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250819.1330>
+;; Version: <20250824.2312>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250819.1330>"
+(defconst eboost-version "<20250824.2312>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2314,7 +2314,9 @@ After initiating the grep search, the isearch is aborted."
     (dolist (ov (overlays-in (window-start) (window-end)))
       (when (overlayp ov)
         (when (member (overlay-get ov 'face)
-                      '(ediff-even-diff-A ediff-even-diff-B
+                      '(ediff-current-diff-A ediff-current-diff-B
+                        ediff-even-diff-A ediff-even-diff-B
+                        ediff-fine-diff-A ediff-fine-diff-B
                         ediff-odd-diff-A ediff-odd-diff-B
                         highlight-changes
                         highlight-changes-delete
@@ -4256,11 +4258,19 @@ scrolling to the bottom."
   "/usr/local/texlive/2024/bin/x86_64-linux"
   "Path to TeX Live executables.")
 
-(add-to-list 'exec-path eboost-texlive-bin)
-(setenv "PATH"
-        (concat (getenv "PATH")
-                path-separator          ; For portability.
-                eboost-texlive-bin))
+(when (file-directory-p eboost-texlive-bin)
+  ;; Make sure Emacs will find binaries there.
+  (add-to-list 'exec-path eboost-texlive-bin)
+
+  ;; Prepend to the PATH environment variable.
+  (setenv "PATH"
+          (concat eboost-texlive-bin
+                  path-separator        ; For portability.
+                  (getenv "PATH"))))
+
+(unless (file-directory-p eboost-texlive-bin)
+  (message "[Warning] %s does not exist, skipping TeX Live bin in PATH"
+           eboost-texlive-bin))
 
 ;;** (info "(preview-latex)Top")
 

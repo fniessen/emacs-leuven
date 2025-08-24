@@ -4060,7 +4060,9 @@ Update time stamps (and copyright notice) automatically.
     (dolist (ov (overlays-in (window-start) (window-end)))
       (when (overlayp ov)
         (when (member (overlay-get ov 'face)
-                      '(ediff-even-diff-A ediff-even-diff-B
+                      '(ediff-current-diff-A ediff-current-diff-B
+                        ediff-even-diff-A ediff-even-diff-B
+                        ediff-fine-diff-A ediff-fine-diff-B
                         ediff-odd-diff-A ediff-odd-diff-B
                         highlight-changes
                         highlight-changes-delete
@@ -7590,11 +7592,19 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
   "/usr/local/texlive/2024/bin/x86_64-linux"
   "Path to TeX Live executables.")
 
-(add-to-list 'exec-path eboost-texlive-bin)
-(setenv "PATH"
-        (concat (getenv "PATH")
-                path-separator          ; For portability.
-                eboost-texlive-bin))
+(when (file-directory-p eboost-texlive-bin)
+  ;; Make sure Emacs will find binaries there.
+  (add-to-list 'exec-path eboost-texlive-bin)
+
+  ;; Prepend to the PATH environment variable.
+  (setenv "PATH"
+          (concat eboost-texlive-bin
+                  path-separator        ; For portability.
+                  (getenv "PATH"))))
+
+(unless (file-directory-p eboost-texlive-bin)
+  (message "[Warning] %s does not exist, skipping TeX Live bin in PATH"
+           eboost-texlive-bin))
 #+end_src
 
 #+begin_src emacs-lisp
