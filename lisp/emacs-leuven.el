@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-
+;; Version: <20250827.2027>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,6 +53,8 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
+(defconst eboost-version "<20250827.2027>"
+  "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
 (message "* --[ Loading Emacs-Leuven %s ]--" eboost-version)
