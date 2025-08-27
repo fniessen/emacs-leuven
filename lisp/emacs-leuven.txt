@@ -242,43 +242,43 @@ we restore default GC settings and perform an initial cleanup via
 (defvar leuven-load-chapter-0-debugging t)
 (defvar leuven-load-chapter-48-packages t)
 (defvar leuven-load-chapter-1-screen t)
-(defvar leuven-load-chapter-6-exiting t)
-(defvar leuven-load-chapter-7-basic t)
-(defvar leuven-load-chapter-8-minibuffer t)
-(defvar leuven-load-chapter-10-help t)
-(defvar leuven-load-chapter-11-mark t)
-(defvar leuven-load-chapter-12-killing t)
-(defvar leuven-load-chapter-13-registers t)
-(defvar leuven-load-chapter-14-display t)
-(defvar leuven-load-chapter-15-search t)
-(defvar leuven-load-chapter-16-fixit t)
-(defvar leuven-load-chapter-17-keyboard-macros t)
-(defvar leuven-load-chapter-18-files t)
-(defvar leuven-load-chapter-19-buffers t)
-(defvar leuven-load-chapter-20-windows t)
-(defvar leuven-load-chapter-21-frames t)
-(defvar leuven-load-chapter-22-international t)
-(defvar leuven-load-chapter-23-major-and-minor-modes t)
-(defvar leuven-load-chapter-24-indentation t)
-(defvar leuven-load-chapter-25-text t)
-(defvar leuven-load-chapter-25.11-tex-mode t)
-(defvar leuven-load-chapter-26-programs t)
-(defvar leuven-load-chapter-27-building t)
-(defvar leuven-load-chapter-28-maintaining t)
-(defvar leuven-load-chapter-29-abbrevs t)
-(defvar leuven-load-chapter-30-dired t)
-(defvar leuven-load-chapter-31-calendar-diary t)
-(defvar leuven-load-chapter-32-sending-mail t)
-(defvar leuven-load-chapter-34-gnus t)
-(defvar leuven-load-chapter-36-document-view t)
-(defvar leuven-load-chapter-38-shell t)
-(defvar leuven-load-chapter-39-emacs-server t)
-(defvar leuven-load-chapter-40-printing t)
-(defvar leuven-load-chapter-41-sorting t)
-(defvar leuven-load-chapter-44-saving-emacs-sessions t)
-(defvar leuven-load-chapter-46-hyperlinking t)
-(defvar leuven-load-chapter-47-amusements t)
-(defvar leuven-load-chapter-49-customization t)
+(defvar leuven-load-chapter-7-exiting t)
+(defvar leuven-load-chapter-8-basic t)
+(defvar leuven-load-chapter-9-minibuffer t)
+(defvar leuven-load-chapter-11-help t)
+(defvar leuven-load-chapter-12-mark t)
+(defvar leuven-load-chapter-13-killing t)
+(defvar leuven-load-chapter-14-registers t)
+(defvar leuven-load-chapter-15-display t)
+(defvar leuven-load-chapter-16-search t)
+(defvar leuven-load-chapter-17-fixit t)
+(defvar leuven-load-chapter-18-keyboard-macros t)
+(defvar leuven-load-chapter-19-files t)
+(defvar leuven-load-chapter-20-buffers t)
+(defvar leuven-load-chapter-21-windows t)
+(defvar leuven-load-chapter-22-frames t)
+(defvar leuven-load-chapter-23-international t)
+(defvar leuven-load-chapter-24-major-and-minor-modes t)
+(defvar leuven-load-chapter-25-indentation t)
+(defvar leuven-load-chapter-26-text t)
+(defvar leuven-load-chapter-26.11-tex-mode t)
+(defvar leuven-load-chapter-27-programs t)
+(defvar leuven-load-chapter-28-building t)
+(defvar leuven-load-chapter-29-maintaining t)
+(defvar leuven-load-chapter-30-abbrevs t)
+(defvar leuven-load-chapter-31-dired t)
+(defvar leuven-load-chapter-32-calendar-diary t)
+(defvar leuven-load-chapter-33-sending-mail t)
+(defvar leuven-load-chapter-35-gnus t)
+(defvar leuven-load-chapter-38-document-view t)
+(defvar leuven-load-chapter-39-shell t)
+(defvar leuven-load-chapter-40-emacs-server t)
+(defvar leuven-load-chapter-41-printing t)
+(defvar leuven-load-chapter-42-sorting t)
+(defvar leuven-load-chapter-45-saving-emacs-sessions t)
+(defvar leuven-load-chapter-47-hyperlinking t)
+(defvar leuven-load-chapter-48-amusements t)
+(defvar leuven-load-chapter-50-customization t)
 (defvar leuven-load-chapter-AppG-ms-dos t)
 (defvar leuven-load-chapter-XX-emacs-display t)
 (defvar leuven-load-chapter-99-debugging t)
@@ -611,7 +611,7 @@ Installed packages are now activated *before* loading the init file.
 ** The Package Menu Buffer
 
 #+begin_src emacs-lisp
-;;* 48 Emacs Lisp (info "(emacs)Packages")
+;;* 49 Emacs Lisp (info "(emacs)Packages")
 
 (leuven--chapter leuven-load-chapter-48-packages "48 Emacs Lisp Packages"
 #+end_src
@@ -910,9 +910,9 @@ like this into your configuration file:
 * Exiting Emacs
 
 #+begin_src emacs-lisp
-;;* 6 (info "(emacs)Exiting") Emacs
+;;* 7 (info "(emacs)Exiting") Emacs
 
-(leuven--chapter leuven-load-chapter-6-exiting "6 Exiting Emacs"
+(leuven--chapter leuven-load-chapter-7-exiting "7 Exiting Emacs"
 
   ;; Unbind "minimize".
   (global-unset-key (kbd "C-z"))
@@ -920,23 +920,23 @@ like this into your configuration file:
   ;; Quit with Alt + F4.
   (global-set-key (kbd "M-<f4>") #'save-buffers-kill-terminal)
 
-)                                       ; Chapter 6 ends here.
+)                                       ; Chapter 7 ends here.
 #+end_src
 
 * Basic Editing Commands
 
 #+begin_src emacs-lisp
-;;* 7 (info "(emacs)Basic") Editing Commands
+;;* 8 (info "(emacs)Basic") Editing Commands
 
-(leuven--chapter leuven-load-chapter-7-basic "7 Basic Editing Commands"
+(leuven--chapter leuven-load-chapter-8-basic "8 Basic Editing Commands"
 #+end_src
 
 ** Inserting Text
 
 #+begin_src emacs-lisp
-;;** 7.1 (info "(emacs)Inserting Text")
+;;** 8.1 (info "(emacs)Inserting Text")
 
-  (leuven--section "7.1 (emacs)Inserting Text")
+  (leuven--section "8.1 (emacs)Inserting Text")
 
   ;; Enter characters by their code in octal (for `C-q NNN RET').
   (setq read-quoted-char-radix 8)       ; 16 for hexadecimal (for Unicode char)
@@ -951,9 +951,9 @@ like this into your configuration file:
      *Jump to* the beginning of *line* number /N/ (~goto-line~).
 
 #+begin_src emacs-lisp
-;;** 7.2 (info "(emacs)Moving Point") Location
+;;** 8.2 (info "(emacs)Moving Point") Location
 
-  (leuven--section "7.2 (emacs)Moving Point Location")
+  (leuven--section "8.2 (emacs)Moving Point Location")
 
   ;; Don't add newlines to end of buffer when scrolling.
   (setq next-line-add-newlines nil)
@@ -1000,9 +1000,9 @@ Shortcuts:
 | Redo    |       | C-S-z, S-<f11> |
 
 #+begin_src emacs-lisp
-;;** 7.4 (info "(emacs)Basic Undo")ing Changes
+;;** 8.4 (info "(emacs)Basic Undo")ing Changes
 
-  (leuven--section "7.4 (emacs)Basic Undoing Changes")
+  (leuven--section "8.4 (emacs)Basic Undoing Changes")
 
   ;; Bind F11 to the undo command.
   (global-set-key (kbd "<f11>") #'undo)
@@ -1045,15 +1045,15 @@ Visual feedback on some operations (~undo~, ~yank~, etc.).
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 7 ends here.
+)                                       ; Chapter 8 ends here.
 #+end_src
 
 * The Minibuffer
 
 #+begin_src emacs-lisp
-;;* 8 The (info "(emacs)Minibuffer")
+;;* 9 The (info "(emacs)Minibuffer")
 
-(leuven--chapter leuven-load-chapter-8-minibuffer "8 The Minibuffer"
+(leuven--chapter leuven-load-chapter-9-minibuffer "9 The Minibuffer"
 
   ;; How long to display an echo-area message when the minibuffer is active.
   (setq minibuffer-message-timeout 0.5)
@@ -1066,9 +1066,9 @@ by the variables ~resize-mini-windows~ and ~max-mini-window-height~), it is show
 echo area.
 
 #+begin_src emacs-lisp
-;;** 8.3 (info "(emacs)Minibuffer Edit")ing
+;;** 9.3 (info "(emacs)Minibuffer Edit")ing
 
-  (leuven--section "8.3 (emacs)Minibuffer Editing")
+  (leuven--section "9.3 (emacs)Minibuffer Editing")
 
   ;; Minibuffer and echo area windows resize vertically as necessary to fit
   ;; the text displayed in them.
@@ -1078,9 +1078,9 @@ echo area.
 ** Completion
 
 #+begin_src emacs-lisp
-;;** 8.4 (info "(emacs)Completion")
+;;** 9.4 (info "(emacs)Completion")
 
-  (leuven--section "8.4 (emacs)Completion")
+  (leuven--section "9.4 (emacs)Completion")
 
   ;; Ignore case differences when completing file names.
   (setq read-file-name-completion-ignore-case t)
@@ -1125,7 +1125,7 @@ Use ~M-x list-command-history~ to display the entire command history, showing al
 the commands ~C-x <ESC> <ESC>~ can repeat, most recent first.
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 8 ends here.
+)                                       ; Chapter 9 ends here.
 #+end_src
 
 * Help
@@ -1167,17 +1167,17 @@ relevant manual page without leaving Emacs.
 *Close* the help buffer by pressing ~Q~.
 
 #+begin_src emacs-lisp
-;;* 10 (info "(emacs)Help")
+;;* 11 (info "(emacs)Help")
 
-(leuven--chapter leuven-load-chapter-10-help "10 Help"
+(leuven--chapter leuven-load-chapter-11-help "11 Help"
 #+end_src
 
 ** Help Summary
 
 #+begin_src emacs-lisp
-;;** 10.1 (info "(emacs)Help Summary")
+;;** 11.1 (info "(emacs)Help Summary")
 
-  (leuven--section "10.1 (emacs)Help Summary")
+  (leuven--section "11.1 (emacs)Help Summary")
 
   ;; Avoid the description of all minor modes.
   (defun leuven-describe-major-mode ()
@@ -1207,9 +1207,9 @@ and a handful of more specific commands:
 
 
 #+begin_src emacs-lisp
-;;** 10.4 (info "(emacs)Apropos")
+;;** 11.4 (info "(emacs)Apropos")
 
-  (leuven--section "10.4 (emacs)Apropos")
+  (leuven--section "11.4 (emacs)Apropos")
 
   (with-eval-after-load 'apropos
 
@@ -1258,9 +1258,9 @@ In a manual, these key bindings will make your life easier:
      *Search for a regexp* and select node it's found in.
 
 #+begin_src emacs-lisp
-;;** 10.8 (info "(emacs)Misc Help")
+;;** 11.8 (info "(emacs)Misc Help")
 
-  (leuven--section "10.8 (emacs)Misc Help")
+  (leuven--section "11.8 (emacs)Misc Help")
 
   ;; Enter Info documentation browser.
   (global-set-key (kbd "<f1>") #'info)
@@ -1385,15 +1385,15 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 10 ends here.
+)                                       ; Chapter 11 ends here.
 #+end_src
 
 * The Mark and the Region
 
 #+begin_src emacs-lisp
-;;* 11 The (info "(emacs)Mark") and the Region
+;;* 12 The (info "(emacs)Mark") and the Region
 
-(leuven--chapter leuven-load-chapter-11-mark "11 The Mark and the Region"
+(leuven--chapter leuven-load-chapter-12-mark "12 The Mark and the Region"
 #+end_src
 
 ** Setting the Mark
@@ -1673,15 +1673,15 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 11 ends here.
+)                                       ; Chapter 12 ends here.
 #+end_src
 
 * Killing and Moving Text
 
 #+begin_src emacs-lisp
-;;* 12 (info "(emacs)Killing") and Moving Text
+;;* 13 (info "(emacs)Killing") and Moving Text
 
-(leuven--chapter leuven-load-chapter-12-killing "12 Killing and Moving Text"
+(leuven--chapter leuven-load-chapter-13-killing "13 Killing and Moving Text"
 #+end_src
 
 ** Deletion and Killing
@@ -1690,9 +1690,9 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
      Kill an entire line at once.
 
 #+begin_src emacs-lisp
-;;** 12.1 (info "(emacs)Deletion and Killing")
+;;** 13.1 (info "(emacs)Deletion and Killing")
 
-  (leuven--section "12.1 (emacs)Deletion and Killing")
+  (leuven--section "13.1 (emacs)Deletion and Killing")
 
   ;; Manipulate whitespace around point in a smart way.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
@@ -1819,9 +1819,9 @@ ones.
 ** Yanking
 
 #+begin_src emacs-lisp
-;;** 12.2 (info "(emacs)Yanking")
+;;** 13.2 (info "(emacs)Yanking")
 
-  (leuven--section "12.2 (emacs)Yanking")
+  (leuven--section "13.2 (emacs)Yanking")
 #+end_src
 
 Auto-indent on paste.
@@ -1856,9 +1856,9 @@ Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
 ** Cutting and Pasting on Graphical Displays
 
 #+begin_src emacs-lisp
-;;** 12.3 (info "(emacs)Cut and Paste")
+;;** 13.3 (info "(emacs)Cut and Paste")
 
-  (leuven--section "12.3 (emacs)Cut and Paste on Graphical Displays")
+  (leuven--section "13.3 (emacs)Cut and Paste on Graphical Displays")
 
   ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
   (menu-bar-enable-clipboard)
@@ -1985,23 +1985,23 @@ highlighting. Though, since Emacs 24.4, ~rectangle-mark-mode~ is the new way.
 - ~M-n~ runs the command ~cua-sequence-rectangle~
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 12 ends here.
+)                                       ; Chapter 13 ends here.
 #+end_src
 
 * Registers (Navigation)
 
 #+begin_src emacs-lisp
-;;* 13 (info "(emacs)Registers")
+;;* 14 (info "(emacs)Registers")
 
-(leuven--chapter leuven-load-chapter-13-registers "13 Registers"
+(leuven--chapter leuven-load-chapter-14-registers "14 Registers"
 #+end_src
 
 ** Saving Positions in Registers
 
 #+begin_src emacs-lisp
-;;** 13.1 (info "(emacs)Position Registers")
+;;** 14.1 (info "(emacs)Position Registers")
 
-  (leuven--section "13.1 (emacs)Position Registers")
+  (leuven--section "14.1 (emacs)Position Registers")
 #+end_src
 
 *Registers:*
@@ -2055,9 +2055,9 @@ of text changes.
 #+end_note
 
 #+begin_src emacs-lisp
-;;** 13.7 (info "(emacs)Bookmarks")
+;;** 14.8 (info "(emacs)Bookmarks")
 
-  (leuven--section "13.7 (emacs)Bookmarks")
+  (leuven--section "14.8 (emacs)Bookmarks")
 
   (with-eval-after-load 'bookmark
 
@@ -2244,23 +2244,23 @@ jumping onto them...
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 13 ends here.
+)                                       ; Chapter 14 ends here.
 #+end_src
 
 * Controlling the Display
 
 #+begin_src emacs-lisp
-;;* 14 Controlling the (info "(emacs)Display")
+;;* 15 Controlling the (info "(emacs)Display")
 
-(leuven--chapter leuven-load-chapter-14-display "14 Controlling the Display"
+(leuven--chapter leuven-load-chapter-15-display "15 Controlling the Display"
 #+end_src
 
 ** Scrolling
 
 #+begin_src emacs-lisp
-;;** 14.1 (info "(emacs)Scrolling")
+;;** 15.1 (info "(emacs)Scrolling")
 
-  (leuven--section "14.1 (emacs)Scrolling")
+  (leuven--section "15.1 (emacs)Scrolling")
 
   ;; When scrolling, point preserves the cursor position in the buffer if the
   ;; original position is still visible.
@@ -2288,9 +2288,9 @@ jumping onto them...
 "Smooth" (civilized) scrolling.
 
 #+begin_src emacs-lisp
-;;** 14.3 (info "(emacs)Auto Scrolling")
+;;** 15.3 (info "(emacs)Auto Scrolling")
 
-  (leuven--section "14.3 (emacs)Auto Scrolling")
+  (leuven--section "15.3 (emacs)Auto Scrolling")
 
   ;; Scroll only one line at a time (redisplay will never recenter point).
   (setq scroll-conservatively 10000)    ; Or `most-positive-fixnum'.
@@ -2321,9 +2321,9 @@ How to automatically add/remove horizontal scrollbars as needed by text width?
      *Widen* to make the entire buffer accessible again.
 
 #+begin_src emacs-lisp
-;;** 14.5 (info "(emacs)Narrowing")
+;;** 15.5 (info "(emacs)Narrowing")
 
-  (leuven--section "14.5 (emacs)Narrowing")
+  (leuven--section "15.5 (emacs)Narrowing")
 
   ;; Enable the use of the command `narrow-to-region' without confirmation.
   (put 'narrow-to-region 'disabled nil)
@@ -2335,9 +2335,9 @@ How to automatically add/remove horizontal scrollbars as needed by text width?
 ** Font Lock mode
 
 #+begin_src emacs-lisp
-;;** 14.12 (info "(emacs)Font Lock")
+;;** 15.13 (info "(emacs)Font Lock")
 
-  (leuven--section "14.12 (emacs)Font Lock")
+  (leuven--section "15.13 (emacs)Font Lock")
 #+end_src
 
 Prior to running their own mode hooks,
@@ -2452,9 +2452,9 @@ Testing it -- Example usage:
 ** Interactive Highlighting
 
 #+begin_src emacs-lisp
-;;** 14.13 (info "(emacs)Highlight Interactively") by Matching
+;;** 15.14 (info "(emacs)Highlight Interactively") by Matching
 
-  (leuven--section "14.13 (emacs)Highlight Interactively by Matching")
+  (leuven--section "15.14 (emacs)Highlight Interactively by Matching")
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2712,9 +2712,9 @@ http://stackoverflow.com/questions/16114700/is-it-possible-to-replace-fringe-bit
 ** Displaying Boundaries
 
 #+begin_src emacs-lisp
-;;** 14.15 (info "(emacs)Displaying Boundaries")
+;;** 15.16 (info "(emacs)Displaying Boundaries")
 
-  (leuven--section "14.15 (emacs)Displaying Boundaries")
+  (leuven--section "15.16 (emacs)Displaying Boundaries")
 
   ;; Set vertical indicator at column 80.
   (setq-default display-fill-column-indicator-column 80)
@@ -2729,9 +2729,9 @@ http://stackoverflow.com/questions/16114700/is-it-possible-to-replace-fringe-bit
 ** Useless Whitespace
 
 #+begin_src emacs-lisp
-;;** 14.16 (info "(emacs)Useless Whitespace")
+;;** 15.17 (info "(emacs)Useless Whitespace")
 
-  (leuven--section "14.16 (emacs)Useless Whitespace")
+  (leuven--section "15.17 (emacs)Useless Whitespace")
 #+end_src
 
 Make trailing whitespace at the end of a line visible.
@@ -2862,9 +2862,9 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
 ** Optional Mode Line Features
 
 #+begin_src emacs-lisp
-;;** 14.18 (info "(emacs)Optional Mode Line") Features
+;;** 15.19 (info "(emacs)Optional Mode Line") Features
 
-  (leuven--section "14.18 (emacs)Optional Mode Line Features")
+  (leuven--section "15.19 (emacs)Optional Mode Line Features")
 
   ;; Show the column number in each mode line.
   (column-number-mode 1)
@@ -3082,10 +3082,12 @@ See http://www.elliotglaysher.org/emacs/
 
 ** How Text Is Displayed
 
-#+begin_src emacs-lisp
-;;** 14.19 The (info "(emacs)")
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-  (leuven--section "14.19 (emacs)")
+#+begin_src emacs-lisp
+;;** 15.20 The (info "(emacs)")
+
+  (leuven--section "15.20 (emacs)")
 
   ;; Set the default tab width of a TAB character to 4 spaces.
   (setq-default tab-width 4)
@@ -3094,9 +3096,9 @@ See http://www.elliotglaysher.org/emacs/
 ** Displaying the Cursor
 
 #+begin_src emacs-lisp
-;;** 14.20 The (info "(emacs)Cursor Display")
+;;** 15.21 The (info "(emacs)Cursor Display")
 
-  (leuven--section "14.20 (emacs)The Cursor Display")
+  (leuven--section "15.21 (emacs)The Cursor Display")
 #+end_src
 
 Colorize cursor according to buffer state.
@@ -3147,9 +3149,9 @@ Highlight the current line:
 ** Truncation of Lines
 
 #+begin_src emacs-lisp
-;;** 14.21 (info "(emacs)Line Truncation")
+;;** 15.22 (info "(emacs)Line Truncation")
 
-  (leuven--section "14.21 (emacs)Line Truncation")
+  (leuven--section "15.22 (emacs)Line Truncation")
 
   ;; Respect the value of `truncate-lines' in all windows less than the full
   ;; width of the frame.
@@ -3159,9 +3161,9 @@ Highlight the current line:
 ** Customization of Display
 
 #+begin_src emacs-lisp
-;;** 14.23 (info "(emacs)Display Custom")ization
+;;** 15.24 (info "(emacs)Display Custom")ization
 
-  (leuven--section "14.23 (emacs)Display Customization")
+  (leuven--section "15.24 (emacs)Display Customization")
 
   ;; Echo what I'm typing *immediately*.
   (setq echo-keystrokes 0.01)
@@ -3204,15 +3206,15 @@ run by each keypress.
 #+end_note
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 14 ends here.
+)                                       ; Chapter 15 ends here.
 #+end_src
 
 * Searching and Replacement
 
 #+begin_src emacs-lisp
-;;* 15 (info "(emacs)Search")ing and Replacement
+;;* 16 (info "(emacs)Search")ing and Replacement
 
-(leuven--chapter leuven-load-chapter-15-search "15 Searching and Replacement"
+(leuven--chapter leuven-load-chapter-16-search "16 Searching and Replacement"
 #+end_src
 
 ** Incremental Search (aka "Live Search")
@@ -3237,9 +3239,9 @@ string* is possible with new commands ~isearch-beginning-of-buffer~ and
 ~isearch-end-of-buffer~ bound to ~M-s M-<~ and ~M-s M->~ in Isearch.
 
 #+begin_src emacs-lisp
-;;** 15.1 (info "(emacs)Incremental Search")
+;;** 16.1 (info "(emacs)Incremental Search")
 
-  (leuven--section "15.1 (emacs)Incremental Search")
+  (leuven--section "16.1 (emacs)Incremental Search")
 
   ;; FIXME Error when selecting search string from kill ring (`M-p')
   ;; ;; Always exit searches at the beginning of the expression found.
@@ -3390,9 +3392,9 @@ You can build regexps with visual feedback by using:
 Optimize regexps with =regexp-opt.el=.
 
 #+begin_src emacs-lisp
-;;** 15.5 (info "(emacs)Regexp Search")
+;;** 16.5 (info "(emacs)Regexp Search")
 
-  (leuven--section "15.5 (emacs)Regexp Search")
+  (leuven--section "16.5 (emacs)Regexp Search")
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -3417,10 +3419,12 @@ white spaces, tab spaces, and line breaks as a simple white space.
 
 *** Search Case
 
-#+begin_src emacs-lisp
-;;** 15.9 (info "(emacs)Search Case")
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-  (leuven--section "15.9 (emacs)Search Case")
+#+begin_src emacs-lisp
+;;** 16.9 (info "(emacs)Search Case")
+
+  (leuven--section "16.9 (emacs)Search Case")
 #+end_src
 
 *Case folding* folds together "a" and "A".
@@ -3458,9 +3462,9 @@ Conversely, there exists an opposite command, ~M-x keep-lines~, which *retains* 
 the *lines* containing *matches* for REGEXP, removing all other lines.
 
 #+begin_src emacs-lisp
-;;** 15.11 (info "(emacs)Other Repeating Search") Commands
+;;** 16.11 (info "(emacs)Other Repeating Search") Commands
 
-  (leuven--section "15.11 (emacs)Other Repeating Search Commands")
+  (leuven--section "16.11 (emacs)Other Repeating Search Commands")
 #+end_src
 
 #+begin_src emacs-lisp
@@ -3525,15 +3529,15 @@ than once* in the buffer, removing all other lines (that are not duplicated).
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 15 ends here.
+)                                       ; Chapter 16 ends here.
 #+end_src
 
 * Commands for Fixing Typos
 
 #+begin_src emacs-lisp
-;;* 16 Commands for (info "(emacs)Fixit") Typos
+;;* 17 Commands for (info "(emacs)Fixit") Typos
 
-(leuven--chapter leuven-load-chapter-16-fixit "16 Commands for Fixing Typos"
+(leuven--chapter leuven-load-chapter-17-fixit "17 Commands for Fixing Typos"
 #+end_src
 
 ** Checking and Correcting Spelling
@@ -3548,9 +3552,9 @@ When spellchecking a buffer, the ~A~ command accepts an incorrect word, and adds
 it to the *file word list* (~ispell-add-per-file-word-list~).
 
 #+begin_src emacs-lisp
-;;** 16.4 Checking and Correcting (info "(emacs)Spelling")
+;;** 17.4 Checking and Correcting (info "(emacs)Spelling")
 
-  (leuven--section "16.4 (emacs)Checking and Correcting Spelling")
+  (leuven--section "17.4 (emacs)Checking and Correcting Spelling")
 
   ;; Spelling checker program.
   (setq ispell-program-name             ; Defined in ispell.el.
@@ -3754,15 +3758,15 @@ of possible corrections for misspelled word before point.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 16 ends here.
+)                                       ; Chapter 17 ends here.
 #+end_src
 
 * Keyboard Macros
 
 #+begin_src emacs-lisp
-;;* 17 (info "(emacs)Keyboard Macros")
+;;* 18 (info "(emacs)Keyboard Macros")
 
-(leuven--chapter leuven-load-chapter-17-keyboard-macros "17 Keyboard Macros"
+(leuven--chapter leuven-load-chapter-18-keyboard-macros "18 Keyboard Macros"
 #+end_src
 
 Shows keyboard macros or latest interactive commands as Emacs Lisp:
@@ -3786,9 +3790,9 @@ If you want to repeat only N times, type ~C-u N <F8>~.
 If you want to repeat forever or until error, type ~C-u 0 <F8>~.
 
 #+begin_src emacs-lisp
-;;** 17.1 (info "(emacs)Basic Keyboard Macro") Use
+;;** 18.1 (info "(emacs)Basic Keyboard Macro") Use
 
-  (leuven--section "17.1 (emacs)Basic Keyboard Macro Use")
+  (leuven--section "18.1 (emacs)Basic Keyboard Macro Use")
 
   (defun lvn-kmacro-toggle-recording ()
     "Toggle keyboard macro recording on and off."
@@ -3837,32 +3841,32 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
 ~M-x~.
 
 #+begin_src emacs-lisp
-;;** 17.5 Name and (info "(emacs)Save Keyboard Macro")s
+;;** 18.5 Name and (info "(emacs)Save Keyboard Macro")s
 
-  (leuven--section "17.5 (emacs)Name and Save Keyboard Macros")
+  (leuven--section "18.5 (emacs)Name and Save Keyboard Macros")
 
   ;; Assign a name to the last keyboard macro defined.
   (global-set-key (kbd "C-<f8>") #'kmacro-name-last-macro)
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 17 ends here.
+)                                       ; Chapter 18 ends here.
 #+end_src
 
 * Files Handling
 
 #+begin_src emacs-lisp
-;;* 18 (info "(emacs)Files") Handling
+;;* 19 (info "(emacs)Files") Handling
 
-(leuven--chapter leuven-load-chapter-18-files "18 Files Handling"
+(leuven--chapter leuven-load-chapter-19-files "19 Files Handling"
 #+end_src
 
 ** Visiting Files
 
 #+begin_src emacs-lisp
-;;** 18.2 (info "(emacs)Visiting") Files
+;;** 19.2 (info "(emacs)Visiting") Files
 
-  (leuven--section "18.2 (emacs)Visiting Files")
+  (leuven--section "19.2 (emacs)Visiting Files")
 
   (defun lvn--find-file-time-advice (orig-fun &rest args)
     "Advice function for `find-file' that reports the time spent on file loading."
@@ -3947,9 +3951,9 @@ You can define a *shadow file* group to automatically upload local files to
 a remote location.
 
 #+begin_src emacs-lisp
-;;** 18.3 (info "(emacs)Saving") Files
+;;** 19.3 (info "(emacs)Saving") Files
 
-  (leuven--section "18.3 (emacs)Saving Files")
+  (leuven--section "19.3 (emacs)Saving Files")
 
   (defun lvn--report-saving-time (orig-fun &rest args)
     "Save the file and report time spent."
@@ -4038,9 +4042,9 @@ Update time stamps (and copyright notice) automatically.
 ** Reverting a Buffer
 
 #+begin_src emacs-lisp
-;;** 18.4 (info "(emacs)Reverting") a Buffer
+;;** 19.4 (info "(emacs)Reverting") a Buffer
 
-  (leuven--section "18.4 (emacs)Reverting a Buffer")
+  (leuven--section "19.4 (emacs)Reverting a Buffer")
 
   ;; Time between Auto-Revert Mode file checks.
   (setq auto-revert-interval 1)         ; [Default: 5]
@@ -4140,9 +4144,9 @@ Auto-refresh Dired.
 How to get Emacs to auto-save to your local disk (=#file#=).
 
 #+begin_src emacs-lisp
-;;** 18.6 (info "(emacs)Auto Save"): Protection Against Disasters
+;;** 19.6 (info "(emacs)Auto Save"): Protection Against Disasters
 
-  (leuven--section "18.6 (emacs)Auto Save: Protection Against Disasters")
+  (leuven--section "19.6 (emacs)Auto Save: Protection Against Disasters")
 
   ;; Auto-save every 100 input events.
   (setq auto-save-interval 100)         ; [Default: 300].
@@ -4218,9 +4222,9 @@ See https://www.diffchecker.com/diff for an online solution.
 *** Diff
 
 #+begin_src emacs-lisp
-;;** 18.9 (info "(emacs)Comparing Files")
+;;** 19.9 (info "(emacs)Comparing Files")
 
-  (leuven--section "18.9 (emacs)Comparing Files")
+  (leuven--section "19.9 (emacs)Comparing Files")
 
   ;; ;; Default to unified diffs.
   ;; (setq diff-switches "-u")             ; Default in Emacs 25.
@@ -4382,9 +4386,9 @@ Use ~C-x v =~ to show what's changed.
 You can also decide to revert a change: *select a hunk and apply it (in reverse)*.
 
 #+begin_src emacs-lisp
-;;** 18.10 (info "(emacs)Diff Mode")
+;;** 19.10 (info "(emacs)Diff Mode")
 
-  (leuven--section "18.10 (emacs)Diff Mode")
+  (leuven--section "19.10 (emacs)Diff Mode")
 
   ;; Mode for viewing/editing context diffs.
   (with-eval-after-load 'diff-mode
@@ -4560,9 +4564,9 @@ Hotkeys supported:
 ** Miscellaneous File Operations
 
 #+begin_src emacs-lisp
-;;** 18.11 (info "(emacs)Misc File Ops")
+;;** 19.12 (info "(emacs)Misc File Ops")
 
-  (leuven--section "18.11 (emacs)Misc File Ops")
+  (leuven--section "19.12 (emacs)Misc File Ops")
 
   ;; Use the system's Trash (when it is available).
   (setq delete-by-moving-to-trash t)
@@ -4671,9 +4675,9 @@ Configuring cache settings in the gpg-agent (=~/.gnupg/gpg-agent.conf= file):
 ** Remote Files
 
 #+begin_src emacs-lisp
-;;** 18.14 (info "(emacs)Remote Files")
+;;** 19.15 (info "(emacs)Remote Files")
 
-  (leuven--section "18.14 (emacs)Remote Files")
+  (leuven--section "19.15 (emacs)Remote Files")
 #+end_src
 
 *** TRAMP
@@ -4851,9 +4855,9 @@ email, including several trace information for analysis.
 ** Convenience Features for Finding Files
 
 #+begin_src emacs-lisp
-;;** 18.17 (info "(emacs)File Conveniences")
+;;** 19.18 (info "(emacs)File Conveniences")
 
-  (leuven--section "18.17 (emacs)File Conveniences")
+  (leuven--section "19.18 (emacs)File Conveniences")
 
   ;; Filenames excluded from the recent list.
   (setq recentf-exclude                 ; Has to be set before you require
@@ -5720,15 +5724,15 @@ Get EXIF data with ~image-dired-get-exif-data~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 18 ends here.
+)                                       ; Chapter 19 ends here.
 #+end_src
 
 * Using Multiple Buffers
 
 #+begin_src emacs-lisp
-;;* 19 Using Multiple (info "(emacs)Buffers")
+;;* 20 Using Multiple (info "(emacs)Buffers")
 
-(leuven--chapter leuven-load-chapter-19-buffers "19 Using Multiple Buffers"
+(leuven--chapter leuven-load-chapter-20-buffers "20 Using Multiple Buffers"
 #+end_src
 
 ** Listing Existing Buffers
@@ -5738,20 +5742,19 @@ Get EXIF data with ~image-dired-get-exif-data~.
 - The ~M~ (modified) column has a ~*~ if it is modified.
 
 #+begin_src emacs-lisp
-;;** 19.2 (info "(emacs)List Buffers")
+;;** 20.2 (info "(emacs)List Buffers")
 
-  (leuven--section "19.2 (emacs)List Buffers")
+  (leuven--section "20.2 (emacs)List Buffers")
 #+end_src
 
 *************** TODO Sort by major mode, then buffer name, like ibuffer
-*************** END
 
 ** Killing Buffers
 
 #+begin_src emacs-lisp
-;;** 19.4 (info "(emacs)Kill Buffer")
+;;** 20.4 (info "(emacs)Kill Buffer")
 
-  (leuven--section "19.4 (emacs)Kill Buffer")
+  (leuven--section "20.4 (emacs)Kill Buffer")
 
   ;; Kill the current buffer without confirmation (if not modified).
   (defun lvn-kill-current-buffer-no-confirm ()
@@ -5766,9 +5769,9 @@ Get EXIF data with ~image-dired-get-exif-data~.
 ** Operating on Several Buffers
 
 #+begin_src emacs-lisp
-;;** 19.5 (info "(emacs)Several Buffers")
+;;** 20.5 (info "(emacs)Several Buffers")
 
-  (leuven--section "19.5 (emacs)Several Buffers")
+  (leuven--section "20.5 (emacs)Several Buffers")
 
   ;; Put the current buffer at the end of the list of all buffers.
   (global-set-key (kbd "M-<f12>") #'bury-buffer)
@@ -5777,9 +5780,9 @@ Get EXIF data with ~image-dired-get-exif-data~.
 ** Convenience Features and Customization of Buffer Handling
 
 #+begin_src emacs-lisp
-;;** 19.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
+;;** 20.7 (info "(emacs)Buffer Convenience") and Customization of Buffer Handling
 
-  (leuven--section "19.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
+  (leuven--section "20.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
 
   ;; Unique buffer names dependent on file name.
   (eboost-try-require 'uniquify)
@@ -5791,31 +5794,23 @@ Get EXIF data with ~image-dired-get-exif-data~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 19 ends here.
+)                                       ; Chapter 20 ends here.
 #+end_src
 
 * Multiple Windows
 
 #+begin_src emacs-lisp
-;;* 20 Multiple (info "(emacs)Windows")
+;;* 21 Multiple (info "(emacs)Windows")
 
-(leuven--chapter leuven-load-chapter-20-windows "20 Multiple Windows"
-#+end_src
-
-** Concepts of Emacs Windows
-
-#+begin_src emacs-lisp
-;;** 20.1 (info "(emacs)Basic Window")
-
-  (leuven--section "20.1 (emacs)Basic Window")
+(leuven--chapter leuven-load-chapter-21-windows "21 Multiple Windows"
 #+end_src
 
 ** Using Other Windows
 
 #+begin_src emacs-lisp
-;;** 20.3 (info "(emacs)Other Window")
+;;** 21.3 (info "(emacs)Other Window")
 
-  (leuven--section "20.3 (emacs)Other Window")
+  (leuven--section "21.3 (emacs)Other Window")
 
   (global-set-key (kbd "<f6>") #'other-window)
 #+end_src
@@ -5853,9 +5848,9 @@ If there is only one window displayed, act like ~C-x 2~ or ~C-x 3~. If there are
 two (or more) windows displayed, act like ~C-x 1~.
 
 #+begin_src emacs-lisp
-;;** 20.5 (info "(emacs)Change Window")
+;;** 21.5 (info "(emacs)Change Window")
 
-  (leuven--section "20.5 (emacs)Change Window")
+  (leuven--section "21.5 (emacs)Change Window")
 
   (defun lvn-toggle-or-delete-window-layout ()
     "Toggle or delete the window layout.
@@ -5973,9 +5968,9 @@ for alternative code...
 See as well ~split-window-preferred-function~.
 
 #+begin_src emacs-lisp
-;;** 20.6 (info "(emacs)Displaying Buffers")
+;;** 21.6 (info "(emacs)Displaying Buffers")
 
-  (leuven--section "20.6 (emacs)Pop Up Window")
+  (leuven--section "21.6 (emacs)Pop Up Window")
 
   ;; Don't allow splitting windows vertically.
   (setq split-height-threshold nil)
@@ -5989,23 +5984,23 @@ See as well ~split-window-preferred-function~.
 Use ~M-x scroll-all-mode~ to scroll all visible windows together in parallel.
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 20 ends here.
+)                                       ; Chapter 21 ends here.
 #+end_src
 
 * Frames and Graphical Displays
 
 #+begin_src emacs-lisp
-;;* 21 (info "(emacs)Frames") and Graphical Displays
+;;* 22 (info "(emacs)Frames") and Graphical Displays
 
-(leuven--chapter leuven-load-chapter-21-frames "21 Frames and Graphical Displays"
+(leuven--chapter leuven-load-chapter-22-frames "22 Frames and Graphical Displays"
 #+end_src
 
 ** Mouse Commands for Editing
 
 #+begin_src emacs-lisp
-;;** 21.1 (info "(emacs)Mouse Commands")
+;;** 22.1 (info "(emacs)Mouse Commands")
 
-  (leuven--section "21.1 (emacs)Mouse Commands")
+  (leuven--section "22.1 (emacs)Mouse Commands")
 
   ;; Scroll one line at a time.
   (setq mouse-wheel-scroll-amount
@@ -6019,9 +6014,9 @@ Use ~M-x scroll-all-mode~ to scroll all visible windows together in parallel.
 ** Creating Frames
 
 #+begin_src emacs-lisp
-;;** 21.6 (info "(emacs)Creating Frames")
+;;** 22.6 (info "(emacs)Creating Frames")
 
-  (leuven--section "21.6 (emacs)Creating Frames")
+  (leuven--section "22.6 (emacs)Creating Frames")
 #+end_src
 
 1. Resize the frame to the size you want.
@@ -6087,9 +6082,9 @@ one.
      decorations*, giving slightly more screen space to Emacs itself.
 
 #+begin_src emacs-lisp
-;;** 21.7 (info "(emacs)Frame Commands")
+;;** 22.7 (info "(emacs)Frame Commands")
 
-  (leuven--section "21.7 (emacs)Frame Commands")
+  (leuven--section "22.7 (emacs)Frame Commands")
 
   ;; ;; Maximize Emacs frame by default.
   ;; (modify-all-frames-parameters '((fullscreen . maximized)))
@@ -6101,9 +6096,9 @@ one.
 ** Speedbar Frames
 
 #+begin_src emacs-lisp
-;;** 21.9 (info "(emacs)Speedbar")
+;;** 22.9 (info "(emacs)Speedbar")
 
-  (leuven--section "21.9 (emacs)Speedbar Frames")
+  (leuven--section "22.9 (emacs)Speedbar Frames")
 
   (unless (locate-library "helm-autoloads")  ; Helm is better than speedbar!
 
@@ -6146,9 +6141,9 @@ See NeoTree as well.
 ** Scroll Bars
 
 #+begin_src emacs-lisp
-;;** 21.12 (info "(emacs)Scroll Bars")
+;;** 22.12 (info "(emacs)Scroll Bars")
 
-  (leuven--section "21.12 (emacs)Scroll Bars")
+  (leuven--section "22.12 (emacs)Scroll Bars")
 
   (if (and (display-graphic-p)
            ;; (featurep 'powerline)
@@ -6164,9 +6159,9 @@ See NeoTree as well.
 ** Menu Bars
 
 #+begin_src emacs-lisp :tangle no
-;;** 21.14 (info "(emacs)Menu Bars")
+;;** 22.15 (info "(emacs)Menu Bars")
 
-  (leuven--section "21.15 (emacs)Menu Bars")
+  (leuven--section "22.15 (emacs)Menu Bars")
 
   ;; Disable the menu-bar.
   (when (display-graphic-p)
@@ -6176,9 +6171,9 @@ See NeoTree as well.
 ** Tool Bars
 
 #+begin_src emacs-lisp :tangle no
-;;** 21.15 (info "(emacs)Tool Bars")
+;;** 22.16 (info "(emacs)Tool Bars")
 
-  (leuven--section "21.15 (emacs)Tool Bars")
+  (leuven--section "22.16 (emacs)Tool Bars")
 
   ;; Disable the tool-bar.
   (when (display-graphic-p)
@@ -6188,9 +6183,9 @@ See NeoTree as well.
 ** Using Dialog Boxes
 
 #+begin_src emacs-lisp
-;;** 21.16 Using (info "(emacs)Dialog Boxes")
+;;** 22.18 Using (info "(emacs)Dialog Boxes")
 
-  (leuven--section "21.16 (emacs)Using Dialog Boxes")
+  (leuven--section "22.18 (emacs)Using Dialog Boxes")
 
   ;; Don't use dialog boxes to ask questions.
   (setq use-dialog-box nil)
@@ -6202,24 +6197,24 @@ See NeoTree as well.
 ** Tooltips
 
 #+begin_src emacs-lisp
-;;** 21.17 (info "(emacs)Tooltips")
+;;** 22.19 (info "(emacs)Tooltips")
 
-  (leuven--section "21.17 (emacs)Tooltips")
+  (leuven--section "22.19 (emacs)Tooltips")
 
   ;; Disable Tooltip mode (use the echo area for help and GUD tooltips).
   (unless leuven--console-p (tooltip-mode -1))
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 21 ends here.
+)                                       ; Chapter 22 ends here.
 #+end_src
 
 * International Character Set Support
 
 #+begin_src emacs-lisp
-;;* 22 (info "(emacs)International") Character Set Support
+;;* 23 (info "(emacs)International") Character Set Support
 
-(leuven--chapter leuven-load-chapter-22-international "22 International Character Set Support"
+(leuven--chapter leuven-load-chapter-23-international "23 International Character Set Support"
 #+end_src
 
 For any user who needs symbols that are not in the 7-bit ASCII set, our
@@ -6264,9 +6259,9 @@ To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
 ~C-x 8 C-h~.
 
 #+begin_src emacs-lisp
-;;** 22.1 (info "(emacs)International Chars")
+;;** 23.1 (info "(emacs)International Chars")
 
-  (leuven--section "22.1 (emacs)International Chars")
+  (leuven--section "23.1 (emacs)International Chars")
 
   ;; Keyboard input definitions for ISO 8859-1.
   (with-eval-after-load 'iso-transl
@@ -6278,9 +6273,9 @@ To see all the non-ASCII characters you can type with the ~C-x 8~ prefix, type
 ** Language Environments
 
 #+begin_src emacs-lisp
-;;** 22.2 (info "(emacs)Language Environments")
+;;** 23.2 (info "(emacs)Language Environments")
 
-  (leuven--section "22.2 (emacs)Language Environments")
+  (leuven--section "23.2 (emacs)Language Environments")
 
   ;; Specify your character-set locale.
   (setenv "LANG" "en_US.utf8")          ; For `svn' not to report warnings.
@@ -6306,9 +6301,9 @@ but this won't work for a Windows binary (well for the Cygwin version) of Emacs.
 ** Input Methods
 
 #+begin_src emacs-lisp
-;;** 22.3 (info "(emacs)Input Methods")
+;;** 23.3 (info "(emacs)Input Methods")
 
-  (leuven--section "22.3 (emacs)Input Methods")
+  (leuven--section "23.3 (emacs)Input Methods")
 
   ;; Get 8-bit characters in terminal mode (Cygwin Emacs).
   (set-input-mode (car (current-input-mode))
@@ -6357,9 +6352,9 @@ https://www.i18nqa.com/debug/table-iso8859-1-vs-windows-1252.html#compare
 #+end_note
 
 #+begin_src emacs-lisp
-;;** 22.6 (info "(emacs)Recognize Coding") Systems
+;;** 23.6 (info "(emacs)Recognize Coding") Systems
 
-  (leuven--section "22.6 (emacs)Recognize Coding Systems")
+  (leuven--section "23.6 (emacs)Recognize Coding Systems")
 
   ;; Default coding system (for new files), also moved to the front of the
   ;; priority list for automatic detection.
@@ -6450,9 +6445,9 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 ** Specifying a File's Coding System
 
 #+begin_src emacs-lisp
-;;** 22.7 (info "(emacs)Specify Coding") System of a File
+;;** 23.7 (info "(emacs)Specify Coding") System of a File
 
-  (leuven--section "22.7 (emacs)Specify Coding System of a File")
+  (leuven--section "23.7 (emacs)Specify Coding System of a File")
 
   ;; To copy and paste to and from Emacs through the clipboard (with coding
   ;; system conversion).
@@ -6465,9 +6460,9 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 ** Bidirectional Editing
 
 #+begin_src emacs-lisp :tangle no
-;;** 22.19 (info "(emacs)Bidirectional Editing")
+;;** 23.20 (info "(emacs)Bidirectional Editing")
 
-  (leuven--section "22.19 (emacs)Bidirectional Editing")
+  (leuven--section "23.20 (emacs)Bidirectional Editing")
 
   ;; Faster scrolling (if you never expect to have to display bidirectional
   ;; scripts, such as Arabic and Hebrew).
@@ -6475,15 +6470,15 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 22 ends here.
+)                                       ; Chapter 23 ends here.
 #+end_src
 
 * Major and Minor Modes
 
 #+begin_src emacs-lisp
-;;* 23 (info "(emacs)Modes")
+;;* 24 (info "(emacs)Modes")
 
-(leuven--chapter leuven-load-chapter-23-major-and-minor-modes "23 Major and Minor Modes"
+(leuven--chapter leuven-load-chapter-24-major-and-minor-modes "24 Major and Minor Modes"
 #+end_src
 
 ** How Major Modes are Chosen
@@ -6493,9 +6488,9 @@ See "Syntax of Regexps":
 - ~$~ matches end of line
 
 #+begin_src emacs-lisp
-;;** 23.3 (info "(emacs)Choosing Modes")
+;;** 24.3 (info "(emacs)Choosing Modes")
 
-  (leuven--section "23.3 (emacs)Choosing File Modes")
+  (leuven--section "24.3 (emacs)Choosing File Modes")
 #+end_src
 
 *** Choice based on the file name
@@ -6549,15 +6544,15 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 23 ends here.
+)                                       ; Chapter 24 ends here.
 #+end_src
 
 * Indentation
 
 #+begin_src emacs-lisp
-;;* 24 (info "(emacs)Indentation")
+;;* 25 (info "(emacs)Indentation")
 
-(leuven--chapter leuven-load-chapter-24-indentation "24 Indentation"
+(leuven--chapter leuven-load-chapter-25-indentation "25 Indentation"
 #+end_src
 
 ** Indentation Commands
@@ -6570,9 +6565,9 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
      ~unsuck-html-layout~ in ~html-mode~).
 
 #+begin_src emacs-lisp
-;;** 24.1 (info "(emacs)Indentation Commands") and Techniques
+;;** 25.1 (info "(emacs)Indentation Commands") and Techniques
 
-  (leuven--section "24.1 (emacs)Indentation Commands and Techniques")
+  (leuven--section "25.1 (emacs)Indentation Commands and Techniques")
 
   (defun leuven-indent-buffer ()
     "Indent each non-blank line in the buffer."
@@ -6644,9 +6639,9 @@ etc.), see ~uncrustify~.
 Don't tabify. Instead, _reindent_ everything, e.g. with ~C-M-\~.
 
 #+begin_src emacs-lisp
-;;** 24.3 TABs vs. (info "(emacs)Just Spaces")
+;;** 25.3 TABs vs. (info "(emacs)Just Spaces")
 
-  (leuven--section "24.3 TABs vs. (emacs)Just Spaces")
+  (leuven--section "25.3 TABs vs. (emacs)Just Spaces")
 
   ;; Set the default for indentation to use spaces instead of tabs.
   (setq-default indent-tabs-mode nil)
@@ -6659,31 +6654,31 @@ Don't tabify. Instead, _reindent_ everything, e.g. with ~C-M-\~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 24 ends here.
+)                                       ; Chapter 25 ends here.
 #+end_src
 
 * Commands for Human Languages
 
 #+begin_src emacs-lisp
-;;* 25 Commands for (info "(emacs)Text") Human Languages
+;;* 26 Commands for (info "(emacs)Text") Human Languages
 
-(leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
+(leuven--chapter leuven-load-chapter-26-text "26 Commands for Human Languages"
 #+end_src
 
 ** Words
 
 #+begin_src emacs-lisp
-;;** 25.1 (info "(emacs)Words")
+;;** 26.1 (info "(emacs)Words")
 
-  (leuven--section "25.1 (emacs)Words")
+  (leuven--section "26.1 (emacs)Words")
 #+end_src
 
 ** Sentences
 
 #+begin_src emacs-lisp
-;;** 25.2 (info "(emacs)Sentences")
+;;** 26.2 (info "(emacs)Sentences")
 
-  (leuven--section "25.2 (emacs)Sentences")
+  (leuven--section "26.2 (emacs)Sentences")
 
   ;; ;; A single space does end a sentence.
   ;; (setq-default sentence-end-double-space nil) ; see `ispell-dictionary'
@@ -6729,9 +6724,9 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 ~fill-nobreak-predicate~.
 
 #+begin_src emacs-lisp
-;;** 25.5 (info "(emacs)Filling") Text
+;;** 26.6 (info "(emacs)Filling") Text
 
-  (leuven--section "25.5 (emacs)Filling Text")
+  (leuven--section "26.6 (emacs)Filling Text")
 
   ;; Line-wrapping beyond that column (when pressing `M-q').
   (setq-default fill-column 80)
@@ -6907,9 +6902,9 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 ** Case Conversion Commands
 
 #+begin_src emacs-lisp
-;;** 25.6 (info "(emacs)Case") Conversion Commands
+;;** 26.7 (info "(emacs)Case") Conversion Commands
 
-  (leuven--section "25.6 (emacs)Case Conversion Commands")
+  (leuven--section "26.7 (emacs)Case Conversion Commands")
 
   ;; Enable the use of some commands without confirmation.
   (dolist (command
@@ -6927,9 +6922,9 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
 Outline is line-oriented and does not distinguish end-of-block.
 
 #+begin_src emacs-lisp
-;;** 25.8 (info "(emacs)Outline Mode")
+;;** 26.9 (info "(emacs)Outline Mode")
 
-  (leuven--section "25.8 (emacs)Outline Mode")
+  (leuven--section "26.9 (emacs)Outline Mode")
 #+end_src
 
 *** TODO outline-minor-mode (inside plain latex-mode as well)
@@ -7241,15 +7236,15 @@ in the region into the phonetic alphabet.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 25 ends here.
+)                                       ; Chapter 26 ends here.
 #+end_src
 
 * TeX
 
 #+begin_src emacs-lisp
-;;** 25.11 (info "(emacs)TeX Mode")
+;;** 26.11 (info "(emacs)TeX Mode")
 
-(leuven--chapter leuven-load-chapter-25.11-tex-mode "25.11 TeX Mode"
+(leuven--chapter leuven-load-chapter-26.11-tex-mode "26.11 TeX Mode"
 #+end_src
 
 #+begin_warning
@@ -7366,7 +7361,7 @@ AUCTeX defines the ~tex-mode.el~ mode names as alias of its own modes: it
 aliases ~(la)tex-mode~ to ~(La)TeX-mode~.
 
 #+begin_src emacs-lisp
-  (leuven--section "25.11 (emacs)AUCTeX Mode")
+  (leuven--section "25.11 (emacs)AUCTeX Mode") ; XXXXXXXXX
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
@@ -7410,9 +7405,9 @@ file, AUCTeX gives you a ~Command~ menu.
     ;; will be bound to `TeX-electric-macro'.
     (setq TeX-electric-escape t)
 
-;;** 2.8 (info "(auctex)Indenting")
+;;** 2.9 (info "(auctex)Indenting")
 
-    (leuven--section "2.8 (auctex)Indenting")
+    (leuven--section "2.9 (auctex)Indenting")
 
     ;; Leave some environments un-indented when using `M-q'.
     (dolist (env '("tikzpicture" "comment" "sverbatim"))
@@ -7695,17 +7690,17 @@ current selection. More general index entries are created with ~C-c <~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 25.11-tex-mode ends here.
+)                                       ; Chapter 26.11-tex-mode ends here.
 #+end_src
 
 * SGML and HTML Modes
 
 #+begin_src emacs-lisp
-(leuven--chapter leuven-load-chapter-25-text "25 Commands for Human Languages"
+(leuven--chapter leuven-load-chapter-26-text "26 Commands for Human Languages" ; XXXXXXXXXXXX
 
-;;** 25.12 (info "(emacs)HTML Mode")
+;;** 26.12 (info "(emacs)HTML Mode")
 
-  (leuven--section "25.12 (emacs)HTML Mode")
+  (leuven--section "26.12 (emacs)HTML Mode") ; XXXXXXXXXXX
 #+end_src
 
 ** HTML
@@ -8034,15 +8029,15 @@ Some key bindings:
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 25 ends here.
+)                                       ; Chapter 26 ends here.
 #+end_src
 
 * Editing Programs
 
 #+begin_src emacs-lisp
-;;* 26 Editing (info "(emacs)Programs")
+;;* 27 Editing (info "(emacs)Programs")
 
-(leuven--chapter leuven-load-chapter-26-programs "26 Editing Programs"
+(leuven--chapter leuven-load-chapter-27-programs "27 Editing Programs"
 #+end_src
 
 Keyboard shortcuts:
@@ -8110,9 +8105,9 @@ and dependecies between functions/variables): byte-compile-generate-call-tree
 Also =who-calls.el=
 
 #+begin_src emacs-lisp
-;;** 26.1 Major Modes for (info "(emacs)Program Modes")
+;;** 27.1 Major Modes for (info "(emacs)Program Modes")
 
-  (leuven--section "26.1 Major Modes for (emacs)Program Modes")
+  (leuven--section "27.1 Major Modes for (emacs)Program Modes")
 #+end_src
 
 ** Top-Level Definitions, or Defuns
@@ -8121,9 +8116,9 @@ Also =who-calls.el=
 :END:
 
 #+begin_src emacs-lisp
-;;** 26.2 Top-Level Definitions, or (info "(emacs)Defuns")
+;;** 27.2 Top-Level Definitions, or (info "(emacs)Defuns")
 
-  (leuven--section "26.2 Top-Level Definitions, or (emacs)Defuns")
+  (leuven--section "27.2 Top-Level Definitions, or (emacs)Defuns")
 #+end_src
 
 *** Navigating Between Methods
@@ -8255,9 +8250,9 @@ program like GNU ~indent~, which will rearrange brace location, among other
 things.
 
 #+begin_src emacs-lisp
-;;** 26.3 (info "(emacs)Program Indent")ation
+;;** 27.3 (info "(emacs)Program Indent")ation
 
-    (leuven--section "26.3 (emacs)Program Indentation")
+    (leuven--section "27.3 (emacs)Program Indentation")
 
     ;; Turn on auto-fill mode in Lisp modes.
     (dolist (mode '(lisp-mode
@@ -8293,9 +8288,9 @@ things.
 ** Commands for Editing with Parentheses
 
 #+begin_src emacs-lisp
-;;** 26.4 Commands for Editing with (info "(emacs)Parentheses")
+;;** 27.4 Commands for Editing with (info "(emacs)Parentheses")
 
-  (leuven--section "26.4 Commands for Editing with (emacs)Parentheses")
+  (leuven--section "27.4 Commands for Editing with (emacs)Parentheses")
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8523,9 +8518,9 @@ Balanced editing: inserting two matching parentheses at once, etc.
 ** Manipulating Comments
 
 #+begin_src emacs-lisp
-;;** 26.5 (info "(emacs)Comments")
+;;** 27.5 (info "(emacs)Comments")
 
-  (leuven--section "26.5 (emacs)Comments")
+  (leuven--section "27.5 (emacs)Comments")
 
   ;; Always comment out empty lines.
   (setq comment-empty-lines t)
@@ -8550,9 +8545,9 @@ Function argument hint. Highlight the arguments in
 ~eldoc-highlight-function-argument~.
 
 #+begin_src emacs-lisp
-;;** 26.6 (info "(emacs)Documentation") Lookup
+;;** 27.6 (info "(emacs)Documentation") Lookup
 
-  (leuven--section "26.6 (emacs)Documentation Lookup")
+  (leuven--section "27.6 (emacs)Documentation Lookup")
 
   ;; Idle time to wait before printing documentation.
   (setq eldoc-idle-delay 0.2)
@@ -8596,9 +8591,9 @@ Keyboard shortcuts:
 | Fold (collapse) Tag Attributes  |       | C-k C-t      |               |          |
 
 #+begin_src emacs-lisp
-;;** 26.7 (info "(emacs)Hideshow") minor mode
+;;** 27.7 (info "(emacs)Hideshow") minor mode
 
-  (leuven--section "26.7 (emacs)Hideshow minor mode")
+  (leuven--section "27.7 (emacs)Hideshow minor mode")
 
   ;; Enable Hideshow (code folding) for programming modes.
   (add-hook 'prog-mode-hook #'hs-minor-mode)
@@ -8672,9 +8667,9 @@ Change those really awkward key bindings with ~@~ in the middle:
 :END:
 
 #+begin_src emacs-lisp
-;;** 26.8 (info "(emacs)Symbol Completion")
+;;** 27.8 (info "(emacs)Symbol Completion")
 
-  (leuven--section "26.8 (emacs)Symbol Completion")
+  (leuven--section "27.8 (emacs)Symbol Completion")
 #+end_src
 
 It's more or less a convention that each language mode binds its symbol
@@ -8717,9 +8712,9 @@ Add overlays to use a different face for the capital letters in symbols like
 ~CamelCaseUnreadableSymbol~, to make them easier to read.
 
 #+begin_src emacs-lisp
-;;** 26.9 (info "(emacs)Glasses") minor mode
+;;** 26.9 (info "(emacs)Glasses") minor mode XXXXXXXXXXXX
 
-  (leuven--section "26.9 (emacs)Glasses minor mode")
+  (leuven--section "26.9 (emacs)Glasses minor mode") ; XXXXXXXX
 
   (add-hook 'ess-mode-hook          #'glasses-mode)
   (add-hook 'inferior-ess-mode-hook #'glasses-mode)
@@ -9562,15 +9557,15 @@ Automatically convert SQL *keywords to* the *upper case* (see general well-known
 *** SQL Remove Square Brackets
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 26 ends here.
+)                                       ; Chapter 27 ends here.
 #+end_src
 
 * Compiling and Testing Programs
 
 #+begin_src emacs-lisp
-;;* 27 (info "(emacs)Building") Compiling and Testing Programs
+;;* 28 (info "(emacs)Building") Compiling and Testing Programs
 
-(leuven--chapter leuven-load-chapter-27-building "27 Compiling and Testing Programs"
+(leuven--chapter leuven-load-chapter-28-building "28 Compiling and Testing Programs"
 #+end_src
 
 ** Running Compilations under Emacs
@@ -9585,9 +9580,9 @@ without a =Makefile=.
 XXX Compiling with ~ant~?
 
 #+begin_src emacs-lisp
-;;** 27.1 Running (info "(emacs)Compilation")s under Emacs
+;;** 28.1 Running (info "(emacs)Compilation")s under Emacs
 
-  (leuven--section "27.1 Running (emacs)Compilations under Emacs")
+  (leuven--section "28.1 Running (emacs)Compilations under Emacs")
 
   ;; Invoke a compiler with the same command as in the last invocation of
   ;; `compile'.
@@ -9692,9 +9687,9 @@ relevant source line. The duration of this highlight is determined by the
 variable ~next-error-highlight~.
 
 #+begin_src emacs-lisp
-;;** 27.2 (info "(emacs)Compilation Mode")
+;;** 28.2 (info "(emacs)Compilation Mode")
 
-  (leuven--section "27.2 (emacs)Compilation Mode")
+  (leuven--section "28.2 (emacs)Compilation Mode")
 
   ;; ;; Automatically jump to the first error during compilation.
   ;; (setq compilation-auto-jump-to-first-error t)
@@ -9735,9 +9730,9 @@ search to return no results) for the purposes of detecting how to invoke it
 thereafter.
 
 #+begin_src emacs-lisp
-;;** 27.4 (info "(emacs)Grep Searching") under Emacs
+;;** 28.4 (info "(emacs)Grep Searching") under Emacs
 
-  (leuven--section "27.4 (emacs)Grep Searching under Emacs")
+  (leuven--section "28.4 (emacs)Grep Searching under Emacs")
 
   (with-eval-after-load 'grep
 
@@ -9955,9 +9950,9 @@ Navigate:
 [[http://www.flycheck.org/en/latest/user/error-reports.html][!FlyC: See errors in buffers]]
 
 #+begin_src emacs-lisp
-;;** 27.5 (info "(emacs)Flymake")
+;;** 28.5 (info "(emacs)Flymake")
 
-  (leuven--section "27.5 (emacs)Flymake")
+  (leuven--section "28.5 (emacs)Flymake")
 
   ;; Enable on-the-fly syntax checking with Flycheck.
   (with-eval-after-load 'flycheck-autoloads
@@ -10036,9 +10031,9 @@ mode line on bottom. Make it blue!
 ** Running Debuggers Under Emacs
 
 #+begin_src emacs-lisp
-;;** 27.6 Running (info "(emacs)Debuggers") Under Emacs
+;;** 28.6 Running (info "(emacs)Debuggers") Under Emacs
 
-  (leuven--section "27.6 Running (emacs)Debuggers Under Emacs")
+  (leuven--section "28.6 Running (emacs)Debuggers Under Emacs")
 
   (with-eval-after-load 'gdb-mi
 
@@ -10130,9 +10125,9 @@ than fixing a bug in a scripting language like Perl.
 ** Libraries of Lisp Code for Emacs
 
 #+begin_src emacs-lisp
-;;** 27.8 (info "(emacs)Lisp Libraries") for Emacs
+;;** 28.8 (info "(emacs)Lisp Libraries") for Emacs
 
-  (leuven--section "27.8 (emacs)Lisp Libraries")
+  (leuven--section "28.8 (emacs)Lisp Libraries")
 
   ;; Remove *.elc when save.
   (defun remove-elc-on-save ()
@@ -10163,9 +10158,9 @@ To (attempt to) cleanly reevaluate a buffer of Emacs Lisp code, use
 ~nuke-and-eval~.
 
 #+begin_src emacs-lisp
-;;** 27.9 (info "(emacs)Lisp Eval") Expressions
+;;** 28.9 (info "(emacs)Lisp Eval") Expressions
 
-  (leuven--section "27.9 (emacs)Lisp Eval Expressions")
+  (leuven--section "28.9 (emacs)Lisp Eval Expressions")
 
   ;; Enable the use of the command `eval-expression' without confirmation.
   (put 'eval-expression 'disabled nil)
@@ -10200,9 +10195,9 @@ See demo of it: http://www.youtube.com/watch?v=TMoPuv-xXMM.
 ** Lisp Interaction Buffers (~*scratch*~)
 
 #+begin_src emacs-lisp
-;;** 27.10 (info "(emacs)Lisp Interaction") Buffers
+;;** 28.10 (info "(emacs)Lisp Interaction") Buffers
 
-  (leuven--section "27.10 (emacs)Lisp Interaction Buffers")
+  (leuven--section "28.10 (emacs)Lisp Interaction Buffers")
 
   ;; Don't display the "Welcome to GNU Emacs" buffer on startup.
   (setq inhibit-startup-screen t)
@@ -10241,15 +10236,15 @@ long run, but useful for figuring out how Emacs's windowing mechanics work.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 27 ends here.
+)                                       ; Chapter 28 ends here.
 #+end_src
 
 * Maintaining Programs
 
 #+begin_src emacs-lisp
-;;* 28 (info "(emacs)Maintaining") Programs
+;;* 29 (info "(emacs)Maintaining") Programs
 
-(leuven--chapter leuven-load-chapter-28-maintaining "28 Maintaining Programs"
+(leuven--chapter leuven-load-chapter-29-maintaining "29 Maintaining Programs"
 #+end_src
 
 ** Version Control
@@ -10270,9 +10265,9 @@ Systems) in a generic way -- a real timesaver.
      vc-update.
 
 #+begin_src emacs-lisp
-;;** 28.1 (info "(emacs)Version Control")
+;;** 29.1 (info "(emacs)Version Control")
 
-  (leuven--section "28.1 (emacs)Version Control")
+  (leuven--section "29.1 (emacs)Version Control")
 
   ;; Always follow symlinks to files under source-control. Don't ask.
   (setq vc-follow-symlinks t)
@@ -10311,7 +10306,7 @@ Using Emacs VC, you only have to write the ChangeLog, then use ~C-c C-a~ to inse
 it into the commit buffer. So there is no need to "write the same thing twice".
 
 #+begin_src emacs-lisp
-;;*** 28.1.4 (info "(emacs)Log Buffer")
+;;*** 29.1.4 (info "(emacs)Log Buffer")
 
   (defun leuven--vc-log-mode-setup ()
     (when (lvn--executable-ispell-program-name-p)
@@ -10366,7 +10361,7 @@ VC can show you the *history of changes* to a *particular line of code*:
 *************** END
 
 #+begin_src emacs-lisp
-;;*** 28.1.6 (info "(emacs)Old Revisions")
+;;*** 29.1.6 (info "(emacs)Old Revisions")
 
   (leuven--section "28.1.6 Examining And Comparing Old Revisions")
 
@@ -10377,7 +10372,7 @@ VC can show you the *history of changes* to a *particular line of code*:
 *** VC Change Log
 
 #+begin_src emacs-lisp
-;;*** 28.1.7 (info "(emacs)VC Change Log")
+;;*** 29.1.7 (info "(emacs)VC Change Log")
 
   (leuven--section "28.1.7 VC Change Log")
 #+end_src
@@ -10471,9 +10466,9 @@ Shortcuts in the popup (once displayed):
 *** VC Directory Mode
 
 #+begin_src emacs-lisp
-;;*** 28.1.9 (info "(emacs)VC Directory Mode")
+;;*** 29.1.10 (info "(emacs)VC Directory Mode")
 
-  (leuven--section "28.1.9 VC Directory Mode")
+  (leuven--section "29.1.10 VC Directory Mode")
 
   ;; Ensure `vc-dir` always operates from the top-level VCS directory.
   (defun lvn--vcs-goto-top-directory-advice (orig-fun buffer dir backend &rest rest)
@@ -10562,9 +10557,9 @@ Shortcuts in the popup (once displayed):
 *** Customizing VC
 
 #+begin_src emacs-lisp
-;;*** 28.1.13 (info "(emacs)Customizing VC")
+;;*** 29.1.13 (info "(emacs)Customizing VC")
 
-  (leuven--section "28.1.13 Customizing VC")
+  (leuven--section "29.1.13 Customizing VC")
 
   ;; Files covered by VC get backups (as with other files).
   (setq vc-make-backup-files t)
@@ -10685,9 +10680,9 @@ Returns the age as an integer."
 ** Change Logs
 
 #+begin_src emacs-lisp
-;;** 28.2 (info "(emacs)Change Log")
+;;** 29.3 (info "(emacs)Change Log")
 
-  (leuven--section "28.2 (emacs)Change Logs")
+  (leuven--section "29.3 (emacs)Change Logs")
 
   (with-eval-after-load 'add-log
 
@@ -10807,7 +10802,7 @@ language, such as:
 - tag jumping.
 
 #+begin_src emacs-lisp
-;;** 28.3 (info "(emacs)Tags")
+;;** 28.3 (info "(emacs)Tags") XXXXXXXXXX
 
   (leuven--section "28.3 (emacs)Tags Tables")
 #+end_src
@@ -11027,9 +11022,9 @@ Need to debug it?
 *** Collection of Emacs Development Environment Tools
 
 #+begin_src emacs-lisp
-;;** 28.4 (info "(emacs)EDE")
+;;** 29.5 (info "(emacs)EDE")
 
-  (leuven--section "28.4 Emacs Development Environment")
+  (leuven--section "29.5 Emacs Development Environment")
 #+end_src
 
 CEDET (integrated into Emacs 23.2) brings improvements over a plain TAGS file.
@@ -11364,7 +11359,7 @@ Projectile's features.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 28 ends here.
+)                                       ; Chapter 29 ends here.
 #+end_src
 
 * Abbrevs (Snippets, Auto Replacements, or live Code Templates)
@@ -11375,9 +11370,9 @@ into a specified *expansion*.
 It allows you to write frequently used text more quickly.
 
 #+begin_src emacs-lisp
-;;* 29 (info "(emacs)Abbrevs")
+;;* 30 (info "(emacs)Abbrevs")
 
-(leuven--chapter leuven-load-chapter-29-abbrevs "29 Abbrevs"
+(leuven--chapter leuven-load-chapter-30-abbrevs "30 Abbrevs"
 
   ;; See (info "(autotype)") as well
 #+end_src
@@ -11416,9 +11411,9 @@ Predefined YASnippet variables:
   fragment to be wrapped.
 
 #+begin_src emacs-lisp
-;;** 29.3 Controlling (info "(emacs)Expanding Abbrevs")
+;;** 30.3 Controlling (info "(emacs)Expanding Abbrevs")
 
-  (leuven--section "29.3 Controlling Expanding Abbrevs")
+  (leuven--section "30.3 Controlling Expanding Abbrevs")
 
   ;; Yet Another Snippet extension for Emacs
   (with-eval-after-load 'yasnippet-autoloads
@@ -11682,9 +11677,9 @@ independent of Abbrev mode.
 See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 
 #+begin_src emacs-lisp
-;;** 29.7 (info "(emacs)Dabbrev Customization")
+;;** 30.8 (info "(emacs)Dabbrev Customization")
 
-  (leuven--section "29.7 Dabbrev Customization")
+  (leuven--section "30.8 Dabbrev Customization")
 
   ;; (with-eval-after-load 'dabbrev
   ;;
@@ -12388,15 +12383,15 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 29 ends here.
+)                                       ; Chapter 30 ends here.
 #+end_src
 
 * Dired, the Directory Editor
 
 #+begin_src emacs-lisp
-;;* 30 (info "(emacs)Dired"), the Directory Editor
+;;* 31 (info "(emacs)Dired"), the Directory Editor
 
-(leuven--chapter leuven-load-chapter-30-dired "30 Dired, the Directory Editor"
+(leuven--chapter leuven-load-chapter-31-dired "31 Dired, the Directory Editor"
 #+end_src
 
 ** Entering Dired
@@ -12407,7 +12402,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
   ;; Directory-browsing commands configuration.
   (with-eval-after-load 'dired
 
-    (leuven--section "30.1 (emacs)Dired Enter")
+    (leuven--section "31.1 (emacs)Dired Enter")
 #+end_src
 
 #+begin_note
@@ -12431,7 +12426,7 @@ Use Emacs's own emulation of ~ls~ in all versions of Emacs.
 #+begin_src emacs-lisp
 ;;** (info "(emacs)ls in Lisp")
 
-    (leuven--section "G.4 (emacs)ls in Lisp")
+    (leuven--section "H.4 (emacs)ls in Lisp")
 
     ;; Emulate insert-directory completely in Emacs Lisp.
     (when (require 'ls-lisp)
@@ -12463,7 +12458,7 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Navigation")
 
-    (leuven--section "30.2 (emacs)Dired Navigation")
+    (leuven--section "31.2 (emacs)Dired Navigation")
 
     ;; Function to move the cursor to the top of the Dired buffer.
     (defun lvn-dired-back-to-top ()
@@ -12494,7 +12489,7 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Deletion")
 
-    (leuven--section "30.3 (emacs)Dired Deletion")
+    (leuven--section "31.3 (emacs)Dired Deletion")
 
     ;; Recursive deletes allowed, after asking for each directory at top level.
     (setq dired-recursive-deletes 'top)
@@ -12514,7 +12509,7 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Visiting")
 
-    (leuven--section "30.5 (emacs)Dired Visiting")
+    (leuven--section "31.5 (emacs)Dired Visiting")
 #+end_src
 
 *** Open file with default tool (open directory with Windows Explorer)
@@ -12700,7 +12695,7 @@ For those under Windows:
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Operating on Files")
 
-    (leuven--section "30.7 (emacs)Operating on Files")
+    (leuven--section "31.7 (emacs)Operating on Files")
 
     ;; Try to guess a default target directory (if there is a Dired buffer
     ;; displayed in the next window).
@@ -12737,7 +12732,7 @@ Maybe the following fixes this above problem?
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Updating")
 
-    (leuven--section "30.15 (emacs)Dired Updating")
+    (leuven--section "31.16 (emacs)Dired Updating")
 
     ;; Automatically revert Dired buffer *on revisiting*.
     (setq dired-auto-revert-buffer t)
@@ -12761,7 +12756,7 @@ For searches in Dired, see ~dired-do-search~ (~A~).
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired and Find")
 
-    (leuven--section "30.16 (emacs)Dired and Find")
+    (leuven--section "31.17 (emacs)Dired and Find")
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -12799,7 +12794,7 @@ To enter it, type ~C-x C-q~.
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Wdired")
 
-    (leuven--section "30.17 Editing the (emacs)Wdired Buffer")
+    (leuven--section "31.18 Editing the (emacs)Wdired Buffer")
 
     ;; Put a Dired buffer in a mode in which filenames are editable.
     (with-eval-after-load 'wdired
@@ -12832,7 +12827,7 @@ For more information, see:
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Image-Dired")
 
-    (leuven--section "30.18 Viewing Image Thumbnails in Dired")
+    (leuven--section "31.19 Viewing Image Thumbnails in Dired")
 
     ;; Use Dired to browse and manipulate your images.
     (with-eval-after-load 'image-dired
@@ -12956,23 +12951,23 @@ latest commit* -- it supports SVN, Git, and other VC systems!
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 30 ends here.
+)                                       ; Chapter 31 ends here.
 #+end_src
 
 * The Calendar and the Diary
 
 #+begin_src emacs-lisp
-;;* 31 The (info "(emacs)Calendar/Diary")
+;;* 32 The (info "(emacs)Calendar/Diary")
 
-(leuven--chapter leuven-load-chapter-31-calendar-diary "31 The Calendar and the Diary"
+(leuven--chapter leuven-load-chapter-32-calendar-diary "32 The Calendar and the Diary"
 #+end_src
 
 ** Calendar Motion
 
 #+begin_src emacs-lisp
-;;** 31.1 (info "(emacs)Calendar Motion")
+;;** 32.1 (info "(emacs)Calendar Motion")
 
-  (leuven--section "31.1 (emacs)Calendar Motion")
+  (leuven--section "32.1 (emacs)Calendar Motion")
 
   ;; Years must be written in full.
   (setq diary-abbreviated-year-flag nil)
@@ -12996,9 +12991,9 @@ latest commit* -- it supports SVN, Git, and other VC systems!
 ** Scroll Calendar
 
 #+begin_src emacs-lisp
-;;** 31.2 (info "(emacs)Scroll Calendar")
+;;** 32.2 (info "(emacs)Scroll Calendar")
 
-  (leuven--section "31.2 (emacs)Scroll Calendar")
+  (leuven--section "32.2 (emacs)Scroll Calendar")
 
   ;; Fix foolish calendar-mode scrolling: swap scroll direction.
   (add-hook 'calendar-load-hook
@@ -13012,9 +13007,9 @@ latest commit* -- it supports SVN, Git, and other VC systems!
 ** Times of Sunrise/Sunset
 
 #+begin_src emacs-lisp
-;;** 31.7 Times of (info "(emacs)Sunrise/Sunset")
+;;** 32.7 Times of (info "(emacs)Sunrise/Sunset")
 
-  (leuven--section "31.7 Times of (emacs)Sunrise/Sunset")
+  (leuven--section "32.7 Times of (emacs)Sunrise/Sunset")
 
   ;; ;; Calendar functions for solar events.
   ;; (with-eval-after-load 'solar
@@ -13040,9 +13035,9 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
 ** Appointments
 
 #+begin_src emacs-lisp
-;;** 31.11 (info "(emacs)Appointments")
+;;** 31.10.6 (info "(emacs)Appointments")
 
-  (leuven--section "31.11 (emacs)Appointments")
+  (leuven--section "32.10.6 (emacs)Appointments")
 
   ;; Insinuate appt if `diary-file' exists.
   (if (file-readable-p "~/diary")
@@ -13141,9 +13136,9 @@ Or better look at the ~alert~ package?
 ** Advanced Calendar/Diary Usage
 
 #+begin_src emacs-lisp
-;;** 31.15 (info "(emacs)Advanced Calendar/Diary Usage")
+;;** 32.13 (info "(emacs)Advanced Calendar/Diary Usage")
 
-  (leuven--section "31.15 (emacs)Advanced Calendar/Diary Usage")
+  (leuven--section "32.13 (emacs)Advanced Calendar/Diary Usage")
 
   ;; Get rid of some holidays.
   (setq holiday-general-holidays nil)   ; Too U.S.-centric holidays.
@@ -13229,7 +13224,7 @@ htmlfontify-buffer~.
 #+end_src
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 31 ends here.
+)                                       ; Chapter 32 ends here.
 #+end_src
 
 * Sending Mail
@@ -13237,9 +13232,9 @@ htmlfontify-buffer~.
 Minimal configuration for sending a bug report, for example.
 
 #+begin_src emacs-lisp
-;;* 32 (info "(emacs)Sending Mail")
+;;* 33 (info "(emacs)Sending Mail")
 
-(leuven--chapter leuven-load-chapter-32-sending-mail "32 Sending Mail"
+(leuven--chapter leuven-load-chapter-33-sending-mail "33 Sending Mail"
 
   ;; Full name of this user.
   (setq user-full-name "John Doe")
@@ -13261,15 +13256,15 @@ Minimal configuration for sending a bug report, for example.
   ;; ;; SMTP service port number.
   ;; (setq smtpmail-smtp-service 587)
 
-)                                       ; Chapter 32 ends here.
+)                                       ; Chapter 33 ends here.
 #+end_src
 
 * Gnus
 
 #+begin_src emacs-lisp
-;;* 34 (info "(emacs)Gnus")
+;;* 35 (info "(emacs)Gnus")
 
-(leuven--chapter leuven-load-chapter-34-gnus "34 Gnus"
+(leuven--chapter leuven-load-chapter-35-gnus "35 Gnus"
 
   (global-set-key (kbd "C-c n")
                   (lambda ()
@@ -13288,7 +13283,7 @@ Minimal configuration for sending a bug report, for example.
     ;; Reading mail with Gnus.
     (setq read-mail-command 'gnus))
 
-)                                       ; Chapter 34 ends here.
+)                                       ; Chapter 35 ends here.
 #+end_src
 
 * Document Viewing
@@ -13303,9 +13298,9 @@ In that case, ~doc-view~ falls back to show you the plain text contents of the P
 if ~doc-view-pdftotext-program~ is on your ~PATH~.
 
 #+begin_src emacs-lisp
-;;* 36 (info "(emacs)Document View")
+;;* 38 (info "(emacs)Document View")
 
-(leuven--chapter leuven-load-chapter-36-document-view "36 Document Viewing"
+(leuven--chapter leuven-load-chapter-38-document-view "38 Document Viewing"
 
   ;; View PDF/PostScript/DVI files in Emacs.
 #+end_src
@@ -13373,7 +13368,7 @@ Another option, without ~doc-view~, is ~! pdtotext ? - RET~.
 ~doc-view-enlarge~ (~+~) and ~doc-view-shrink~ (~-~) work fine to zoom in or out.
 
 #+begin_src emacs-lisp
-)                                       ; Chapter 36 ends here.
+)                                       ; Chapter 38 ends here.
 #+end_src
 
 * Web Browsing
@@ -13417,9 +13412,9 @@ certificates are marked in red.
 See customizations at http://snarfed.org/why_i_run_shells_inside_emacs.
 
 #+begin_src emacs-lisp
-;;* 38 Running (info "(emacs)Shell") Commands from Emacs
+;;* 39 Running (info "(emacs)Shell") Commands from Emacs
 
-(leuven--chapter leuven-load-chapter-38-shell "38 Running Shell Commands from Emacs"
+(leuven--chapter leuven-load-chapter-39-shell "39 Running Shell Commands from Emacs"
 #+end_src
 
 #+begin_src emacs-lisp
@@ -13932,9 +13927,9 @@ Do you use ~emacsclient~ in terminals?  If not, just use parameter ~-c -n~, whic
 creates an X Window and doesn't wait for ~(server-edit)~.
 
 #+begin_src emacs-lisp
-;;* 39 (info "(emacs)Emacs Server")
+;;* 40 (info "(emacs)Emacs Server")
 
-(leuven--chapter leuven-load-chapter-39-emacs-server "39 Using Emacs as a Server"
+(leuven--chapter leuven-load-chapter-40-emacs-server "40 Using Emacs as a Server"
 
   ;; Use Emacs as a server (with the `emacsclient' program).
   (unless noninteractive
@@ -13961,7 +13956,7 @@ PROC is the process associated with the server."
     ;; Add the advice to the 'server-edit' function.
     (advice-add 'server-edit :before #'eboost--server-edit-save-buffer-advice))
 
-)                                       ; Chapter 39 ends here.
+)                                       ; Chapter 40 ends here.
 #+end_src
 
 Since GNU Emacs 23, there is also a ~--daemon~ flag to start the server in a
@@ -14331,9 +14326,9 @@ See ~(info "(emacs)Windows Printing")~ for several methods of correctly setting 
 printing on Windows.
 
 #+begin_src emacs-lisp
-;;* 40 (info "(emacs)Printing")
+;;* 41 (info "(emacs)Printing")
 
-(leuven--chapter leuven-load-chapter-40-printing "40 Printing Hard Copies"
+(leuven--chapter leuven-load-chapter-41-printing "41 Printing Hard Copies"
 
   ;; Print Emacs buffer on line printer
   ;; for {lpr,print}-{buffer,region}.
@@ -14446,15 +14441,15 @@ printing on Windows.
     ;; Specify line spacing, in points, for ordinary text.
     (setq ps-line-spacing 3))
 
-)                                       ; Chapter 40 ends here.
+)                                       ; Chapter 41 ends here.
 #+end_src
 
 * Sorting Text
 
 #+begin_src emacs-lisp
-;;* 41 (info "(emacs)Sorting") Text
+;;* 42 (info "(emacs)Sorting") Text
 
-(leuven--chapter leuven-load-chapter-41-sorting "41 Sorting Text"
+(leuven--chapter leuven-load-chapter-42-sorting "42 Sorting Text"
 
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
@@ -14477,7 +14472,7 @@ printing on Windows.
             (insert "\n")))
       (message "No region selected.")))
 
-)                                       ; Chapter 41 ends here.
+)                                       ; Chapter 42 ends here.
 #+end_src
 
 To *reverse the order of* the *lines* in the region, use ~M-x reverse-region~.
@@ -14489,22 +14484,22 @@ To *reverse the order of* the *lines* in the region, use ~M-x reverse-region~.
 Pick up where you left off.
 
 #+begin_src emacs-lisp
-;;* 44 (info "(emacs)Saving Emacs Sessions")
+;;* 45 (info "(emacs)Saving Emacs Sessions")
 
-(leuven--chapter leuven-load-chapter-44-saving-emacs-sessions "44 Saving Emacs Sessions"
+(leuven--chapter leuven-load-chapter-45-saving-emacs-sessions "45 Saving Emacs Sessions"
 
   ;; Remember cursor position in each file.
   (save-place-mode 1)
 
-)                                       ; Chapter 44 ends here.
+)                                       ; Chapter 45 ends here.
 #+end_src
 
 * Hyperlinking and Navigation Features
 
 #+begin_src emacs-lisp
-;;* 46 (info "(emacs)Hyperlinking")
+;;* 47 (info "(emacs)Hyperlinking")
 
-(leuven--chapter leuven-load-chapter-46-hyperlinking "46 Hyperlinking and Navigation Features"
+(leuven--chapter leuven-load-chapter-47-hyperlinking "47 Hyperlinking and Navigation Features"
 #+end_src
 
 ** Following URLs
@@ -14601,15 +14596,15 @@ using ~C-n~ and ~C-p~ key bindings.
             ("fr" . "nl") ("nl" . "fr")
             ("fr" . "es") ("es" . "fr"))))
 
-)                                       ; Chapter 46 ends here.
+)                                       ; Chapter 47 ends here.
 #+end_src
 
 * Other Amusements
 
 #+begin_src emacs-lisp
-;;* 47 Other (info "(emacs)Amusements")
+;;* 48 Other (info "(emacs)Amusements")
 
-(leuven--chapter leuven-load-chapter-47-amusements "47 Other Amusements"
+(leuven--chapter leuven-load-chapter-48-amusements "48 Other Amusements"
 
   ;; Define a default menu bar.
   (with-eval-after-load 'menu-bar
@@ -14617,7 +14612,7 @@ using ~C-n~ and ~C-p~ key bindings.
     ;; Get rid of the Games in the Tools menu.
     (define-key menu-bar-tools-menu [games] nil))
 
-)                                       ; Chapter 47 ends here.
+)                                       ; Chapter 48 ends here.
 #+end_src
 
 * Customization
@@ -14630,9 +14625,9 @@ Install Leuven Theme via the [[id:8c71fa50-b62e-49ae-bcbb-2ed1ee7a5d65][Emacs Li
 Emacs 24.4).
 
 #+begin_src emacs-lisp
-;;* 49 (info "(emacs)Customization")
+;;* 50 (info "(emacs)Customization")
 
-(leuven--chapter leuven-load-chapter-49-customization "49 Customization"
+(leuven--chapter leuven-load-chapter-50-customization "50 Customization"
 
   (ignore-errors
     ;; Load custom theme "Leuven" and enable it.
@@ -14652,9 +14647,9 @@ particular color...
 ** Variables
 
 #+begin_src emacs-lisp
-;;** 49.3 (info "(emacs)Variables")
+;;** 50.2 (info "(emacs)Variables")
 
-  (leuven--section "49.3 (emacs)Variables")
+  (leuven--section "50.2 (emacs)Variables")
 
   ;; File local variables specifications are obeyed, without query --
   ;; RISKY!
@@ -14718,9 +14713,9 @@ M-: (let (lst) (mapatoms (lambda (x) (if (get x 'disabled) (push x lst)))) lst) 
 #+end_src
 
 #+begin_src emacs-lisp
-;;** 49.4 Customizing (info "(emacs)Key Bindings")
+;;** 50.2 Customizing (info "(emacs)Key Bindings")
 
-  (leuven--section "49.4 Customizing (emacs)Key Bindings")
+  (leuven--section "50.3 Customizing (emacs)Key Bindings")
 #+end_src
 
 See as well Print keybindings (pkb).
@@ -14912,7 +14907,7 @@ the mouse:
 :END:
 
 #+begin_src emacs-lisp
-;;** 37.17 (info "(elisp)Images")
+;;** 41.17 (info "(elisp)Images")  XXXXXXXXXXXXXXXX
 #+end_src
 
 How do I get image support? See ~image-library-alist~, a list of image types vs.
@@ -15033,7 +15028,7 @@ You need to type ~C-x * e~ again to exit the Embedded mode.
 Eventually have a look as well at ~input-decode-map~.
 
 #+begin_src emacs-lisp
-;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")
+;;* App G Emacs and (info "(emacs)Microsoft Windows/MS-DOS")  XXXXX
 
 (leuven--chapter leuven-load-chapter-AppG-ms-dos "Appendix G Emacs and MS-DOS"
 
