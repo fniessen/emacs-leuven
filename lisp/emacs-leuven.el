@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250827.2027>
+;; Version: <20250827.2215>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250827.2027>"
+(defconst eboost-version "<20250827.2215>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1084,15 +1084,17 @@ called interactively."
 
   (leuven--section "13.2 (emacs)Yanking")
 
-  ;; Auto-indentation of pasted code in the programming modes
+  ;; Auto-indentation of pasted code in programming modes,
+  ;; but not in Makefile modes.
   ;; (fall back to default, non-indented, yanking by preceding the yanking
   ;; command `C-y' with `C-u').
   (dolist (command '(yank yank-pop))
     (advice-add command :after
                 (lambda (&rest _)
-                  "Indent yanked text in programming mode (unless prefix arg)."
+                  "Indent yanked text in programming mode (unless prefix arg or in Makefile mode)."
                   (when (and (not current-prefix-arg)
-                             (derived-mode-p 'prog-mode))
+                             (derived-mode-p 'prog-mode)
+                             (not (derived-mode-p 'makefile-mode)))
                     (let ((mark-even-if-inactive t))
                       (indent-region (region-beginning) (region-end) nil))))))
 

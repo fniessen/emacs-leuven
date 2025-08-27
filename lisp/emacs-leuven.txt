@@ -1827,15 +1827,17 @@ ones.
 Auto-indent on paste.
 
 #+begin_src emacs-lisp
-  ;; Auto-indentation of pasted code in the programming modes
+  ;; Auto-indentation of pasted code in programming modes,
+  ;; but not in Makefile modes.
   ;; (fall back to default, non-indented, yanking by preceding the yanking
   ;; command `C-y' with `C-u').
   (dolist (command '(yank yank-pop))
     (advice-add command :after
                 (lambda (&rest _)
-                  "Indent yanked text in programming mode (unless prefix arg)."
+                  "Indent yanked text in programming mode (unless prefix arg or in Makefile mode)."
                   (when (and (not current-prefix-arg)
-                             (derived-mode-p 'prog-mode))
+                             (derived-mode-p 'prog-mode)
+                             (not (derived-mode-p 'makefile-mode)))
                     (let ((mark-even-if-inactive t))
                       (indent-region (region-beginning) (region-end) nil))))))
 #+end_src
