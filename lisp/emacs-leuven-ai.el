@@ -49,7 +49,11 @@ If already bound, emit a warning mentioning SCOPE (string)."
                          :warning))))))
 
 ;; Set OpenAI API key.
-(defvar eboost-openai-api-key
+(defvar eboost-openai-api-key nil
+  "OpenAI API key from env or ~/.openai_api_key; nil if unavailable.")
+
+(defun eboost--load-openai-api-key ()
+  "Retourne la clé OpenAI ou affiche un warning si absente."
   (let* ((api-key (or (getenv "OPENAI_API_KEY")
                       (let ((f (expand-file-name "~/.openai_api_key")))
                         (when (file-exists-p f)
@@ -64,8 +68,9 @@ If already bound, emit a warning mentioning SCOPE (string)."
      (t
       (when init-file-debug
         (display-warning 'eboost "No valid OpenAI API key found!" :warning))
-      nil)))
-  "OpenAI API key from env or ~/.openai_api_key; nil if unavailable.")
+      nil))))
+
+(setq eboost-openai-api-key (eboost--load-openai-api-key))
 
 ;; Load gptel.
 (when (eboost-try-require 'gptel)
