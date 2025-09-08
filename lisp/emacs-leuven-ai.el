@@ -11,6 +11,8 @@
 
 ;;; Code:
 
+(require 'subr-x)
+
 ;; Require a feature/library if available; if not, fail silently.
 (defun eboost-try-require (feature)
   "Try to (require FEATURE) silently.
@@ -63,7 +65,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
       (when init-file-debug
         (display-warning 'eboost "No valid OpenAI API key found!" :warning))
       nil)))
-  "OpenAI API key from env or file; nil if unavailable.")
+  "OpenAI API key from env or ~/.openai_api_key; nil if unavailable.")
 
 ;; Load gptel.
 (when (eboost-try-require 'gptel)
@@ -323,65 +325,54 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                              #'eboost-gptel-write-commit-message
                              "global map")
 
-  (defun eboost-ai-generate-contextual-test ()
+  (defun eboost--extract-defun-source ()
+    "Retourne le code de la defun courante ou signale une erreur."
+    (save-excursion
+      (unless (ignore-errors (beginning-of-defun 1))
+        (error "No function found at point"))
+      (let ((beg (point)))
+        (end-of-defun)
+        (buffer-substring-no-properties beg (point)))))
+
+  (defun eboost-gptel-generate-contextual-test ()
     "Generate a unit test for the current function by sending its source code to GPTel."
     (interactive)
-    (let* ((function-source (save-excursion
-                              (beginning-of-defun)
-                              (buffer-substring-no-properties
-                               (point)
-                               (progn (end-of-defun) (point)))))
+    (let* ((function-source (eboost--extract-defun-source))
            (prompt (format "Generate a unit test for the following function:\n\n%s"
                            function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-ai-refactor-function ()
+  (defun eboost-gptel-refactor-function ()
     "Refactor the current function with suggestions from GPTel."
     (interactive)
-    (let* ((function-source (save-excursion
-                              (beginning-of-defun)
-                              (buffer-substring-no-properties
-                               (point)
-                               (progn (end-of-defun) (point)))))
+    (let* ((function-source (eboost--extract-defun-source))
            (prompt (format "Suggest a refactored, cleaner version of this function:\n\n%s\n\nProvide the refactored code and explain the improvements." function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-ai-generate-docstring ()
+  (defun eboost-gptel-generate-docstring ()
     "Generate a docstring for the current function using GPTel."
     (interactive)
-    (let* ((function-source (save-excursion
-                              (beginning-of-defun)
-                              (buffer-substring-no-properties
-                               (point)
-                               (progn (end-of-defun) (point)))))
+    (let* ((function-source (eboost--extract-defun-source))
            (prompt (format "Generate a detailed docstring for the following function:\n\n%s\n\nFollow Emacs docstring conventions." function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-ai-debug-function ()
+  (defun eboost-gptel-debug-function ()
     "Analyze the current function for bugs or improvements using GPTel."
     (interactive)
-    (let* ((function-source (save-excursion
-                              (beginning-of-defun)
-                              (buffer-substring-no-properties
-                               (point)
-                               (progn (end-of-defun) (point)))))
+    (let* ((function-source (eboost--extract-defun-source))
            (prompt (format "Analyze this function for potential bugs or improvements:\n\n%s\n\nProvide a list of issues and suggested fixes." function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-ai-generate-example-usage ()
+  (defun eboost-gptel-generate-example-usage ()
     "Generate example usage for the current function using GPTel."
     (interactive)
     (let* ((function-name (which-function))
-           (function-source (save-excursion
-                              (beginning-of-defun)
-                              (buffer-substring-no-properties
-                               (point)
-                               (progn (end-of-defun) (point)))))
+           (function-source (eboost--extract-defun-source))
            (prompt (format "Provide example usage code for the following function named %s:\n\n%s\n\nInclude a brief explanation of each example."
                            function-name function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-ai-generate-function-from-spec ()
+  (defun eboost-gptel-generate-function-from-spec ()
     "Generate an Emacs Lisp function from a user-provided specification using GPTel."
     (interactive)
     (let ((spec (read-string "Enter the function specification (e.g., 'Write a function to reverse a string'): ")))
@@ -390,22 +381,18 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                               spec)))
           (gptel-request prompt)))))
 
-  (defun eboost-ai-optimize-function-performance ()
+  (defun eboost-gptel-optimize-function-performance ()
     "Suggest performance optimizations for the current function using GPTel."
     (interactive)
-    (let* ((function-source (save-excursion
-                              (beginning-of-defun)
-                              (buffer-substring-no-properties
-                               (point)
-                               (progn (end-of-defun) (point)))))
+    (let* ((function-source (eboost--extract-defun-source))
            (prompt (format "Analyze this Emacs Lisp function for performance bottlenecks:\n\n%s\n\nSuggest optimizations with code examples and explain why they improve performance." function-source)))
       (gptel-request prompt)))
 
-  (defvar eboost-ai-code-review-prompt
+  (defvar eboost-gptel-code-review-prompt
     "Perform a code review for this Emacs Lisp code:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement."
     "Prompt template for AI code review.")
 
-  (defun eboost-ai-code-review-function (&optional arg)
+  (defun eboost-gptel-code-review-function (&optional arg)
     "Perform a code review on the current Emacs Lisp function, region, or buffer using GPTel.
   With no prefix argument, review the current function.
   With one `C-u`, review the active region.
@@ -426,11 +413,11 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
              (t ;; default: current defun
               (save-excursion
                 (unless (beginning-of-defun)
-                  (error "No valid function found at point"))
+                  (error "No function found at point"))
                 (buffer-substring-no-properties
                  (point)
                  (progn (end-of-defun) (point)))))))
-           (prompt (format eboost-ai-code-review-prompt function-source))
+           (prompt (format eboost-gptel-code-review-prompt function-source))
            (output-buffer (get-buffer-create "*Code Review*")))
       (when (string-empty-p function-source)
         (error "No valid code source extracted"))
@@ -450,15 +437,11 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
              (message "Code review completed!")))
         (error (message "Code review failed: %s" err)))))
 
-  (defun eboost-ai-generate-companion-function ()
+  (defun eboost-gptel-generate-companion-function ()
     "Generate a companion function for the current function using GPTel."
     (interactive)
     (let* ((function-name (which-function))
-           (function-source (save-excursion
-                              (beginning-of-defun)
-                              (buffer-substring-no-properties
-                               (point)
-                               (progn (end-of-defun) (point)))))
+           (function-source (eboost--extract-defun-source))
            (prompt (format "Generate a companion function for this Emacs Lisp function named %s:\n\n%s\n\nThe companion could be an inverse operation, a helper function, or something that logically complements it. Provide the code and explain its purpose." function-name function-source)))
       (gptel-request prompt)))
 
