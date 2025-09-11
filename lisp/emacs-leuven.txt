@@ -446,7 +446,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
                   keymap
                 (when (and (symbolp keymap) (boundp keymap))
                   (symbol-value keymap))))
-         (existing-binding (and map (lookup-key map key))))
+         (existing-binding (and map (lookup-key map key t))))
     (cond
      ((not map)
       (display-warning 'eboost "Keymap not available (yet)" :warning))

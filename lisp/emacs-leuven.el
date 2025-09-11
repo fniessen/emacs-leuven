@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250827.2215>
+;; Version: <20250911.1909>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250827.2215>"
+(defconst eboost-version "<20250911.1909>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -279,7 +279,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
                   keymap
                 (when (and (symbolp keymap) (boundp keymap))
                   (symbol-value keymap))))
-         (existing-binding (and map (lookup-key map key))))
+         (existing-binding (and map (lookup-key map key t))))
     (cond
      ((not map)
       (display-warning 'eboost "Keymap not available (yet)" :warning))
