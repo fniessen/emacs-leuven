@@ -120,7 +120,7 @@ SPC $ g m : Ouvrir le menu transient.
 
 ;;; Code:
 
-(require 'subr-x)
+(require 'subr-x)  ;; string-trim, string-empty-p, etc.
 
 ;; Require a feature/library if available; if not, fail silently.
 (defun eboost-try-require (feature)
@@ -145,7 +145,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
                   keymap
                 (when (and (symbolp keymap) (boundp keymap))
                   (symbol-value keymap))))
-         (existing-binding (and map (lookup-key map key))))
+         (existing-binding (and map (lookup-key map key t))))
     (cond
      ((not map)
       (display-warning 'eboost "Keymap not available (yet)" :warning))
@@ -290,8 +290,6 @@ Inside a gptel buffer:
 *************** END
 
 #+begin_src emacs-lisp
-(require 'subr-x)  ;; string-trim, string-empty-p, etc.
-
 (defcustom eboost-gptel-directives-directory
   (expand-file-name "~/ai-prompts/")
   "Répertoire racine contenant des fichiers .txt pour les directives GPTel (recurse)."
@@ -397,8 +395,6 @@ How to use them: =C-u M-x gptel-send=.
 **** Templates with placeholders {{Var}} or {{Var|defaut}}
 
 #+begin_src emacs-lisp :tangle no
-(require 'subr-x)
-
 (defvar my/gptel-templates
   '(("facecam-30s"
      . "Rôle: maître des scripts viraux. Niche: {{NICHE}} (audience: {{AUDIENCE|débutants}}).

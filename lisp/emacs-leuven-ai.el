@@ -11,7 +11,7 @@
 
 ;;; Code:
 
-(require 'subr-x)
+(require 'subr-x)  ;; string-trim, string-empty-p, etc.
 
 ;; Require a feature/library if available; if not, fail silently.
 (defun eboost-try-require (feature)
@@ -34,7 +34,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
                   keymap
                 (when (and (symbolp keymap) (boundp keymap))
                   (symbol-value keymap))))
-         (existing-binding (and map (lookup-key map key))))
+         (existing-binding (and map (lookup-key map key t))))
     (cond
      ((not map)
       (display-warning 'eboost "Keymap not available (yet)" :warning))
@@ -128,8 +128,6 @@ If already bound, emit a warning mentioning SCOPE (string)."
   ;; Automatically move cursor to end of response.
   (when (fboundp 'gptel-end-of-response)
     (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
-
-(require 'subr-x)  ;; string-trim, string-empty-p, etc.
 
 (defcustom eboost-gptel-directives-directory
   (expand-file-name "~/ai-prompts/")
