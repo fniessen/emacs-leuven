@@ -149,7 +149,8 @@ Return the directive content, or nil on failure."
 (defun eboost--gptel-read-directives-from-directory (dir)
   "Populate `gptel-directives` from all .txt files under DIR (recursively).
 Existing entries with the same NAME are overwritten."
-  ;; (setq gptel-directives nil)
+  ;; (setq gptel-directives nil)           ;; <-- Reset old entries.
+  ;; Now iterate.
   (dolist (f (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
     (condition-case err
         (let ((name (intern (file-name-base f))))
@@ -265,6 +266,13 @@ Existing entries with the same NAME are overwritten."
                                #'eboost-gptel-org-send-to-chatgpt
                                "Org mode"))
 
+;; Commit-prompt file customization.
+(defcustom eboost-gptel-commit-prompt-file
+  (expand-file-name "write-commit-message.txt"
+                    eboost-gptel-directives-directory)
+  "System prompt file for commit-message generation."
+  :type 'file :group 'eboost-gptel)
+
 ;;;###autoload
   (defun eboost-gptel-write-commit-message ()
     "Generate a Git commit message from the current diff region or buffer.
@@ -273,7 +281,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
     (interactive)
     (unless (or (use-region-p) (> (buffer-size) 0))
       (user-error "No content to analyze"))
-    (let* ((prompt-file (expand-file-name "~/ai-prompts/write-commit-message.txt"))
+    (let* ((prompt-file eboost-gptel-commit-prompt-file)
            (default-prompt
             "Write a Git commit message for the following diff:\n\n")
            (system-prompt
@@ -292,8 +300,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
       (with-current-buffer (get-buffer-create "*Commit Message*")
         (erase-buffer))
       ;; Send request without menu.
-      (gptel-request
-          diff-text
+      (gptel-request diff-text
         :system system-prompt
         :callback (lambda (response info)
                     (if (stringp response)
@@ -303,10 +310,10 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                           (with-current-buffer output-buffer
                             (erase-buffer)
                             (let ((msg (string-trim response)))
-                              ;; strip ``` fences if present.
-                              (setq msg (replace-regexp-in-string "^```+ *\n?" "" msg))
-                              (setq msg (replace-regexp-in-string "\n?```+$" "" msg))
-                              ;; optional: convert backticks-quotes.
+                              ;; Strip ``` fences if present.
+                              (setq msg (replace-regexp-in-string "\\````[^\n]*\n?" "" msg))
+                              (setq msg (replace-regexp-in-string "\n?```\\'" "" msg))
+                              ;; Optional: convert backticks-quotes.
                               (setq msg (replace-regexp-in-string "`" "'" msg))
                               (kill-new msg) ; Add to kill ring.
                               (insert msg)
@@ -369,7 +376,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
   (defun eboost-gptel-generate-example-usage ()
     "Generate example usage for the current function using GPTel."
     (interactive)
-    (let* ((function-name (which-function))
+    (let* ((function-name (or (which-function) "unknown-function"))
            (function-source (eboost--extract-defun-source))
            (prompt (format "Provide example usage code for the following function named %s:\n\n%s\n\nInclude a brief explanation of each example."
                            function-name function-source)))
@@ -392,7 +399,12 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
       (gptel-request prompt)))
 
   (defvar eboost-gptel-code-review-prompt
-    "Perform a code review for this Emacs Lisp code:\n\n%s\n\nProvide detailed feedback, including clarity, style, potential bugs, and suggestions for improvement."
+    "Perform a code review for this Emacs Lisp code:
+
+%s
+
+Provide detailed feedback, including clarity, style, potential bugs, and
+suggestions for improvement."
     "Prompt template for AI code review.")
 
   (defun eboost-gptel-code-review-function (&optional arg)
@@ -426,8 +438,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
         (error "No valid code source extracted"))
       (message "Sending code for AI code review...")
       (condition-case err
-          (gptel-request
-              prompt
+          (gptel-request prompt
             :buffer output-buffer
             :callback
             (lambda (response info)
@@ -443,7 +454,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
   (defun eboost-gptel-generate-companion-function ()
     "Generate a companion function for the current function using GPTel."
     (interactive)
-    (let* ((function-name (which-function))
+    (let* ((function-name (or (which-function) "unknown-function"))
            (function-source (eboost--extract-defun-source))
            (prompt (format "Generate a companion function for this Emacs Lisp function named %s:\n\n%s\n\nThe companion could be an inverse operation, a helper function, or something that logically complements it. Provide the code and explain its purpose." function-name function-source)))
       (gptel-request prompt)))
