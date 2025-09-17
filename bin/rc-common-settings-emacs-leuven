@@ -116,11 +116,11 @@ cde() {
                                 default-directory))' | tr -d '"')"
 
     if [[ ! -d "$dir" ]]; then
-        printf >&2 "Error: directory not found: %s\n" "$dir"
+        printf >&2 "Error: Directory not found: %s\n" "$dir"
         return 2
     fi
 
-    cd "$dir"
+    cd "$dir" || return 2
     # The change in working directory will persist after the function has
     # completed.
 }
@@ -135,7 +135,7 @@ elf() {
 
     # Check if the last command is empty.
     if [[ -z "$last_command" ]]; then
-        printf >&2 "No command found in the shell history.\n"
+        printf >&2 "Error: No command found in shell history.\n"
         return 2
     fi
 
@@ -154,12 +154,21 @@ elf() {
 
     # Return if the last line is empty.
     if [[ -z "$last_file" ]]; then
-        printf >&2 "No output from the last command or no files found.\n"
+        printf >&2 "Error: No valid file found in command output.\n"
         return 2
     fi
 
+    if [[ ! -f "$last_file" ]]; then
+        printf >&2 "Error: File not found: '%s'\n" "$last_file"
+        return 2
+    fi
+
+    printf "Opening last file: %s\n" "$last_file"
     # Open the last file in Emacs using emacsclient.
-    emacsclient -n "$last_file"
+    emacsclient -n "$last_file" || {
+        printf >&2 "Error: Failed to open file in Emacs.\n"
+        return 2
+    }
 }
 
 # Retrieve and execute the last command from shell history, assuming it outputs
@@ -191,17 +200,24 @@ eff() {
 
     # Return if the first line is empty.
     if [[ -z "$first_file" ]]; then
-        printf >&2 "No output from the last command or no files found.\n"
+        printf >&2 "Error: No valid file found in command output.\n"
+        return 2
+    fi
+
+    if [[ ! -f "$first_file" ]]; then
+        printf >&2 "Error: File not found: '%s'\n" "$first_file"
         return 2
     fi
 
     # Open the first file in Emacs using emacsclient.
-    emacsclient -n "$first_file"
+    emacsclient -n "$first_file" || {
+        printf >&2 "Error: Failed to open file in Emacs.\n"
+        return 2
+    }
 }
 
-# Retrieve and execute the last command from shell history, then open its output
-# in Emacs for inspection.
-elo() {
+# Open previous command output in Emacs buffer.
+fco() {
     # Retrieve the last command from the history file.
     local last_command
     last_command=$(HISTTIMEFORMAT="" history 2 \
@@ -223,13 +239,22 @@ elo() {
 
     # Return if the last line is empty.
     if [[ -z "$command_output" ]]; then
-        printf >&2 "No output from the last command.\n"
+        printf >&2 "Error: No output from previous command.\n"
         return 2
     fi
+
+    # Escape quotes and special characters properly.
+    local escaped_output=${command_output//\"/\\\"}
+    printf "Opening output of previous command in Emacs buffer.\n"
 
     # Open Emacs and paste the output of the last command into a buffer named
     # "*Shell Command Output*".
     emacsclient -e "(with-current-buffer
                       (get-buffer-create \"*Shell Command Output*\")
-                      (insert \"$command_output\"))"
+                      (erase-buffer)
+                      (insert \"$escaped_output\")
+                      (goto-char (point-min)))" >/dev/null || {
+        printf >&2 "Error: Failed to create buffer in Emacs.\n"
+        return 2
+    }
 }
