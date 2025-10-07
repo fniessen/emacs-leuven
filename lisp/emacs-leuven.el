@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20250911.1909>
+;; Version: <20251007.1015>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20250911.1909>"
+(defconst eboost-version "<20251007.1015>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4253,7 +4253,8 @@ scrolling to the bottom."
                                         ; Must end with a slash.
 
 (defconst eboost-texlive-bin
-  "/usr/local/texlive/2024/bin/x86_64-linux"
+  (concat (string-trim (shell-command-to-string "kpsewhich --var-value=TEXMFROOT"))
+          "/bin/x86_64-linux")
   "Path to TeX Live executables.")
 
 (when (file-directory-p eboost-texlive-bin)

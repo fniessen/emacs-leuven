@@ -7586,7 +7586,8 @@ LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
 
 #+begin_src emacs-lisp
 (defconst eboost-texlive-bin
-  "/usr/local/texlive/2024/bin/x86_64-linux"
+  (concat (string-trim (shell-command-to-string "kpsewhich --var-value=TEXMFROOT"))
+          "/bin/x86_64-linux")
   "Path to TeX Live executables.")
 
 (when (file-directory-p eboost-texlive-bin)
