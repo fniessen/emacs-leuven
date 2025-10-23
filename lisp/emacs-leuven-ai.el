@@ -147,7 +147,8 @@ Return the directive content, or nil on failure."
         content))))
 
 (defun eboost--gptel-read-directives-from-directory (dir)
-  "Populate `gptel-directives` from all .txt files under DIR (recursively).
+  "Populate `gptel-directives` from all .txt files under DIR (recursively),
+sorted in ascending order by filename.
 Existing entries with the same NAME are overwritten."
   ;; (setq gptel-directives nil)           ;; <-- Reset old entries.
   ;; Now iterate.
@@ -447,8 +448,8 @@ suggestions for improvement."
                  (erase-buffer)
                  (insert (or response "No response received from GPTel"))
                  (emacs-lisp-mode)
-                 (display-buffer buf)))
-             (message "Code review completed!")))
+                 (display-buffer buf))
+               (message "Code review completed!"))))
         (error (message "Code review failed: %s" err)))))
 
   (defun eboost-gptel-generate-companion-function ()
@@ -478,6 +479,21 @@ suggestions for improvement."
           (pop-to-buffer buffer-name)
         (progn
           (call-interactively 'gptel)))))
+
+  ;; (defun eboost-gptel-chat-buffer (&optional arg)
+  ;;   "Switch to the GPTel chat buffer.
+  ;; Without prefix ARG, jump to `*ChatGPT*` creating it if needed (no prompt).
+  ;; With C-u prefix, defer to `gptel`'s usual interactive flow (with prompts)."
+  ;;   (interactive "P")
+  ;;   (let ((buffer-name "*ChatGPT*"))
+  ;;     (if arg
+  ;;         ;; C-u -> keep original prompting/confirmation behavior.
+  ;;         (call-interactively #'gptel)
+  ;;       ;; No prefix -> reuse or create *ChatGPT* without prompting.
+  ;;       (let ((buf (get-buffer buffer-name)))
+  ;;         (if buf
+  ;;             (pop-to-buffer buf)
+  ;;           (funcall #'gptel buffer-name))))))
 
   ;; Global keybinding (only if free).
   (eboost-define-key-if-free global-map
