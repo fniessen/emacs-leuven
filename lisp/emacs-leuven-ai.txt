@@ -297,14 +297,19 @@ Inside a gptel buffer:
   :group 'eboost-gptel)
 
 (defun eboost--gptel-read-directive-file (name directive-file)
-  "Read DIRECTIVE-FILE and set NAME entry in `gptel-directives` as a proper alist cell.
+  "Read DIRECTIVE-FILE and set NAME entry in `gptel-directives' as a proper alist cell.
 Return the directive content, or nil on failure."
   (when (file-readable-p directive-file)
     (with-temp-buffer
       (insert-file-contents directive-file)
-      (let ((content (string-trim (buffer-string))))
-        ;; Create or update (NAME . CONTENT)
-        (setf (alist-get name gptel-directives nil nil #'eq) content)
+      (let* ((content (string-trim (buffer-string)))
+             (cell    (assoc name gptel-directives)))
+        (if cell
+            ;; Update existing (NAME . CONTENT).
+            (setcdr cell content)
+          ;; Append new cell to the end.
+          (setq gptel-directives
+                (append gptel-directives (list (cons name content)))))
         content))))
 
 (defun eboost--gptel-read-directives-from-directory (dir)
