@@ -3731,18 +3731,15 @@ of possible corrections for misspelled word before point.
       ;; Dash character (`-') is considered as a word delimiter.
       (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
 
-      (defun lvn-toggle-ispell-dictionary ()
-        "Toggle the ispell dictionary between French and US English."
+      (defun eboost-toggle-ispell-dictionary ()
+        "Toggle Ispell dictionary between French and American English."
         (interactive)
-        (let ((current-dict (or ispell-local-dictionary
-                                ispell-dictionary))
-              (new-dict))
-          (setq new-dict (if (string= current-dict "francais")
-                             "american"
-                           "francais"))
-          (ispell-change-dictionary new-dict)
-          (message "[Switched to %S]" new-dict)
-          (sit-for 0.5)
+        (let* ((current (or ispell-local-dictionary ispell-dictionary))
+               (next    (if (string= current "francais")
+                            "american"
+                          "francais")))
+          (ispell-change-dictionary next)
+          (message "[Switched to %s]" next)
           (force-mode-line-update)
           (when flyspell-mode
             ;; (flyspell-delete-all-overlays)
@@ -3752,7 +3749,7 @@ of possible corrections for misspelled word before point.
 
       ;; Key bindings.
       (global-set-key (kbd "C-$") #'flyspell-buffer)
-      (global-set-key (kbd "C-M-$") #'lvn-toggle-ispell-dictionary)
+      (global-set-key (kbd "C-M-$") #'eboost-toggle-ispell-dictionary)
 
       ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
       ;; faces corresponding to text in programming-mode buffers).

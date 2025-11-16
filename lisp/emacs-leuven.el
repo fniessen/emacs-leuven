@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20251007.1015>
+;; Version: <20251116.1844>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20251007.1015>"
+(defconst eboost-version "<20251116.1844>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2077,18 +2077,15 @@ After initiating the grep search, the isearch is aborted."
       ;; Dash character (`-') is considered as a word delimiter.
       (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
 
-      (defun lvn-toggle-ispell-dictionary ()
-        "Toggle the ispell dictionary between French and US English."
+      (defun eboost-toggle-ispell-dictionary ()
+        "Toggle Ispell dictionary between French and American English."
         (interactive)
-        (let ((current-dict (or ispell-local-dictionary
-                                ispell-dictionary))
-              (new-dict))
-          (setq new-dict (if (string= current-dict "francais")
-                             "american"
-                           "francais"))
-          (ispell-change-dictionary new-dict)
-          (message "[Switched to %S]" new-dict)
-          (sit-for 0.5)
+        (let* ((current (or ispell-local-dictionary ispell-dictionary))
+               (next    (if (string= current "francais")
+                            "american"
+                          "francais")))
+          (ispell-change-dictionary next)
+          (message "[Switched to %s]" next)
           (force-mode-line-update)
           (when flyspell-mode
             ;; (flyspell-delete-all-overlays)
@@ -2098,7 +2095,7 @@ After initiating the grep search, the isearch is aborted."
 
       ;; Key bindings.
       (global-set-key (kbd "C-$") #'flyspell-buffer)
-      (global-set-key (kbd "C-M-$") #'lvn-toggle-ispell-dictionary)
+      (global-set-key (kbd "C-M-$") #'eboost-toggle-ispell-dictionary)
 
       ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
       ;; faces corresponding to text in programming-mode buffers).
