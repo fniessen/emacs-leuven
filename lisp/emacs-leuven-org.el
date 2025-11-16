@@ -24,12 +24,13 @@ emit a warning when the feature can't be loaded."
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 
-;; Keybindings outside org-mode-hook (global).
-(global-set-key (kbd "C-c l") #'org-store-link)
-(global-set-key (kbd "C-c c") #'org-capture)
-(global-set-key (kbd "C-c a") #'org-agenda)
-(global-set-key (kbd "C-c L") #'org-insert-link-global)
-(global-set-key (kbd "C-c O") #'org-open-at-point-global)
+(with-eval-after-load 'org
+  ;; Global keymap definitions.
+  (define-key global-map (kbd "C-c l") #'org-store-link)
+  (define-key global-map (kbd "C-c c") #'org-capture)
+  (define-key global-map (kbd "C-c a") #'org-agenda)
+  (define-key global-map (kbd "C-c L") #'org-insert-link-global)
+  (define-key global-map (kbd "C-c O") #'org-open-at-point-global))
 
 (defun leuven-org-check-agenda-files ()
   "Check and report the status of `org-agenda-files'."
@@ -69,7 +70,7 @@ emit a warning when the feature can't be loaded."
 
 (with-eval-after-load 'org
   ;; Allow both single and double quotes in the border.
-  (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n,")
+  (setf (nth 2 org-emphasis-regexp-components) " \t\r\n,")
   (custom-set-variables `(org-emphasis-alist ',org-emphasis-alist)))
 
 ;; Single character alphabetical bullets (a, b, c, ..., X, Y, Z) are allowed.
@@ -372,23 +373,15 @@ emit a warning when the feature can't be loaded."
   ;; Define Org-mode link abbreviations for quick access to web resources.
   (setq org-link-abbrev-alist
         (append
-         ;; Search engines and cached content.
-         '(("google"     . "https://www.google.com/search?q=%s")
-           ;; ("cache"      . "https://webcache.googleusercontent.com/search?q=cache:%s")
-           ;; http://web.archive.org/web/http://www.yahoo.com/ ?
-           ("googlegroups" . "https://groups.google.com/groups?q=%s"))
-
-         ;; Maps and location services.
-         '(("googlemaps" . "https://maps.google.com/maps?q=%s")
-           ("openstreetmap" . "https://nominatim.openstreetmap.org/search?q=%s&polygon=1"))
-
-         ;; Reference and dictionaries.
-         '(("dictionary" . "https://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=%s")
-           ("wpen"       . "https://en.wikipedia.org/wiki/%s")
-           ("wpfr"       . "https://fr.wikipedia.org/wiki/%s"))
-
-         ;; Entertainment.
-         '(("imdb"       . "https://www.imdb.com/title/%s")))))
+         '(("google"        . "https://www.google.com/search?q=%s")
+           ("googlegroups"  . "https://groups.google.com/groups?q=%s")
+           ("googlemaps"    . "https://maps.google.com/maps?q=%s")
+           ("openstreetmap" . "https://nominatim.openstreetmap.org/search?q=%s&polygon=1")
+           ("dictionary"    . "https://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=%s")
+           ("wpen"          . "https://en.wikipedia.org/wiki/%s")
+           ("wpfr"          . "https://fr.wikipedia.org/wiki/%s")
+           ("imdb"          . "https://www.imdb.com/title/%s"))
+         org-link-abbrev-alist)))
 
 ;;* 5 (info "(org)TODO Items")
 
@@ -809,10 +802,15 @@ a parent headline."
 
 ;; 9.1.2 Directory with Org files.
 (defvar lvn-org-directory
-  (directory-file-name                  ; This function removes the final slash.
-   (cond ((file-directory-p "~/org/") "~/org/")
-         ((file-directory-p "~/org-files/") "~/org-files/")
-         (t "~/")))
+  (let ((candidates
+         '("~/org/"
+           "~/org-files/")))
+    (directory-file-name
+     (or (cl-find-if (lambda (dir)
+                       (and (file-directory-p dir) (file-writable-p dir)))
+                     candidates)
+         (expand-file-name "org" user-emacs-directory)
+         "~/")))
   "Base directory for Org files.")
 (setq org-directory lvn-org-directory)
 
@@ -927,7 +925,7 @@ From the address <%a>"
                  :immediate-finish t) :append)
 
   (add-to-list 'org-capture-templates
-               `("p" "Phone call" entry
+               `("p" "New phone call" entry
                  (file+headline ,org-default-notes-file "Phone calls")
                  "* %?"
                  :clock-in t
@@ -1248,7 +1246,7 @@ From the address <%a>"
 
   ;; Right-justify tags in the agenda buffer.
   (defun leuven--org-agenda-right-justify-tags ()
-    "Justify the tags to the right border of the agenda window."
+    "Justify org-agenda tags to right side."
     (let ((org-agenda-tags-column (- 2 (window-width))))
       (org-agenda-align-tags)))
   (add-hook 'org-agenda-finalize-hook #'leuven--org-agenda-right-justify-tags))
@@ -1400,20 +1398,6 @@ Currently: 08:00-21:59."
     (and (<= 8 hour) (<= hour 21))))
 
 (defun leuven--org-auto-exclude-function (tag)
-  "Exclude certain tags from the agenda based on specific conditions."
-  (and (cond
-        ((string= tag "personal")
-         (with-temp-buffer
-           (call-process "/sbin/ifconfig" nil t nil "en0" "inet")
-           (goto-char (point-min))
-           (not (re-search-forward "inet 192\\.168\\.9\\." nil t))))
-        ((or (string= tag "errands")
-             (string= tag "call"))
-         (let ((hour (nth 2 (decode-time))))
-           (or (< hour 8) (> hour 21)))))
-       (concat "-" tag)))
-
-(defun leuven--org-auto-exclude-function (tag)
   "Exclude certain tags from the agenda based on specific conditions.
 
 This function is designed to be used as the `org-agenda-auto-exclude-function'.
@@ -1421,13 +1405,10 @@ It ensures that tags like ':inbox:' are never excluded!
 
 TAG is the tag to be considered for exclusion.
 
-Returns a string to be used in the agenda filter.
-
 Examples:
 - Exclude 'personal' tag during working hours.
 - Exclude 'work' tag outside of working hours.
 - Exclude 'errands' and 'call' tags outside of calling hours."
-  ;; List of tags and conditions for auto-exclusion in agenda.
   (and (cond
         ((string= tag "personal")
          (leuven--org-working-p))
@@ -1544,7 +1525,7 @@ this with to-do items than with projects or headings."
 (with-eval-after-load 'org
   (message "[... Org Markup]")
 
-  ;;??? Change the face of a headline (as an additional information) if it is
+  ;; ??? Change the face of a headline (as an additional information) if it is
   ;; marked DONE (to face `org-headline-done').
   (setq org-fontify-done-headline t)
 
@@ -1653,10 +1634,10 @@ or added into the given directory, defaulting to the current one."
 
   ;; Main function.
   (defun org-save-buffer-and-do-related ()
-    "Save buffer, execute/tangle code blocks, and export to various
+    "Save Org buffer, execute/tangle code blocks, and export it to various
 formats (Markdown, HTML, or PDF)."
     (interactive)
-    (when (not (derived-mode-p 'org-mode))
+    (unless (derived-mode-p 'org-mode)
       (user-error "Not in Org mode"))
 
     (let* ((orgfile (buffer-file-name))
@@ -1665,6 +1646,9 @@ formats (Markdown, HTML, or PDF)."
            (htmlfile (concat base-name ".html"))
            (texfile (concat base-name ".tex"))
            (pdffile (concat base-name ".pdf")))
+
+      (unless (and orgfile (file-exists-p orgfile))
+        (user-error "Buffer is not visiting a file"))
 
       ;; Initial save buffer.
       (save-buffer)
@@ -1825,7 +1809,7 @@ formats (Markdown, HTML, or PDF)."
 
   ;; HTML checkbox output.
   (defun leuven--checkbox-filter (item backend info)
-    "XXX"
+    "Convert Org checkbox to UTF-8 symbol in HTML export."
     (when (org-export-derived-backend-p backend 'html)
       (replace-regexp-in-string
        "\\`.*\\(<code>\\[\\(X\\|&#xa0;\\|-\\)\\]</code>\\).*$"
@@ -2087,7 +2071,7 @@ parent."
 
   ;; 13.4 Force publishing all files.
   (defun leuven-org-publish-all-force ()
-    "XXX"
+    "Force publish all Org projects, ignoring timestamps."
     (interactive)
     (org-publish-all t)))
 
@@ -2192,28 +2176,22 @@ parent."
     (delete-overlay ov)))
 
 (with-eval-after-load 'org
-  (defun lvn-org-copy-current-code-block ()
-    "Copy the contents of the current Org mode code block to the kill ring.
-A code block in Org mode is identified by the \"#+begin_src\" and \"#+end_src\" markers.
-This command copies the code block contents to the kill ring, making it available for pasting.
-It does not actually delete or kill the code block.
-This function is intended for use within Org mode buffers."
+  (defun eboost-org-copy-current-code-block ()
+    "Copy the contents of the current Org mode code block to the kill ring."
     (interactive)
     (if (not (derived-mode-p 'org-mode))
         (message "[Not in an Org mode buffer]")
-      (let ((block-start (save-excursion
-                           (re-search-backward "^[ \t]*#\\+begin_src[ \t]+\\([a-zA-Z0-9]+\\)?" nil t)
-                           (forward-line)
-                           (point)))
-            (block-end (save-excursion
-                         (re-search-forward "^[ \t]*#\\+end_src" nil t)
-                         (beginning-of-line)
-                         (point))))
-        (copy-region-as-kill block-start block-end)
-        (message "[Code block copied to kill ring]"))))
+      (let* ((info (org-babel-get-src-block-info t))
+             (beg (nth 5 info))
+             (end (nth 6 info)))
+        (if (and beg end)
+            (progn
+              (copy-region-as-kill beg end)
+              (message "[Code block copied to kill ring]"))
+          (message "[No source block found at point]")))))
 
   ;; Copy current code block.
-  (define-key org-mode-map (kbd "H-w") #'lvn-org-copy-current-code-block))
+  (define-key org-mode-map (kbd "H-w") #'eboost-org-copy-current-code-block))
 
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
@@ -2396,28 +2374,29 @@ Ignore non Org buffers."
 (when (boundp 'org-planning-line-re)
   (add-hook 'org-mode-hook #'org-repair-property-drawers))
 
-(defun lvn--org-switch-dictionary ()
-  "Set the language dictionary if Flyspell is enabled and `#+LANGUAGE:' is found within the top 8 lines of the buffer."
-  (when (and (boundp 'ispell-dictionary-alist)
-             ispell-dictionary-alist)
+(defun eboost--org-switch-dictionary ()
+  "Set Ispell dictionary based on a #+LANGUAGE keyword in first 8 lines of the buffer."
+  (when (bound-and-true-p ispell-dictionary-alist)
     (save-excursion
-      (goto-char (point-min))
-      (forward-line 8)
-      (let ((lang-dict-alist '(("en" . "american")
-                               ("fr" . "francais"))))
-        (when (re-search-backward "#\\+LANGUAGE: +\\([[:alpha:]_]*\\)" 1 t)
-          (let* ((lang (match-string 1))
-                 (dict (cdr (assoc lang lang-dict-alist))))
+      (save-restriction
+        (widen)
+        (goto-char (point-min))
+        (when (re-search-forward "^#\\+LANGUAGE: +\\([[:alpha:]_]*\\)"
+                                (line-end-position 8) t)
+          (let* ((lang (match-string-no-properties 1))
+                 (dict (cdr (assoc lang
+                                   '(("en" . "american")
+                                     ("fr" . "francais"))))))
             (if dict
-                (progn
-                  (ispell-change-dictionary dict)
-                  (force-mode-line-update))
-              (message "[No Ispell dictionary for language `%s' (see file `%s')]"
-                       lang (file-name-base))
+                (condition-case err
+                    (progn (ispell-change-dictionary dict)
+                           (force-mode-line-update))
+                  (error (message "Dictionary error for %s: %s" lang err)))
+              (message "[No dictionary for language `%s']" lang)
               (sit-for 1.5))))))))
 
-;; Guess dictionary.
-(add-hook 'org-mode-hook #'lvn--org-switch-dictionary)
+;; Guess dictionary in Org buffers.
+(add-hook 'org-mode-hook #'eboost--org-switch-dictionary)
 
 ;;** 15.2 (info "(org)Easy Templates")
 
@@ -2682,6 +2661,7 @@ BACKEND is the current export backend."
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
 (add-hook 'before-save-hook #'lvn--org-update-buffer-before-save)
+                                        ; Heavy before-save hook.
 
 (defvar eboost--org-clean-typography-excluded-files
   '("emacs.org" "init.org" "emacs-leuven-org.txt")
@@ -2709,7 +2689,9 @@ BACKEND is the current export backend."
           (while (search-forward (car pair) nil t)
             (replace-match (cdr pair) nil t)))))))
 
-(add-hook 'before-save-hook #'eboost--org-clean-typography nil 'local)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook #'eboost--org-clean-typography)))
 
 ;; Add weather forecast in your Org agenda.
 (autoload 'org-google-weather "org-google-weather"
