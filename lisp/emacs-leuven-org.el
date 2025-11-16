@@ -2375,25 +2375,30 @@ Ignore non Org buffers."
   (add-hook 'org-mode-hook #'org-repair-property-drawers))
 
 (defun eboost--org-switch-dictionary ()
-  "Set Ispell dictionary based on a #+LANGUAGE keyword in first 8 lines of the buffer."
+  "Set Ispell dictionary based on a #+LANGUAGE keyword near the top of the buffer."
   (when (bound-and-true-p ispell-dictionary-alist)
     (save-excursion
       (save-restriction
         (widen)
         (goto-char (point-min))
-        (when (re-search-forward "^#\\+LANGUAGE: +\\([[:alpha:]_]*\\)"
-                                (line-end-position 8) t)
-          (let* ((lang (match-string-no-properties 1))
-                 (dict (cdr (assoc lang
-                                   '(("en" . "american")
-                                     ("fr" . "francais"))))))
-            (if dict
-                (condition-case err
-                    (progn (ispell-change-dictionary dict)
-                           (force-mode-line-update))
-                  (error (message "Dictionary error for %s: %s" lang err)))
-              (message "[No dictionary for language `%s']" lang)
-              (sit-for 1.5))))))))
+        (let ((limit (save-excursion
+                       (forward-line 8)
+                       (point))))
+          (when (re-search-forward "^#\\+LANGUAGE:[ \t]+\\([[:alpha:]_]+\\)"
+                                   limit t)
+            (let* ((lang (match-string-no-properties 1))
+                   (dict (cdr (assoc lang
+                                     '(("en" . "american")
+                                       ("fr" . "francais"))))))
+              (if dict
+                  (condition-case err
+                      (progn
+                        (ispell-change-dictionary dict)
+                        (force-mode-line-update))
+                    (error
+                     (message "Dictionary error for %s: %s" lang err)))
+                (message "[No dictionary configured for language `%s']" lang)
+                (sit-for 0.5)))))))))
 
 ;; Guess dictionary in Org buffers.
 (add-hook 'org-mode-hook #'eboost--org-switch-dictionary)
