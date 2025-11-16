@@ -3073,60 +3073,79 @@ Not very coherent!
 #+end_warning
 
 #+begin_src emacs-lisp
-  (defun leuven--change-pdflatex-program (backend)
-    "Automatically run XeLaTeX, if asked, when exporting to LaTeX."
+  (defun leuven--set-latex-engine-and-process (backend)
+    "Automatically select the LaTeX engine and configure `org-latex-pdf-process'.
 
-    (when (equal org-export-current-backend "latex")
+  Logic:
+  - Use XeLaTeX if the file contains `#+LATEX_COMPILER: xelatex`
+    (or the legacy `#+LATEX_CMD: xelatex`).
+  - Otherwise default to PDFLaTeX.
+  - If `latexmk` is available, prefer it.
+  - Under WSL/Linux, no path conversion is required (plain %f is correct)."
 
-      (let* ((org-latex-pdf-engine-full-path
-              (cond ((string-match "^#\\+LATEX_CMD: xelatex" (buffer-string))
-                     (or (executable-find "xelatex")
-                         (error "Please install XeLaTeX.")))
-                    (t
-                     (or (executable-find "pdflatex")
-                         (error "Please install PDFLaTeX.")))))
+    (when (org-export-derived-backend-p backend 'latex)
 
-             (org-latex-pdf-command
-              (cond ((executable-find "latexmk")
-                     "latexmk")
-                    (t
-                     (file-name-base org-latex-pdf-engine-full-path))))
-                                          ; "xelatex" or "pdflatex".
+      (let* (;; Detect explicit request for XeLaTeX.
+             (use-xelatex
+              (or (save-excursion
+                    (goto-char (point-min))
+                    (re-search-forward "^#\\+LATEX_COMPILER: *xelatex" nil t))
+                  (save-excursion
+                    (goto-char (point-min))
+                    (re-search-forward "^#\\+LATEX_CMD: *xelatex" nil t))))
 
-             (latex-file
-              (cond ((string-match "^/usr/bin/" org-latex-pdf-engine-full-path)
-                     "$(cygpath -m %f)")
-                    (t
-                     "%f"))))
+             ;; Full path to selected LaTeX engine.
+             (engine-path
+              (if use-xelatex
+                  (or (executable-find "xelatex")
+                      (user-error "XeLaTeX was requested but is not installed."))
+                (or (executable-find "pdflatex")
+                    (user-error "PDFLaTeX is not installed."))))
 
-        (message "[LaTeX engine: %s]" org-latex-pdf-engine-full-path)
-        (message "[LaTeX command: %s]" org-latex-pdf-command)
+             ;; Executable name only ("xelatex" or "pdflatex").
+             (engine-name (file-name-base engine-path))
 
-        (setq org-latex-pdf-process
-              (cond ((equal org-latex-pdf-command "latexmk")
-                     `(;; "echo f = %f" "echo quotedf = '%f'" "echo cygpath = $(cygpath %f)"
-                       "latexmk --version"
-                       ,(concat "latexmk -cd -f -pdf -pdflatex=" (file-name-base org-latex-pdf-engine-full-path) " " latex-file
-                                " && latexmk -c"))) ; Clean up all nonessential files.
-                    ((equal org-latex-pdf-command "xelatex")
-                     `(,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "xelatex -interaction=nonstopmode -output-directory=%o " latex-file)))
-                    (t
-                     `(,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)
-                       ,(concat "pdflatex -interaction=nonstopmode -output-directory=%o " latex-file)))))
-        (message "[Export command: %S]" org-latex-pdf-process)
-        )))
+             ;; latexmk detection (optional).
+             (latexmk-path (executable-find "latexmk"))
 
-  ;; Hook run before parsing an export buffer.
-  (add-hook 'org-export-before-parsing-hook #'leuven--change-pdflatex-program)
+             ;; File placeholder for Org → LaTeX export.
+             ;; WSL/Linux does NOT require cygpath conversions.
+             (latex-file "%f"))
+
+        (message "[LaTeX engine detected: %s]" engine-path)
+
+        ;; Choose the PDF build process.
+        (cond
+
+         ;; 1) latexmk available → use a single robust command.
+         (latexmk-path
+          (setq org-latex-pdf-process
+                (list
+                 (format
+                  "latexmk -cd -f -pdf -pdflatex=%s -interaction=nonstopmode -output-directory=%%o %s && latexmk -c"
+                  engine-name latex-file))))
+
+         ;; 2) XeLaTeX chosen explicitly and latexmk not available.
+         ((string= engine-name "xelatex")
+          (setq org-latex-pdf-process
+                (list
+                 (format "xelatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
+                 (format "xelatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
+                 (format "xelatex -interaction=nonstopmode -output-directory=%%o %s" latex-file))))
+
+         ;; 3) Default: PDFLaTeX fallback (three-pass build).
+         (t
+          (setq org-latex-pdf-process
+                (list
+                 (format "pdflatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
+                 (format "pdflatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
+                 (format "pdflatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)))))
+
+        (message "[Export command: %S]" org-latex-pdf-process))))
+
+  ;; Hook executed before Org parses the temporary export buffer.
+  (add-hook 'org-export-before-parsing-hook #'leuven--set-latex-engine-and-process)
 #+end_src
-
-#+begin_warning
-As of 2015-09-29, it seems that ~LATEX_COMPILER~ is the keyword to use the above
-functionality in standard Org mode!
-#+end_warning
 
 #+begin_note
 If LaTeXmk succeeds, the =.tex= file should be removed as well (as we can produce
