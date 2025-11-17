@@ -322,7 +322,7 @@ Records execution time in `leuven--load-times-list'."
 The last time is saved in the global variable `leuven--before-section-time`.
 If END-OF-CHAPTER is non-nil, it will not print the section name."
   (unless (numberp leuven--before-section-time)
-    (error "leuven--before-section-time is not a valid number."))
+    (error "[leuven--before-section-time is not a valid number]"))
 
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time))
@@ -548,7 +548,7 @@ Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
 Returns FILE if it is both existent and executable, otherwise returns nil.
 Shows a warning message if the file does not exist or is not executable."
     (when (not file)
-      (error "Missing argument to `lvn--validate-file-executable-p'"))
+      (error "[Missing argument to `lvn--validate-file-executable-p']"))
 
     (cond
      ((not (file-exists-p file))
@@ -819,7 +819,7 @@ like this into your configuration file:
                     (package-refresh-contents)
                     (dolist (pkg missing-packages)
                       (lvn--install-package pkg)))
-                  (error "No internet connection"))))
+                  (error "[No internet connection]"))))
         (error (message "[Failed to install packages: %s]" err))))
 
     ;; Start the installation process.
@@ -980,7 +980,7 @@ Show line numbers temporarily -- just when you're going to a line number with
             (display-line-numbers-mode 1)
             (let ((line-count (count-lines (point-min) (point-max))))
               (if (or (< line-number 1) (> line-number line-count))
-                  (error "Line number must be between 1 and %d" line-count)
+                  (error "[Line number must be between 1 and %d]" line-count)
                 (goto-char (point-min))
                 (forward-line (1- line-number))
                 (message "[Moved to line %d]" line-number))))
@@ -4251,7 +4251,7 @@ Press ~e~ in Dired mode to immediately Ediff two marked files, no questions aske
                       (lambda ()
                         (setq ediff-after-quit-hook-internal nil)
                         (set-window-configuration wnd))))
-        (error "no more than 2 files should be marked"))))
+        (error "[No more than 2 files should be marked]"))))
 
   (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired))
@@ -5126,7 +5126,7 @@ in the current buffer."
       (cond ((derived-mode-p 'org-mode)
              (condition-case nil
                  (helm-org-in-buffer-headings)
-               (error (message "[The fonction `helm-org-in-buffer-headings' is not available.]"))))
+               (error (message "[The fonction `helm-org-in-buffer-headings' is not available]"))))
             ((derived-mode-p 'tex-mode)
              (helm-imenu))
             (t
@@ -10586,7 +10586,7 @@ Shortcuts in the popup (once displayed):
   using Ediff."
     (interactive "P")
     (let ((file (or (buffer-file-name)
-                    (error "No file associated with this buffer"))))
+                    (error "[No file associated with this buffer]"))))
       (if arg
           (vc-diff nil)
         (lvn--ediff-revision file
@@ -12599,7 +12599,7 @@ Reveal active file in Explorer:
       (let ((dir (file-name-directory (or buffer-file-name default-directory))))
         (if dir
             (browse-url-of-file dir)
-          (error "No directory associated with this buffer"))))
+          (error "[No directory associated with this buffer]"))))
 
     ;; Mnemonic for "directory".
     (global-set-key (kbd "C-c d") #'lvn-open-buffer-directory-in-file-explorer)
@@ -12672,7 +12672,7 @@ For those under Windows:
               ))
              (t
               (start-process "" nil "xdg-open" file))))
-        (user-error "No marked files; aborting")))
+        (user-error "[No marked files; aborting]")))
 
     (define-key dired-mode-map "o" 'dired-open-marked-files-externally)
 #+end_src
@@ -14470,7 +14470,7 @@ printing on Windows.
             (delete-region (region-beginning) (region-end))
             (insert (mapconcat 'identity lines "\n"))
             (insert "\n")))
-      (message "No region selected.")))
+      (message "[No region selected]")))
 
 )                                       ; Chapter 42 ends here.
 #+end_src
@@ -15229,7 +15229,7 @@ Git repository directory."
     (interactive)
     (if (and (boundp 'eboost-version) (stringp eboost-version))
         (message "[EmacsBoost version %s]" eboost-version)
-      (message "Error: EmacsBoost version is not defined.")))
+      (message "[Error: EmacsBoost version is not defined]")))
 #+end_src
 
 # See spacemacs/check-for-new-version.

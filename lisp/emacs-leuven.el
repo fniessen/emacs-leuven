@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20251116.1844>
+;; Version: <20251117.1444>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20251116.1844>"
+(defconst eboost-version "<20251117.1444>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -194,7 +194,7 @@ Records execution time in `leuven--load-times-list'."
 The last time is saved in the global variable `leuven--before-section-time`.
 If END-OF-CHAPTER is non-nil, it will not print the section name."
   (unless (numberp leuven--before-section-time)
-    (error "leuven--before-section-time is not a valid number."))
+    (error "[leuven--before-section-time is not a valid number]"))
 
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time))
@@ -367,7 +367,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
 Returns FILE if it is both existent and executable, otherwise returns nil.
 Shows a warning message if the file does not exist or is not executable."
     (when (not file)
-      (error "Missing argument to `lvn--validate-file-executable-p'"))
+      (error "[Missing argument to `lvn--validate-file-executable-p']"))
 
     (cond
      ((not (file-exists-p file))
@@ -579,7 +579,7 @@ Shows a warning message if the file does not exist or is not executable."
                     (package-refresh-contents)
                     (dolist (pkg missing-packages)
                       (lvn--install-package pkg)))
-                  (error "No internet connection"))))
+                  (error "[No internet connection]"))))
         (error (message "[Failed to install packages: %s]" err))))
 
     ;; Start the installation process.
@@ -688,7 +688,7 @@ Shows a warning message if the file does not exist or is not executable."
             (display-line-numbers-mode 1)
             (let ((line-count (count-lines (point-min) (point-max))))
               (if (or (< line-number 1) (> line-number line-count))
-                  (error "Line number must be between 1 and %d" line-count)
+                  (error "[Line number must be between 1 and %d]" line-count)
                 (goto-char (point-min))
                 (forward-line (1- line-number))
                 (message "[Moved to line %d]" line-number))))
@@ -2451,7 +2451,7 @@ After initiating the grep search, the isearch is aborted."
                       (lambda ()
                         (setq ediff-after-quit-hook-internal nil)
                         (set-window-configuration wnd))))
-        (error "no more than 2 files should be marked"))))
+        (error "[No more than 2 files should be marked]"))))
 
   (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired))
@@ -2765,7 +2765,7 @@ in the current buffer."
       (cond ((derived-mode-p 'org-mode)
              (condition-case nil
                  (helm-org-in-buffer-headings)
-               (error (message "[The fonction `helm-org-in-buffer-headings' is not available.]"))))
+               (error (message "[The fonction `helm-org-in-buffer-headings' is not available]"))))
             ((derived-mode-p 'tex-mode)
              (helm-imenu))
             (t
@@ -5617,7 +5617,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   using Ediff."
     (interactive "P")
     (let ((file (or (buffer-file-name)
-                    (error "No file associated with this buffer"))))
+                    (error "[No file associated with this buffer]"))))
       (if arg
           (vc-diff nil)
         (lvn--ediff-revision file
@@ -6325,7 +6325,7 @@ This example lists Azerty layout second row keys."
       (let ((dir (file-name-directory (or buffer-file-name default-directory))))
         (if dir
             (browse-url-of-file dir)
-          (error "No directory associated with this buffer"))))
+          (error "[No directory associated with this buffer]"))))
 
     ;; Mnemonic for "directory".
     (global-set-key (kbd "C-c d") #'lvn-open-buffer-directory-in-file-explorer)
@@ -6368,7 +6368,7 @@ This example lists Azerty layout second row keys."
               ))
              (t
               (start-process "" nil "xdg-open" file))))
-        (user-error "No marked files; aborting")))
+        (user-error "[No marked files; aborting]")))
 
     (define-key dired-mode-map "o" 'dired-open-marked-files-externally)
 
@@ -7152,7 +7152,7 @@ PROC is the process associated with the server."
             (delete-region (region-beginning) (region-end))
             (insert (mapconcat 'identity lines "\n"))
             (insert "\n")))
-      (message "No region selected.")))
+      (message "[No region selected]")))
 
 )                                       ; Chapter 42 ends here.
 
@@ -7525,7 +7525,7 @@ Git repository directory."
     (interactive)
     (if (and (boundp 'eboost-version) (stringp eboost-version))
         (message "[EmacsBoost version %s]" eboost-version)
-      (message "Error: EmacsBoost version is not defined.")))
+      (message "[Error: EmacsBoost version is not defined]")))
 
 (message "* --[ Loaded Emacs-Leuven %s]--" eboost-version)
 
