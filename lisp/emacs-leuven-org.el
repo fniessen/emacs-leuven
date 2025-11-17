@@ -361,9 +361,9 @@ emit a warning when the feature can't be loaded."
   otherwise, limit to the current file. Signals an error if no ID or file is found."
     (interactive "P")
     (let* ((current-id (or (org-entry-get nil "ID" t) ; Ensure ID exists.
-                           (user-error "No ID found at point")))
+                           (user-error "[No ID found at point]")))
            (current-file (or (buffer-file-name) ; Ensure file exists.
-                             (user-error "No file associated with buffer")))
+                             (user-error "[No file associated with buffer]")))
            (search-files (if (and all-files (boundp 'org-agenda-files))
                              org-agenda-files
                            (list current-file))))
@@ -1556,7 +1556,7 @@ or added into the given directory, defaulting to the current one."
             (message "[Taking screenshot into %s]" name)
             (call-process "import" nil nil nil name)
             (message "[Taking screenshot...done]"))
-        (error "Cannot create image file")))
+        (error "[Cannot create image file]")))
     (insert (concat "[[" name "]]"))
     (org-display-inline-images))
 
@@ -1638,7 +1638,7 @@ or added into the given directory, defaulting to the current one."
 formats (Markdown, HTML, or PDF)."
     (interactive)
     (unless (derived-mode-p 'org-mode)
-      (user-error "Not in Org mode"))
+      (user-error "[Not in Org mode]"))
 
     (let* ((orgfile (buffer-file-name))
            (base-name (file-name-base orgfile))
@@ -1648,7 +1648,7 @@ formats (Markdown, HTML, or PDF)."
            (pdffile (concat base-name ".pdf")))
 
       (unless (and orgfile (file-exists-p orgfile))
-        (user-error "Buffer is not visiting a file"))
+        (user-error "[Buffer is not visiting a file]"))
 
       ;; Initial save buffer.
       (save-buffer)
@@ -1945,9 +1945,9 @@ buffer."
              (engine-path
               (if use-xelatex
                   (or (executable-find "xelatex")
-                      (user-error "XeLaTeX was requested but is not installed."))
+                      (user-error "[XeLaTeX was requested but is not installed]"))
                 (or (executable-find "pdflatex")
-                    (user-error "PDFLaTeX is not installed."))))
+                    (user-error "[PDFLaTeX is not installed]"))))
 
              ;; Executable name only ("xelatex" or "pdflatex").
              (engine-name (file-name-base engine-path))
@@ -2288,7 +2288,7 @@ parent."
       (lambda (sb)
         (let ((language (org-element-property :language sb)))
           (cond ((null language)
-                 (error "Missing language at line %d in %s"
+                 (error "[Missing language at line %d in %s]"
                         (line-number-at-pos
                          (org-element-property :post-affiliated sb))
                         (buffer-name)))
@@ -2300,7 +2300,7 @@ parent."
                 ;;                       ; in org-babel-load-languages for
                 ;;                       ; evaluated code blocks. Must be in both
                 ;;                       ; other cases for edited code blocks.
-                ;;  (error "Unknown language `%s' at line %d in `%s'"
+                ;;  (error "[Unknown language `%s' at line %d in `%s']"
                 ;;         language
                 ;;         (line-number-at-pos
                 ;;          (org-element-property :post-affiliated sb))
@@ -2420,8 +2420,8 @@ Ignore non Org buffers."
                         (ispell-change-dictionary dict)
                         (force-mode-line-update))
                     (error
-                     (message "Dictionary error for %s: %s" lang err)))
-                (message "[No dictionary configured for language `%s']" lang)
+                     (message "[Dictionary error for %s: %s.]" lang err)))
+                (message "[No dictionary configured for language `%s'.]" lang)
                 (sit-for 0.5)))))))))
 
 ;; Guess dictionary in Org buffers.
