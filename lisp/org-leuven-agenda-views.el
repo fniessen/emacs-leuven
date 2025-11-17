@@ -1,5 +1,5 @@
 ;; Custom commands for the agenda -- start with a clean slate.
-(setq org-agenda-custom-commands nil)
+;; (setq org-agenda-custom-commands nil)
 
 ;;; org-leuven-agenda-views.el --- Org customized views
 
@@ -737,7 +737,7 @@ N should be a non-negative integer representing the number of days."
   (let* ((git-root (vc-git-root default-directory)))
     (cond
      ((not git-root)
-      (user-error "Not in a Git repository"))
+      (user-error "[Not in a Git repository]"))
      (t
       (let* ((org-files (condition-case err
                             (directory-files-recursively
@@ -781,7 +781,7 @@ use the project's root directory instead of the current directory."
          (org-agenda-files
           (cond
            ((not current-dir)
-            (error "Cannot determine a directory for this buffer"))
+            (error "[Cannot determine a directory for this buffer]"))
            ;; No argument: Restrict to the current buffer's file.
            ((not arg)
             (list (buffer-file-name)))

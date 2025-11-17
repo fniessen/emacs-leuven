@@ -20,7 +20,7 @@ deadline and scheduled for what they're meant.
 
 #+begin_src emacs-lisp
 ;; Custom commands for the agenda -- start with a clean slate.
-(setq org-agenda-custom-commands nil)
+;; (setq org-agenda-custom-commands nil)
 #+end_src
 
 * Key bindings
@@ -1883,7 +1883,7 @@ directory (including from local files =TODO.org= and =BUGS.org=, for example).
   (let* ((git-root (vc-git-root default-directory)))
     (cond
      ((not git-root)
-      (user-error "Not in a Git repository"))
+      (user-error "[Not in a Git repository]"))
      (t
       (let* ((org-files (condition-case err
                             (directory-files-recursively
@@ -1934,7 +1934,7 @@ use the project's root directory instead of the current directory."
          (org-agenda-files
           (cond
            ((not current-dir)
-            (error "Cannot determine a directory for this buffer"))
+            (error "[Cannot determine a directory for this buffer]"))
            ;; No argument: Restrict to the current buffer's file.
            ((not arg)
             (list (buffer-file-name)))
@@ -2631,7 +2631,7 @@ Merged into:
 #+begin_src emacs-lisp
 (progn
 
-  (setq org-agenda-custom-commands nil)
+  ;; (setq org-agenda-custom-commands nil)
 
   (add-to-list 'org-agenda-custom-commands
                '("0" "Calendar for today" ; For the events.
@@ -2742,7 +2742,7 @@ Chercher l'erreur :
 #+begin_src emacs-lisp
 (progn
 
-  (setq org-agenda-custom-commands nil)
+  ;; (setq org-agenda-custom-commands nil)
 
   (add-to-list 'org-agenda-custom-commands
                '("E1" "Maybe/Someday with a SCHEDULED date"
