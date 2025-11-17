@@ -155,7 +155,7 @@ Return the directive content, or nil on failure."
   "Populate `gptel-directives` from all .txt files under DIR (recursively),
 sorted in ascending order by filename.
 Existing entries with the same NAME are overwritten."
-  ;; (setq gptel-directives nil)           ;; <-- Reset old entries.
+  (setq gptel-directives nil)           ; Reset old entries.
   ;; Now iterate.
   (dolist (f (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
     (condition-case err
@@ -231,9 +231,9 @@ Existing entries with the same NAME are overwritten."
 
     ;; Validate context.
     (unless (derived-mode-p 'org-mode)
-      (user-error "This command works in Org buffers only"))
+      (user-error "[This command works in Org buffers only]"))
     (unless (or (use-region-p) (org-at-heading-p))
-      (user-error "Place point on an Org heading or select a region"))
+      (user-error "[Place point on an Org heading or select a region]"))
 
     ;; Extract text.
     (let ((text (if (use-region-p)
@@ -286,7 +286,7 @@ The result is shown in *Commit Message* and copied to the kill ring.
 If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system prompt."
     (interactive)
     (unless (or (use-region-p) (> (buffer-size) 0))
-      (user-error "No content to analyze"))
+      (user-error "[No content to analyze]"))
     (let* ((prompt-file eboost-gptel-commit-prompt-file)
            (default-prompt
             "Write a Git commit message for the following diff:\n\n")
@@ -345,7 +345,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
     "Retourne le code de la defun courante ou signale une erreur."
     (save-excursion
       (unless (ignore-errors (beginning-of-defun 1))
-        (error "No function found at point"))
+        (error "[No function found at point]"))
       (let ((beg (point)))
         (end-of-defun)
         (buffer-substring-no-properties beg (point)))))
@@ -422,7 +422,7 @@ suggestions for improvement."
   The review output is sent to the *Code Review* buffer."
     (interactive "p")
     (unless (fboundp 'gptel-request)
-      (error "GPTel package is not loaded or configured"))
+      (error "[GPTel package is not loaded or configured]"))
     (let* ((function-source
             (cond
              ((= arg 16) ;; C-u C-u
@@ -430,19 +430,19 @@ suggestions for improvement."
              ((= arg 4)  ;; C-u
               (if (use-region-p)
                   (buffer-substring-no-properties (region-beginning) (region-end))
-                (error "No active region found")))
+                (error "[No active region found]")))
              (t ;; default: current defun
               (save-excursion
                 (unless (beginning-of-defun)
-                  (error "No function found at point"))
+                  (error "[No function found at point]"))
                 (buffer-substring-no-properties
                  (point)
                  (progn (end-of-defun) (point)))))))
            (prompt (format eboost-gptel-code-review-prompt function-source))
            (output-buffer (get-buffer-create "*Code Review*")))
       (when (string-empty-p function-source)
-        (error "No valid code source extracted"))
-      (message "Sending code for AI code review...")
+        (error "[No valid code source extracted]"))
+      (message "[Sending code for AI code review...]")
       (condition-case err
           (gptel-request prompt
             :buffer output-buffer
@@ -451,11 +451,11 @@ suggestions for improvement."
               (let ((buf (or (plist-get info :buffer) output-buffer)))
                (with-current-buffer buf
                  (erase-buffer)
-                 (insert (or response "No response received from GPTel"))
+                 (insert (or response "[No response received from GPTel]"))
                  (emacs-lisp-mode)
                  (display-buffer buf))
-               (message "Code review completed!"))))
-        (error (message "Code review failed: %s" err)))))
+               (message "[Code review completed!]"))))
+        (error (message "[Code review failed: %s]" err)))))
 
   (defun eboost-gptel-generate-companion-function ()
     "Generate a companion function for the current function using GPTel."
