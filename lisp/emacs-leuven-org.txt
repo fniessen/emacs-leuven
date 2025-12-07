@@ -3077,32 +3077,32 @@ Not very coherent!
     "Automatically select the LaTeX engine and configure `org-latex-pdf-process'.
 
   Logic:
-  - Use XeLaTeX if the file contains `#+LATEX_COMPILER: xelatex`
-    (or the legacy `#+LATEX_CMD: xelatex`).
+  - Use LuaLaTeX if the file contains `#+LATEX_COMPILER: lualatex`
+    (or the legacy `#+LATEX_CMD: lualatex`).
   - Otherwise default to PDFLaTeX.
   - If `latexmk` is available, prefer it.
   - Under WSL/Linux, no path conversion is required (plain %f is correct)."
 
     (when (org-export-derived-backend-p backend 'latex)
 
-      (let* (;; Detect explicit request for XeLaTeX.
-             (use-xelatex
+      (let* (;; Detect explicit request for LuaLaTeX.
+             (use-lualatex
               (or (save-excursion
                     (goto-char (point-min))
-                    (re-search-forward "^#\\+LATEX_COMPILER: *xelatex" nil t))
+                    (re-search-forward "^#\\+LATEX_COMPILER: *lualatex" nil t))
                   (save-excursion
                     (goto-char (point-min))
-                    (re-search-forward "^#\\+LATEX_CMD: *xelatex" nil t))))
+                    (re-search-forward "^#\\+LATEX_CMD: *lualatex" nil t))))
 
              ;; Full path to selected LaTeX engine.
              (engine-path
-              (if use-xelatex
-                  (or (executable-find "xelatex")
-                      (user-error "[XeLaTeX was requested but is not installed]"))
+              (if use-lualatex
+                  (or (executable-find "lualatex")
+                      (user-error "[LuaLaTeX was requested but is not installed]"))
                 (or (executable-find "pdflatex")
                     (user-error "[PDFLaTeX is not installed]"))))
 
-             ;; Executable name only ("xelatex" or "pdflatex").
+             ;; Executable name only ("lualatex" or "pdflatex").
              (engine-name (file-name-base engine-path))
 
              ;; latexmk detection (optional).
@@ -3125,13 +3125,13 @@ Not very coherent!
                   "latexmk -cd -f -pdf -pdflatex=%s -interaction=nonstopmode -output-directory=%%o %s && latexmk -c"
                   engine-name latex-file))))
 
-         ;; 2) XeLaTeX chosen explicitly and latexmk not available.
-         ((string= engine-name "xelatex")
+         ;; 2) LuaLaTeX chosen explicitly and latexmk not available.
+         ((string= engine-name "lualatex")
           (setq org-latex-pdf-process
                 (list
-                 (format "xelatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
-                 (format "xelatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
-                 (format "xelatex -interaction=nonstopmode -output-directory=%%o %s" latex-file))))
+                 (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
+                 (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
+                 (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file))))
 
          ;; 3) Default: PDFLaTeX fallback (three-pass build).
          (t
@@ -3146,12 +3146,6 @@ Not very coherent!
   ;; Hook executed before Org parses the temporary export buffer.
   (add-hook 'org-export-before-parsing-hook #'leuven--set-latex-engine-and-process)
 #+end_src
-
-#+begin_note
-If LaTeXmk succeeds, the =.tex= file should be removed as well (as we can produce
-it independently anyway); but adding ~rm $(cygpath %f)~ did not do the trick (in
-Windows Emacs, well in Cygwin Emacs!?)...
-#+end_note
 
 #+begin_tip
 You can clear out this individual function by calling ~remove-hook~:
