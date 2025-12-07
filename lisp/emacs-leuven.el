@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20251117.1444>
+;; Version: <20251207.1905>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20251117.1444>"
+(defconst eboost-version "<20251207.1905>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -245,7 +245,7 @@ If END-OF-CHAPTER is non-nil, it will not print the section name."
   ;; (lvn--add-dir-to-load-path leuven-user-lisp-directory)
 
   ;; Require a feature/library if available; if not, fail silently.
-  (defun eboost-try-require (feature)
+  (defun eboost--try-require (feature)
     "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
@@ -425,7 +425,7 @@ Shows a warning message if the file does not exist or is not executable."
     ;; Archives from which to fetch.
     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") :append))
 
-  (eboost-try-require 'package)
+  (eboost--try-require 'package)
   (with-eval-after-load 'package
 
 
@@ -608,12 +608,12 @@ Shows a warning message if the file does not exist or is not executable."
 )                                       ; Chapter 48 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
-  (eboost-try-require 'idle-require)
+  (eboost--try-require 'idle-require)
 
   ;; Fail-safe for `idle-require`.
   (if (not (featurep 'idle-require))
       (defun idle-require (feature &optional file noerror)
-        (eboost-try-require feature)))
+        (eboost--try-require feature)))
 
   (with-eval-after-load 'idle-require
 
@@ -1275,7 +1275,7 @@ called interactively."
   (leuven--section "15.13 (emacs)Font Lock")
 
 ;; Load hl-todo only if it's available.
-(when (eboost-try-require 'hl-todo)
+(when (eboost--try-require 'hl-todo)
 
   ;; Enable hl-todo globally.
   (global-hl-todo-mode 1)
@@ -2509,7 +2509,7 @@ After initiating the grep search, the isearch is aborted."
 
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads
-  ;; (eboost-try-require 'ediff-hook)
+  ;; (eboost--try-require 'ediff-hook)
   ;; already loaded (by Emacs?)
 
   (with-eval-after-load 'ediff
@@ -2813,7 +2813,7 @@ in the current buffer."
     ;; For multi-line items in e.g. minibuffer history, match entire items,
     ;; not individual lines within items.
 
-    ;; (eboost-try-require 'helm-dictionary)
+    ;; (eboost--try-require 'helm-dictionary)
 
     ;; Use the *current window* (no popup) to show the candidates.
     (setq helm-full-frame nil)
@@ -3093,7 +3093,7 @@ in the current buffer."
   (leuven--section "20.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
 
   ;; Unique buffer names dependent on file name.
-  (eboost-try-require 'uniquify)
+  (eboost--try-require 'uniquify)
 
   (with-eval-after-load 'uniquify
 
@@ -3564,7 +3564,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   (push '("expect" . tcl-mode) interpreter-mode-alist)
 
   ;; ;; Load generic modes which support e.g. batch files.
-  ;; (eboost-try-require 'generic-x)
+  ;; (eboost--try-require 'generic-x)
 
 )                                       ; Chapter 24 ends here.
 
@@ -3836,7 +3836,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
     ;; ;; Make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik).
-    ;; (eboost-try-require 'outline-magic)
+    ;; (eboost--try-require 'outline-magic)
     ;; (with-eval-after-load 'outline-magic
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
@@ -3852,7 +3852,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
     ;;                           (kbd "<M-down>") #'outline-move-subtree-down))))
 
     ;; ;; Extra support for outline minor mode.
-    ;; (eboost-try-require 'out-xtra)
+    ;; (eboost--try-require 'out-xtra)
 
 
     ;; Org-style folding for a `.emacs' (and much more).
@@ -3965,7 +3965,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 ;; C-M-] and M-] fold the whole buffer or the current defun.
 
   ;; ;; Unified user interface for Emacs folding modes, bound to Org key-strokes.
-  ;; (eboost-try-require 'fold-dwim-org)
+  ;; (eboost--try-require 'fold-dwim-org)
 
   ;; 25.8.2
   ;; Toggle display of invisible text.
@@ -4079,7 +4079,7 @@ scrolling to the bottom."
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  ;; (eboost-try-require 'tex-site)
+  ;; (eboost--try-require 'tex-site)
 
   ;; Support for LaTeX documents.
   (with-eval-after-load 'latex
@@ -4500,7 +4500,7 @@ the parent element."
     (add-hook 'nxml-mode-hook 'hs-minor-mode))
 
   ;; Highlight the current SGML tag context (`hl-tags-face').
-  (eboost-try-require 'hl-tags-mode)
+  (eboost--try-require 'hl-tags-mode)
   (with-eval-after-load 'hl-tags-mode
 
     (add-hook 'html-mode-hook
@@ -4590,7 +4590,7 @@ the parent element."
   (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a.
 
   ;; Making buffer indexes as menus.
-  (eboost-try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
+  (eboost--try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
 
   (when (require 'imenu nil 'noerror)
     (with-eval-after-load 'imenu
@@ -5672,7 +5672,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; (with-eval-after-load 'etags
   ;;
   ;;   ;; Select from multiple tags.
-  ;;   (eboost-try-require 'etags-select))
+  ;;   (eboost--try-require 'etags-select))
 
   (with-eval-after-load 'etags-select
 
@@ -6400,7 +6400,7 @@ This example lists Azerty layout second row keys."
     (setq dired-auto-revert-buffer t)
 
     ;; Dired sort.
-    (eboost-try-require 'dired-sort-map)
+    (eboost--try-require 'dired-sort-map)
 
 ;;** (info "(emacs)Dired and Find")
 
@@ -6539,7 +6539,7 @@ This example lists Azerty layout second row keys."
 
   ;; Insinuate appt if `diary-file' exists.
   (if (file-readable-p "~/diary")
-      (eboost-try-require 'appt)        ; Requires `diary-lib', which requires
+      (eboost--try-require 'appt)        ; Requires `diary-lib', which requires
                                         ; `diary-loaddefs'.
     (message "[Appointment reminders lib `appt' not loaded (no diary file found)]"))
 
@@ -6802,7 +6802,7 @@ This example lists Azerty layout second row keys."
 
   ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...).
-  ;; (eboost-try-require 'comint)
+  ;; (eboost--try-require 'comint)
   ;; (with-eval-after-load 'comint
 
     ;; Comint prompt is read only.

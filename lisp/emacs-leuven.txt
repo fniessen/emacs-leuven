@@ -408,7 +408,7 @@ distro) without impacting on stuff you have added by hand.
 
 #+begin_src emacs-lisp
   ;; Require a feature/library if available; if not, fail silently.
-  (defun eboost-try-require (feature)
+  (defun eboost--try-require (feature)
     "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
@@ -665,7 +665,7 @@ like this into your configuration file:
 #+end_src
 
 #+begin_src emacs-lisp
-  (eboost-try-require 'package)
+  (eboost--try-require 'package)
   (with-eval-after-load 'package
 
 
@@ -867,12 +867,12 @@ like this into your configuration file:
 
 #+begin_src emacs-lisp
   ;; Load elisp libraries while Emacs is idle.
-  (eboost-try-require 'idle-require)
+  (eboost--try-require 'idle-require)
 
   ;; Fail-safe for `idle-require`.
   (if (not (featurep 'idle-require))
       (defun idle-require (feature &optional file noerror)
-        (eboost-try-require feature)))
+        (eboost--try-require feature)))
 
   (with-eval-after-load 'idle-require
 
@@ -2137,7 +2137,7 @@ Annotating bookmarks.
 
 #+begin_src emacs-lisp :tangle no
     ;; Extensions to standard library `bookmark.el'.
-    (when (and (eboost-try-require 'bookmark+)
+    (when (and (eboost--try-require 'bookmark+)
                (locate-library "dired-aux"))
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
@@ -2374,7 +2374,7 @@ In IntelliJ IDEA, the are recognized in both lower and upper case.
 
 #+begin_src emacs-lisp
 ;; Load hl-todo only if it's available.
-(when (eboost-try-require 'hl-todo)
+(when (eboost--try-require 'hl-todo)
 
   ;; Enable hl-todo globally.
   (global-hl-todo-mode 1)
@@ -2592,7 +2592,7 @@ such a background behind or underneath the text. Think of a marker pen
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-;; (when (eboost-try-require 'symbol-overlay)
+;; (when (eboost--try-require 'symbol-overlay)
 ;;   (global-set-key (kbd "C-S-<f7>") 'symbol-overlay-put)
 ;;   (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
 ;;   (global-set-key (kbd "S-<f3>") 'symbol-overlay-switch-backward)
@@ -4456,7 +4456,7 @@ In Ediff, press:
 #+begin_src emacs-lisp
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads
-  ;; (eboost-try-require 'ediff-hook)
+  ;; (eboost--try-require 'ediff-hook)
   ;; already loaded (by Emacs?)
 
   (with-eval-after-load 'ediff
@@ -5210,7 +5210,7 @@ before running helm-flycheck"
     ;; For multi-line items in e.g. minibuffer history, match entire items,
     ;; not individual lines within items.
 
-    ;; (eboost-try-require 'helm-dictionary)
+    ;; (eboost--try-require 'helm-dictionary)
 
     ;; Use the *current window* (no popup) to show the candidates.
     (setq helm-full-frame nil)
@@ -5784,7 +5784,7 @@ Get EXIF data with ~image-dired-get-exif-data~.
   (leuven--section "20.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
 
   ;; Unique buffer names dependent on file name.
-  (eboost-try-require 'uniquify)
+  (eboost--try-require 'uniquify)
 
   (with-eval-after-load 'uniquify
 
@@ -6539,7 +6539,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 
 #+begin_src emacs-lisp
   ;; ;; Load generic modes which support e.g. batch files.
-  ;; (eboost-try-require 'generic-x)
+  ;; (eboost--try-require 'generic-x)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -6956,7 +6956,7 @@ See https://github.com/zk-phi/dotfiles/blob/master/emacs/init.el.
 
     ;; ;; Make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik).
-    ;; (eboost-try-require 'outline-magic)
+    ;; (eboost--try-require 'outline-magic)
     ;; (with-eval-after-load 'outline-magic
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
@@ -6972,7 +6972,7 @@ See https://github.com/zk-phi/dotfiles/blob/master/emacs/init.el.
     ;;                           (kbd "<M-down>") #'outline-move-subtree-down))))
 
     ;; ;; Extra support for outline minor mode.
-    ;; (eboost-try-require 'out-xtra)
+    ;; (eboost--try-require 'out-xtra)
 
 
     ;; Org-style folding for a `.emacs' (and much more).
@@ -7154,7 +7154,7 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 #+begin_src emacs-lisp
   ;; ;; Unified user interface for Emacs folding modes, bound to Org key-strokes.
-  ;; (eboost-try-require 'fold-dwim-org)
+  ;; (eboost--try-require 'fold-dwim-org)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7364,7 +7364,7 @@ aliases ~(la)tex-mode~ to ~(La)TeX-mode~.
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  ;; (eboost-try-require 'tex-site)
+  ;; (eboost--try-require 'tex-site)
 
   ;; Support for LaTeX documents.
   (with-eval-after-load 'latex
@@ -7994,7 +7994,7 @@ Some key bindings:
 
 #+begin_src emacs-lisp
   ;; Highlight the current SGML tag context (`hl-tags-face').
-  (eboost-try-require 'hl-tags-mode)
+  (eboost--try-require 'hl-tags-mode)
   (with-eval-after-load 'hl-tags-mode
 
     (add-hook 'html-mode-hook
@@ -8156,7 +8156,7 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
 
 #+begin_src emacs-lisp
   ;; Making buffer indexes as menus.
-  (eboost-try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
+  (eboost--try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
 
   (when (require 'imenu nil 'noerror)
     (with-eval-after-load 'imenu
@@ -10831,7 +10831,7 @@ Alternatively,
   (with-eval-after-load 'etags
 
     ;; Tags enhancements.
-    (eboost-try-require 'sure-tags))
+    (eboost--try-require 'sure-tags))
 #+end_src
 
 will make sure that ~TAGS~ file exists (and builds it if it doesn't), allowing
@@ -10874,7 +10874,7 @@ the TAGS table, by using ~M-x tags-search RET~.
   ;; (with-eval-after-load 'etags
   ;;
   ;;   ;; Select from multiple tags.
-  ;;   (eboost-try-require 'etags-select))
+  ;;   (eboost--try-require 'etags-select))
 
   (with-eval-after-load 'etags-select
 
@@ -11151,7 +11151,7 @@ Keyboard navigation:
 #+begin_src emacs-lisp :tangle no
   ;; Emacs Code Browser.
   (custom-set-variables '(ecb-options-version "2.40"))
-  (eboost-try-require 'ecb-autoloads)
+  (eboost--try-require 'ecb-autoloads)
   (with-eval-after-load 'ecb-autoloads
 
     ;; Trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2).
@@ -11181,7 +11181,7 @@ narrows down the list as you type substrings. Tastes differ, but I for one
 really like this.
 
 #+begin_src emacs-lisp :tangle no
-  (eboost-try-require 'eassist)
+  (eboost--try-require 'eassist)
   (with-eval-after-load 'eassist
 
     (defun leuven--c-mode-eassist ()
@@ -12743,7 +12743,7 @@ grouping Dirs first:
 
 #+begin_src emacs-lisp
     ;; Dired sort.
-    (eboost-try-require 'dired-sort-map)
+    (eboost--try-require 'dired-sort-map)
 #+end_src
 
 ** Dired and ~find~
@@ -12915,7 +12915,7 @@ a Dired buffer. They are thus similar to the default global bindings ~C-x d~ and
 
   (leuven--section "30.XX Dired+")
 
-  (when (and (eboost-try-require 'dired+)
+  (when (and (eboost--try-require 'dired+)
              (locate-library "dired-aux"))
 
     ;; Don't hide details in Dired.
@@ -13041,7 +13041,7 @@ But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
 
   ;; Insinuate appt if `diary-file' exists.
   (if (file-readable-p "~/diary")
-      (eboost-try-require 'appt)        ; Requires `diary-lib', which requires
+      (eboost--try-require 'appt)        ; Requires `diary-lib', which requires
                                         ; `diary-loaddefs'.
     (message "[Appointment reminders lib `appt' not loaded (no diary file found)]"))
 
@@ -13543,7 +13543,7 @@ output going to that buffer.
 
   ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...).
-  ;; (eboost-try-require 'comint)
+  ;; (eboost--try-require 'comint)
   ;; (with-eval-after-load 'comint
 
     ;; Comint prompt is read only.
