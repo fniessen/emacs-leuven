@@ -2838,7 +2838,7 @@ devraient être considérés comme erronés...
 * Org-super-agenda
 
 #+begin_src emacs-lisp
-(when (eboost-try-require 'org-super-agenda)
+(when (eboost--try-require 'org-super-agenda)
   (org-super-agenda-mode 1))
 #+end_src
 
