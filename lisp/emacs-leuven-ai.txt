@@ -123,7 +123,7 @@ SPC $ g m : Ouvrir le menu transient.
 (require 'subr-x)  ;; string-trim, string-empty-p, etc.
 
 ;; Require a feature/library if available; if not, fail silently.
-(defun eboost-try-require (feature)
+(defun eboost--try-require (feature)
   "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
@@ -217,7 +217,7 @@ Inside a gptel buffer:
 
 #+begin_src emacs-lisp
 ;; Load gptel.
-(when (eboost-try-require 'gptel)
+(when (eboost--try-require 'gptel)
 
   ;; Set OpenAI API key.
   (when (bound-and-true-p eboost-openai-api-key)
@@ -794,7 +794,7 @@ suggestions for improvement."
 
 #+begin_src emacs-lisp
 ;; Load org-ai.
-(when (eboost-try-require 'org-ai)
+(when (eboost--try-require 'org-ai)
 
   ;; Enable org-ai-mode in Org mode.
   (add-hook 'org-mode-hook #'org-ai-mode)
@@ -804,7 +804,7 @@ suggestions for improvement."
     (setq org-ai-openai-api-token eboost-openai-api-key))
 
   ;; Install YASnippet templates for org-ai.
-  (when (eboost-try-require 'yasnippet)
+  (when (eboost--try-require 'yasnippet)
     (org-ai-install-yasnippets)))
 #+end_src
 

@@ -14,7 +14,7 @@
 (require 'subr-x)  ;; string-trim, string-empty-p, etc.
 
 ;; Require a feature/library if available; if not, fail silently.
-(defun eboost-try-require (feature)
+(defun eboost--try-require (feature)
   "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
@@ -73,7 +73,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
 (setq eboost-openai-api-key (eboost--load-openai-api-key))
 
 ;; Load gptel.
-(when (eboost-try-require 'gptel)
+(when (eboost--try-require 'gptel)
 
   ;; Set OpenAI API key.
   (when (bound-and-true-p eboost-openai-api-key)
@@ -509,7 +509,7 @@ suggestions for improvement."
 )
 
 ;; Load org-ai.
-(when (eboost-try-require 'org-ai)
+(when (eboost--try-require 'org-ai)
 
   ;; Enable org-ai-mode in Org mode.
   (add-hook 'org-mode-hook #'org-ai-mode)
@@ -519,7 +519,7 @@ suggestions for improvement."
     (setq org-ai-openai-api-token eboost-openai-api-key))
 
   ;; Install YASnippet templates for org-ai.
-  (when (eboost-try-require 'yasnippet)
+  (when (eboost--try-require 'yasnippet)
     (org-ai-install-yasnippets)))
 
 (message "* --[ Loaded Emacs-Leuven AI %s ]--"
