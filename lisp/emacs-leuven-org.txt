@@ -14,7 +14,7 @@
 
 #+begin_src emacs-lisp
 ;; Require a feature/library if available; if not, fail silently.
-(defun eboost-try-require (feature)
+(defun eboost--try-require (feature)
   "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
@@ -98,7 +98,7 @@ work and tasks with Org mode.
 ;;** 1.2 (info "(org)Installation")
 
 ;; Autoloads.
-(eboost-try-require 'org-loaddefs)
+(eboost--try-require 'org-loaddefs)
 
 ;; Getting started.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
@@ -277,8 +277,8 @@ unsetting local keys?
 * Activation
 
 #+begin_src emacs-lisp
-(eboost-try-require 'helm-org)
-(eboost-try-require 'ox-jira)
+(eboost--try-require 'helm-org)
+(eboost--try-require 'ox-jira)
 
 (with-eval-after-load 'org
   (message "[... Org Introduction]")
@@ -374,7 +374,7 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
   (message "[... Org Headlines]")
 
   ;; Insert an inline task (independent of outline hierarchy).
-  (eboost-try-require 'org-inlinetask))      ; Needed.
+  (eboost--try-require 'org-inlinetask))      ; Needed.
 
 (with-eval-after-load 'org-inlinetask
 
@@ -391,7 +391,7 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
   :ensure t
   :config
   (setq org-inlinetask-default-state "TODO")
-  (eboost-try-require 'org-inlinetask)
+  (eboost--try-require 'org-inlinetask)
   )
 #+end_src
 
@@ -1154,7 +1154,7 @@ special meaning are written with all capitals.
 (with-eval-after-load 'org
   (message "[... Org Dates and Times]")
 
-  (eboost-try-require 'appt))
+  (eboost--try-require 'appt))
 #+end_src
 
 ** Creating time stamps
@@ -2718,7 +2718,7 @@ formats (Markdown, HTML, or PDF)."
       ;; (measure-time-wrapper "Restarted Org mode" #'org-mode)
 
       ;; Run Org lint if available.
-      (when (eboost-try-require 'org-lint)
+      (when (eboost--try-require 'org-lint)
         (measure-time-wrapper "Linted Org mode"
           (lambda ()
             (let ((lint-result (org-lint)))
@@ -3073,7 +3073,7 @@ Not very coherent!
 #+end_warning
 
 #+begin_src emacs-lisp
-  (defun leuven--set-latex-engine-and-process (backend)
+  (defun eboost--set-latex-engine-and-process (backend)
     "Automatically select the LaTeX engine and configure `org-latex-pdf-process'.
 
   Logic:
@@ -3153,7 +3153,7 @@ Not very coherent!
         (message "[Export command: %S]" org-latex-pdf-process))))
 
   ;; Hook executed before Org parses the temporary export buffer.
-  (add-hook 'org-export-before-parsing-hook #'leuven--set-latex-engine-and-process)
+  (add-hook 'org-export-before-parsing-hook #'eboost--set-latex-engine-and-process)
 #+end_src
 
 #+begin_tip
@@ -4114,7 +4114,7 @@ C-r~ (fits nicely with the meaning of "reveal").
 (with-eval-after-load 'org
   (message "[... Org Crypt]")
 
-  (eboost-try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
+  (eboost--try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
 
 (with-eval-after-load 'org-crypt
 
@@ -4426,7 +4426,7 @@ Link emails from Org files.
   "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
 (with-eval-after-load 'org-google-weather
-  ;; (eboost-try-require 'url)
+  ;; (eboost--try-require 'url)
 
   ;; Add the city.
   (setq org-google-weather-format "%C %i %c, %l°-%h°"))

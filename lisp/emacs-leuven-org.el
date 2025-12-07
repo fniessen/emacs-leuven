@@ -1,5 +1,5 @@
 ;; Require a feature/library if available; if not, fail silently.
-(defun eboost-try-require (feature)
+(defun eboost--try-require (feature)
   "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
@@ -18,7 +18,7 @@ emit a warning when the feature can't be loaded."
 ;;** 1.2 (info "(org)Installation")
 
 ;; Autoloads.
-(eboost-try-require 'org-loaddefs)
+(eboost--try-require 'org-loaddefs)
 
 ;; Getting started.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
@@ -117,8 +117,8 @@ emit a warning when the feature can't be loaded."
 
             ))
 
-(eboost-try-require 'helm-org)
-(eboost-try-require 'ox-jira)
+(eboost--try-require 'helm-org)
+(eboost--try-require 'ox-jira)
 
 (with-eval-after-load 'org
   (message "[... Org Introduction]")
@@ -177,7 +177,7 @@ emit a warning when the feature can't be loaded."
   (message "[... Org Headlines]")
 
   ;; Insert an inline task (independent of outline hierarchy).
-  (eboost-try-require 'org-inlinetask))      ; Needed.
+  (eboost--try-require 'org-inlinetask))      ; Needed.
 
 (with-eval-after-load 'org-inlinetask
 
@@ -607,7 +607,7 @@ a parent headline."
 (with-eval-after-load 'org
   (message "[... Org Dates and Times]")
 
-  (eboost-try-require 'appt))
+  (eboost--try-require 'appt))
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
@@ -1657,7 +1657,7 @@ formats (Markdown, HTML, or PDF)."
       ;; (measure-time-wrapper "Restarted Org mode" #'org-mode)
 
       ;; Run Org lint if available.
-      (when (eboost-try-require 'org-lint)
+      (when (eboost--try-require 'org-lint)
         (measure-time-wrapper "Linted Org mode"
           (lambda ()
             (let ((lint-result (org-lint)))
@@ -1920,7 +1920,7 @@ buffer."
   ;; Default process to convert LaTeX fragments to image files.
   ;; (setq org-preview-latex-default-process 'imagemagick)
 
-  (defun leuven--set-latex-engine-and-process (backend)
+  (defun eboost--set-latex-engine-and-process (backend)
     "Automatically select the LaTeX engine and configure `org-latex-pdf-process'.
 
   Logic:
@@ -2000,7 +2000,7 @@ buffer."
         (message "[Export command: %S]" org-latex-pdf-process))))
 
   ;; Hook executed before Org parses the temporary export buffer.
-  (add-hook 'org-export-before-parsing-hook #'leuven--set-latex-engine-and-process)
+  (add-hook 'org-export-before-parsing-hook #'eboost--set-latex-engine-and-process)
 
   ;; 12.6.2 Default packages to be inserted in the header.
   ;; Include the `babel' package first for language-specific hyphenation and
@@ -2517,7 +2517,7 @@ Ignore non Org buffers."
 (with-eval-after-load 'org
   (message "[... Org Crypt]")
 
-  (eboost-try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
+  (eboost--try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
 
 (with-eval-after-load 'org-crypt
 
@@ -2736,7 +2736,7 @@ BACKEND is the current export backend."
   "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
 (with-eval-after-load 'org-google-weather
-  ;; (eboost-try-require 'url)
+  ;; (eboost--try-require 'url)
 
   ;; Add the city.
   (setq org-google-weather-format "%C %i %c, %l°-%h°"))
