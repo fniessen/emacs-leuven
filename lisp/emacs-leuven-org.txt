@@ -3077,30 +3077,33 @@ Not very coherent!
     "Automatically select the LaTeX engine and configure `org-latex-pdf-process'.
 
   Logic:
-  - Use LuaLaTeX if the file contains `#+LATEX_COMPILER: lualatex`
-    (or the legacy `#+LATEX_CMD: lualatex`).
-  - Otherwise default to PDFLaTeX.
+  - Use pdfLaTeX if the file contains `#+LATEX_COMPILER: pdflatex`
+    (or the legacy `#+LATEX_CMD: pdflatex`).
+  - Otherwise default to LuaLaTeX.
   - If `latexmk` is available, prefer it.
+  - When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
   - Under WSL/Linux, no path conversion is required (plain %f is correct)."
 
     (when (org-export-derived-backend-p backend 'latex)
 
-      (let* (;; Detect explicit request for LuaLaTeX.
-             (use-lualatex
+      (let* (;; Detect explicit request for pdfLaTeX.
+             (use-pdflatex
               (or (save-excursion
                     (goto-char (point-min))
-                    (re-search-forward "^#\\+LATEX_COMPILER: *lualatex" nil t))
+                    (re-search-forward "^#\\+LATEX_COMPILER: *pdflatex" nil t))
                   (save-excursion
                     (goto-char (point-min))
-                    (re-search-forward "^#\\+LATEX_CMD: *lualatex" nil t))))
+                    (re-search-forward "^#\\+LATEX_CMD: *pdflatex" nil t))))
 
-             ;; Full path to selected LaTeX engine.
+             ;; Full path to selected LaTeX engine (for non-latexmk builds).
+             ;; If pdfLaTeX is explicitly requested, use it, otherwise default
+             ;; to LuaLaTeX.
              (engine-path
-              (if use-lualatex
-                  (or (executable-find "lualatex")
-                      (user-error "[LuaLaTeX was requested but is not installed]"))
-                (or (executable-find "pdflatex")
-                    (user-error "[PDFLaTeX is not installed]"))))
+              (if use-pdflatex
+                  (or (executable-find "pdflatex")
+                      (user-error "[pdfLaTeX was requested but is not installed]"))
+                (or (executable-find "lualatex")
+                    (user-error "[LuaLaTeX (default) is not installed]"))))
 
              ;; Executable name only ("lualatex" or "pdflatex").
              (engine-name (file-name-base engine-path))
@@ -3108,24 +3111,30 @@ Not very coherent!
              ;; latexmk detection (optional).
              (latexmk-path (executable-find "latexmk"))
 
+             ;; When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
+             (latexmk-uses-lualatex (and latexmk-path (executable-find "lualatex")))
+
              ;; File placeholder for Org → LaTeX export.
              ;; WSL/Linux does NOT require cygpath conversions.
              (latex-file "%f"))
 
-        (message "[LaTeX engine detected: %s]" engine-path)
+        (message "[LaTeX engine detected (non-latexmk base): %s]" engine-path)
 
         ;; Choose the PDF build process.
         (cond
 
-         ;; 1) latexmk available → use a single robust command.
+         ;; 1) latexmk available → single robust command.
+         ;;    When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
          (latexmk-path
           (setq org-latex-pdf-process
                 (list
                  (format
-                  "latexmk -cd -f -pdf -pdflatex=%s -interaction=nonstopmode -output-directory=%%o %s && latexmk -c"
-                  engine-name latex-file))))
+                  "latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s && latexmk -c"
+                  (if latexmk-uses-lualatex "-pdflua" "-pdf")
+                  latex-file))))
 
-         ;; 2) LuaLaTeX chosen explicitly and latexmk not available.
+         ;; 2) LuaLaTeX used (default) and latexmk not available.
+         ;;    This happens when no explicit pdfLaTeX directive is present.
          ((string= engine-name "lualatex")
           (setq org-latex-pdf-process
                 (list
@@ -3133,7 +3142,7 @@ Not very coherent!
                  (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
                  (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file))))
 
-         ;; 3) Default: PDFLaTeX fallback (three-pass build).
+         ;; 3) Explicit pdfLaTeX (or fallback) when latexmk is not available.
          (t
           (setq org-latex-pdf-process
                 (list
