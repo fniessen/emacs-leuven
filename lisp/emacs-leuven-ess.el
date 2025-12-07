@@ -3,7 +3,7 @@
 (package-install-selected-packages)
 
 ;; Load ESS package for R-specific features only.
-(eboost-try-require 'ess-r-mode)
+(eboost--try-require 'ess-r-mode)
 
 ;; Don't ask for directory when starting R.
 (setq ess-ask-for-ess-directory nil)
