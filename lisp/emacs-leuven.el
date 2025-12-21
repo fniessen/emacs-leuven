@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20251207.1905>
+;; Version: <20251221.1543>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20251207.1905>"
+(defconst eboost-version "<20251221.1543>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -271,7 +271,7 @@ Example usage:
       `(eval-after-load ,feature
          '(progn ,@body))))
 
-(defun eboost-define-key-if-free (keymap key command &optional scope)
+(defun eboost--define-key-if-free (keymap key command &optional scope)
   "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
 KEYMAP may be the map itself or a symbol naming it.
 If already bound, emit a warning mentioning SCOPE (string)."
@@ -2325,10 +2325,10 @@ After initiating the grep search, the isearch is aborted."
     (message "[Buffer synchronized with disk and overlays removed]"))
 
   ;; Bind to `C-S-y' globally.
-  (eboost-define-key-if-free 'global-map
-                             (kbd "C-S-y")
-                             #'eboost-sync-buffer-and-clear-overlays
-                             "global map")
+  (eboost--define-key-if-free 'global-map
+                              (kbd "C-S-y")
+                              #'eboost-sync-buffer-and-clear-overlays
+                              "global map")
 
   (when (and (bound-and-true-p lvn--cygwin-p)
                                         ; Cygwin Emacs uses gfilenotify (based
@@ -2771,21 +2771,21 @@ in the current buffer."
             (t
              (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
-    (eboost-define-key-if-free 'global-map
-                               (kbd "C-<f12>")
-                               #'eboost-helm-generic-imenu
-                               "global map")
-    ;; (eboost-define-key-if-free 'global-map
-    ;;                            (kbd "<f4>")
-    ;;                            #'eboost-helm-generic-imenu
-    ;;                            "global map")
+    (eboost--define-key-if-free 'global-map
+                                (kbd "C-<f12>")
+                                #'eboost-helm-generic-imenu
+                                "global map")
+    ;; (eboost--define-key-if-free 'global-map
+    ;;                             (kbd "<f4>")
+    ;;                             #'eboost-helm-generic-imenu
+    ;;                             "global map")
 
     ;; Org headlines in Org agenda files.
     (when (fboundp 'helm-org-agenda-files-headings)
-      (eboost-define-key-if-free 'global-map
-                                 (kbd "C-h O")
-                                 #'helm-org-agenda-files-headings
-                                 "global map"))
+      (eboost--define-key-if-free 'global-map
+                                  (kbd "C-h O")
+                                  #'helm-org-agenda-files-headings
+                                  "global map"))
 
     (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
 
@@ -5249,6 +5249,9 @@ mouse-3: go to end") "]")))
 
   ;; Run `grep' via `find', with user-friendly interface.
   (global-set-key (kbd "C-c 3") #'rgrep)
+
+  ;; Automatically save the buffer after C-c C-c.
+  (setq wgrep-auto-save-buffer t)
 
 ;;** 28.5 (info "(emacs)Flymake")
 
