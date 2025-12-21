@@ -137,7 +137,7 @@ emit a warning when the feature can't be loaded."
 #+end_src
 
 #+begin_src emacs-lisp
-(defun eboost--define-key-if-free (keymap key command &optional scope)
+(defun eboost--set-key-if-free (keymap key command &optional scope)
   "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
 KEYMAP may be the map itself or a symbol naming it.
 If already bound, emit a warning mentioning SCOPE (string)."
@@ -500,8 +500,8 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
 
   ;; Org mode keybinding (only if free).
   (with-eval-after-load 'org
-    (eboost--define-key-if-free 'org-mode-map (kbd "C-c q")
-                                #'eboost-gptel-org-send-to-chatgpt "Org mode"))
+    (eboost--set-key-if-free 'org-mode-map (kbd "C-c q")
+                             #'eboost-gptel-org-send-to-chatgpt "Org mode"))
 #+end_src
 
 **** Commit message generator
@@ -565,12 +565,12 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
 
   ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
-    (eboost--define-key-if-free 'diff-mode-map (kbd "w")
-                                #'eboost-gptel-write-commit-message "diff-mode"))
+    (eboost--set-key-if-free 'diff-mode-map (kbd "w")
+                             #'eboost-gptel-write-commit-message "diff-mode"))
 
   ;; Global keybinding (only if free).
-  (eboost--define-key-if-free global-map (kbd "C-x v w")
-                              #'eboost-gptel-write-commit-message "global map")
+  (eboost--set-key-if-free global-map (kbd "C-x v w")
+                           #'eboost-gptel-write-commit-message "global map")
 #+end_src
 
 **** Generate unit tests for current function
@@ -742,8 +742,8 @@ suggestions for improvement."
 
   ;; Quick access to gptel-send (only if key is free).
   (with-eval-after-load 'gptel
-    (eboost--define-key-if-free global-map (kbd "C-c RET")
-                                #'gptel-send "global map"))
+    (eboost--set-key-if-free global-map (kbd "C-c RET")
+                             #'gptel-send "global map"))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -772,8 +772,8 @@ suggestions for improvement."
   ;;           (funcall #'gptel buffer-name))))))
 
   ;; Global keybinding (only if free).
-  (eboost--define-key-if-free global-map (kbd "C-c g")
-                              #'eboost-gptel-chat-buffer "global map")
+  (eboost--set-key-if-free global-map (kbd "C-c g")
+                           #'eboost-gptel-chat-buffer "global map")
 #+end_src
 
 #+begin_src emacs-lisp
