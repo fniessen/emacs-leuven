@@ -267,10 +267,8 @@ Existing entries with the same NAME are overwritten."
 
   ;; Org mode keybinding (only if free).
   (with-eval-after-load 'org
-    (eboost--define-key-if-free 'org-mode-map
-                                (kbd "C-c q")
-                                #'eboost-gptel-org-send-to-chatgpt
-                                "Org mode"))
+    (eboost--define-key-if-free 'org-mode-map (kbd "C-c q")
+                                #'eboost-gptel-org-send-to-chatgpt "Org mode"))
 
 ;; Commit-prompt file customization.
 (defcustom eboost-gptel-commit-prompt-file
@@ -330,16 +328,12 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
 
   ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
-    (eboost--define-key-if-free 'diff-mode-map
-                                (kbd "w")
-                                #'eboost-gptel-write-commit-message
-                                "diff-mode"))
+    (eboost--define-key-if-free 'diff-mode-map (kbd "w")
+                                #'eboost-gptel-write-commit-message "diff-mode"))
 
   ;; Global keybinding (only if free).
-  (eboost--define-key-if-free global-map
-                              (kbd "C-x v w")
-                              #'eboost-gptel-write-commit-message
-                              "global map")
+  (eboost--define-key-if-free global-map (kbd "C-x v w")
+                              #'eboost-gptel-write-commit-message "global map")
 
   (defun eboost--extract-defun-source ()
     "Retourne le code de la defun courante ou signale une erreur."
@@ -471,10 +465,8 @@ suggestions for improvement."
 
   ;; Quick access to gptel-send (only if key is free).
   (with-eval-after-load 'gptel
-    (eboost--define-key-if-free global-map
-                                (kbd "C-c RET")
-                                #'gptel-send
-                                "global map"))
+    (eboost--define-key-if-free global-map (kbd "C-c RET")
+                                #'gptel-send "global map"))
 
   (defun eboost-gptel-chat-buffer ()
     "Switch to the GPTel chat buffer, creating it if it doesn't exist."
@@ -501,10 +493,8 @@ suggestions for improvement."
   ;;           (funcall #'gptel buffer-name))))))
 
   ;; Global keybinding (only if free).
-  (eboost--define-key-if-free global-map
-                              (kbd "C-c g")
-                              #'eboost-gptel-chat-buffer
-                              "global map")
+  (eboost--define-key-if-free global-map (kbd "C-c g")
+                              #'eboost-gptel-chat-buffer "global map")
 
 )
 

@@ -4075,10 +4075,8 @@ Update time stamps (and copyright notice) automatically.
     (message "[Buffer synchronized with disk and overlays removed]"))
 
   ;; Bind to `C-S-y' globally.
-  (eboost--define-key-if-free 'global-map
-                              (kbd "C-S-y")
-                              #'eboost-sync-buffer-and-clear-overlays
-                              "global map")
+  (eboost--define-key-if-free 'global-map (kbd "C-S-y")
+                              #'eboost-sync-buffer-and-clear-overlays "global map")
 #+end_src
 
 Turn on auto-revert mode globally.
@@ -5132,23 +5130,17 @@ in the current buffer."
             (t
              (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
-    (eboost--define-key-if-free 'global-map
-                                (kbd "C-<f12>")
-                                #'eboost-helm-generic-imenu
-                                "global map")
-    ;; (eboost--define-key-if-free 'global-map
-    ;;                             (kbd "<f4>")
-    ;;                             #'eboost-helm-generic-imenu
-    ;;                             "global map")
+    (eboost--define-key-if-free 'global-map (kbd "C-<f12>")
+                                #'eboost-helm-generic-imenu "global map")
+    ;; (eboost--define-key-if-free 'global-map (kbd "<f4>")
+    ;;                             #'eboost-helm-generic-imenu "global map")
 #+end_src
 
 #+begin_src emacs-lisp
     ;; Org headlines in Org agenda files.
     (when (fboundp 'helm-org-agenda-files-headings)
-      (eboost--define-key-if-free 'global-map
-                                  (kbd "C-h O")
-                                  #'helm-org-agenda-files-headings
-                                  "global map"))
+      (eboost--define-key-if-free 'global-map (kbd "C-h O")
+                                  #'helm-org-agenda-files-headings "global map"))
 #+end_src
 
 #+begin_src emacs-lisp
