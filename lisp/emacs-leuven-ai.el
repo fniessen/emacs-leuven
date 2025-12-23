@@ -335,6 +335,18 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
   (eboost--set-key-if-free global-map (kbd "C-x v w")
                            #'eboost-gptel-write-commit-message "global map")
 
+  (eboost--try-require 'gptel-commit)
+
+  ;; (setq gptel-backend
+  ;;       (gptel-make-openai
+  ;;        "openai-mini"
+  ;;        :key (getenv "OPENAI_API_KEY")
+  ;;        :models '("gpt-4o-mini")))
+
+  ;; Global keybinding (only if free).
+  (eboost--set-key-if-free global-map (kbd "C-c g c")
+                           #'gptel-commit "global map")
+
   (defun eboost--extract-defun-source ()
     "Retourne le code de la defun courante ou signale une erreur."
     (save-excursion

@@ -573,6 +573,22 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                            #'eboost-gptel-write-commit-message "global map")
 #+end_src
 
+**** GPTel commit
+
+#+begin_src emacs-lisp
+  (eboost--try-require 'gptel-commit)
+
+  ;; (setq gptel-backend
+  ;;       (gptel-make-openai
+  ;;        "openai-mini"
+  ;;        :key (getenv "OPENAI_API_KEY")
+  ;;        :models '("gpt-4o-mini")))
+
+  ;; Global keybinding (only if free).
+  (eboost--set-key-if-free global-map (kbd "C-c g c")
+                           #'gptel-commit "global map")
+#+end_src
+
 **** Generate unit tests for current function
 
 #+begin_src emacs-lisp
