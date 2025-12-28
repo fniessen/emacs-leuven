@@ -1,12 +1,12 @@
 ;; Require a feature/library if available; if not, fail silently.
-(defun eboost--try-require (feature)
+(defun boost--try-require (feature)
   "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
   (if (require feature nil 'noerror)
       t
     (when (bound-and-true-p init-file-debug)
-      (display-warning 'eboost
+      (display-warning 'boost
                        (format "Cannot load `%s'" feature)
                        :warning))
     nil))
@@ -18,7 +18,7 @@ emit a warning when the feature can't be loaded."
 ;;** 1.2 (info "(org)Installation")
 
 ;; Autoloads.
-(eboost--try-require 'org-loaddefs)
+(boost--try-require 'org-loaddefs)
 
 ;; Getting started.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
@@ -117,8 +117,8 @@ emit a warning when the feature can't be loaded."
 
             ))
 
-(eboost--try-require 'helm-org)
-(eboost--try-require 'ox-jira)
+(boost--try-require 'helm-org)
+(boost--try-require 'ox-jira)
 
 (with-eval-after-load 'org
   (message "[... Org Introduction]")
@@ -177,7 +177,7 @@ emit a warning when the feature can't be loaded."
   (message "[... Org Headlines]")
 
   ;; Insert an inline task (independent of outline hierarchy).
-  (eboost--try-require 'org-inlinetask))      ; Needed.
+  (boost--try-require 'org-inlinetask))      ; Needed.
 
 (with-eval-after-load 'org-inlinetask
 
@@ -607,7 +607,7 @@ a parent headline."
 (with-eval-after-load 'org
   (message "[... Org Dates and Times]")
 
-  (eboost--try-require 'appt))
+  (boost--try-require 'appt))
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
@@ -815,7 +815,7 @@ a parent headline."
 (setq org-directory lvn-org-directory)
 
 (unless (and (file-directory-p org-directory) (file-writable-p org-directory))
-  (display-warning 'eboost
+  (display-warning 'boost
                    (format "Org directory '%s' is not accessible" org-directory)
                    :warning)
   (setq org-directory "~/"))
@@ -983,7 +983,7 @@ From the address <%a>"
 
 (with-eval-after-load 'org-protocol
   (add-to-list 'org-safe-remote-resources
-               "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-readtheorg\\.setup\\'"))
+               "\\`https://fniessen\\.github\\.io/org-html-themes/org/html-theme-readtheorg\\.setup\\'"))
 
 (message "9.4 (org)Protocols")
 
@@ -1274,7 +1274,7 @@ From the address <%a>"
 ;; Show agenda in the current window, keeping all other windows.
 (setq org-agenda-window-setup 'current-window)
 
-(defun eboost-org-agenda-set-sorting-strategy (strategy)
+(defun boost-org-agenda-set-sorting-strategy (strategy)
   "Interactively set the sorting strategy for the current Org agenda buffer."
   (interactive
    (list (completing-read
@@ -1287,7 +1287,7 @@ From the address <%a>"
 
 ;; Must come *after* the defun
 (with-eval-after-load 'org-agenda
-  (define-key org-agenda-mode-map (kbd "C-c s") #'eboost-org-agenda-set-sorting-strategy))
+  (define-key org-agenda-mode-map (kbd "C-c s") #'boost-org-agenda-set-sorting-strategy))
 
 ;;** 10.5 (info "(org)Agenda commands")
 
@@ -1657,12 +1657,12 @@ formats (Markdown, HTML, or PDF)."
       ;; (measure-time-wrapper "Restarted Org mode" #'org-mode)
 
       ;; Run Org lint if available.
-      (when (eboost--try-require 'org-lint)
+      (when (boost--try-require 'org-lint)
         (measure-time-wrapper "Linted Org mode"
           (lambda ()
             (let ((lint-result (org-lint)))
               (when lint-result
-                (display-warning 'eboost
+                (display-warning 'boost
                                  "Org-lint found issues! Run `org-lint' to review."
                                  :warning)
                 (beep)
@@ -1920,7 +1920,7 @@ buffer."
   ;; Default process to convert LaTeX fragments to image files.
   ;; (setq org-preview-latex-default-process 'imagemagick)
 
-  (defun eboost--set-latex-engine-and-process (backend)
+  (defun boost--set-latex-engine-and-process (backend)
     "Automatically select the LaTeX engine and configure `org-latex-pdf-process'.
 
   Logic:
@@ -2000,7 +2000,7 @@ buffer."
         (message "[Export command: %S]" org-latex-pdf-process))))
 
   ;; Hook executed before Org parses the temporary export buffer.
-  (add-hook 'org-export-before-parsing-hook #'eboost--set-latex-engine-and-process)
+  (add-hook 'org-export-before-parsing-hook #'boost--set-latex-engine-and-process)
 
   ;; 12.6.2 Default packages to be inserted in the header.
   ;; Include the `babel' package first for language-specific hyphenation and
@@ -2209,7 +2209,7 @@ parent."
     (delete-overlay ov)))
 
 (with-eval-after-load 'org
-  (defun eboost-org-copy-current-code-block ()
+  (defun boost-org-copy-current-code-block ()
     "Copy the contents of the current Org mode code block to the kill ring."
     (interactive)
     (if (not (derived-mode-p 'org-mode))
@@ -2224,7 +2224,7 @@ parent."
           (message "[No source block found at point]")))))
 
   ;; Copy current code block.
-  (define-key org-mode-map (kbd "H-w") #'eboost-org-copy-current-code-block))
+  (define-key org-mode-map (kbd "H-w") #'boost-org-copy-current-code-block))
 
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
@@ -2407,7 +2407,7 @@ Ignore non Org buffers."
 (when (boundp 'org-planning-line-re)
   (add-hook 'org-mode-hook #'org-repair-property-drawers))
 
-(defun eboost--org-switch-dictionary ()
+(defun boost--org-switch-dictionary ()
   "Set Ispell dictionary based on a #+LANGUAGE keyword near the top of the buffer."
   (when (bound-and-true-p ispell-dictionary-alist)
     (save-excursion
@@ -2434,7 +2434,7 @@ Ignore non Org buffers."
                 (sit-for 0.5)))))))))
 
 ;; Guess dictionary in Org buffers.
-(add-hook 'org-mode-hook #'eboost--org-switch-dictionary)
+(add-hook 'org-mode-hook #'boost--org-switch-dictionary)
 
 ;;** 15.2 (info "(org)Easy Templates")
 
@@ -2517,7 +2517,7 @@ Ignore non Org buffers."
 (with-eval-after-load 'org
   (message "[... Org Crypt]")
 
-  (eboost--try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
+  (boost--try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
 
 (with-eval-after-load 'org-crypt
 
@@ -2701,16 +2701,16 @@ BACKEND is the current export backend."
 (add-hook 'before-save-hook #'lvn--org-update-buffer-before-save)
                                         ; Heavy before-save hook.
 
-(defvar eboost--org-clean-typography-excluded-files
+(defvar boost--org-clean-typography-excluded-files
   '("emacs.org" "init.org" "emacs-leuven-org.txt")
-  "List of Org filenames where `eboost--org-clean-typography` should NOT run.")
+  "List of Org filenames where `boost--org-clean-typography` should NOT run.")
 
-(defun eboost--org-clean-typography ()
+(defun boost--org-clean-typography ()
   "Replace typographic characters with ASCII equivalents before saving, unless in excluded Org files."
   (when (and (derived-mode-p 'org-mode)
              buffer-file-name           ; Ensure that the file name is not nil.
              (not (member (file-name-nondirectory buffer-file-name)
-                          eboost--org-clean-typography-excluded-files)))
+                          boost--org-clean-typography-excluded-files)))
     (let ((replacements
            '(("—" . "--")               ; Em dash.
              ("–" . "-")                ; En dash.
@@ -2729,14 +2729,14 @@ BACKEND is the current export backend."
 
 (add-hook 'org-mode-hook
           (lambda ()
-            (add-hook 'before-save-hook #'eboost--org-clean-typography)))
+            (add-hook 'before-save-hook #'boost--org-clean-typography)))
 
 ;; Add weather forecast in your Org agenda.
 (autoload 'org-google-weather "org-google-weather"
   "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
 (with-eval-after-load 'org-google-weather
-  ;; (eboost--try-require 'url)
+  ;; (boost--try-require 'url)
 
   ;; Add the city.
   (setq org-google-weather-format "%C %i %c, %l°-%h°"))
