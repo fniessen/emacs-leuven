@@ -12872,6 +12872,10 @@ Extra Dired functionality:
 
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
+    ;; Ignore LaTeX build artifacts in completion.
+    (dolist (ext '(".fdb_latexmk" ".fls" ".nav" ".out" ".snm" ".swp" ".vrb"))
+      (add-to-list 'completion-ignored-extensions ext))
+
     (when lvn--cygwin-p
       (when (fboundp 'dired-jump)       ; Check if `dired-jump' exists.
         (defun boost--dired-jump-advice (orig-fun &rest args)
