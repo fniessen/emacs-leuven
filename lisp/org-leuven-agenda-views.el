@@ -972,7 +972,7 @@ use the project's root directory instead of the current directory."
      ;; All other cases.
      (t skip))))
 
-(defun eboost-set-org-agenda-files-dotfiles-todo (&optional root-dir)
+(defun boost-set-org-agenda-files-dotfiles-todo (&optional root-dir)
   "Set `org-agenda-files` to all TODO.org and TODO-*.org files
 in the root directories of repositories under ROOT-DIR.
 If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
@@ -991,7 +991,7 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
   (message "[Org agenda files set to: %s]" org-agenda-files)
   org-agenda-files)
 
-(defun eboost-set-org-agenda-files ()
+(defun boost-set-org-agenda-files ()
   "Set `org-agenda-files` to all `.org` files directly inside `org-directory`."
   (interactive)
   (let ((files (directory-files org-directory t "\\`[^.].*\\.org\\'")))
@@ -1141,7 +1141,7 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
 
 ;;; org-leuven-agenda-views.el ends here
 
-(when (eboost--try-require 'org-super-agenda)
+(when (boost--try-require 'org-super-agenda)
   (org-super-agenda-mode 1))
 
 (setq org-agenda-custom-commands
