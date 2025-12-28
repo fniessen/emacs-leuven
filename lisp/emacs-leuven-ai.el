@@ -14,19 +14,19 @@
 (require 'subr-x)  ;; string-trim, string-empty-p, etc.
 
 ;; Require a feature/library if available; if not, fail silently.
-(defun eboost--try-require (feature)
+(defun boost--try-require (feature)
   "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
   (if (require feature nil 'noerror)
       t
     (when (bound-and-true-p init-file-debug)
-      (display-warning 'eboost
+      (display-warning 'boost
                        (format "Cannot load `%s'" feature)
                        :warning))
     nil))
 
-(defun eboost--set-key-if-free (keymap key command &optional scope)
+(defun boost--set-key-if-free (keymap key command &optional scope)
   "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
 KEYMAP may be the map itself or a symbol naming it.
 If already bound, emit a warning mentioning SCOPE (string)."
@@ -37,22 +37,22 @@ If already bound, emit a warning mentioning SCOPE (string)."
          (existing-binding (and map (lookup-key map key t))))
     (cond
      ((not map)
-      (display-warning 'eboost "Keymap not available (yet)" :warning))
+      (display-warning 'boost "Keymap not available (yet)" :warning))
      ((or (null existing-binding) (numberp existing-binding))
       (define-key map key command))
      (t
       (when init-file-debug
-        (display-warning 'eboost
+        (display-warning 'boost
                          (format "Keybinding %s is already in use%s!"
                                  (key-description key)
                                  (if scope (format " in %s" scope) ""))
                          :warning))))))
 
 ;; Set OpenAI API key.
-(defvar eboost-openai-api-key nil
+(defvar boost-openai-api-key nil
   "OpenAI API key from env or ~/.openai_api_key; nil if unavailable.")
 
-(defun eboost--load-openai-api-key ()
+(defun boost--load-openai-api-key ()
   "Retourne la clé OpenAI ou affiche un warning si absente."
   (let* ((api-key (or (getenv "OPENAI_API_KEY")
                       (let ((f (expand-file-name "~/.openai_api_key")))
@@ -67,17 +67,17 @@ If already bound, emit a warning mentioning SCOPE (string)."
       trimmed-api-key)
      (t
       (when init-file-debug
-        (display-warning 'eboost "No valid OpenAI API key found!" :warning))
+        (display-warning 'boost "No valid OpenAI API key found!" :warning))
       nil))))
 
-(setq eboost-openai-api-key (eboost--load-openai-api-key))
+(setq boost-openai-api-key (boost--load-openai-api-key))
 
 ;; Load gptel.
-(when (eboost--try-require 'gptel)
+(when (boost--try-require 'gptel)
 
   ;; Set OpenAI API key.
-  (when (bound-and-true-p eboost-openai-api-key)
-    (setq gptel-api-key eboost-openai-api-key))
+  (when (bound-and-true-p boost-openai-api-key)
+    (setq gptel-api-key boost-openai-api-key))
 
   (setq gptel-model 'o4-mini)
 
@@ -93,32 +93,32 @@ If already bound, emit a warning mentioning SCOPE (string)."
   ;; Enable GPTel's expert/power-user commands.
   (setq gptel-expert-commands t)
 
-  (defgroup eboost-gptel nil
-    "Eboost tweaks and integration for GPTel."
+  (defgroup boost-gptel nil
+    "Boost tweaks and integration for GPTel."
     :group 'applications
-    :prefix "eboost-gptel-")
+    :prefix "boost-gptel-")
 
-  (defcustom eboost-gptel-prompt-prefix "** --- User prompt ---\n\n"
+  (defcustom boost-gptel-prompt-prefix "** --- User prompt ---\n\n"
     "Prompt prefix inserted before user text in GPTel Org buffers."
     :type 'string
-    :group 'eboost-gptel)
+    :group 'boost-gptel)
 
-  (defcustom eboost-gptel-response-prefix "** --- AI response ---\n\n"
+  (defcustom boost-gptel-response-prefix "** --- AI response ---\n\n"
     "Response prefix inserted before AI output in GPTel Org buffers."
     :type 'string
-    :group 'eboost-gptel)
+    :group 'boost-gptel)
 
   ;; Update or create the org-mode entries (no duplicates).
   (let ((cell (assq 'org-mode gptel-prompt-prefix-alist)))
     (if cell
-        (setcdr cell eboost-gptel-prompt-prefix)
-      (push (cons 'org-mode eboost-gptel-prompt-prefix)
+        (setcdr cell boost-gptel-prompt-prefix)
+      (push (cons 'org-mode boost-gptel-prompt-prefix)
             gptel-prompt-prefix-alist)))
 
   (let ((cell (assq 'org-mode gptel-response-prefix-alist)))
     (if cell
-        (setcdr cell eboost-gptel-response-prefix)
-      (push (cons 'org-mode eboost-gptel-response-prefix)
+        (setcdr cell boost-gptel-response-prefix)
+      (push (cons 'org-mode boost-gptel-response-prefix)
             gptel-response-prefix-alist)))
 
   ;; Add auto-scrolling after GPTel stream ends.
@@ -129,13 +129,13 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (when (fboundp 'gptel-end-of-response)
     (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
 
-(defcustom eboost-gptel-directives-directory
+(defcustom boost-gptel-directives-directory
   (expand-file-name "~/ai-prompts/")
   "Répertoire racine contenant des fichiers .txt pour les directives GPTel (recurse)."
   :type 'directory
-  :group 'eboost-gptel)
+  :group 'boost-gptel)
 
-(defun eboost--gptel-read-directive-file (name directive-file)
+(defun boost--gptel-read-directive-file (name directive-file)
   "Read DIRECTIVE-FILE and set NAME entry in `gptel-directives' as a proper alist cell.
 Return the directive content, or nil on failure."
   (when (file-readable-p directive-file)
@@ -151,7 +151,7 @@ Return the directive content, or nil on failure."
                 (append gptel-directives (list (cons name content)))))
         content))))
 
-(defun eboost--gptel-read-directives-from-directory (dir)
+(defun boost--gptel-read-directives-from-directory (dir)
   "Populate `gptel-directives` from all .txt files under DIR (recursively),
 sorted in ascending order by filename.
 Existing entries with the same NAME are overwritten."
@@ -160,20 +160,20 @@ Existing entries with the same NAME are overwritten."
   (dolist (f (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
     (condition-case err
         (let ((name (intern (file-name-base f))))
-          (eboost--gptel-read-directive-file name f))
+          (boost--gptel-read-directive-file name f))
       (error
-       (display-warning 'eboost
+       (display-warning 'boost
                         (format "[Failed to read directive %s: %s]"
                                 f (error-message-string err))
                         :warning))))
   gptel-directives)
 
 ;; Load directives from the specified directory.
-(if (file-directory-p eboost-gptel-directives-directory)
+(if (file-directory-p boost-gptel-directives-directory)
     (condition-case err
-        (eboost--gptel-read-directives-from-directory eboost-gptel-directives-directory)
+        (boost--gptel-read-directives-from-directory boost-gptel-directives-directory)
       (error (message "[Error reading directives: %s]" (error-message-string err))))
-  (message "[Directory %s does not exist.]" eboost-gptel-directives-directory))
+  (message "[Directory %s does not exist.]" boost-gptel-directives-directory))
 
   ;; (gptel-make-preset 'gpt4coding2
   ;;   :backend "openai"
@@ -223,7 +223,7 @@ Existing entries with the same NAME are overwritten."
     :tools '("read_buffer" "lsp_context"))
 
 ;;;###autoload
-  (defun eboost-gptel-org-send-to-chatgpt ()
+  (defun boost-gptel-org-send-to-chatgpt ()
     "Send selected region or Org subtree to the *ChatGPT* buffer.
     If a region is selected, send its text; otherwise, send the content of the Org subtree.
     Displays the response in the *ChatGPT* buffer."
@@ -250,9 +250,9 @@ Existing entries with the same NAME are overwritten."
           (goto-char (point-max))
           (insert (format-time-string
                    "\n\n* -------------------- GPT Session [%Y-%m-%d %H:%M] --------------------")
-                  "\n\n" eboost-gptel-prompt-prefix
+                  "\n\n" boost-gptel-prompt-prefix
                   text
-                  "\n\n" eboost-gptel-response-prefix)
+                  "\n\n" boost-gptel-response-prefix)
           (goto-char (point-max)))
 
         ;; Send to GPTel with error handling.
@@ -267,25 +267,25 @@ Existing entries with the same NAME are overwritten."
 
   ;; Org mode keybinding (only if free).
   (with-eval-after-load 'org
-    (eboost--set-key-if-free 'org-mode-map (kbd "C-c q")
-                             #'eboost-gptel-org-send-to-chatgpt "Org mode"))
+    (boost--set-key-if-free 'org-mode-map (kbd "C-c q")
+                             #'boost-gptel-org-send-to-chatgpt "Org mode"))
 
 ;; Commit-prompt file customization.
-(defcustom eboost-gptel-commit-prompt-file
+(defcustom boost-gptel-commit-prompt-file
   (expand-file-name "write-commit-message.txt"
-                    eboost-gptel-directives-directory)
+                    boost-gptel-directives-directory)
   "System prompt file for commit-message generation."
-  :type 'file :group 'eboost-gptel)
+  :type 'file :group 'boost-gptel)
 
 ;;;###autoload
-  (defun eboost-gptel-write-commit-message ()
+  (defun boost-gptel-write-commit-message ()
     "Generate a Git commit message from the current diff region or buffer.
 The result is shown in *Commit Message* and copied to the kill ring.
 If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system prompt."
     (interactive)
     (unless (or (use-region-p) (> (buffer-size) 0))
       (user-error "[No content to analyze]"))
-    (let* ((prompt-file eboost-gptel-commit-prompt-file)
+    (let* ((prompt-file boost-gptel-commit-prompt-file)
            (default-prompt
             "Write a Git commit message for the following diff:\n\n")
            (system-prompt
@@ -328,14 +328,14 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
 
   ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
-    (eboost--set-key-if-free 'diff-mode-map (kbd "w")
-                             #'eboost-gptel-write-commit-message "diff-mode"))
+    (boost--set-key-if-free 'diff-mode-map (kbd "w")
+                             #'boost-gptel-write-commit-message "diff-mode"))
 
   ;; Global keybinding (only if free).
-  (eboost--set-key-if-free global-map (kbd "C-x v w")
-                           #'eboost-gptel-write-commit-message "global map")
+  (boost--set-key-if-free global-map (kbd "C-x v w")
+                           #'boost-gptel-write-commit-message "global map")
 
-  (eboost--try-require 'gptel-commit)
+  (boost--try-require 'gptel-commit)
 
   ;; (setq gptel-backend
   ;;       (gptel-make-openai
@@ -344,10 +344,10 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
   ;;        :models '("gpt-4o-mini")))
 
   ;; Global keybinding (only if free).
-  (eboost--set-key-if-free global-map (kbd "C-c g c")
+  (boost--set-key-if-free global-map (kbd "C-c g c")
                            #'gptel-commit "global map")
 
-  (defun eboost--extract-defun-source ()
+  (defun boost--extract-defun-source ()
     "Retourne le code de la defun courante ou signale une erreur."
     (save-excursion
       (unless (ignore-errors (beginning-of-defun 1))
@@ -356,45 +356,45 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
         (end-of-defun)
         (buffer-substring-no-properties beg (point)))))
 
-  (defun eboost-gptel-generate-contextual-test ()
+  (defun boost-gptel-generate-contextual-test ()
     "Generate a unit test for the current function by sending its source code to GPTel."
     (interactive)
-    (let* ((function-source (eboost--extract-defun-source))
+    (let* ((function-source (boost--extract-defun-source))
            (prompt (format "Generate a unit test for the following function:\n\n%s"
                            function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-gptel-refactor-function ()
+  (defun boost-gptel-refactor-function ()
     "Refactor the current function with suggestions from GPTel."
     (interactive)
-    (let* ((function-source (eboost--extract-defun-source))
+    (let* ((function-source (boost--extract-defun-source))
            (prompt (format "Suggest a refactored, cleaner version of this function:\n\n%s\n\nProvide the refactored code and explain the improvements." function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-gptel-generate-docstring ()
+  (defun boost-gptel-generate-docstring ()
     "Generate a docstring for the current function using GPTel."
     (interactive)
-    (let* ((function-source (eboost--extract-defun-source))
+    (let* ((function-source (boost--extract-defun-source))
            (prompt (format "Generate a detailed docstring for the following function:\n\n%s\n\nFollow Emacs docstring conventions." function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-gptel-debug-function ()
+  (defun boost-gptel-debug-function ()
     "Analyze the current function for bugs or improvements using GPTel."
     (interactive)
-    (let* ((function-source (eboost--extract-defun-source))
+    (let* ((function-source (boost--extract-defun-source))
            (prompt (format "Analyze this function for potential bugs or improvements:\n\n%s\n\nProvide a list of issues and suggested fixes." function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-gptel-generate-example-usage ()
+  (defun boost-gptel-generate-example-usage ()
     "Generate example usage for the current function using GPTel."
     (interactive)
     (let* ((function-name (or (which-function) "unknown-function"))
-           (function-source (eboost--extract-defun-source))
+           (function-source (boost--extract-defun-source))
            (prompt (format "Provide example usage code for the following function named %s:\n\n%s\n\nInclude a brief explanation of each example."
                            function-name function-source)))
       (gptel-request prompt)))
 
-  (defun eboost-gptel-generate-function-from-spec ()
+  (defun boost-gptel-generate-function-from-spec ()
     "Generate an Emacs Lisp function from a user-provided specification using GPTel."
     (interactive)
     (let ((spec (read-string "Enter the function specification (e.g., 'Write a function to reverse a string'): ")))
@@ -403,14 +403,14 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                               spec)))
           (gptel-request prompt)))))
 
-  (defun eboost-gptel-optimize-function-performance ()
+  (defun boost-gptel-optimize-function-performance ()
     "Suggest performance optimizations for the current function using GPTel."
     (interactive)
-    (let* ((function-source (eboost--extract-defun-source))
+    (let* ((function-source (boost--extract-defun-source))
            (prompt (format "Analyze this Emacs Lisp function for performance bottlenecks:\n\n%s\n\nSuggest optimizations with code examples and explain why they improve performance." function-source)))
       (gptel-request prompt)))
 
-  (defvar eboost-gptel-code-review-prompt
+  (defvar boost-gptel-code-review-prompt
     "Perform a code review for this Emacs Lisp code:
 
 %s
@@ -419,7 +419,7 @@ Provide detailed feedback, including clarity, style, potential bugs, and
 suggestions for improvement."
     "Prompt template for AI code review.")
 
-  (defun eboost-gptel-code-review-function (&optional arg)
+  (defun boost-gptel-code-review-function (&optional arg)
     "Perform a code review on the current Emacs Lisp function, region, or buffer using GPTel.
   With no prefix argument, review the current function.
   With one `C-u`, review the active region.
@@ -444,7 +444,7 @@ suggestions for improvement."
                 (buffer-substring-no-properties
                  (point)
                  (progn (end-of-defun) (point)))))))
-           (prompt (format eboost-gptel-code-review-prompt function-source))
+           (prompt (format boost-gptel-code-review-prompt function-source))
            (output-buffer (get-buffer-create "*Code Review*")))
       (when (string-empty-p function-source)
         (error "[No valid code source extracted]"))
@@ -463,11 +463,11 @@ suggestions for improvement."
                (message "[Code review completed!]"))))
         (error (message "[Code review failed: %s]" err)))))
 
-  (defun eboost-gptel-generate-companion-function ()
+  (defun boost-gptel-generate-companion-function ()
     "Generate a companion function for the current function using GPTel."
     (interactive)
     (let* ((function-name (or (which-function) "unknown-function"))
-           (function-source (eboost--extract-defun-source))
+           (function-source (boost--extract-defun-source))
            (prompt (format "Generate a companion function for this Emacs Lisp function named %s:\n\n%s\n\nThe companion could be an inverse operation, a helper function, or something that logically complements it. Provide the code and explain its purpose." function-name function-source)))
       (gptel-request prompt)))
 
@@ -477,10 +477,10 @@ suggestions for improvement."
 
   ;; Quick access to gptel-send (only if key is free).
   (with-eval-after-load 'gptel
-    (eboost--set-key-if-free global-map (kbd "C-c RET")
+    (boost--set-key-if-free global-map (kbd "C-c RET")
                              #'gptel-send "global map"))
 
-  (defun eboost-gptel-chat-buffer ()
+  (defun boost-gptel-chat-buffer ()
     "Switch to the GPTel chat buffer, creating it if it doesn't exist."
     (interactive)
     (let ((buffer-name "*ChatGPT*"))
@@ -489,7 +489,7 @@ suggestions for improvement."
         (progn
           (call-interactively 'gptel)))))
 
-  ;; (defun eboost-gptel-chat-buffer (&optional arg)
+  ;; (defun boost-gptel-chat-buffer (&optional arg)
   ;;   "Switch to the GPTel chat buffer.
   ;; Without prefix ARG, jump to `*ChatGPT*` creating it if needed (no prompt).
   ;; With C-u prefix, defer to `gptel`'s usual interactive flow (with prompts)."
@@ -505,23 +505,23 @@ suggestions for improvement."
   ;;           (funcall #'gptel buffer-name))))))
 
   ;; Global keybinding (only if free).
-  (eboost--set-key-if-free global-map (kbd "C-c g")
-                           #'eboost-gptel-chat-buffer "global map")
+  (boost--set-key-if-free global-map (kbd "C-c g")
+                           #'boost-gptel-chat-buffer "global map")
 
 )
 
 ;; Load org-ai.
-(when (eboost--try-require 'org-ai)
+(when (boost--try-require 'org-ai)
 
   ;; Enable org-ai-mode in Org mode.
   (add-hook 'org-mode-hook #'org-ai-mode)
 
   ;; Set OpenAI API key.
-  (when (bound-and-true-p eboost-openai-api-key)
-    (setq org-ai-openai-api-token eboost-openai-api-key))
+  (when (bound-and-true-p boost-openai-api-key)
+    (setq org-ai-openai-api-token boost-openai-api-key))
 
   ;; Install YASnippet templates for org-ai.
-  (when (eboost--try-require 'yasnippet)
+  (when (boost--try-require 'yasnippet)
     (org-ai-install-yasnippets)))
 
 (message "* --[ Loaded Emacs-Leuven AI %s ]--"
