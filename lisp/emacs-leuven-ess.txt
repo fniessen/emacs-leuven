@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle yes
 
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/html-theme-readtheorg.setup
 
 * Emacs Speaks Statistics (ESS)
 
@@ -28,7 +28,7 @@ See:
 
 #+begin_src emacs-lisp
 ;; Load ESS package for R-specific features only.
-(eboost--try-require 'ess-r-mode)
+(boost--try-require 'ess-r-mode)
 #+end_src
 
 ** 3 Interacting with statistical programs
