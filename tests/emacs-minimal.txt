@@ -8,8 +8,6 @@
 
 #+PROPERTY:  header-args :eval no
 
-#+SETUPFILE: ~/org/theme-readtheorg.setup
-
 * Example
 :PROPERTIES:
 :header-args: :tangle ../.emacs.d/emacs-minimal.el
