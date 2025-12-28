@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20251221.1557>
+;; Version: <20251223.1826>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,11 +53,11 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst eboost-version "<20251221.1557>"
+(defconst boost-version "<20251223.1826>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
-(message "* --[ Loading Emacs-Leuven %s ]--" eboost-version)
+(message "* --[ Loading Emacs-Leuven %s ]--" boost-version)
 
 ;; Record the start time for measuring load duration.
 (defconst emacs-leuven--load-start-time (current-time)
@@ -222,7 +222,7 @@ If END-OF-CHAPTER is non-nil, it will not print the section name."
             (add-to-list 'load-path abs-dir)
             (when lvn-verbose-loading
               (message "[Added '%s' to load-path]" abs-dir)))
-        (display-warning 'eboost
+        (display-warning 'boost
                          (format "Directory '%s' does not exist" abs-dir)
                          :warning))))
 
@@ -245,14 +245,14 @@ If END-OF-CHAPTER is non-nil, it will not print the section name."
   ;; (lvn--add-dir-to-load-path leuven-user-lisp-directory)
 
   ;; Require a feature/library if available; if not, fail silently.
-  (defun eboost--try-require (feature)
+  (defun boost--try-require (feature)
     "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
 emit a warning when the feature can't be loaded."
     (if (require feature nil 'noerror)
         t
       (when (bound-and-true-p init-file-debug)
-        (display-warning 'eboost
+        (display-warning 'boost
                          (format "Cannot load `%s'" feature)
                          :warning))
       nil))
@@ -271,7 +271,7 @@ Example usage:
       `(eval-after-load ,feature
          '(progn ,@body))))
 
-(defun eboost--set-key-if-free (keymap key command &optional scope)
+(defun boost--set-key-if-free (keymap key command &optional scope)
   "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
 KEYMAP may be the map itself or a symbol naming it.
 If already bound, emit a warning mentioning SCOPE (string)."
@@ -282,18 +282,18 @@ If already bound, emit a warning mentioning SCOPE (string)."
          (existing-binding (and map (lookup-key map key t))))
     (cond
      ((not map)
-      (display-warning 'eboost "Keymap not available (yet)" :warning))
+      (display-warning 'boost "Keymap not available (yet)" :warning))
      ((or (null existing-binding) (numberp existing-binding))
       (define-key map key command))
      (t
       (when init-file-debug
-        (display-warning 'eboost
+        (display-warning 'boost
                          (format "Keybinding %s is already in use%s!"
                                  (key-description key)
                                  (if scope (format " in %s" scope) ""))
                          :warning))))))
 
-  (defun eboost--switch-or-start (fn buffer)
+  (defun boost--switch-or-start (fn buffer)
     "If BUFFER is the current buffer, bury it.
   If a buffer with the name BUFFER exists, switch to it;
   otherwise, invoke FN, which should be a function to run."
@@ -371,14 +371,14 @@ Shows a warning message if the file does not exist or is not executable."
 
     (cond
      ((not (file-exists-p file))
-      (display-warning 'eboost
+      (display-warning 'boost
                        (format "File `%s' does not exist." file)
                        :warning)
       (sit-for 1.5)
       nil)
 
      ((not (file-executable-p file))
-      (display-warning 'eboost
+      (display-warning 'boost
                        (format "File `%s' is not executable." file)
                        :warning)
       (sit-for 1.5)
@@ -425,7 +425,7 @@ Shows a warning message if the file does not exist or is not executable."
     ;; Archives from which to fetch.
     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") :append))
 
-  (eboost--try-require 'package)
+  (boost--try-require 'package)
   (with-eval-after-load 'package
 
 
@@ -608,12 +608,12 @@ Shows a warning message if the file does not exist or is not executable."
 )                                       ; Chapter 48 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
-  (eboost--try-require 'idle-require)
+  (boost--try-require 'idle-require)
 
   ;; Fail-safe for `idle-require`.
   (if (not (featurep 'idle-require))
       (defun idle-require (feature &optional file noerror)
-        (eboost--try-require feature)))
+        (boost--try-require feature)))
 
   (with-eval-after-load 'idle-require
 
@@ -674,7 +674,7 @@ Shows a warning message if the file does not exist or is not executable."
   ;; Print the current buffer line number.
   (global-set-key (kbd "M-G") #'what-line)
 
-  (defun eboost-goto-line-with-line-numbers ()
+  (defun boost-goto-line-with-line-numbers ()
     "Go to a specific line while temporarily enabling line numbers.
 
   This function prompts the user to enter a line number to navigate to.
@@ -695,7 +695,7 @@ Shows a warning message if the file does not exist or is not executable."
         (display-line-numbers-mode line-numbers-enabled))))
 
   ;; Remap goto-line.
-  (global-set-key [remap goto-line] #'eboost-goto-line-with-line-numbers)
+  (global-set-key [remap goto-line] #'boost-goto-line-with-line-numbers)
 
 ;;** 8.4 (info "(emacs)Basic Undo")ing Changes
 
@@ -1275,7 +1275,7 @@ called interactively."
   (leuven--section "15.13 (emacs)Font Lock")
 
 ;; Load hl-todo only if it's available.
-(when (eboost--try-require 'hl-todo)
+(when (boost--try-require 'hl-todo)
 
   ;; Enable hl-todo globally.
   (global-hl-todo-mode 1)
@@ -1713,7 +1713,7 @@ Should be selected from `fringe-bitmaps'.")
   (leuven--section "15.21 (emacs)The Cursor Display")
 
   ;; Cursor customization based on buffer state.
-  (defun eboost-update-cursor-appearance ()
+  (defun boost-update-cursor-appearance ()
     "Update cursor color and shape based on buffer state (read-only, overwrite, or insert)."
     (let* ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
            (cursor-colors `((read-only . "purple1")
@@ -1734,7 +1734,7 @@ Should be selected from `fringe-bitmaps'.")
       (setq cursor-type current-type)))
 
   ;; Update cursor on every command.
-  (add-hook 'post-command-hook #'eboost-update-cursor-appearance)
+  (add-hook 'post-command-hook #'boost-update-cursor-appearance)
 
   ;; Default to bar cursor.
   (setq-default cursor-type 'bar)
@@ -1830,7 +1830,7 @@ Should be selected from `fringe-bitmaps'.")
     (anzu-replace-to-string-separator " => ")
     :config
     ;; Function which returns mode-line string.
-    (defun eboost--anzu-format-mode-line (here total)
+    (defun boost--anzu-format-mode-line (here total)
       "Return a mode-line string based on anzu search state.
     HERE is the current position, TOTAL is the number of matches."
       (when anzu--state
@@ -1858,7 +1858,7 @@ Should be selected from `fringe-bitmaps'.")
                        'anzu-mode-line)))
           (propertize status-text 'face face))))
     ;; Set the update function.
-    (setq anzu-mode-line-update-function #'eboost--anzu-format-mode-line))
+    (setq anzu-mode-line-update-function #'boost--anzu-format-mode-line))
 
     ;; ;; Lighter of anzu-mode.
     ;; (setq anzu-mode-lighter "")
@@ -2077,7 +2077,7 @@ After initiating the grep search, the isearch is aborted."
       ;; Dash character (`-') is considered as a word delimiter.
       (setq-default flyspell-consider-dash-as-word-delimiter-flag t)
 
-      (defun eboost-toggle-ispell-dictionary ()
+      (defun boost-toggle-ispell-dictionary ()
         "Toggle Ispell dictionary between French and American English."
         (interactive)
         (let* ((current (or ispell-local-dictionary ispell-dictionary))
@@ -2095,7 +2095,7 @@ After initiating the grep search, the isearch is aborted."
 
       ;; Key bindings.
       (global-set-key (kbd "C-$") #'flyspell-buffer)
-      (global-set-key (kbd "C-M-$") #'eboost-toggle-ispell-dictionary)
+      (global-set-key (kbd "C-M-$") #'boost-toggle-ispell-dictionary)
 
       ;; Spell-check your XHTML (by adding `nxml-text-face' to the list of
       ;; faces corresponding to text in programming-mode buffers).
@@ -2304,7 +2304,7 @@ After initiating the grep search, the isearch is aborted."
   ;; (setq auto-revert-check-vc-info t)
 
   ;; Sync buffer with disk and clear specific highlights.
-  (defun eboost-sync-buffer-and-clear-overlays ()
+  (defun boost-sync-buffer-and-clear-overlays ()
     "Revert buffer from disk and remove specified overlays in visible area."
     (interactive)
     (condition-case err
@@ -2325,8 +2325,8 @@ After initiating the grep search, the isearch is aborted."
     (message "[Buffer synchronized with disk and overlays removed]"))
 
   ;; Bind to `C-S-y' globally.
-  (eboost--set-key-if-free 'global-map (kbd "C-S-y")
-                           #'eboost-sync-buffer-and-clear-overlays "global map")
+  (boost--set-key-if-free 'global-map (kbd "C-S-y")
+                           #'boost-sync-buffer-and-clear-overlays "global map")
 
   (when (and (bound-and-true-p lvn--cygwin-p)
                                         ; Cygwin Emacs uses gfilenotify (based
@@ -2350,7 +2350,7 @@ After initiating the grep search, the isearch is aborted."
     ;; Check and warn about remote files setting.
     (when (and (boundp 'auto-revert-remote-files)
                auto-revert-remote-files)
-      (display-warning 'eboost
+      (display-warning 'boost
                        "`auto-revert-remote-files' is non-nil, this may generate significant network traffic."
                        :warning)))
 
@@ -2507,7 +2507,7 @@ After initiating the grep search, the isearch is aborted."
 
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads
-  ;; (eboost--try-require 'ediff-hook)
+  ;; (boost--try-require 'ediff-hook)
   ;; already loaded (by Emacs?)
 
   (with-eval-after-load 'ediff
@@ -2753,7 +2753,7 @@ After initiating the grep search, the isearch is aborted."
     ;; `dabbrev-expand' (M-/) =>`helm-dabbrev'
     ;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
 
-    (defun eboost-helm-generic-imenu (arg)
+    (defun boost-helm-generic-imenu (arg)
       "Jump to a place in the buffer using an Index menu.
 
 For programming mode buffers, this function displays a menu to
@@ -2769,14 +2769,14 @@ in the current buffer."
             (t
              (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
-    (eboost--set-key-if-free 'global-map (kbd "C-<f12>")
-                             #'eboost-helm-generic-imenu "global map")
-    ;; (eboost--set-key-if-free 'global-map (kbd "<f4>")
-    ;;                          #'eboost-helm-generic-imenu "global map")
+    (boost--set-key-if-free 'global-map (kbd "C-<f12>")
+                             #'boost-helm-generic-imenu "global map")
+    ;; (boost--set-key-if-free 'global-map (kbd "<f4>")
+    ;;                          #'boost-helm-generic-imenu "global map")
 
     ;; Org headlines in Org agenda files.
     (when (fboundp 'helm-org-agenda-files-headings)
-      (eboost--set-key-if-free 'global-map (kbd "C-h O")
+      (boost--set-key-if-free 'global-map (kbd "C-h O")
                                #'helm-org-agenda-files-headings "global map"))
 
     (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
@@ -2805,7 +2805,7 @@ in the current buffer."
     ;; For multi-line items in e.g. minibuffer history, match entire items,
     ;; not individual lines within items.
 
-    ;; (eboost--try-require 'helm-dictionary)
+    ;; (boost--try-require 'helm-dictionary)
 
     ;; Use the *current window* (no popup) to show the candidates.
     (setq helm-full-frame nil)
@@ -3085,7 +3085,7 @@ in the current buffer."
   (leuven--section "20.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
 
   ;; Unique buffer names dependent on file name.
-  (eboost--try-require 'uniquify)
+  (boost--try-require 'uniquify)
 
   (with-eval-after-load 'uniquify
 
@@ -3556,7 +3556,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   (push '("expect" . tcl-mode) interpreter-mode-alist)
 
   ;; ;; Load generic modes which support e.g. batch files.
-  ;; (eboost--try-require 'generic-x)
+  ;; (boost--try-require 'generic-x)
 
 )                                       ; Chapter 24 ends here.
 
@@ -3828,7 +3828,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
     ;; ;; Make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik).
-    ;; (eboost--try-require 'outline-magic)
+    ;; (boost--try-require 'outline-magic)
     ;; (with-eval-after-load 'outline-magic
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
@@ -3844,7 +3844,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
     ;;                           (kbd "<M-down>") #'outline-move-subtree-down))))
 
     ;; ;; Extra support for outline minor mode.
-    ;; (eboost--try-require 'out-xtra)
+    ;; (boost--try-require 'out-xtra)
 
 
     ;; Org-style folding for a `.emacs' (and much more).
@@ -3957,7 +3957,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 ;; C-M-] and M-] fold the whole buffer or the current defun.
 
   ;; ;; Unified user interface for Emacs folding modes, bound to Org key-strokes.
-  ;; (eboost--try-require 'fold-dwim-org)
+  ;; (boost--try-require 'fold-dwim-org)
 
   ;; 25.8.2
   ;; Toggle display of invisible text.
@@ -4044,7 +4044,7 @@ scrolling to the bottom."
   (add-hook 'TeX-output-mode-hook #'lvn--setup-latex-output)
 
   ;; Align LaTeX table columns and row terminators in the selected region.
-  (defun eboost-align-latex-tables (start end &optional only-rows)
+  (defun boost-align-latex-tables (start end &optional only-rows)
     "Align LaTeX table columns and row terminators between START and END.
 
   This command performs two passes:
@@ -4071,7 +4071,7 @@ scrolling to the bottom."
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  ;; (eboost--try-require 'tex-site)
+  ;; (boost--try-require 'tex-site)
 
   ;; Support for LaTeX documents.
   (with-eval-after-load 'latex
@@ -4241,24 +4241,24 @@ scrolling to the bottom."
     (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
                                         ; Must end with a slash.
 
-(defconst eboost-texlive-bin
+(defconst boost-texlive-bin
   (concat (string-trim (shell-command-to-string "kpsewhich --var-value=TEXMFROOT"))
           "/bin/x86_64-linux")
   "Path to TeX Live executables.")
 
-(when (file-directory-p eboost-texlive-bin)
+(when (file-directory-p boost-texlive-bin)
   ;; Make sure Emacs will find binaries there.
-  (add-to-list 'exec-path eboost-texlive-bin)
+  (add-to-list 'exec-path boost-texlive-bin)
 
   ;; Prepend to the PATH environment variable.
   (setenv "PATH"
-          (concat eboost-texlive-bin
+          (concat boost-texlive-bin
                   path-separator        ; For portability.
                   (getenv "PATH"))))
 
-(unless (file-directory-p eboost-texlive-bin)
+(unless (file-directory-p boost-texlive-bin)
   (message "[Warning] %s does not exist, skipping TeX Live bin in PATH"
-           eboost-texlive-bin))
+           boost-texlive-bin))
 
 ;;** (info "(preview-latex)Top")
 
@@ -4492,7 +4492,7 @@ the parent element."
     (add-hook 'nxml-mode-hook 'hs-minor-mode))
 
   ;; Highlight the current SGML tag context (`hl-tags-face').
-  (eboost--try-require 'hl-tags-mode)
+  (boost--try-require 'hl-tags-mode)
   (with-eval-after-load 'hl-tags-mode
 
     (add-hook 'html-mode-hook
@@ -4582,7 +4582,7 @@ the parent element."
   (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a.
 
   ;; Making buffer indexes as menus.
-  (eboost--try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
+  (boost--try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
 
   (when (require 'imenu nil 'noerror)
     (with-eval-after-load 'imenu
@@ -4590,7 +4590,7 @@ the parent element."
       (setq imenu-auto-rescan t)
 
       ;; Function to add Imenu to the menu bar in modes that support it.
-      (defun eboost--try-to-add-imenu ()
+      (defun boost--try-to-add-imenu ()
         "Attempt to add an Imenu index to the menu bar, if the current mode supports it."
         (condition-case err
             (imenu-add-to-menubar "Outline")
@@ -4600,7 +4600,7 @@ the parent element."
           (error (message "[Error adding Imenu index: %S]" err))))
 
       ;; Add Imenu to the menu bar in any mode that supports it.
-      (add-hook 'after-change-major-mode-hook #'eboost--try-to-add-imenu))
+      (add-hook 'after-change-major-mode-hook #'boost--try-to-add-imenu))
 
     ;; Bind Imenu to the Shift + Right Mouse Button.
     (global-set-key [S-mouse-3] #'imenu)
@@ -5667,7 +5667,7 @@ a clean buffer we're an order of magnitude laxer about checking."
   ;; (with-eval-after-load 'etags
   ;;
   ;;   ;; Select from multiple tags.
-  ;;   (eboost--try-require 'etags-select))
+  ;;   (boost--try-require 'etags-select))
 
   (with-eval-after-load 'etags-select
 
@@ -6395,7 +6395,7 @@ This example lists Azerty layout second row keys."
     (setq dired-auto-revert-buffer t)
 
     ;; Dired sort.
-    (eboost--try-require 'dired-sort-map)
+    (boost--try-require 'dired-sort-map)
 
 ;;** (info "(emacs)Dired and Find")
 
@@ -6451,7 +6451,7 @@ This example lists Azerty layout second row keys."
 
     (when lvn--cygwin-p
       (when (fboundp 'dired-jump)       ; Check if `dired-jump' exists.
-        (defun eboost--dired-jump-advice (orig-fun &rest args)
+        (defun boost--dired-jump-advice (orig-fun &rest args)
           "Ask for confirmation before jumping to a Dired buffer.
 
       This advice checks the buffer size and prompts for confirmation if the buffer
@@ -6462,7 +6462,7 @@ This example lists Azerty layout second row keys."
               (apply orig-fun args)
             (message "[Operation cancelled: Buffer size too large]")))
 
-        (advice-add 'dired-jump :around #'eboost--dired-jump-advice))))
+        (advice-add 'dired-jump :around #'boost--dired-jump-advice))))
 
 ;;** Diff-hl
 
@@ -6534,7 +6534,7 @@ This example lists Azerty layout second row keys."
 
   ;; Insinuate appt if `diary-file' exists.
   (if (file-readable-p "~/diary")
-      (eboost--try-require 'appt)        ; Requires `diary-lib', which requires
+      (boost--try-require 'appt)        ; Requires `diary-lib', which requires
                                         ; `diary-loaddefs'.
     (message "[Appointment reminders lib `appt' not loaded (no diary file found)]"))
 
@@ -6711,7 +6711,7 @@ This example lists Azerty layout second row keys."
   (global-set-key (kbd "C-c n")
                   (lambda ()
                     (interactive)
-                    (eboost--switch-or-start 'gnus "*Group*")))
+                    (boost--switch-or-start 'gnus "*Group*")))
 
   ;; Directory beneath which additional per-user Gnus-specific files are placed.
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
@@ -6797,7 +6797,7 @@ This example lists Azerty layout second row keys."
 
   ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...).
-  ;; (eboost--try-require 'comint)
+  ;; (boost--try-require 'comint)
   ;; (with-eval-after-load 'comint
 
     ;; Comint prompt is read only.
@@ -6942,7 +6942,7 @@ This example lists Azerty layout second row keys."
   (global-set-key (kbd "C-!")
                   (lambda ()
                     (interactive)
-                    (eboost--switch-or-start 'shell "*shell*")))
+                    (boost--switch-or-start 'shell "*shell*")))
 
 ;;** 38.10 Remote Host Shell
 
@@ -6994,7 +6994,7 @@ This example lists Azerty layout second row keys."
 
     ;; Define an advice function to save the current buffer without confirmation
     ;; before returning to the client.
-    (defun eboost--server-edit-save-buffer-advice (proc)
+    (defun boost--server-edit-save-buffer-advice (proc)
     "Save the current buffer before marking it as done if it is modified.
 PROC is the process associated with the server."
       (when (and server-buffer-clients
@@ -7003,7 +7003,7 @@ PROC is the process associated with the server."
         (save-buffer)))
 
     ;; Add the advice to the 'server-edit' function.
-    (advice-add 'server-edit :before #'eboost--server-edit-save-buffer-advice))
+    (advice-add 'server-edit :before #'boost--server-edit-save-buffer-advice))
 
 )                                       ; Chapter 40 ends here.
 
@@ -7131,7 +7131,7 @@ PROC is the process associated with the server."
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
 
-  (defun eboost-sort-names-by-last-name ()
+  (defun boost-sort-names-by-last-name ()
     "Sort lines in the selected region by last name (everything after the first space)."
     (interactive)
     (if (use-region-p)
@@ -7474,7 +7474,7 @@ Before using this function, make sure 'lvn--directory' points to the
 directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
   (interactive)
-  (eboost-display-version)
+  (boost-display-version)
   (let* ((repository-directory (file-name-directory (file-truename (locate-library "emacs-leuven.el"))))
          (unstaged-changes (shell-command-to-string (format "cd %s && git status --porcelain" repository-directory))))
     (if (file-directory-p repository-directory)
@@ -7486,8 +7486,8 @@ Git repository directory."
                     (progn
                       (sit-for 1.5)
                       (message "[Configuration updated. Please restart Emacs to complete the update]"))
-                  (display-warning 'eboost "Error: Failed to update configuration" :warning))))
-          (display-warning 'eboost "You have unstaged changes. Please commit or stash them before updating." :warning)
+                  (display-warning 'boost "Error: Failed to update configuration" :warning))))
+          (display-warning 'boost "You have unstaged changes. Please commit or stash them before updating." :warning)
           (message "[Unstaged changes:\n%s]" unstaged-changes))
       (message "[Error: 'emacs-leuven.el' file not found]"))))
 
@@ -7502,7 +7502,7 @@ Before using this function, make sure 'lvn--directory' points to the
 directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
     (interactive)
-    (eboost-display-version)
+    (boost-display-version)
     (message "[Fetching latest changes in Emacs-Leuven...]")
     (let* ((el-file-path (locate-library "emacs-leuven.el"))
            (el-file-directory (file-name-directory (file-truename el-file-path)))
@@ -7515,14 +7515,14 @@ Git repository directory."
           (shell-command "LC_ALL=C git log --pretty=format:'%h %ad %s' --date=short HEAD..origin" commits-buffer)
           (pop-to-buffer commits-buffer)))))
 
-  (defun eboost-display-version ()
+  (defun boost-display-version ()
     "Display the current version of the EmacsBoost package."
     (interactive)
-    (if (and (boundp 'eboost-version) (stringp eboost-version))
-        (message "[EmacsBoost version %s]" eboost-version)
+    (if (and (boundp 'boost-version) (stringp boost-version))
+        (message "[EmacsBoost version %s]" boost-version)
       (message "[Error: EmacsBoost version is not defined]")))
 
-(message "* --[ Loaded Emacs-Leuven %s]--" eboost-version)
+(message "* --[ Loaded Emacs-Leuven %s]--" boost-version)
 
 (provide 'emacs-leuven)
 
