@@ -3073,8 +3073,8 @@ Not very coherent!
 #+end_warning
 
 #+begin_src emacs-lisp
-  (defun boost--set-latex-engine-and-process (backend)
-    "Automatically select the LaTeX engine and configure `org-latex-pdf-process'.
+  (defun boost--set-org-latex-pdf-process (backend)
+    "Automatically select the LaTeX compiler and configure `org-latex-pdf-process'.
 
   Logic:
   - Use pdfLaTeX if the file contains `#+LATEX_COMPILER: pdflatex`
@@ -3095,10 +3095,10 @@ Not very coherent!
                     (goto-char (point-min))
                     (re-search-forward "^#\\+LATEX_CMD: *pdflatex" nil t))))
 
-             ;; Full path to selected LaTeX engine (for non-latexmk builds).
+             ;; Full path to selected LaTeX compiler (for non-latexmk builds).
              ;; If pdfLaTeX is explicitly requested, use it, otherwise default
              ;; to LuaLaTeX.
-             (engine-path
+             (compiler-path
               (if use-pdflatex
                   (or (executable-find "pdflatex")
                       (user-error "[pdfLaTeX was requested but is not installed]"))
@@ -3106,7 +3106,7 @@ Not very coherent!
                     (user-error "[LuaLaTeX (default) is not installed]"))))
 
              ;; Executable name only ("lualatex" or "pdflatex").
-             (engine-name (file-name-base engine-path))
+             (compiler-name (file-name-base compiler-path))
 
              ;; latexmk detection (optional).
              (latexmk-path (executable-find "latexmk"))
@@ -3118,7 +3118,7 @@ Not very coherent!
              ;; WSL/Linux does NOT require cygpath conversions.
              (latex-file "%f"))
 
-        (message "[LaTeX engine detected (non-latexmk base): %s]" engine-path)
+        (message "[LaTeX compiler detected (non-latexmk base): %s]" compiler-path)
 
         ;; Choose the PDF build process.
         (cond
@@ -3135,7 +3135,7 @@ Not very coherent!
 
          ;; 2) LuaLaTeX used (default) and latexmk not available.
          ;;    This happens when no explicit pdfLaTeX directive is present.
-         ((string= engine-name "lualatex")
+         ((string= compiler-name "lualatex")
           (setq org-latex-pdf-process
                 (list
                  (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
@@ -3153,7 +3153,7 @@ Not very coherent!
         (message "[Export command: %S]" org-latex-pdf-process))))
 
   ;; Hook executed before Org parses the temporary export buffer.
-  (add-hook 'org-export-before-parsing-hook #'boost--set-latex-engine-and-process)
+  (add-hook 'org-export-before-parsing-hook #'boost--set-org-latex-pdf-process)
 #+end_src
 
 #+begin_tip

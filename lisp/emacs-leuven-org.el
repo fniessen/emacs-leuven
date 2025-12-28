@@ -1920,8 +1920,8 @@ buffer."
   ;; Default process to convert LaTeX fragments to image files.
   ;; (setq org-preview-latex-default-process 'imagemagick)
 
-  (defun boost--set-latex-engine-and-process (backend)
-    "Automatically select the LaTeX engine and configure `org-latex-pdf-process'.
+  (defun boost--set-org-latex-pdf-process (backend)
+    "Automatically select the LaTeX compiler and configure `org-latex-pdf-process'.
 
   Logic:
   - Use pdfLaTeX if the file contains `#+LATEX_COMPILER: pdflatex`
@@ -1942,10 +1942,10 @@ buffer."
                     (goto-char (point-min))
                     (re-search-forward "^#\\+LATEX_CMD: *pdflatex" nil t))))
 
-             ;; Full path to selected LaTeX engine (for non-latexmk builds).
+             ;; Full path to selected LaTeX compiler (for non-latexmk builds).
              ;; If pdfLaTeX is explicitly requested, use it, otherwise default
              ;; to LuaLaTeX.
-             (engine-path
+             (compiler-path
               (if use-pdflatex
                   (or (executable-find "pdflatex")
                       (user-error "[pdfLaTeX was requested but is not installed]"))
@@ -1953,7 +1953,7 @@ buffer."
                     (user-error "[LuaLaTeX (default) is not installed]"))))
 
              ;; Executable name only ("lualatex" or "pdflatex").
-             (engine-name (file-name-base engine-path))
+             (compiler-name (file-name-base compiler-path))
 
              ;; latexmk detection (optional).
              (latexmk-path (executable-find "latexmk"))
@@ -1965,7 +1965,7 @@ buffer."
              ;; WSL/Linux does NOT require cygpath conversions.
              (latex-file "%f"))
 
-        (message "[LaTeX engine detected (non-latexmk base): %s]" engine-path)
+        (message "[LaTeX compiler detected (non-latexmk base): %s]" compiler-path)
 
         ;; Choose the PDF build process.
         (cond
@@ -1982,7 +1982,7 @@ buffer."
 
          ;; 2) LuaLaTeX used (default) and latexmk not available.
          ;;    This happens when no explicit pdfLaTeX directive is present.
-         ((string= engine-name "lualatex")
+         ((string= compiler-name "lualatex")
           (setq org-latex-pdf-process
                 (list
                  (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
@@ -2000,7 +2000,7 @@ buffer."
         (message "[Export command: %S]" org-latex-pdf-process))))
 
   ;; Hook executed before Org parses the temporary export buffer.
-  (add-hook 'org-export-before-parsing-hook #'boost--set-latex-engine-and-process)
+  (add-hook 'org-export-before-parsing-hook #'boost--set-org-latex-pdf-process)
 
   ;; 12.6.2 Default packages to be inserted in the header.
   ;; Include the `babel' package first for language-specific hyphenation and
