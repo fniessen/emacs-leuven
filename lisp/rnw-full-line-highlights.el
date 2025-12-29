@@ -3,11 +3,9 @@
 (require 'jit-lock)
 (require 'cl-lib)
 
-(defun boost--hl-full-lines (regexp &optional face-bg)
-  "Highlight full lines containing REGEXP with FACE-BG in the current buffer."
-  (let* ((bg      (or face-bg "#ff4444"))
-         (face    `(:background ,bg))
-         (key     (intern (format "my--hl-lines-%s" regexp))))
+(defun boost--hl-full-lines (regexp face)
+  "Highlight full lines containing REGEXP with FACE in the current buffer."
+  (let* ((key (intern (format "my--hl-lines-%s" regexp))))
     (fset key
           (lambda ()
             (remove-overlays nil nil 'my-hl-lines-key key)
@@ -19,6 +17,7 @@
                   (overlay-put ov 'my-hl-lines-key key)
                   (overlay-put ov 'face face)
                   (overlay-put ov 'priority 100)
+                  ;; Extend highlight to the right edge of the window.
                   (overlay-put ov 'wrap-prefix
                                (propertize " " 'display '(space :align-to right)
                                            'face face))
@@ -34,8 +33,8 @@
 
 (defun boost--setup-rnw-highlights ()
   "Activate full-line highlights for Sweave/Rnw chunk delimiters."
-  (boost--hl-full-lines "^<<.*>>=$" "#E2E1D5")
-  (boost--hl-full-lines "^@$"       "#E2E1D5"))
+  (boost--hl-full-lines "^<<.*>>=$" 'org-block-begin-line)
+  (boost--hl-full-lines "^@$"       'org-block-end-line))
 
 (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . LaTeX-mode))
 
