@@ -1,4 +1,4 @@
-(defun eboost-highlight-full-lines-matching-regexp (regexp &optional face-bg)
+(defun boost-highlight-full-lines-matching-regexp (regexp &optional face-bg)
   "Colorie entièrement (jusqu’au bord droit de la fenêtre) toutes les lignes
 contenant REGEXP. Aucun bug, même en édition."
   (interactive "sRegexp à highlighter: \nsCouleur de fond (ex: red, #ff4444): ")
@@ -21,23 +21,23 @@ contenant REGEXP. Aucun bug, même en édition."
                                (propertize " " 'display '(space :align-to right)
                                            'face face))
                   (overlay-put ov 'line-prefix
-                               (propertize " " 'face face))
+                               (propertize "" 'face face))
                   (overlay-put ov 'after-string
                                (propertize " " 'display '(space :align-to right)
                                            'face face)))))))
     (jit-lock-register key t)
     (funcall key)))
 
-(eboost-highlight-full-lines-matching-regexp "^<<.*>>=" "#E2E1D5")
-(eboost-highlight-full-lines-matching-regexp "^@$" "#E2E1D5")
-
 (defun my/setup-rnw-highlights ()
   "Active les surlignages complets pour les chunks Sweave/Rnw"
-  (eboost-highlight-full-lines-matching-regexp "^<<.*>>=$" "#E2E1D5")
-  (eboost-highlight-full-lines-matching-regexp "^@$""#E2E1D5"))
+  (boost-highlight-full-lines-matching-regexp "^<<.*>>=$" "#E2E1D5")
+  (boost-highlight-full-lines-matching-regexp "^@$" "#E2E1D5"))
 
-(add-hook 'LaTeX-mode-hook
-          (lambda ()
-            (when (and buffer-file-name
-                       (string-match-p "\\.Rnw\\'" buffer-file-name))
-              (my/setup-rnw-highlights))))
+(add-to-list 'auto-mode-alist '("\\.Rnw\\'" . LaTeX-mode))
+
+(defun my/rnw-find-file-setup ()
+  (when (and buffer-file-name
+             (string-match-p "\\.Rnw\\'" buffer-file-name))
+    (my/setup-rnw-highlights)))
+
+(add-hook 'find-file-hook #'my/rnw-find-file-setup)
