@@ -2076,6 +2076,22 @@ parent."
   ;; Default title of a frame containing an outline.
   (setq org-beamer-outline-frame-title "Plan")) ; [default: "Outline"]
 
+;; Force the Beamer title to be rendered inside a dedicated frame.
+(defconst boost--beamer-title-command
+  "\\begin{frame}[plain]\n\\maketitle\n\\end{frame}\n")
+
+(with-eval-after-load 'ox-beamer
+  (defun boost--around-beamer-title-frame (orig-fun &rest args)
+    "Wrap \\maketitle in a plain frame for Beamer exports only."
+    (let ((org-latex-title-command boost--beamer-title-command))
+      (apply orig-fun args)))
+
+  ;; Export to .tex (buffer or file).
+  (advice-add 'org-beamer-export-as-latex :around #'boost--around-beamer-title-frame)
+
+  ;; Export to PDF.
+  (advice-add 'org-beamer-export-to-pdf :around #'boost--around-beamer-title-frame))
+
 (with-eval-after-load 'ox-odt
 
   ;; Convert "odt" format to "doc" format.

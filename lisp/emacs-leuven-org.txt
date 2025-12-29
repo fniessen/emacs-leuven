@@ -3349,6 +3349,29 @@ headline. This is useful to support structures like the following:
   (setq org-beamer-outline-frame-title "Plan")) ; [default: "Outline"]
 #+end_src
 
+Beamer expects the title slide to live inside a frame, but =ox-beamer= inserts
+~\maketitle~ directly in the document body. By temporarily overriding
+~org-latex-title-command~ during Beamer exports only, this advice ensures that the
+title is wrapped in a ~[plain]~ frame without affecting standard LaTeX exports.
+
+#+begin_src emacs-lisp
+;; Force the Beamer title to be rendered inside a dedicated frame.
+(defconst boost--beamer-title-command
+  "\\begin{frame}[plain]\n\\maketitle\n\\end{frame}\n")
+
+(with-eval-after-load 'ox-beamer
+  (defun boost--around-beamer-title-frame (orig-fun &rest args)
+    "Wrap \\maketitle in a plain frame for Beamer exports only."
+    (let ((org-latex-title-command boost--beamer-title-command))
+      (apply orig-fun args)))
+
+  ;; Export to .tex (buffer or file).
+  (advice-add 'org-beamer-export-as-latex :around #'boost--around-beamer-title-frame)
+
+  ;; Export to PDF.
+  (advice-add 'org-beamer-export-to-pdf :around #'boost--around-beamer-title-frame))
+#+end_src
+
 ** OpenDocument Text (ODT)
 
 ODT export is not loaded by default. You will have to load it explicitly or to
