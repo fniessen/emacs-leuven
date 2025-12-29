@@ -39,10 +39,12 @@
 (add-to-list 'auto-mode-alist '("\\.Rnw\\'" . LaTeX-mode))
 
 (defun boost--rnw-find-file-setup ()
-  "Setup Rnw highlights when visiting an .Rnw file."
+  "When visiting an .Rnw file, enable LaTeX mode and full-line highlighting
+for Sweave/Rnw chunk delimiters."
   (when (and buffer-file-name
              (string-match-p "\\.Rnw\\'" buffer-file-name))
-    (boost--setup-rnw-highlights)))
+    (boost--setup-rnw-highlights)
+    (LaTeX-mode)))
 
 (add-hook 'find-file-hook #'boost--rnw-find-file-setup)
 
