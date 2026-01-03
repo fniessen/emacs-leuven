@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20251228.1347>
+;; Version: <20260103.1216>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20251228.1347>"
+(defconst boost-version "<20260103.1216>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2486,11 +2486,12 @@ After initiating the grep search, the isearch is aborted."
                            ;; after the delay.
                            (goto-char (point-min)))))))
 
-    (defun vc-diff--diff-make-fine-diffs-if-necessary (&optional historic not-urgent)
+    (defun vc-diff--diff-make-fine-diffs-if-necessary (&rest _args)
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; Check for auto-refine limit.
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
+
     ;; Push the auto-refine function after `vc-diff'.
     (advice-add 'vc-diff :after #'vc-diff--diff-make-fine-diffs-if-necessary)
 

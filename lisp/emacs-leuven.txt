@@ -4409,11 +4409,12 @@ You can also decide to revert a change: *select a hunk and apply it (in reverse)
                            ;; after the delay.
                            (goto-char (point-min)))))))
 
-    (defun vc-diff--diff-make-fine-diffs-if-necessary (&optional historic not-urgent)
+    (defun vc-diff--diff-make-fine-diffs-if-necessary (&rest _args)
       "Auto-refine only the regions of 14,000 bytes or less."
       ;; Check for auto-refine limit.
       (unless (> (buffer-size) 14000)
         (leuven-diff-make-fine-diffs)))
+
     ;; Push the auto-refine function after `vc-diff'.
     (advice-add 'vc-diff :after #'vc-diff--diff-make-fine-diffs-if-necessary)
 #+end_src
