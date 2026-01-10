@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260103.1216>
+;; Version: <20260110.1456>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260103.1216>"
+(defconst boost-version "<20260110.1456>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2304,7 +2304,7 @@ After initiating the grep search, the isearch is aborted."
   ;; (setq auto-revert-check-vc-info t)
 
   ;; Sync buffer with disk and clear specific highlights.
-  (defun boost-sync-buffer-and-clear-overlays ()
+  (defun boost-revert-buffer-and-clear-overlays ()
     "Revert buffer from disk and remove specified overlays in visible area."
     (interactive)
     (condition-case err
@@ -2326,7 +2326,7 @@ After initiating the grep search, the isearch is aborted."
 
   ;; Bind to `C-S-y' globally.
   (boost--set-key-if-free 'global-map (kbd "C-S-y")
-                           #'boost-sync-buffer-and-clear-overlays "global map")
+                           #'boost-revert-buffer-and-clear-overlays "global map")
 
   (when (and (bound-and-true-p lvn--cygwin-p)
                                         ; Cygwin Emacs uses gfilenotify (based

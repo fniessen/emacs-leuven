@@ -4054,7 +4054,7 @@ Update time stamps (and copyright notice) automatically.
   ;; (setq auto-revert-check-vc-info t)
 
   ;; Sync buffer with disk and clear specific highlights.
-  (defun boost-sync-buffer-and-clear-overlays ()
+  (defun boost-revert-buffer-and-clear-overlays ()
     "Revert buffer from disk and remove specified overlays in visible area."
     (interactive)
     (condition-case err
@@ -4076,7 +4076,7 @@ Update time stamps (and copyright notice) automatically.
 
   ;; Bind to `C-S-y' globally.
   (boost--set-key-if-free 'global-map (kbd "C-S-y")
-                           #'boost-sync-buffer-and-clear-overlays "global map")
+                           #'boost-revert-buffer-and-clear-overlays "global map")
 #+end_src
 
 Turn on auto-revert mode globally.
