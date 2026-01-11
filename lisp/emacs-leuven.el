@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260110.1456>
+;; Version: <20260111.1559>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260110.1456>"
+(defconst boost-version "<20260111.1559>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -6309,6 +6309,14 @@ This example lists Azerty layout second row keys."
 
     ;; Recursive deletes allowed, after asking for each directory at top level.
     (setq dired-recursive-deletes 'top)
+
+    (defun boost-dired-mark-files ()
+      "Mark all regular files in the current Dired buffer."
+      (interactive)
+      (dired-mark-sexp
+       '(not (eq (aref mode 0) ?d))))
+
+    (define-key dired-mode-map (kbd "% f") #'boost-dired-mark-files)
 
 ;;** (info "(emacs)Dired Visiting")
 

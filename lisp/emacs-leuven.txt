@@ -12493,6 +12493,18 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
     (setq dired-recursive-deletes 'top)
 #+end_src
 
+** Flagging Many Files at Once
+
+#+begin_src emacs-lisp
+    (defun boost-dired-mark-files ()
+      "Mark all regular files in the current Dired buffer."
+      (interactive)
+      (dired-mark-sexp
+       '(not (eq (aref mode 0) ?d))))
+
+    (define-key dired-mode-map (kbd "% f") #'boost-dired-mark-files)
+#+end_src
+
 ** Visiting Files in Dired
 
 - ~^~ ::
@@ -14156,8 +14168,8 @@ You need the ~emacs-server~ functionality enabled for this to work.
 _get_last_command_output() {
     local last_command
     last_command=$(HISTTIMEFORMAT="" history 2 \
-                       | sed -n '1p;s/^[[:space:]]*[0-9]*[[:space:]]*//p')
-                       # | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
+                       | sed -n '1p;s_^[[:space:]]*[0-9]*[[:space:]]*__p')
+                       # | sed -n 's_^[[:space:]]*[0-9]*[[:space:]]*__p;q')
 
     # Debug info: Print the retrieved command.
     printf >&2 "[DEBUG] Retrieved last command: '%s'\n" "$last_command"
@@ -14170,7 +14182,7 @@ _get_last_command_output() {
     # Run the last command and capture its output, supporting piping or other
     # advanced shell features.
     local command_output
-    if ! command_output=$(eval "$last_command" 2>/dev/null); then
+    if ! command_output=$(eval "$last_command" 2> /dev/null); then
         printf >&2 "Error: Failed to execute command '%s'.\n" "$last_command"
         return 2
     fi
@@ -14188,7 +14200,7 @@ elf() {
     # Extract the last line (assuming it's a list of files).
     local last_file
     last_file=$(printf "%s" "$command_output" | tail -n 1 \
-                    | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
+                    | sed -E 's_\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]__g')
 
     if [[ -z "$last_file" ]]; then
         printf >&2 "Error: No valid file found in command output.\n"
@@ -14225,7 +14237,7 @@ eff() {
     # Extract the first line (assuming it's a list of files).
     local first_file
     first_file=$(printf "%s" "$command_output" | head -n 1 \
-                    | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
+                    | sed -E 's_\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]__g')
 
     if [[ -z "$first_file" ]]; then
         printf >&2 "Error: No valid file found in command output.\n"
