@@ -6,7 +6,7 @@
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
-#+PROPERTY:  header-args :tangle org-leuven-agenda-views.el :padline yes :eval no
+#+PROPERTY:  header-args :tangle ../lisp/org-leuven-agenda-views.el :padline yes :eval no
 
 #+SETUPFILE: ~/org/html-theme-readtheorg.setup
 
@@ -1349,7 +1349,7 @@ Broader:
              t)
 #+end_src
 
-#+begin_src emacs-lisp :tangle org-leuven-agenda-views.el
+#+begin_src emacs-lisp :tangle ../lisp/org-leuven-agenda-views.el
 (add-to-list 'org-agenda-custom-commands
              '("p" "Past and unscheduled TODOs"
                ((todo ""

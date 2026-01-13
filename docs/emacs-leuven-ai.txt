@@ -8,7 +8,7 @@
 #+OPTIONS:   H:4 num:nil toc:2
 #+EXCLUDE_TAGS: noexport
 
-#+PROPERTY:  header-args :eval never :padline yes :tangle yes
+#+PROPERTY:  header-args :eval never :padline yes :tangle ../lisp/emacs-leuven-ai.el
 
 #+SETUPFILE: ~/org/html-theme-readtheorg.setup
 

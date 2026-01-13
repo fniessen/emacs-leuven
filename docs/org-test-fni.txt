@@ -6,7 +6,7 @@
 #+LANGUAGE:  en
 #+OPTIONS:   H:4 num:nil
 
-#+PROPERTY:  header-args :tangle yes :padline yes :eval no
+#+PROPERTY:  header-args :tangle ../lisp/org-test-fni.el :padline yes :eval no
 
 #+SETUPFILE: ~/org/theme-readtheorg.setup
 
