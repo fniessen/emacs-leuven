@@ -1262,8 +1262,8 @@ In a manual, these key bindings will make your life easier:
 
   (leuven--section "11.8 (emacs)Misc Help")
 
-  ;; Enter Info documentation browser.
-  (global-set-key (kbd "<f1>") #'info)
+  ;; ;; Enter Info documentation browser.
+  ;; (global-set-key (kbd "<f1>") #'info)
 
   (defun leuven-describe-elisp-symbol-at-point ()
     "Get help for the symbol at point."
@@ -1277,7 +1277,7 @@ In a manual, these key bindings will make your life easier:
                  (describe-variable sym)))
         (message "[nothing]"))))
 
-  (global-set-key (kbd "<f1>") #'leuven-describe-elisp-symbol-at-point)
+  (global-set-key (kbd "S-<f1>") #'leuven-describe-elisp-symbol-at-point)
 
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that

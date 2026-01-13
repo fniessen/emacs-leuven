@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260111.1559>
+;; Version: <20260113.0809>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260111.1559>"
+(defconst boost-version "<20260113.0809>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -818,8 +818,8 @@ Shows a warning message if the file does not exist or is not executable."
 
   (leuven--section "11.8 (emacs)Misc Help")
 
-  ;; Enter Info documentation browser.
-  (global-set-key (kbd "<f1>") #'info)
+  ;; ;; Enter Info documentation browser.
+  ;; (global-set-key (kbd "<f1>") #'info)
 
   (defun leuven-describe-elisp-symbol-at-point ()
     "Get help for the symbol at point."
@@ -833,7 +833,7 @@ Shows a warning message if the file does not exist or is not executable."
                  (describe-variable sym)))
         (message "[nothing]"))))
 
-  (global-set-key (kbd "<f1>") #'leuven-describe-elisp-symbol-at-point)
+  (global-set-key (kbd "S-<f1>") #'leuven-describe-elisp-symbol-at-point)
 
   ;; Display symbol definitions, as found in the relevant manual
   ;; (for AWK, C, Emacs Lisp, LaTeX, M4, Makefile, Sh and other languages that
