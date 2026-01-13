@@ -100,10 +100,6 @@ SPC $ g m : Ouvrir le menu transient.
               (when (eq major-mode 'gptel-mode)
                 (fill-paragraph)))))
 
-;; Raccourcis personnalisés
-(global-set-key (kbd "C-c g") 'gptel-send)
-(global-set-key (kbd "C-c r") 'gptel-rewrite)
-
 * Intro
 
 #+begin_src emacs-lisp
@@ -584,9 +580,9 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
   ;;        :key (getenv "OPENAI_API_KEY")
   ;;        :models '("gpt-4o-mini")))
 
-  ;; Global keybinding (only if free).
-  (boost--set-key-if-free global-map (kbd "C-c g c")
-                           #'gptel-commit "global map")
+  ;; ;; Global keybinding (only if free).
+  ;; (boost--set-key-if-free global-map (kbd "C-c g c")
+  ;;                          #'gptel-commit "global map")
 #+end_src
 
 **** Generate unit tests for current function
@@ -790,7 +786,18 @@ suggestions for improvement."
   ;; Global keybinding (only if free).
   (boost--set-key-if-free global-map (kbd "C-c g")
                            #'boost-gptel-chat-buffer "global map")
+
+  ;; ;; Global keybinding (only if free).
+  ;; (boost--set-key-if-free global-map (kbd "<f1>")
+  ;;                          #'boost-gptel-chat-buffer "global map")
+  (global-set-key (kbd "<f1>") #'boost-gptel-chat-buffer)
 #+end_src
+
+(global-set-key (kbd "C-c g") 'gptel-send)
+(global-set-key (kbd "C-c r") 'gptel-rewrite)
+
+:bind ("C-<f1>" . gptel)               ;; ← main entry: start / switch to chat buffer
+:bind (("C-c g"   . gptel-menu)        ;; transient menu: change model, backend, etc.
 
 #+begin_src emacs-lisp
 )

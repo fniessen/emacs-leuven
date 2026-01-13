@@ -343,9 +343,9 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
   ;;        :key (getenv "OPENAI_API_KEY")
   ;;        :models '("gpt-4o-mini")))
 
-  ;; Global keybinding (only if free).
-  (boost--set-key-if-free global-map (kbd "C-c g c")
-                           #'gptel-commit "global map")
+  ;; ;; Global keybinding (only if free).
+  ;; (boost--set-key-if-free global-map (kbd "C-c g c")
+  ;;                          #'gptel-commit "global map")
 
   (defun boost--extract-defun-source ()
     "Retourne le code de la defun courante ou signale une erreur."
@@ -507,6 +507,11 @@ suggestions for improvement."
   ;; Global keybinding (only if free).
   (boost--set-key-if-free global-map (kbd "C-c g")
                            #'boost-gptel-chat-buffer "global map")
+
+  ;; ;; Global keybinding (only if free).
+  ;; (boost--set-key-if-free global-map (kbd "<f1>")
+  ;;                          #'boost-gptel-chat-buffer "global map")
+  (global-set-key (kbd "<f1>") #'boost-gptel-chat-buffer)
 
 )
 
