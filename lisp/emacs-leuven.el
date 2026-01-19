@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260113.0809>
+;; Version: <20260119.1528>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260113.0809>"
+(defconst boost-version "<20260119.1528>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3854,13 +3854,18 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
     ;; `org-level-N' are defined when used
 
     (defun leuven--outline-regexp ()
-      "Calculate the outline regexp for the current mode."
-      (let ((comment-starter (replace-regexp-in-string
-                              "[[:space:]]+" "" comment-start)))
-        (when (string= comment-start ";")
-          (setq comment-starter ";;"))
-        ;; (concat "^" comment-starter "\\*+")))
-        (concat "^" comment-starter "[*]+ ")))
+      "Return an outline heading regexp, robust when `comment-start` is nil."
+      (if (not (stringp comment-start))
+          ;; Case where the mode has no comment syntax.
+          "^\\*+ "
+        (let* ((comment-starter
+                (replace-regexp-in-string "[[:space:]]+" "" comment-start))
+               ;; Emacs Lisp special case: a single ';' → force ';;'.
+               (comment-starter
+                (if (string= comment-start ";")
+                    ";;"
+                  comment-starter)))
+          (concat "^" comment-starter "[*]+ "))))
 
     ;; Fontify the whole line for headings (with a background color).
     (setq org-fontify-whole-heading-line t)
