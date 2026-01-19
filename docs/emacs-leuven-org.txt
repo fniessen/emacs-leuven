@@ -3266,17 +3266,30 @@ Shows the values of `org-latex-packages-alist' and `org-latex-default-packages-a
 #+end_src
 
 #+begin_src emacs-lisp
-(add-to-list 'org-latex-classes
-          '("koma-article"
-             "\\documentclass{scrartcl}
-             [NO-DEFAULT-PACKAGES]
-             [NO-PACKAGES]
-             [EXTRA]"
-             ("\\section{%s}" . "\\section*{%s}")
-             ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-             ("\\paragraph{%s}" . "\\paragraph*{%s}")
-             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+               '("no-packages"
+                 "\\documentclass{article}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]
+[EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+            '("koma-article"
+               "\\documentclass{scrartcl}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 #+end_src
 
 ** "Ignore heading + promote children" tag

@@ -2037,17 +2037,30 @@ buffer."
   ;; 12.6.5 Default position for LaTeX figures.
   (setq org-latex-default-figure-position "!htbp")
 
-(add-to-list 'org-latex-classes
-          '("koma-article"
-             "\\documentclass{scrartcl}
-             [NO-DEFAULT-PACKAGES]
-             [NO-PACKAGES]
-             [EXTRA]"
-             ("\\section{%s}" . "\\section*{%s}")
-             ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-             ("\\paragraph{%s}" . "\\paragraph*{%s}")
-             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+               '("no-packages"
+                 "\\documentclass{article}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]
+[EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+            '("koma-article"
+               "\\documentclass{scrartcl}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
   (defun leuven--org-export-ignore-headlines (data backend info)
     "Remove headlines tagged \"ignore\" retaining contents and promoting children.
