@@ -3270,6 +3270,7 @@ Shows the values of `org-latex-packages-alist' and `org-latex-default-packages-a
           '("koma-article"
              "\\documentclass{scrartcl}
              [NO-DEFAULT-PACKAGES]
+             [NO-PACKAGES]
              [EXTRA]"
              ("\\section{%s}" . "\\section*{%s}")
              ("\\subsection{%s}" . "\\subsection*{%s}")

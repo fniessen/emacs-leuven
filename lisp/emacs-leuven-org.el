@@ -2041,6 +2041,7 @@ buffer."
           '("koma-article"
              "\\documentclass{scrartcl}
              [NO-DEFAULT-PACKAGES]
+             [NO-PACKAGES]
              [EXTRA]"
              ("\\section{%s}" . "\\section*{%s}")
              ("\\subsection{%s}" . "\\subsection*{%s}")
