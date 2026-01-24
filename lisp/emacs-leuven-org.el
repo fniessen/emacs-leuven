@@ -2037,6 +2037,38 @@ buffer."
   ;; 12.6.5 Default position for LaTeX figures.
   (setq org-latex-default-figure-position "!htbp")
 
+(defun boost-org-latex--debug-preamble (orig-fun &rest args)
+  "Debug advice: show package lists before org-latex-make-preamble runs."
+  (let ((default-pkgs org-latex-default-packages-alist)
+        (user-pkgs    org-latex-packages-alist))
+
+    ;; Log debug information to the *Messages* buffer.
+    (message "┌───────────────────────────────────────────────┐")
+    (message "│ Debugging org-latex-make-preamble             │")
+    (message "├───────────────────────────────────────────────┤")
+    (message "│ org-latex-default-packages-alist (%d entries) │"
+             (length default-pkgs))
+    (message "└───────────────────────────────────────────────┘")
+
+    (dolist (entry default-pkgs)
+      (message "  %S" entry))
+
+    (message "\n┌───────────────────────────────────────────────┐")
+    (message "│ org-latex-packages-alist          (%d entries) │"
+             (length user-pkgs))
+    (message "└───────────────────────────────────────────────┘")
+
+    (dolist (entry user-pkgs)
+      (message "  %S" entry))
+
+    (message "─────────────────────────────────────────────────"))
+
+  ;; Call original function.
+  (apply orig-fun args))
+
+;; Activate it.
+(advice-add 'org-latex-make-preamble :around #'boost-org-latex--debug-preamble)
+
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
                '("no-packages"
