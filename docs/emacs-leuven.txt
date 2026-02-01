@@ -455,7 +455,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
      (t
       (when init-file-debug
         (display-warning 'boost
-                         (format "Keybinding %s is already in use%s!"
+                         (format "Keyboard shortcut %s conflicts with an existing one%s!"
                                  (key-description key)
                                  (if scope (format " in %s" scope) ""))
                          :warning))))))

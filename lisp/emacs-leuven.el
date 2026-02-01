@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260119.1528>
+;; Version: <20260201.1207>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260119.1528>"
+(defconst boost-version "<20260201.1207>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -288,7 +288,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
      (t
       (when init-file-debug
         (display-warning 'boost
-                         (format "Keybinding %s is already in use%s!"
+                         (format "Keyboard shortcut %s conflicts with an existing one%s!"
                                  (key-description key)
                                  (if scope (format " in %s" scope) ""))
                          :warning))))))
