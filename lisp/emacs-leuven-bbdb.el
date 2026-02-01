@@ -39,7 +39,7 @@
   ;;   the BBDB when new messages are loaded (required if the BBDB is to be
   ;;   able to display BBDB entries for messages displayed in Gnus).
   ;;
-  ;; - Add a binding for `M-TAB' to Message mode.  This will enable completion
+  ;; - Add a binding for `M-TAB' to Message mode. This will enable completion
   ;;   of addresses based on BBDB records.
 
   ;; What do we do when invoking bbdb interactively (`:' to display sender).
