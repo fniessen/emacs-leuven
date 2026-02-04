@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260201.1207>
+;; Version: <20260204.1814>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260201.1207>"
+(defconst boost-version "<20260204.1814>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -6464,7 +6464,7 @@ This example lists Azerty layout second row keys."
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
     ;; Ignore LaTeX build artifacts in completion.
-    (dolist (ext '(".fdb_latexmk" ".fls" ".nav" ".out" ".snm" ".swp" ".vrb"))
+    (dolist (ext '(".fdb_latexmk" ".fls" ".ind" ".nav" ".out" ".snm" ".swp" ".vrb"))
       (add-to-list 'completion-ignored-extensions ext))
 
     (when lvn--cygwin-p
