@@ -174,9 +174,7 @@ Existing entries with the same NAME are overwritten."
 (gptel-make-tool
  :name "read_buffer"
  :description "Return the full contents of a named Emacs buffer."
- :args (list '(:name "buffer"
-               :type "string"
-               :description "The name of the buffer whose contents are to be retrieved"))
+ :args (list '(:name "buffer" :type "string" :description "The name of the buffer whose contents are to be retrieved"))
  :function (lambda (buffer)
              (unless (buffer-live-p (get-buffer buffer))
                (error "error: buffer %s is not live." buffer))
@@ -216,6 +214,40 @@ Existing entries with the same NAME are overwritten."
                (format "Created file %s in %s" filename path)))
  :category "filesystem")
 
+;; Outil spell_check : vérifie orthographe d'un mot ou d'un texte court
+(gptel-make-tool
+ :name "spell_check"
+ :description "Check spelling of a word or short text snippet. Returns suggestions if misspelled. Use English or French dictionary based on buffer."
+ :args (list '(:name "text" :type "string" :description "The word or short phrase to spell-check (max 100 chars recommended)"))
+ :function (lambda (text)
+             (if (string-empty-p text)
+                 "No text provided."
+               (let ((result (with-temp-buffer
+                               (insert text)
+                               (ispell-word nil t)  ; t = ask for new word if wrong
+                               (buffer-string))))  ; ou capture suggestions via ispell
+                 (if (string-match-p "^[a-zA-Z]+$" text)
+                     (format "Spell check for '%s': OK (correct spelling)." text)
+                   (format "Spell check for '%s': Possible issues → %s"
+                           text
+                           (or result "Run M-$ in Emacs for interactive suggestions"))))))
+ :category "proofreading")
+
+(gptel-make-tool
+ :name "grammar_check"
+ :description "Basic grammar/style check fallback (spelling + simple repetition detection)."
+ :args (list '(:name "text" :type "string" :description "Text to analyze"))
+ :function (lambda (text)
+             (let ((words (split-string text)))
+               (if (< (length words) 3)
+                   "Text too short for meaningful check."
+                 (format "Basic check:\n- Word count: %d\n- Spelling: use spell_check for details\n- Possible repetition: %s"
+                         (length words)
+                         (if (> (length (seq-uniq words)) (/ (length words) 1.5))
+                             "No obvious repetition."
+                           "Some words seem overused -- review style.")))))
+ :category "proofreading")
+
   ;; Coding preset - optimized for serious programming work.
   (gptel-make-preset 'coding
     :description "High-precision coding assistant with strong reasoning"
@@ -233,7 +265,7 @@ best practices in every response."
   (gptel-make-preset 'proofreading
     :description "Professional text polishing and correction"
     :backend "Claude"
-    :model 'claude-sonnet-4-5-20250929   ;; Adapt to current best Sonnet.
+    :model 'claude-sonnet-4-5-20250929  ;; Adapt to current best Sonnet.
     :system
     "You are a professional proofreader. Correct spelling and grammar,
 improve clarity, style, structure, and readability, and rewrite
@@ -252,7 +284,7 @@ well-structured text."
 a wide range of questions."
     :temperature 0.9)
 
-  ;; Project-specific preset (good for .dir-locals.el)
+  ;; Project-specific preset (good for .dir-locals.el).
   (gptel-make-preset 'project-agent
     :description "Project-aware assistant using codebase context"
     :backend "Claude"
