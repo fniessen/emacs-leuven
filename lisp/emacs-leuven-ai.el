@@ -325,7 +325,9 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                               (kill-new msg) ; Add to kill ring.
                               (insert msg)
                               (message "[Commit message copied to kill ring.]")))
-                          (pop-to-buffer output-buffer))
+                          (display-buffer output-buffer
+                           '((display-buffer-reuse-window display-buffer-pop-up-window)
+                             (inhibit-same-window . t))))
                       (error "[Failed to generate commit message: %s]"
                              (plist-get info :status)))))))
 
