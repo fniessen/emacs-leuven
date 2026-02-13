@@ -90,9 +90,6 @@ If already bound, emit a warning mentioning SCOPE (string)."
   ;; Controls randomness (lower = more deterministic).
   (setq gptel-temperature 0.7)
 
-  ;; Limit response length.
-  (setq gptel-max-tokens 32000)
-
   ;; Set default mode for response buffer.
   (setq gptel-default-mode 'org-mode)
 
@@ -126,14 +123,6 @@ If already bound, emit a warning mentioning SCOPE (string)."
         (setcdr cell boost-gptel-response-prefix)
       (push (cons 'org-mode boost-gptel-response-prefix)
             gptel-response-prefix-alist)))
-
-  ;; Add auto-scrolling after GPTel stream ends.
-  (when (fboundp 'gptel-auto-scroll)
-    (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll))
-
-  ;; Automatically move cursor to end of response.
-  (when (fboundp 'gptel-end-of-response)
-    (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
 
 (defcustom boost-gptel-directives-directory
   (expand-file-name "~/ai-prompts/")
@@ -342,18 +331,6 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
   (boost--set-key-if-free global-map (kbd "C-x v w")
                            #'boost-gptel-write-commit-message "global map")
 
-  (boost--try-require 'gptel-commit)
-
-  ;; (setq gptel-backend
-  ;;       (gptel-make-openai
-  ;;        "openai-mini"
-  ;;        :key (getenv "OPENAI_API_KEY")
-  ;;        :models '("gpt-4o-mini")))
-
-  ;; ;; Global keybinding (only if free).
-  ;; (boost--set-key-if-free global-map (kbd "C-c g c")
-  ;;                          #'gptel-commit "global map")
-
   (defun boost--extract-defun-source ()
     "Retourne le code de la defun courante ou signale une erreur."
     (save-excursion
@@ -375,21 +352,33 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
     "Refactor the current function with suggestions from GPTel."
     (interactive)
     (let* ((function-source (boost--extract-defun-source))
-           (prompt (format "Suggest a refactored, cleaner version of this function:\n\n%s\n\nProvide the refactored code and explain the improvements." function-source)))
+           (prompt (format "Suggest a refactored, cleaner version of this function:
+
+%s
+
+Provide the refactored code and explain the improvements." function-source)))
       (gptel-request prompt)))
 
   (defun boost-gptel-generate-docstring ()
     "Generate a docstring for the current function using GPTel."
     (interactive)
     (let* ((function-source (boost--extract-defun-source))
-           (prompt (format "Generate a detailed docstring for the following function:\n\n%s\n\nFollow Emacs docstring conventions." function-source)))
+           (prompt (format "Generate a detailed docstring for the following function:
+
+%s
+
+Follow Emacs docstring conventions." function-source)))
       (gptel-request prompt)))
 
   (defun boost-gptel-debug-function ()
     "Analyze the current function for bugs or improvements using GPTel."
     (interactive)
     (let* ((function-source (boost--extract-defun-source))
-           (prompt (format "Analyze this function for potential bugs or improvements:\n\n%s\n\nProvide a list of issues and suggested fixes." function-source)))
+           (prompt (format "Analyze this function for potential bugs or improvements:
+
+%s
+
+Provide a list of issues and suggested fixes." function-source)))
       (gptel-request prompt)))
 
   (defun boost-gptel-generate-example-usage ()
@@ -397,7 +386,11 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
     (interactive)
     (let* ((function-name (or (which-function) "unknown-function"))
            (function-source (boost--extract-defun-source))
-           (prompt (format "Provide example usage code for the following function named %s:\n\n%s\n\nInclude a brief explanation of each example."
+           (prompt (format "Provide example usage code for the following function named %s:
+
+%s
+
+Include a brief explanation of each example."
                            function-name function-source)))
       (gptel-request prompt)))
 
@@ -406,7 +399,9 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
     (interactive)
     (let ((spec (read-string "Enter the function specification (e.g., 'Write a function to reverse a string'): ")))
       (when spec
-        (let ((prompt (format "Generate an Emacs Lisp function based on this specification: %s\n\nProvide the function code and a brief explanation of how it works."
+        (let ((prompt (format "Generate an Emacs Lisp function based on this specification: %s
+
+Provide the function code and a brief explanation of how it works."
                               spec)))
           (gptel-request prompt)))))
 
@@ -414,7 +409,11 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
     "Suggest performance optimizations for the current function using GPTel."
     (interactive)
     (let* ((function-source (boost--extract-defun-source))
-           (prompt (format "Analyze this Emacs Lisp function for performance bottlenecks:\n\n%s\n\nSuggest optimizations with code examples and explain why they improve performance." function-source)))
+           (prompt (format "Analyze this Emacs Lisp function for performance bottlenecks:
+
+%s
+
+Suggest optimizations with code examples and explain why they improve performance." function-source)))
       (gptel-request prompt)))
 
   (defvar boost-gptel-code-review-prompt
@@ -475,7 +474,14 @@ suggestions for improvement."
     (interactive)
     (let* ((function-name (or (which-function) "unknown-function"))
            (function-source (boost--extract-defun-source))
-           (prompt (format "Generate a companion function for this Emacs Lisp function named %s:\n\n%s\n\nThe companion could be an inverse operation, a helper function, or something that logically complements it. Provide the code and explain its purpose." function-name function-source)))
+           (prompt (format "Generate a companion function for this Emacs Lisp function named %s:
+
+%s
+
+The companion could be an inverse operation, a helper function, or
+something that logically complements it. Provide the code and explain
+its purpose."
+                           function-name function-source)))
       (gptel-request prompt)))
 
   ;; Unbind `C-c RET' in Org mode.
