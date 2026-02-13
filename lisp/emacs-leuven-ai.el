@@ -170,6 +170,52 @@ Existing entries with the same NAME are overwritten."
       (error (message "[Error reading directives: %s]" (error-message-string err))))
   (message "[Directory %s does not exist.]" boost-gptel-directives-directory))
 
+;; Tool to read the contents of an Emacs buffer.
+(gptel-make-tool
+ :name "read_buffer"
+ :description "Return the full contents of a named Emacs buffer."
+ :args (list '(:name "buffer"
+               :type "string"
+               :description "The name of the buffer whose contents are to be retrieved"))
+ :function (lambda (buffer)
+             (unless (buffer-live-p (get-buffer buffer))
+               (error "error: buffer %s is not live." buffer))
+             (with-current-buffer (get-buffer buffer)
+               (buffer-substring-no-properties (point-min) (point-max))))
+ :category "emacs")
+
+;; Tool for modifying/editing a buffer (use with caution!).
+(gptel-make-tool
+ :name "modify_buffer"
+ :description "Modify the contents of an Emacs buffer. Use with caution. Confirm before use."
+ :args (list '(:name "buffer"  :type "string" :description "Buffer name")
+             '(:name "content" :type "string" :description "New content to set or append")
+             '(:name "action"  :type "string" :description "One of: 'replace', 'append' or 'prepend'"))
+ :function (lambda (buffer content action)
+             (when (y-or-n-p (format "Modify buffer %s? " buffer))
+               (with-current-buffer (get-buffer buffer)
+                 (cond ((string= action "replace") (erase-buffer) (insert content))
+                       ((string= action "append")  (goto-char (point-max)) (insert content))
+                       ((string= action "prepend") (goto-char (point-min)) (insert content))
+                       (t (error "Invalid action")))
+                 "Buffer modified successfully.")
+               "Modification cancelled."))
+ :category "emacs")
+
+(gptel-make-tool
+ :name "create_file"
+ :description "Create a new file with the specified content"
+ :args (list '(:name "path"     :type string :description "The directory where to create the file")
+             '(:name "filename" :type string :description "The name of the file to create")
+             '(:name "content"  :type string :description "The content to write to the file"))
+ :function (lambda (path filename content)
+             (let ((full-path (expand-file-name filename path)))
+               (with-temp-buffer
+                 (insert content)
+                 (write-file full-path))
+               (format "Created file %s in %s" filename path)))
+ :category "filesystem")
+
   ;; Coding preset - optimized for serious programming work.
   (gptel-make-preset 'coding
     :description "High-precision coding assistant with strong reasoning"
