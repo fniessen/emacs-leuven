@@ -7,7 +7,7 @@
 #+OPTIONS:   ^:{}
 
 #+FILETAGS:  :inbox:
-#+SETUPFILE: ~/org/theme-readtheorg.setup
+#+SETUPFILE: ~/org/html-theme-readtheorg.setup
 
 Now, *collect* all your "stuff" (new thoughts and tasks) quickly in here.
 
