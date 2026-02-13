@@ -81,6 +81,12 @@ If already bound, emit a warning mentioning SCOPE (string)."
 
   (setq gptel-model 'o4-mini)
 
+  ;; Set logging level to info.
+  (setq gptel-log-level 'info)
+
+  ;; Enable media tracking.
+  (setq gptel-track-media t)
+
   ;; Controls randomness (lower = more deterministic).
   (setq gptel-temperature 0.7)
 
@@ -175,30 +181,27 @@ Existing entries with the same NAME are overwritten."
       (error (message "[Error reading directives: %s]" (error-message-string err))))
   (message "[Directory %s does not exist.]" boost-gptel-directives-directory))
 
-  ;; (gptel-make-preset 'gpt4coding2
-  ;;   :backend "openai"
-  ;;   :model "gpt-4o-mini"
-  ;;   :temperature 0.7)
-
   ;; Coding preset.
   (gptel-make-preset 'gpt4coding
     :description "A preset optimized for coding tasks"
     :backend "ChatGPT"
-    :model 'gpt-4.1-mini
+    :model 'gpt-4.1
     :system
-    "You are an expert coding assistant. Your role is to provide
-   high-quality code solutions, refactorings, and explanations."
+    "You are an expert programming assistant. Provide high-quality, precise,
+well-structured and well-commented code solutions, refactorings, and clear
+explanations. Ensure correctness, clarity, and best practices in every response."
     :tools '("read_buffer" "modify_buffer")
     :temperature 0.7)
 
-  ;; Proofreading Preset.
+  ;; Proofreading preset.
   (gptel-make-preset 'proofreading
-    :description "Preset for proofreading tasks"
+    :description "Preset for proofreading and text improvement"
     :backend "Claude"
     :model 'claude-sonnet-4-20250514
     :system
-    "You are a professional proofreader. Your task is to correct spelling,
-   grammar, and improve clarity and style."
+    "You are a professional proofreader. Correct spelling and grammar,
+improve clarity, style, structure, and readability, and rewrite sentences
+when necessary to produce clear, polished, and well-structured text."
     :tools '("read_buffer" "spell_check" "grammar_check")
     :temperature 0.7)
 

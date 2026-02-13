@@ -30,33 +30,10 @@ References:
 
 ** Sort out
 
+;; Backend Claude
 (gptel-make-anthropic "Claude"
   :stream t
   :key (getenv "ANTHROPIC_API_KEY"))
-
-(gptel-make-preset 'coding
-  :description "Preset pour coder"
-  :backend "ChatGPT"
-  :model 'gpt-4.1
-  :system "Vous êtes un assistant expert en programmation. Fournissez des solutions de code précises et bien commentées."
-  :tools '("read_buffer" "modify_buffer")
-  :temperature 0.7)
-
-(gptel-make-preset 'proofreading
-  :description "Preset pour relecture"
-  :backend "Claude"
-  :model 'claude-3-7-sonnet-20250219
-  :system "Corrigez la grammaire et améliorez la clarté du texte."
-  :tools '("spell_check" "grammar_check"))
-
-Fonctions Utiles
-gptel-send : Envoie une requête à l'LLM. Avec un préfixe (C-u M-x gptel-send), accédez au menu transient pour ajuster les paramètres (modèle, backend, température, etc.).
-gptel-rewrite : Réécrit ou refactorise une région sélectionnée (idéal pour le code ou la prose).
-gptel-add : Ajoute du contexte (région, buffer, ou fichier) à la requête.
-gptel-add-file : Inclut un fichier (texte ou média) dans la requête. Activez gptel-track-media pour inclure des médias globalement :
-emacs-lisp(setq gptel-track-media t)
-gptel-org-set-topic : Limite le contexte à une section Org.
-gptel-org-set-properties : Définit des propriétés Org pour des configurations spécifiques par section, par exemple :
 
 (gptel-make-tool "web_search"
   :description "Effectue une recherche web"
@@ -66,39 +43,6 @@ Les raccourcis associés incluent :
 SPC $ g g : Démarrer une session GPTel.
 SPC $ g s : Envoyer un message.
 SPC $ g m : Ouvrir le menu transient.
-
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize))
-  (exec-path-from-shell-copy-env "OPENAI_API_KEY"))
-
-(use-package gptel
-  :ensure t
-  :config
-  (setq gptel-api-key (getenv "OPENAI_API_KEY")
-        gptel-default-mode 'org-mode
-        gptel-log-level 'info
-        gptel-org-branching-context t
-        gptel-curl-file-size-threshold 100000
-        gptel-track-media t)
-  ;; Backend Claude
-  (gptel-make-anthropic "Claude"
-    :stream t
-    :key (getenv "ANTHROPIC_API_KEY"))
-  ;; Preset pour coding
-  (gptel-make-preset 'coding
-    :description "Preset pour coder"
-    :backend "ChatGPT"
-    :model 'gpt-4.1
-    :system "Vous êtes un assistant expert en programmation."
-    :tools '("read_buffer" "modify_buffer"))
-  ;; Auto-formatage des réponses
-  (add-hook 'gptel-post-response-hook
-            (lambda ()
-              (when (eq major-mode 'gptel-mode)
-                (fill-paragraph)))))
 
 * Intro
 
@@ -186,28 +130,23 @@ If already bound, emit a warning mentioning SCOPE (string)."
 
 ** GPTel
 
-Usage:
-- ~M-x gptel-send~ (or ~C-c RET~) :: Send the buffer up to point (or active region)
-  as prompt to the AI and insert the result below.
-- ~C-u M-x gptel-send~ (or ~C-u C-c RET~) :: Set LLM and input/output options (such
-  as "system message") before sending prompt.
-- ~M-x gptel~ :: Open a dedicated chat buffer.
-- ~C-u M-x gptel~ :: Open a second dedicated chat buffer.
-- gptel-mode to restore the rigth mode for a saved chat.
-- gptel-abort :: Cancel query in progress.
+Useful functions:
+- gptel-send (or C-c RET) :: Send a query (buffer up to point, or active region)
+  to the LLM.  as prompt to the AI and insert the result below.
+  + Prefix with ~C-u~ to adjust the transient menu for fine-tuning
+    LLM and input/output options -- model, backend, temperature, and more.
+- gptel :: Open a dedicated chat buffer.
+  - With a prefix (C-u M-x gptel), open a second dedicated chat buffer.
+- gptel-rewrite :: Rewrite or refactor the selected region, ideal for polishing code or prose.
 - gptel-menu :: Direct access to menu.
-- gptel-set-topic :: Limit context by Org header.
-- ~gptel-add-file~
-- ~gptel-add~ → Add to context DWIM
-- ~gptel-make-preset~
-- ~gptel-make-tool~
-- ~gptel-org-set-properties~
-- ~gptel-org-set-topic~
-- ~gptel-rewrite~
-
-Inside a gptel buffer:
-
-- ~C-u C-x RET~ or ~gptel-menu~ → Menu
+- gptel-add :: Add context (DWIM) to the request (region, buffer or file).
+- gptel-add-file :: Include a file (text or media) into your request. Enable
+  ~gptel-track-media~ to seamlessly include media across all queries.
+- gptel-org-set-properties :: Define Org-mode properties for granular,
+  section-specific configurations.
+- gptel-org-set-topic :: Limit context to an Org section.
+- gptel-make-preset ::
+- gptel-make-tool ::
 
 *** Core GPTel settings
 
@@ -220,6 +159,12 @@ Inside a gptel buffer:
     (setq gptel-api-key boost-openai-api-key))
 
   (setq gptel-model 'o4-mini)
+
+  ;; Set logging level to info.
+  (setq gptel-log-level 'info)
+
+  ;; Enable media tracking.
+  (setq gptel-track-media t)
 
   ;; Controls randomness (lower = more deterministic).
   (setq gptel-temperature 0.7)
@@ -276,6 +221,14 @@ Inside a gptel buffer:
   ;; Automatically move cursor to end of response.
   (when (fboundp 'gptel-end-of-response)
     (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+  ;; Auto-formatage des réponses
+  (add-hook 'gptel-post-response-hook
+            (lambda (process response)
+              (when (eq major-mode 'gptel-mode)
+                (fill-paragraph))))
 #+end_src
 
 *** Directives (system prompts)
@@ -345,30 +298,27 @@ How to use them: =C-u M-x gptel-send=.
   a specific project directory.
 
 #+begin_src emacs-lisp
-  ;; (gptel-make-preset 'gpt4coding2
-  ;;   :backend "openai"
-  ;;   :model "gpt-4o-mini"
-  ;;   :temperature 0.7)
-
   ;; Coding preset.
   (gptel-make-preset 'gpt4coding
     :description "A preset optimized for coding tasks"
     :backend "ChatGPT"
-    :model 'gpt-4.1-mini
+    :model 'gpt-4.1
     :system
-    "You are an expert coding assistant. Your role is to provide
-   high-quality code solutions, refactorings, and explanations."
+    "You are an expert programming assistant. Provide high-quality, precise,
+well-structured and well-commented code solutions, refactorings, and clear
+explanations. Ensure correctness, clarity, and best practices in every response."
     :tools '("read_buffer" "modify_buffer")
     :temperature 0.7)
 
-  ;; Proofreading Preset.
+  ;; Proofreading preset.
   (gptel-make-preset 'proofreading
-    :description "Preset for proofreading tasks"
+    :description "Preset for proofreading and text improvement"
     :backend "Claude"
     :model 'claude-sonnet-4-20250514
     :system
-    "You are a professional proofreader. Your task is to correct spelling,
-   grammar, and improve clarity and style."
+    "You are a professional proofreader. Correct spelling and grammar,
+improve clarity, style, structure, and readability, and rewrite sentences
+when necessary to produce clear, polished, and well-structured text."
     :tools '("read_buffer" "spell_check" "grammar_check")
     :temperature 0.7)
 
