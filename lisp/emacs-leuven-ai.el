@@ -97,7 +97,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (setq gptel-expert-commands t)
 
   (defgroup boost-gptel nil
-    "Boost tweaks and integration for GPTel."
+    "Tweaks GPTel."
     :group 'applications
     :prefix "boost-gptel-")
 
@@ -200,7 +200,7 @@ well-structured text."
   (gptel-make-preset 'general-chat
     :description "Fast, general-purpose conversations"
     :backend "ChatGPT"
-    :model 'gpt-5-mini           ;; or 'o1-mini if you want reasoning
+    :model 'gpt-5-mini
     :system
     "You are a helpful assistant providing clear and concise answers to
 a wide range of questions."
@@ -210,11 +210,36 @@ a wide range of questions."
   (gptel-make-preset 'project-agent
     :description "Project-aware assistant using codebase context"
     :backend "Claude"
-    :model 'claude-sonnet-4-5-20250929
+    :model 'claude-opus-4-5-20251101
     :system
     "You are an AI assistant for a software project. Provide insights
 based on the project's code and documentation."
-    :tools '("read_buffer" "lsp_context"))
+    :tools '("read_buffer" "lsp_context")
+    :temperature 0.7)
+
+  (defun boost-gptel-chat-buffer ()
+    "Switch to the GPTel chat buffer, creating it if it doesn't exist."
+    (interactive)
+    (let ((buffer-name "*ChatGPT*"))
+      (if (get-buffer buffer-name)
+          (pop-to-buffer buffer-name)
+        (progn
+          (call-interactively 'gptel)))))
+
+  ;; (defun boost-gptel-chat-buffer (&optional arg)
+  ;;   "Switch to the GPTel chat buffer.
+  ;; Without prefix ARG, jump to `*ChatGPT*` creating it if needed (no prompt).
+  ;; With C-u prefix, defer to `gptel`'s usual interactive flow (with prompts)."
+  ;;   (interactive "P")
+  ;;   (let ((buffer-name "*ChatGPT*"))
+  ;;     (if arg
+  ;;         ;; C-u -> keep original prompting/confirmation behavior.
+  ;;         (call-interactively #'gptel)
+  ;;       ;; No prefix -> reuse or create *ChatGPT* without prompting.
+  ;;       (let ((buf (get-buffer buffer-name)))
+  ;;         (if buf
+  ;;             (pop-to-buffer buf)
+  ;;           (funcall #'gptel buffer-name))))))
 
 ;;;###autoload
   (defun boost-gptel-org-send-to-chatgpt ()
@@ -258,11 +283,6 @@ based on the project's code and documentation."
         ;; Display the buffer and provide user feedback.
         (pop-to-buffer buffer)
         (message "[GPTel: Prompt sent...]"))))
-
-  ;; Org mode keybinding (only if free).
-  (with-eval-after-load 'org
-    (boost--set-key-if-free 'org-mode-map (kbd "C-c q")
-                             #'boost-gptel-org-send-to-chatgpt "Org mode"))
 
 ;; Commit-prompt file customization.
 (defcustom boost-gptel-commit-prompt-file
@@ -321,15 +341,6 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                              (inhibit-same-window . t))))
                       (error "[Failed to generate commit message: %s]"
                              (plist-get info :status)))))))
-
-  ;; Diff mode keybinding (only if free).
-  (with-eval-after-load 'diff-mode
-    (boost--set-key-if-free 'diff-mode-map (kbd "w")
-                             #'boost-gptel-write-commit-message "diff-mode"))
-
-  ;; Global keybinding (only if free).
-  (boost--set-key-if-free global-map (kbd "C-x v w")
-                           #'boost-gptel-write-commit-message "global map")
 
   (defun boost--extract-defun-source ()
     "Retourne le code de la defun courante ou signale une erreur."
@@ -493,30 +504,6 @@ its purpose."
     (boost--set-key-if-free global-map (kbd "C-c RET")
                              #'gptel-send "global map"))
 
-  (defun boost-gptel-chat-buffer ()
-    "Switch to the GPTel chat buffer, creating it if it doesn't exist."
-    (interactive)
-    (let ((buffer-name "*ChatGPT*"))
-      (if (get-buffer buffer-name)
-          (pop-to-buffer buffer-name)
-        (progn
-          (call-interactively 'gptel)))))
-
-  ;; (defun boost-gptel-chat-buffer (&optional arg)
-  ;;   "Switch to the GPTel chat buffer.
-  ;; Without prefix ARG, jump to `*ChatGPT*` creating it if needed (no prompt).
-  ;; With C-u prefix, defer to `gptel`'s usual interactive flow (with prompts)."
-  ;;   (interactive "P")
-  ;;   (let ((buffer-name "*ChatGPT*"))
-  ;;     (if arg
-  ;;         ;; C-u -> keep original prompting/confirmation behavior.
-  ;;         (call-interactively #'gptel)
-  ;;       ;; No prefix -> reuse or create *ChatGPT* without prompting.
-  ;;       (let ((buf (get-buffer buffer-name)))
-  ;;         (if buf
-  ;;             (pop-to-buffer buf)
-  ;;           (funcall #'gptel buffer-name))))))
-
   ;; Global keybinding (only if free).
   (boost--set-key-if-free global-map (kbd "C-c g")
                            #'boost-gptel-chat-buffer "global map")
@@ -525,6 +512,20 @@ its purpose."
   ;; (boost--set-key-if-free global-map (kbd "<f1>")
   ;;                          #'boost-gptel-chat-buffer "global map")
   (global-set-key (kbd "<f1>") #'boost-gptel-chat-buffer)
+
+  ;; Org mode keybinding (only if free).
+  (with-eval-after-load 'org
+    (boost--set-key-if-free 'org-mode-map (kbd "C-c q")
+                             #'boost-gptel-org-send-to-chatgpt "Org mode"))
+
+  ;; Diff mode keybinding (only if free).
+  (with-eval-after-load 'diff-mode
+    (boost--set-key-if-free 'diff-mode-map (kbd "w")
+                             #'boost-gptel-write-commit-message "diff-mode"))
+
+  ;; Global keybinding (only if free).
+  (boost--set-key-if-free global-map (kbd "C-x v w")
+                           #'boost-gptel-write-commit-message "global map")
 
 )
 

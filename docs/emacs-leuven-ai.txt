@@ -44,7 +44,7 @@ SPC $ g g : Démarrer une session GPTel.
 SPC $ g s : Envoyer un message.
 SPC $ g m : Ouvrir le menu transient.
 
-* Intro
+* Introduction
 
 #+begin_src emacs-lisp
 ;;; emacs-leuven-ai.el --- GPTel & org-ai Integration  -*- lexical-binding: t -*-
@@ -61,7 +61,13 @@ SPC $ g m : Ouvrir le menu transient.
 ;;; Code:
 
 (require 'subr-x)  ;; string-trim, string-empty-p, etc.
+#+end_src
 
+** Helper functions
+
+*** boost--try-require
+
+#+begin_src emacs-lisp
 ;; Require a feature/library if available; if not, fail silently.
 (defun boost--try-require (feature)
   "Try to (require FEATURE) silently.
@@ -75,6 +81,8 @@ emit a warning when the feature can't be loaded."
                        :warning))
     nil))
 #+end_src
+
+*** boost--set-key-if-free
 
 #+begin_src emacs-lisp
 (defun boost--set-key-if-free (keymap key command &optional scope)
@@ -102,6 +110,8 @@ If already bound, emit a warning mentioning SCOPE (string)."
 
 * Integrating AI tools into Emacs
 
+** OpenAI API key loading
+
 #+begin_src emacs-lisp
 ;; Set OpenAI API key.
 (defvar boost-openai-api-key nil
@@ -128,7 +138,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
 (setq boost-openai-api-key (boost--load-openai-api-key))
 #+end_src
 
-** GPTel
+* GPTel
 
 Useful functions:
 - gptel-send (or C-c RET) :: Send a query (buffer up to point, or active region)
@@ -148,7 +158,9 @@ Useful functions:
 - gptel-make-preset ::
 - gptel-make-tool ::
 
-*** Core GPTel settings
+** Base configuration
+
+*** GPTel core settings
 
 #+begin_src emacs-lisp
 ;; Load gptel.
@@ -176,11 +188,11 @@ Useful functions:
   (setq gptel-expert-commands t)
 #+end_src
 
-*** Display formatting configuration
+*** Prompt / response formatting (Org mode style)
 
 #+begin_src emacs-lisp
   (defgroup boost-gptel nil
-    "Boost tweaks and integration for GPTel."
+    "Tweaks GPTel."
     :group 'applications
     :prefix "boost-gptel-")
 
@@ -208,7 +220,7 @@ Useful functions:
             gptel-response-prefix-alist)))
 #+end_src
 
-*** Hooks / post-response handlers
+*** Post-response hooks
 
 #+begin_src emacs-lisp :tangle no
   ;; Add auto-scrolling after GPTel stream ends.
@@ -228,9 +240,9 @@ Useful functions:
                 (fill-paragraph))))
 #+end_src
 
-*** Directives (system prompts)
+** System prompts (directives)
 
-*************** TODO Add directives with a key like in demo
+*************** TODO Add quick selection key/menu (like in Karthink / c3po demos)
 [[YouTube:yAL0cw1ePqw]] at 05:35
 (Also in demo of Karthink, see [[YouTube:bsRnh_brggM]])
 *************** END
@@ -283,7 +295,7 @@ Existing entries with the same NAME are overwritten."
   (message "[Directory %s does not exist.]" boost-gptel-directives-directory))
 #+end_src
 
-*** Presets configuration
+** GPTel presets
 
 How to use them: =C-u M-x gptel-send=.
 
@@ -293,6 +305,19 @@ How to use them: =C-u M-x gptel-send=.
 - A versatile preset for general conversations or ad-hoc queries with an LLM.
 - Tailored for per-project workflows, such as analyzing code or documentation in
   a specific project directory.
+
+*** Overview table
+
+| Preset        | Primary Usage                | Suggested Backend | Recommended Model (2026)        | Temp. |
+|---------------+------------------------------+-------------------+---------------------------------+-------|
+| coding        | Code, refactor, debug        | OpenAI / Claude   | gpt-5.2-codex / claude-opus-4.6 |   0.7 |
+| proofreading  | Text correction              | Claude            | claude-sonnet-4.5               |   0.7 |
+| general-chat  | Quick questions              | OpenAI            | gpt-4o-mini / o1-mini           |   0.9 |
+| project-agent | Project context / dir-locals | Claude            | claude-opus-4.6                 |   0.7 |
+
+*** Preset Definitions
+
+**** Coding
 
 #+begin_src emacs-lisp
   ;; Coding preset - optimized for serious programming work.
@@ -307,7 +332,11 @@ refactorings, and clear explanations. Ensure correctness, clarity, and
 best practices in every response."
     :tools '("read_buffer" "modify_buffer")
     :temperature 0.7)
+#+end_src
 
+**** Proofreading
+
+#+begin_src emacs-lisp
   ;; Proofreading / editing preset.
   (gptel-make-preset 'proofreading
     :description "Professional text polishing and correction"
@@ -320,84 +349,70 @@ sentences when necessary to produce clear, polished, and
 well-structured text."
     :tools '("read_buffer" "spell_check" "grammar_check")
     :temperature 0.7)
+#+end_src
 
+**** General-chat
+
+#+begin_src emacs-lisp
   ;; Fast general-purpose chat.
   (gptel-make-preset 'general-chat
     :description "Fast, general-purpose conversations"
     :backend "ChatGPT"
-    :model 'gpt-5-mini           ;; or 'o1-mini if you want reasoning
+    :model 'gpt-5-mini
     :system
     "You are a helpful assistant providing clear and concise answers to
 a wide range of questions."
     :temperature 0.9)
+#+end_src
 
+**** Project-agent
+
+#+begin_src emacs-lisp
   ;; Project-specific preset (good for .dir-locals.el)
   (gptel-make-preset 'project-agent
     :description "Project-aware assistant using codebase context"
     :backend "Claude"
-    :model 'claude-sonnet-4-5-20250929
+    :model 'claude-opus-4-5-20251101
     :system
     "You are an AI assistant for a software project. Provide insights
 based on the project's code and documentation."
-    :tools '("read_buffer" "lsp_context"))
+    :tools '("read_buffer" "lsp_context")
+    :temperature 0.7)
 #+end_src
 
-*** Custom functions
+** Custom commands
 
-**** Templates with placeholders {{Var}} or {{Var|defaut}}
+*** Chat & Org integration
 
-#+begin_src emacs-lisp :tangle no
-(defvar my/gptel-templates
-  '(("facecam-30s"
-     . "Rôle: maître des scripts viraux. Niche: {{NICHE}} (audience: {{AUDIENCE|débutants}}).
-Écris un script face-cam de {{DUREE|35}}s sur: {{SUJET}}.
-Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'abonner.")
-    ("rewrite-friendly"
-     . "Réécris ce texte pour {{OBJECTIF|clarifier et dynamiser}}, ton {{TON|amical et pro}}:\n\n{{TEXTE}}"))
-  "Alist (NAME . TEMPLATE). Placeholders: {{Nom}} ou {{Nom|valeur-par-défaut}}.")
+**** boost-gptel-chat-buffer
 
-(defun my/render-template-placeholders (template)
-  "Rend `TEMPLATE' en remplaçant {{Var}} ou {{Var|defaut}} par des saisies interactives."
-  (let ((s template)
-        (re "{{\\([^}|]+\\)\\(?:|\\([^}]*\\)\\)?}}")
-        (seen (make-hash-table :test 'equal)))
-    (while (string-match re s)
-      (let* ((var  (string-trim (match-string 1 s)))
-             (def  (or (match-string 2 s) ""))
-             (prev (gethash var seen))
-             (val  (or prev
-                       (read-string (format "%s%s: " var (if (string-empty-p def) "" (format " (def: %s)" def)))
-                                    nil nil def))))
-        (puthash var val seen)
-        (setq s (replace-match (regexp-quote val) t t s))))
-    s))
+#+begin_src emacs-lisp
+  (defun boost-gptel-chat-buffer ()
+    "Switch to the GPTel chat buffer, creating it if it doesn't exist."
+    (interactive)
+    (let ((buffer-name "*ChatGPT*"))
+      (if (get-buffer buffer-name)
+          (pop-to-buffer buffer-name)
+        (progn
+          (call-interactively 'gptel)))))
 
-(defun my/gptel--send (prompt)
-  "Envoie PROMPT via gptel si disponible, sinon l'insère et le copie."
-  (cond
-   ;; gptel >= 0.9 : gptel-request est dispo
-   ((fboundp 'gptel-request)
-    (gptel-request prompt :stream t)
-    (message "[gptel: requête envoyée]"))
-   ;; fallback : insérer dans le buffer + copier
-   (t
-    (insert prompt)
-    (kill-new prompt)
-    (message "[gptel non trouvé : prompt inséré et copié (yank dans un buffer gptel)]"))))
-
-(defun my/gptel-template-run (name)
-  "Choisir un template par NAME, remplir les placeholders, et envoyer via gptel."
-  (interactive
-   (list (completing-read "Template: " (mapcar #'car my/gptel-templates) nil t)))
-  (let* ((tmpl (alist-get name my/gptel-templates nil nil #'string=)))
-    (unless tmpl (user-error "[Template introuvable: %s]" name))
-    (my/gptel--send (my/render-template-placeholders tmpl))))
-
-;; Raccourcis pratiques
-(global-set-key (kbd "C-c t g") #'my/gptel-template-run)
+  ;; (defun boost-gptel-chat-buffer (&optional arg)
+  ;;   "Switch to the GPTel chat buffer.
+  ;; Without prefix ARG, jump to `*ChatGPT*` creating it if needed (no prompt).
+  ;; With C-u prefix, defer to `gptel`'s usual interactive flow (with prompts)."
+  ;;   (interactive "P")
+  ;;   (let ((buffer-name "*ChatGPT*"))
+  ;;     (if arg
+  ;;         ;; C-u -> keep original prompting/confirmation behavior.
+  ;;         (call-interactively #'gptel)
+  ;;       ;; No prefix -> reuse or create *ChatGPT* without prompting.
+  ;;       (let ((buf (get-buffer buffer-name)))
+  ;;         (if buf
+  ;;             (pop-to-buffer buf)
+  ;;           (funcall #'gptel buffer-name))))))
 #+end_src
 
-**** Org mode integration
+**** boost-gptel-org-send-to-chatgpt (Org subtree or region → *ChatGPT* buffer)
 
 #+begin_src emacs-lisp
 ;;;###autoload
@@ -442,14 +457,11 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
         ;; Display the buffer and provide user feedback.
         (pop-to-buffer buffer)
         (message "[GPTel: Prompt sent...]"))))
-
-  ;; Org mode keybinding (only if free).
-  (with-eval-after-load 'org
-    (boost--set-key-if-free 'org-mode-map (kbd "C-c q")
-                             #'boost-gptel-org-send-to-chatgpt "Org mode"))
 #+end_src
 
-**** Commit message generator
+*** Git commit messages
+
+**** Commit message
 
 #+begin_src emacs-lisp
 ;; Commit-prompt file customization.
@@ -509,28 +521,17 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                              (inhibit-same-window . t))))
                       (error "[Failed to generate commit message: %s]"
                              (plist-get info :status)))))))
-
-  ;; Diff mode keybinding (only if free).
-  (with-eval-after-load 'diff-mode
-    (boost--set-key-if-free 'diff-mode-map (kbd "w")
-                             #'boost-gptel-write-commit-message "diff-mode"))
-
-  ;; Global keybinding (only if free).
-  (boost--set-key-if-free global-map (kbd "C-x v w")
-                           #'boost-gptel-write-commit-message "global map")
 #+end_src
 
-**** GPTel commit
+**** gptel-commit (optional package)
 
 #+begin_src emacs-lisp :tangle no
   (boost--try-require 'gptel-commit)
-
-  ;; ;; Global keybinding (only if free).
-  ;; (boost--set-key-if-free global-map (kbd "C-c g c")
-  ;;                          #'gptel-commit "global map")
 #+end_src
 
-**** Generate unit tests for current function
+*** Code tools (Emacs Lisp)
+
+**** Common
 
 #+begin_src emacs-lisp
   (defun boost--extract-defun-source ()
@@ -541,7 +542,11 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
       (let ((beg (point)))
         (end-of-defun)
         (buffer-substring-no-properties beg (point)))))
+#+end_src
 
+**** Unit tests
+
+#+begin_src emacs-lisp
   (defun boost-gptel-generate-contextual-test ()
     "Generate a unit test for the current function by sending its source code to GPTel."
     (interactive)
@@ -551,7 +556,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
       (gptel-request prompt)))
 #+end_src
 
-**** Refactor current function with suggestions
+**** Refactoring
 
 #+begin_src emacs-lisp
   (defun boost-gptel-refactor-function ()
@@ -566,7 +571,7 @@ Provide the refactored code and explain the improvements." function-source)))
       (gptel-request prompt)))
 #+end_src
 
-**** Generate function documentation
+**** Documentation
 
 #+begin_src emacs-lisp
   (defun boost-gptel-generate-docstring ()
@@ -581,7 +586,7 @@ Follow Emacs docstring conventions." function-source)))
       (gptel-request prompt)))
 #+end_src
 
-**** Debug current function
+**** Bug analysis
 
 #+begin_src emacs-lisp
   (defun boost-gptel-debug-function ()
@@ -596,7 +601,7 @@ Provide a list of issues and suggested fixes." function-source)))
       (gptel-request prompt)))
 #+end_src
 
-**** Generate example usage for current function
+**** Usage examples
 
 #+begin_src emacs-lisp
   (defun boost-gptel-generate-example-usage ()
@@ -613,7 +618,7 @@ Include a brief explanation of each example."
       (gptel-request prompt)))
 #+end_src
 
-**** Generate function from specification
+**** Function from description
 
 #+begin_src emacs-lisp
   (defun boost-gptel-generate-function-from-spec ()
@@ -628,7 +633,7 @@ Provide the function code and a brief explanation of how it works."
           (gptel-request prompt)))))
 #+end_src
 
-**** Suggest performance optimizations for current function
+**** Performance
 
 #+begin_src emacs-lisp
   (defun boost-gptel-optimize-function-performance ()
@@ -643,7 +648,7 @@ Suggest optimizations with code examples and explain why they improve performanc
       (gptel-request prompt)))
 #+end_src
 
-**** Generate code review comments for current function
+**** Full code review
 
 #+begin_src emacs-lisp
   (defvar boost-gptel-code-review-prompt
@@ -700,7 +705,7 @@ suggestions for improvement."
         (error (message "[Code review failed: %s]" err)))))
 #+end_src
 
-**** Generate companion function
+**** Companion / inverse function
 
 #+begin_src emacs-lisp
   (defun boost-gptel-generate-companion-function ()
@@ -719,7 +724,92 @@ its purpose."
       (gptel-request prompt)))
 #+end_src
 
-*** Keybindings
+*** Experimental / Commented
+
+**** Template system with {{placeholders}}
+
+#+begin_src emacs-lisp :tangle no
+(defvar my/gptel-templates
+  '(("facecam-30s"
+     . "Rôle: maître des scripts viraux. Niche: {{NICHE}} (audience: {{AUDIENCE|débutants}}).
+Écris un script face-cam de {{DUREE|35}}s sur: {{SUJET}}.
+Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'abonner.")
+    ("rewrite-friendly"
+     . "Réécris ce texte pour {{OBJECTIF|clarifier et dynamiser}}, ton {{TON|amical et pro}}:\n\n{{TEXTE}}"))
+  "Alist (NAME . TEMPLATE). Placeholders: {{Nom}} ou {{Nom|valeur-par-défaut}}.")
+
+(defun my/render-template-placeholders (template)
+  "Rend `TEMPLATE' en remplaçant {{Var}} ou {{Var|defaut}} par des saisies interactives."
+  (let ((s template)
+        (re "{{\\([^}|]+\\)\\(?:|\\([^}]*\\)\\)?}}")
+        (seen (make-hash-table :test 'equal)))
+    (while (string-match re s)
+      (let* ((var  (string-trim (match-string 1 s)))
+             (def  (or (match-string 2 s) ""))
+             (prev (gethash var seen))
+             (val  (or prev
+                       (read-string (format "%s%s: " var (if (string-empty-p def) "" (format " (def: %s)" def)))
+                                    nil nil def))))
+        (puthash var val seen)
+        (setq s (replace-match (regexp-quote val) t t s))))
+    s))
+
+(defun my/gptel--send (prompt)
+  "Envoie PROMPT via gptel si disponible, sinon l'insère et le copie."
+  (cond
+   ;; gptel >= 0.9 : gptel-request est dispo
+   ((fboundp 'gptel-request)
+    (gptel-request prompt :stream t)
+    (message "[gptel: requête envoyée]"))
+   ;; fallback : insérer dans le buffer + copier
+   (t
+    (insert prompt)
+    (kill-new prompt)
+    (message "[gptel non trouvé : prompt inséré et copié (yank dans un buffer gptel)]"))))
+
+(defun my/gptel-template-run (name)
+  "Choisir un template par NAME, remplir les placeholders, et envoyer via gptel."
+  (interactive
+   (list (completing-read "Template: " (mapcar #'car my/gptel-templates) nil t)))
+  (let* ((tmpl (alist-get name my/gptel-templates nil nil #'string=)))
+    (unless tmpl (user-error "[Template introuvable: %s]" name))
+    (my/gptel--send (my/render-template-placeholders tmpl))))
+
+;; Raccourcis pratiques
+(global-set-key (kbd "C-c t g") #'my/gptel-template-run)
+#+end_src
+
+** Keybindings
+
+| Key     | Command                          | Context     | Status                            |
+|---------+----------------------------------+-------------+-----------------------------------|
+| C-c RET | gptel-send                       | global      | recommended                       |
+| C-c g   | boost-gptel-chat-buffer or gptel | global      | OK                                |
+| <f1>    | boost-gptel-chat-buffer          | global      | ← Warning: overwrites Emacs help! |
+| C-c g   | gptel-menu (transient)           | global      | very useful                       |
+| C-c q   | boost-gptel-org-send-to-chatgpt  | org-mode    | useful                            |
+| C-x v w | boost-gptel-write-commit-message | global/diff | handy                             |
+
+(global-set-key (kbd "C-c g") 'gptel-send)
+(global-set-key (kbd "C-c r") 'gptel-rewrite)
+
+:bind ("C-<f1>" . gptel)               ;; ← main entry: start / switch to chat buffer
+:bind (("C-c g"   . gptel-menu)        ;; transient menu: change model, backend, etc.
+
+#+begin_src emacs-lisp :tangle no
+(defvar boost-ai-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "c" #'boost-gptel-chat-buffer)
+    (define-key map "s" #'gptel-send)
+    (define-key map "m" #'gptel-menu)
+    (define-key map "q" #'boost-gptel-org-send-to-chatgpt)
+    (define-key map "w" #'boost-gptel-write-commit-message)
+    map))
+
+(global-set-key (kbd "C-c g") boost-ai-map)
+#+end_src
+
+*** Global bindings
 
 #+begin_src emacs-lisp
   ;; Unbind `C-c RET' in Org mode.
@@ -733,30 +823,6 @@ its purpose."
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun boost-gptel-chat-buffer ()
-    "Switch to the GPTel chat buffer, creating it if it doesn't exist."
-    (interactive)
-    (let ((buffer-name "*ChatGPT*"))
-      (if (get-buffer buffer-name)
-          (pop-to-buffer buffer-name)
-        (progn
-          (call-interactively 'gptel)))))
-
-  ;; (defun boost-gptel-chat-buffer (&optional arg)
-  ;;   "Switch to the GPTel chat buffer.
-  ;; Without prefix ARG, jump to `*ChatGPT*` creating it if needed (no prompt).
-  ;; With C-u prefix, defer to `gptel`'s usual interactive flow (with prompts)."
-  ;;   (interactive "P")
-  ;;   (let ((buffer-name "*ChatGPT*"))
-  ;;     (if arg
-  ;;         ;; C-u -> keep original prompting/confirmation behavior.
-  ;;         (call-interactively #'gptel)
-  ;;       ;; No prefix -> reuse or create *ChatGPT* without prompting.
-  ;;       (let ((buf (get-buffer buffer-name)))
-  ;;         (if buf
-  ;;             (pop-to-buffer buf)
-  ;;           (funcall #'gptel buffer-name))))))
-
   ;; Global keybinding (only if free).
   (boost--set-key-if-free global-map (kbd "C-c g")
                            #'boost-gptel-chat-buffer "global map")
@@ -767,17 +833,33 @@ its purpose."
   (global-set-key (kbd "<f1>") #'boost-gptel-chat-buffer)
 #+end_src
 
-(global-set-key (kbd "C-c g") 'gptel-send)
-(global-set-key (kbd "C-c r") 'gptel-rewrite)
+*** Org-mode specific
 
-:bind ("C-<f1>" . gptel)               ;; ← main entry: start / switch to chat buffer
-:bind (("C-c g"   . gptel-menu)        ;; transient menu: change model, backend, etc.
+#+begin_src emacs-lisp
+  ;; Org mode keybinding (only if free).
+  (with-eval-after-load 'org
+    (boost--set-key-if-free 'org-mode-map (kbd "C-c q")
+                             #'boost-gptel-org-send-to-chatgpt "Org mode"))
+#+end_src
+
+*** Diff-mode specific
+
+#+begin_src emacs-lisp
+  ;; Diff mode keybinding (only if free).
+  (with-eval-after-load 'diff-mode
+    (boost--set-key-if-free 'diff-mode-map (kbd "w")
+                             #'boost-gptel-write-commit-message "diff-mode"))
+
+  ;; Global keybinding (only if free).
+  (boost--set-key-if-free global-map (kbd "C-x v w")
+                           #'boost-gptel-write-commit-message "global map")
+#+end_src
 
 #+begin_src emacs-lisp
 )
 #+end_src
 
-** Org-ai
+* Org-ai
 
 #+begin_src emacs-lisp
 ;; Load org-ai.
@@ -797,14 +879,12 @@ its purpose."
 
 The package whisper.el is needed for transcribing speech.
 
-* Leuven
+* Finalization & Provide
 
 #+begin_src emacs-lisp
 (message "* --[ Loaded Emacs-Leuven AI %s ]--"
          (if (boundp 'lvn--emacs-version) lvn--emacs-version ""))
 #+end_src
-
-** Feature
 
 #+begin_src emacs-lisp
 (provide 'emacs-leuven-ai)
