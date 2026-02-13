@@ -79,7 +79,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (when (bound-and-true-p boost-openai-api-key)
     (setq gptel-api-key boost-openai-api-key))
 
-  (setq gptel-model 'gpt-5)
+  (setq gptel-model 'gpt-5-mini)
 
   ;; Set logging level to info.
   (setq gptel-log-level 'info)
@@ -170,7 +170,7 @@ Existing entries with the same NAME are overwritten."
       (error (message "[Error reading directives: %s]" (error-message-string err))))
   (message "[Directory %s does not exist.]" boost-gptel-directives-directory))
 
-;; Tool to read the contents of an Emacs buffer.
+;; Read the contents of an Emacs buffer.
 (gptel-make-tool
  :name "read_buffer"
  :description "Return the full contents of a named Emacs buffer."
@@ -182,7 +182,7 @@ Existing entries with the same NAME are overwritten."
                (buffer-substring-no-properties (point-min) (point-max))))
  :category "emacs")
 
-;; Tool for modifying/editing a buffer (use with caution!).
+;; Modify/edit a buffer (use with caution!).
 (gptel-make-tool
  :name "modify_buffer"
  :description "Modify the contents of an Emacs buffer. Use with caution. Confirm before use."
@@ -214,7 +214,7 @@ Existing entries with the same NAME are overwritten."
                (format "Created file %s in %s" filename path)))
  :category "filesystem")
 
-;; Outil spell_check : vérifie orthographe d'un mot ou d'un texte court
+;; Check the spelling of a word or a short text.
 (gptel-make-tool
  :name "spell_check"
  :description "Check spelling of a word or short text snippet. Returns suggestions if misspelled. Use English or French dictionary based on buffer."

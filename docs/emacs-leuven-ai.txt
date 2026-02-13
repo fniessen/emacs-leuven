@@ -172,7 +172,7 @@ Useful functions:
   (when (bound-and-true-p boost-openai-api-key)
     (setq gptel-api-key boost-openai-api-key))
 
-  (setq gptel-model 'gpt-5)
+  (setq gptel-model 'gpt-5-mini)
 
   ;; Set logging level to info.
   (setq gptel-log-level 'info)
@@ -325,7 +325,7 @@ included by default in gptel.
 Available tools: ~gptel-tools~.
 
 #+begin_src emacs-lisp
-;; Tool to read the contents of an Emacs buffer.
+;; Read the contents of an Emacs buffer.
 (gptel-make-tool
  :name "read_buffer"
  :description "Return the full contents of a named Emacs buffer."
@@ -339,7 +339,7 @@ Available tools: ~gptel-tools~.
 #+end_src
 
 #+begin_src emacs-lisp
-;; Tool for modifying/editing a buffer (use with caution!).
+;; Modify/edit a buffer (use with caution!).
 (gptel-make-tool
  :name "modify_buffer"
  :description "Modify the contents of an Emacs buffer. Use with caution. Confirm before use."
@@ -375,7 +375,7 @@ Available tools: ~gptel-tools~.
 #+end_src
 
 #+begin_src emacs-lisp
-;; Outil spell_check : vérifie orthographe d'un mot ou d'un texte court
+;; Check the spelling of a word or a short text.
 (gptel-make-tool
  :name "spell_check"
  :description "Check spelling of a word or short text snippet. Returns suggestions if misspelled. Use English or French dictionary based on buffer."
