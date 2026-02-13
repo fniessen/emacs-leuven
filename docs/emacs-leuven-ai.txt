@@ -298,48 +298,50 @@ How to use them: =C-u M-x gptel-send=.
   a specific project directory.
 
 #+begin_src emacs-lisp
-  ;; Coding preset.
-  (gptel-make-preset 'gpt4coding
-    :description "A preset optimized for coding tasks"
+  ;; Coding preset - optimized for serious programming work.
+  (gptel-make-preset 'coding
+    :description "High-precision coding assistant with strong reasoning"
     :backend "ChatGPT"
-    :model 'gpt-4.1
+    :model 'gpt-5
     :system
-    "You are an expert programming assistant. Provide high-quality, precise,
-well-structured and well-commented code solutions, refactorings, and clear
-explanations. Ensure correctness, clarity, and best practices in every response."
+    "You are an expert programming assistant. Provide high-quality,
+precise, well-structured and well-commented code solutions,
+refactorings, and clear explanations. Ensure correctness, clarity, and
+best practices in every response."
     :tools '("read_buffer" "modify_buffer")
     :temperature 0.7)
 
-  ;; Proofreading preset.
+  ;; Proofreading / editing preset.
   (gptel-make-preset 'proofreading
-    :description "Preset for proofreading and text improvement"
+    :description "Professional text polishing and correction"
     :backend "Claude"
-    :model 'claude-sonnet-4-20250514
+    :model 'claude-sonnet-4-5-20250929   ;; Adapt to current best Sonnet.
     :system
     "You are a professional proofreader. Correct spelling and grammar,
-improve clarity, style, structure, and readability, and rewrite sentences
-when necessary to produce clear, polished, and well-structured text."
+improve clarity, style, structure, and readability, and rewrite
+sentences when necessary to produce clear, polished, and
+well-structured text."
     :tools '("read_buffer" "spell_check" "grammar_check")
     :temperature 0.7)
 
-  ;; General-purpose chat preset.
+  ;; Fast general-purpose chat.
   (gptel-make-preset 'general-chat
-    :description "A preset for general-purpose LLM interactions"
+    :description "Fast, general-purpose conversations"
     :backend "ChatGPT"
-    :model 'o4-mini
+    :model 'gpt-5-mini           ;; or 'o1-mini if you want reasoning
     :system
-    "You are a helpful assistant providing clear and concise answers to a
-   wide range of questions."
+    "You are a helpful assistant providing clear and concise answers to
+a wide range of questions."
     :temperature 0.9)
 
-  ;; Project-specific preset (within '.dir-locals.el').
+  ;; Project-specific preset (good for .dir-locals.el)
   (gptel-make-preset 'project-agent
-    :description "Preset for project-specific AI tasks"
+    :description "Project-aware assistant using codebase context"
     :backend "Claude"
-    :model 'claude-sonnet-4-20250514
+    :model 'claude-sonnet-4-5-20250929
     :system
     "You are an AI assistant for a software project. Provide insights
-   based on the project's code and documentation."
+based on the project's code and documentation."
     :tools '("read_buffer" "lsp_context"))
 #+end_src
 
