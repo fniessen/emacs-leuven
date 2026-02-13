@@ -79,7 +79,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (when (bound-and-true-p boost-openai-api-key)
     (setq gptel-api-key boost-openai-api-key))
 
-  (setq gptel-model 'o4-mini)
+  (setq gptel-model 'gpt-5)
 
   ;; Set logging level to info.
   (setq gptel-log-level 'info)
@@ -301,7 +301,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
       (user-error "[No content to analyze]"))
     (let* ((prompt-file boost-gptel-commit-prompt-file)
            (default-prompt
-            "Write a Git commit message for the following diff:\n\n")
+            "Write a concise commit message (imperative mood, ≤72 char subject line) for this diff:\n\n")
            (system-prompt
             (if (file-readable-p prompt-file)
                 (with-temp-buffer
