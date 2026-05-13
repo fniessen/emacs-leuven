@@ -2776,7 +2776,10 @@ BACKEND is the current export backend."
                                         ; Heavy before-save hook.
 
 (defvar boost--org-clean-typography-excluded-files
-  '("emacs.org" "init.org" "emacs-leuven-org.txt")
+  '("README.org"
+    "emacs-leuven-org.txt"
+    "emacs.org"
+    "init.org")
   "List of Org filenames where `boost--org-clean-typography` should NOT run.")
 
 (defun boost--org-clean-typography ()

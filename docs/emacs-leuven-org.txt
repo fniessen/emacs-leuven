@@ -4435,7 +4435,10 @@ to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 
 #+begin_src emacs-lisp
 (defvar boost--org-clean-typography-excluded-files
-  '("emacs.org" "init.org" "emacs-leuven-org.txt")
+  '("README.org"
+    "emacs-leuven-org.txt"
+    "emacs.org"
+    "init.org")
   "List of Org filenames where `boost--org-clean-typography` should NOT run.")
 
 (defun boost--org-clean-typography ()
