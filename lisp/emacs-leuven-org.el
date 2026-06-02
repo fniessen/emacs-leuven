@@ -2355,8 +2355,15 @@ parent."
   (add-to-list 'org-babel-load-languages '(shell    . t)) ; Org mode 8.2 (Emacs 26.1).
   (add-to-list 'org-babel-load-languages '(sql      . t))
 
+  ;; Add Mermaid support only if ob-mermaid is installed.
+  (when (require 'ob-mermaid nil 'noerror)
+    (add-to-list 'org-babel-load-languages '(mermaid . t))
+    (setq ob-mermaid-cli-path (or (executable-find "mmdc")
+                                  ob-mermaid-cli-path)))
+
   (org-babel-do-load-languages        ; Loads org, gnus-sum, etc...
-   'org-babel-load-languages org-babel-load-languages)
+   'org-babel-load-languages
+   org-babel-load-languages)
 
   ;; ;; Don't use getline for command-line editing and assert interactive use.
   ;; (setq org-babel-R-command
