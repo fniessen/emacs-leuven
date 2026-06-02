@@ -2356,7 +2356,7 @@ parent."
   (add-to-list 'org-babel-load-languages '(sql      . t))
 
   ;; Add Mermaid support only if ob-mermaid is installed.
-  (when (require 'ob-mermaid nil 'noerror)
+  (when (boost--try-require 'ob-mermaid)
     (add-to-list 'org-babel-load-languages '(mermaid . t))
     (setq ob-mermaid-cli-path (or (executable-find "mmdc")
                                   ob-mermaid-cli-path)))
