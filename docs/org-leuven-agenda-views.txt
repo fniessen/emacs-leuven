@@ -10,7 +10,7 @@
 
 #+SETUPFILE: ~/org/html-theme-readtheorg.setup
 
-At the beginning, we've put way too many tasks either as scheduled or deadline
+At the beginning, we've put way too many tasks either as planned or deadline
 because the unique interaction with Org mode was via the agenda view, and we
 did not want to loose some tasks out of our view.
 
