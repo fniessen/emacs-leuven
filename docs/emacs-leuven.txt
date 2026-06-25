@@ -12891,7 +12891,8 @@ Extra Dired functionality:
     (require 'dired-x)                  ; with-eval-after-load "dired" ends here.
 
     ;; Ignore LaTeX build artifacts in completion.
-    (dolist (ext '(".fdb_latexmk" ".fls" ".ind" ".nav" ".out" ".snm" ".swp" ".vrb"))
+    (dolist (ext '(".fdb_latexmk" ".fls" ".ilg" ".ind" ".listing" ".nav" ".out"
+                   ".snm" ".swp" ".vrb"))
       (add-to-list 'completion-ignored-extensions ext))
 
     (when lvn--cygwin-p
@@ -13964,9 +13965,8 @@ creates an X Window and doesn't wait for ~(server-edit)~.
 
     ;; Define an advice function to save the current buffer without confirmation
     ;; before returning to the client.
-    (defun boost--server-edit-save-buffer-advice (proc)
-    "Save the current buffer before marking it as done if it is modified.
-PROC is the process associated with the server."
+    (defun boost--server-edit-save-buffer-advice (&rest _args)
+      "Save the current buffer before marking it as done."
       (when (and server-buffer-clients
                  (buffer-modified-p)
                  (buffer-live-p (current-buffer)))
