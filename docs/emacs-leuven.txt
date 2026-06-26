@@ -1825,8 +1825,8 @@ If trailing whitespace may be present, the following helper first normalizes the
 region, then removes duplicate lines:
 
 #+begin_src emacs-lisp
-  (defun boost-delete-duplicate-lines (beg end)
-    "Delete trailing whitespace and duplicate lines in the region."
+  (defun boost-delete-duplicate-lines-trim (beg end)
+    "Delete trailing whitespace, then remove duplicate lines in the region."
     (interactive "r")
     (delete-trailing-whitespace beg end)
     (delete-duplicate-lines beg end))
