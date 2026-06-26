@@ -1270,12 +1270,11 @@ From the address <%a>"
        (make-string 50 ?─)))
 
 ;; 10.4.3 Sorting structure for the agenda items of a single day.
-(setq org-agenda-sorting-strategy   ; custom value
-      '((agenda time-up category-up priority-down effort-down)
-        ;; (agenda priority-down time-up category-up effort-down)
-        (todo category-up priority-down effort-down)
-        (tags category-up priority-down effort-down)
-        (search category-up)))
+(setq org-agenda-sorting-strategy
+      '((agenda time-up priority-down deadline-up category-keep effort-down)
+        (todo priority-down deadline-up category-keep effort-down)
+        (tags priority-down deadline-up category-keep effort-down)
+        (search category-keep)))
 
 ;; Show agenda in the current window, keeping all other windows.
 (setq org-agenda-window-setup 'current-window)
