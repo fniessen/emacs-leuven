@@ -1780,14 +1780,19 @@ called interactively."
 To *highlight duplicate lines*, see
 https://emacs.stackexchange.com/questions/13092/how-can-i-highlight-duplicate-lines
 
-In Emacs 24.4+, the cleanest way to *uniquify lines* (~uniq-lines~) is the
-~delete-duplicate-lines~ function.
+In Emacs 24.4 and later, the recommended way to *uniquify lines* is the built-in
+command ~delete-duplicate-lines~.
 
 Note that:
-- this works on a region, not a buffer, so select the desired text first,
-- it maintains the relative order of the originals, killing the duplicates.
 
-For example, if your input is:
+- it operates on the active region, not the entire buffer, so select the text
+  to process first,
+- it preserves the first occurrence of each line and removes subsequent
+  duplicates while maintaining the original order,
+- lines must match exactly. Trailing whitespace makes lines different, so
+  removing trailing whitespace beforehand is often desirable.
+
+For example, given:
 
 #+begin_example
 test
@@ -1802,7 +1807,7 @@ test
 five
 #+end_example
 
-~M-x delete-duplicate-lines~ would make it:
+running ~M-x delete-duplicate-lines~ produces:
 
 #+begin_example
 test
@@ -1813,8 +1818,19 @@ three
 five
 #+end_example
 
-That is, it does remove all *duplicate lines* in region, not only the *consecutive*
-ones.
+In other words, it removes all *duplicate lines* in the region, not just *adjacent*
+duplicates.
+
+If trailing whitespace may be present, the following helper first normalizes the
+region, then removes duplicate lines:
+
+#+begin_src emacs-lisp
+  (defun boost-delete-duplicate-lines (beg end)
+    "Delete trailing whitespace and duplicate lines in the region."
+    (interactive "r")
+    (delete-trailing-whitespace beg end)
+    (delete-duplicate-lines beg end))
+#+end_src
 
 ** Yanking
 

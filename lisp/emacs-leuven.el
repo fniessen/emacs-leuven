@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260625.1336>
+;; Version: <20260626.1125>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260625.1336>"
+(defconst boost-version "<20260626.1125>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1079,6 +1079,12 @@ called interactively."
           (yank)))))
 
   (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
+
+  (defun boost-delete-duplicate-lines (beg end)
+    "Delete trailing whitespace and duplicate lines in the region."
+    (interactive "r")
+    (delete-trailing-whitespace beg end)
+    (delete-duplicate-lines beg end))
 
 ;;** 13.2 (info "(emacs)Yanking")
 
