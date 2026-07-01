@@ -13654,9 +13654,6 @@ and *replaces* it with the output from the shell command.
   ;; ;; Switch used to have the shell execute its command line argument.
   ;; (setq shell-command-switch "-c")      ; `/c' did not work with XEmacs.
 
-  ;; Quote process arguments to ensure correct parsing on Windows.
-  (setq w32-quote-process-args t)
-
   ;; ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
   ;; (setq null-device "/dev/null"))
 #+end_src

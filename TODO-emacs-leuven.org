@@ -27,7 +27,6 @@
 
 | Item                                | Type     | Status          | Replacement                                                                   |
 |-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
-| w32-quote-process-args              | Variable | Obsolete (27.1) | Remove; argument quoting is internal                                          |
 | w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start"                    |
 | w32-register-hot-key                | Function | Obsolete (27.1) | Remove; handle via keybindings or external tools                              |
 |-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
@@ -166,6 +165,25 @@ EDITOR
 VISUAL
 
 editor='emacsclient' (sans le -n) dans .gitconfig
+
+
+
+#+begin_src shell
+emd() {
+    if [[ -z $(pgrep emacs -u "$USER") ]]
+    then
+        emacs --user "" --daemon=default
+    else
+        emacsclient -s default -t -a ""
+    fi
+}
+#+end_src
+
+alias ecn='emacsclient -n'
+alias ecnc='emacsclient -n -c'
+
+ceci est aussi bien pratique dans mon ~/.bashrc:
+export EDITOR="emacsclient -c"
 
 *** TODO Re-enable dead code
 

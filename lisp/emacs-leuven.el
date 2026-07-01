@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.1647>
+;; Version: <20260701.1655>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.1647>"
+(defconst boost-version "<20260701.1655>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -6859,9 +6859,6 @@ This example lists Azerty layout second row keys."
   ;;
   ;; ;; Switch used to have the shell execute its command line argument.
   ;; (setq shell-command-switch "-c")      ; `/c' did not work with XEmacs.
-
-  ;; Quote process arguments to ensure correct parsing on Windows.
-  (setq w32-quote-process-args t)
 
   ;; ;; Workaround for Cygwin when 'shell-file-name' is 'bash'.
   ;; (setq null-device "/dev/null"))
