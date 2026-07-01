@@ -7389,17 +7389,28 @@ With AUCTeX:
   (add-hook 'TeX-output-mode-hook #'boost--configure-latex-output)
 #+end_src
 
-With M-x compile:
+When running LaTeX via ~M-x compile~, Emacs uses ~compilation-mode~ instead of
+AUCTeX's dedicated ~TeX-output-mode~.
+
+To apply the same syntax highlighting for errors, warnings, overfull/underfull
+boxes, and successful output, detect whether the compilation buffer corresponds
+to a TeX-related command before installing the extra font-lock rules:
 
 #+begin_src emacs-lisp
+  (defconst boost-latex-compilation-command-regexp
+    "\\b\\(?:pdftex\\|pdflatex\\|xetex\\|xelatex\\|luatex\\|lualatex\\|latex\\|latexmk\\)\\b"
+    "Regexp matching TeX-related compilation commands.")
+
+  (defun boost--latex-compilation-buffer-p ()
+    "Return non-nil if the current `compilation-mode' buffer looks TeX-related."
+    (and (derived-mode-p 'compilation-mode)
+         (save-excursion
+           (goto-char (point-min))
+           (re-search-forward boost-latex-compilation-command-regexp nil t))))
+
   (defun boost--configure-latex-compilation-buffer ()
-    "Colorize LaTeX output in `compilation-mode' buffers."
-    (when (or (string-match-p "\\*compilation\\*" (buffer-name))
-              (save-excursion
-                (goto-char (point-min))
-                (re-search-forward
-                 "\\b\\(?:pdflatex\\|xelatex\\|lualatex\\|latexmk\\)\\b"
-                 nil t)))
+    "Colorize LaTeX output in TeX-related `compilation-mode' buffers."
+    (when (boost--latex-compilation-buffer-p)
       (boost--fontify-latex-output)))
 
   (add-hook 'compilation-mode-hook
@@ -7592,15 +7603,14 @@ file, AUCTeX gives you a ~Command~ menu.
     ;; Don't ask user for permission to save files before starting TeX.
     (setq TeX-save-query nil)
 
-    (defun TeX-default ()
-      "Choose the default command from `C-c C-c'."
+    (defun boost-tex-command-default ()
+      "Run the default AUCTeX command without prompting."
       (interactive)
-      (TeX-save-document "")          ; or just use `TeX-save-query'
-      (execute-kbd-macro (kbd "C-c C-c RET")))
+      (TeX-save-document "")
+      (TeX-command TeX-command-default 'TeX-master-file))
 
-    ;; Rebind the "compile command" to default command from `C-c C-c' (in LaTeX
-    ;; mode only).
-    (define-key LaTeX-mode-map (kbd "<f9>") #'TeX-default)
+    ;; Rebind the compile command to the default AUCTeX command in LaTeX mode only.
+    (define-key LaTeX-mode-map (kbd "<f9>") #'boost-tex-command-default)
 
     ;; Use PDF mode by default (instead of DVI).
     (setq-default TeX-PDF-mode t)
@@ -7614,34 +7624,52 @@ page in the output file corresponding to the position in the source file.
 Currently, this only works if you use the pdfsync LaTeX package and xpdf or
 SumatraPDF as your PDF viewer.
 
+To use a more capable PDF viewer than the default one, configure AUCTeX to
+launch SumatraPDF on native Windows and to open the generated PDF with the
+default Windows PDF application when running under WSL.
+
+Under native Windows, AUCTeX invokes the SumatraPDF executable directly.
+
+Under WSL, the generated PDF path (~%o~) is a Linux path (for example,
+~/home/user/document.pdf~). Before passing it to Windows, it must be converted to
+a Windows path using ~wslpath -w~. The command
+
+~cmd.exe /c start "" "$(wslpath -w %o)"~
+
+opens the PDF with the default application associated with PDF files on
+Windows. This could be SumatraPDF, Adobe Acrobat, Microsoft Edge, or any other
+application registered as the default PDF viewer.
+
 #+begin_src emacs-lisp
 ;;** 4.2 (info "(auctex)Viewing") the formatted output
 
     (leuven--section "4.2 (auctex)Viewing the formatted output")
 
-    ;; Use a saner PDF viewer (SumatraPDF, evince).
+    ;; Use a saner PDF viewer (SumatraPDF, the default Windows PDF application).
     (defvar leuven--sumatrapdf-command
       (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
       "Path to the SumatraPDF executable.")
 
-    ;; Configure SumatraPDF as the PDF viewer for Windows-based systems.
-    (when (or lvn--win32-p
-              lvn--wsl-p
-              lvn--cygwin-p)
-      ;; Add SumatraPDF to available viewers (AUCTeX 11.86+).
-      (when (boundp 'TeX-view-program-list)
+    ;; Configure the PDF viewer.
+    (when (boundp 'TeX-view-program-list)
+      ;; Native Windows: invoke SumatraPDF directly.
+      (when (and lvn--win32-p
+                 (file-executable-p leuven--sumatrapdf-command))
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
-                       ,(list (concat "\"" leuven--sumatrapdf-command "\" %o")))))
-      ;; Set SumatraPDF as default PDF viewer.
-      (setcdr (assoc 'output-pdf TeX-view-program-selection)
-              '("SumatraPDF")))
-#+end_src
+                       ,(list (format "\"%s\" %%o"
+                                      leuven--sumatrapdf-command))))
+        (setcdr (assoc 'output-pdf TeX-view-program-selection)
+                '("SumatraPDF")))
 
-#+begin_tip
-Under Windows, we could open the PDF file with ~start "" xxx.pdf~ (in a command
-prompt).
-#+end_tip
+      ;; WSL: open the PDF with the default Windows PDF application.
+      (when lvn--wsl-p
+        (add-to-list 'TeX-view-program-list
+                     '("Windows PDF Viewer"
+                       ("cmd.exe /c start \"\" \"$(wslpath -w %o)\"")))
+        (setcdr (assoc 'output-pdf TeX-view-program-selection)
+                '("Windows PDF Viewer"))))
+#+end_src
 
 #+begin_src emacs-lisp
 ;;** 4.7 (info "(auctex)Documentation")

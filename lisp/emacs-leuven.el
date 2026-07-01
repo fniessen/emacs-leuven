@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.1546>
+;; Version: <20260701.1624>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.1546>"
+(defconst boost-version "<20260701.1624>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4069,14 +4069,20 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   ;; Colorize LaTeX output in AUCTeX output buffers.
   (add-hook 'TeX-output-mode-hook #'boost--configure-latex-output)
 
+  (defconst boost-latex-compilation-command-regexp
+    "\\b\\(?:pdftex\\|pdflatex\\|xetex\\|xelatex\\|luatex\\|lualatex\\|latex\\|latexmk\\)\\b"
+    "Regexp matching TeX-related compilation commands.")
+
+  (defun boost--latex-compilation-buffer-p ()
+    "Return non-nil if the current `compilation-mode' buffer looks TeX-related."
+    (and (derived-mode-p 'compilation-mode)
+         (save-excursion
+           (goto-char (point-min))
+           (re-search-forward boost-latex-compilation-command-regexp nil t))))
+
   (defun boost--configure-latex-compilation-buffer ()
-    "Colorize LaTeX output in `compilation-mode' buffers."
-    (when (or (string-match-p "\\*compilation\\*" (buffer-name))
-              (save-excursion
-                (goto-char (point-min))
-                (re-search-forward
-                 "\\b\\(?:pdflatex\\|xelatex\\|lualatex\\|latexmk\\)\\b"
-                 nil t)))
+    "Colorize LaTeX output in TeX-related `compilation-mode' buffers."
+    (when (boost--latex-compilation-buffer-p)
       (boost--fontify-latex-output)))
 
   (add-hook 'compilation-mode-hook
@@ -4226,15 +4232,14 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
     ;; Don't ask user for permission to save files before starting TeX.
     (setq TeX-save-query nil)
 
-    (defun TeX-default ()
-      "Choose the default command from `C-c C-c'."
+    (defun boost-tex-command-default ()
+      "Run the default AUCTeX command without prompting."
       (interactive)
-      (TeX-save-document "")          ; or just use `TeX-save-query'
-      (execute-kbd-macro (kbd "C-c C-c RET")))
+      (TeX-save-document "")
+      (TeX-command TeX-command-default 'TeX-master-file))
 
-    ;; Rebind the "compile command" to default command from `C-c C-c' (in LaTeX
-    ;; mode only).
-    (define-key LaTeX-mode-map (kbd "<f9>") #'TeX-default)
+    ;; Rebind the compile command to the default AUCTeX command in LaTeX mode only.
+    (define-key LaTeX-mode-map (kbd "<f9>") #'boost-tex-command-default)
 
     ;; Use PDF mode by default (instead of DVI).
     (setq-default TeX-PDF-mode t)
@@ -4243,23 +4248,30 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
     (leuven--section "4.2 (auctex)Viewing the formatted output")
 
-    ;; Use a saner PDF viewer (SumatraPDF, evince).
+    ;; Use a saner PDF viewer (SumatraPDF, the default Windows PDF application).
     (defvar leuven--sumatrapdf-command
       (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
       "Path to the SumatraPDF executable.")
 
-    ;; Configure SumatraPDF as the PDF viewer for Windows-based systems.
-    (when (or lvn--win32-p
-              lvn--wsl-p
-              lvn--cygwin-p)
-      ;; Add SumatraPDF to available viewers (AUCTeX 11.86+).
-      (when (boundp 'TeX-view-program-list)
+    ;; Configure the PDF viewer.
+    (when (boundp 'TeX-view-program-list)
+      ;; Native Windows: invoke SumatraPDF directly.
+      (when (and lvn--win32-p
+                 (file-executable-p leuven--sumatrapdf-command))
         (add-to-list 'TeX-view-program-list
                      `("SumatraPDF"
-                       ,(list (concat "\"" leuven--sumatrapdf-command "\" %o")))))
-      ;; Set SumatraPDF as default PDF viewer.
-      (setcdr (assoc 'output-pdf TeX-view-program-selection)
-              '("SumatraPDF")))
+                       ,(list (format "\"%s\" %%o"
+                                      leuven--sumatrapdf-command))))
+        (setcdr (assoc 'output-pdf TeX-view-program-selection)
+                '("SumatraPDF")))
+
+      ;; WSL: open the PDF with the default Windows PDF application.
+      (when lvn--wsl-p
+        (add-to-list 'TeX-view-program-list
+                     '("Windows PDF Viewer"
+                       ("cmd.exe /c start \"\" \"$(wslpath -w %o)\"")))
+        (setcdr (assoc 'output-pdf TeX-view-program-selection)
+                '("Windows PDF Viewer"))))
 
 ;;** 4.7 (info "(auctex)Documentation")
 
