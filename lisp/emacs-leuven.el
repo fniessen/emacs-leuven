@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.1009>
+;; Version: <20260701.1147>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.1009>"
+(defconst boost-version "<20260701.1147>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -433,7 +433,7 @@ Shows a warning message if the file does not exist or is not executable."
       '(ag
         ant
         anzu
-        ;; auctex
+        auctex
         ;; auto-complete
         auto-highlight-symbol
         auto-package-update
@@ -2326,7 +2326,7 @@ After initiating the grep search, the isearch is aborted."
                         highlight-changes
                         highlight-changes-delete
                         org-block-executing
-                        recover-this-file))
+                        boost-recover-overlay-face))
           (delete-overlay ov))))
     (message "[Buffer synchronized with disk and overlays removed]"))
 
@@ -4029,8 +4029,9 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   (defconst boost-latex-output-font-lock-keywords
     '(;; LaTeX error messages.
       ("^!.*" . compilation-error-face)
-      ;; Latexmk separator lines.
-      ("^-+$" . compilation-info-face)
+      ;; LatexMk separator lines.
+      ("^-+$" . ahs-plugin-default-face)
+                                        ;; compilation-info-face)
       ;; LaTeX package errors.
       ("Package .* Error:.*" . compilation-error-face)
       ;; LaTeX package warnings.
@@ -4038,11 +4039,13 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
       ;; Undefined references.
       ("Reference .* undefined" . compilation-warning-face)
       ;; Overfull/Underfull boxes.
-      ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-string-face)
+      ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . ahs-definition-face)
+                                        ;; font-lock-string-face) FOR TESTING PURPOSE...
       ;; Font warnings.
       ("^LaTeX Font Warning:" . font-lock-string-face)
       ;; Output written lines (successful compilation)
-      ("^Output written on .*\\.pdf (.*)" . font-lock-function-name-face)
+      ("^Output written on .*\\.pdf.*" . ahs-plugin-whole-buffer-face)
+                                        ;; font-lock-function-name-face)
       ;; Add more patterns as needed...
       )
     "Additional font-lock keywords for LaTeX output buffers.")
@@ -4061,20 +4064,18 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   ;; Colorize LaTeX output in AUCTeX output buffers.
   (add-hook 'TeX-output-mode-hook #'boost--configure-latex-output)
 
-  (defun boost--colorize-latex-shell-output (_output)
-    "Colorize LaTeX output inserted in a shell buffer."
-    (boost--fontify-latex-output))
+  (defun boost--configure-latex-compilation-buffer ()
+    "Colorize LaTeX output in `compilation-mode' buffers."
+    (when (or (string-match-p "\\*compilation\\*" (buffer-name))
+              (save-excursion
+                (goto-char (point-min))
+                (re-search-forward
+                 "\\b\\(?:pdflatex\\|xelatex\\|lualatex\\|latexmk\\)\\b"
+                 nil t)))
+      (boost--fontify-latex-output)))
 
-  (defun boost--setup-latex-shell-output ()
-    "Enable LaTeX output highlighting in shell buffers."
-    (boost--fontify-latex-output)
-    (add-hook 'comint-output-filter-functions
-              #'boost--colorize-latex-shell-output
-              nil
-              t))
-
-  ;; Colorize LaTeX output in shell buffers.
-  (add-hook 'shell-mode-hook #'boost--setup-latex-shell-output)
+  (add-hook 'compilation-mode-hook
+            #'boost--configure-latex-compilation-buffer)
 
   ;; Align LaTeX table columns and row terminators in the selected region.
   (defun boost-align-latex-tables (start end &optional only-rows)
@@ -4146,14 +4147,36 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
     (leuven--section "4.1 Executing (auctex)Commands")
 
-    ;; Add a command to execute on the LaTeX document.
-    (add-to-list 'TeX-command-list      ; ~ `tex-compile-commands'.
-                 '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+    (with-eval-after-load 'tex          ; AUCTeX.
+      ;; Simplify the AUCTeX command menu by removing commands that are not used.
+      (dolist (name '("TeX"
+                      "Makeinfo"
+                      "Makeinfo HTML"
+                      "AmSTeX"
+                      "ConTeXt"
+                      "ConTeXt Full"
+                      "Texindex"
+                      "Texi2dvi"
+                      "Print"
+                      "Queue"
+                      "File"
+                      "Dvips"
+                      "Dvipdfmx"
+                      "Ps2pdf"
+                      "Glossaries"
+                      "Index"
+                      "upMendex"
+                      "Xindy"
+                      "Check"
+                      "ChkTeX"))
+        (setq TeX-command-list
+              (assoc-delete-all name TeX-command-list #'string=))))
 
-    ;; (add-to-list 'TeX-command-list
-    ;;              '("latexmk" "(run-latexmk)"
-    ;;                TeX-run-function nil t :help "Run latexmk") :append)
-    ;; (setq TeX-command-default "latexmk")
+    (with-eval-after-load 'tex
+      ;; Make `LaTeXMk' the default compilation command.
+      (add-hook 'LaTeX-mode-hook
+                (lambda ()
+                  (setq TeX-command-default "LaTeXMk"))))
 
     ;; Not called?
     (defun lvn--setup-latex-mode ()
