@@ -7314,8 +7314,8 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
   ;; Extra font-lock keywords for LaTeX output buffers.
   (defconst boost-latex-output-font-lock-keywords
     '(;; LaTeX errors.
-      ("^.*Undefined control sequence\\.$" . compilation-error-face)
-      ("^.*Fatal error.*$" . compilation-error-face)
+      ("^.*Undefined control sequence.*" . compilation-error-face)
+      ("^.*Fatal error.*" . compilation-error-face)
       ("^!.*" . compilation-error-face)
       ("^Package .* Error:.*" . compilation-error-face)
 
