@@ -7310,6 +7310,33 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
 
 - properly quote ~tex-start-commands~.
 
+#+begin_src emacs-lisp :tangle no
+  (defface boost-latex-error-face
+    '((t (:weight bold :foreground "#E62020" :background "#FFCABF")))
+    "Face for LaTeX errors."
+    :group 'boost)
+
+  (defface boost-latex-warning-face
+    '((t (:foreground "#EA8820" :background "#FFF4BF")))
+    "Face for LaTeX warnings."
+    :group 'boost)
+
+  (defface boost-latex-box-warning-face
+    '((t (:foreground "#BFD6FF")))
+    "Face for LaTeX box warnings."
+    :group 'boost)
+
+  (defface boost-latex-info-face
+    '((t (:background "#E1F1FF")))
+    "Face for informational LaTeX output."
+    :group 'boost)
+
+  (defface boost-latex-success-face
+    '((t (:weight bold :background "#56EB54")))
+    "Face for successful LaTeX output."
+    :group 'boost)
+#+end_src
+
 #+begin_src emacs-lisp
   ;; Extra font-lock keywords for LaTeX output buffers.
   (defconst boost-latex-output-font-lock-keywords
@@ -7576,7 +7603,9 @@ file, AUCTeX gives you a ~Command~ menu.
       (add-hook 'LaTeX-mode-hook
                 (lambda ()
                   (setq TeX-command-default "LaTeXMk"))))
+#+end_src
 
+#+begin_src emacs-lisp
     ;; Not called?
     (defun lvn--setup-latex-mode ()
       "Custom hook for LaTeX mode."
