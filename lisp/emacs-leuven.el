@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.1219>
+;; Version: <20260701.1302>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.1219>"
+(defconst boost-version "<20260701.1302>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4154,26 +4154,26 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
     (with-eval-after-load 'tex          ; AUCTeX.
       ;; Simplify the AUCTeX command menu by removing commands that are not used.
-      (dolist (name '("TeX"
-                      "Makeinfo"
-                      "Makeinfo HTML"
-                      "AmSTeX"
-                      "ConTeXt"
+      (dolist (name '("AmSTeX"
+                      "Check"
+                      "ChkTeX"
                       "ConTeXt Full"
-                      "Texindex"
-                      "Texi2dvi"
-                      "Print"
-                      "Queue"
-                      "File"
-                      "Dvips"
+                      "ConTeXt"
                       "Dvipdfmx"
-                      "Ps2pdf"
+                      "Dvips"
+                      "File"
                       "Glossaries"
                       "Index"
-                      "upMendex"
+                      "Makeinfo HTML"
+                      "Makeinfo"
+                      "Print"
+                      "Ps2pdf"
+                      "Queue"
+                      "TeX"
+                      "Texi2dvi"
+                      "Texindex"
                       "Xindy"
-                      "Check"
-                      "ChkTeX"))
+                      "upMendex"))
         (setq TeX-command-list
               (assoc-delete-all name TeX-command-list #'string=))))
 

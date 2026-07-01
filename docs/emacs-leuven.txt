@@ -7548,26 +7548,26 @@ file, AUCTeX gives you a ~Command~ menu.
 
     (with-eval-after-load 'tex          ; AUCTeX.
       ;; Simplify the AUCTeX command menu by removing commands that are not used.
-      (dolist (name '("TeX"
-                      "Makeinfo"
-                      "Makeinfo HTML"
-                      "AmSTeX"
-                      "ConTeXt"
+      (dolist (name '("AmSTeX"
+                      "Check"
+                      "ChkTeX"
                       "ConTeXt Full"
-                      "Texindex"
-                      "Texi2dvi"
-                      "Print"
-                      "Queue"
-                      "File"
-                      "Dvips"
+                      "ConTeXt"
                       "Dvipdfmx"
-                      "Ps2pdf"
+                      "Dvips"
+                      "File"
                       "Glossaries"
                       "Index"
-                      "upMendex"
+                      "Makeinfo HTML"
+                      "Makeinfo"
+                      "Print"
+                      "Ps2pdf"
+                      "Queue"
+                      "TeX"
+                      "Texi2dvi"
+                      "Texindex"
                       "Xindy"
-                      "Check"
-                      "ChkTeX"))
+                      "upMendex"))
         (setq TeX-command-list
               (assoc-delete-all name TeX-command-list #'string=))))
 
