@@ -7374,64 +7374,7 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
     (font-lock-flush))
 #+end_src
 
-Without AUCTeX (shell buffer):
-
-#+begin_src emacs-lisp :tangle no
-  (defun boost--latex-output-command-p ()
-    "Return non-nil when the current shell command looks like LaTeX."
-    (save-excursion
-      (goto-char comint-last-input-start)
-      (looking-at-p ".*\\b\\(?:pdflatex\\|xelatex\\|lualatex\\|latexmk\\)\\b")))
-
-  (defun boost--propertize-latex-shell-output (_output)
-    "Colorize newly inserted LaTeX output in shell buffers."
-    (when (boost--latex-output-command-p)
-      (save-excursion
-        (let ((inhibit-read-only t)
-              (beg comint-last-output-start)
-              (end (point-max)))
-          (goto-char beg)
-          (while (re-search-forward "^!.*" end t)
-            (add-face-text-property
-             (match-beginning 0) (match-end 0)
-             'compilation-error-face))
-          (goto-char beg)
-          (while (re-search-forward "^Package .* Warning:.*" end t)
-            (add-face-text-property
-             (match-beginning 0) (match-end 0)
-             'compilation-warning-face))
-          (goto-char beg)
-          (while (re-search-forward "Reference .* undefined" end t)
-            (add-face-text-property
-             (match-beginning 0) (match-end 0)
-             'compilation-warning-face))
-          (goto-char beg)
-          (while (re-search-forward
-                  "^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" end t)
-            (add-face-text-property
-             (match-beginning 0) (match-end 0)
-             'font-lock-string-face))
-          (goto-char beg)
-          (while (re-search-forward "^LaTeX Font Warning:.*" end t)
-            (add-face-text-property
-             (match-beginning 0) (match-end 0)
-             'font-lock-string-face))
-          (goto-char beg)
-          (while (re-search-forward "^Output written on .*\\.pdf (.*)" end t)
-            (add-face-text-property
-             (match-beginning 0) (match-end 0)
-             'font-lock-function-name-face))))))
-
-  (defun boost--setup-latex-shell-output ()
-    "Enable LaTeX output highlighting in shell buffers."
-    (add-hook 'comint-output-filter-functions
-              #'boost--propertize-latex-shell-output
-              nil
-              t))
-
-  ;; Colorize LaTeX output in shell buffers.
-  (add-hook 'shell-mode-hook #'boost--setup-latex-shell-output)
-#+end_src
+Without AUCTeX = shell buffer
 
 With AUCTeX:
 
@@ -7601,8 +7544,8 @@ file, AUCTeX gives you a ~Command~ menu.
     (with-eval-after-load 'tex
       ;; Make `LaTeXMk' the default compilation command.
       (add-hook 'LaTeX-mode-hook
-                (lambda ()
-                  (setq TeX-command-default "LaTeXMk"))))
+                (defun boost-set-latexmk ()
+                  (setq-local TeX-command-default "LaTeXMk"))))
 #+end_src
 
 #+begin_src emacs-lisp

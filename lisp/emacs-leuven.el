@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.1302>
+;; Version: <20260701.1546>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.1302>"
+(defconst boost-version "<20260701.1546>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4180,8 +4180,8 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
     (with-eval-after-load 'tex
       ;; Make `LaTeXMk' the default compilation command.
       (add-hook 'LaTeX-mode-hook
-                (lambda ()
-                  (setq TeX-command-default "LaTeXMk"))))
+                (defun boost-set-latexmk ()
+                  (setq-local TeX-command-default "LaTeXMk"))))
 
     ;; Not called?
     (defun lvn--setup-latex-mode ()
