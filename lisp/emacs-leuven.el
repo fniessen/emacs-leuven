@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.0846>
+;; Version: <20260701.0942>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.0846>"
+(defconst boost-version "<20260701.0942>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -5895,22 +5895,22 @@ a clean buffer we're an order of magnitude laxer about checking."
 
     (global-set-key (kbd "C-c & C-r") #'yas-reload-all)
 
-    ;; Automatically reload snippets after saving.
-    (defun recompile-and-reload-all-snippets ()
-      (interactive)
+    ;; Automatically recompile and reload snippets after saving.
+    (defun boost--yas-recompile-and-reload-after-save ()
+      "Recompile and reload YASnippet tables when saving a `snippet-mode' buffer."
       (when (derived-mode-p 'snippet-mode)
         (yas-recompile-all)
         (yas-reload-all)
-        (message "[Reloaded all snippets]")))
+        (message "[Reloaded YASnippet tables]")))
 
-    (add-hook 'after-save-hook #'recompile-and-reload-all-snippets)
+    (add-hook 'after-save-hook #'boost--yas-recompile-and-reload-after-save)
 
     (global-set-key (kbd "C-c & C-l") #'yas-describe-tables)
 
     (defvar leuven-contextual-menu-map
       (let ((map (make-sparse-keymap "Contextual menu")))
         (define-key map [help-for-help] (cons "Help" 'help-for-help))
-        (define-key map [seperator-two] '(menu-item "--"))
+        (define-key map [separator-two] '(menu-item "--"))
         map)
       "Keymap for the contextual menu.")
 
@@ -5932,8 +5932,7 @@ a clean buffer we're an order of magnitude laxer about checking."
               (lambda ()
                 (setq require-final-newline nil)))
 
-    ;; ;; Make the "yas-minor-mode"'s expansion behavior to take input word
-    ;; ;; including hyphen.
+    ;; Make YASnippet include symbol characters and dots when looking for keys.
     ;; (setq yas-key-syntaxes '("w_" "w_." "^ "))
                                         ; [default:
                                         ; '("w" "w_" "w_." "w_.()"

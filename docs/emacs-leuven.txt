@@ -11426,36 +11426,53 @@ It allows you to write frequently used text more quickly.
 
 ** Controlling Abbrev Expansion
 
-Inspired by [[http://macromates.com/][TextMate]]. In fact, many editors support *snippets* (/quick texts/):
-Eclipse, Notepad++, etc.
+Like many modern editors (TextMate, Eclipse, Notepad++, IntelliJ, etc.), Emacs
+supports quick *text expansion* to speed up repetitive editing.
 
 *************** TODO Add rv for "REVIEW[who] text" https://www.jetbrains.com/help/idea/using-live-templates-in-todo-comments.html
 *************** END
 
-For complex templates, I use ~YASnippet~. For example, new file templates (where
-it's Lisp evaluation is handy), class and function templates with docblocks,
-etc. I use it to reduce the repetitious parts of programming, and let me focus
-on getting things done.
+For simple word expansions, the built-in *abbrev* facility is lightweight and
+fast. For more sophisticated templates, I use *YASnippet*.
 
-~YASnippet~ does support mirror fields and transformations. It also does support
-multiple snippets with same name. It will also expand snippets containing
-non-word-constituent characters, which ~abbrev~ can't. So I can't have ~@p~ expand
-to ~@param~ with ~abbrev~, but I can with ~YASnippet~.
+YASnippet is well suited to snippets containing placeholders, mirrors,
+transformations, and embedded Lisp code. Typical uses include:
+
+- new file templates,
+- class and function skeletons,
+- documentation blocks,
+- boilerplate code.
+
+It helps eliminate repetitive typing while letting me focus on the interesting
+parts of programming.
+
+Compared to ~abbrev~, YASnippet offers several additional features:
+
+- placeholder fields and mirrored fields,
+- field transformations,
+- embedded Emacs Lisp evaluation,
+- multiple snippets sharing the same trigger,
+- snippet triggers containing non-word characters.
+
+For example, while ~abbrev~ cannot expand ~@p~ into ~@param~, YASnippet can.
 
 XXX Look at https://github.com/vderyagin/dotemacs/blob/master/conf/yasnippet-configuration.el
 
+A minimal snippet looks like this:
+
 #+begin_example
 # -*- mode: snippet -*-
-# name: file.name
+# name: Greeting
 # key: hello
 # --
 Hello,$0 ${1:this} is a ${2:snippet}.
 #+end_example
 
-Predefined YASnippet variables:
-- ~$0~ indicates the position of the cursor after the template is expanded.
-- ~`yas-selected-text`~ is used in *surround templates* and stands for the code
-  fragment to be wrapped.
+Some predefined YASnippet variables:
+
+- ~$0~ specifies the final cursor position after expansion.
+- ~yas-selected-text~ contains the active region when using a *surround
+  snippet*, allowing the selected text to be wrapped by the template.
 
 #+begin_src emacs-lisp
 ;;** 30.3 Controlling (info "(emacs)Expanding Abbrevs")
@@ -11579,18 +11596,18 @@ After editing your snippets:
     (global-set-key (kbd "C-c & C-r") #'yas-reload-all)
 #+end_src
 
-Automatically reload snippets after saving.
+Automatically recompile and reload snippets after saving:
 
 #+begin_src emacs-lisp
-    ;; Automatically reload snippets after saving.
-    (defun recompile-and-reload-all-snippets ()
-      (interactive)
+    ;; Automatically recompile and reload snippets after saving.
+    (defun boost--yas-recompile-and-reload-after-save ()
+      "Recompile and reload YASnippet tables when saving a `snippet-mode' buffer."
       (when (derived-mode-p 'snippet-mode)
         (yas-recompile-all)
         (yas-reload-all)
-        (message "[Reloaded all snippets]")))
+        (message "[Reloaded YASnippet tables]")))
 
-    (add-hook 'after-save-hook #'recompile-and-reload-all-snippets)
+    (add-hook 'after-save-hook #'boost--yas-recompile-and-reload-after-save)
 #+end_src
 
 Display all available snippets with ~M-x yas-describe-tables~ (or ~C-c & C-l~ in
@@ -11606,7 +11623,7 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
     (defvar leuven-contextual-menu-map
       (let ((map (make-sparse-keymap "Contextual menu")))
         (define-key map [help-for-help] (cons "Help" 'help-for-help))
-        (define-key map [seperator-two] '(menu-item "--"))
+        (define-key map [separator-two] '(menu-item "--"))
         map)
       "Keymap for the contextual menu.")
 
@@ -11627,7 +11644,10 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
 
 *** Frequently Asked Questions
 
-**** Why is there an extra newline?
+**** Why is there an extra newline in snippet files?
+
+Snippet files should usually not force a final newline. Disable it locally in
+~snippet-mode~:
 
 #+begin_src emacs-lisp
     (add-hook 'snippet-mode-hook
@@ -11637,50 +11657,45 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
 
 **** Why doesn't TAB expand a snippet?
 
-1. Check the mode line to see if there's ~yas~. If not, then try
-   ~M-x yas-minor-mode~ to manually turn on the minor mode and try to expand the
-   snippet again.
-
-   If it works, then, you can add the following code to your =.emacs= before
-   loading YASnippet:
+1. First, check that ~yas-minor-mode~ is enabled in the current buffer. The mode
+   line should contain ~yas~. If not, enable it manually with:
 
    #+begin_example
-   (add-hook 'the-major-mode-hook #'yas-minor-mode-on)
+   M-x yas-minor-mode
    #+end_example
 
-   where ~the-major-mode~ is the major mode in which ~yas-minor-mode~ isn't enabled
-   by default.
+   If that fixes the issue, enable YASnippet for the relevant major mode:
 
-   You can also use the command ~M-x yas-global-mode~ to turn on YASnippet
-   automatically for all major modes.
+   #+begin_src emacs-lisp :tangle no
+   (add-hook 'the-major-mode-hook #'yas-minor-mode-on)
+   #+end_src
 
-2. If ~yas-minor-mode~ is on but the snippet still not expanded, then try to see
-   what command is bound to the ~TAB~ key: press ~C-h k~ and then press ~TAB~. Emacs
-   will show you the result.
+   Alternatively, use ~yas-global-mode~ to enable it in all buffers.
 
-   You'll see a buffer prompted by Emacs saying that ~TAB~ runs the command "...".
-   Alternatively, you might see ~TAB~ runs the command "...". Note the
-   difference between ~TAB~ and ~TAB~ where the latter has priority.
+2. If ~yas-minor-mode~ is already enabled, check what command ~TAB~ runs:
 
-   If you see ~TAB~ bound to a command other than ~yas-expand~ (e.g. in org-mode),
-   you can try a work around. See
-   https://github.com/capitaomorte/yasnippet/blob/master/doc/faq.org.
+   #+begin_example
+   C-h k TAB
+   #+end_example
 
-**** yas-key-syntaxes
+   In some modes, especially ~org-mode~, ~TAB~ may be bound to another command before
+   YASnippet gets a chance to expand the snippet. In that case, either use
+   ~yas-expand~ directly or adjust the key binding for that mode.
 
-~yas-key-syntaxes~ is the variable that allows you control the behavior "don't
-expand words finishing with the snippet key", even if:
+   See also the YASnippet FAQ:
+   https://github.com/joaotavora/yasnippet/blob/master/doc/faq.org
 
-- the default syntax table for the major mode you are working on says that "C-s"
-  (for example) is two separate words, and
+**** How does YASnippet decide what counts as a snippet key?
 
-- assuming you don't want to fix the major mode's behavior.
+The variable ~yas-key-syntaxes~ controls how YASnippet looks backward from point
+to find the snippet key. This is useful when snippet keys contain characters
+that are not considered word constituents by the current major mode.
 
-Find it at http://capitaomorte.github.io/yasnippet/snippet-reference.html#yas-key-syntaxes
+For example, the following setting makes YASnippet consider word characters,
+symbols, dots, and whitespace-based keys:
 
 #+begin_src emacs-lisp
-    ;; ;; Make the "yas-minor-mode"'s expansion behavior to take input word
-    ;; ;; including hyphen.
+    ;; Make YASnippet include symbol characters and dots when looking for keys.
     ;; (setq yas-key-syntaxes '("w_" "w_." "^ "))
                                         ; [default:
                                         ; '("w" "w_" "w_." "w_.()"
