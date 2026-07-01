@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.0942>
+;; Version: <20260701.1009>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.0942>"
+(defconst boost-version "<20260701.1009>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4025,14 +4025,8 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
   (leuven--section "25.11 (emacs)TeX Mode")
 
-  ;; Define a derived mode for colorized PDFLaTeX output.
-  (define-derived-mode latex-output-mode fundamental-mode "LaTeX-Output"
-    "Major mode for colorizing LaTeX output."
-    (setq-local font-lock-defaults
-                '((latex-output-font-lock-keywords))))
-
-  ;; Font lock keywords.
-  (defconst latex-output-font-lock-keywords
+  ;; Extra font-lock keywords for LaTeX output buffers.
+  (defconst boost-latex-output-font-lock-keywords
     '(;; LaTeX error messages.
       ("^!.*" . compilation-error-face)
       ;; Latexmk separator lines.
@@ -4051,21 +4045,36 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
       ("^Output written on .*\\.pdf (.*)" . font-lock-function-name-face)
       ;; Add more patterns as needed...
       )
-    "Font lock keywords for `latex-output-mode'.")
+    "Additional font-lock keywords for LaTeX output buffers.")
 
-  ;; Function to apply latex-output-mode and ensure scrolling.
-  (defun lvn--setup-latex-output ()
-    "Enable `latex-output-mode' in the LaTeX output buffer and ensure
-scrolling to the bottom."
-    ;; Ensure mode is always reapplied.
-    (unless (eq major-mode 'latex-output-mode)
-      (latex-output-mode))
-    (set (make-local-variable 'window-point-insertion-type) t)
-    ;; Scroll to the bottom.
+  (defun boost--fontify-latex-output ()
+    "Apply custom highlighting for LaTeX output."
+    (font-lock-add-keywords nil boost-latex-output-font-lock-keywords t)
+    (font-lock-flush))
+
+  (defun boost--configure-latex-output ()
+    "Colorize a LaTeX output buffer and scroll to the bottom."
+    (boost--fontify-latex-output)
+    (setq-local window-point-insertion-type t)
     (goto-char (point-max)))
 
-  ;; Add our function to TeX-output-mode-hook.
-  (add-hook 'TeX-output-mode-hook #'lvn--setup-latex-output)
+  ;; Colorize LaTeX output in AUCTeX output buffers.
+  (add-hook 'TeX-output-mode-hook #'boost--configure-latex-output)
+
+  (defun boost--colorize-latex-shell-output (_output)
+    "Colorize LaTeX output inserted in a shell buffer."
+    (boost--fontify-latex-output))
+
+  (defun boost--setup-latex-shell-output ()
+    "Enable LaTeX output highlighting in shell buffers."
+    (boost--fontify-latex-output)
+    (add-hook 'comint-output-filter-functions
+              #'boost--colorize-latex-shell-output
+              nil
+              t))
+
+  ;; Colorize LaTeX output in shell buffers.
+  (add-hook 'shell-mode-hook #'boost--setup-latex-shell-output)
 
   ;; Align LaTeX table columns and row terminators in the selected region.
   (defun boost-align-latex-tables (start end &optional only-rows)
