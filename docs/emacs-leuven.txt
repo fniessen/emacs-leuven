@@ -503,6 +503,17 @@ If already bound, emit a warning mentioning SCOPE (string)."
     ;;      (string-match-p "Microsoft" (shell-command-to-string "uname -r")))
     "Non-nil if running Emacs on WSL or WSL2.")
 
+  ;; (defconst lvn--wsl-p
+  ;;   (and (eq system-type 'gnu/linux)
+  ;;        (or (getenv "WSL_INTEROP")
+  ;;            (getenv "WSL_DISTRO_NAME")
+  ;;            (and (file-readable-p "/proc/sys/kernel/osrelease")
+  ;;                 (with-temp-buffer
+  ;;                   (insert-file-contents "/proc/sys/kernel/osrelease")
+  ;;                   (goto-char (point-min))
+  ;;                   (re-search-forward "microsoft\\|WSL" nil t)))))
+  ;;   "Non-nil if running Emacs under Windows Subsystem for Linux.")
+
   (defconst lvn--mac-p (eq system-type 'darwin)
     "Non-nil if running Emacs on macOS.")
 
@@ -534,12 +545,8 @@ Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
   (leuven--section "Window system")
 
   (defconst leuven--console-p
-    (not window-system)
-    "Non-nil if running a text-only terminal.")
-
-  (defconst leuven--x-window-p
-    (eq window-system 'x)
-    "Non-nil if running an X Window system.")
+    (not (display-graphic-p))
+    "Non-nil if Emacs is running in a text terminal.")
 
 ;;** Testing file accessibility
 
@@ -578,6 +585,22 @@ Shows a warning message if the file does not exist or is not executable."
   ;;  '((height . 32)))
 
 )                                       ; Chapter 0 ends here.
+#+end_src
+
+** Importing environment variables
+
+This imports selected environment variables from the user's login shell so that
+Emacs inherits the same ~PATH~, ~MANPATH~, and ~INFOPATH~. This makes TeX Live and
+other external tools available without hardcoding installation directories.
+
+#+begin_src emacs-lisp
+;; Import environment variables from the user's login shell.
+(when (or lvn--linux-p lvn--mac-p)
+  (when (boost--try-require 'exec-path-from-shell)
+    (exec-path-from-shell-copy-envs
+     '("PATH"
+       "MANPATH"
+       "INFOPATH"))))
 #+end_src
 
 * Debugging
@@ -695,6 +718,7 @@ like this into your configuration file:
         dumb-jump
         ;; emacs-eclim
         emr
+        exec-path-from-shell
         expand-region
         fancy-narrow
         flycheck
@@ -7726,27 +7750,6 @@ Nor a default when point is on a command name...
 
 You can detect the successful activation of ~preview-latex~: after loading a
 LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
-
-#+begin_src emacs-lisp
-(defconst boost-texlive-bin
-  (concat (string-trim (shell-command-to-string "kpsewhich --var-value=TEXMFROOT"))
-          "/bin/x86_64-linux")
-  "Path to TeX Live executables.")
-
-(when (file-directory-p boost-texlive-bin)
-  ;; Make sure Emacs will find binaries there.
-  (add-to-list 'exec-path boost-texlive-bin)
-
-  ;; Prepend to the PATH environment variable.
-  (setenv "PATH"
-          (concat boost-texlive-bin
-                  path-separator        ; For portability.
-                  (getenv "PATH"))))
-
-(unless (file-directory-p boost-texlive-bin)
-  (message "[Warning] %s does not exist, skipping TeX Live bin in PATH"
-           boost-texlive-bin))
-#+end_src
 
 #+begin_src emacs-lisp
 ;;** (info "(preview-latex)Top")

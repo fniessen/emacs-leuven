@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.1624>
+;; Version: <20260701.1647>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.1624>"
+(defconst boost-version "<20260701.1647>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -326,6 +326,17 @@ If already bound, emit a warning mentioning SCOPE (string)."
     ;;      (string-match-p "Microsoft" (shell-command-to-string "uname -r")))
     "Non-nil if running Emacs on WSL or WSL2.")
 
+  ;; (defconst lvn--wsl-p
+  ;;   (and (eq system-type 'gnu/linux)
+  ;;        (or (getenv "WSL_INTEROP")
+  ;;            (getenv "WSL_DISTRO_NAME")
+  ;;            (and (file-readable-p "/proc/sys/kernel/osrelease")
+  ;;                 (with-temp-buffer
+  ;;                   (insert-file-contents "/proc/sys/kernel/osrelease")
+  ;;                   (goto-char (point-min))
+  ;;                   (re-search-forward "microsoft\\|WSL" nil t)))))
+  ;;   "Non-nil if running Emacs under Windows Subsystem for Linux.")
+
   (defconst lvn--mac-p (eq system-type 'darwin)
     "Non-nil if running Emacs on macOS.")
 
@@ -353,12 +364,8 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (leuven--section "Window system")
 
   (defconst leuven--console-p
-    (not window-system)
-    "Non-nil if running a text-only terminal.")
-
-  (defconst leuven--x-window-p
-    (eq window-system 'x)
-    "Non-nil if running an X Window system.")
+    (not (display-graphic-p))
+    "Non-nil if Emacs is running in a text terminal.")
 
 ;;** Testing file accessibility
 
@@ -397,6 +404,14 @@ Shows a warning message if the file does not exist or is not executable."
   ;;  '((height . 32)))
 
 )                                       ; Chapter 0 ends here.
+
+;; Import environment variables from the user's login shell.
+(when (or lvn--linux-p lvn--mac-p)
+  (when (boost--try-require 'exec-path-from-shell)
+    (exec-path-from-shell-copy-envs
+     '("PATH"
+       "MANPATH"
+       "INFOPATH"))))
 
 ;;* Debugging
 
@@ -455,6 +470,7 @@ Shows a warning message if the file does not exist or is not executable."
         dumb-jump
         ;; emacs-eclim
         emr
+        exec-path-from-shell
         expand-region
         fancy-narrow
         flycheck
@@ -4313,25 +4329,6 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
     ;; Directory containing automatically generated TeX information.
     (setq TeX-auto-local (concat user-emacs-directory "auctex-auto-generated-info/"))
                                         ; Must end with a slash.
-
-(defconst boost-texlive-bin
-  (concat (string-trim (shell-command-to-string "kpsewhich --var-value=TEXMFROOT"))
-          "/bin/x86_64-linux")
-  "Path to TeX Live executables.")
-
-(when (file-directory-p boost-texlive-bin)
-  ;; Make sure Emacs will find binaries there.
-  (add-to-list 'exec-path boost-texlive-bin)
-
-  ;; Prepend to the PATH environment variable.
-  (setenv "PATH"
-          (concat boost-texlive-bin
-                  path-separator        ; For portability.
-                  (getenv "PATH"))))
-
-(unless (file-directory-p boost-texlive-bin)
-  (message "[Warning] %s does not exist, skipping TeX Live bin in PATH"
-           boost-texlive-bin))
 
 ;;** (info "(preview-latex)Top")
 
