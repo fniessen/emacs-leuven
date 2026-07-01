@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260626.1139>
+;; Version: <20260701.0846>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260626.1139>"
+(defconst boost-version "<20260701.0846>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2404,30 +2404,42 @@ After initiating the grep search, the isearch is aborted."
       (if auto-save-default
           (auto-save-mode 1))))
 
-  (defface recover-this-file
+  ;; Make the message "FILENAME has auto save data" unmissable:
+  (defface boost-recover-overlay-face
     '((t :weight bold :background "#FF3F3F"))
-    "Face for buffers visiting files with auto save data."
+    "Face used to highlight buffers with newer auto-save data."
     :group 'files)
 
-  (defvar leuven--recover-this-file nil
-    "If non-nil, an overlay indicating that the visited file has auto save data.")
+  (defvar boost--recover-overlay nil
+    "Overlay highlighting that the visited file has newer auto-save data.")
 
-  (defun leuven--recover-this-file ()
+  (defun boost--recover-this-file ()
+    "Warn when the visited file has newer auto-save data.
+
+Highlights the entire buffer when its auto-save file is newer than the
+visited file, which typically indicates that Emacs or the system crashed
+before the changes were saved. A warning is also displayed explaining how
+to recover the auto-saved changes using `recover-this-file'."
     (let ((warning (not buffer-read-only)))
       (when (and warning
-                 ;; No need to warn if buffer is auto-saved under the name of
-                 ;; the visited file.
+                 ;; No need to warn if the buffer is auto-saved under the name
+                 ;; of the visited file.
                  (not (and buffer-file-name
-                           auto-save-visited-mode)) ; Emacs 26.1
-                 (file-newer-than-file-p (or buffer-auto-save-file-name
-                                             (make-auto-save-file-name))
-                                         buffer-file-name))
-        (set (make-local-variable 'leuven--recover-this-file)
-             (make-overlay (point-min) (point-max)))
-        (overlay-put leuven--recover-this-file
-                     'face 'recover-this-file))))
+                           auto-save-visited-mode))
+                 (file-newer-than-file-p
+                  (or buffer-auto-save-file-name
+                      (make-auto-save-file-name))
+                  buffer-file-name))
+        (setq-local boost--recover-overlay
+                    (make-overlay (point-min) (point-max)))
+        (overlay-put boost--recover-overlay
+                     'face 'boost-recover-overlay-face)
+        (message
+         "[%s has auto-save data.  Use M-x recover-this-file to recover it.]"
+         (file-name-nondirectory buffer-file-name))
+        (sit-for 3))))
 
-  (add-hook 'find-file-hook #'leuven--recover-this-file)
+  (add-hook 'find-file-hook #'boost--recover-this-file)
 
 ;;** 19.9 (info "(emacs)Comparing Files")
 
