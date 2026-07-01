@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.1147>
+;; Version: <20260701.1214>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.1147>"
+(defconst boost-version "<20260701.1214>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4027,27 +4027,32 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
   ;; Extra font-lock keywords for LaTeX output buffers.
   (defconst boost-latex-output-font-lock-keywords
-    '(;; LaTeX error messages.
+    '(;; LaTeX errors.
+      ("^.*Undefined control sequence\\.$" . compilation-error-face)
+      ("^.*Fatal error.*$" . compilation-error-face)
       ("^!.*" . compilation-error-face)
-      ;; LatexMk separator lines.
-      ("^-+$" . ahs-plugin-default-face)
-                                        ;; compilation-info-face)
-      ;; LaTeX package errors.
-      ("Package .* Error:.*" . compilation-error-face)
-      ;; LaTeX package warnings.
+      ("^Package .* Error:.*" . compilation-error-face)
+
+      ;; Offending TeX command.
+      ("^<recently read> \\(\\\\[^[:space:]]+\\)"
+       (1 compilation-error-face))
+
+      ;; Source line reported by TeX.
+      ("^l\\.[0-9]+ .*" . compilation-line-face)
+
+      ;; Warnings.
       ("^Package .* Warning:.*" . compilation-warning-face)
-      ;; Undefined references.
       ("Reference .* undefined" . compilation-warning-face)
-      ;; Overfull/Underfull boxes.
-      ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . ahs-definition-face)
-                                        ;; font-lock-string-face) FOR TESTING PURPOSE...
-      ;; Font warnings.
-      ("^LaTeX Font Warning:" . font-lock-string-face)
-      ;; Output written lines (successful compilation)
-      ("^Output written on .*\\.pdf.*" . ahs-plugin-whole-buffer-face)
-                                        ;; font-lock-function-name-face)
-      ;; Add more patterns as needed...
-      )
+      ("^LaTeX.* Warning:.*" . compilation-warning-face)
+
+      ;; Box warnings.
+      ("^\\s-*\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-string-face)
+
+      ;; LatexMk separator lines.
+      ("^\\s-*-+\\s-*$" . compilation-info-face)
+
+      ;; Successful output.
+      ("^Output written on .*\\.pdf.*" . font-lock-function-name-face))
     "Additional font-lock keywords for LaTeX output buffers.")
 
   (defun boost--fontify-latex-output ()
