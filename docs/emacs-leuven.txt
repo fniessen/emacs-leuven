@@ -4277,47 +4277,58 @@ See https://www.diffchecker.com/diff for an online solution.
   (leuven--section "19.9 (emacs)Comparing Files")
 #+end_src
 
-Press ~e~ in Dired mode to immediately Ediff two marked files, no questions asked:
+Press ~E~ in Dired mode to compare files with Ediff.
+
+If two files are marked, they are compared immediately. If only one file is
+marked, it is used as the first file, and Emacs prompts for the second one.
 
 #+begin_src emacs-lisp
-  (defun leuven-ediff-files-from-dired ()
-"Quickly Ediff files from Dired"
+  (defun boost-ediff-files-from-dired ()
+    "Compare two files from Dired using Ediff.
+
+If two files are marked, compare them. If only one file is marked,
+prompt for the second file, defaulting to `dired-dwim-target-directory'.
+
+The older file is always displayed as file A and the newer file as
+file B."
     (interactive)
-    (let ((files (dired-get-marked-files))
-          (wnd (current-window-configuration)))
-      (if (<= (length files) 2)
-          (let ((file1 (car files))
-                (file2 (if (cdr files)
-                           (cadr files)
-                         (read-file-name
-                          "File B to compare: "
-                          (dired-dwim-target-directory)))))
-            (if (file-newer-than-file-p file1 file2)
-                (ediff-files file2 file1)
-              (ediff-files file1 file2))
-            (add-hook 'ediff-after-quit-hook-internal
-                      (lambda ()
-                        (setq ediff-after-quit-hook-internal nil)
-                        (set-window-configuration wnd))))
-        (error "[No more than 2 files should be marked]"))))
+    (let* ((files (dired-get-marked-files))
+           (file-a (car files))
+           (file-b (cond
+                    ((> (length files) 2)
+                     (user-error "[No more than 2 files should be marked]"))
+                    ((cadr files))
+                    (t
+                     (read-file-name "Compare with: "
+                                     (dired-dwim-target-directory)))))
+           (window-configuration (current-window-configuration)))
+
+      ;; Show the older file on the left and the newer file on the right.
+      (if (file-newer-than-file-p file-a file-b)
+          (ediff-files file-b file-a)
+        (ediff-files file-a file-b))
+
+      (add-hook
+       'ediff-after-quit-hook-internal
+       (lambda ()
+         (set-window-configuration window-configuration))
+       nil t)))
 
   (with-eval-after-load 'dired
-    (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired))
+    (define-key dired-mode-map (kbd "E") #'boost-ediff-files-from-dired))
 #+end_src
 
-- In case no files are marked, the file at point is used as the first file, and
-  ~read-file-name~ is used for the second file. Since I have the magic
-  (setq dired-dwim-target t)
-  in my config, in case a second dired buffer is open,
-  ~dired-dwim-target-directory~ will offer it as the starting directory during
-  completion. Very useful to compare two files in two different directories.
+Notes:
 
-- Depending on the order of the arguments to ~ediff-files~, the changes will
-  appear either as added or removed; ~file-newer-than-file-p~ tries to put the
-  arguments in a logical order by looking at the files' last change times.
+- If only one file is marked, it is compared with a second file selected via
+  ~read-file-name~. When ~dired-dwim-target~ is non-~nil~, the directory shown in
+  another Dired window is offered as the default, making it convenient to
+  compare files from different directories.
 
-- ~ediff-after-quit-hook-internal~ is used to restore the previous window
-  configuration after I quit Ediff with ~q~.
+- The older file is always passed to ~ediff-files~ as file A and the newer file as
+  file B. This provides a consistent left-to-right comparison.
+
+- After quitting Ediff with ~q~, the previous window configuration is restored.
 
 *** Compare windows
 

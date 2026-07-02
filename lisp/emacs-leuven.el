@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1351>
+;; Version: <20260702.1412>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1351>"
+(defconst boost-version "<20260702.1412>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2449,29 +2449,39 @@ to recover the auto-saved changes using `recover-this-file'."
 
   (leuven--section "19.9 (emacs)Comparing Files")
 
-  (defun leuven-ediff-files-from-dired ()
-"Quickly Ediff files from Dired"
+  (defun boost-ediff-files-from-dired ()
+    "Compare two files from Dired using Ediff.
+
+If two files are marked, compare them. If only one file is marked,
+prompt for the second file, defaulting to `dired-dwim-target-directory'.
+
+The older file is always displayed as file A and the newer file as
+file B."
     (interactive)
-    (let ((files (dired-get-marked-files))
-          (wnd (current-window-configuration)))
-      (if (<= (length files) 2)
-          (let ((file1 (car files))
-                (file2 (if (cdr files)
-                           (cadr files)
-                         (read-file-name
-                          "File B to compare: "
-                          (dired-dwim-target-directory)))))
-            (if (file-newer-than-file-p file1 file2)
-                (ediff-files file2 file1)
-              (ediff-files file1 file2))
-            (add-hook 'ediff-after-quit-hook-internal
-                      (lambda ()
-                        (setq ediff-after-quit-hook-internal nil)
-                        (set-window-configuration wnd))))
-        (error "[No more than 2 files should be marked]"))))
+    (let* ((files (dired-get-marked-files))
+           (file-a (car files))
+           (file-b (cond
+                    ((> (length files) 2)
+                     (user-error "[No more than 2 files should be marked]"))
+                    ((cadr files))
+                    (t
+                     (read-file-name "Compare with: "
+                                     (dired-dwim-target-directory)))))
+           (window-configuration (current-window-configuration)))
+
+      ;; Show the older file on the left and the newer file on the right.
+      (if (file-newer-than-file-p file-a file-b)
+          (ediff-files file-b file-a)
+        (ediff-files file-a file-b))
+
+      (add-hook
+       'ediff-after-quit-hook-internal
+       (lambda ()
+         (set-window-configuration window-configuration))
+       nil t)))
 
   (with-eval-after-load 'dired
-    (define-key dired-mode-map (kbd "E") #'leuven-ediff-files-from-dired))
+    (define-key dired-mode-map (kbd "E") #'boost-ediff-files-from-dired))
 
   ;; Compare text in current window with text in next window.
   (global-set-key (kbd "C-=") #'compare-windows)
