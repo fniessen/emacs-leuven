@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1458>
+;; Version: <20260702.1609>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1458>"
+(defconst boost-version "<20260702.1609>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1530,34 +1530,52 @@ Should be selected from `fringe-bitmaps'.")
   ;; Show the column number in each mode line.
   (column-number-mode 1)
 
-  ;; Unclutter the mode line.
+  ;; Reduce visual clutter in the mode line.
   (with-eval-after-load 'diminish-autoloads
-    (with-eval-after-load 'abbrev       (diminish 'abbrev-mode " Ab"))
-    (with-eval-after-load 'anzu         (diminish 'anzu-mode))
-    (with-eval-after-load 'back-button  (diminish 'back-button-mode))
-    (with-eval-after-load 'volatile-highlights (diminish 'volatile-highlights-mode))
-    (with-eval-after-load 'checkdoc     (diminish 'checkdoc-minor-mode " Cd"))
-    ;; (with-eval-after-load 'company      (diminish 'company-mode " Cp"))
-                                        ; Company displays the currently used
-                                        ; backend in the mode-line.
-    (with-eval-after-load 'eldoc        (diminish 'eldoc-mode))
-    (with-eval-after-load 'color-identifiers-mode (diminish 'color-identifiers-mode))
-    (with-eval-after-load 'fancy-narrow (diminish 'fancy-narrow-mode))
-    (with-eval-after-load 'flycheck     (diminish 'flycheck-mode " fC")) ; Wanna see FlyC:1/1.
-    (with-eval-after-load 'flyspell     (diminish 'flyspell-mode " fS"))
-    (with-eval-after-load 'hilit-chg    (diminish 'highlight-changes-mode))
-    ;; (with-eval-after-load 'isearch      (diminish 'isearch-mode (string 32 ?\u279c)))
-    (with-eval-after-load 'paredit      (diminish 'paredit-mode " Pe"))
-    (with-eval-after-load 'projectile-mode (diminish 'projectile-mode))
-    (with-eval-after-load 'rainbow-mode (diminish 'rainbow-mode))
-    (with-eval-after-load 'simple       (diminish 'auto-fill-function))
-    (with-eval-after-load 'whitespace   (diminish 'whitespace-mode))
-    ;; (diminish-on-load hs-minor-mode-hook hs-minor-mode)
-    (with-eval-after-load 'glasses      (diminish 'glasses-mode))
-    ;; (with-eval-after-load 'redshank     (diminish 'redshank-mode))
-    ;; (with-eval-after-load 'smartparens  (diminish 'smartparens-mode)) ;; Don't hide it, as it impacts perf on big files (must see it!)
-    (with-eval-after-load 'which-key    (diminish 'which-key-mode)))
-    ;; (with-eval-after-load 'whitespace   (diminish 'whitespace-mode))
+    (with-eval-after-load 'abbrev
+      (diminish 'abbrev-mode " Ab"))
+    (with-eval-after-load 'anzu
+      (diminish 'anzu-mode))
+    (with-eval-after-load 'back-button
+      (diminish 'back-button-mode))
+    (with-eval-after-load 'checkdoc
+      (diminish 'checkdoc-minor-mode " Cd"))
+    (with-eval-after-load 'color-identifiers-mode
+      (diminish 'color-identifiers-mode))
+    (with-eval-after-load 'eldoc
+      (diminish 'eldoc-mode))
+    (with-eval-after-load 'fancy-narrow
+      (diminish 'fancy-narrow-mode))
+    (with-eval-after-load 'flycheck
+      (diminish 'flycheck-mode " fC"))
+    (with-eval-after-load 'flyspell
+      (diminish 'flyspell-mode " fS"))
+    (with-eval-after-load 'glasses
+      (diminish 'glasses-mode))
+    (with-eval-after-load 'hilit-chg
+      (diminish 'highlight-changes-mode))
+    (with-eval-after-load 'paredit
+      (diminish 'paredit-mode " Pe"))
+    (with-eval-after-load 'projectile-mode
+      (diminish 'projectile-mode))
+    (with-eval-after-load 'rainbow-mode
+      (diminish 'rainbow-mode))
+    (with-eval-after-load 'simple
+      (diminish 'auto-fill-function))
+    (with-eval-after-load 'volatile-highlights
+      (diminish 'volatile-highlights-mode))
+    (with-eval-after-load 'which-key
+      (diminish 'which-key-mode))
+    (with-eval-after-load 'whitespace
+      (diminish 'whitespace-mode))
+
+    ;; Keep visible because it displays useful backend/status information.
+    ;; (with-eval-after-load 'company
+    ;;   (diminish 'company-mode " Cp"))
+
+    ;; Keep visible because it can affect performance on large files.
+    ;; (with-eval-after-load 'smartparens
+    ;;   (diminish 'smartparens-mode)))
 
   (defface powerline-modified-face
     '((t (:background "#FFA335" :foreground "black" :weight bold)))
@@ -1616,7 +1634,7 @@ Should be selected from `fringe-bitmaps'.")
       s))
 
   (defun powerline-leuven-theme ()
-    "Setup the Leuven mode-line theme."
+    "Set up the Leuven mode-line theme."
     (interactive)
     (setq-default mode-line-format
       '("%e"
