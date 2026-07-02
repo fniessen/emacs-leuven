@@ -27,8 +27,6 @@
 
 | Item                                | Type     | Status          | Replacement                                                                   |
 |-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
-| w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start"                    |
-|-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
 | menu-bar-enable-clipboard           | Function | Obsolete (23.2) | Remove; clipboard is default                                                  |
 | garbage-collection-messages         | Variable | Obsolete (24.4) | Remove; use after-gc-hook if needed                                           |
 | comint-use-prompt-regexp            | Variable | Obsolete (24.4) | Not set; rely on comint-prompt-read-only                                      |
