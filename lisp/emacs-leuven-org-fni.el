@@ -9,6 +9,25 @@
         (when (eq major-mode 'org-agenda-mode)
           (kill-buffer buf)))))
 
+  (defun fni-org-agenda-skip-priority-a ()
+    "Skip agenda entries whose priority is A."
+    (let ((priority (org-get-priority (thing-at-point 'line t))))
+      (when (= priority org-priority-highest)
+        (or (outline-next-heading) (point-max)))))
+
+  (defun fni-org-agenda-skip-scheduled-future ()
+    "Skip entries scheduled after today."
+    (let ((scheduled (org-get-scheduled-time (point))))
+      (when (and scheduled
+                 (> (time-to-days scheduled)
+                    (time-to-days (current-time))))
+        (or (outline-next-heading) (point-max)))))
+
+  (defun fni-org-agenda-skip-priority-a-or-scheduled-future ()
+    "Skip priority A entries or entries scheduled after today."
+    (or (fni-org-agenda-skip-priority-a)
+        (fni-org-agenda-skip-scheduled-future)))
+
   (defun fni-org-agenda-dashboard ()
     "GTD dashboard focused on FNI agenda files."
     (interactive)
@@ -31,21 +50,23 @@
    'org-agenda-custom-commands
    '("F" "Fabrice GTD Dashboard"
      (;; 1. Do IMMEDIATELY.
-      (tags-todo "+urgent|PRIORITY=\"A\"|DEADLINE<=\"<+3d>\"-SCHEDULED>=\"<tomorrow>\""
+      (tags-todo "+urgent|PRIORITY=\"A\"|DEADLINE<=\"<+3d>\""
                  ((org-agenda-overriding-header "‼ Do IMMEDIATELY")
                   (org-agenda-sorting-strategy
-                   '(deadline-up priority-down effort-up category-keep))))
-
+                   '(deadline-up priority-down effort-up category-keep))
+                  (org-agenda-skip-function
+                   #'fni-org-agenda-skip-scheduled-future)))
       ;; 2. Next 7 Days.
       (agenda ""
               ((org-agenda-span 7)
-               (org-agenda-start-day "+0d") ; "+0d" to include today.
+               (org-agenda-start-day "+0d")
                (org-agenda-overriding-header "▦ Next 7 Days")
                (org-deadline-warning-days 7)
+               (org-agenda-entry-types '(:scheduled :deadline :sexp))
                (org-agenda-sorting-strategy
                 '(time-up deadline-up priority-down category-keep))
-               (org-agenda-entry-types '(:scheduled :deadline :sexp))
-               (org-agenda-skip-function #'fni-org-agenda-skip-priority-a)))
+               (org-agenda-skip-function
+                #'fni-org-agenda-skip-priority-a)))
 
       ;; 3. In Progress.
       (tags-todo "TODO=\"STRT\"-PRIORITY=\"A\""
@@ -54,10 +75,12 @@
                    '(priority-down deadline-up effort-up category-keep))))
 
       ;; 4. Next Actions.
-      (tags-todo "TODO=\"NEXT\"-PRIORITY=\"A\"-urgent-SCHEDULED>=\"<tomorrow>\""
+      (tags-todo "TODO=\"NEXT\"-PRIORITY=\"A\"-urgent"
                  ((org-agenda-overriding-header "➜ Next Actions")
                   (org-agenda-sorting-strategy
-                   '(priority-down deadline-up effort-up category-keep))))
+                   '(priority-down deadline-up effort-up category-keep))
+                  (org-agenda-skip-function
+                   #'fni-org-agenda-skip-scheduled-future)))
 
       ;; 5. Waiting For.
       (tags-todo "TODO=\"WAIT\"-PRIORITY=\"A\""
@@ -66,10 +89,12 @@
                    '(deadline-up priority-down category-keep))))
 
       ;; 6. To Clarify / Plan.
-      (tags-todo "TODO=\"TODO\"|TODO=\"MAYB\"-PRIORITY=\"A\"-urgent-SCHEDULED>=\"<tomorrow>\""
+      (tags-todo "TODO=\"TODO\"|TODO=\"MAYB\"-urgent"
                  ((org-agenda-overriding-header "⋯ To Clarify/Plan")
                   (org-agenda-sorting-strategy
-                   '(priority-down category-keep effort-up)))))
+                   '(priority-down category-keep effort-up))
+                  (org-agenda-skip-function
+                   #'fni-org-agenda-skip-priority-a-or-scheduled-future))))
 
      ;; Global options for this custom agenda.
      ((org-agenda-prefix-format
