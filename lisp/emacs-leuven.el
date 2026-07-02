@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1630>
+;; Version: <20260702.1652>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1630>"
+(defconst boost-version "<20260702.1652>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1463,13 +1463,14 @@ Should be selected from `fringe-bitmaps'.")
   ;; ;; Highlight trailing whitespaces in all modes.
   ;; (setq-default show-trailing-whitespace t)
 
-  ;; Unobtrusively remove trailing whitespace using ws-butler.
+  ;; Remove trailing whitespace only on edited lines.
   (with-eval-after-load 'ws-butler-autoloads
     (dolist (hook '(text-mode-hook
                     prog-mode-hook))
       (add-hook hook #'ws-butler-mode)))
 
   (with-eval-after-load 'ws-butler
+    ;; Hide ws-butler from the mode line.
     (diminish 'ws-butler-mode))
 
   ;; Visually indicate empty lines after the buffer end in the fringe.
@@ -1740,7 +1741,7 @@ Should be selected from `fringe-bitmaps'.")
   (leuven--section "15.21 (emacs)The Cursor Display")
 
   ;; Cursor customization based on buffer state.
-  (defun boost-update-cursor-appearance ()
+  (defun boost--update-cursor-appearance ()
     "Update cursor color and shape based on buffer state (read-only, overwrite, or insert)."
     (let* ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
            (cursor-colors `((read-only . "purple1")
@@ -1761,7 +1762,7 @@ Should be selected from `fringe-bitmaps'.")
       (setq cursor-type current-type)))
 
   ;; Update cursor on every command.
-  (add-hook 'post-command-hook #'boost-update-cursor-appearance)
+  (add-hook 'post-command-hook #'boost--update-cursor-appearance)
 
   ;; Default to bar cursor.
   (setq-default cursor-type 'bar)
@@ -1835,87 +1836,84 @@ Should be selected from `fringe-bitmaps'.")
   ;; Isearch mode).
   (setq isearch-allow-scroll t)
 
-  ;; Fuzzy matching utilities (a must-have).
+  ;; Enable fuzzy matching during incremental search.
   (with-eval-after-load 'fuzzy-autoloads
-
+    ;; `turn-on-fuzzy-isearch' is not autoloaded by `fuzzy-autoloads'.
     (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
-                                        ; This autoload isn't defined in
-                                        ; `fuzzy-autoloads'!
 
     (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch))
 
-  ;; Show number of matches in mode-line while searching.
-  (use-package anzu
-    :ensure t
-    ;; Enable Global-Anzu mode.
-    :hook (after-init . global-anzu-mode)
-    :custom
-    ;; Separator of `to' string.
-    (anzu-replace-to-string-separator " => ")
-    :config
-    ;; Function which returns mode-line string.
+  ;; Show the number of matches in the mode line while searching.
+  (with-eval-after-load 'anzu-autoloads
+    (add-hook 'after-init-hook #'global-anzu-mode))
+
+  (with-eval-after-load 'anzu
+    ;; Separator used by replacement commands.
+    (setq anzu-replace-to-string-separator " => ")
+
     (defun boost--anzu-format-mode-line (here total)
-      "Return a mode-line string based on anzu search state.
-    HERE is the current position, TOTAL is the number of matches."
+      "Return a mode-line string for the current Anzu search state.
+
+HERE is the current match position.
+TOTAL is the total number of matches."
       (when anzu--state
-        (let* ((format-string
-                (cl-case anzu--state
-                  (search (if (> total 1)
-                              " %s of %d%s matches "
-                            " %s of %d%s match "))
-                  (replace-query " %d replace ")
-                  (replace (if (> total 1)
-                               " %d of %d matches "
-                             " %d of %d match "))
-                  (t " %s ")))
+        (let* ((search-p (eq anzu--state 'search))
+               (overflow (and search-p anzu--overflow-p))
+               (position (if search-p
+                             (anzu--format-here-position here total)
+                           here))
+               (format-string
+                (pcase anzu--state
+                  ('search
+                   (if (= total 1)
+                       " %s of %d%s match "
+                     " %s of %d%s matches "))
+                  ('replace-query
+                   " %d replace ")
+                  ('replace
+                   (if (= total 1)
+                       " %d of %d match "
+                     " %d of %d matches "))
+                  (_
+                   " %s ")))
                (status-text
                 (format format-string
-                        (if (eq anzu--state 'search)
-                            (anzu--format-here-position here total)
-                          here)
+                        position
                         total
-                        (if (and (eq anzu--state 'search) anzu--overflow-p)
-                            "+"
-                          "")))
-               (face (if (and (zerop total) (not (string-empty-p isearch-string)))
-                         'anzu-mode-line-no-match
-                       'anzu-mode-line)))
+                        (if overflow "+" "")))
+               (face
+                (if (and (zerop total)
+                         (not (string-empty-p isearch-string)))
+                    'anzu-mode-line-no-match
+                  'anzu-mode-line)))
           (propertize status-text 'face face))))
+
     ;; Set the update function.
     (setq anzu-mode-line-update-function #'boost--anzu-format-mode-line))
 
-    ;; ;; Lighter of anzu-mode.
-    ;; (setq anzu-mode-lighter "")
-    ;;
-    ;; ;; Deactive region if you use anzu a replace command with region.
-    ;; (setq anzu-deactivate-region t)
-    ;;
-    ;; ;; Override binding for `query-replace'.
+    ;; ;; Use Anzu for query-replace commands.
     ;; (global-set-key (kbd "M-%")   #'anzu-query-replace)
     ;; (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
-    ;;
-    ;; ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
 
+;; Fall back to the built-in lazy match counter when Anzu is unavailable.
 (unless (fboundp 'anzu-mode)
 
-  ;; Enable lazy counting during Isearch.
+  ;; Display the current and total match count during Isearch.
   (setq isearch-lazy-count t)
 
-  ;; Set the format for displaying lazy count prefix.
+  ;; Customize the lazy-count display format.
   (setq lazy-count-prefix-format "(%s of %s) "))
 
-    ;; Used in Visual Studio Code and IntelliJ IDEA.
-    (defun lvn-find-usages ()
-      "Approximate 'find usages' using occur command."
+    (defun boost-occur-symbol-at-point ()
+      "Show all occurrences of the symbol at point in the current buffer."
       (interactive)
-      (let ((symbol (symbol-at-point)))
-        (if symbol
-            (progn
-              (occur (format "\\_<%s\\_>" (regexp-quote (symbol-name symbol))))
-              (switch-to-buffer "*Occur*"))
-          (message "[No symbol at point]"))))
+      (let ((symbol (thing-at-point 'symbol t)))
+        (unless symbol
+          (user-error "[No symbol at point]"))
+        (occur (format "\\_<%s\\_>" (regexp-quote symbol)))))
 
-    (global-set-key (kbd "C-M-<f7>") 'lvn-find-usages)
+    ;; Same key binding as "Find Usages" in Visual Studio and IntelliJ IDEA.
+    (global-set-key (kbd "C-M-<f7>") #'boost-occur-symbol-at-point)
 
 ;;** 16.5 (info "(emacs)Regexp Search")
 

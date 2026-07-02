@@ -2789,13 +2789,14 @@ This command also deletes *all empty lines at the end of the buffer*.
 Remove trailing whitespace in *edited lines only* with ~ws-butler~:
 
 #+begin_src emacs-lisp
-  ;; Unobtrusively remove trailing whitespace using ws-butler.
+  ;; Remove trailing whitespace only on edited lines.
   (with-eval-after-load 'ws-butler-autoloads
     (dolist (hook '(text-mode-hook
                     prog-mode-hook))
       (add-hook hook #'ws-butler-mode)))
 
   (with-eval-after-load 'ws-butler
+    ;; Hide ws-butler from the mode line.
     (diminish 'ws-butler-mode))
 #+end_src
 
@@ -3159,7 +3160,7 @@ Colorize cursor according to buffer state.
 
 #+begin_src emacs-lisp
   ;; Cursor customization based on buffer state.
-  (defun boost-update-cursor-appearance ()
+  (defun boost--update-cursor-appearance ()
     "Update cursor color and shape based on buffer state (read-only, overwrite, or insert)."
     (let* ((is-light-theme (eq (frame-parameter nil 'background-mode) 'light))
            (cursor-colors `((read-only . "purple1")
@@ -3180,7 +3181,7 @@ Colorize cursor according to buffer state.
       (setq cursor-type current-type)))
 
   ;; Update cursor on every command.
-  (add-hook 'post-command-hook #'boost-update-cursor-appearance)
+  (add-hook 'post-command-hook #'boost--update-cursor-appearance)
 #+end_src
 
 Default cursor settings:
@@ -3330,68 +3331,66 @@ the user see truly invisible matches before replacing them.
 #+end_note
 
 #+begin_src emacs-lisp
-  ;; Fuzzy matching utilities (a must-have).
+  ;; Enable fuzzy matching during incremental search.
   (with-eval-after-load 'fuzzy-autoloads
-
+    ;; `turn-on-fuzzy-isearch' is not autoloaded by `fuzzy-autoloads'.
     (autoload 'turn-on-fuzzy-isearch "fuzzy" nil t)
-                                        ; This autoload isn't defined in
-                                        ; `fuzzy-autoloads'!
 
     (add-hook 'isearch-mode-hook #'turn-on-fuzzy-isearch))
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Show number of matches in mode-line while searching.
-  (use-package anzu
-    :ensure t
-    ;; Enable Global-Anzu mode.
-    :hook (after-init . global-anzu-mode)
-    :custom
-    ;; Separator of `to' string.
-    (anzu-replace-to-string-separator " => ")
-    :config
-    ;; Function which returns mode-line string.
+  ;; Show the number of matches in the mode line while searching.
+  (with-eval-after-load 'anzu-autoloads
+    (add-hook 'after-init-hook #'global-anzu-mode))
+
+  (with-eval-after-load 'anzu
+    ;; Separator used by replacement commands.
+    (setq anzu-replace-to-string-separator " => ")
+
     (defun boost--anzu-format-mode-line (here total)
-      "Return a mode-line string based on anzu search state.
-    HERE is the current position, TOTAL is the number of matches."
+      "Return a mode-line string for the current Anzu search state.
+
+HERE is the current match position.
+TOTAL is the total number of matches."
       (when anzu--state
-        (let* ((format-string
-                (cl-case anzu--state
-                  (search (if (> total 1)
-                              " %s of %d%s matches "
-                            " %s of %d%s match "))
-                  (replace-query " %d replace ")
-                  (replace (if (> total 1)
-                               " %d of %d matches "
-                             " %d of %d match "))
-                  (t " %s ")))
+        (let* ((search-p (eq anzu--state 'search))
+               (overflow (and search-p anzu--overflow-p))
+               (position (if search-p
+                             (anzu--format-here-position here total)
+                           here))
+               (format-string
+                (pcase anzu--state
+                  ('search
+                   (if (= total 1)
+                       " %s of %d%s match "
+                     " %s of %d%s matches "))
+                  ('replace-query
+                   " %d replace ")
+                  ('replace
+                   (if (= total 1)
+                       " %d of %d match "
+                     " %d of %d matches "))
+                  (_
+                   " %s ")))
                (status-text
                 (format format-string
-                        (if (eq anzu--state 'search)
-                            (anzu--format-here-position here total)
-                          here)
+                        position
                         total
-                        (if (and (eq anzu--state 'search) anzu--overflow-p)
-                            "+"
-                          "")))
-               (face (if (and (zerop total) (not (string-empty-p isearch-string)))
-                         'anzu-mode-line-no-match
-                       'anzu-mode-line)))
+                        (if overflow "+" "")))
+               (face
+                (if (and (zerop total)
+                         (not (string-empty-p isearch-string)))
+                    'anzu-mode-line-no-match
+                  'anzu-mode-line)))
           (propertize status-text 'face face))))
+
     ;; Set the update function.
     (setq anzu-mode-line-update-function #'boost--anzu-format-mode-line))
 
-    ;; ;; Lighter of anzu-mode.
-    ;; (setq anzu-mode-lighter "")
-    ;;
-    ;; ;; Deactive region if you use anzu a replace command with region.
-    ;; (setq anzu-deactivate-region t)
-    ;;
-    ;; ;; Override binding for `query-replace'.
+    ;; ;; Use Anzu for query-replace commands.
     ;; (global-set-key (kbd "M-%")   #'anzu-query-replace)
     ;; (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
-    ;;
-    ;; ;; (define-key isearch-mode-map (kbd "M-%") #'anzu-query-replace)
 #+end_src
 
 The following code checks if the ~anzu-mode~ function is defined. If it's not, it
@@ -3400,12 +3399,13 @@ count prefix. Lazy counting improves the performance of Isearch by only updating
 the search count periodically.
 
 #+begin_src emacs-lisp
+;; Fall back to the built-in lazy match counter when Anzu is unavailable.
 (unless (fboundp 'anzu-mode)
 
-  ;; Enable lazy counting during Isearch.
+  ;; Display the current and total match count during Isearch.
   (setq isearch-lazy-count t)
 
-  ;; Set the format for displaying lazy count prefix.
+  ;; Customize the lazy-count display format.
   (setq lazy-count-prefix-format "(%s of %s) "))
 #+end_src
 
@@ -3416,18 +3416,16 @@ the search count periodically.
      found near point added to the search string initially.
 
 #+begin_src emacs-lisp
-    ;; Used in Visual Studio Code and IntelliJ IDEA.
-    (defun lvn-find-usages ()
-      "Approximate 'find usages' using occur command."
+    (defun boost-occur-symbol-at-point ()
+      "Show all occurrences of the symbol at point in the current buffer."
       (interactive)
-      (let ((symbol (symbol-at-point)))
-        (if symbol
-            (progn
-              (occur (format "\\_<%s\\_>" (regexp-quote (symbol-name symbol))))
-              (switch-to-buffer "*Occur*"))
-          (message "[No symbol at point]"))))
+      (let ((symbol (thing-at-point 'symbol t)))
+        (unless symbol
+          (user-error "[No symbol at point]"))
+        (occur (format "\\_<%s\\_>" (regexp-quote symbol)))))
 
-    (global-set-key (kbd "C-M-<f7>") 'lvn-find-usages)
+    ;; Same key binding as "Find Usages" in Visual Studio and IntelliJ IDEA.
+    (global-set-key (kbd "C-M-<f7>") #'boost-occur-symbol-at-point)
 #+end_src
 
 ** Regexp Search
