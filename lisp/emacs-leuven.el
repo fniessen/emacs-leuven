@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1157>
+;; Version: <20260702.1306>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1157>"
+(defconst boost-version "<20260702.1306>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -759,14 +759,6 @@ Shows a warning message if the file does not exist or is not executable."
   ;; How long to display an echo-area message when the minibuffer is active.
   (setq minibuffer-message-timeout 0.5)
 
-;;** 9.3 (info "(emacs)Minibuffer Edit")ing
-
-  (leuven--section "9.3 (emacs)Minibuffer Editing")
-
-  ;; Minibuffer and echo area windows resize vertically as necessary to fit
-  ;; the text displayed in them.
-  (setq resize-mini-windows t)
-
 ;;** 9.4 (info "(emacs)Completion")
 
   (leuven--section "9.4 (emacs)Completion")
@@ -1120,7 +1112,8 @@ called interactively."
                     (let ((mark-even-if-inactive t))
                       (indent-region (region-beginning) (region-end) nil))))))
 
-  ;; Save clipboard strings into kill ring before replacing them.
+  ;; Preserve the previous system clipboard contents in the kill ring before
+  ;; replacing them with an Emacs kill.
   (setq save-interprogram-paste-before-kill t)
 
   ;; ;; Rotating the kill ring changes the window system selection.

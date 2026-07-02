@@ -25,46 +25,22 @@
 
 *** NEXT Remove obsolete variables
 
-| Item                                | Type     | Status          | Replacement                                                                   |
-|-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
-| menu-bar-enable-clipboard           | Function | Obsolete (23.2) | Remove; clipboard is default                                                  |
-| garbage-collection-messages         | Variable | Obsolete (24.4) | Remove; use after-gc-hook if needed                                           |
-| comint-use-prompt-regexp            | Variable | Obsolete (24.4) | Not set; rely on comint-prompt-read-only                                      |
-| ad-disable-advice, ad-update        | Function | Obsolete (24.4) | Remove; already using advice-add                                              |
-| save-interprogram-paste-before-kill | Variable | Obsolete (25.1) | Remove; default behavior now                                                  |
-| yank-pop-change-selection           | Variable | Obsolete (25.1) | Remove (commented out); clipboard handling is automatic                       |
-| find-tag-default                    | Function | Obsolete (25.1) | Use symbol-at-point or thing-at-point 'symbol                                 |
-| resize-mini-windows                 | Variable | Obsolete (27.1) | Remove; use resize-mini-frames if Emacs is running in a graphical environment |
-
+| Item                         | Type     | Status          | Replacement                                             |
+|------------------------------+----------+-----------------+---------------------------------------------------------|
+| ad-disable-advice, ad-update | Function | Obsolete (24.4) | Remove; already using advice-add                        |
+| yank-pop-change-selection    | Variable | Obsolete (25.1) | Remove (commented out); clipboard handling is automatic |
+| find-tag-default             | Function | Obsolete (25.1) | Use symbol-at-point or thing-at-point 'symbol           |
 
 All of those really are marked obsolete in upstream Emacs--you can safely stop setting/removing them in your init and rely on the newer defaults or APIs. Here's the quick rundown:
 
-1. menu-bar-enable-clipboard (obsolete 23.2)
-   • Clipboard support is always on now. Just delete any calls to this.
-
-2. garbage-collection-messages (obsolete 24.4)
-   • If you really want GC logging, use after-gc-hook instead of this variable.
-
-3. comint-use-prompt-regexp (obsolete 24.4)
-   • Emacs now uses comint-prompt-read-only. Remove your setting of the old var.
-
-4. ad-disable-advice, ad-update (both obsolete 24.4)
+1. ad-disable-advice, ad-update (both obsolete 24.4)
    • The new advice API is advice-add/advice-remove. Drop any defadvice or ad-/ calls.
 
-5. save-interprogram-paste-before-kill (obsolete 25.1)
-   • Interprogram paste is always saved by default. You don't need this var.
-
-6. yank-pop-change-selection (obsolete 25.1)
+2. yank-pop-change-selection (obsolete 25.1)
    • Emacs manages the selection automatically when you yank/yank-pop. Remove it.
 
-7. find-tag-default (obsolete 25.1)
+3. find-tag-default (obsolete 25.1)
    • Use (thing-at-point 'symbol) or symbol-at-point, or switch to xref-find-definitions, etc.
-
-8. resize-mini-windows (obsolete 27.1)
-   • In a GUI build use resize-mini-frames. In TTY Emacs respects =resize-mini-windows' invisibly.
-
-
-
 
 *** TODO Remove obsolete variables and functions for Orgstruct
 

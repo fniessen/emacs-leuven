@@ -1083,22 +1083,6 @@ Visual feedback on some operations (~undo~, ~yank~, etc.).
   (setq minibuffer-message-timeout 0.5)
 #+end_src
 
-** Editing in the Minibuffer
-
-If the output is short enough to display in the echo area (which is determined
-by the variables ~resize-mini-windows~ and ~max-mini-window-height~), it is shown in
-echo area.
-
-#+begin_src emacs-lisp
-;;** 9.3 (info "(emacs)Minibuffer Edit")ing
-
-  (leuven--section "9.3 (emacs)Minibuffer Editing")
-
-  ;; Minibuffer and echo area windows resize vertically as necessary to fit
-  ;; the text displayed in them.
-  (setq resize-mini-windows t)
-#+end_src
-
 ** Completion
 
 #+begin_src emacs-lisp
@@ -1883,7 +1867,8 @@ Auto-indent on paste.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Save clipboard strings into kill ring before replacing them.
+  ;; Preserve the previous system clipboard contents in the kill ring before
+  ;; replacing them with an Emacs kill.
   (setq save-interprogram-paste-before-kill t)
 
   ;; ;; Rotating the kill ring changes the window system selection.
