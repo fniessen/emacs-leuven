@@ -3468,8 +3468,6 @@ white spaces, tab spaces, and line breaks as a simple white space.
 
 *** Search Case
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
 #+begin_src emacs-lisp
 ;;** 16.9 (info "(emacs)Search Case")
 
@@ -8865,19 +8863,31 @@ See also [[id:0fa23e4a-e42c-4317-834c-d2ef7c9d741c][Dabbrev]], Emacs' standard a
 
 ** Glasses minor mode
 
-Add overlays to use a different face for the capital letters in symbols like
-~CamelCaseUnreadableSymbol~, to make them easier to read.
+~glasses-mode~ improves the readability of CamelCase identifiers by visually
+highlighting word boundaries.
+
+For example, the identifier
+
+: CamelCaseUnreadableSymbol
+
+can be displayed with its capital letters emphasized, making it easier to read
+without modifying the buffer contents.
 
 #+begin_src emacs-lisp
 ;;** 26.9 (info "(emacs)Glasses") minor mode XXXXXXXXXXXX
 
-  (leuven--section "26.9 (emacs)Glasses minor mode") ; XXXXXXXX
+  (leuven--section "26.9 (emacs)Glasses minor mode")
 
-  (add-hook 'ess-mode-hook          #'glasses-mode)
-  (add-hook 'inferior-ess-mode-hook #'glasses-mode)
-  (add-hook 'java-mode-hook         #'glasses-mode)
+  (dolist (hook '(java-mode-hook
+                  ess-mode-hook
+                  inferior-ess-mode-hook))
+    (add-hook hook #'glasses-mode))
 
   (with-eval-after-load 'glasses
+    (defface boost-glasses-face
+      '((t (:weight bold)))
+      "Face used to highlight CamelCase word boundaries."
+      :group 'glasses)
 
     ;; String to be displayed as a visual separator in unreadable identifiers.
     (setq glasses-separator "")
@@ -8886,20 +8896,17 @@ Add overlays to use a different face for the capital letters in symbols like
     (setq glasses-original-separator "")
 
     ;; Face to be put on capitals of an identifier looked through glasses.
-    (make-face 'leuven-glasses-face)
-    (set-face-attribute 'leuven-glasses-face nil :weight 'bold)
-    (setq glasses-face 'leuven-glasses-face)
-                                        ; Avoid the black foreground set in
-                                        ; `emacs-leuven-theme' to face `bold'.
-
-    ;; Set properties of glasses overlays.
-    (glasses-set-overlay-properties)
+    (setq glasses-face 'boost-glasses-face)
 
     ;; No space between an identifier and an opening parenthesis.
-    (setq glasses-separate-parentheses-p nil))
+    (setq glasses-separate-parentheses-p nil)
+
+    ;; Set properties of glasses overlays.
+    (glasses-set-overlay-properties))
 #+end_src
 
-subword-mode : M-f/M-b in ~CamelCaseUnreadableSymbol~.
+Unlike ~subword-mode~, ~glasses-mode~ is purely visual: it changes only the display
+of identifiers, not cursor movement, editing commands, or the file contents.
 
 ** C and related modes
 

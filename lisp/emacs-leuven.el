@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1652>
+;; Version: <20260702.1712>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1652>"
+(defconst boost-version "<20260702.1712>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4890,13 +4890,18 @@ mouse-3: go to end") "]")))
 
 ;;** 26.9 (info "(emacs)Glasses") minor mode XXXXXXXXXXXX
 
-  (leuven--section "26.9 (emacs)Glasses minor mode") ; XXXXXXXX
+  (leuven--section "26.9 (emacs)Glasses minor mode")
 
-  (add-hook 'ess-mode-hook          #'glasses-mode)
-  (add-hook 'inferior-ess-mode-hook #'glasses-mode)
-  (add-hook 'java-mode-hook         #'glasses-mode)
+  (dolist (hook '(java-mode-hook
+                  ess-mode-hook
+                  inferior-ess-mode-hook))
+    (add-hook hook #'glasses-mode))
 
   (with-eval-after-load 'glasses
+    (defface boost-glasses-face
+      '((t (:weight bold)))
+      "Face used to highlight CamelCase word boundaries."
+      :group 'glasses)
 
     ;; String to be displayed as a visual separator in unreadable identifiers.
     (setq glasses-separator "")
@@ -4905,17 +4910,13 @@ mouse-3: go to end") "]")))
     (setq glasses-original-separator "")
 
     ;; Face to be put on capitals of an identifier looked through glasses.
-    (make-face 'leuven-glasses-face)
-    (set-face-attribute 'leuven-glasses-face nil :weight 'bold)
-    (setq glasses-face 'leuven-glasses-face)
-                                        ; Avoid the black foreground set in
-                                        ; `emacs-leuven-theme' to face `bold'.
-
-    ;; Set properties of glasses overlays.
-    (glasses-set-overlay-properties)
+    (setq glasses-face 'boost-glasses-face)
 
     ;; No space between an identifier and an opening parenthesis.
-    (setq glasses-separate-parentheses-p nil))
+    (setq glasses-separate-parentheses-p nil)
+
+    ;; Set properties of glasses overlays.
+    (glasses-set-overlay-properties))
 
   ;; An interface to the Eclipse IDE.
   (with-eval-after-load 'emacs-eclim-autoloads-XXX
