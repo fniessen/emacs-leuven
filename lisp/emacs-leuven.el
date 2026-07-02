@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1412>
+;; Version: <20260702.1458>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1412>"
+(defconst boost-version "<20260702.1458>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2483,9 +2483,6 @@ file B."
   (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "E") #'boost-ediff-files-from-dired))
 
-  ;; Compare text in current window with text in next window.
-  (global-set-key (kbd "C-=") #'compare-windows)
-
   ;; Change the cumbersome default prefix (C-c ^).
   (setq smerge-command-prefix (kbd "C-c m")) ; Mnemonic: merge.
 
@@ -2500,7 +2497,7 @@ file B."
 
   (with-eval-after-load 'ediff
 
-    ;; Ignore space.
+    ;; Ignore whitespace differences.
     (setq ediff-diff-options (concat ediff-diff-options " -w"))
                                         ; Add new options after the default ones.
 
@@ -2525,29 +2522,31 @@ file B."
 
     ;; (setq ediff-merge-split-window-function 'split-window-below)
 
-    (defun turn-on-visible-mode ()
-      "Make all invisible text visible."
+    (defun boost-ediff-prepare-buffer ()
+      "Make hidden buffer contents visible before Ediff starts."
       (visible-mode 1)
       (setq truncate-lines nil)
-      (when (and (boundp 'hs-minor-mode)
-                 hs-minor-mode)
+      (when (bound-and-true-p hs-minor-mode)
         (hs-show-all))
       (when (derived-mode-p 'org-mode)
         (org-remove-inline-images)))
 
-    ;; Force the buffers to unhide (folded) text (in Org files).
-    (add-hook 'ediff-prepare-buffer-hook #'turn-on-visible-mode)
+    ;; Make hidden or folded text visible before comparing buffers.
+    (add-hook 'ediff-prepare-buffer-hook #'boost-ediff-prepare-buffer)
 
-    (defun turn-off-visible-mode ()
-      "Disable Visible mode."
+    (defun boost-ediff-restore-buffer ()
+      "Restore buffer visibility settings after Ediff finishes."
       (visible-mode 0)
       (setq truncate-lines t)
       (when (derived-mode-p 'org-mode)
         (org-display-inline-images)))
 
-    (add-hook 'ediff-quit-hook #'turn-off-visible-mode)
+    (add-hook 'ediff-quit-hook #'boost-ediff-restore-buffer)
 
     )
+
+  ;; Compare text in current window with text in next window.
+  (global-set-key (kbd "C-=") #'compare-windows)
 
   ;; ("M-m g v" . ztree-dir)
   ;; ("M-m g V" . ztree-diff)

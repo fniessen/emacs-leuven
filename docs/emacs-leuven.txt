@@ -4267,8 +4267,6 @@ to recover the auto-saved changes using `recover-this-file'."
 
 ** Comparing Files
 
-See https://www.diffchecker.com/diff for an online solution.
-
 *** Diff
 
 #+begin_src emacs-lisp
@@ -4329,13 +4327,6 @@ Notes:
   file B. This provides a consistent left-to-right comparison.
 
 - After quitting Ediff with ~q~, the previous window configuration is restored.
-
-*** Compare windows
-
-#+begin_src emacs-lisp
-  ;; Compare text in current window with text in next window.
-  (global-set-key (kbd "C-=") #'compare-windows)
-#+end_src
 
 *** SMerge mode
 
@@ -4447,21 +4438,33 @@ individual hunks*, making it easy to keep or discard selected modifications.
   (leuven--section "19.10 (emacs)Diff Mode")
 #+end_src
 
-To compare 2 text files, you can also use Ediff if the following command
+To compare two text files, you can also use Ediff if the following command
 works.
 
 : M-: (executable-find "diff") RET
 
-In Ediff, press:
+Useful Ediff keys:
 
-- ~?~ to get help
+- ~n~, ~p~ ::
+     Move between differences.
 
-- ~|~ to change from vertical window layout to horizontal window layout, and
-  vice versa
+- ~a~, ~b~ ::
+     Copy difference A→B or B→A.
 
-- ~a~ or ~b~ key to merge the code from A to B or from B to A
+- ~ra~, ~rb~ ::
+      Revert copied changes.
 
-- ~ra~ or ~rb~ to revert your change
+- ~|~ ::
+      Toggle vertical/horizontal split.
+
+- ~/~ ::
+      Show *common ancestor* (3-way comparison).
+
+- ~?~ ::
+      Display help.
+
+- ~q~ ::
+      Quit Ediff.
 
 #+begin_src emacs-lisp
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
@@ -4471,7 +4474,7 @@ In Ediff, press:
 
   (with-eval-after-load 'ediff
 
-    ;; Ignore space.
+    ;; Ignore whitespace differences.
     (setq ediff-diff-options (concat ediff-diff-options " -w"))
                                         ; Add new options after the default ones.
 
@@ -4501,74 +4504,109 @@ When using Ediff, everything must be visible; otherwise, it's fairly hard to
 resolve conflicts.
 
 #+begin_src emacs-lisp
-    (defun turn-on-visible-mode ()
-      "Make all invisible text visible."
+    (defun boost-ediff-prepare-buffer ()
+      "Make hidden buffer contents visible before Ediff starts."
       (visible-mode 1)
       (setq truncate-lines nil)
-      (when (and (boundp 'hs-minor-mode)
-                 hs-minor-mode)
+      (when (bound-and-true-p hs-minor-mode)
         (hs-show-all))
       (when (derived-mode-p 'org-mode)
         (org-remove-inline-images)))
 
-    ;; Force the buffers to unhide (folded) text (in Org files).
-    (add-hook 'ediff-prepare-buffer-hook #'turn-on-visible-mode)
+    ;; Make hidden or folded text visible before comparing buffers.
+    (add-hook 'ediff-prepare-buffer-hook #'boost-ediff-prepare-buffer)
 
-    (defun turn-off-visible-mode ()
-      "Disable Visible mode."
+    (defun boost-ediff-restore-buffer ()
+      "Restore buffer visibility settings after Ediff finishes."
       (visible-mode 0)
       (setq truncate-lines t)
       (when (derived-mode-p 'org-mode)
         (org-display-inline-images)))
 
-    (add-hook 'ediff-quit-hook #'turn-off-visible-mode)
+    (add-hook 'ediff-quit-hook #'boost-ediff-restore-buffer)
 
     )
 #+end_src
 
-*** Ediff-directories
+*** Compare windows
 
-For *comparing two directories*, you can use ~ediff-directories~, ~ztree-diff~, [[http://meldmerge.org/][Meld]]
-(free) or [[https://www.deltawalker.com/][DeltaWalker]] (39.95 USD).
-or [[https://diffoscope.org/][diffoscope]]
+#+begin_src emacs-lisp
+  ;; Compare text in current window with text in next window.
+  (global-set-key (kbd "C-=") #'compare-windows)
+#+end_src
 
-~ediff-directories~ combined with the key sequence == h x= ~= h x~ shows you only the
-files which differ.
+*** Directory comparison
 
-It is not recursive, but it gives you also subdirectory pairs to compare. Just
-hit ~RET~ on such a pair.
+For *comparing two directories*, you can use:
 
-As bonus, it even works for remote directories.
+- ~ediff-directories~ (built into Emacs),
+- ~ztree-diff~,
+- [[https://meldmerge.org/][Meld]],
+- [[https://www.deltawalker.com/][DeltaWalker]],
+- or [[https://diffoscope.org/][diffoscope]].
+
+~ediff-directories~ can display only the files that differ by typing ~h x~.
+
+Although it does not compare directories recursively, it identifies matching
+subdirectory pairs. Press ~RET~ on such a pair to compare the corresponding
+subdirectories.
+
+A nice bonus is that it also works with remote directories (via TRAMP).
 
 #+begin_warning
-~ediff-directories~ does not list files in one directory with no corresponding
-files in the other directory.
+~ediff-directories~ does not list files that exist in only one of the two
+directories.
 #+end_warning
 
 *** Ztree
+
+~ztree-diff~ provides a two-pane interface for comparing directory trees.
 
 #+begin_src emacs-lisp
   ;; ("M-m g v" . ztree-dir)
   ;; ("M-m g V" . ztree-diff)
 #+end_src
 
-Hotkeys supported:
+Useful key bindings:
 
-- Open/close directories with double-click, ~RET~ or ~SPC~ keys.
-- To jump to the parent directory, hit the ~Backspace~ key.
-- To toggle open/closed state of the subtree of the current directory, hit the
-  ~x~ key.
-- ~RET~ on different files starts the *Ediff* (or open file if one absent or the same)
-- ~SPC~ show the simple diff window for the current file instead of *Ediff* (or view
-  file if one absent or the same)
-- ~TAB~ to fast switch between panels
-- ~h~ key to toggle show/hide identical files/directories
-- ~H~ key to toggle show/hide hidden/ignored files/directories
-- ~C~ key to copy current file or directory to the left or right panel
-- ~D~ key to delete current file or directory
-- ~v~ key to quick view the current file
-- ~r~ initiates the rescan/refresh of current file or subdirectory
-- ~<F5>~ forces the full rescan.
+- ~RET~, ~SPC~, or double-click ::
+     Open or close a directory.
+
+- ~Backspace~ ::
+     Go to the parent directory.
+
+- ~x~ ::
+     Toggle the expanded state of the current subtree.
+
+- ~TAB~ ::
+     Switch to the other pane.
+
+- ~RET~ on a pair of different files ::
+     Start an *Ediff* session.
+
+- ~SPC~ on a pair of different files ::
+     Display a simple diff instead of *Ediff*.
+
+- ~h~ ::
+     Show or hide identical files and directories.
+
+- ~H~ ::
+     Show or hide hidden or ignored files and directories.
+
+- ~C~ ::
+     Copy the current file or directory to the opposite pane.
+
+- ~D~ ::
+     Delete the current file or directory.
+
+- ~v~ ::
+     Preview the current file.
+
+- ~r~ ::
+     Refresh the current file or subtree.
+
+- ~<F5>~ ::
+     Refresh the entire directory tree.
 
 ** Miscellaneous File Operations
 
