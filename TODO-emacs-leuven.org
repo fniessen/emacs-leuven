@@ -28,7 +28,6 @@
 | Item                                | Type     | Status          | Replacement                                                                   |
 |-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
 | w32-shell-execute                   | Function | Obsolete (27.1) | Use shell-command or start-process with "cmd.exe /c start"                    |
-| w32-register-hot-key                | Function | Obsolete (27.1) | Remove; handle via keybindings or external tools                              |
 |-------------------------------------+----------+-----------------+-------------------------------------------------------------------------------|
 | menu-bar-enable-clipboard           | Function | Obsolete (23.2) | Remove; clipboard is default                                                  |
 | garbage-collection-messages         | Variable | Obsolete (24.4) | Remove; use after-gc-hook if needed                                           |

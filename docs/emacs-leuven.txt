@@ -14457,7 +14457,6 @@ printing on Windows.
   ;; Generate and print a PostScript image of the buffer.
   (when lvn--win32-p
     ;; Override `Print Screen' globally used as a hotkey by Windows.
-    (w32-register-hot-key (kbd "<snapshot>"))
     (global-set-key
       (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query))
 

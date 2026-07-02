@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1137>
+;; Version: <20260702.1148>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1137>"
+(defconst boost-version "<20260702.1148>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -7089,7 +7089,6 @@ This example lists Azerty layout second row keys."
   ;; Generate and print a PostScript image of the buffer.
   (when lvn--win32-p
     ;; Override `Print Screen' globally used as a hotkey by Windows.
-    (w32-register-hot-key (kbd "<snapshot>"))
     (global-set-key
       (kbd "<snapshot>") #'leuven-ps-print-buffer-with-faces-query))
 
