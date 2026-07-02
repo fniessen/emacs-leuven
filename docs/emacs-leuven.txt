@@ -4654,33 +4654,38 @@ exec gzip -d "$@"
 
 ** Auto Encryption
 
-History:
+Emacs provides transparent support for OpenPGP-encrypted files through *EasyPG*
+(EPG), the standard GnuPG interface bundled with Emacs.
 
-1. mailcrypt
+Historically, Emacs users relied on packages such as *Mailcrypt* and *PGG*.  These
+have been superseded by EasyPG.
 
-2. PGG
+When you visit an encrypted file (for example, one ending in =.gpg=), Emacs
+prompts for the appropriate passphrase, decrypts the file, and displays its
+plaintext contents. When you save the buffer, the file is automatically
+re-encrypted using the same recipients.
 
-3. EasyPG (= epg) is a GnuPG interface for Emacs.
+EasyPG consists of two complementary components:
 
-   It allows you to encrypt/decrypt files within Emacs. When you use ~C-x C-f~ to
-   access an encrypted file, Emacs prompts you for the passphrase and then
-   decrypts the file before displaying it. When you save the file, Emacs
-   automatically encrypts it again with that same key.
+- *EasyPG Assistant (EPA)* ::
+     Interactive commands for encrypting, decrypting, signing, and verifying
+     files and regions.
 
-   It has two aspects:
+- *EasyPG Library (EPG)* ::
+     The Lisp interface used internally by Emacs packages to communicate with
+     GnuPG.
 
-   - convenient tools which allow to use GnuPG from Emacs (EasyPG Assistant),
-     and
-
-   - a fully functional interface library to GnuPG (EasyPG Library).
-
-*************** TODO Fetch the key automatically
-Set the ~keyserver~ entry in the =~/.gnupg/gpg.conf= file properly.
+*************** TODO Automatically retrieve missing public keys
+Configure an appropriate *key server* (or key discovery mechanism) in
+=~/.gnupg/gpg.conf= so that missing public keys can be retrieved automatically
+when needed.
 *************** END
 
+#+begin_note
 What is PGP/MIME, what is OpenPGP, and how Gnus handles them?
 - PGP/MIME is a standard, which mml2015* implements using ep[ag]-*.
 - OpenPGP is a standard, which ep[ag]-* implements.
+#+end_note
 
 #+begin_src emacs-lisp
   ;; The EasyPG Assistant, transparent file encryption.
