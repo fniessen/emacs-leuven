@@ -2950,6 +2950,8 @@ editing.
     ;; Keep visible because it can affect performance on large files.
     ;; (with-eval-after-load 'smartparens
     ;;   (diminish 'smartparens-mode)))
+
+  )
 #+end_src
 
 *** Powerline theme
