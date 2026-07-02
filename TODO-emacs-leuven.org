@@ -469,10 +469,14 @@ See issue #144
 *** TODO Add 'alert' emphasis and font-lock support
 
 #+begin_src emacs-lisp
+  (defface org-alert
+    '((t (:foreground "red" :weight bold)))
+    "Face for alert emphasis in Org."
+    :group 'org-faces)
+
   ;; Add 'alert' emphasis. The text enclosed by '!' will be displayed in bold
   ;; and red to indicate emphasis.
-  (add-to-list 'org-emphasis-alist
-               '("!" (bold :foreground "red")))
+  (add-to-list 'org-emphasis-alist '("!" org-alert))
 #+end_src
 
 See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis in org-emphasis-alist]]
