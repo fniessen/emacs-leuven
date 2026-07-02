@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1712>
+;; Version: <20260702.1725>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1712>"
+(defconst boost-version "<20260702.1725>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -5292,20 +5292,18 @@ mouse-3: go to end") "]")))
     ;; ;; Enable Flycheck mode in LaTeX mode.
     ;; (add-hook 'LaTeX-mode-hook #'flycheck-mode)
 
-    ;; Set a global keybinding to quickly access the Flycheck error list.
+    ;; Show the Flycheck error list.
     (global-set-key (kbd "M-g l") #'flycheck-list-errors))
 
   (with-eval-after-load 'flycheck
 
-    ;; Delay in seconds before displaying errors at point.
+    ;; Delay before displaying an error at point.
     (setq flycheck-display-errors-delay 0.3)
 
-    (setq flycheck-indication-mode 'left-fringe) ; See init.el.
-    ;; ;; Indicate errors and warnings via icons in the right fringe.
+    ;; Show diagnostics in the right fringe.
     (setq flycheck-indication-mode 'right-fringe)
 
-    ;; Remove newline checks, since they would trigger an immediate check when
-    ;; we want the `flycheck-idle-change-delay' to be in effect while editing.
+    ;; Don't check on newline; rely on the adaptive idle delay instead.
     (setq flycheck-check-syntax-automatically
           '(save
             idle-change
@@ -5315,20 +5313,17 @@ mouse-3: go to end") "]")))
     ;; buffer-sensitive adjustment above.
     (make-variable-buffer-local 'flycheck-idle-change-delay)
 
-    (defun leuven--adjust-flycheck-automatic-syntax-eagerness ()
-      "Adjust how often we check for errors based on if there are any.
+    (defun boost--update-flycheck-idle-delay ()
+      "Adjust Flycheck delay depending on whether the current buffer has errors."
+      (setq-local flycheck-idle-change-delay
+                  (if (and (bound-and-true-p flycheck-current-errors)
+                           (assq 'error
+                                 (flycheck-count-errors flycheck-current-errors)))
+                      1
+                    5)))
 
-This lets us fix any errors as quickly as possible, but in
-a clean buffer we're an order of magnitude laxer about checking."
-      (setq flycheck-idle-change-delay
-            (if (assq 'error (flycheck-count-errors flycheck-current-errors))
-                ; only check for REAL errors (original source: Magnar Sveen)
-                1
-              20)))
-
-    ;; Functions to run after each syntax check.
     (add-hook 'flycheck-after-syntax-check-hook
-              #'leuven--adjust-flycheck-automatic-syntax-eagerness)
+              #'boost--update-flycheck-idle-delay)
 
     ;; Change mode line color with Flycheck status.
     (with-eval-after-load 'flycheck-color-mode-line
