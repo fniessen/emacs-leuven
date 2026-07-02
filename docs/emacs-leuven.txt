@@ -12679,13 +12679,14 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
 ** Visiting Files in Dired
 
 - ~^~ ::
-     ~dired-up-directory~.
-
-- ~o~ ::
-     Open the file or directory in *another window*.
+     Visit the parent directory.
 
 - ~C-o~ ::
-     Open the file but stay on Dired buffer.
+     Open the file while remaining in the Dired buffer.
+
+- ~o~ ::
+     Open all marked files (or the current file) with the operating system's
+     default application.
 
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Visiting")
