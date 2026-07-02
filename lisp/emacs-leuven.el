@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1612>
+;; Version: <20260702.1623>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1612>"
+(defconst boost-version "<20260702.1623>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1787,11 +1787,8 @@ Should be selected from `fringe-bitmaps'.")
 
   (leuven--section "15.24 (emacs)Display Customization")
 
-  ;; Echo what I'm typing *immediately*.
+  ;; Display incomplete key sequences almost immediately.
   (setq echo-keystrokes 0.01)
-
-  ;; Let emacs react faster to keystrokes.
-  (setq idle-update-delay 0.35)
 
   ;; Exhaustive log of interactions with Emacs (display keystrokes, etc.).
   (with-eval-after-load 'interaction-log-autoloads

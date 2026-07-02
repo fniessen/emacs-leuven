@@ -3219,11 +3219,8 @@ Highlight the current line:
 
   (leuven--section "15.24 (emacs)Display Customization")
 
-  ;; Echo what I'm typing *immediately*.
+  ;; Display incomplete key sequences almost immediately.
   (setq echo-keystrokes 0.01)
-
-  ;; Let emacs react faster to keystrokes.
-  (setq idle-update-delay 0.35)
 #+end_src
 
 Display pressed keyboard shortcuts on screen during presentations or
