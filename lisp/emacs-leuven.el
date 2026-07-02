@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1148>
+;; Version: <20260702.1157>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1148>"
+(defconst boost-version "<20260702.1157>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1130,13 +1130,8 @@ called interactively."
 
   (leuven--section "13.3 (emacs)Cut and Paste on Graphical Displays")
 
-  ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
+  ;; Make cut, copy and paste use the clipboard.
   (menu-bar-enable-clipboard)
-
-  (setq interprogram-paste-function
-        (if (equal interprogram-paste-function 'x-cut-buffer-or-selection-value)
-            #'x-selection-value
-          interprogram-paste-function))
 
   ;; ;; Define the copy command for WSL.
   ;; (defun lvn-wsl-slick-copy-region (beg end &optional region)

@@ -1902,20 +1902,20 @@ Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
 
   (leuven--section "13.3 (emacs)Cut and Paste on Graphical Displays")
 
-  ;; Make cut, copy and paste (keys and menu bar items) use the clipboard.
+  ;; Make cut, copy and paste use the clipboard.
   (menu-bar-enable-clipboard)
 #+end_src
 
-Copy/paste from Windows clipboard in WSL Emacs:
-
-#+begin_src emacs-lisp
-  (setq interprogram-paste-function
-        (if (equal interprogram-paste-function 'x-cut-buffer-or-selection-value)
-            #'x-selection-value
-          interprogram-paste-function))
-#+end_src
-
-See [[https://stackoverflow.com/questions/11186370/symbols-function-definition-is-void-x-cut-buffer-or-selection-value][Symbol's function definition is void: x-cut-buffer-or-selection-value]].
+# Copy/paste from Windows clipboard in WSL Emacs:
+#
+# #+begin_src emacs-lisp
+#   (setq interprogram-paste-function
+#         (if (equal interprogram-paste-function 'x-cut-buffer-or-selection-value)
+#             #'x-selection-value
+#           interprogram-paste-function))
+# #+end_src
+#
+# See [[https://stackoverflow.com/questions/11186370/symbols-function-definition-is-void-x-cut-buffer-or-selection-value][Symbol's function definition is void: x-cut-buffer-or-selection-value]].
 
 #+begin_src emacs-lisp
   ;; ;; Define the copy command for WSL.
