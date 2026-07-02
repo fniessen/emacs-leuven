@@ -423,20 +423,20 @@ emit a warning when the feature can't be loaded."
 (with-eval-after-load 'org-faces
   ;; Define non-standard faces for specific TODO states.
   (defface leuven-org-todo-kwd
-    '((t :weight bold :box "#BBBBBB"
-         :foreground "#BBBBBB" :background "#F0F0F0"))
+    '((t (:weight bold :box "#BBBBBB"
+          :foreground "#BBBBBB" :background "#F0F0F0")))
     "Face used to display state TODO.")
   (defface leuven-org-strt-kwd
-    '((t :weight bold :box "#D9D14A"
-         :foreground "#D9D14A" :background "#FCFCDC"))
+    '((t (:weight bold :box "#D9D14A"
+          :foreground "#D9D14A" :background "#FCFCDC")))
     "Face used to display state STRT.")
   (defface leuven-org-wait-kwd
-    '((t :weight bold :box "#9EB6D4"
-         :foreground "#9EB6D4" :background "#E0EFFF"))
+    '((t (:weight bold :box "#9EB6D4"
+          :foreground "#9EB6D4" :background "#E0EFFF")))
     "Face used to display state WAIT.")
   (defface leuven-org-canx-kwd
-    '((t :weight bold :box "#BBBBBB"
-         :foreground "#BBBBBB" :background "#F0F0F0"))
+    '((t (:weight bold :box "#BBBBBB"
+          :foreground "#BBBBBB" :background "#F0F0F0")))
     "Face used to display state CANX.")
 
   ;; Set the specific faces for Org TODO keywords.
@@ -1230,19 +1230,19 @@ From the address <%a>"
 
   ;; Org non-standard faces.
   (defface leuven-org-deadline-overdue
-    '((t :foreground "#F22659"))
+    '((t (:foreground "#F22659")))
     "Face used to highlight tasks whose due date is in the past.")
 
   (defface leuven-org-deadline-today
-    '((t :weight bold :foreground "#4F4A3D" :background "#FFFFCC"))
+    '((t (:weight bold :foreground "#4F4A3D" :background "#FFFFCC")))
     "Face used to highlight tasks whose due date is today.")
 
   (defface leuven-org-deadline-tomorrow
-    '((t :foreground "#40A80B"))
+    '((t (:foreground "#40A80B")))
     "Face used to highlight tasks whose due date is tomorrow.")
 
   (defface leuven-org-deadline-future
-    '((t :foreground "#40A80B"))
+    '((t (:foreground "#40A80B")))
     "Face used to highlight tasks whose due date is for later."))
 
 (with-eval-after-load 'org-agenda
