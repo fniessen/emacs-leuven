@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260701.1655>
+;; Version: <20260701.1700>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260701.1655>"
+(defconst boost-version "<20260701.1700>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -6423,26 +6423,23 @@ This example lists Azerty layout second row keys."
       ;; (define-key dired-mode-map (kbd "E") #'lvn-dired-open-files-externally)
     )
 
-    (defun dired-open-marked-files-externally ()
-      ;; dired-open-marked-files-with-explorer
-      "Open marked files in Dired using the default external application."
-      (interactive)
-      (if-let ((marks (dired-get-marked-files)))
-          (dolist (file marks)
-            (cond
-             (lvn--win32-p
-              (w32-shell-execute "open" file))
-             (lvn--wsl-p
-              (if (executable-find "wslview-XXX") ; TO TEST!
-                  (start-process "" nil "wslview" file)
-                ;; (w32-shell-execute "open" file)
-                (shell-command (format "explorer.exe '%s'" (file-name-nondirectory file)))
-              ))
-             (t
-              (start-process "" nil "xdg-open" file))))
-        (user-error "[No marked files; aborting]")))
+    (defun leuven-dired-open-marked-files-externally (&optional arg)
+      "Open the marked files (or current file) using the operating system's default application."
+      (interactive "P")
+      (let ((files (dired-get-marked-files nil arg)))
+        (unless files
+          (user-error "[No marked files; aborting]"))
+        (dolist (file files)
+          (cond
+           (lvn--wsl-p
+            (if (executable-find "wslview")
+                (start-process "wslview" nil "wslview" file)
+              (browse-url-of-file file)))
+           (t
+            (browse-url-of-file file))))))
 
-    (define-key dired-mode-map "o" 'dired-open-marked-files-externally)
+    (define-key dired-mode-map (kbd "o")
+                #'leuven-dired-open-marked-files-externally)
 
     ;; Open current file with eww.
     (defun dired-open-with-eww ()
