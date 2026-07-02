@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1318>
+;; Version: <20260702.1351>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1318>"
+(defconst boost-version "<20260702.1351>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2449,9 +2449,6 @@ to recover the auto-saved changes using `recover-this-file'."
 
   (leuven--section "19.9 (emacs)Comparing Files")
 
-  ;; ;; Default to unified diffs.
-  ;; (setq diff-switches "-u")             ; Default in Emacs 25.
-
   (defun leuven-ediff-files-from-dired ()
 "Quickly Ediff files from Dired"
     (interactive)
@@ -2480,53 +2477,11 @@ to recover the auto-saved changes using `recover-this-file'."
   (global-set-key (kbd "C-=") #'compare-windows)
 
   ;; Change the cumbersome default prefix (C-c ^).
-  (setq smerge-command-prefix (kbd "C-c v"))
+  (setq smerge-command-prefix (kbd "C-c m")) ; Mnemonic: merge.
 
 ;;** 19.10 (info "(emacs)Diff Mode")
 
   (leuven--section "19.10 (emacs)Diff Mode")
-
-  ;; Mode for viewing/editing context diffs.
-  (with-eval-after-load 'diff-mode
-
-    ;; Highlight the changes with better granularity.
-    (defun leuven-diff-make-fine-diffs ()
-      "Enable Diff Auto-Refine mode."
-      (interactive)
-      (let (diff-refine)                ; Avoid refining the hunks redundantly ...
-        (condition-case nil
-            (save-excursion
-              (goto-char (point-min))
-              (while (not (eobp))
-                (diff-hunk-next)
-                (diff-refine-hunk)))    ; ... when this does it.
-          (error nil))
-        (run-at-time 0.0 nil
-                     (lambda ()
-                       (if (derived-mode-p 'diff-mode)
-                           ;; Put back the cursor only if still in a Diff buffer
-                           ;; after the delay.
-                           (goto-char (point-min)))))))
-
-    (defun vc-diff--diff-make-fine-diffs-if-necessary (&rest _args)
-      "Auto-refine only the regions of 14,000 bytes or less."
-      ;; Check for auto-refine limit.
-      (unless (> (buffer-size) 14000)
-        (leuven-diff-make-fine-diffs)))
-
-    ;; Push the auto-refine function after `vc-diff'.
-    (advice-add 'vc-diff :after #'vc-diff--diff-make-fine-diffs-if-necessary)
-
-    (defun vc-diff-finish--handle-color-in-diff-output (buffer messages &optional oldbuf)
-      "Run `ansi-color-apply-on-region'."
-      (interactive)
-      (progn
-        (require 'ansi-color)
-        (let ((inhibit-read-only t))
-          (ansi-color-apply-on-region (point-min) (point-max)))))
-    (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
-
-    )
 
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads

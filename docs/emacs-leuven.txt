@@ -4275,9 +4275,6 @@ See https://www.diffchecker.com/diff for an online solution.
 ;;** 19.9 (info "(emacs)Comparing Files")
 
   (leuven--section "19.9 (emacs)Comparing Files")
-
-  ;; ;; Default to unified diffs.
-  ;; (setq diff-switches "-u")             ; Default in Emacs 25.
 #+end_src
 
 Press ~e~ in Dired mode to immediately Ediff two marked files, no questions asked:
@@ -4331,162 +4328,112 @@ Press ~e~ in Dired mode to immediately Ediff two marked files, no questions aske
 
 *** SMerge mode
 
-You can use ~M-x smerge-mode~ to *edit a file with conflict markers* (output from
-the ~diff3~ program).
+SMerge mode helps resolve merge conflicts directly in a *buffer containing
+conflict markers* (such as those produced by Git).
 
-SMerge does not automatically select regions but provides convenient key
-bindings to navigate between conflicts and to choose the A or B variant.
+It provides convenient commands to navigate between conflicts and to choose
+which version to keep.
 
 #+begin_src emacs-lisp
   ;; Change the cumbersome default prefix (C-c ^).
-  (setq smerge-command-prefix (kbd "C-c v"))
+  (setq smerge-command-prefix (kbd "C-c m")) ; Mnemonic: merge.
 #+end_src
 
-Important keybindings:
+Frequently used SMerge key bindings:
 
-- ~C-c v n~ (~smerge-next~) ::
-     Move to next conflict.
+- ~C-c m n~ (~smerge-next~) ::
+     Move to the next conflict.
 
-- ~C-c v p~ (~smerge-previous~) ::
-     Move to previous conflict.
+- ~C-c m p~ (~smerge-previous~) ::
+     Move to the previous conflict.
 
-- ~C-c v RET~ (~smerge-keep-current~) ::
-     Keep the version the cursor is on.
+- ~C-c m m~ (~smerge-keep-upper~) ::
+     Keep the upper version (typically your changes).
 
-- ~C-c v m~ (~smerge-keep-mine~) ::
-     Keep your changes.
+- ~C-c m o~ (~smerge-keep-lower~) ::
+     Keep the lower version (typically the incoming changes).
 
-- ~C-c v o~ (~smerge-keep-other~) ::
-     Keep other changes.
+- ~C-c m a~ (~smerge-keep-all~) ::
+     Keep both versions.
+
+- ~C-c m RET~ (~smerge-keep-current~) ::
+     Keep the version at point.
+
+#+begin_note
+When merge conflicts are created through Emacs VC commands, recent Emacs
+versions *automatically enable* ~smerge-mode~ for the affected buffers.
+
+If you perform merges outside Emacs (for example, using Git from the shell), the
+helper below is still useful to enable ~smerge-mode~ automatically when opening
+a file containing conflict markers.
+#+end_note
 
 #+begin_src emacs-lisp :tangle no
   ;; Enable SMerge automatically.
-  (defun leuven--enable-smerge-maybe ()
-    (when (and buffer-file-name (vc-backend buffer-file-name))
+  (defun boost--try-smerge ()
+    (when (and buffer-file-name
+               (vc-backend buffer-file-name))
       (save-excursion
         (goto-char (point-min))
         (when (re-search-forward "^<<<<<<< " nil t)
           (smerge-mode 1)))))
 
-  (add-hook 'buffer-list-update-hook #'leuven--enable-smerge-maybe)
+  (add-hook 'find-file-hook 'boost--try-smerge t)
 #+end_src
-
-#+begin_note
-In recent Emacs versions, SMerge is turned on automatically??? XXX
-#+end_note
 
 *** Interface for merging files
 
-- ~C-c v E~ (~smerge-ediff~) ::
-     Start an Ediff session to merge the conflicts.
+For complex conflicts, SMerge can delegate conflict resolution to Ediff.
 
-Keybindings:
+- ~C-c m E~ (~smerge-ediff~) ::
+     Start an Ediff session for the current conflicts.
 
-- ~n~ and ~p~ ::
-     Navigate through the conflicts.
+Useful Ediff key bindings:
 
-- ~a~ or ~b~ ::
-     Accept versions.
+- ~n~, ~p~ ::
+     Move to the next or previous conflict.
+
+- ~a~, ~b~ ::
+     Accept one of the conflicting versions.
 
 - ~/~ ::
-     Look at the ancestor!
+     Display the *common ancestor*.
 
 - ~q~ ::
-     Quit the ediff session.
+     Quit the Ediff session.
 
-The top-left pane contains the =file= in my working directory as it was before the
-merge, the top-right pane contains the final revision of =file= at the source URL
-and the bottom pane contains the merged version.
-
-The really nice thing is that as soon as I end the Ediff session, Emacs goes
-back to the conflicted file /with all the changes done in the Ediff session
-applied/. So if you have resolved all conflicts, the file is not in Smerge mode
-anymore. The only thing left to do is to save the file. After that, the state of
-the file as displayed in the vc-dir buffer changes from /conflicted/ to /edited/.
+When the Ediff session ends, all accepted changes are written back to the
+original buffer. Once every conflict has been resolved, the buffer leaves
+~smerge-mode~ automatically. Saving the buffer then records the resolved file.
 
 #+begin_note
-Since the year 2000, ~vc-resolve-conflict~ is an alias for ~smerge-ediff~, which as
-the name suggests starts an Ediff session, not an Emerge session.
-
-By the way, the library header of =ediff.el= acknowledges =emerge.el='s influence
-and then goes on saying "The present version of *Ediff supersedes Emerge*. It
-provides a superior user interface and has numerous major features not found in
-Emerge. In particular, it can do patching, and 2-way and 3-way file comparison,
-merging, and directory operations."
-
-Also note that ~magit-ediff-resolve~ (~E m~ or ~e~ on a file with conflicts) uses
-~smerge-ediff~ internally. It does however override the ~ediff-quit-hook~ to
-provide a slightly better session finishing experience. Instead of telling you
-that you could save "the buffer" (there are several buffers), it asks you
-whether you want to save the buffer (while showing you its name).
+~vc-resolve-conflicts~ is an alias for ~smerge-ediff~.
 #+end_note
 
 ** Diff mode
 
-You can review the diff of all file changes, either:
+Diff mode lets you *review the changes* made to one or more files.
 
-- *unified* (Diff mode) or
-- *split* (Ediff mode).
+Emacs provides two complementary interfaces:
 
-In Diff mode, the changes specified in a patch are grouped into "hunks", which
-are contiguous chunks of text that contain one or more changed lines.
+- *Diff mode* ::
+     Display changes in a *unified diff*.
 
-Use ~C-x v =~ to show what's changed.
+- *Ediff* ::
+     Compare and merge files using a *side-by-side interface*.
 
-You can also decide to revert a change: *select a hunk and apply it (in reverse)*.
+Use ~C-x v =~ (~vc-diff~) to display the changes made to the current file.
+
+In Diff mode, changes are grouped into *hunks*, that is, contiguous regions
+containing one or more modified lines.
+
+Diff mode is not only useful for reviewing changes: it can also apply or *revert
+individual hunks*, making it easy to keep or discard selected modifications.
 
 #+begin_src emacs-lisp
 ;;** 19.10 (info "(emacs)Diff Mode")
 
   (leuven--section "19.10 (emacs)Diff Mode")
-
-  ;; Mode for viewing/editing context diffs.
-  (with-eval-after-load 'diff-mode
-
-    ;; Highlight the changes with better granularity.
-    (defun leuven-diff-make-fine-diffs ()
-      "Enable Diff Auto-Refine mode."
-      (interactive)
-      (let (diff-refine)                ; Avoid refining the hunks redundantly ...
-        (condition-case nil
-            (save-excursion
-              (goto-char (point-min))
-              (while (not (eobp))
-                (diff-hunk-next)
-                (diff-refine-hunk)))    ; ... when this does it.
-          (error nil))
-        (run-at-time 0.0 nil
-                     (lambda ()
-                       (if (derived-mode-p 'diff-mode)
-                           ;; Put back the cursor only if still in a Diff buffer
-                           ;; after the delay.
-                           (goto-char (point-min)))))))
-
-    (defun vc-diff--diff-make-fine-diffs-if-necessary (&rest _args)
-      "Auto-refine only the regions of 14,000 bytes or less."
-      ;; Check for auto-refine limit.
-      (unless (> (buffer-size) 14000)
-        (leuven-diff-make-fine-diffs)))
-
-    ;; Push the auto-refine function after `vc-diff'.
-    (advice-add 'vc-diff :after #'vc-diff--diff-make-fine-diffs-if-necessary)
-#+end_src
-
-If you use ~colordiff~ in SVN, you need this:
-
-#+begin_src emacs-lisp
-    (defun vc-diff-finish--handle-color-in-diff-output (buffer messages &optional oldbuf)
-      "Run `ansi-color-apply-on-region'."
-      (interactive)
-      (progn
-        (require 'ansi-color)
-        (let ((inhibit-read-only t))
-          (ansi-color-apply-on-region (point-min) (point-max)))))
-    (advice-add 'vc-diff-finish :after #'vc-diff-finish--handle-color-in-diff-output)
-#+end_src
-
-#+begin_src emacs-lisp
-    )
 #+end_src
 
 To compare 2 text files, you can also use Ediff if the following command
