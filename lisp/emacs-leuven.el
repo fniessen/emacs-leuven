@@ -1,10 +1,10 @@
 ;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
 
-;; Copyright (C) 1999-2025 Fabrice Niessen. All rights reserved.
+;; Copyright (C) 1999-2026 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1012>
+;; Version: <20260702.1040>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1012>"
+(defconst boost-version "<20260702.1040>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -7574,6 +7574,22 @@ Git repository directory."
       (message "[Error: EmacsBoost version is not defined]")))
 
 (message "* --[ Loaded Emacs-Leuven %s]--" boost-version)
+
+;; Load optional Emacs Leuven extension libraries from this directory.
+(let* ((this-directory (file-name-directory
+                        (or load-file-name buffer-file-name)))
+       (load-path (cons this-directory load-path))
+       (libraries '("emacs-leuven-org"
+                    "emacs-leuven-ai"
+                    "emacs-leuven-bbdb"
+                    "emacs-leuven-ess"
+                    "emacs-leuven-ledger")))
+  (dolist (library libraries)
+    (if (locate-library library)
+        (progn
+          (message "[Loading library: %s]" library)
+          (require (intern library)))
+      (message "[Library not found: %s]" library))))
 
 (provide 'emacs-leuven)
 

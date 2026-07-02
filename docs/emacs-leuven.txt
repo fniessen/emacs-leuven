@@ -15399,6 +15399,34 @@ leuven-send-bug-report~.
 (message "* --[ Loaded Emacs-Leuven %s]--" boost-version)
 #+end_src
 
+** Optional extension libraries
+
+~emacs-leuven.el~ automatically loads optional extension libraries located in the
+same directory. This makes it possible to keep support for specific packages or
+workflows in separate files while maintaining a modular configuration.
+
+Each extension is loaded only if it is present. Missing libraries are silently
+skipped (apart from an informational message), so any subset of the available
+extensions can be installed.
+
+#+begin_src emacs-lisp
+;; Load optional Emacs Leuven extension libraries from this directory.
+(let* ((this-directory (file-name-directory
+                        (or load-file-name buffer-file-name)))
+       (load-path (cons this-directory load-path))
+       (libraries '("emacs-leuven-org"
+                    "emacs-leuven-ai"
+                    "emacs-leuven-bbdb"
+                    "emacs-leuven-ess"
+                    "emacs-leuven-ledger")))
+  (dolist (library libraries)
+    (if (locate-library library)
+        (progn
+          (message "[Loading library: %s]" library)
+          (require (intern library)))
+      (message "[Library not found: %s]" library))))
+#+end_src
+
 ** Feature
 
 #+begin_src emacs-lisp
