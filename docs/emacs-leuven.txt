@@ -2772,13 +2772,16 @@ Remove trailing whitespace in *all lines*:
 
 #+begin_src emacs-lisp :tangle no
   ;; Remove trailing whitespace before saving, with exceptions.
-  (add-hook 'before-save-hook
-            (lambda ()
-              "Remove trailing whitespace before save, skipping message-mode and diff-mode."
-              (let ((buffer-undo-list buffer-undo-list))  ; Preserve undo history for goto-chg.
-                (unless (or (derived-mode-p 'message-mode)  ; Skip email signatures (separator).
-                            (derived-mode-p 'diff-mode))    ; Skip patch files.
-                  (delete-trailing-whitespace)))))
+  (defun boost--delete-trailing-whitespace ()
+    "Delete trailing whitespace before saving the current buffer."
+    ;; Preserve the undo list so `goto-last-change' is not polluted by the
+    ;; whitespace cleanup.
+    (let ((buffer-undo-list buffer-undo-list))
+      (unless (derived-mode-p 'message-mode  ; Skip email signatures (separator).
+                              'diff-mode)    ; Skip patch files.
+        (delete-trailing-whitespace))))
+
+  (add-hook 'before-save-hook #'boost--delete-trailing-whitespace)
 #+end_src
 
 This command also deletes *all empty lines at the end of the buffer*.
@@ -2811,16 +2814,13 @@ characters over the default mechanism of ~nobreak-char-display~ and
 ~show-trailing-whitespace~.
 
 #+begin_src emacs-lisp
-  ;; Enable Whitespace mode in text and programming modes (not in *vc-dir*,
-  ;; etc.).
+  ;; Enable Whitespace mode in text and programming buffers.
   (dolist (hook '(text-mode-hook
                   prog-mode-hook))
     (add-hook hook #'whitespace-mode))
 
   (with-eval-after-load 'whitespace
-    ;; Customize Whitespace mode settings.
-
-    ;; Define whitespace styles (Which kind of blank is visualized).
+    ;; Choose which whitespace problems and markers to display.
     (setq whitespace-style
           '(face
             trailing
@@ -2830,10 +2830,10 @@ characters over the default mechanism of ~nobreak-char-display~ and
             space-mark
             tab-mark))
 
-    ;; Column beyond which the line is highlighted.
+    ;; Highlight lines beyond column 80 when `lines-tail' is enabled.
     (setq whitespace-line-column 80)
 
-    ;; Mappings for displaying characters.
+    ;; Display selected whitespace characters explicitly.
     (setq whitespace-display-mappings
           '((space-mark ?\u00A0         ; No-break space.
                         [?_]            ; Spacing underscore.
@@ -2843,7 +2843,7 @@ characters over the default mechanism of ~nobreak-char-display~ and
                         [?\u00B7]       ; Middle dot.
                         [?.])
 
-            (tab-mark ?\t               ; Tabulation.
+            (tab-mark ?\t               ; Tab.
                       [?\u25BA ?\t]     ; Black right-pointing pointer.
                       [?\\ ?\t]))))
 #+end_src

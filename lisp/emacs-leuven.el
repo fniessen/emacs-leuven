@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1623>
+;; Version: <20260702.1630>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1623>"
+(defconst boost-version "<20260702.1630>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1475,16 +1475,13 @@ Should be selected from `fringe-bitmaps'.")
   ;; Visually indicate empty lines after the buffer end in the fringe.
   (setq-default indicate-empty-lines t)
 
-  ;; Enable Whitespace mode in text and programming modes (not in *vc-dir*,
-  ;; etc.).
+  ;; Enable Whitespace mode in text and programming buffers.
   (dolist (hook '(text-mode-hook
                   prog-mode-hook))
     (add-hook hook #'whitespace-mode))
 
   (with-eval-after-load 'whitespace
-    ;; Customize Whitespace mode settings.
-
-    ;; Define whitespace styles (Which kind of blank is visualized).
+    ;; Choose which whitespace problems and markers to display.
     (setq whitespace-style
           '(face
             trailing
@@ -1494,10 +1491,10 @@ Should be selected from `fringe-bitmaps'.")
             space-mark
             tab-mark))
 
-    ;; Column beyond which the line is highlighted.
+    ;; Highlight lines beyond column 80 when `lines-tail' is enabled.
     (setq whitespace-line-column 80)
 
-    ;; Mappings for displaying characters.
+    ;; Display selected whitespace characters explicitly.
     (setq whitespace-display-mappings
           '((space-mark ?\u00A0         ; No-break space.
                         [?_]            ; Spacing underscore.
@@ -1507,7 +1504,7 @@ Should be selected from `fringe-bitmaps'.")
                         [?\u00B7]       ; Middle dot.
                         [?.])
 
-            (tab-mark ?\t               ; Tabulation.
+            (tab-mark ?\t               ; Tab.
                       [?\u25BA ?\t]     ; Black right-pointing pointer.
                       [?\\ ?\t]))))
 
