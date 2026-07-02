@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1040>
+;; Version: <20260702.1128>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1040>"
+(defconst boost-version "<20260702.1128>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -6390,19 +6390,21 @@ This example lists Azerty layout second row keys."
 
     (leuven--section "31.5 (emacs)Dired Visiting")
 
-    ;; Reveal active buffer's directory in the system file explorer.
+    ;; Open the current buffer's directory in the system file explorer.
     (defun lvn-open-buffer-directory-in-file-explorer ()
-      "Open the current buffer's directory in the default file explorer."
+      "Open the current buffer's directory in the system file explorer."
       (interactive)
       (let ((dir (file-name-directory (or buffer-file-name default-directory))))
-        (if dir
-            (browse-url-of-file dir)
-          (error "[No directory associated with this buffer]"))))
+        (if (and lvn--wsl-p
+                 (executable-find "wslview"))
+            (start-process "wslview" nil "wslview" dir)
+          (browse-url-of-file dir))))
 
-    ;; Mnemonic for "directory".
+    ;; Mnemonic: "directory".
     (global-set-key (kbd "C-c d") #'lvn-open-buffer-directory-in-file-explorer)
 
-    ;; In Dired, ask a WWW browser to display the file named on this line.
+    ;; In Dired, open the file or directory at point with the system's default
+    ;; application.
     (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?
 
     (defun boost-dired-open-marked-files-externally (&optional arg)

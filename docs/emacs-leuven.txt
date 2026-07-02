@@ -12712,7 +12712,7 @@ In addition to what others have mentioned, if you are on MS Windows then, after
 loading ~w32-browser.el~ and ~dired+.el~, you can use item ~Open Associated Windows
 App~ in the ~Single~ menu to open a file with the associated program.
 
-Same thing for the marked files, using ~Oepn Associated Windows Apps~ in menus
+Same thing for the marked files, using ~Open Associated Windows Apps~ in menus
 ~Multiple~ and ~Multiple > Marked Here and Below~.
 
 And you can use item ~Single > ~Open in Windows Explorer~ to open a file or folder
@@ -12746,70 +12746,50 @@ appropriate viewer:
   will support Unicode file names, something that is currently impossible when
   you invoke an external command.
 
-#+begin_src emacs-lisp :tangle no
-    (defun helm-open-file-with-default-tool (file)
-      "Open FILE with the default tool on this platform."
-      (let ((program (cond ((lvn--linux-p) "xdg-open")
-                           ((lvn--mac-p) "open")))
-            process-connect-type)
-        (if (lvn--win32-p)
-            (helm-w32-shell-execute-open-file file)
-          (start-process "helm-open-file-with-default-tool" nil program file))))
-#+end_src
+**** Open the current buffer's directory
 
-#+begin_src emacs-lisp :tangle no
-    ;; Dired open function.
-    (defun dired-open ()
-      "Open marked files in Dired with the default tool on this platform."
-      (interactive)
-      (let ((program (cond ((lvn--linux-p) "xdg-open")
-                           ((lvn--mac-p) "open"))))
-        (dired-do-shell-command program nil
-                                (dired-get-marked-files t current-prefix-arg))))
-
-    (define-key dired-mode-map (kbd "F") #'dired-open)
-#+end_src
-
-Reveal active file in Explorer:
+Open the directory containing the current buffer in the operating system's file
+manager.
 
 #+begin_src emacs-lisp
-    ;; Reveal active buffer's directory in the system file explorer.
+    ;; Open the current buffer's directory in the system file explorer.
     (defun lvn-open-buffer-directory-in-file-explorer ()
-      "Open the current buffer's directory in the default file explorer."
+      "Open the current buffer's directory in the system file explorer."
       (interactive)
       (let ((dir (file-name-directory (or buffer-file-name default-directory))))
-        (if dir
-            (browse-url-of-file dir)
-          (error "[No directory associated with this buffer]"))))
+        (if (and lvn--wsl-p
+                 (executable-find "wslview"))
+            (start-process "wslview" nil "wslview" dir)
+          (browse-url-of-file dir))))
 
-    ;; Mnemonic for "directory".
+    ;; Mnemonic: "directory".
     (global-set-key (kbd "C-c d") #'lvn-open-buffer-directory-in-file-explorer)
 #+end_src
 
-**** Ask a WWW browser to display file
+For file-visiting buffers, this opens the directory containing the file.
 
-Just ask a WWW browser to display the current file.
+For buffers not visiting a file (such as ~*scratch*~), it opens ~default-directory~.
+
+**** Open the current file externally
+
+Open the file at point with the operating system's default application.
 
 #+begin_src emacs-lisp
-    ;; In Dired, ask a WWW browser to display the file named on this line.
+    ;; In Dired, open the file or directory at point with the system's default
+    ;; application.
     (define-key dired-mode-map (kbd "e") #'browse-url-of-dired-file) ; <C-RET>?
 #+end_src
 
-It works for files as well as for directories.
+This command works for both files and directories.
 
-It opens the Windows Explorer for:
+On Windows, it opens the associated application for files and File Explorer for
+directories. In particular:
 
-- the *current directory* when invoked on ~.~, and
-- the *parent directory* when invoked on ~..~.
+- Invoked on ~.~, it opens the *current directory*.
+- Invoked on ~..~, it opens the *parent directory*.
 
-*************** TODO Mapcar on the browse-url function
-See code of ~w32-dired-open-files-externally~.
-*************** END
-
-*************** TODO ~C-u RET~ opens dired on Org link
-We should probably have the same type of key binding for opening Explorer from
-Dired.
-*************** END
+See also [[*Open multiple files externally][Open multiple files externally]], which performs the same operation for
+all marked files.
 
 **** Open multiple files externally
 
