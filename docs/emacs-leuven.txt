@@ -2928,23 +2928,26 @@ See also *Outline Mode* for another way to hide part of the text in a buffer.
     ;; (with-eval-after-load 'whitespace   (diminish 'whitespace-mode))
 #+end_src
 
-See https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline for screenshots.
+*** Mode line
 
-See https://github.com/bling/vim-airline for the original author.
+See https://powerline.readthedocs.org/en/latest/overview.html#vim-statusline for
+screenshots.
 
-We build our mode line:
+Emacs Leuven uses a custom Powerline-based mode line inspired by [[https://github.com/vim-airline/vim-airline][vim-airline]].
 
-- Git/SVN branch
-- buffer-read-only / buffer-modified-p
-- mule environment
-- buffer name
-- which function information
-- major mode
-- minor modes
-- line number, column number
-- percent
-- buffer size
-- dictionary
+The mode line displays the main buffer and editing state at a glance:
+
+- Version-control branch or revision.
+- Buffer read-only or modified status.
+- Mule and coding-system information.
+- Buffer name.
+- Current function, when available.
+- Major mode.
+- Minor modes.
+- Line and column number.
+- Buffer position.
+- Buffer size.
+- Active dictionary.
 
 #+begin_src emacs-lisp
   (defface powerline-modified-face
@@ -3108,8 +3111,6 @@ See http://www.elliotglaysher.org/emacs/
 *************** END
 
 ** How Text Is Displayed
-
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 #+begin_src emacs-lisp
 ;;** 15.20 The (info "(emacs)")
