@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1306>
+;; Version: <20260702.1318>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1306>"
+(defconst boost-version "<20260702.1318>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2410,7 +2410,7 @@ After initiating the grep search, the isearch is aborted."
 
   ;; Make the message "FILENAME has auto save data" unmissable:
   (defface boost-recover-overlay-face
-    '((t :weight bold :background "#FF3F3F"))
+    '((t (:weight bold :background "#FF3F3F")))
     "Face used to highlight buffers with newer auto-save data."
     :group 'files)
 
@@ -4894,7 +4894,7 @@ mouse-3: go to end") "]")))
       :type 'face)
 
     (defface hs-face
-      '((t :box "#777777" :foreground "#9A9A6A" :background "#F3F349"))
+      '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
       "Face to hightlight the \"...\" area of hidden regions"
       :group 'hideshow)
 

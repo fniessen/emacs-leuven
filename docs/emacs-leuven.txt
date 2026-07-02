@@ -4229,7 +4229,7 @@ If the version on disk is the one you want, simply ignore the warning.
 #+begin_src emacs-lisp
   ;; Make the message "FILENAME has auto save data" unmissable:
   (defface boost-recover-overlay-face
-    '((t :weight bold :background "#FF3F3F"))
+    '((t (:weight bold :background "#FF3F3F")))
     "Face used to highlight buffers with newer auto-save data."
     :group 'files)
 
@@ -8780,7 +8780,7 @@ Change those really awkward key bindings with ~@~ in the middle:
       :type 'face)
 
     (defface hs-face
-      '((t :box "#777777" :foreground "#9A9A6A" :background "#F3F349"))
+      '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
       "Face to hightlight the \"...\" area of hidden regions"
       :group 'hideshow)
 
