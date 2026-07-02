@@ -12693,58 +12693,16 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
     (leuven--section "31.5 (emacs)Dired Visiting")
 #+end_src
 
-*** Open file with default tool (open directory with Windows Explorer)
+*** Open files and directories externally
 
-On top of the traditional ways, there are also these add-ons which open files
-using external programs (such as PDF viewers), based on their extension.
+Emacs Leuven provides convenient commands for opening files and directories with
+the operating system's default applications.
 
-One advantage is that using the traditional ~!~ (or ~X~) switch with Dired locks up
-Emacs until you close the other program. These add-ons do not and leave Emacs
-free for continued used.
-
-#+begin_note
-Alternative
-
-Nowadays, there's at least the built-in ~dired-do-async-shell-command~, bound to
-~&~.
-
-In addition to what others have mentioned, if you are on MS Windows then, after
-loading ~w32-browser.el~ and ~dired+.el~, you can use item ~Open Associated Windows
-App~ in the ~Single~ menu to open a file with the associated program.
-
-Same thing for the marked files, using ~Open Associated Windows Apps~ in menus
-~Multiple~ and ~Multiple > Marked Here and Below~.
-
-And you can use item ~Single > ~Open in Windows Explorer~ to open a file or folder
-in Windows Explorer.
-
-You can also right-click on a file and pick ~Open Associated Windows App~ or ~Open
-in Windows Explorer~.
-
-There are key bindings for these as wel:
-
-- ~M-RET~ or ~mouse-2~ :: open with associated proram
-- ~C-RET~ :: open in Explorer
-#+end_note
+These commands are asynchronous: unlike ~!~ or ~X~ in Dired, they do not block Emacs
+while the external application is running.
 
 *************** TODO Read http://www.piprime.fr/1302/plus-qu-un-explorateur-de-fichiers-le-mode-dired-d-emacs/
-
-These days, there are mature programs for launching an arbitrary file with an
-appropriate viewer:
-
-- ~xdg-open~ on GNU systems,
-
-- ~open~ on Mac OS X,
-
-  If ~xdg-open~ is not available, one can replace it with ~gnome-open~ or ~kde-open~.
-
-- ~start~ on MS Windows.
-
-  Though, it is a bad idea to use ~start~ on Windows: it has too many quirks
-  regarding quoting of its command line. Instead, just invoke the existing
-  primitive ~w32-shell-execute~ with the ~open~ verb. As a nice side effect, this
-  will support Unicode file names, something that is currently impossible when
-  you invoke an external command.
+# ~C-RET~ :: open in Explorer
 
 **** Open the current buffer's directory
 
@@ -12814,18 +12772,23 @@ Windows application. Otherwise, the standard Emacs mechanism
                 #'boost-dired-open-marked-files-externally)
 #+end_src
 
-*** Open file with ~eww~
+**** Open the current file with ~eww~
+
+Open the file at point in Dired using Emacs' built-in web browser, ~eww~.
 
 #+begin_src emacs-lisp
-    ;; Open current file with eww.
-    (defun dired-open-with-eww ()
-      "In Dired, visit (with eww) the file named on this line."
+    ;; Open the file at point in Dired with `eww'.
+    (defun boost-dired-open-file-with-eww ()
+      "In Dired, open the file at point with `eww'."
       (interactive)
       (eww-open-file (file-name-sans-versions (dired-get-filename) t)))
 
-    ;; Add a binding "W" -> `dired-open-with-eww' to Dired.
-    (define-key dired-mode-map (kbd "W") #'dired-open-with-eww)
+    ;; Mnemonic: "Web".
+    (define-key dired-mode-map (kbd "W") #'boost-dired-open-file-with-eww)
 #+end_src
+
+This is useful for viewing HTML documents, SVG images, plain text files, and
+other formats supported by ~eww~, without leaving Emacs.
 
 ** Operating on Files
 

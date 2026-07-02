@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1128>
+;; Version: <20260702.1137>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1128>"
+(defconst boost-version "<20260702.1137>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -6419,14 +6419,14 @@ This example lists Azerty layout second row keys."
     (define-key dired-mode-map (kbd "o")
                 #'boost-dired-open-marked-files-externally)
 
-    ;; Open current file with eww.
-    (defun dired-open-with-eww ()
-      "In Dired, visit (with eww) the file named on this line."
+    ;; Open the file at point in Dired with `eww'.
+    (defun boost-dired-open-file-with-eww ()
+      "In Dired, open the file at point with `eww'."
       (interactive)
       (eww-open-file (file-name-sans-versions (dired-get-filename) t)))
 
-    ;; Add a binding "W" -> `dired-open-with-eww' to Dired.
-    (define-key dired-mode-map (kbd "W") #'dired-open-with-eww)
+    ;; Mnemonic: "Web".
+    (define-key dired-mode-map (kbd "W") #'boost-dired-open-file-with-eww)
 
 ;;** (info "(emacs)Operating on Files")
 
