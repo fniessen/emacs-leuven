@@ -1359,15 +1359,15 @@ Return nil when the task is already in state \"STRT\" or while
   ;; (setq org-clock-in-resume t)
 
   ;; Ask user before clocking out on Emacs exit.
-  (defun lvn--org-query-clock-out ()
-    "Prompt user to clock out before exiting Emacs."
+  (defun boost--org-clock-query-exit ()
+    "Prompt to clock out before exiting Emacs."
     (if (and (featurep 'org-clock)
              (funcall 'org-clocking-p)
-             (y-or-n-p "You are currently clocking time, clock out? "))
+             (y-or-n-p "You are clocking time. Clock out before exiting? "))
         (org-clock-out)
       t))
 
-  (add-hook 'kill-emacs-query-functions #'lvn--org-query-clock-out)
+  (add-hook 'kill-emacs-query-functions #'boost--org-clock-query-exit)
 
   )                                   ; with-eval-after-load "org-clock" ends here.
 #+end_src
