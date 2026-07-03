@@ -139,24 +139,20 @@ emit a warning when the feature can't be loaded."
 (with-eval-after-load 'org
   (message "[... Org Document Structure]")
 
-  ;; Define the right-pointing pointer character.
-  (defvar lvn-right-pointing-char
-    (if (char-displayable-p ?\u25B8)
-        " \u25B8"
-      nil))
+  ;; Use a right-pointing triangle as the folding indicator when supported.
+  (defvar boost--org-ellipsis-glyph
+    (when (char-displayable-p ?\u25B8)
+      " ▸")
+    "Glyph used for `org-ellipsis' when displayable.")
 
-  ;; Define common face attributes.
-  (defvar lvn-org-ellipsis-face-attributes
-    '((:box "#999999"
-       :foreground "#999999"
-       :background "#FFF8C0"
-       :underline nil)))
-
-  ;; Set custom ellipsis character.
-  (if lvn-right-pointing-char
-      (setq org-ellipsis lvn-right-pointing-char)
-    (apply #'set-face-attribute 'org-ellipsis nil lvn-org-ellipsis-face-attributes)
-    (setq org-ellipsis 'org-ellipsis)))
+  (if boost--org-ellipsis-glyph
+      (setq org-ellipsis boost--org-ellipsis-glyph)
+    (set-face-attribute 'org-ellipsis nil
+                        :box "#999999"
+                        :foreground "#999999"
+                        :background "#FFF8C0"
+                        :underline nil))
+    (setq org-ellipsis 'org-ellipsis))
 
 ;; RET follows links (except in tables, where you must use `C-c C-o').
 (setq org-return-follows-link t)
