@@ -787,17 +787,17 @@ Return nil when the task is already in state \"STRT\" or while
 (message "8.5 (org)Effort estimates")
 
 ;; Add an effort estimate on the fly when clocking in.
-(defun leuven--org-ask-effort ()
-  "Ask for an effort estimate when clocking in."
+(defun boost--org-clock-ensure-effort ()
+  "Prompt for an effort estimate before clocking in."
   (unless (org-entry-get (point) "Effort")
     (let ((effort
            (completing-read
             "Estimated time (H:MM): "
             (org-entry-get-multivalued-property (point) "Effort"))))
-      (unless (equal effort "")
+      (unless (string-empty-p effort)
         (org-set-property "Effort" effort)))))
 
-(add-hook 'org-clock-in-prepare-hook #'leuven--org-ask-effort)
+(add-hook 'org-clock-in-prepare-hook #'boost--org-clock-ensure-effort)
 
 ;;* 9 (info "(org)Capture - Refile - Archive")
 
