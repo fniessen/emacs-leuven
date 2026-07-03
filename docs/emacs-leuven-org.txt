@@ -499,17 +499,18 @@ vs ~C-u C-c C-j~
 
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
-  (defun lvn-org-reveal (&optional all)
+  (defun boost-org-reveal-siblings (&optional all)
     "Reveal hidden Org entries.
-  If ALL is non-nil (e.g., with prefix arg C-u), reveal all hidden content in the buffer.
-  Otherwise, reveal only siblings at the current level."
+If ALL is non-nil (e.g., with prefix argument `C-u`), reveal all folded
+content in the current buffer. Otherwise, reveal only siblings at the
+current level."
     (interactive "P")
     (if all
         (org-reveal t)            ; Reveal all hidden content in the buffer.
       (org-fold-show-siblings)))  ; Reveal only siblings at the current level.
 
-  ;; Bind `C-c C-r' to `lvn-org-reveal' in Org-mode keymap.
-  (define-key org-mode-map (kbd "C-c C-r") #'lvn-org-reveal))
+  ;; Bind `C-c C-r' to `boost-org-reveal-siblings' in Org-mode keymap.
+  (define-key org-mode-map (kbd "C-c C-r") #'boost-org-reveal-siblings))
 #+end_src
 
 See also [[id:a9fe61b7-cdbd-478e-a4af-da9e122fb2d9][Sparse trees]] for behavior when revealing a location.

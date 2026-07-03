@@ -226,17 +226,18 @@ emit a warning when the feature can't be loaded."
 (setq org-goto-interface 'outline-path-completion)
 
 (with-eval-after-load 'org
-  (defun lvn-org-reveal (&optional all)
+  (defun boost-org-reveal-siblings (&optional all)
     "Reveal hidden Org entries.
-  If ALL is non-nil (e.g., with prefix arg C-u), reveal all hidden content in the buffer.
-  Otherwise, reveal only siblings at the current level."
+If ALL is non-nil (e.g., with prefix argument `C-u`), reveal all folded
+content in the current buffer. Otherwise, reveal only siblings at the
+current level."
     (interactive "P")
     (if all
         (org-reveal t)            ; Reveal all hidden content in the buffer.
       (org-fold-show-siblings)))  ; Reveal only siblings at the current level.
 
-  ;; Bind `C-c C-r' to `lvn-org-reveal' in Org-mode keymap.
-  (define-key org-mode-map (kbd "C-c C-r") #'lvn-org-reveal))
+  ;; Bind `C-c C-r' to `boost-org-reveal-siblings' in Org-mode keymap.
+  (define-key org-mode-map (kbd "C-c C-r") #'boost-org-reveal-siblings))
 
 ;;** (info "(org)Structure editing")
 
