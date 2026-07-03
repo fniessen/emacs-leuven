@@ -1323,17 +1323,17 @@ Alternative to requiring org-clock in every Emacs session.
   ;; 8.4.3 Set idle time before resolving open clocks.
   (setq org-clock-idle-time 240)
 
-  ;; Function to switch task state to "STRT" when clocking in.
-  (defun lvn--org-switch-to-started (kwd)
-    "Switch task state to STRT unless it's already in STRT or in capture mode."
-    (if (and kwd
-             (not (string-equal kwd "STRT"))
-             (not (and (boundp 'org-capture-mode) org-capture-mode)))
-        "STRT"
-      nil))
+  (defun boost--org-clock-in-started-state (state)
+    "Return \"STRT\" when clocking into a task that is not already started.
+Return nil when the task is already in state \"STRT\" or while
+  `org-capture-mode' is active."
+    (when (and state
+               (not (equal state "STRT"))
+               (not (bound-and-true-p org-capture-mode)))
+      "STRT"))
 
-  ;; 8.4.3 Set task to todo state STRT while clocking it.
-  (setq org-clock-in-switch-to-state 'lvn--org-switch-to-started)
+  ;; 8.4.3 Switch tasks to STRT when clocking in.
+  (setq org-clock-in-switch-to-state #'boost--org-clock-in-started-state)
 
   ;; Disable clock-out on DONE to avoid interrupting workflows.
   (setq org-clock-out-when-done nil)
