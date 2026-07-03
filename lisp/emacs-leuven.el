@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260703.1345>
+;; Version: <20260703.1357>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260703.1345>"
+(defconst boost-version "<20260703.1357>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2195,29 +2195,32 @@ After initiating the grep search, the isearch is aborted."
   ;; Visit a file.
   (global-set-key (kbd "<f3>") #'find-file)
 
-  (defcustom lvn-large-file-warning-threshold
+  (defcustom boost-large-file-warning-threshold
     (* 512 1024 1024) ; 512 MB
     "Threshold for the 'File xxx is large, really open? (y or n)' warning."
     :group 'leuven
     :type 'integer)
 
   ;; Maximum buffer size for which line number should be displayed.
-  (setq line-number-display-limit lvn-large-file-warning-threshold)
+  (setq line-number-display-limit boost-large-file-warning-threshold)
                                         ; 14.18 Optional Mode Line Features.
 
-  (defun lvn-file-too-large-p ()
-    "Check if the file is too large and might cause performance issues."
-    (> (buffer-size) lvn-large-file-warning-threshold))
+  (defun boost--large-file-p ()
+    "Return non-nil if the current buffer exceeds `boost-large-file-warning-threshold'."
+    (> (buffer-size) boost-large-file-warning-threshold))
 
-  (defun lvn-optimize-large-file-viewing ()
+  (defun boost-optimize-large-file-viewing ()
     "Optimize Emacs performance when viewing large files."
-    (setq buffer-read-only t)
+    (read-only-mode 1)
     (setq-local bidi-display-reordering nil) ; Default local setting.
-    (jit-lock-mode nil)
+    (jit-lock-mode -1)
     (buffer-disable-undo)
-    (set (make-variable-buffer-local 'global-hl-line-mode) nil)
-    (set (make-variable-buffer-local 'line-number-mode) nil)
-    (set (make-variable-buffer-local 'column-number-mode) nil)
+
+    (when (bound-and-true-p hl-line-mode)
+      (hl-line-mode -1))
+
+    (when (bound-and-true-p display-line-numbers-mode)
+      (display-line-numbers-mode -1))
 
     ;; Disable costly modes.
     (when (fboundp 'smartparens-mode)
@@ -2225,11 +2228,12 @@ After initiating the grep search, the isearch is aborted."
     (when (fboundp 'anzu-mode)
       (anzu-mode -1)))
 
-  (define-derived-mode lvn-large-file-mode fundamental-mode "LvnLargeFile"
+  (define-derived-mode boost-large-file-mode fundamental-mode "BoostLargeFile"
     "Major mode for optimized viewing of large files."
-    (lvn-optimize-large-file-viewing))
+    (boost-optimize-large-file-viewing))
 
-  (add-to-list 'magic-mode-alist (cons #'lvn-file-too-large-p #'lvn-large-file-mode))
+  (add-to-list 'magic-mode-alist
+               (cons #'boost--large-file-p #'boost-large-file-mode))
 
   ;; (defun leuven-find-large-file-conservatively (filename)
   ;;   (interactive
@@ -4514,7 +4518,7 @@ the parent element."
 
     (add-hook 'nxml-mode-hook
               (lambda ()
-                (when (< (buffer-size) lvn-large-file-warning-threshold) ; View large files.
+                (when (< (buffer-size) boost-large-file-warning-threshold) ; View large files.
                   (hl-tags-mode 1))))
 
     ;; (add-hook 'web-mode-hook #'hl-tags-mode)
