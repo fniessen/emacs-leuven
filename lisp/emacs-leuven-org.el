@@ -699,7 +699,7 @@ emit a warning when the feature can't be loaded."
   ;; (setq org-clock-persist t)
   ;; (org-clock-persistence-insinuate)
 
-  ;; Set the maximum length of the clocked task string in the modeline.
+  ;; Set the maximum length of the clocked task string in the mode line.
   (setq org-clock-string-limit 35)
 
   ;; Resume clocking task on clock-in if the clock is open.
