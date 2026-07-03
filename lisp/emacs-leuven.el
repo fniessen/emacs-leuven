@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260703.1407>
+;; Version: <20260703.1416>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260703.1407>"
+(defconst boost-version "<20260703.1416>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -726,7 +726,7 @@ Shows a warning message if the file does not exist or is not executable."
     (global-undo-tree-mode 1))
 
   (with-eval-after-load 'undo-tree
-    ;; Diminish undo-tree-mode from modeline.
+    ;; Diminish undo-tree-mode from mode line.
     (with-eval-after-load 'diminish-autoloads
       (diminish 'undo-tree-mode))
 
@@ -2244,9 +2244,9 @@ After initiating the grep search, the isearch is aborted."
     "Save the file and report time spent."
     (let* ((filename (buffer-file-name))
            (start-time (float-time)))
-      (message "[Saving file %s...]" filename)
+      (message "[Saving %s...]" filename)
       (let ((result (apply orig-fun args)))
-        (message "[Saved file %s in %.2f seconds]" filename
+        (message "[Saved %s in %.2f s]" filename
                  (- (float-time) start-time))
         result)))
 
@@ -4620,27 +4620,30 @@ the parent element."
     (which-function-mode 1)             ; ~ Stickyfunc mode (in header line).
 
     (defcustom lvn-which-func-max-length 30
-      "Maximum length of the function name displayed in the modeline."
+      "Maximum width of the function name displayed in the mode line."
       :group 'leuven
       :type 'integer)
 
-    (defun lvn--which-func-current ()
+    (defun boost--which-func-current-name ()
       "Return the current function name, truncated to `lvn-which-func-max-length'."
-      (let ((current (gethash (selected-window) which-func-table)))
-        (if current
+      (or (when-let ((current (gethash (selected-window) which-func-table)))
             (truncate-string-to-width current
                                       lvn-which-func-max-length
-                                      nil nil "...")
-          which-func-unknown)))
+                                      nil nil "..."))
+          which-func-unknown))
 
     (setq which-func-format
-          `("[" (:propertize (:eval (lvn--which-func-current))
-                             local-map ,which-func-keymap
-                             face which-func
-                             mouse-face mode-line-highlight
-                             help-echo "mouse-1: go to beginning\n\
-mouse-2: toggle rest visibility\n\
-mouse-3: go to end") "]")))
+          `("[" (:propertize
+                 (:eval (boost--which-func-current-name))
+                 local-map ,which-func-keymap
+                 face which-func
+                 mouse-face mode-line-highlight
+                 help-echo
+                 ,(concat
+                   "mouse-1: go to beginning\n"
+                   "mouse-2: toggle rest visibility\n"
+                   "mouse-3: go to end"))
+            "]")))
 
   (with-eval-after-load 'helm-autoloads
 
