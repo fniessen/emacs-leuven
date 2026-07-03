@@ -3946,29 +3946,49 @@ against reading a log which spits out a long line, I often do something like
 ~tail -f /some/file | fold -s~ in a shell buffer. This isn't good for editing,
 obviously, but helps a lot with reading.
 
+*** Viewing Large Files Efficiently
+
+Files whose size exceeds ~boost-large-file-warning-threshold~ are automatically
+opened in ~boost-large-file-mode~, a lightweight major mode derived from
+~fundamental-mode~.
+
+This mode is intended for fast, read-only inspection of large files. To reduce
+memory usage and improve responsiveness, it:
+
+- enables read-only mode,
+- disables bidirectional text reordering,
+- turns off JIT fontification,
+- disables undo recording, and
+- turns off selected minor modes that can be costly on large buffers, including
+  ~hl-line-mode~, ~display-line-numbers-mode~, ~smartparens-mode~, and ~anzu-mode~.
+
+The mode is selected automatically through ~magic-mode-alist~ whenever the current
+buffer exceeds the configured size threshold.
+
 #+begin_src emacs-lisp
   (defun boost--large-file-p ()
     "Return non-nil if the current buffer exceeds `boost-large-file-warning-threshold'."
     (> (buffer-size) boost-large-file-warning-threshold))
 
+  (defun boost--disable-mode-if-active (mode)
+    "Disable MODE if it is currently active."
+    (when (and (fboundp mode)
+               (bound-and-true-p mode))
+      (funcall mode -1)))
+
   (defun boost-optimize-large-file-viewing ()
     "Optimize Emacs performance when viewing large files."
     (read-only-mode 1)
-    (setq-local bidi-display-reordering nil) ; Default local setting.
+    (setq-local bidi-display-reordering nil)
     (jit-lock-mode -1)
     (buffer-disable-undo)
 
-    (when (bound-and-true-p hl-line-mode)
-      (hl-line-mode -1))
-
-    (when (bound-and-true-p display-line-numbers-mode)
-      (display-line-numbers-mode -1))
-
     ;; Disable costly modes.
-    (when (fboundp 'smartparens-mode)
-      (smartparens-mode -1))
-    (when (fboundp 'anzu-mode)
-      (anzu-mode -1)))
+    (dolist (mode '(hl-line-mode
+                    display-line-numbers-mode
+                    smartparens-mode
+                    anzu-mode))
+      (boost--disable-mode-if-active mode)))
 
   (define-derived-mode boost-large-file-mode fundamental-mode "BoostLargeFile"
     "Major mode for optimized viewing of large files."
@@ -3978,21 +3998,13 @@ obviously, but helps a lot with reading.
                (cons #'boost--large-file-p #'boost-large-file-mode))
 #+end_src
 
-#+begin_src emacs-lisp
-  ;; (defun leuven-find-large-file-conservatively (filename)
-  ;;   (interactive
-  ;;    (list (read-file-name
-  ;;           "Find file conservatively: " nil default-directory
-  ;;           (confirm-nonexistent-file-or-buffer))))
-  ;;   (let ((auto-mode-alist nil))
-  ;;     (find-file filename)
-  ;;     (fundamental-mode)
-  ;;     (leuven--view-large-file)))
-#+end_src
-
-The *SoLong* package is a workaround for the issue of large "minified" files of
-programming code bringing Emacs to its knees on account of the relevant modes
-not being optimised for that use-case.
+#+begin_note
+File size and line length are different performance concerns. A file may be
+relatively small but still contain extremely long lines (for example, "minified"
+source code or log files), which can severely impact responsiveness.  For such
+cases, the built-in *SoLong* package automatically mitigates the performance
+problems caused by pathological line lengths.
+#+end_note
 
 ** Saving Files
 

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260703.1357>
+;; Version: <20260703.1407>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260703.1357>"
+(defconst boost-version "<20260703.1407>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2209,24 +2209,25 @@ After initiating the grep search, the isearch is aborted."
     "Return non-nil if the current buffer exceeds `boost-large-file-warning-threshold'."
     (> (buffer-size) boost-large-file-warning-threshold))
 
+  (defun boost--disable-mode-if-active (mode)
+    "Disable MODE if it is currently active."
+    (when (and (fboundp mode)
+               (bound-and-true-p mode))
+      (funcall mode -1)))
+
   (defun boost-optimize-large-file-viewing ()
     "Optimize Emacs performance when viewing large files."
     (read-only-mode 1)
-    (setq-local bidi-display-reordering nil) ; Default local setting.
+    (setq-local bidi-display-reordering nil)
     (jit-lock-mode -1)
     (buffer-disable-undo)
 
-    (when (bound-and-true-p hl-line-mode)
-      (hl-line-mode -1))
-
-    (when (bound-and-true-p display-line-numbers-mode)
-      (display-line-numbers-mode -1))
-
     ;; Disable costly modes.
-    (when (fboundp 'smartparens-mode)
-      (smartparens-mode -1))
-    (when (fboundp 'anzu-mode)
-      (anzu-mode -1)))
+    (dolist (mode '(hl-line-mode
+                    display-line-numbers-mode
+                    smartparens-mode
+                    anzu-mode))
+      (boost--disable-mode-if-active mode)))
 
   (define-derived-mode boost-large-file-mode fundamental-mode "BoostLargeFile"
     "Major mode for optimized viewing of large files."
@@ -2234,16 +2235,6 @@ After initiating the grep search, the isearch is aborted."
 
   (add-to-list 'magic-mode-alist
                (cons #'boost--large-file-p #'boost-large-file-mode))
-
-  ;; (defun leuven-find-large-file-conservatively (filename)
-  ;;   (interactive
-  ;;    (list (read-file-name
-  ;;           "Find file conservatively: " nil default-directory
-  ;;           (confirm-nonexistent-file-or-buffer))))
-  ;;   (let ((auto-mode-alist nil))
-  ;;     (find-file filename)
-  ;;     (fundamental-mode)
-  ;;     (leuven--view-large-file)))
 
 ;;** 19.3 (info "(emacs)Saving") Files
 
