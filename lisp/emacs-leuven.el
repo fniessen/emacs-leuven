@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260703.1330>
+;; Version: <20260703.1345>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260703.1330>"
+(defconst boost-version "<20260703.1345>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4171,45 +4171,20 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
                 (defun boost-set-latexmk ()
                   (setq-local TeX-command-default "LaTeXMk"))))
 
-    ;; Not called?
-    (defun lvn--setup-latex-mode ()
-      "Custom hook for LaTeX mode."
-      (setq TeX-command-default (lvn--determine-tex-command))
-      (TeX-fold-mode 1))
+    ;; Automatically use French dictionary when a LaTeX document uses French.
+    (defun boost--set-french-dictionary-for-latex ()
+      "Use the French dictionary for LaTeX documents written in French."
+      (when (save-excursion
+              (goto-char (point-min))
+              (or (re-search-forward "\\\\documentclass.*french" nil t)
+                  (re-search-forward "\\\\usepackage.*french.*babel" nil t)))
+        (ispell-change-dictionary "francais")
+        (force-mode-line-update)
+        (message "[Switched dictionary to français]")
+        (when flyspell-mode
+          (flyspell-buffer))))
 
-    (defun lvn--determine-tex-command ()
-      "Determine the appropriate TeX command based on package usage."
-      (let ((fontspec-regex "^\\s-*\\\\usepackage\\(?:\\[.*\\]\\)?{.*\\<\\(?:font\\|math\\)spec\\>.*}")
-            (search-limit 3000))
-        (if (lvn--file-contains-regex fontspec-regex search-limit)
-            "XeLaTeX"
-          "LaTeX")))
-
-    (defun lvn--file-contains-regex (regex limit)
-      "Check if the current buffer contains REGEX within LIMIT lines from the start."
-      (save-excursion
-        (save-restriction
-          (widen)
-          (goto-char (point-min))
-          (re-search-forward regex limit t))))
-
-    ;; Automatically switch to French dictionary when LaTeX document uses French.
-    (defun lvn--switch-to-french-dictionary ()
-      "Change the local dictionary to French when using French in LaTeX babel package."
-      (when (eq major-mode 'latex-mode)
-        (when (save-excursion
-                (goto-char (point-min))
-                (or (re-search-forward "\\(documentclass.*french\\)" nil t)
-                    (re-search-forward "\\(usepackage.*french.*babel\\)" nil t)))
-          (message "[Switched dictionary to français]")
-          (sit-for 0.5)
-          (save-excursion
-            (ispell-change-dictionary "francais")
-            (force-mode-line-update)
-            (when flyspell-mode
-              (flyspell-buffer))))))
-
-    (add-hook 'LaTeX-mode-hook #'lvn--switch-to-french-dictionary)
+    (add-hook 'LaTeX-mode-hook #'boost--set-french-dictionary-for-latex)
 
     ;; Don't ask user for permission to save files before starting TeX.
     (setq TeX-save-query nil)
