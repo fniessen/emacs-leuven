@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260703.1207>
+;; Version: <20260703.1330>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260703.1207>"
+(defconst boost-version "<20260703.1330>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2179,17 +2179,18 @@ After initiating the grep search, the isearch is aborted."
 
   (leuven--section "19.2 (emacs)Visiting Files")
 
-  (defun lvn--find-file-time-advice (orig-fun &rest args)
-    "Advice function for `find-file' that reports the time spent on file loading."
-    (let* ((filename (car args))
-           (find-file-time-start (float-time)))
-      (message "[Finding file %s...]" filename)
-      (let ((result (apply orig-fun args)))
-        (message "[Found file %s in %.2f seconds]" filename
-                 (- (float-time) find-file-time-start))
-        result)))
+  (defun boost--find-file-report-time (orig-fun &rest args)
+    "Report the time spent in `find-file'."
+    (let ((filename (car args))
+          (start (float-time)))
+      (message "[Finding %s...]" filename)
+      (unwind-protect
+          (apply orig-fun args)
+        (message "[Found %s in %.2f s]"
+                 filename
+                 (- (float-time) start)))))
 
-  (advice-add 'find-file :around #'lvn--find-file-time-advice)
+  (advice-add 'find-file :around #'boost--find-file-report-time)
 
   ;; Visit a file.
   (global-set-key (kbd "<f3>") #'find-file)
@@ -3063,14 +3064,15 @@ in the current buffer."
 
   (leuven--section "20.4 (emacs)Kill Buffer")
 
-  ;; Kill the current buffer without confirmation (if not modified).
-  (defun lvn-kill-current-buffer-no-confirm ()
-    "Kill the current buffer without confirmation (if not modified)."
+  ;; Kill the current buffer, prompting only when Emacs normally requires
+  ;; confirmation.
+  (defun boost-kill-current-buffer ()
+    "Kill the current buffer."
     (interactive)
     (kill-buffer nil))
 
   ;; Key binding.
-  (global-set-key (kbd "S-<f12>") #'lvn-kill-current-buffer-no-confirm)
+  (global-set-key (kbd "S-<f12>") #'boost-kill-current-buffer)
 
 ;;** 20.5 (info "(emacs)Several Buffers")
 
