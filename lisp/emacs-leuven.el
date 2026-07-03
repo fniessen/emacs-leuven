@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260702.1725>
+;; Version: <20260703.1207>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260702.1725>"
+(defconst boost-version "<20260703.1207>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1891,9 +1891,9 @@ TOTAL is the total number of matches."
     ;; Set the update function.
     (setq anzu-mode-line-update-function #'boost--anzu-format-mode-line))
 
-    ;; ;; Use Anzu for query-replace commands.
-    ;; (global-set-key (kbd "M-%")   #'anzu-query-replace)
-    ;; (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
+    ;; Use Anzu for query-replace commands.
+    (global-set-key (kbd "M-%")   #'anzu-query-replace)
+    (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
 
 ;; Fall back to the built-in lazy match counter when Anzu is unavailable.
 (unless (fboundp 'anzu-mode)

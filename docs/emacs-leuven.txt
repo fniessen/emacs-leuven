@@ -3388,9 +3388,9 @@ TOTAL is the total number of matches."
     ;; Set the update function.
     (setq anzu-mode-line-update-function #'boost--anzu-format-mode-line))
 
-    ;; ;; Use Anzu for query-replace commands.
-    ;; (global-set-key (kbd "M-%")   #'anzu-query-replace)
-    ;; (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
+    ;; Use Anzu for query-replace commands.
+    (global-set-key (kbd "M-%")   #'anzu-query-replace)
+    (global-set-key (kbd "C-M-%") #'anzu-query-replace-regexp)
 #+end_src
 
 The following code checks if the ~anzu-mode~ function is defined. If it's not, it
