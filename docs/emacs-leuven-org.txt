@@ -4391,7 +4391,7 @@ corresponding LaTeX tables.
 * A.6 Dynamic blocks
 
 #+begin_note
-For some (yet) unknown reason, ~lvn--org-update-buffer-before-save~ gets added to
+For some (yet) unknown reason, ~boost--org-before-save-update-buffer~ gets added to
 a local copy of the global variable ~before-save-hook~. We now decided to add it
 to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 #+end_note
@@ -4399,14 +4399,14 @@ to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
 #+begin_src emacs-lisp
 ;;** A.6 (info "(org)Dynamic blocks")
 
-(defun lvn--org-update-buffer-before-save ()
-  "Update dynamic blocks, tables, and tags in Org buffer before saving, if modified."
+(defun boost--org-before-save-update-buffer ()
+  "Update dynamic blocks, tables, and tags in Org buffer before saving."
   (when (and (derived-mode-p 'org-mode) ; Check if in org-mode.
-             (buffer-file-name)         ; Check if associated with a file.
+             buffer-file-name           ; Check if associated with a file.
              (buffer-modified-p))       ; Check if modified.
     (message "[Updating Org buffer: %s]"
-             (file-name-nondirectory (buffer-file-name)))
-    (let ((cache-long-scans nil)        ; Optimize line navigation.
+             (file-name-nondirectory buffer-file-name))
+    (let ((cache-long-scans nil))       ; Optimize line navigation.
                                         ; Make `forward-line' much faster and
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
@@ -4414,27 +4414,36 @@ to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
           ;; Preserve undo history (for goto-chg).
           (buffer-undo-list buffer-undo-list)
           mode-states)
-      ;; Temporarily disable interfering modes.
-      (dolist (mode modes-to-disable)
-        (when (and (boundp mode) (symbol-value mode))
-          (push (cons mode t) mode-states)
-          (funcall mode -1)))
-      ;; Perform buffer updates only if relevant content exists.
-      (boost-org-remove-redundant-local-tags) ; Remove redundant local tags.
-      (measure-time "Realigned all tags" (org-align-tags :all))
-      (when (org-element-map (org-element-parse-buffer) 'dynamic-block #'identity nil t)
-        ;; Skip unnecessary updates: update only if dynamic blocks exist.
-        (measure-time "Updated all dynamic blocks" (org-update-all-dblocks)))
-      (when (org-element-map (org-element-parse-buffer) 'table #'identity nil t)
-        ;; Skip unnecessary updates: update only if tables exist.
-        (measure-time "Re-applied formulas to all tables"
-                      (org-table-iterate-buffer-tables)))
-      ;; Restore disabled modes.
-      (dolist (mode-state mode-states)
-        (when (cdr mode-state) (funcall (car mode-state) 1))))))
+      (unwind-protect
+          (progn
+            ;; Temporarily disable interfering modes.
+            (dolist (mode modes-to-disable)
+              (when (and (fboundp mode)
+                         (bound-and-true-p mode))
+                (push mode mode-states)
+                (funcall mode -1)))
+
+            ;; Perform buffer updates.
+            (boost-org-remove-redundant-local-tags) ; Remove redundant local tags.
+            (measure-time "Realigned all tags"
+              (org-align-tags :all))
+
+            ;; Skip unnecessary updates.
+            (let ((ast (org-element-parse-buffer)))
+              ;; Update only if dynamic blocks exist.
+              (when (org-element-map ast 'dynamic-block #'identity nil t)
+                (measure-time "Updated all dynamic blocks"
+                  (org-update-all-dblocks)))
+              ;; Update only if tables exist.
+              (when (org-element-map ast 'table #'identity nil t)
+                (measure-time "Re-applied formulas to all tables"
+                  (org-table-iterate-buffer-tables)))))
+        ;; Restore disabled modes.
+        (dolist (mode mode-states)
+          (funcall mode 1)))))
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
-(add-hook 'before-save-hook #'lvn--org-update-buffer-before-save)
+(add-hook 'before-save-hook #'boost--org-before-save-update-buffer)
                                         ; Heavy before-save hook.
 #+end_src
 
