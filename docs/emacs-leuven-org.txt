@@ -209,22 +209,20 @@ ID's are saved in =~/.emacs.d/.org-id-locations= on my system (see
 ~org-id-locations-file~).
 
 #+begin_src emacs-lisp
-(defun lvn-org-module-available-p (module)
-  "Return t if MODULE is available for loading."
-  (or (featurep module) (locate-library (symbol-name module))))
+(defun boost--org-enable-module (module)
+  "Add MODULE to `org-modules' if it is available (can be loaded)."
+  (when (or (featurep module)
+            (locate-library (symbol-name module)))
+    (add-to-list 'org-modules module)))
 
-(when (lvn-org-module-available-p 'org-checklist)
-  ;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
-  ;; needed.
-  (add-to-list 'org-modules 'org-checklist))
-#+end_src
+;; Set the RESET_CHECK_BOXES and LIST_EXPORT_BASENAME properties in items as
+;; needed.
+(boost--org-enable-module 'org-checklist)
 
-#+begin_src emacs-lisp
-;; Globally unique ID for Org mode entries (see `org-store-link')
-;; (takes care of automatically creating unique targets for internal
-;; links, see `C-h v org-id-link-to-org-use-id RET').
-(when (lvn-org-module-available-p 'org-id)
-  (add-to-list 'org-modules 'org-id))
+;; Globally unique IDs for Org entries (see `org-store-link'). This also enables
+;; automatic creation of unique targets for internal links. See
+;; `org-id-link-to-org-use-id' for details.
+(boost--org-enable-module 'org-id)
 #+end_src
 
 #+begin_note
