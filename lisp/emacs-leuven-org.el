@@ -2449,9 +2449,10 @@ parent."
 
 ;;* 15 (info "(org)Miscellaneous")
 
-(defun org-repair-property-drawers ()
-  "Fix properties drawers in current buffer.
-Ignore non Org buffers."
+(defun boost-org-repair-property-drawers ()
+  "Move misplaced property drawers to the correct position in Org buffers.
+
+Ignore non-Org buffers."
   (when (derived-mode-p 'org-mode)
     (org-with-wide-buffer
      (goto-char (point-min))
@@ -2463,7 +2464,9 @@ Ignore non Org buffers."
         (lambda ()
           (unless (and inline-re (looking-at-p inline-re))
             (save-excursion
-              (let ((end (save-excursion (outline-next-heading) (point))))
+              (let ((end (save-excursion
+                           (outline-next-heading)
+                           (point))))
                 (forward-line)
                 (when (looking-at-p org-planning-line-re) ; Org-8.3.
                   (forward-line))
@@ -2472,15 +2475,19 @@ Ignore non Org buffers."
                            (save-excursion
                              (and (re-search-forward org-property-drawer-re end t)
                                   (eq (org-element-type
-                                       (save-match-data (org-element-at-point)))
+                                       (save-match-data
+                                         (org-element-at-point)))
                                       'drawer))))
-                  (insert (delete-and-extract-region
-                           (match-beginning 0)
-                           (min (1+ (match-end 0)) end)))
-                  (unless (bolp) (insert "\n"))))))))))))
+                  (insert
+                   (delete-and-extract-region
+                    (match-beginning 0)
+                    (min (1+ (match-end 0)) end)))
+                  (unless (bolp)
+                    (insert "\n"))))))))))))
 
-(when (boundp 'org-planning-line-re)
-  (add-hook 'org-mode-hook #'org-repair-property-drawers))
+(with-eval-after-load 'org
+  (when (boundp 'org-planning-line-re)
+    (add-hook 'org-mode-hook #'boost-org-repair-property-drawers)))
 
 (defun boost--org-switch-dictionary ()
   "Set Ispell dictionary based on a #+LANGUAGE keyword near the top of the buffer."
