@@ -812,7 +812,7 @@ Return nil when the task is already in state \"STRT\" or while
 (message "9.1 (org)Capture")
 
 ;; 9.1.2 Directory with Org files.
-(defvar lvn-org-directory
+(defvar boost-org-directory
   (let* ((candidates
           (list "~/org/"
                 "~/org-files/"
@@ -828,7 +828,7 @@ Return nil when the task is already in state \"STRT\" or while
            candidates)))
     (directory-file-name dir))
   "Base directory for Org files.")
-(setq org-directory lvn-org-directory)
+(setq org-directory boost-org-directory)
 
 (unless (and (file-directory-p org-directory)
              (file-writable-p org-directory))

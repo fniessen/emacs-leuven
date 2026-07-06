@@ -1434,7 +1434,7 @@ Selection:
 
 #+begin_src emacs-lisp
 ;; 9.1.2 Directory with Org files.
-(defvar lvn-org-directory
+(defvar boost-org-directory
   (let* ((candidates
           (list "~/org/"
                 "~/org-files/"
@@ -1450,7 +1450,7 @@ Selection:
            candidates)))
     (directory-file-name dir))
   "Base directory for Org files.")
-(setq org-directory lvn-org-directory)
+(setq org-directory boost-org-directory)
 #+end_src
 
 Validation:
