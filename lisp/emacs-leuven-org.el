@@ -627,11 +627,12 @@ Signal an error if no ID or file is found."
 
 ;; ;; Advise `org-read-date' to bury the calendar buffer after selecting a date,
 ;; ;; so it is out of the way.
-;; (defun lvn--bury-calendar-after-org-read-date (&rest _)
+;; (defun boost--bury-calendar-after-org-read-date (&rest _)
 ;;   "Bury the *Calendar* buffer after reading a date."
-;;   (bury-buffer "*Calendar*"))
-;;
-;; (advice-add 'org-read-date :after #'lvn--bury-calendar-after-org-read-date)
+;;   (when-let ((buffer (get-buffer "*Calendar*")))
+;;     (bury-buffer buffer)))
+;; 
+;; (advice-add 'org-read-date :after #'boost--bury-calendar-after-org-read-date)
 
 ;;** 8.3 (info "(org)Deadlines and scheduling")
 
