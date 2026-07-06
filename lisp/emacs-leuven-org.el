@@ -813,23 +813,32 @@ Return nil when the task is already in state \"STRT\" or while
 
 ;; 9.1.2 Directory with Org files.
 (defvar lvn-org-directory
-  (let ((candidates
-         '("~/org/"
-           "~/org-files/")))
-    (directory-file-name
-     (or (cl-find-if (lambda (dir)
-                       (and (file-directory-p dir) (file-writable-p dir)))
-                     candidates)
-         (expand-file-name "org" user-emacs-directory)
-         "~/")))
+  (let* ((candidates
+          (list "~/org/"
+                "~/org-files/"
+                ;; Fallback only if this directory already exists.
+                (expand-file-name "org/" user-emacs-directory)
+                ;; Final fallback.
+                "~/"))
+         (dir
+          (cl-find-if
+           (lambda (dir)
+             (and (file-directory-p dir)
+                  (file-writable-p dir)))
+           candidates)))
+    (directory-file-name dir))
   "Base directory for Org files.")
 (setq org-directory lvn-org-directory)
 
-(unless (and (file-directory-p org-directory) (file-writable-p org-directory))
-  (display-warning 'boost
-                   (format "Org directory '%s' is not accessible" org-directory)
-                   :warning)
-  (setq org-directory "~/"))
+(unless (and (file-directory-p org-directory)
+             (file-writable-p org-directory))
+  (display-warning
+   'boost
+   (format "Org directory '%s' does not exist or is not writable; using '%s' instead."
+           org-directory
+           "~/")
+   :warning)
+  (setq org-directory (file-name-as-directory "~/")))
 
 ;; 9.1.2 Default target for storing notes.
 (with-eval-after-load 'org

@@ -1428,26 +1428,43 @@ Structure:
 ;;* 9 (info "(org)Capture - Refile - Archive")
 
 (message "9.1 (org)Capture")
+#+end_src
 
+Selection:
+
+#+begin_src emacs-lisp
 ;; 9.1.2 Directory with Org files.
 (defvar lvn-org-directory
-  (let ((candidates
-         '("~/org/"
-           "~/org-files/")))
-    (directory-file-name
-     (or (cl-find-if (lambda (dir)
-                       (and (file-directory-p dir) (file-writable-p dir)))
-                     candidates)
-         (expand-file-name "org" user-emacs-directory)
-         "~/")))
+  (let* ((candidates
+          (list "~/org/"
+                "~/org-files/"
+                ;; Fallback only if this directory already exists.
+                (expand-file-name "org/" user-emacs-directory)
+                ;; Final fallback.
+                "~/"))
+         (dir
+          (cl-find-if
+           (lambda (dir)
+             (and (file-directory-p dir)
+                  (file-writable-p dir)))
+           candidates)))
+    (directory-file-name dir))
   "Base directory for Org files.")
 (setq org-directory lvn-org-directory)
+#+end_src
 
-(unless (and (file-directory-p org-directory) (file-writable-p org-directory))
-  (display-warning 'boost
-                   (format "Org directory '%s' is not accessible" org-directory)
-                   :warning)
-  (setq org-directory "~/"))
+Validation:
+
+#+begin_src emacs-lisp
+(unless (and (file-directory-p org-directory)
+             (file-writable-p org-directory))
+  (display-warning
+   'boost
+   (format "Org directory '%s' does not exist or is not writable; using '%s' instead."
+           org-directory
+           "~/")
+   :warning)
+  (setq org-directory (file-name-as-directory "~/")))
 #+end_src
 
 Dedicated file for quickly capturing notes or tasks that need further
