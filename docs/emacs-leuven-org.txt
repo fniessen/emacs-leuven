@@ -3676,15 +3676,15 @@ Write error messages to the Messages buffer for invalid ~org-sbe~ calls.
 
 #+begin_src emacs-lisp :tangle no
 ;; Debugging org-sbe calls.
-(defun lvn--org-sbe-get-err-msg-advice (orig-fun &rest args)
-  "Issue messages at errors for org-sbe calls."
+(defun boost--org-sbe-report-errors (orig-fun &rest args)
+  "Report `org-sbe' errors before re-signaling them."
   (condition-case err
       (apply orig-fun args)
     (error
-     (message "[Error in org-sbe: %S]" err)
+     (message "[org-sbe] %s" (error-message-string err))
      (signal (car err) (cdr err)))))
 
-(advice-add 'org-sbe :around #'lvn--org-sbe-get-err-msg-advice)
+(advice-add 'org-sbe :around #'boost--org-sbe-report-errors)
 #+end_src
 
 *** Languages
