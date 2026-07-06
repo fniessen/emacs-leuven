@@ -2449,22 +2449,6 @@ parent."
 
 ;;* 15 (info "(org)Miscellaneous")
 
-(defun lvn-org-check-property-drawers ()
-  "Report headlines containing a PROPERTIES drawer.
-
-Return a list of the corresponding buffer positions."
-  (interactive)
-  (org-element-map (org-element-parse-buffer 'element) 'headline
-    (lambda (headline)
-      (when (org-element-map
-             headline 'drawer
-             (lambda (drawer)
-               (equal (org-element-property :name drawer) "PROPERTIES"))
-             nil t 'headline)
-        (let ((begin (org-element-property :begin headline)))
-          (message "[Entry with PROPERTIES drawer at %d]" begin)
-          begin)))))
-
 (defun org-repair-property-drawers ()
   "Fix properties drawers in current buffer.
 Ignore non Org buffers."

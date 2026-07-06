@@ -3871,8 +3871,8 @@ where we *load languages* such as R, etc.
 
 Find all entries where ~:PROPERTIES:~ is not the first item listed.
 
-#+begin_src emacs-lisp
-(defun lvn-org-check-property-drawers ()
+#+begin_src emacs-lisp :tangle no
+(defun boost-org-check-property-drawers ()
   "Report headlines containing a PROPERTIES drawer.
 
 Return a list of the corresponding buffer positions."
