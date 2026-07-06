@@ -2041,16 +2041,16 @@ headline (to return any kind of string you want).
   (defun boost-org-agenda-toggle-details ()
     "Toggle display of category and effort estimates in agenda views."
     (interactive)
-    (setq boost--org-agenda-show-details
-          (not boost--org-agenda-show-details))
-    (setq org-agenda-prefix-format
-          (if boost--org-agenda-show-details
-              boost--org-agenda-prefix-format-detailed
-            boost--org-agenda-prefix-format-default))
-    (when (derived-mode-p 'org-agenda-mode)
-      (org-agenda-redo))
-    (message "[Task details %s]"
-             (if boost--org-agenda-show-details "enabled" "disabled")))
+    (let ((show (setq boost--org-agenda-show-details
+                      (not boost--org-agenda-show-details))))
+      (setq org-agenda-prefix-format
+            (if show
+                boost--org-agenda-prefix-format-detailed
+              boost--org-agenda-prefix-format-default))
+      (when (derived-mode-p 'org-agenda-mode)
+        (org-agenda-redo))
+      (message "[Task details %s]"
+               (if show "enabled" "disabled"))))
 
   (with-eval-after-load 'org-agenda
     (define-key org-agenda-mode-map
