@@ -2736,8 +2736,8 @@ BACKEND is the current export backend."
 ;;        (t
 ;;         (format "BGCOLOR LINK (%s): {%s}{%s}" format path desc))))))
 
-(defun lvn-orgtbl-send-all-tables ()
-  "Export all Org tables in the current LaTeX document to LaTeX tables."
+(defun boost-orgtbl-send-all-tables ()
+  "Send all Org tables in the current buffer to their associated targets."
   (interactive)
   (org-table-map-tables
    (lambda ()

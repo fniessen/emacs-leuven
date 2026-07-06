@@ -4398,8 +4398,8 @@ Interactively export all Org tables within a LaTeX document to their
 corresponding LaTeX tables.
 
 #+begin_src emacs-lisp
-(defun lvn-orgtbl-send-all-tables ()
-  "Export all Org tables in the current LaTeX document to LaTeX tables."
+(defun boost-orgtbl-send-all-tables ()
+  "Send all Org tables in the current buffer to their associated targets."
   (interactive)
   (org-table-map-tables
    (lambda ()
