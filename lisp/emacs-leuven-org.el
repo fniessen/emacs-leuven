@@ -352,8 +352,8 @@ current level."
   ;; 4.4 Default image width if none is found from an #+ATTR.* keyword.
   (setq org-image-actual-width '(320))
 
-  ;; (define-key org-mode-map (kbd "C-c C-x l") #'lvn-org-show-id-references)
-  (defun lvn-org-show-id-references (&optional all-files)
+  ;; (define-key org-mode-map (kbd "C-c C-x l") #'boost-org-show-id-references)
+  (defun boost-org-show-id-references (&optional all-files)
     "Display Org entries linking to the current entry's ID, including itself.
 
 With prefix argument ALL-FILES, search all `org-agenda-files'.
@@ -722,7 +722,7 @@ Signal an error if no ID or file is found."
   (setq org-clock-file-time-cell-format "%s")
 
   ;; Function to clock back into an interrupted task.
-  (defun lvn-org-clock-in-interrupted-task ()
+  (defun boost-org-clock-in-interrupted-task ()
     "Resume the interrupted task if currently clocking another task.
 Otherwise, clock out."
     (interactive)
@@ -733,7 +733,7 @@ Otherwise, clock out."
           (org-clock-in))
       (org-clock-out)))
 
-  (global-set-key (kbd "C-c C-x C-q") #'lvn-org-clock-in-interrupted-task)
+  (global-set-key (kbd "C-c C-x C-q") #'boost-org-clock-in-interrupted-task)
 
   ;; 8.4.3 Set idle time before resolving open clocks.
   (setq org-clock-idle-time 240)

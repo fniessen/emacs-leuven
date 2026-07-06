@@ -702,7 +702,7 @@ and resize it to a specific width.
 
 *** Search for backlinks
 
-The ~lvn-org-show-id-references~ function provides a powerful way to explore
+The ~boost-org-show-id-references~ function provides a powerful way to explore
 connections within your Org-mode files by displaying all entries that link to
 the current entry’s ID, including the entry itself. This effectively makes
 ID-based links quasi-bidirectional, revealing back-references in your notes or
@@ -713,11 +713,11 @@ a universal prefix argument (~C-u~), it extends the search across all files list
 in ~org-agenda-files~.
 
 To use it, position your cursor on an Org entry with an ~ID~ property and invoke
-~M-x lvn-org-show-id-references~.
+~M-x boost-org-show-id-references~.
 
 #+begin_src emacs-lisp
-  ;; (define-key org-mode-map (kbd "C-c C-x l") #'lvn-org-show-id-references)
-  (defun lvn-org-show-id-references (&optional all-files)
+  ;; (define-key org-mode-map (kbd "C-c C-x l") #'boost-org-show-id-references)
+  (defun boost-org-show-id-references (&optional all-files)
     "Display Org entries linking to the current entry's ID, including itself.
 
 With prefix argument ALL-FILES, search all `org-agenda-files'.
@@ -1311,7 +1311,7 @@ Alternative to requiring org-clock in every Emacs session.
   (setq org-clock-file-time-cell-format "%s")
 
   ;; Function to clock back into an interrupted task.
-  (defun lvn-org-clock-in-interrupted-task ()
+  (defun boost-org-clock-in-interrupted-task ()
     "Resume the interrupted task if currently clocking another task.
 Otherwise, clock out."
     (interactive)
@@ -1322,7 +1322,7 @@ Otherwise, clock out."
           (org-clock-in))
       (org-clock-out)))
 
-  (global-set-key (kbd "C-c C-x C-q") #'lvn-org-clock-in-interrupted-task)
+  (global-set-key (kbd "C-c C-x C-q") #'boost-org-clock-in-interrupted-task)
 
   ;; 8.4.3 Set idle time before resolving open clocks.
   (setq org-clock-idle-time 240)
