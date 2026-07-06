@@ -353,23 +353,29 @@ current level."
   (setq org-image-actual-width '(320))
 
   ;; (define-key org-mode-map (kbd "C-c C-x l") #'lvn-org-show-id-references)
-
   (defun lvn-org-show-id-references (&optional all-files)
     "Display Org entries linking to the current entry's ID, including itself.
-  This makes ID links quasi-bidirectional by showing back-references.
 
-  If ALL-FILES (non-nil with prefix arg C-u), search all `org-agenda-files';
-  otherwise, limit to the current file. Signals an error if no ID or file is found."
+With prefix argument ALL-FILES, search all `org-agenda-files'.
+Otherwise, search only the current file.
+
+Signal an error if no ID or file is found."
     (interactive "P")
-    (let* ((current-id (or (org-entry-get nil "ID" t) ; Ensure ID exists.
-                           (user-error "[No ID found at point]")))
-           (current-file (or (buffer-file-name) ; Ensure file exists.
-                             (user-error "[No file associated with buffer]")))
-           (search-files (if (and all-files (boundp 'org-agenda-files))
-                             org-agenda-files
-                           (list current-file))))
-      (let ((org-agenda-inhibit-startup t)) ; Faster loading.
-        (org-search-view nil current-id))))
+    (let* ((current-id
+            (or (org-entry-get nil "ID" t) ; Ensure ID exists.
+                (user-error "[No ID found at point]")))
+           (current-file
+            (or (buffer-file-name) ; Ensure file exists.
+                (user-error "[No file associated with buffer]")))
+           (files
+            (if all-files
+                (if (bound-and-true-p org-agenda-files)
+                    org-agenda-files
+                  (user-error "[`org-agenda-files' is not set]"))
+              (list current-file)))
+           (org-agenda-files files)
+           (org-agenda-inhibit-startup t)) ; Faster loading.
+      (org-search-view nil current-id)))
 
   ;; Define Org-mode link abbreviations for quick access to web resources.
   (setq org-link-abbrev-alist
@@ -717,13 +723,14 @@ current level."
 
   ;; Function to clock back into an interrupted task.
   (defun lvn-org-clock-in-interrupted-task ()
-    "Clock back into the interrupted task, if one exists."
+    "Resume the interrupted task if currently clocking another task.
+Otherwise, clock out."
     (interactive)
     (if (and (not org-clock-resolving-clocks-due-to-idleness)
-             (marker-buffer org-clock-marker)
+             (org-clocking-p)
              (marker-buffer org-clock-interrupted-task))
         (org-with-point-at org-clock-interrupted-task
-          (org-clock-in nil))
+          (org-clock-in))
       (org-clock-out)))
 
   (global-set-key (kbd "C-c C-x C-q") #'lvn-org-clock-in-interrupted-task)
