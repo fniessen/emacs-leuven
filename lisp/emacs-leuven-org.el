@@ -840,22 +840,25 @@ Return nil when the task is already in state \"STRT\" or while
    :warning)
   (setq org-directory (file-name-as-directory "~/")))
 
-;; 9.1.2 Default target for storing notes.
+(defvar boost-org-inbox-file
+  (expand-file-name "inbox.org" org-directory)
+  "Path to the default Org inbox file.")
+
+(defvar boost-org-refile-file
+  (expand-file-name "refile.org" org-directory)
+  "Path to the refile Org file.")
+
+;; 9.1.2 Default capture target.
 (with-eval-after-load 'org
-  (defvar lvn-org-inbox-file
-    (expand-file-name "inbox.org" org-directory)
-    "Path to the default Org inbox file.")
-
-  (defvar lvn-org-refile-file
-    (expand-file-name "refile.org" org-directory)
-    "Path to the refile Org file.")
-
   (setq org-default-notes-file          ; Inbox for collecting
                                         ; [Default: "~/.notes"].
         (cond
-         ((file-exists-p lvn-org-inbox-file) lvn-org-inbox-file)
-         ((file-exists-p lvn-org-refile-file) lvn-org-refile-file)
-         (t (expand-file-name "notes.org" org-directory)))))
+         ((file-exists-p boost-org-inbox-file)
+          boost-org-inbox-file)
+         ((file-exists-p boost-org-refile-file)
+          boost-org-refile-file)
+         (t
+          (expand-file-name "notes.org" org-directory)))))
 
 ;; 9.1.2 templates for the creation of capture buffers
 
