@@ -3059,27 +3059,28 @@ capabilities.
 ;; LaTeX back-end.
 (with-eval-after-load 'ox-latex
 
+  ;; Format Org headlines for LaTeX export.
   ;; Markup for TODO keywords and for tags, as a printf format.
-  (defun leuven--org-latex-format-headline
-      (todo todo-type priority text tags &optional info)
-    "Default function for formatting the headline's text."
-    (concat (when todo
-              (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
-                      (cond ((equal todo-type 'todo) "\\color{red}")
-                            ((equal todo-type 'done) "\\color{teal}")
-                            (t "\\color{gray}"))
-                      todo))
-            (when priority
-              (format "\\framebox{\\#%c} " priority))
-            text
-            (when tags
-              (format "\\hfill{}\\fbox{\\textsc{%s}}"
-                      ;; XXX source of "undefined control sequence"?
-                      (mapconcat 'identity tags ":")))))
+  (defun boost-org-latex-headline-formatter
+      (todo todo-type priority text tags &optional _info)
+    "Format an Org headline for LaTeX export."
+    (concat
+     (when todo
+       (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
+               (pcase todo-type
+                 ('todo "\\color{red}")
+                 ('done "\\color{teal}")
+                 (_     "\\color{gray}"))
+               todo))
+     (when priority
+       (format "\\framebox{\\#%c} " priority))
+     text
+     (when tags
+       (format "\\hfill{}\\fbox{\\textsc{%s}}"
+               (mapconcat #'identity tags ":")))))
 
-  ;; Function for formatting the headline's text.
   (setq org-latex-format-headline-function
-        'leuven--org-latex-format-headline)
+        #'boost-org-latex-headline-formatter)
 
   ;; Default width for images.
   (setq org-latex-image-default-width ".75\\linewidth")
