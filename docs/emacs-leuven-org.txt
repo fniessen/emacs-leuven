@@ -1807,17 +1807,16 @@ header under which the entry will be placed.
 (with-eval-after-load 'org
   (message "[... Org Refile]")
 
-  (defvar leuven-org-refile-extra-files
-    (if (file-exists-p "~/org/")
-        (file-expand-wildcards "~/org/*.txt")
-      nil)
+  (defvar boost-org-refile-extra-files
+    (when (file-directory-p "~/org/")
+      (file-expand-wildcards "~/org/*.txt"))
     "List of extra .txt files to be used as targets for refile commands.")
 
-  ;; 9.5 Any headline with level <= 3 is a target.
+  ;; 8.5 Any headline up to the configured level is a refile target.
   (setq org-refile-targets
         `((nil
-           :maxlevel . 4)             ; Current file.
-          (,(append org-agenda-files leuven-org-refile-extra-files)
+           :maxlevel . 4)               ; Current file.
+          (,(append org-agenda-files boost-org-refile-extra-files)
            :maxlevel . 2)))
 
   ;; Cache refile targets to speed up the process.
