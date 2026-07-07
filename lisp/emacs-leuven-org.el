@@ -1269,12 +1269,13 @@ From the address <%a>"
   ;; ;; 10.4 Column to shift tags to (in agenda items).
   ;; (setq org-agenda-tags-column -132)
 
-  ;; Right-justify tags in the agenda buffer.
-  (defun leuven--org-agenda-right-justify-tags ()
-    "Justify org-agenda tags to right side."
+  ;; Right-align tags in agenda buffers.
+  (defun leuven--org-agenda-align-tags-right ()
+    "Align agenda tags against the right window edge."
     (let ((org-agenda-tags-column (- 2 (window-width))))
       (org-agenda-align-tags)))
-  (add-hook 'org-agenda-finalize-hook #'leuven--org-agenda-right-justify-tags))
+
+  (add-hook 'org-agenda-finalize-hook #'leuven--org-agenda-align-tags-right))
 
 ;; 10.4.2 Settings for time grid for agenda display.
 (setq org-agenda-time-grid '((daily today remove-match)
