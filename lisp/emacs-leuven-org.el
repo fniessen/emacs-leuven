@@ -1528,16 +1528,17 @@ so this command is intended for TODO items rather than project headings."
   (define-key org-agenda-mode-map
     (kbd "Z") #'boost-org-agenda-done-and-follow-up)
 
-  (defun leuven-org-agenda-new ()
-    "Create a new note or task at the current agenda item.
-Creates it at the same level as the previous task, so it's better to use
-this with to-do items than with projects or headings."
+  (defun boost-org-agenda-capture ()
+    "Capture a new entry from the current agenda item.
+
+The new entry is created at the same outline level as the current task,
+so this command is intended for TODO items rather than project headings."
     (interactive)
     (org-agenda-switch-to)
     (org-capture 0))
 
   ;; ;; New key assignment (overrides `org-agenda-next-item').
-  ;; (define-key org-agenda-mode-map (kbd "N") #'leuven-org-agenda-new)
+  ;; (define-key org-agenda-mode-map (kbd "N") #'boost-org-agenda-capture)
 
   )
 
