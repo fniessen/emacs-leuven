@@ -1836,21 +1836,21 @@ formats (Markdown, HTML, or PDF)."
   ;; 12.5.9 Turn inclusion of the default CSS style off.
   (setq org-html-head-include-default-style nil)
 
-  ;; HTML checkbox output.
-  (defun leuven--checkbox-filter (item backend info)
-    "Convert Org checkbox to UTF-8 symbol in HTML export."
+  ;; Export Org checkboxes as Unicode symbols in HTML.
+  (defun boost--org-export-html-checkbox-filter (item backend _info)
+    "Replace HTML checkbox markup with Unicode checkbox symbols."
     (when (org-export-derived-backend-p backend 'html)
       (replace-regexp-in-string
-       "\\`.*\\(<code>\\[\\(X\\|&#xa0;\\|-\\)\\]</code>\\).*$"
-       (lambda (rep)
-         (let ((check (match-string 2 rep)))
-           (cond ((equal check "X") "&#x2611;")
-                 ((equal check "-") "&#x2610;")
-                 (t "&#x2610;"))))
-       item
-       nil nil 1)))
+       "\\`.*<code>\\[\\(X\\|&#xa0;\\|-\\)\\]</code>.*\\'"
+       (lambda (match)
+         (pcase (match-string 1 match)
+           ("X"      "&#x2611;") ; ☑ checked
+           ("-"      "&#x25A3;") ; ▣ partial (or another suitable symbol)
+           ("&#xa0;" "&#x2610;"))) ; ☐ unchecked
+       item nil nil 1)))
+
   (add-to-list 'org-export-filter-item-functions
-               'leuven--checkbox-filter)
+               #'boost--org-export-html-checkbox-filter)
 
   )                                   ; with-eval-after-load "ox-html" ends here.
 
