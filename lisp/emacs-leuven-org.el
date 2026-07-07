@@ -1270,12 +1270,12 @@ From the address <%a>"
   ;; (setq org-agenda-tags-column -132)
 
   ;; Right-align tags in agenda buffers.
-  (defun leuven--org-agenda-align-tags-right ()
+  (defun boost--org-agenda-align-tags-right ()
     "Align agenda tags against the right window edge."
     (let ((org-agenda-tags-column (- 2 (window-width))))
       (org-agenda-align-tags)))
 
-  (add-hook 'org-agenda-finalize-hook #'leuven--org-agenda-align-tags-right))
+  (add-hook 'org-agenda-finalize-hook #'boost--org-agenda-align-tags-right))
 
 ;; 10.4.2 Settings for time grid for agenda display.
 (setq org-agenda-time-grid '((daily today remove-match)
@@ -1515,17 +1515,18 @@ Examples:
                 (goto-char (point-min))
                 (org-do-emphasis-faces (point-max)))))
 
-  (defun leuven-org-agenda-mark-done-and-add-followup ()
-    "Mark the current TODO as done and add another task after it.
-Creates it at the same level as the previous task, so it's better to use
-this with to-do items than with projects or headings."
+  (defun boost-org-agenda-done-and-follow-up ()
+    "Mark the current TODO as DONE and capture a follow-up task.
+
+The follow-up is created at the same outline level as the current task,
+so this command is intended for TODO items rather than project headings."
     (interactive)
     (org-agenda-todo "DONE")
     (org-agenda-switch-to)
     (org-capture 0 "t"))
 
   (define-key org-agenda-mode-map
-    (kbd "Z") #'leuven-org-agenda-mark-done-and-add-followup)
+    (kbd "Z") #'boost-org-agenda-done-and-follow-up)
 
   (defun leuven-org-agenda-new ()
     "Create a new note or task at the current agenda item.
