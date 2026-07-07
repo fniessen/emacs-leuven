@@ -1048,11 +1048,11 @@ From the address <%a>"
   (setq org-refile-allow-creating-parent-nodes 'confirm)
 
   ;; Refile only within the current buffer.
-  (defun leuven-org-refile-within-current-buffer ()
-    "Move the entry at point to another heading in the current buffer."
+  (defun boost-org-refile-within-current-buffer ()
+    "Refile the current subtree to another heading in the current buffer."
     (interactive)
     (let ((org-refile-targets '((nil :maxlevel . 4))))
-      (org-refile)))
+      (call-interactively #'org-refile)))
   ;; FIXME Add a smart key binding
 
   ;; Exclude DONE state tasks from refile targets.
