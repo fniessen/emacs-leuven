@@ -2055,14 +2055,14 @@ buffer."
           (underline     . "\\uline{%s}")      ;; Underlined text (requires `ulem').
           (verbatim      . "\\verb|%s|")))     ;; Verbatim text.
 
-  ;; Filter for no-break spaces.
-  (defun leuven--latex-filter-nbsp (text backend info)
-    "Convert no-break spaces when exporting to LaTeX/Beamer."
+  ;; Replace non-breaking spaces when exporting to LaTeX.
+  (defun boost--org-export-latex-text-filter (text backend _info)
+    "Replace non-breaking spaces with LaTeX non-breaking spaces."
     (when (memq backend '(latex beamer))
       (replace-regexp-in-string " " "~" text)))
 
   (add-to-list 'org-export-filter-plain-text-functions
-               'leuven--latex-filter-nbsp)
+               #'boost--org-export-latex-text-filter)
 
   ;; 12.6.5 Default position for LaTeX figures.
   (setq org-latex-default-figure-position "!htbp")

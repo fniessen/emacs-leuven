@@ -3258,14 +3258,14 @@ the UTF-8 *no-break space*:
 - Convert it in Org mode, when exporting (via a filter), or
 
   #+begin_src emacs-lisp
-  ;; Filter for no-break spaces.
-  (defun leuven--latex-filter-nbsp (text backend info)
-    "Convert no-break spaces when exporting to LaTeX/Beamer."
+  ;; Replace non-breaking spaces when exporting to LaTeX.
+  (defun boost--org-export-latex-text-filter (text backend _info)
+    "Replace non-breaking spaces with LaTeX non-breaking spaces."
     (when (memq backend '(latex beamer))
       (replace-regexp-in-string " " "~" text)))
 
   (add-to-list 'org-export-filter-plain-text-functions
-               'leuven--latex-filter-nbsp)
+               #'boost--org-export-latex-text-filter)
   #+end_src
 
 - Convert it in LaTeX:
