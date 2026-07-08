@@ -1119,23 +1119,25 @@ From the address <%a>"
   ;; ;; Duration of an appointment will add to day effort.
   ;; (setq org-agenda-columns-add-appointments-to-effort-sum t)
 
-  ;; Show dated entries in the global `todo' list.
+  ;; Keep dated items out of TODO lists only when handled by the more specific
+  ;; SCHEDULED, DEADLINE, or ordinary timestamp settings below.
   (setq org-agenda-todo-ignore-with-date nil)
-                                        ;!! tricky setting
+                                        ;!! Tricky setting.
 
-  ;; Show entries with a time stamp in the global `todo' list.
-  (setq org-agenda-todo-ignore-timestamp nil)
+  ;; Hide TODO entries with ordinary active timestamps from TODO lists; they
+  ;; remain visible in the agenda.
+  (setq org-agenda-todo-ignore-timestamp 'all)
+                                        ;!! Tricky setting.
 
-  ;; 10.3.2 Don't show scheduled entries in the global `todo' list.
+  ;; 10.3.2 Hide future scheduled tasks from TODO lists (they still appear in
+  ;; the agenda).
   (setq org-agenda-todo-ignore-scheduled 'future)
                                         ;!! Tricky setting.
-  (setq org-agenda-todo-ignore-scheduled nil)
 
-  ;; 10.3.2 Don't show entries scheduled in the future in the global
-  ;; `todo' list (until they are within the warning period).
+  ;; 10.3.2 Hide tasks with distant deadlines from TODO lists (they reappear as
+  ;; the deadline approaches and always remain visible in the agenda).
   (setq org-agenda-todo-ignore-deadlines 'near)
                                         ;!! Tricky setting.
-  (setq org-agenda-todo-ignore-deadlines nil)
 
   ;; 10.3.2 Check also the sublevels of a TODO entry for TODO entries,
   ;; resulting in potentially much longer `todo' lists.

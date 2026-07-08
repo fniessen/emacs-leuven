@@ -1933,7 +1933,7 @@ at the end of your =.emacs= file.
   (message "10.3 (org)Built-in agenda views")
 #+end_src
 
-Press ~C-c a a~ to jump you to this week's task page from anywhere.
+Press ~C-c a a~ to display your agenda for the current week.
 
 #+begin_src emacs-lisp
   ;; Default duration for appointments that only have a starting time.
@@ -1943,37 +1943,55 @@ Press ~C-c a a~ to jump you to this week's task page from anywhere.
   ;; (setq org-agenda-columns-add-appointments-to-effort-sum t)
 #+end_src
 
-~C-c a t~ should show *all* the ~TODO~ items... but...
+The global TODO list (~C-c a t~) is most useful when it focuses on work that is
+actionable now. Date-driven items already have a natural place in the agenda, so
+the following settings progressively filter them out of global TODO and
+tags searches while keeping them visible in the agenda.
+
+Tasks with ordinary active timestamps are hidden from global TODO and tags
+searches. Unlike ~SCHEDULED~ and ~DEADLINE~ timestamps, ordinary timestamps
+simply associate a task with a date without affecting scheduling or deadline
+semantics.
 
 #+begin_src emacs-lisp
-  ;; Show dated entries in the global `todo' list.
+  ;; Keep dated items out of TODO lists only when handled by the more specific
+  ;; SCHEDULED, DEADLINE, or ordinary timestamp settings below.
   (setq org-agenda-todo-ignore-with-date nil)
-                                        ;!! tricky setting
+                                        ;!! Tricky setting.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Show entries with a time stamp in the global `todo' list.
-  (setq org-agenda-todo-ignore-timestamp nil)
+  ;; Hide TODO entries with ordinary active timestamps from TODO lists; they
+  ;; remain visible in the agenda.
+  (setq org-agenda-todo-ignore-timestamp 'all)
+                                        ;!! Tricky setting.
 #+end_src
 
-Don't tell me about stuff that isn't due yet: tasks scheduled in the future
-should no longer show up in global todo or tags searches until that date
-arrives -- at which point it will be in all lists.
+Tasks scheduled for a future date are hidden until their scheduled date arrives.
+Once they become due, they automatically reappear in global TODO and tags
+searches.
 
 #+begin_src emacs-lisp
-  ;; 10.3.2 Don't show scheduled entries in the global `todo' list.
+  ;; 10.3.2 Hide future scheduled tasks from TODO lists (they still appear in
+  ;; the agenda).
   (setq org-agenda-todo-ignore-scheduled 'future)
                                         ;!! Tricky setting.
-  (setq org-agenda-todo-ignore-scheduled nil)
 #+end_src
 
+Tasks with deadlines remain hidden while their due date is still "distant
+enough". They reappear automatically when they enter the warning period defined
+by ~org-deadline-warning-days~.
+
 #+begin_src emacs-lisp
-  ;; 10.3.2 Don't show entries scheduled in the future in the global
-  ;; `todo' list (until they are within the warning period).
+  ;; 10.3.2 Hide tasks with distant deadlines from TODO lists (they reappear as
+  ;; the deadline approaches and always remain visible in the agenda).
   (setq org-agenda-todo-ignore-deadlines 'near)
                                         ;!! Tricky setting.
-  (setq org-agenda-todo-ignore-deadlines nil)
 #+end_src
+
+Together, these settings make the agenda the place to manage dated work, while
+the global TODO and tags views concentrate on tasks that are ready to be worked
+on.
 
 #+begin_src emacs-lisp
   ;; 10.3.2 Check also the sublevels of a TODO entry for TODO entries,
@@ -1984,6 +2002,17 @@ arrives -- at which point it will be in all lists.
   ;; in the `tags-todo' list.
   (setq org-agenda-tags-todo-honor-ignore-options t)
 #+end_src
+
+So:
+
+| Item type                     | Visible in TODO list? |
+|-------------------------------+-----------------------|
+| TODO + plain timestamp        | No                    |
+| TODO + future SCHEDULED       | No                    |
+| TODO + far DEADLINE           | No                    |
+| TODO + near DEADLINE          | Yes                   |
+| TODO + overdue DEADLINE       | Yes                   |
+| TODO + active SCHEDULED today | Yes                   |
 
 *** Advanced Search
 
