@@ -2626,30 +2626,40 @@ Ignore non-Org buffers."
   ;; Which tag is used to mark headings to be encrypted.
   (setq org-tags-exclude-from-inheritance '("crypt")))
 
-(defun leuven-org-scramble-contents ()
-  "Scramble alphanumeric characters in the buffer for privacy testing.
-Example: 'Hello' becomes 'xxxxx'."
+(defun boost--org-obfuscate-string (string)
+  "Replace alphanumeric characters in STRING with \"x\"."
+  (replace-regexp-in-string "[[:alnum:]]" "x" string))
+
+(defun boost-org-obfuscate-buffer ()
+  "Create an obfuscated copy of the current Org buffer for sharing.
+
+Example: \"Hello\" becomes \"xxxxx\"."
   (interactive)
   (let ((tree (org-element-parse-buffer)))
     (org-element-map tree
         '(code comment comment-block example-block fixed-width keyword link
                node-property plain-text verbatim)
       (lambda (obj)
-        (cl-case (org-element-type obj)
-          ((code comment comment-block example-block fixed-width keyword
-                 node-property verbatim)
-           (let ((value (org-element-property :value obj)))
-             (org-element-put-property
-              obj :value (replace-regexp-in-string "[[:alnum:]]" "x" value))))
-          (link
+        (pcase (org-element-type obj)
+          ((or 'code 'comment 'comment-block 'example-block 'fixed-width
+               'keyword 'node-property 'verbatim)
+           (org-element-put-property
+            obj :value
+            (boost--org-obfuscate-string
+             (org-element-property :value obj))))
+
+          ('link
            (unless (string= (org-element-property :type obj) "radio")
              (org-element-put-property obj :raw-link "http://orgmode.org")))
-          (plain-text
+
+          ('plain-text
            (org-element-set-element
-            obj (replace-regexp-in-string "[[:alnum:]]" "x" obj)))))
+            obj (boost--org-obfuscate-string obj)))))
       nil nil nil t)
-    (let ((buffer (get-buffer-create "*Scrambled text*")))
+
+    (let ((buffer (get-buffer-create "*Obfuscated Org*")))
       (with-current-buffer buffer
+        (erase-buffer)
         (insert (org-element-interpret-data tree))
         (goto-char (point-min)))
       (switch-to-buffer buffer))))
