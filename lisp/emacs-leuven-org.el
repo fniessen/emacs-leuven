@@ -2849,9 +2849,13 @@ Example: \"Hello\" becomes \"xxxxx\"."
           (while (search-forward (car pair) nil t)
             (replace-match (cdr pair) nil t)))))))
 
+;; Clean up Org typography automatically before saving the current buffer.
 (add-hook 'org-mode-hook
           (lambda ()
-            (add-hook 'before-save-hook #'boost--org-clean-typography)))
+            (add-hook 'before-save-hook
+                      #'boost--org-clean-typography
+                      nil
+                      t)))
 
 ;; Add weather forecast in your Org agenda.
 (autoload 'org-google-weather "org-google-weather"

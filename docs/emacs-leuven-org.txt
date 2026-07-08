@@ -4535,9 +4535,13 @@ to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
           (while (search-forward (car pair) nil t)
             (replace-match (cdr pair) nil t)))))))
 
+;; Clean up Org typography automatically before saving the current buffer.
 (add-hook 'org-mode-hook
           (lambda ()
-            (add-hook 'before-save-hook #'boost--org-clean-typography)))
+            (add-hook 'before-save-hook
+                      #'boost--org-clean-typography
+                      nil
+                      t)))
 #+end_src
 
 * Org-contrib
