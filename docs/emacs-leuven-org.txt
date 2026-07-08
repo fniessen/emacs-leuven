@@ -117,19 +117,6 @@ work and tasks with Org mode.
   (define-key global-map (kbd "C-c O") #'org-open-at-point-global))
 #+end_src
 
-Agenda file check logic:
-
-#+begin_src emacs-lisp
-(defun leuven-org-check-agenda-files ()
-  "Check and report the status of `org-agenda-files'."
-  (when (boundp 'org-agenda-files)
-    (if (null org-agenda-files)
-        (message "[No agenda files found]")
-      (message "[Found %d agenda files]" (length org-agenda-files)))))
-
-(add-hook 'after-init-hook #'leuven-org-check-agenda-files)
-#+end_src
-
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
   ;; Unbind default keys in Org mode.
@@ -1892,17 +1879,28 @@ header under which the entry will be placed.
 ** Agenda files
 
 #+begin_src emacs-lisp
-  ;;** 10.1 (info "(org)Agenda files")
+;;** 10.1 (info "(org)Agenda files")
 
   (message "10.1 (org)Agenda files")
+#+end_src
 
-  (when (boundp 'org-agenda-files)
-    (if (null org-agenda-files)
-        (progn
-          (message "[No Org agenda files currently found]")
-          (sit-for 1.5)) ; Wait for 1.5 seconds
-      (message "[Found %s entries in `org-agenda-files']"
-               (length org-agenda-files))))
+Agenda file check:
+
+#+begin_src emacs-lisp
+  (defun boost--org-report-agenda-files ()
+    "Report the number of configured Org agenda files."
+    (if (boundp 'org-agenda-files)
+        (let ((count (length org-agenda-files)))
+          (if (zerop count)
+              (progn
+                (message "[No agenda files found]")
+                (sit-for 1.5))
+            (message "[Found %d agenda file%s]"
+                     count
+                     (if (= count 1) "" "s"))))
+      (message "[Unable to report agenda files: Org Agenda not loaded]")))
+
+  (boost--org-report-agenda-files)
 #+end_src
 
 Avoid any possibility of getting a customized version of ~org-agenda-files~ added
