@@ -2207,8 +2207,8 @@ of the ignored headline."
   ;; (setq org-publish-use-timestamps-flag nil)
 
   ;; 13.4 Force publishing all files.
-  (defun leuven-org-publish-all-force ()
-    "Force publish all Org projects, ignoring timestamps."
+  (defun leuven-org-force-publish-all ()
+    "Publish all Org projects, ignoring timestamps."
     (interactive)
     (org-publish-all t)))
 
@@ -2243,8 +2243,8 @@ of the ignored headline."
 (setq org-src-window-setup 'current-window)
 
 ;; FIXME Bind this to the correct keys.
-(defun leuven-org-babel-expand-src-block ()
-  "XXX"
+(defun boost-org-babel-expand-src-block ()
+  "Expand the source block in a dedicated frame."
   (interactive)
   (let ((org-src-window-setup 'reorganize-frame))
     (org-babel-expand-src-block)))

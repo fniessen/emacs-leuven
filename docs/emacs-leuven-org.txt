@@ -3519,8 +3519,8 @@ See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 T
 
 #+begin_src emacs-lisp
   ;; 13.4 Force publishing all files.
-  (defun leuven-org-publish-all-force ()
-    "Force publish all Org projects, ignoring timestamps."
+  (defun leuven-org-force-publish-all ()
+    "Publish all Org projects, ignoring timestamps."
     (interactive)
     (org-publish-all t)))
 #+end_src
@@ -3576,8 +3576,8 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
 (setq org-src-window-setup 'current-window)
 
 ;; FIXME Bind this to the correct keys.
-(defun leuven-org-babel-expand-src-block ()
-  "XXX"
+(defun boost-org-babel-expand-src-block ()
+  "Expand the source block in a dedicated frame."
   (interactive)
   (let ((org-src-window-setup 'reorganize-frame))
     (org-babel-expand-src-block)))
@@ -4128,17 +4128,19 @@ For security resons, evaluation is not turned on by default.
     "Face used for the source block background when executed.")
 
   ;; Change the color of code blocks while they are being executed.
-  (defun leuven-org-babel-execute-src-block-advice (fn &rest args)
-    "Temporarily highlight the source block during execution and measure time."
-    (let ((o (make-overlay (org-element-property :begin (org-element-at-point))
-                           (1- (org-element-property :end (org-element-at-point))))))
+  (defun leuven--org-babel-execute-src-block-around (fn &rest args)
+    "Highlight the current source block while it executes and report its duration."
+    (let ((overlay (make-overlay (org-element-property :begin (org-element-at-point))
+                                 (1- (org-element-property :end (org-element-at-point))))))
       (recenter)
-      (overlay-put o 'face 'org-block-executing)
+      (overlay-put overlay 'face 'org-block-executing)
       (unwind-protect
-          (measure-time "Executed code block" (apply fn args))
-        (delete-overlay o))))
+          (measure-time "Executed code block"
+            (apply fn args))
+        (delete-overlay overlay))))
 
-  (advice-add 'org-babel-execute-src-block :around #'leuven-org-babel-execute-src-block-advice))
+  (advice-add 'org-babel-execute-src-block
+              :around #'leuven--org-babel-execute-src-block-around))
 #+end_src
 
 #+begin_note
