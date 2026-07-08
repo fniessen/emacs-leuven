@@ -7392,7 +7392,7 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
       ("^.*Undefined control sequence.*" . compilation-error-face)
       ("^.*Fatal error.*" . compilation-error-face)
       ("^!.*" . compilation-error-face)
-      ("^Package .* Error:.*" . compilation-error-face)
+      ("^.*Package .* Error:.*" . compilation-error-face)
 
       ;; Offending TeX command.
       ("^<recently read> \\(\\\\[^[:space:]]+\\)"

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260703.1416>
+;; Version: <20260708.1512>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260703.1416>"
+(defconst boost-version "<20260708.1512>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4008,7 +4008,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
       ("^.*Undefined control sequence.*" . compilation-error-face)
       ("^.*Fatal error.*" . compilation-error-face)
       ("^!.*" . compilation-error-face)
-      ("^Package .* Error:.*" . compilation-error-face)
+      ("^.*Package .* Error:.*" . compilation-error-face)
 
       ;; Offending TeX command.
       ("^<recently read> \\(\\\\[^[:space:]]+\\)"
