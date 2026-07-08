@@ -4649,63 +4649,115 @@ Link emails from Org files.
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
   (setq org-modern-label-border 1)
+#+end_src
 
-  ;; TODO: Make a choice with leading characters (in order to visualize depth).
-  (setq org-modern-star ["◉" "○" "✸" "✳" "◈" "◇" "✿" "❀" "✜"])
-  (setq org-modern-star ["◉" "·○" "··◈" "···◇" "····✳"]) ; OK.
-  (setq org-modern-star ["◈" "·◈" "··◇" "···◇" "·····"]) ; OK.
+*** org-modern-star
 
-  ;; (setq org-modern-timestamp '("%y-%m-%d" . "%y-%m-%d %H:%M"))
+#+begin_src emacs-lisp
+  ;; Use distinct heading bullets, with increasing indentation to emphasize the
+  ;; document hierarchy.
+  (setq org-modern-star
+        '("◉"
+          "⸱○"
+          "⸱⸱◈"
+          "⸱⸱⸱◇"
+          "⸱⸱⸱⸱✳"))
+#+end_src
 
-  (setq org-modern-table-vertical 2)
-  (setq org-modern-table-horizontal 1)
+*** Lists
 
-  (setq org-modern-list '(
-                          ;; (?- . "-")
-                          (?- . "–")
-                          (?+ . "•")
-                          ;; (?+ . "○")
-                          (?* . "▹")
-                          ;; (?* . "◦")
-                          ))
+Replace the standard Org list markers with Unicode bullets to improve
+readability while preserving the underlying Org syntax.
 
+With this configuration:
+
+- First item
+  + Second item
+    * Third item
+
+is displayed using the corresponding Unicode markers, while the file itself
+continues to contain the original ~-~, ~+~, and ~*~ characters.
+
+#+begin_src emacs-lisp
+  (setq org-modern-list
+        '((?- . "–")
+          (?+ . "•")
+          (?* . "▹")))
+#+end_src
+
+*** Checkboxes
+
+Org checkboxes represent the progress of individual items within a list:
+
+- [ ] not started
+- [-] in progress
+- [X] completed
+
+The following configuration customizes their appearance using ~org-modern~ to
+display cleaner Unicode symbols while preserving the underlying Org syntax.
+
+#+begin_src emacs-lisp
   (setq org-modern-checkbox
-        '((?X  . #("▢✓" 0 2 (composition ((2)))))
-          (?-  . #("▢–" 0 2 (composition ((2)))))
+        '((?X  . "■")
+          (?-  . #("▢⋯" 0 2 (composition ((2)))))
           (?\s . #("▢" 0 1 (composition ((1)))))))
+#+end_src
 
+*** Tables
+
+Display lightweight Unicode separators to improve the readability of Org tables
+without changing their contents. The underlying table syntax remains unchanged.
+
+For example, the Org table:
+
+| Name  | Score |
+|-------+-------|
+| Alice |    42 |
+| Bob   |    37 |
+
+is rendered with thin Unicode separators instead of the ASCII ~|~, ~-~, and ~+~
+characters.
+
+#+begin_src emacs-lisp
+  (setq org-modern-table-vertical 1)
+  (setq org-modern-table-horizontal 1)
+#+end_src
+
+*** Block names
+
+#+begin_src emacs-lisp
   (setq org-modern-block-name
         '((t . t)
-          ("src" "»" "∥")
-          ("example" "»–" "∥")
-          ("quote" "❝" "❞")))
+          ("src"     "⚙ src"     "⚙")
+          ("example" "◈ example" "◈")
+          ("quote"   "❝ quote"   "❞")))
+#+end_src
 
+*** Block fringe
+
+#+begin_src emacs-lisp
   (setq org-modern-block-fringe nil)
+#+end_src
 
+*** Keywords
+
+#+begin_src emacs-lisp
   ;; See https://gitlab.com/jdm204/dotfiles/-/blob/master/config.org
   (setq org-modern-keyword
         '((t . t)
-          ("bibliography" . "")
-          ("cite_export" . "⮭")
-          ("include" . "⇤")
-          ("setupfile" . "⇚")
-          ("html_head" . "🅷")
-          ("html" . "🅗")
-          ("latex_class" . "🄻")
-          ("latex_header" . "🅻")
-          ("latex_header_extra" . "🅻⁺")
-          ("latex" . "🅛")
-          ("beamer_theme" . "🄱")
-          ("beamer_header" . "🅱")
-          ("beamer" . "🅑")
-          ("attr_latex" . "🄛")
-          ("attr_html" . "🄗")
-          ("attr_org" . "⒪")
           ("header" . "›")
           ("caption" . "☰")
-          ("name" . "⁝")
-          ("results" . "∴")))
-  ;; (setq org-modern-keyword nil)
+          ("results" . "∴")
+          ("name" . "⁝")))
+#+end_src
+
+*** Timestamps
+
+#+begin_src emacs-lisp
+  ;; (setq org-modern-timestamp '("%y-%m-%d" . "%y-%m-%d %H:%M"))
+#+end_src
+
+#+begin_src emacs-lisp
   )
 #+end_src
 

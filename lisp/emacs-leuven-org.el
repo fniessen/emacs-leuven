@@ -2883,62 +2883,46 @@ Example: \"Hello\" becomes \"xxxxx\"."
 
   (setq org-modern-label-border 1)
 
-  ;; TODO: Make a choice with leading characters (in order to visualize depth).
-  (setq org-modern-star ["◉" "○" "✸" "✳" "◈" "◇" "✿" "❀" "✜"])
-  (setq org-modern-star ["◉" "·○" "··◈" "···◇" "····✳"]) ; OK.
-  (setq org-modern-star ["◈" "·◈" "··◇" "···◇" "·····"]) ; OK.
+  ;; Use distinct heading bullets, with increasing indentation to emphasize the
+  ;; document hierarchy.
+  (setq org-modern-star
+        '("◉"
+          "⸱○"
+          "⸱⸱◈"
+          "⸱⸱⸱◇"
+          "⸱⸱⸱⸱✳"))
 
-  ;; (setq org-modern-timestamp '("%y-%m-%d" . "%y-%m-%d %H:%M"))
-
-  (setq org-modern-table-vertical 2)
-  (setq org-modern-table-horizontal 1)
-
-  (setq org-modern-list '(
-                          ;; (?- . "-")
-                          (?- . "–")
-                          (?+ . "•")
-                          ;; (?+ . "○")
-                          (?* . "▹")
-                          ;; (?* . "◦")
-                          ))
+  (setq org-modern-list
+        '((?- . "–")
+          (?+ . "•")
+          (?* . "▹")))
 
   (setq org-modern-checkbox
-        '((?X  . #("▢✓" 0 2 (composition ((2)))))
-          (?-  . #("▢–" 0 2 (composition ((2)))))
+        '((?X  . "■")
+          (?-  . #("▢⋯" 0 2 (composition ((2)))))
           (?\s . #("▢" 0 1 (composition ((1)))))))
+
+  (setq org-modern-table-vertical 1)
+  (setq org-modern-table-horizontal 1)
 
   (setq org-modern-block-name
         '((t . t)
-          ("src" "»" "∥")
-          ("example" "»–" "∥")
-          ("quote" "❝" "❞")))
+          ("src"     "⚙ src"     "⚙")
+          ("example" "◈ example" "◈")
+          ("quote"   "❝ quote"   "❞")))
 
   (setq org-modern-block-fringe nil)
 
   ;; See https://gitlab.com/jdm204/dotfiles/-/blob/master/config.org
   (setq org-modern-keyword
         '((t . t)
-          ("bibliography" . "")
-          ("cite_export" . "⮭")
-          ("include" . "⇤")
-          ("setupfile" . "⇚")
-          ("html_head" . "🅷")
-          ("html" . "🅗")
-          ("latex_class" . "🄻")
-          ("latex_header" . "🅻")
-          ("latex_header_extra" . "🅻⁺")
-          ("latex" . "🅛")
-          ("beamer_theme" . "🄱")
-          ("beamer_header" . "🅱")
-          ("beamer" . "🅑")
-          ("attr_latex" . "🄛")
-          ("attr_html" . "🄗")
-          ("attr_org" . "⒪")
           ("header" . "›")
           ("caption" . "☰")
-          ("name" . "⁝")
-          ("results" . "∴")))
-  ;; (setq org-modern-keyword nil)
+          ("results" . "∴")
+          ("name" . "⁝")))
+
+  ;; (setq org-modern-timestamp '("%y-%m-%d" . "%y-%m-%d %H:%M"))
+
   )
 
 (provide 'emacs-leuven-org)
