@@ -3519,7 +3519,7 @@ See [[http://orgmode.org/worg/org-tutorials/org-latex-export.html#sec-9-2][9.2 T
 
 #+begin_src emacs-lisp
   ;; 13.4 Force publishing all files.
-  (defun leuven-org-force-publish-all ()
+  (defun boost-org-force-publish-all ()
     "Publish all Org projects, ignoring timestamps."
     (interactive)
     (org-publish-all t)))
@@ -4128,7 +4128,7 @@ For security resons, evaluation is not turned on by default.
     "Face used for the source block background when executed.")
 
   ;; Change the color of code blocks while they are being executed.
-  (defun leuven--org-babel-execute-src-block-around (fn &rest args)
+  (defun boost--org-babel-execute-src-block-around (fn &rest args)
     "Highlight the current source block while it executes and report its duration."
     (let ((overlay (make-overlay (org-element-property :begin (org-element-at-point))
                                  (1- (org-element-property :end (org-element-at-point))))))
@@ -4140,7 +4140,7 @@ For security resons, evaluation is not turned on by default.
         (delete-overlay overlay))))
 
   (advice-add 'org-babel-execute-src-block
-              :around #'leuven--org-babel-execute-src-block-around))
+              :around #'boost--org-babel-execute-src-block-around))
 #+end_src
 
 #+begin_note

@@ -2207,7 +2207,7 @@ of the ignored headline."
   ;; (setq org-publish-use-timestamps-flag nil)
 
   ;; 13.4 Force publishing all files.
-  (defun leuven-org-force-publish-all ()
+  (defun boost-org-force-publish-all ()
     "Publish all Org projects, ignoring timestamps."
     (interactive)
     (org-publish-all t)))
