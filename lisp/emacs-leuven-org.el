@@ -2686,30 +2686,33 @@ Example: \"Hello\" becomes \"xxxxx\"."
 ;; ;; Grab the last line too, when selecting a subtree.
 ;; (org-end-of-subtree nil t)
 
-;; Backend aware export preprocess hook.
-(defun leuven--org-export-preprocess-hook (backend)
-  "Backend-aware export preprocess hook.
-BACKEND is the current export backend."
-  (condition-case err
-      (save-excursion
-        (when (eq backend 'latex)
-          ;; (goto-char (point-min))
-          ;; (while (re-search-forward ":ignoreheading:" nil t)
-          ;; (delete-region (point-at-bol) (point-at-eol)))
-          (org-map-entries
-           (lambda ()
-             (delete-region (point-at-bol) (point-at-eol)))
-           ;; ignoreheading tag for bibliographies and appendices.
-           ":ignoreheading:"))
-        (when (eq backend 'html)
-          ;; Set custom CSS style class based on matched tag.
-          (org-map-entries
-           (lambda ()
-             (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
-           "Qn")))
-    (error (message "[Error in export preprocess: %s]" err))))
+(defun boost--org-export-strip-ignoreheading-headlines (backend)
+  "Strip headlines tagged \"ignoreheading\" before LaTeX export."
+  (when (eq backend 'latex)
+    ;; (goto-char (point-min))
+    ;; (while (re-search-forward ":ignoreheading:" nil t)
+    ;; (delete-region (point-at-bol) (point-at-eol)))
+    (org-map-entries
+     (lambda ()
+       (delete-region (line-beginning-position)
+                      (line-end-position)))
+     ;; ignoreheading tag for bibliographies and appendices.
+     ":ignoreheading:")))
 
-(add-hook 'org-export-before-parsing-hook #'leuven--org-export-preprocess-hook)
+(add-hook 'org-export-before-parsing-hook
+          #'boost--org-export-strip-ignoreheading-headlines)
+
+(defun boost--org-export-html-qn-container-class (backend)
+  "Set HTML container class for headlines tagged \"Qn\"."
+  (when (eq backend 'html)
+    ;; Set custom CSS style class based on matched tag.
+    (org-map-entries
+     (lambda ()
+       (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
+     "Qn")))
+
+(add-hook 'org-export-before-parsing-hook
+          #'boost--org-export-html-qn-container-class)
 
 (defun insert-one-equal-or-two ()
   "XXX"
