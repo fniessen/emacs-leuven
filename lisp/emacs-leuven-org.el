@@ -2067,37 +2067,44 @@ buffer."
   ;; 12.6.5 Default position for LaTeX figures.
   (setq org-latex-default-figure-position "!htbp")
 
+(defvar boost-org-latex-debug-preamble t
+  "Non-nil means log Org LaTeX preamble package lists.")
+
 (defun boost-org-latex--debug-preamble (orig-fun &rest args)
-  "Debug advice: show package lists before org-latex-make-preamble runs."
-  (let ((default-pkgs org-latex-default-packages-alist)
-        (user-pkgs    org-latex-packages-alist))
+  "Debug advice: show package lists before `org-latex-make-preamble' runs."
+  (when boost-org-latex-debug-preamble
+    (let ((default-pkgs org-latex-default-packages-alist)
+          (user-pkgs    org-latex-packages-alist))
 
-    ;; Log debug information to the *Messages* buffer.
-    (message "┌───────────────────────────────────────────────┐")
-    (message "│ Debugging org-latex-make-preamble             │")
-    (message "├───────────────────────────────────────────────┤")
-    (message "│ org-latex-default-packages-alist (%d entries) │"
-             (length default-pkgs))
-    (message "└───────────────────────────────────────────────┘")
+      ;; Log debug information to the *Messages* buffer.
+      (message "┌───────────────────────────────────────────────┐")
+      (message "│ Debugging org-latex-make-preamble             │")
+      (message "├───────────────────────────────────────────────┤")
+      (message "│ org-latex-default-packages-alist (%d entries) │"
+               (length default-pkgs))
+      (message "└───────────────────────────────────────────────┘")
 
-    (dolist (entry default-pkgs)
-      (message "  %S" entry))
+      (dolist (entry default-pkgs)
+        (message "  %S" entry))
 
-    (message "\n┌───────────────────────────────────────────────┐")
-    (message "│ org-latex-packages-alist          (%d entries) │"
-             (length user-pkgs))
-    (message "└───────────────────────────────────────────────┘")
+      (message "")
+      (message "┌───────────────────────────────────────────────┐")
+      (message "│ org-latex-packages-alist (%d entries)         │"
+               (length user-pkgs))
+      (message "└───────────────────────────────────────────────┘")
 
-    (dolist (entry user-pkgs)
-      (message "  %S" entry))
+      (dolist (entry user-pkgs)
+        (message "  %S" entry))
 
-    (message "─────────────────────────────────────────────────"))
+      (message "─────────────────────────────────────────────────")))
 
-  ;; Call original function.
+  ;; Always call the original function.
   (apply orig-fun args))
 
 ;; Activate it.
-(advice-add 'org-latex-make-preamble :around #'boost-org-latex--debug-preamble)
+(advice-add 'org-latex-make-preamble
+            :around
+            #'boost-org-latex--debug-preamble)
 
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
