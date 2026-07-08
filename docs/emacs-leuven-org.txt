@@ -3353,35 +3353,36 @@ headline*, but *well its contents*, you can add a ~ignore~ tag to remove the
 headline:
 
 #+begin_src emacs-lisp
-  (defun leuven--org-export-ignore-headlines (data backend info)
-    "Remove headlines tagged \"ignore\" retaining contents and promoting children.
-Each headline tagged \"ignore\" will be removed retaining its
-contents and promoting any children headlines to the level of the
-parent."
+  (defun boost--org-export-strip-ignore-headlines (data _backend _info)
+    "Remove headlines tagged \"ignore\" while preserving their contents.
+
+The contents are retained, and child headlines are promoted to the level
+of the ignored headline."
     (org-element-map data 'headline
-      (lambda (object)
-        (when (member "ignore" (org-element-property :tags object))
-          (let ((level-top (org-element-property :level object))
+      (lambda (headline)
+        (when (member "ignore" (org-element-property :tags headline))
+          (let ((parent-level (org-element-property :level headline))
                 level-diff)
-            (dolist (el (org-element-contents object))
-              ;; Recursively promote all nested headlines.
-              (org-element-map el 'headline
-                                (lambda (el)
-                                  (when (equal 'headline (org-element-type el))
-                                    (unless level-diff
-                                      (setq level-diff (- (org-element-property :level el)
-                                                          level-top)))
-                                    (org-element-put-property el
-                                                              :level (- (org-element-property :level el)
-                                                                        level-diff)))))
-              ;; Insert back into parse tree.
-              (org-element-insert-before el object)))
-          (org-element-extract-element object)))
-      info nil)
+            (dolist (element (org-element-contents headline))
+              ;; Promote nested headlines relative to the removed headline.
+              (org-element-map element 'headline
+                (lambda (child)
+                  (unless level-diff
+                    (setq level-diff (- (org-element-property :level child)
+                                        parent-level)))
+                  (org-element-put-property
+                   child :level (- (org-element-property :level child)
+                                    level-diff))))
+
+              ;; Reinsert contents before removing the ignored headline.
+              (org-element-insert-before element headline))
+
+            (org-element-extract-element headline))))
+      _info nil)
     data)
 
   (add-hook 'org-export-filter-parse-tree-functions
-            #'leuven--org-export-ignore-headlines)
+            #'boost--org-export-strip-ignore-headlines)
 #+end_src
 
 In addition, it promotes all headlines under the removed ~ignore~-tagged
