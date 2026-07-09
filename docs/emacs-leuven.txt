@@ -7392,7 +7392,9 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
       ("^.*Undefined control sequence.*" . compilation-error-face)
       ("^.*Fatal error.*" . compilation-error-face)
       ("^!.*" . compilation-error-face)
-      ("^.*Package .* Error:.*" . compilation-error-face)
+      ("^.*Package .* Error: .*" . compilation-error-face)
+      ("^.*LaTeX Error: .*" . compilation-error-face)
+      ("^.*TeX capacity exceeded.*" . compilation-error-face)
 
       ;; Offending TeX command.
       ("^<recently read> \\(\\\\[^[:space:]]+\\)"
@@ -7402,9 +7404,9 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
       ("^l\\.[0-9]+ .*" . compilation-line-face)
 
       ;; Warnings.
-      ("^Package .* Warning:.*" . compilation-warning-face)
-      ("Reference .* undefined" . compilation-warning-face)
-      ("^LaTeX.* Warning:.*" . compilation-warning-face)
+      ("^.*Package .* Warning:.*" . compilation-warning-face)
+      ("^.*Reference .* undefined" . compilation-warning-face)
+      ("^.*LaTeX.* Warning:.*" . compilation-warning-face)
 
       ;; Box warnings.
       ("^\\s-*\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-string-face)
