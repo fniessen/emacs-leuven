@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260709.0908>
+;; Version: <20260709.0914>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260709.0908>"
+(defconst boost-version "<20260709.0914>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4004,13 +4004,13 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
   ;; Extra font-lock keywords for LaTeX output buffers.
   (defconst boost-latex-output-font-lock-keywords
-    '(;; LaTeX errors.
-      ("^.*Undefined control sequence.*" . compilation-error-face)
-      ("^.*Fatal error.*" . compilation-error-face)
-      ("^!.*" . compilation-error-face)
+    '(;; Fatal and error messages.
       ("^.*Package .* Error: .*" . compilation-error-face)
       ("^.*LaTeX Error: .*" . compilation-error-face)
+      ("^.*Undefined control sequence.*" . compilation-error-face)
       ("^.*TeX capacity exceeded.*" . compilation-error-face)
+      ("^.*Fatal error.*" . compilation-error-face)
+      ("^!.*" . compilation-error-face)
 
       ;; Offending TeX command.
       ("^<recently read> \\(\\\\[^[:space:]]+\\)"
@@ -4021,17 +4021,19 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
       ;; Warnings.
       ("^.*Package .* Warning:.*" . compilation-warning-face)
-      ("^.*Reference .* undefined" . compilation-warning-face)
       ("^.*LaTeX.* Warning:.*" . compilation-warning-face)
+      ("^.*Reference .* undefined" . compilation-warning-face)
 
-      ;; Box warnings.
-      ("^\\s-*\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-string-face)
+      ;; Box diagnostics.
+      ("^\\s-*\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*"
+       . font-lock-string-face)
 
       ;; LatexMk separator lines.
       ("^\\s-*-+\\s-*$" . compilation-info-face)
 
       ;; Successful output.
-      ("^Output written on .*\\.pdf.*" . font-lock-function-name-face))
+      ("^Output written on .*\\.pdf.*"
+       . font-lock-function-name-face))
     "Additional font-lock keywords for LaTeX output buffers.")
 
   (defun boost--fontify-latex-output ()
