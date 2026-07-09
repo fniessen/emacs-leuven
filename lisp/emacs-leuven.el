@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260709.0914>
+;; Version: <20260709.1132>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260709.0914>"
+(defconst boost-version "<20260709.1132>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4028,6 +4028,14 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
       ("^\\s-*\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*"
        . font-lock-string-face)
 
+      ;; LatexMk rule information.
+      ("^Rule '\\([^']+\\)':.*"
+       (1 font-lock-function-name-face))
+
+      ;; Document class.
+      ("^Document Class: \\([^[:space:]]+\\)"
+       (1 font-lock-type-face))
+
       ;; LatexMk separator lines.
       ("^\\s-*-+\\s-*$" . compilation-info-face)
 
@@ -4162,7 +4170,14 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
                       "Xindy"
                       "upMendex"))
         (setq TeX-command-list
-              (assoc-delete-all name TeX-command-list #'string=))))
+              (assoc-delete-all name TeX-command-list #'string=)))
+
+      ;; Let latexmkrc choose the TeX engine by removing the %(mode) argument
+      ;; (which may force -pdf).
+      (when-let ((cmd (assoc "LaTeXMk" TeX-command-list)))
+        (setcar (cdr cmd)
+                "latexmk %(latexmk-out) %(file-line-error) %(output-dir) %`%(extraopts) %S%' %t"))
+      )
 
     (with-eval-after-load 'tex
       ;; Make `LaTeXMk' the default compilation command.

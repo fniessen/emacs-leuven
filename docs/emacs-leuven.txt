@@ -7412,6 +7412,14 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
       ("^\\s-*\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*"
        . font-lock-string-face)
 
+      ;; LatexMk rule information.
+      ("^Rule '\\([^']+\\)':.*"
+       (1 font-lock-function-name-face))
+
+      ;; Document class.
+      ("^Document Class: \\([^[:space:]]+\\)"
+       (1 font-lock-type-face))
+
       ;; LatexMk separator lines.
       ("^\\s-*-+\\s-*$" . compilation-info-face)
 
@@ -7602,7 +7610,14 @@ file, AUCTeX gives you a ~Command~ menu.
                       "Xindy"
                       "upMendex"))
         (setq TeX-command-list
-              (assoc-delete-all name TeX-command-list #'string=))))
+              (assoc-delete-all name TeX-command-list #'string=)))
+
+      ;; Let latexmkrc choose the TeX engine by removing the %(mode) argument
+      ;; (which may force -pdf).
+      (when-let ((cmd (assoc "LaTeXMk" TeX-command-list)))
+        (setcar (cdr cmd)
+                "latexmk %(latexmk-out) %(file-line-error) %(output-dir) %`%(extraopts) %S%' %t"))
+      )
 
     (with-eval-after-load 'tex
       ;; Make `LaTeXMk' the default compilation command.
