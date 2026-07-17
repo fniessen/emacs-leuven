@@ -997,7 +997,7 @@ From the address <%a>"
 
 (with-eval-after-load 'org-protocol
   (add-to-list 'org-safe-remote-resources
-               "\\`https://fniessen\\.github\\.io/org-html-themes/org/html-theme-readtheorg\\.setup\\'"))
+               "\\`https://fniessen\\.github\\.io/org-html-themes/org/setup/html-theme-readtheorg\\.setup\\'"))
 
 (message "9.4 (org)Protocols")
 
@@ -1988,8 +1988,12 @@ buffer."
              ;; latexmk detection (optional).
              (latexmk-path (executable-find "latexmk"))
 
-             ;; When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
-             (latexmk-uses-lualatex (and latexmk-path (executable-find "lualatex")))
+             ;; Use LuaLaTeX with latexmk by default, unless pdfLaTeX was
+             ;; explicitly requested in the Org file.
+             (latexmk-uses-lualatex
+              (and latexmk-path
+                   (not use-pdflatex)
+                   (executable-find "lualatex")))
 
              ;; File placeholder for Org → LaTeX export.
              ;; WSL/Linux does NOT require cygpath conversions.

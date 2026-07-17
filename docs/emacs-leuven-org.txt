@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle ../lisp/emacs-leuven-org.el
 
-#+SETUPFILE: ~/org/html-theme-readtheorg.setup
+#+SETUPFILE: ~/org/setup/html-theme-readtheorg.setup
 
 #+begin_src emacs-lisp
 ;; Require a feature/library if available; if not, fail silently.
@@ -1760,7 +1760,7 @@ in your Org buffers.
 #+begin_src emacs-lisp
 (with-eval-after-load 'org-protocol
   (add-to-list 'org-safe-remote-resources
-               "\\`https://fniessen\\.github\\.io/org-html-themes/org/html-theme-readtheorg\\.setup\\'"))
+               "\\`https://fniessen\\.github\\.io/org-html-themes/org/setup/html-theme-readtheorg\\.setup\\'"))
 #+end_src
 
 ** Protocols for external access
@@ -3175,8 +3175,12 @@ Not very coherent!
              ;; latexmk detection (optional).
              (latexmk-path (executable-find "latexmk"))
 
-             ;; When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
-             (latexmk-uses-lualatex (and latexmk-path (executable-find "lualatex")))
+             ;; Use LuaLaTeX with latexmk by default, unless pdfLaTeX was
+             ;; explicitly requested in the Org file.
+             (latexmk-uses-lualatex
+              (and latexmk-path
+                   (not use-pdflatex)
+                   (executable-find "lualatex")))
 
              ;; File placeholder for Org → LaTeX export.
              ;; WSL/Linux does NOT require cygpath conversions.
