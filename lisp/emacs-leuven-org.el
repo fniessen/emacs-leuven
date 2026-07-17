@@ -1951,36 +1951,36 @@ buffer."
   ;; (setq org-preview-latex-default-process 'imagemagick)
 
   (defun boost--set-org-latex-pdf-process (backend)
-    "Automatically select the LaTeX compiler and configure `org-latex-pdf-process'.
+    "Automatically select the LaTeX compiler and configure
+`org-latex-pdf-process'.
 
-  Logic:
-  - Use pdfLaTeX if the file contains `#+LATEX_COMPILER: pdflatex`
-    (or the legacy `#+LATEX_CMD: pdflatex`).
-  - Otherwise default to LuaLaTeX.
-  - If `latexmk` is available, prefer it.
-  - When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
-  - Under WSL/Linux, no path conversion is required (plain %f is correct)."
+Logic:
+- Use pdfLaTeX if the file contains `#+LATEX_COMPILER: pdflatex'.
+- Otherwise default to LuaLaTeX.
+- If `latexmk` is available, prefer it.
+- When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
+- Under WSL/Linux, no path conversion is required (plain %f is correct)."
 
     (when (org-export-derived-backend-p backend 'latex)
 
       (let* (;; Detect explicit request for pdfLaTeX.
              (use-pdflatex
-              (or (save-excursion
-                    (goto-char (point-min))
-                    (re-search-forward "^#\\+LATEX_COMPILER: *pdflatex" nil t))
-                  (save-excursion
-                    (goto-char (point-min))
-                    (re-search-forward "^#\\+LATEX_CMD: *pdflatex" nil t))))
+              (save-excursion
+                (goto-char (point-min))
+                (re-search-forward
+                 "^#\\+LATEX_COMPILER:[[:space:]]*pdflatex" nil t)))
 
              ;; Full path to selected LaTeX compiler (for non-latexmk builds).
-             ;; If pdfLaTeX is explicitly requested, use it, otherwise default
+             ;; If pdfLaTeX is explicitly requested, use it; otherwise default
              ;; to LuaLaTeX.
              (compiler-path
               (if use-pdflatex
                   (or (executable-find "pdflatex")
-                      (user-error "[pdfLaTeX was requested but is not installed]"))
+                      (user-error
+                       "[pdfLaTeX was requested but is not installed]"))
                 (or (executable-find "lualatex")
-                    (user-error "[LuaLaTeX (default) is not installed]"))))
+                    (user-error
+                     "[LuaLaTeX (default) is not installed]"))))
 
              ;; Executable name only ("lualatex" or "pdflatex").
              (compiler-name (file-name-base compiler-path))
@@ -1988,7 +1988,7 @@ buffer."
              ;; latexmk detection (optional).
              (latexmk-path (executable-find "latexmk"))
 
-             ;; Use LuaLaTeX with latexmk by default, unless pdfLaTeX was
+             ;; Use LuaLaTeX with latexmk by default unless pdfLaTeX was
              ;; explicitly requested in the Org file.
              (latexmk-uses-lualatex
               (and latexmk-path
@@ -1996,10 +1996,12 @@ buffer."
                    (executable-find "lualatex")))
 
              ;; File placeholder for Org → LaTeX export.
-             ;; WSL/Linux does NOT require cygpath conversions.
+             ;; WSL/Linux does not require path conversion.
              (latex-file "%f"))
 
-        (message "[LaTeX compiler detected (non-latexmk base): %s]" compiler-path)
+        (message
+         "[LaTeX compiler detected (non-latexmk base): %s]"
+         compiler-path)
 
         ;; Choose the PDF build process.
         (cond
@@ -2011,25 +2013,39 @@ buffer."
                 (list
                  (format
                   "latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s && latexmk -c"
-                  (if latexmk-uses-lualatex "-pdflua" "-pdf")
+                  (if latexmk-uses-lualatex
+                      "-pdflua"
+                    "-pdf")
                   latex-file))))
 
-         ;; 2) LuaLaTeX used (default) and latexmk not available.
+         ;; 2) LuaLaTeX (default) without latexmk.
          ;;    This happens when no explicit pdfLaTeX directive is present.
          ((string= compiler-name "lualatex")
           (setq org-latex-pdf-process
                 (list
-                 (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
-                 (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
-                 (format "lualatex -interaction=nonstopmode -output-directory=%%o %s" latex-file))))
+                 (format
+                  "lualatex -interaction=nonstopmode -output-directory=%%o %s"
+                  latex-file)
+                 (format
+                  "lualatex -interaction=nonstopmode -output-directory=%%o %s"
+                  latex-file)
+                 (format
+                  "lualatex -interaction=nonstopmode -output-directory=%%o %s"
+                  latex-file))))
 
-         ;; 3) Explicit pdfLaTeX (or fallback) when latexmk is not available.
+         ;; 3) Explicit pdfLaTeX without latexmk.
          (t
           (setq org-latex-pdf-process
                 (list
-                 (format "pdflatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
-                 (format "pdflatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)
-                 (format "pdflatex -interaction=nonstopmode -output-directory=%%o %s" latex-file)))))
+                 (format
+                  "pdflatex -interaction=nonstopmode -output-directory=%%o %s"
+                  latex-file)
+                 (format
+                  "pdflatex -interaction=nonstopmode -output-directory=%%o %s"
+                  latex-file)
+                 (format
+                  "pdflatex -interaction=nonstopmode -output-directory=%%o %s"
+                  latex-file)))))
 
         (message "[Export command: %S]" org-latex-pdf-process))))
 
@@ -2061,9 +2077,9 @@ buffer."
 
   ;; Replace non-breaking spaces when exporting to LaTeX.
   (defun boost--org-export-latex-text-filter (text backend _info)
-    "Replace non-breaking spaces with LaTeX non-breaking spaces."
+    "Replace Unicode non-breaking spaces with LaTeX non-breaking spaces."
     (when (memq backend '(latex beamer))
-      (replace-regexp-in-string " " "~" text)))
+      (replace-regexp-in-string "\u00A0" "~" text)))
 
   (add-to-list 'org-export-filter-plain-text-functions
                #'boost--org-export-latex-text-filter)
