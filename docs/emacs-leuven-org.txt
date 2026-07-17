@@ -3382,8 +3382,23 @@ immediately before ~org-latex-make-preamble~ runs. Disable it by setting
             #'boost-org-latex--debug-preamble)
 #+end_src
 
+*** Defining custom Org LaTeX classes
+
+*Minimal class*
+
+The following class disables both of Org's package lists while still allowing
+user-defined LaTeX headers.
+
+This is useful when:
+
+- the document class manages all required packages itself;
+- you want complete control over the preamble;
+- you are debugging the generated LaTeX.
+
 #+begin_src emacs-lisp
 (with-eval-after-load 'ox-latex
+  ;; Minimal LaTeX class with no automatically loaded packages.
+  ;; Useful for debugging or for fully self-contained document classes.
   (add-to-list 'org-latex-classes
                '("no-packages"
                  "\\documentclass{article}
@@ -3395,7 +3410,25 @@ immediately before ~org-latex-make-preamble~ runs. Disable it by setting
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+end_src
 
+The resulting preamble contains:
+
+- the ~\documentclass~ declaration;
+- any ~#+LATEX_HEADER:~ or ~#+LATEX_HEADER_EXTRA:~ directives;
+
+but excludes packages from both:
+
+- =org-latex-default-packages-alist=;
+- =org-latex-packages-alist=.
+
+*KOMA-Script class*
+
+The next example defines a class based on KOMA-Script's =scrartcl=.
+
+#+begin_src emacs-lisp
+  ;; KOMA-Script article class.
+  ;; Uses Org's package mechanism while disabling Org's default packages.
   (add-to-list 'org-latex-classes
             '("koma-article"
                "\\documentclass{scrartcl}
@@ -3408,6 +3441,15 @@ immediately before ~org-latex-make-preamble~ runs. Disable it by setting
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 #+end_src
+
+Compared to the previous example, this class enables ~[PACKAGES]~. Consequently:
+
+- Org's default package list is still suppressed;
+- packages declared in ~org-latex-packages-alist~ are inserted;
+- ~#+LATEX_HEADER:~ and ~#+LATEX_HEADER_EXTRA:~ directives are also inserted.
+
+This approach is appropriate when you want to customize the package list through
+=org-latex-packages-alist= while still avoiding Org's default packages.
 
 ** "Ignore heading + promote children" tag
 

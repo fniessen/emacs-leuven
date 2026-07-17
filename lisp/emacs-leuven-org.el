@@ -2127,6 +2127,8 @@ Logic:
             #'boost-org-latex--debug-preamble)
 
 (with-eval-after-load 'ox-latex
+  ;; Minimal LaTeX class with no automatically loaded packages.
+  ;; Useful for debugging or for fully self-contained document classes.
   (add-to-list 'org-latex-classes
                '("no-packages"
                  "\\documentclass{article}
@@ -2139,6 +2141,8 @@ Logic:
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
+  ;; KOMA-Script article class.
+  ;; Uses Org's package mechanism while disabling Org's default packages.
   (add-to-list 'org-latex-classes
             '("koma-article"
                "\\documentclass{scrartcl}
