@@ -1950,6 +1950,9 @@ buffer."
   ;; Default process to convert LaTeX fragments to image files.
   ;; (setq org-preview-latex-default-process 'imagemagick)
 
+  ;; Default LaTeX engine for Org exports.
+  (setq org-latex-compiler "lualatex")  ; "%% Intended LaTeX compiler"
+
   (defun boost--set-org-latex-pdf-process (backend)
     "Automatically select the LaTeX compiler and configure
 `org-latex-pdf-process'.
@@ -2012,7 +2015,9 @@ Logic:
           (setq org-latex-pdf-process
                 (list
                  (format
-                  "latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s && latexmk -c"
+                  ;; Perform a clean build by removing stale auxiliary files
+                  ;; before and after compilation.
+                  "latexmk -c && latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s && latexmk -c"
                   (if latexmk-uses-lualatex
                       "-pdflua"
                     "-pdf")
