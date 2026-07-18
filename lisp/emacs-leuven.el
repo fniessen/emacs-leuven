@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260718.1251>
+;; Version: <20260718.1537>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260718.1251>"
+(defconst boost-version "<20260718.1537>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4147,6 +4147,10 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
     (leuven--section "4.1 Executing (auctex)Commands")
 
+    (defun boost--set-latexmk ()
+      "Use LaTeXMk as the default AUCTeX compilation command."
+      (setq-local TeX-command-default "LaTeXMk"))
+
     (with-eval-after-load 'tex             ; AUCTeX.
       ;; Simplify the AUCTeX command menu by removing unused commands.
       (dolist (name '("AmSTeX"
@@ -4172,18 +4176,25 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
         (setq TeX-command-list
               (assoc-delete-all name TeX-command-list #'string=)))
 
-      ;; Let .latexmkrc choose the TeX engine.  In particular, omit
-      ;; `%(mode)', since it may expand to `-pdf' and force pdfLaTeX.
-      (when-let ((command (assoc "LaTeXMk" TeX-command-list)))
-        (setcar (cdr command)
-                "latexmk %(latexmk-out) %(file-line-error) %(output-dir) %`%(extraopts) %S%' %t"))
+      ;; Remove AUCTeX's existing LaTeXMk definition, which may include
+      ;; `%(mode)' and consequently force `latexmk -pdf'.
+      (setq TeX-command-list
+            (assoc-delete-all "LaTeXMk" TeX-command-list #'string=))
 
-      (defun boost-set-latexmk ()
-        "Use LaTeXMk as the default AUCTeX compilation command."
-        (setq-local TeX-command-default "LaTeXMk"))
+      ;; Let .latexmkrc choose the TeX engine. Do not use neither `%(mode)' nor
+      ;; `%(latexmk-out)', since AUCTeX may expand them to `-pdf', forcing
+      ;; latexmk to use pdfLaTeX.
+      (add-to-list
+       'TeX-command-list
+       '("LaTeXMk"
+         "latexmk %(file-line-error) %(output-dir) %`%(extraopts) %S%' %t"
+         TeX-run-TeX
+         nil
+         (latex-mode)
+         :help "Run latexmk using the engine selected by .latexmkrc"))
 
       ;; Make `LaTeXMk' the default compilation command.
-      (add-hook 'LaTeX-mode-hook #'boost-set-latexmk))
+      (add-hook 'LaTeX-mode-hook #'boost--set-latexmk))
 
     ;; Automatically use French dictionary when a LaTeX document uses French.
     (defun boost--set-french-dictionary-for-latex ()

@@ -7587,6 +7587,10 @@ file, AUCTeX gives you a ~Command~ menu.
 
     (leuven--section "4.1 Executing (auctex)Commands")
 
+    (defun boost--set-latexmk ()
+      "Use LaTeXMk as the default AUCTeX compilation command."
+      (setq-local TeX-command-default "LaTeXMk"))
+
     (with-eval-after-load 'tex             ; AUCTeX.
       ;; Simplify the AUCTeX command menu by removing unused commands.
       (dolist (name '("AmSTeX"
@@ -7612,18 +7616,25 @@ file, AUCTeX gives you a ~Command~ menu.
         (setq TeX-command-list
               (assoc-delete-all name TeX-command-list #'string=)))
 
-      ;; Let .latexmkrc choose the TeX engine.  In particular, omit
-      ;; `%(mode)', since it may expand to `-pdf' and force pdfLaTeX.
-      (when-let ((command (assoc "LaTeXMk" TeX-command-list)))
-        (setcar (cdr command)
-                "latexmk %(latexmk-out) %(file-line-error) %(output-dir) %`%(extraopts) %S%' %t"))
+      ;; Remove AUCTeX's existing LaTeXMk definition, which may include
+      ;; `%(mode)' and consequently force `latexmk -pdf'.
+      (setq TeX-command-list
+            (assoc-delete-all "LaTeXMk" TeX-command-list #'string=))
 
-      (defun boost-set-latexmk ()
-        "Use LaTeXMk as the default AUCTeX compilation command."
-        (setq-local TeX-command-default "LaTeXMk"))
+      ;; Let .latexmkrc choose the TeX engine. Do not use neither `%(mode)' nor
+      ;; `%(latexmk-out)', since AUCTeX may expand them to `-pdf', forcing
+      ;; latexmk to use pdfLaTeX.
+      (add-to-list
+       'TeX-command-list
+       '("LaTeXMk"
+         "latexmk %(file-line-error) %(output-dir) %`%(extraopts) %S%' %t"
+         TeX-run-TeX
+         nil
+         (latex-mode)
+         :help "Run latexmk using the engine selected by .latexmkrc"))
 
       ;; Make `LaTeXMk' the default compilation command.
-      (add-hook 'LaTeX-mode-hook #'boost-set-latexmk))
+      (add-hook 'LaTeX-mode-hook #'boost--set-latexmk))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -9682,12 +9693,12 @@ noticeable.
             (concat "\n" output))
         output)))
 
-  (defun sqli-add-hooks ()
+  (defun sqli--add-hooks ()
     "Add hooks to `sql-interactive-mode-hook'."
     (add-hook 'comint-preoutput-filter-functions
               'sql-add-newline-first))
 
-  (add-hook 'sql-interactive-mode-hook 'sqli-add-hooks)
+  (add-hook 'sql-interactive-mode-hook 'sqli--add-hooks)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
