@@ -11785,14 +11785,19 @@ Automatically recompile and reload snippets after saving:
 
 #+begin_src emacs-lisp
     ;; Automatically recompile and reload snippets after saving.
-    (defun boost--yas-recompile-and-reload-after-save ()
-      "Recompile and reload YASnippet tables when saving a `snippet-mode' buffer."
-      (when (derived-mode-p 'snippet-mode)
-        (yas-recompile-all)
-        (yas-reload-all)
-        (message "[Reloaded YASnippet tables]")))
+    (defun boost--yas-recompile-and-reload-snippets ()
+      "Recompile and reload YASnippet tables after saving a snippet."
+      (yas-recompile-all)
+      (yas-reload-all)
+      (message "[Reloaded YASnippet tables]"))
 
-    (add-hook 'after-save-hook #'boost--yas-recompile-and-reload-after-save)
+    (defun boost--setup-yasnippet-auto-reload ()
+      "Install a buffer-local save hook for YASnippet files."
+      (add-hook 'after-save-hook
+                #'boost--yas-recompile-and-reload-snippets
+                nil t))
+
+    (add-hook 'snippet-mode-hook #'boost--setup-yasnippet-auto-reload)
 #+end_src
 
 Display all available snippets with ~M-x yas-describe-tables~ (or ~C-c & C-l~ in

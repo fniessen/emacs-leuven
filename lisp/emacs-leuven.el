@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260718.2040>
+;; Version: <20260718.2049>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260718.2040>"
+(defconst boost-version "<20260718.2049>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -5921,14 +5921,19 @@ This prevents loading stale byte-compiled code."
     (global-set-key (kbd "C-c & C-r") #'yas-reload-all)
 
     ;; Automatically recompile and reload snippets after saving.
-    (defun boost--yas-recompile-and-reload-after-save ()
-      "Recompile and reload YASnippet tables when saving a `snippet-mode' buffer."
-      (when (derived-mode-p 'snippet-mode)
-        (yas-recompile-all)
-        (yas-reload-all)
-        (message "[Reloaded YASnippet tables]")))
+    (defun boost--yas-recompile-and-reload-snippets ()
+      "Recompile and reload YASnippet tables after saving a snippet."
+      (yas-recompile-all)
+      (yas-reload-all)
+      (message "[Reloaded YASnippet tables]"))
 
-    (add-hook 'after-save-hook #'boost--yas-recompile-and-reload-after-save)
+    (defun boost--setup-yasnippet-auto-reload ()
+      "Install a buffer-local save hook for YASnippet files."
+      (add-hook 'after-save-hook
+                #'boost--yas-recompile-and-reload-snippets
+                nil t))
+
+    (add-hook 'snippet-mode-hook #'boost--setup-yasnippet-auto-reload)
 
     (global-set-key (kbd "C-c & C-l") #'yas-describe-tables)
 
