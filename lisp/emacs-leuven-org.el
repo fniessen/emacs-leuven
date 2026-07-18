@@ -2017,7 +2017,7 @@ Logic:
                  (format
                   ;; Perform a clean build by removing stale auxiliary files
                   ;; before and after compilation.
-                  "latexmk -c && latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s && latexmk -c"
+                  "sh -c 'trap \"latexmk -c\" EXIT; latexmk -c; latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s'"
                   (if latexmk-uses-lualatex
                       "-pdflua"
                     "-pdf")
