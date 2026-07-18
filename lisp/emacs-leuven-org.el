@@ -1961,33 +1961,42 @@ buffer."
   ;; “Intended LaTeX compiler” comment.
   (setq-default org-latex-compiler boost-org-default-latex-compiler)
 
+  (defun boost--org-latex-compiler-from-keyword ()
+    "Return the compiler specified by a `#+LATEX_COMPILER:' keyword, or nil.
+
+The keyword lookup is case-insensitive.  The returned compiler name is
+converted to lowercase."
+    (save-excursion
+      (goto-char (point-min))
+      (let ((case-fold-search t))
+        (when (re-search-forward
+               "^#\\+LATEX_COMPILER:[[:space:]]*\\([^[:space:]]+\\)[[:space:]]*$"
+               nil t)
+          (downcase (match-string-no-properties 1))))))
+
+  (defun boost--latexmk-engine-option (compiler-name)
+    "Return the latexmk engine option for COMPILER-NAME.
+
+Return nil when no corresponding latexmk option is known."
+    (pcase compiler-name
+      ("pdflatex" "-pdf")
+      ("lualatex" "-pdflua")
+      ("xelatex" "-pdfxe")
+      (_ nil)))
+
   (defun boost--set-org-latex-pdf-process (backend)
     "Select the LaTeX compiler and configure `org-latex-pdf-process'.
 
-Use pdfLaTeX when the Org file contains:
+Use the compiler specified by the Org file's `#+LATEX_COMPILER:'
+keyword.  Otherwise, use `boost-org-default-latex-compiler'.
 
-  #+LATEX_COMPILER: pdflatex
-
-Otherwise, use `boost-org-default-latex-compiler'.
-
-Prefer `latexmk' when available.  Without `latexmk', invoke the selected
-compiler three times so references, the table of contents, and similar
-cross-references can stabilize."
+Prefer `latexmk' when it has a known option for the selected compiler.
+Otherwise, invoke the selected compiler three times so references, the
+table of contents, and similar cross-references can stabilize."
     (when (org-export-derived-backend-p backend 'latex)
-      (let* (;; Detect an explicit request for pdfLaTeX.
-             (use-pdflatex
-              (save-excursion
-                (goto-char (point-min))
-                (let ((case-fold-search t))
-                  (re-search-forward
-                   "^#\\+LATEX_COMPILER:[[:space:]]*pdflatex[[:space:]]*$"
-                   nil t))))
-
-             ;; Use the document-specific compiler or the configured default.
-             (compiler-name
-              (if use-pdflatex
-                  "pdflatex"
-                boost-org-default-latex-compiler))
+      (let* ((compiler-name
+              (or (boost--org-latex-compiler-from-keyword)
+                  boost-org-default-latex-compiler))
 
              ;; Verify that the requested engine exists, even when latexmk will
              ;; ultimately invoke it.
@@ -1999,6 +2008,8 @@ cross-references can stabilize."
 
              ;; Prefer latexmk when available.
              (latexmk-path (executable-find "latexmk"))
+             (latexmk-engine
+              (boost--latexmk-engine-option compiler-name))
 
              ;; Org export placeholders.
              (latex-file "%f")
@@ -2007,28 +2018,26 @@ cross-references can stabilize."
         ;; Keep Org's metadata aligned with the engine used for compilation.
         (setq-local org-latex-compiler compiler-name)
 
-        (setq-local org-latex-pdf-process
-                    (if latexmk-path
-                        (let ((latexmk-engine
-                               (if (string= compiler-name "lualatex")
-                                   "-pdflua"
-                                 "-pdf")))
-                          (list
-                           (format
-                            ;; Remove stale auxiliary files before compilation.
-                            "latexmk -c; latexmk -cd %s -interaction=nonstopmode -output-directory=%s %s"
-                            latexmk-engine
-                            output-directory
-                            latex-file)))
+        (setq-local
+         org-latex-pdf-process
+         (if (and latexmk-path latexmk-engine)
+             (list
+              (format
+               ;; Remove stale auxiliary files before compilation.
+               "latexmk -c; latexmk -cd %s -interaction=nonstopmode -output-directory=%s %s"
+               latexmk-engine
+               output-directory
+               latex-file))
 
-                      ;; Without latexmk, run the selected engine three times.
-                      (let ((command
-                             (format
-                              "%s -interaction=nonstopmode -output-directory=%s %s"
-                              (shell-quote-argument compiler-path)
-                              output-directory
-                              latex-file)))
-                        (list command command command))))
+           ;; Use the compiler directly when latexmk is unavailable or when its
+           ;; corresponding engine option is unknown.
+           (let ((command
+                  (format
+                   "%s -interaction=nonstopmode -output-directory=%s %s"
+                   (shell-quote-argument compiler-path)
+                   output-directory
+                   latex-file)))
+             (list command command command))))
 
         (message "[LaTeX compiler: %s]" compiler-name)
         (message "[Export command: %S]" org-latex-pdf-process))))
