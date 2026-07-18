@@ -1935,8 +1935,11 @@ buffer."
        (format "\\framebox{\\#%c} " priority))
      text
      (when tags
-       (format "\\hfill{}\\fbox{\\textsc{%s}}"
-               (mapconcat #'identity tags ":")))))
+       (let ((tag-text (mapconcat #'identity tags ":")))
+         (format
+          "\\hfill{}\\texorpdfstring{\\fbox{\\textsc{%s}}}{%s}"
+          tag-text
+          tag-text)))))
 
   (setq org-latex-format-headline-function
         #'boost-org-latex-headline-formatter)
