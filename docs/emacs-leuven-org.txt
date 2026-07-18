@@ -3137,113 +3137,78 @@ Not very coherent!
 #+end_warning
 
 #+begin_src emacs-lisp
-  ;; Default LaTeX engine for Org exports.
+  ;; Default LaTeX engine for Org exports. Individual Org files may override
+  ;; this with `#+LATEX_COMPILER: pdflatex'.
   (setq org-latex-compiler "lualatex")  ; "%% Intended LaTeX compiler"
-#+end_src
 
-#+begin_src emacs-lisp
   (defun boost--set-org-latex-pdf-process (backend)
-    "Automatically select the LaTeX compiler and configure
-`org-latex-pdf-process'.
+    "Select the LaTeX compiler and configure `org-latex-pdf-process'.
 
-Logic:
-- Use pdfLaTeX if the file contains `#+LATEX_COMPILER: pdflatex'.
-- Otherwise default to LuaLaTeX.
-- If `latexmk` is available, prefer it.
-- When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
-- Under WSL/Linux, no path conversion is required (plain %f is correct)."
+Use pdfLaTeX when the Org file contains:
+
+  ,#+LATEX_COMPILER: pdflatex
+
+Otherwise, use LuaLaTeX.
+
+Prefer `latexmk' when available. Without `latexmk', invoke the selected
+compiler three times so references, the table of contents, and similar
+cross-references can stabilize."
 
     (when (org-export-derived-backend-p backend 'latex)
-
-      (let* (;; Detect explicit request for pdfLaTeX.
+      (let* (;; Detect an explicit request for pdfLaTeX.
              (use-pdflatex
               (save-excursion
                 (goto-char (point-min))
                 (re-search-forward
                  "^#\\+LATEX_COMPILER:[[:space:]]*pdflatex" nil t)))
 
-             ;; Full path to selected LaTeX compiler (for non-latexmk builds).
-             ;; If pdfLaTeX is explicitly requested, use it; otherwise default
-             ;; to LuaLaTeX.
+             ;; Select the compiler requested by the document, falling back to
+             ;; the global LuaLaTeX default.
+             (compiler-name
+              (if use-pdflatex "pdflatex" org-latex-compiler))
+
+             ;; Resolve the selected compiler before configuring the command.
              (compiler-path
-              (if use-pdflatex
-                  (or (executable-find "pdflatex")
-                      (user-error
-                       "[pdfLaTeX was requested but is not installed]"))
-                (or (executable-find "lualatex")
-                    (user-error
-                     "[LuaLaTeX (default) is not installed]"))))
+              (or (executable-find compiler-name)
+                  (user-error
+                   "[The requested LaTeX compiler `%s' is not installed]"
+                   compiler-name)))
 
-             ;; Executable name only ("lualatex" or "pdflatex").
-             (compiler-name (file-name-base compiler-path))
-
-             ;; latexmk detection (optional).
+             ;; Use latexmk when it is available.
              (latexmk-path (executable-find "latexmk"))
 
-             ;; Use LuaLaTeX with latexmk by default unless pdfLaTeX was
-             ;; explicitly requested in the Org file.
-             (latexmk-uses-lualatex
-              (and latexmk-path
-                   (not use-pdflatex)
-                   (executable-find "lualatex")))
-
-             ;; File placeholder for Org → LaTeX export.
+             ;; Org's LaTeX source-file placeholder.
              ;; WSL/Linux does not require path conversion.
              (latex-file "%f"))
 
-        (message
-         "[LaTeX compiler detected (non-latexmk base): %s]"
-         compiler-path)
+        ;; Keep Org's compiler metadata and generated header comment aligned
+        ;; with the command that will actually build this document.
+        (setq-local org-latex-compiler compiler-name)
 
-        ;; Choose the PDF build process.
-        (cond
+        (setq org-latex-pdf-process
+              (if latexmk-path
+                  (list
+                   (format
+                    ;; Clean before compilation and use an EXIT trap so cleanup
+                    ;; also runs when latexmk fails or is interrupted.
+                    "sh -c 'trap \"latexmk -c\" EXIT; latexmk -c; latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s'"
+                    (if (string= compiler-name "lualatex")
+                        "-pdflua"
+                      "-pdf")
+                    latex-file))
 
-         ;; 1) latexmk available → single robust command.
-         ;;    When using latexmk, use LuaLaTeX if available, otherwise pdfLaTeX.
-         (latexmk-path
-          (setq org-latex-pdf-process
-                (list
-                 (format
-                  ;; Perform a clean build by removing stale auxiliary files
-                  ;; before and after compilation.
-                  "sh -c 'trap \"latexmk -c\" EXIT; latexmk -c; latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s'"
-                  (if latexmk-uses-lualatex
-                      "-pdflua"
-                    "-pdf")
-                  latex-file))))
+                ;; Without latexmk, run the selected engine three times.
+                (let ((command
+                       (format
+                        "%s -interaction=nonstopmode -output-directory=%%o %s"
+                        compiler-path
+                        latex-file)))
+                  (list command command command))))
 
-         ;; 2) LuaLaTeX (default) without latexmk.
-         ;;    This happens when no explicit pdfLaTeX directive is present.
-         ((string= compiler-name "lualatex")
-          (setq org-latex-pdf-process
-                (list
-                 (format
-                  "lualatex -interaction=nonstopmode -output-directory=%%o %s"
-                  latex-file)
-                 (format
-                  "lualatex -interaction=nonstopmode -output-directory=%%o %s"
-                  latex-file)
-                 (format
-                  "lualatex -interaction=nonstopmode -output-directory=%%o %s"
-                  latex-file))))
-
-         ;; 3) Explicit pdfLaTeX without latexmk.
-         (t
-          (setq org-latex-pdf-process
-                (list
-                 (format
-                  "pdflatex -interaction=nonstopmode -output-directory=%%o %s"
-                  latex-file)
-                 (format
-                  "pdflatex -interaction=nonstopmode -output-directory=%%o %s"
-                  latex-file)
-                 (format
-                  "pdflatex -interaction=nonstopmode -output-directory=%%o %s"
-                  latex-file)))))
-
+        (message "[LaTeX compiler: %s]" compiler-path)
         (message "[Export command: %S]" org-latex-pdf-process))))
 
-  ;; Hook executed before Org parses the temporary export buffer.
+  ;; Configure the compiler before Org parses the export buffer.
   (add-hook 'org-export-before-parsing-hook #'boost--set-org-latex-pdf-process)
 #+end_src
 
