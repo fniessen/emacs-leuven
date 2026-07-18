@@ -1950,14 +1950,16 @@ buffer."
   ;; Default process to convert LaTeX fragments to image files.
   ;; (setq org-preview-latex-default-process 'imagemagick)
 
-  (defconst boost-org-default-latex-compiler
-    "lualatex"
-    "Default compiler used when no #+LATEX_COMPILER is specified.")
+  (defcustom boost-org-default-latex-compiler "lualatex"
+    "Default compiler used when no `#+LATEX_COMPILER:' keyword is specified."
+    :type '(choice
+            (const :tag "LuaLaTeX" "lualatex")
+            (const :tag "pdfLaTeX" "pdflatex"))
+    :group 'org-export-latex)
 
-  ;; Default LaTeX engine for Org exports. Individual Org files may override
-  ;; this with `#+LATEX_COMPILER: pdflatex'.
-  (setq org-latex-compiler boost-org-default-latex-compiler)
-                                        ; "%% Intended LaTeX compiler".
+  ;; Set Org's global default and the value used in the generated
+  ;; “Intended LaTeX compiler” comment.
+  (setq-default org-latex-compiler boost-org-default-latex-compiler)
 
   (defun boost--set-org-latex-pdf-process (backend)
     "Select the LaTeX compiler and configure `org-latex-pdf-process'.
@@ -1966,12 +1968,11 @@ Use pdfLaTeX when the Org file contains:
 
   #+LATEX_COMPILER: pdflatex
 
-Otherwise, use LuaLaTeX.
+Otherwise, use `boost-org-default-latex-compiler'.
 
-Prefer `latexmk' when available. Without `latexmk', invoke the selected
+Prefer `latexmk' when available.  Without `latexmk', invoke the selected
 compiler three times so references, the table of contents, and similar
 cross-references can stabilize."
-
     (when (org-export-derived-backend-p backend 'latex)
       (let* (;; Detect an explicit request for pdfLaTeX.
              (use-pdflatex
@@ -1979,17 +1980,16 @@ cross-references can stabilize."
                 (goto-char (point-min))
                 (let ((case-fold-search t))
                   (re-search-forward
-                   "^#\\+LATEX_COMPILER:[[:space:]]*pdflatex\\s-*$"
+                   "^#\\+LATEX_COMPILER:[[:space:]]*pdflatex[[:space:]]*$"
                    nil t))))
 
-             ;; Select the compiler requested by the document, falling back to
-             ;; the global LuaLaTeX default.
+             ;; Use the document-specific compiler or the configured default.
              (compiler-name
               (if use-pdflatex
                   "pdflatex"
                 boost-org-default-latex-compiler))
 
-             ;; Verify that the requested engine exists even when latexmk will
+             ;; Verify that the requested engine exists, even when latexmk will
              ;; ultimately invoke it.
              (compiler-path
               (or (executable-find compiler-name)
@@ -1997,42 +1997,43 @@ cross-references can stabilize."
                    "[The requested LaTeX compiler `%s' is not installed]"
                    compiler-name)))
 
-             ;; Use latexmk when it is available.
+             ;; Prefer latexmk when available.
              (latexmk-path (executable-find "latexmk"))
 
-             ;; Org's LaTeX source-file placeholder.
-             ;; WSL/Linux does not require path conversion.
-             (latex-file "%f"))
+             ;; Org export placeholders.
+             (latex-file "%f")
+             (output-directory "%o"))
 
-        ;; Keep Org's compiler metadata and generated header comment aligned
-        ;; with the command that will actually build this document.
+        ;; Keep Org's metadata aligned with the engine used for compilation.
         (setq-local org-latex-compiler compiler-name)
 
         (setq-local org-latex-pdf-process
                     (if latexmk-path
-                        (list
-                         (format
-                          ;; Clean before compilation and use an EXIT trap so
-                          ;; cleanup also runs when latexmk fails or is
-                          ;; interrupted.
-                          "sh -c 'trap \"latexmk -c\" EXIT; latexmk -c; latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s'"
-                          (if (string= compiler-name "lualatex")
-                              "-pdflua"
-                            "-pdf")
-                          latex-file))
+                        (let ((latexmk-engine
+                               (if (string= compiler-name "lualatex")
+                                   "-pdflua"
+                                 "-pdf")))
+                          (list
+                           (format
+                            ;; Remove stale auxiliary files before compilation.
+                            "latexmk -c; latexmk -cd -f %s -interaction=nonstopmode -output-directory=%s %s"
+                            latexmk-engine
+                            output-directory
+                            latex-file)))
 
                       ;; Without latexmk, run the selected engine three times.
                       (let ((command
                              (format
-                              "%s -interaction=nonstopmode -output-directory=%%o %s"
-                              compiler-path
+                              "%s -interaction=nonstopmode -output-directory=%s %s"
+                              (shell-quote-argument compiler-path)
+                              output-directory
                               latex-file)))
                         (list command command command))))
 
         (message "[LaTeX compiler: %s]" compiler-name)
         (message "[Export command: %S]" org-latex-pdf-process))))
 
-  ;; Configure the compiler before Org parses the export buffer.
+  ;; Configure the compiler in Org's temporary export buffer before parsing.
   (add-hook 'org-export-before-parsing-hook #'boost--set-org-latex-pdf-process)
 
   ;; 12.6.2 Default packages to be inserted in the header.
