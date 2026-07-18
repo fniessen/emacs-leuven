@@ -8,7 +8,7 @@
 
 #+PROPERTY:  header-args :tangle ../lisp/org-leuven-agenda-views.el :padline yes :eval no
 
-#+SETUPFILE: ~/org/html-theme-readtheorg.setup
+#+SETUPFILE: ~/org/setup/html-theme-readtheorg.setup
 
 At the beginning, we've put way too many tasks either as planned or deadline
 because the unique interaction with Org mode was via the agenda view, and we
