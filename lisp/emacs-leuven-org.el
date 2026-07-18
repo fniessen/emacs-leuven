@@ -1919,25 +1919,37 @@ buffer."
 (with-eval-after-load 'ox-latex
 
   ;; Format Org headlines for LaTeX export.
-  ;; Markup for TODO keywords and for tags, as a printf format.
+  ;;
+  ;; Headline decorations (TODO keywords, priorities, and tags) are wrapped
+  ;; in \texorpdfstring so they typeset nicely while providing plain-text
+  ;; equivalents for PDF bookmarks.  \NoCaseChange prevents the `book` class
+  ;; from uppercasing running headers (e.g. \color{teal} -> \color{TEAL}).
   (defun boost-org-latex-headline-formatter
       (todo todo-type priority text tags &optional _info)
     "Format an Org headline for LaTeX export."
     (concat
      (when todo
-       (format "{%s\\textbf{\\textsc{\\textsf{%s}}}} "
-               (pcase todo-type
-                 ('todo "\\color{red}")
-                 ('done "\\color{teal}")
-                 (_     "\\color{gray}"))
-               todo))
+       (format
+        "\\texorpdfstring{\\NoCaseChange{{%s\\textbf{\\textsf{%s}}}}}{%s} "
+        (pcase todo-type
+          ('todo "\\color{red}")
+          ('done "\\color{teal}")
+          (_     "\\color{gray}"))
+        todo
+        todo))
+
      (when priority
-       (format "\\framebox{\\#%c} " priority))
+       (format
+        "\\texorpdfstring{\\NoCaseChange{\\framebox{\\#%c}}}{[\\#%c]} "
+        priority
+        priority))
+
      text
+
      (when tags
        (let ((tag-text (mapconcat #'identity tags ":")))
          (format
-          "\\hfill{}\\texorpdfstring{\\fbox{\\textsc{%s}}}{%s}"
+          "\\texorpdfstring{\\NoCaseChange{\\hfill{}\\fbox{\\textsc{%s}}}}{ (%s)}"
           tag-text
           tag-text)))))
 
