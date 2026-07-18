@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle ../lisp/emacs-leuven.el
 
-#+SETUPFILE: ~/org/html-theme-readtheorg.setup
+#+SETUPFILE: ~/org/setup/html-theme-readtheorg.setup
 
 * Evaluating the current setup
 
@@ -7587,8 +7587,8 @@ file, AUCTeX gives you a ~Command~ menu.
 
     (leuven--section "4.1 Executing (auctex)Commands")
 
-    (with-eval-after-load 'tex          ; AUCTeX.
-      ;; Simplify the AUCTeX command menu by removing commands that are not used.
+    (with-eval-after-load 'tex             ; AUCTeX.
+      ;; Simplify the AUCTeX command menu by removing unused commands.
       (dolist (name '("AmSTeX"
                       "Check"
                       "ChkTeX"
@@ -7612,18 +7612,18 @@ file, AUCTeX gives you a ~Command~ menu.
         (setq TeX-command-list
               (assoc-delete-all name TeX-command-list #'string=)))
 
-      ;; Let latexmkrc choose the TeX engine by removing the %(mode) argument
-      ;; (which may force -pdf).
-      (when-let ((cmd (assoc "LaTeXMk" TeX-command-list)))
-        (setcar (cdr cmd)
+      ;; Let .latexmkrc choose the TeX engine.  In particular, omit
+      ;; `%(mode)', since it may expand to `-pdf' and force pdfLaTeX.
+      (when-let ((command (assoc "LaTeXMk" TeX-command-list)))
+        (setcar (cdr command)
                 "latexmk %(latexmk-out) %(file-line-error) %(output-dir) %`%(extraopts) %S%' %t"))
-      )
 
-    (with-eval-after-load 'tex
+      (defun boost-set-latexmk ()
+        "Use LaTeXMk as the default AUCTeX compilation command."
+        (setq-local TeX-command-default "LaTeXMk"))
+
       ;; Make `LaTeXMk' the default compilation command.
-      (add-hook 'LaTeX-mode-hook
-                (defun boost-set-latexmk ()
-                  (setq-local TeX-command-default "LaTeXMk"))))
+      (add-hook 'LaTeX-mode-hook #'boost-set-latexmk))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -9124,6 +9124,10 @@ among JS developers.
 
 - JavaScript
   https://github.com/bengourley/js-style-guide (so it's not only Crockford)
+
+#+begin_src emacs-lisp
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+#+end_src
 
 - Java
   http://www.oracle.com/technetwork/java/javase/documentation/codeconventions-142311.html#468

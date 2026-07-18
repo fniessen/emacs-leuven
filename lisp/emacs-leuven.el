@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260709.1132>
+;; Version: <20260718.1251>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260709.1132>"
+(defconst boost-version "<20260718.1251>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4147,8 +4147,8 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
     (leuven--section "4.1 Executing (auctex)Commands")
 
-    (with-eval-after-load 'tex          ; AUCTeX.
-      ;; Simplify the AUCTeX command menu by removing commands that are not used.
+    (with-eval-after-load 'tex             ; AUCTeX.
+      ;; Simplify the AUCTeX command menu by removing unused commands.
       (dolist (name '("AmSTeX"
                       "Check"
                       "ChkTeX"
@@ -4172,18 +4172,18 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
         (setq TeX-command-list
               (assoc-delete-all name TeX-command-list #'string=)))
 
-      ;; Let latexmkrc choose the TeX engine by removing the %(mode) argument
-      ;; (which may force -pdf).
-      (when-let ((cmd (assoc "LaTeXMk" TeX-command-list)))
-        (setcar (cdr cmd)
+      ;; Let .latexmkrc choose the TeX engine.  In particular, omit
+      ;; `%(mode)', since it may expand to `-pdf' and force pdfLaTeX.
+      (when-let ((command (assoc "LaTeXMk" TeX-command-list)))
+        (setcar (cdr command)
                 "latexmk %(latexmk-out) %(file-line-error) %(output-dir) %`%(extraopts) %S%' %t"))
-      )
 
-    (with-eval-after-load 'tex
+      (defun boost-set-latexmk ()
+        "Use LaTeXMk as the default AUCTeX compilation command."
+        (setq-local TeX-command-default "LaTeXMk"))
+
       ;; Make `LaTeXMk' the default compilation command.
-      (add-hook 'LaTeX-mode-hook
-                (defun boost-set-latexmk ()
-                  (setq-local TeX-command-default "LaTeXMk"))))
+      (add-hook 'LaTeX-mode-hook #'boost-set-latexmk))
 
     ;; Automatically use French dictionary when a LaTeX document uses French.
     (defun boost--set-french-dictionary-for-latex ()
@@ -4959,6 +4959,8 @@ the parent element."
     (require 'eclimd)
 
     )
+
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
 
   (with-eval-after-load 'js2-mode-autoloads
 
