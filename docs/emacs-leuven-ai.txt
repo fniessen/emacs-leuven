@@ -10,7 +10,7 @@
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle ../lisp/emacs-leuven-ai.el
 
-#+SETUPFILE: ~/org/html-theme-readtheorg.setup
+#+SETUPFILE: ~/org/setup/html-theme-readtheorg.setup
 
 #+LINK: GitHub https://github.com/
 #+LINK: YouTube https://www.youtube.com/watch?v=
