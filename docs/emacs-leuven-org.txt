@@ -3203,7 +3203,7 @@ cross-references can stabilize."
                           (list
                            (format
                             ;; Remove stale auxiliary files before compilation.
-                            "latexmk -c; latexmk -cd -f %s -interaction=nonstopmode -output-directory=%s %s"
+                            "latexmk -c; latexmk -cd %s -interaction=nonstopmode -output-directory=%s %s"
                             latexmk-engine
                             output-directory
                             latex-file)))
