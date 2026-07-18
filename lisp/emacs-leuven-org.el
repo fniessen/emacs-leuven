@@ -177,6 +177,51 @@ emit a warning when the feature can't be loaded."
 
   )                                   ; with-eval-after-load "org-inlinetask" ends here.
 
+(with-eval-after-load 'ox-latex
+  (defun org-latex-format-inlinetask-default-function
+      (todo _todo-type priority title tags contents _info)
+    "Format an Org inline task using the boostboxes task style."
+
+    (let* ((todo (or todo "TASK"))
+           (priority-text
+            (when priority
+              (format "{\\setlength{\\fboxsep}{1pt}\\fbox{\\#%c}}\\hspace{0.4em}" priority)))
+           (full-title
+            (concat priority-text title))
+           ;; Convert '(\"PHONE\" \"B\") into \"PHONE:B\".
+           ;; The LaTeX macro adds the surrounding colons.
+           (tag-text
+            (when tags
+              (mapconcat
+               (lambda (tag)
+                 (org-latex--protect-text tag))
+               tags
+               ":")))
+           (body (org-string-nw-p contents)))
+
+      (if body
+          ;; Task with a description.
+          (concat
+           "\\begin{boostinlinetask}"
+           (format "[%s]" todo)
+           (format "{%s}" full-title)
+           (if tag-text
+               (format "[%s]" tag-text)
+             "")
+           "\n"
+           contents
+           "\\end{boostinlinetask}")
+
+        ;; One-line task without a description.
+        (concat
+         "\\boostcompacttask"
+         (format "[%s]" todo)
+         (format "{%s}" full-title)
+         (if tag-text
+             (format "[%s]" tag-text)
+           "")
+         "\n")))))
+
 ;;** (info "(org)Visibility cycling")
 
 (message "2.3 (org)Visibility cycling")

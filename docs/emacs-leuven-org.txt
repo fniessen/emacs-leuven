@@ -382,36 +382,51 @@ installs the key binding ~C-c C-x t~ to insert a new *inline task*.
   )
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-(defun org-latex-format-inlinetask-default-function
-    (todo _todo-type priority title tags contents info)
-  "Default format function for inlinetasks.
-See `org-latex-format-inlinetask-function' for details."
-  (let* ((todo-text (when todo (format "\\textbf{\\textsf{\\textsc{%s}}} " todo)))
-         (priority-text (when priority (format "\\framebox{\\#%c} " priority)))
-         (tags-text (when tags
-                      (format "\\hfill{}\\textsc{:%s:}"
-                              (mapconcat (lambda (tag) (org-latex-plain-text tag info))
-                                         tags ":"))))
-         (full-title (concat todo-text priority-text title tags-text)))
-    (concat "\\begin{center}\n"
-            "\\fcolorbox{black}{yellow}{\n"
-            "\\begin{minipage}[c]{\\textwidth}\n"
-            full-title "\n\n"
-            (when (org-string-nw-p contents)
-              (concat "\\rule[.8em]{\\textwidth}{2pt}\n\n" contents))
-            "\\end{minipage}\n"
-            "}\n"
-            "\\end{center}")))
-#+end_src
+#+begin_src emacs-lisp
+(with-eval-after-load 'ox-latex
+  (defun org-latex-format-inlinetask-default-function
+      (todo _todo-type priority title tags contents _info)
+    "Format an Org inline task using the boostboxes task style."
 
-#+begin_src emacs-lisp :tangle no
-(setq org-inlinetask-export-templates
-      '((latex "%s\\footnote{%s\\\\ %s}\\marginpar{\\fbox{\\thefootnote}}"
-               '((unless
-                     (eq todo "")
-                   (format "\\fbox{\\textsc{%s%s}}" todo priority))
-                 heading content))))
+    (let* ((todo (or todo "TASK"))
+           (priority-text
+            (when priority
+              (format "{\\setlength{\\fboxsep}{1pt}\\fbox{\\#%c}}\\hspace{0.4em}" priority)))
+           (full-title
+            (concat priority-text title))
+           ;; Convert '(\"PHONE\" \"B\") into \"PHONE:B\".
+           ;; The LaTeX macro adds the surrounding colons.
+           (tag-text
+            (when tags
+              (mapconcat
+               (lambda (tag)
+                 (org-latex--protect-text tag))
+               tags
+               ":")))
+           (body (org-string-nw-p contents)))
+
+      (if body
+          ;; Task with a description.
+          (concat
+           "\\begin{boostinlinetask}"
+           (format "[%s]" todo)
+           (format "{%s}" full-title)
+           (if tag-text
+               (format "[%s]" tag-text)
+             "")
+           "\n"
+           contents
+           "\\end{boostinlinetask}")
+
+        ;; One-line task without a description.
+        (concat
+         "\\boostcompacttask"
+         (format "[%s]" todo)
+         (format "{%s}" full-title)
+         (if tag-text
+             (format "[%s]" tag-text)
+           "")
+         "\n")))))
 #+end_src
 
 *************** TODO Use todonotes
