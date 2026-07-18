@@ -3164,12 +3164,15 @@ converted to lowercase."
   (defun boost--latexmk-engine-option (compiler-name)
     "Return the latexmk engine option for COMPILER-NAME.
 
-Return nil when no corresponding latexmk option is known."
+Signal a user error when COMPILER-NAME is not supported by this
+configuration."
     (pcase compiler-name
       ("pdflatex" "-pdf")
       ("lualatex" "-pdflua")
       ("xelatex" "-pdfxe")
-      (_ nil)))
+      (_
+       (user-error
+        "[Unsupported LaTeX compiler `%s']" compiler-name))))
 
   (defun boost--set-org-latex-pdf-process (backend)
     "Select the LaTeX compiler and configure `org-latex-pdf-process'.
@@ -3177,9 +3180,9 @@ Return nil when no corresponding latexmk option is known."
 Use the compiler specified by the Org file's `#+LATEX_COMPILER:'
 keyword.  Otherwise, use `boost-org-default-latex-compiler'.
 
-Prefer `latexmk' when it has a known option for the selected compiler.
-Otherwise, invoke the selected compiler three times so references, the
-table of contents, and similar cross-references can stabilize."
+Prefer `latexmk', which reads the project's `.latexmkrc'.  If `latexmk'
+is unavailable, invoke the selected compiler three times so references,
+the table of contents, and similar cross-references can stabilize."
     (when (org-export-derived-backend-p backend 'latex)
       (let* ((compiler-name
               (or (boost--org-latex-compiler-from-keyword)
@@ -3198,7 +3201,7 @@ table of contents, and similar cross-references can stabilize."
              (latexmk-engine
               (boost--latexmk-engine-option compiler-name))
 
-             ;; Org export placeholders.
+             ;; Org export placeholders, expanded when the command is run.
              (latex-file "%f")
              (output-directory "%o"))
 
@@ -3211,16 +3214,21 @@ table of contents, and similar cross-references can stabilize."
              (list
               (format
                ;; Remove stale auxiliary files before compilation.
-               "latexmk -c; latexmk -cd %s -interaction=nonstopmode -output-directory=%s %s"
+               "latexmk -c; latexmk -cd %s -output-directory=\"%s\" \"%s\""
                latexmk-engine
                output-directory
                latex-file))
 
-           ;; Use the compiler directly when latexmk is unavailable or when its
-           ;; corresponding engine option is unknown.
+           ;; Match the important engine flags from `.latexmkrc' when latexmk
+           ;; is unavailable.
            (let ((command
                   (format
-                   "%s -interaction=nonstopmode -output-directory=%s %s"
+                   (concat "%s"
+                           " -interaction=nonstopmode"
+                           " -file-line-error"
+                           " -halt-on-error"
+                           " -output-directory=\"%s\""
+                           " \"%s\"")
                    (shell-quote-argument compiler-path)
                    output-directory
                    latex-file)))
