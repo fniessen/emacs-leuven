@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260718.1537>
+;; Version: <20260718.1540>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260718.1537>"
+(defconst boost-version "<20260718.1540>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2184,11 +2184,16 @@ After initiating the grep search, the isearch is aborted."
     (let ((filename (car args))
           (start (float-time)))
       (message "[Finding %s...]" filename)
-      (unwind-protect
-          (apply orig-fun args)
-        (message "[Found %s in %.2f s]"
-                 filename
-                 (- (float-time) start)))))
+      (condition-case err
+          (prog1
+              (apply orig-fun args)
+            (message "[Found %s in %.2f s]"
+                     filename
+                     (- (float-time) start)))
+        (error
+         (message "[Failed to find %s]"
+                  filename)
+         (signal (car err) (cdr err))))))
 
   (advice-add 'find-file :around #'boost--find-file-report-time)
 

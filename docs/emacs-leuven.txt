@@ -3917,11 +3917,16 @@ You can add ~(interactive)~ to make it a command, so that you can use it with
     (let ((filename (car args))
           (start (float-time)))
       (message "[Finding %s...]" filename)
-      (unwind-protect
-          (apply orig-fun args)
-        (message "[Found %s in %.2f s]"
-                 filename
-                 (- (float-time) start)))))
+      (condition-case err
+          (prog1
+              (apply orig-fun args)
+            (message "[Found %s in %.2f s]"
+                     filename
+                     (- (float-time) start)))
+        (error
+         (message "[Failed to find %s]"
+                  filename)
+         (signal (car err) (cdr err))))))
 
   (advice-add 'find-file :around #'boost--find-file-report-time)
 
