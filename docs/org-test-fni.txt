@@ -8,7 +8,7 @@
 
 #+PROPERTY:  header-args :tangle ../lisp/org-test-fni.el :padline yes :eval no
 
-#+SETUPFILE: ~/org/theme-readtheorg.setup
+#+SETUPFILE: ~/org/setup/theme-readtheorg.setup
 
 * Extra
 
