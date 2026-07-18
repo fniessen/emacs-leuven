@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260718.1540>
+;; Version: <20260718.2040>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260718.1540>"
+(defconst boost-version "<20260718.2040>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -5407,16 +5407,23 @@ the parent element."
 
   (leuven--section "28.8 (emacs)Lisp Libraries")
 
-  ;; Remove *.elc when save.
-  (defun remove-elc-on-save ()
-    "If you're saving an elisp file, likely the .elc is no longer valid."
-    (make-local-variable 'after-save-hook)
-    (add-hook 'after-save-hook
-              (lambda ()
-                (if (file-exists-p (concat buffer-file-name "c"))
-                    (delete-file (concat buffer-file-name "c"))))))
+  (defun boost--delete-elc-after-save ()
+    "Delete the stale byte-compiled file after saving the current Emacs
+Lisp source file.
 
-  (add-hook 'emacs-lisp-mode-hook #'remove-elc-on-save)
+This prevents loading stale byte-compiled code."
+    (when-let ((src buffer-file-name))
+      (let ((elc (byte-compile-dest-file src)))
+        ;; Remove the stale byte-compiled file so Emacs always loads the
+        ;; latest source until it is explicitly recompiled.
+        (when (file-exists-p elc)
+          (delete-file elc)))))
+
+  (defun boost--setup-elc-cleanup ()
+    "Install a buffer-local `after-save-hook' that deletes stale .elc files."
+    (add-hook 'after-save-hook #'boost--delete-elc-after-save nil t))
+
+  (add-hook 'emacs-lisp-mode-hook #'boost--setup-elc-cleanup)
 
   ;; Force load of `.el' files when they are newer than the `.elc' files.
   (setq load-prefer-newer t)            ; From Emacs 24.4.
