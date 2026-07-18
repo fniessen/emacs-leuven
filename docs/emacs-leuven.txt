@@ -8,6 +8,11 @@
 #+OPTIONS:   H:4 num:nil toc:2
 #+EXCLUDE_TAGS: noexport
 
+#+SETUPFILE: ~/org/setup/html-theme-readtheorg.setup
+#+SETUPFILE: ~/org/setup/latex-listings.setup
+
+#+LATEX_HEADER: \usepackage{boostboxes}
+
 #+PROPERTY:  header-args :eval never :padline yes :tangle ../lisp/emacs-leuven.el
 
 #+SETUPFILE: ~/org/setup/html-theme-readtheorg.setup
@@ -1168,9 +1173,9 @@ remind myself of rarely used rectangle commands: ~C-x r C-h~.
 FYI, ~catman~ create the database files that are used by ~apropos~ or ~man -k~.
 
 Note about PHP documentation lookup -- PHP Mode has a nice feature to lookup the
-function's definition in PHP's manual in your web browser (~M-x
-php-search-documentation~ or ~C-c C-f~). You can combine it with EWW to get the
-relevant manual page without leaving Emacs.
+function's definition in PHP's manual in your web browser
+(~M-x php-search-documentation~ or ~C-c C-f~). You can combine it with EWW to get
+the relevant manual page without leaving Emacs.
 
 *Close* the help buffer by pressing ~Q~.
 
@@ -1199,9 +1204,8 @@ relevant manual page without leaving Emacs.
 
 ** Apropos
 
-You can ask what pertains to a given topic by typing ~M-x apropos RET pattern
-RET~.
-
+You can ask what pertains to a given topic by typing
+~M-x apropos RET pattern RET~.
 
 Instead of apropos-do-all, Emacs now ships with a single "apropos" dispatcher
 and a handful of more specific commands:
@@ -6649,7 +6653,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 - ~M-m~ ::
      ~back-to-indentation~.
 
-- ~C-M-\~ ::
+- C-M-\ ::
      Run the command ~indent-region~ (which does the job of the imaginary command
      ~unsuck-html-layout~ in ~html-mode~).
 
@@ -7301,8 +7305,8 @@ wrapping text in a visually appealing box, often used for code or comments.
 This configuration makes use of Unicode box-drawing characters.
 
 In Gnus, you can mark some region with enclosing tags by pressing ~C-c M-m~
-(~message-mark-inserted-region~) or by clicking on ~<menu-bar> <Message> <Insert
-Region Marked>~.
+(~message-mark-inserted-region~) or by clicking on
+~<menu-bar> <Message> <Insert Region Marked>~.
 
 #+begin_example
 --8<---------------cut here---------------start------------->8---
@@ -11167,7 +11171,7 @@ Go to source code for symbol at point:
 *** dump-jump (go to definition) -- obsoleted by the xref interface
 
 With this package, you can jump to a definition (of the symbol at point) for
-multiple languages without any setup (e.g. *no =TAGS= file is needed anymore*).
+multiple languages without any setup (e.g. *no* =TAGS= *file is needed anymore*).
 
 Dumb Jump uses
 - ripgrep ~rg~ (the best ~grep~ alternative),
@@ -13219,7 +13223,7 @@ The Emacs diary keeps track of appointments or other events on a daily basis, in
 conjunction with the calendar. To use the diary feature, you must first create
 a "diary file" containing a list of events and their dates.
 
-But [[id:737b836b-ac1f-4120-94ca-c9e0282268f0][Org]] outperforms it!
+But Org outperforms it!
 
 ** Appointments
 
@@ -13360,8 +13364,8 @@ the command ~M-x holidays~.
 
 ** Calendar framework
 
-After displaying your ~calfw~ buffer, you can get a HTML buffer with ~M-x
-htmlfontify-buffer~.
+After displaying your ~calfw~ buffer, you can get a HTML buffer with
+~M-x htmlfontify-buffer~.
 
 #+begin_warning
 ~Calfw~ requires ~Google-maps~!?
