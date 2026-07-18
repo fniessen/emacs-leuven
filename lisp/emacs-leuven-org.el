@@ -1950,9 +1950,14 @@ buffer."
   ;; Default process to convert LaTeX fragments to image files.
   ;; (setq org-preview-latex-default-process 'imagemagick)
 
+  (defconst boost-org-default-latex-compiler
+    "lualatex"
+    "Default compiler used when no #+LATEX_COMPILER is specified.")
+
   ;; Default LaTeX engine for Org exports. Individual Org files may override
   ;; this with `#+LATEX_COMPILER: pdflatex'.
-  (setq org-latex-compiler "lualatex")  ; "%% Intended LaTeX compiler"
+  (setq org-latex-compiler boost-org-default-latex-compiler)
+                                        ; "%% Intended LaTeX compiler".
 
   (defun boost--set-org-latex-pdf-process (backend)
     "Select the LaTeX compiler and configure `org-latex-pdf-process'.
@@ -1972,15 +1977,20 @@ cross-references can stabilize."
              (use-pdflatex
               (save-excursion
                 (goto-char (point-min))
-                (re-search-forward
-                 "^#\\+LATEX_COMPILER:[[:space:]]*pdflatex" nil t)))
+                (let ((case-fold-search t))
+                  (re-search-forward
+                   "^#\\+LATEX_COMPILER:[[:space:]]*pdflatex\\s-*$"
+                   nil t))))
 
              ;; Select the compiler requested by the document, falling back to
              ;; the global LuaLaTeX default.
              (compiler-name
-              (if use-pdflatex "pdflatex" org-latex-compiler))
+              (if use-pdflatex
+                  "pdflatex"
+                boost-org-default-latex-compiler))
 
-             ;; Resolve the selected compiler before configuring the command.
+             ;; Verify that the requested engine exists even when latexmk will
+             ;; ultimately invoke it.
              (compiler-path
               (or (executable-find compiler-name)
                   (user-error
@@ -1998,27 +2008,28 @@ cross-references can stabilize."
         ;; with the command that will actually build this document.
         (setq-local org-latex-compiler compiler-name)
 
-        (setq org-latex-pdf-process
-              (if latexmk-path
-                  (list
-                   (format
-                    ;; Clean before compilation and use an EXIT trap so cleanup
-                    ;; also runs when latexmk fails or is interrupted.
-                    "sh -c 'trap \"latexmk -c\" EXIT; latexmk -c; latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s'"
-                    (if (string= compiler-name "lualatex")
-                        "-pdflua"
-                      "-pdf")
-                    latex-file))
+        (setq-local org-latex-pdf-process
+                    (if latexmk-path
+                        (list
+                         (format
+                          ;; Clean before compilation and use an EXIT trap so
+                          ;; cleanup also runs when latexmk fails or is
+                          ;; interrupted.
+                          "sh -c 'trap \"latexmk -c\" EXIT; latexmk -c; latexmk -cd -f %s -interaction=nonstopmode -output-directory=%%o %s'"
+                          (if (string= compiler-name "lualatex")
+                              "-pdflua"
+                            "-pdf")
+                          latex-file))
 
-                ;; Without latexmk, run the selected engine three times.
-                (let ((command
-                       (format
-                        "%s -interaction=nonstopmode -output-directory=%%o %s"
-                        compiler-path
-                        latex-file)))
-                  (list command command command))))
+                      ;; Without latexmk, run the selected engine three times.
+                      (let ((command
+                             (format
+                              "%s -interaction=nonstopmode -output-directory=%%o %s"
+                              compiler-path
+                              latex-file)))
+                        (list command command command))))
 
-        (message "[LaTeX compiler: %s]" compiler-path)
+        (message "[LaTeX compiler: %s]" compiler-name)
         (message "[Export command: %S]" org-latex-pdf-process))))
 
   ;; Configure the compiler before Org parses the export buffer.
