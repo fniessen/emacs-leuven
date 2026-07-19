@@ -596,6 +596,8 @@ Signal an error if no ID or file is found."
 (setq org-tag-faces
       '(("FLAGGED"                      ;; Mark for special attention.
          (:slant italic :foreground "#FF0000"))
+        ("important"
+         (:slant italic :foreground "#FF0000"))
         ("work"
          (:slant italic :foreground "#FF9900"))
         ("personal"
@@ -2891,10 +2893,13 @@ Example: \"Hello\" becomes \"xxxxx\"."
                 (push mode mode-states)
                 (funcall mode -1)))
 
+            (message ">>> Inside boost--org-before-save-update-buffer <<<")
+            (sit-for 1)
+
             ;; Perform buffer updates.
             (boost-org-remove-redundant-local-tags) ; Remove redundant local tags.
             (measure-time "Realigned all tags"
-              (org-align-tags :all))
+              (org-align-tags :all)) ; XXX Does not work anymore
 
             ;; Skip unnecessary updates.
             (let ((ast (org-element-parse-buffer)))
