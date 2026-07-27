@@ -2876,7 +2876,7 @@ Example: \"Hello\" becomes \"xxxxx\"."
              (buffer-modified-p))       ; Check if modified.
     (message "[Updating Org buffer: %s]"
              (file-name-nondirectory buffer-file-name))
-    (let ((cache-long-scans nil))       ; Optimize line navigation.
+    (let ((cache-long-scans nil)        ; Optimize line navigation.
                                         ; Make `forward-line' much faster and
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
@@ -2892,9 +2892,6 @@ Example: \"Hello\" becomes \"xxxxx\"."
                          (bound-and-true-p mode))
                 (push mode mode-states)
                 (funcall mode -1)))
-
-            (message ">>> Inside boost--org-before-save-update-buffer <<<")
-            (sit-for 1)
 
             ;; Perform buffer updates.
             (boost-org-remove-redundant-local-tags) ; Remove redundant local tags.
@@ -2913,7 +2910,7 @@ Example: \"Hello\" becomes \"xxxxx\"."
                   (org-table-iterate-buffer-tables)))))
         ;; Restore disabled modes.
         (dolist (mode mode-states)
-          (funcall mode 1)))))
+          (funcall mode 1))))))
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
 (add-hook 'before-save-hook #'boost--org-before-save-update-buffer)
