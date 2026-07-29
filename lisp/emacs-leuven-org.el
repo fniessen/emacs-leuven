@@ -2869,17 +2869,22 @@ Example: \"Hello\" becomes \"xxxxx\"."
 
 ;;** A.6 (info "(org)Dynamic blocks")
 
-(defun boost--org-before-save-update-buffer ()
+(defun boost--org-update-generated-content-before-save ()
   "Update dynamic blocks, tables, and tags in Org buffer before saving."
   (when (and (derived-mode-p 'org-mode) ; Check if in org-mode.
              buffer-file-name           ; Check if associated with a file.
-             (buffer-modified-p))       ; Check if modified.
+             (buffer-modified-p))       ; Skip expensive updates when saving an
+                                        ; unchanged buffer. Remove this check if
+                                        ; generated content must always be
+                                        ; refreshed, even when no user edits
+                                        ; were made.
     (message "[Updating Org buffer: %s]"
              (file-name-nondirectory buffer-file-name))
-    (let ((cache-long-scans nil)        ; Optimize line navigation.
-                                        ; Make `forward-line' much faster and
-                                        ; thus `org-goto-line', `org-table-sum',
-                                        ; etc.
+    (let ((cache-long-scans nil)        ; Speed up line navigation in large
+                                        ; buffers during Org maintenance
+                                        ; operations. Make `forward-line' much
+                                        ; faster and thus `org-goto-line',
+                                        ; `org-table-sum', etc.
           (modes-to-disable '(flyspell-mode)) ; List extensible for other modes.
           (undo-tree-was-enabled (bound-and-true-p undo-tree-mode))
           mode-states)
@@ -2889,10 +2894,11 @@ Example: \"Hello\" becomes \"xxxxx\"."
             (when undo-tree-was-enabled
               (undo-tree-mode -1))
 
-            ;; Temporarily disable interfering modes.
+            ;; Record and disable currently enabled minor modes.
             (dolist (mode modes-to-disable)
               (when (and (fboundp mode)
-                         (bound-and-true-p mode))
+                         (boundp mode)
+                         (symbol-value mode))
                 (push mode mode-states)
                 (funcall mode -1)))
 
@@ -2903,28 +2909,31 @@ Example: \"Hello\" becomes \"xxxxx\"."
             (measure-time "Realigned all tags"
               (org-align-tags :all))
 
-            ;; Parse the buffer once and perform only the necessary updates.
+            ;; Parse the buffer once after the preceding edits.
             (let ((ast (org-element-parse-buffer)))
               ;; Update dynamic blocks if any.
               (when (org-element-map ast 'dynamic-block #'identity nil t)
                 (measure-time "Updated all dynamic blocks"
                   (org-update-all-dblocks)))
 
-              ;; Recompute table formulas if any.
-              (when (org-element-map ast 'table #'identity nil t)
+              ;; Only run table calculations when a formula exists.
+              (when (save-excursion
+                      (goto-char (point-min))
+                      (re-search-forward
+                       "^[ \t]*#\\+TBLFM:" nil t))
                 (measure-time "Re-applied formulas to all tables"
                   (org-table-iterate-buffer-tables)))))
-        ;; Restore disabled modes.
+        ;; Restore disabled modes in reverse order.
         (dolist (mode mode-states)
-          (funcall mode 1))
+          (when (fboundp mode)
+            (funcall mode 1)))
 
         ;; Re-enable undo-tree.
         (when undo-tree-was-enabled
           (undo-tree-mode 1))))))
 
-;; Make sure that all dynamic blocks and all tables are always up-to-date.
-(add-hook 'before-save-hook #'boost--org-before-save-update-buffer)
-                                        ; Heavy before-save hook.
+;; Ensure dynamic blocks, tables and tags are up to date before writing.
+(add-hook 'before-save-hook #'boost--org-update-generated-content-before-save)
 
 (defvar boost--org-clean-typography-excluded-files
   '("README.org"
