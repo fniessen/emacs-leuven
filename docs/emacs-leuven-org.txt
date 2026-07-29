@@ -30,24 +30,29 @@ emit a warning when the feature can't be loaded."
 * Disabled configurations
 
 #+begin_src emacs-lisp :tangle no
-    ;; Enable on-the-fly spell checking.
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (let ((buffer-name (buffer-name)))
-                  (if (or (eq (aref buffer-name 0) ?\s) ; Buffer starting with " *".
-                          (and (boundp 'org-babel-exp-reference-buffer)
-                               org-babel-exp-reference-buffer)) ; Export buffer.
-                      (message "[DON'T TURN ON Flyspell mode in `%s']" buffer-name)
-                    (message "[Turning on Flyspell mode in `%s']" buffer-name)
-                    (flyspell-mode)))))
+    (defun boost--enable-flyspell-in-org-file-buffer ()
+      "Enable Flyspell only in Org buffers visiting a file.
+
+Skip temporary Org buffers created for exports and other internal operations."
+      (when (and buffer-file-name
+                 (not (bound-and-true-p org-babel-exp-reference-buffer)))
+        (message "[Turning on Flyspell mode in `%s']" buffer-name)
+        (flyspell-mode 1)))
+
+    ;; Enable Flyspell only in user-editable Org files.
+    (add-hook 'org-mode-hook #'boost--enable-flyspell-in-org-file-buffer)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-    (defun org-export-as--org-export-as-around (orig-fun &rest args)
-      "Turn off Text mode hooks (Flyspell, etc.) when exporting current Org buffer."
+    (defun boost--org-export-without-text-mode-hook (orig-fun &rest args)
+      "Temporarily suppress `text-mode-hook' (Flyspell, etc.) while exporting an Org buffer."
+      ;; Some export backends create temporary text-mode buffers. Prevent
+      ;; `text-mode-hook' from enabling expensive modes such as Flyspell in
+      ;; those transient buffers.
       (let ((text-mode-hook nil))
         (apply orig-fun args)))
-    (advice-add 'org-export-as :around #'org-export-as--org-export-as-around)
+
+    (advice-add #'org-export-as :around #'boost--org-export-without-text-mode-hook)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
