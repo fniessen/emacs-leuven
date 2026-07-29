@@ -4611,11 +4611,14 @@ to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
                                         ; thus `org-goto-line', `org-table-sum',
                                         ; etc.
           (modes-to-disable '(flyspell-mode)) ; List extensible for other modes.
-          ;; Preserve undo history (for goto-chg).
-          (buffer-undo-list buffer-undo-list)
+          (undo-tree-was-enabled (bound-and-true-p undo-tree-mode))
           mode-states)
       (unwind-protect
           (progn
+            ;; Temporarily disable undo-tree.
+            (when undo-tree-was-enabled
+              (undo-tree-mode -1))
+
             ;; Temporarily disable interfering modes.
             (dolist (mode modes-to-disable)
               (when (and (fboundp mode)
@@ -4623,24 +4626,31 @@ to the hook outside of Org (not anymore in an ~with-eval-after-load~ form).
                 (push mode mode-states)
                 (funcall mode -1)))
 
-            ;; Perform buffer updates.
-            (boost-org-remove-redundant-local-tags) ; Remove redundant local tags.
-            (measure-time "Realigned all tags"
-              (org-align-tags :all)) ; XXX Does not work anymore
+            ;; Remove redundant local tags.
+            (boost-org-remove-redundant-local-tags)
 
-            ;; Skip unnecessary updates.
+            ;; Realign all tags.
+            (measure-time "Realigned all tags"
+              (org-align-tags :all))
+
+            ;; Parse the buffer once and perform only the necessary updates.
             (let ((ast (org-element-parse-buffer)))
-              ;; Update only if dynamic blocks exist.
+              ;; Update dynamic blocks if any.
               (when (org-element-map ast 'dynamic-block #'identity nil t)
                 (measure-time "Updated all dynamic blocks"
                   (org-update-all-dblocks)))
-              ;; Update only if tables exist.
+
+              ;; Recompute table formulas if any.
               (when (org-element-map ast 'table #'identity nil t)
                 (measure-time "Re-applied formulas to all tables"
                   (org-table-iterate-buffer-tables)))))
         ;; Restore disabled modes.
         (dolist (mode mode-states)
-          (funcall mode 1))))))
+          (funcall mode 1))
+
+        ;; Re-enable undo-tree.
+        (when undo-tree-was-enabled
+          (undo-tree-mode 1))))))
 
 ;; Make sure that all dynamic blocks and all tables are always up-to-date.
 (add-hook 'before-save-hook #'boost--org-before-save-update-buffer)
