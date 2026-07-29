@@ -10,8 +10,7 @@
 
 #+SETUPFILE: ~/org/setup/html-theme-readtheorg.setup
 #+SETUPFILE: ~/org/setup/latex-listings.setup
-
-#+LATEX_HEADER: \usepackage{boostboxes}
+#+SETUPFILE: ~/org/setup/latex-admonitions.setup
 
 #+PROPERTY:  header-args :eval never :padline yes :tangle ../lisp/emacs-leuven.el
 
