@@ -11122,48 +11122,40 @@ But when it is done, the next search will be very fast.
 
 See http://truongtx.me/2014/04/20/emacs-javascript-completion-and-refactoring/.
 
-*** Find Emacs Lisp symbol definition
+*** Find Emacs Lisp definitions
 
-Find the definition of the Emacs Lisp symbol near point:
+Jump directly to the definition of the Emacs Lisp symbol at point:
 
 - ~C-x F~ ::
-     Find *function*.
+     Find the definition of a *function*.
 
 - ~C-x K~ ::
-     Find function *bound to key* sequence.
+     Find the function *bound to a key sequence*.
 
 - ~C-x V~ ::
-     Find *variable*.
+     Find the definition of a *variable*.
+
+- C-x L ::
+      Find an Emacs Lisp *library*.
 
 - ~M-x find-face-definition~ ::
-     Find *face*.
+     Find the definition of a *face*.
 
-Use ~C-x 4~ for displaying in another window, and ~C-x 5~ for displaying in
-another frame.
+Use the standard Emacs prefixes ~C-x 4~ and ~C-x 5~ to display the
+definition in another window or another frame, respectively.
 
 #+begin_src emacs-lisp
-  ;; Find the definition of the Emacs Lisp function or variable near point.
+  ;; Enable key bindings for navigating to Emacs Lisp definitions.
   (find-function-setup-keys)
 #+end_src
 
 Go to source code for symbol at point:
 
-#+begin_src emacs-lisp
-  (with-eval-after-load 'lisp-mode
+- ~M-.~ (or ~M-x xref-find-definitions~) ::
+     Go to the definition of the symbol at point.
 
-    (defun leuven-goto-lisp-symbol-at-point ()
-      "Go to the definition of the Emacs Lisp symbol at point."
-      (interactive)
-      (require 'thingatpt)              ; XXX use xref-find-definitions instead?
-      (let ((sym (symbol-at-point)))    ; or (find-tag-default) or (current-word)?
-        (funcall (pcase sym
-                   ((pred facep)           'find-face)
-                   ((pred symbol-function) 'find-function)
-                   (_                      'find-variable))
-                 sym)))
-
-    (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
-#+end_src
+- ~M-,~ (or ~M-x xref-go-back~) ::
+     Return to the previous location.
 
 *** dump-jump (go to definition) -- obsoleted by the xref interface
 

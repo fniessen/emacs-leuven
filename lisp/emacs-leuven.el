@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260803.1429>
+;; Version: <20260803.1453>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260803.1429>"
+(defconst boost-version "<20260803.1453>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -5721,23 +5721,8 @@ With prefix ARG, invoke `vc-diff' instead."
     ;; Do a `find-tag-at-point', and display all exact matches.
     (global-set-key (kbd "M-?") #'etags-select-find-tag-at-point))
 
-  ;; Find the definition of the Emacs Lisp function or variable near point.
+  ;; Enable key bindings for navigating to Emacs Lisp definitions.
   (find-function-setup-keys)
-
-  (with-eval-after-load 'lisp-mode
-
-    (defun leuven-goto-lisp-symbol-at-point ()
-      "Go to the definition of the Emacs Lisp symbol at point."
-      (interactive)
-      (require 'thingatpt)              ; XXX use xref-find-definitions instead?
-      (let ((sym (symbol-at-point)))    ; or (find-tag-default) or (current-word)?
-        (funcall (pcase sym
-                   ((pred facep)           'find-face)
-                   ((pred symbol-function) 'find-function)
-                   (_                      'find-variable))
-                 sym)))
-
-    (define-key emacs-lisp-mode-map (kbd "M-.") #'leuven-goto-lisp-symbol-at-point))
 
 ;;** 29.5 (info "(emacs)EDE")
 
