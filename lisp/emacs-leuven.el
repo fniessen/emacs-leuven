@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260718.2049>
+;; Version: <20260803.1148>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260718.2049>"
+(defconst boost-version "<20260803.1148>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2754,20 +2754,15 @@ file B."
     ;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
 
     (defun boost-helm-generic-imenu (arg)
-      "Jump to a place in the buffer using an Index menu.
-
-For programming mode buffers, this function displays a menu to
-navigate through functions, variables, and other relevant items
-in the current buffer."
+      "Jump to a place in the current buffer using the most appropriate index."
       (interactive "P")
-      (cond ((derived-mode-p 'org-mode)
-             (condition-case nil
-                 (helm-org-in-buffer-headings)
-               (error (message "[The fonction `helm-org-in-buffer-headings' is not available]"))))
-            ((derived-mode-p 'tex-mode)
-             (helm-imenu))
-            (t
-             (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
+      (cond
+       ((derived-mode-p 'org-mode)
+        (if (fboundp 'helm-org-in-buffer-headings)
+            (helm-org-in-buffer-headings)
+          (user-error "[helm-org-in-buffer-headings is unavailable]")))
+       (t
+        (helm-semantic-or-imenu arg)))) ; More generic than `helm-imenu'.
 
     (boost--set-key-if-free 'global-map (kbd "C-<f12>")
                              #'boost-helm-generic-imenu "global map")
@@ -5625,12 +5620,14 @@ This prevents loading stale byte-compiled code."
             (ewoc-delete vc-ewoc current-item))
           (setq current-item prev-item)))))
 
-  (defun lvn-vc-ediff-ignore-whitespace (historic &optional not-urgent)
-    "Ignore regions that differ in white space & line breaks only."
-    (interactive (list current-prefix-arg t))
+  (defun lvn-vc-ediff-ignore-whitespace (&optional arg)
+    "Run `vc-ediff' while ignoring whitespace-only differences."
+    (interactive "P")
     (require 'ediff)
-    (let ((ediff-ignore-similar-regions t))
-      (call-interactively 'vc-ediff)))  ; XXX does not work yet!
+    (let ((ediff-ignore-similar-regions t)
+          (diff-switches "-w")
+          (current-prefix-arg arg))
+      (vc-ediff)))                      ; TEST whether it works...
 
 ;;*** 29.1.13 (info "(emacs)Customizing VC")
 
