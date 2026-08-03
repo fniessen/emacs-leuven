@@ -10810,22 +10810,23 @@ Shortcuts in the popup (once displayed):
       (funcall (intern (format "ediff-%s-internal" ediff-version-control-package))
                rev1 (rev2 "" nil))))
 
-  (defun lvn-vc-diff-buffer-file (arg)
-    "Diff the current file against a revision using Ediff, or run
- `vc-diff' with prefix ARG.
-  With prefix ARG, call `vc-diff' interactively.
-  Without ARG, prompt for a revision to compare against the current file
-  using Ediff."
+  (defun boost-vc-diff-or-ediff-revision (arg)
+    "Compare the current file against a revision.
+
+Without a prefix argument, prompt for a revision and compare it
+with the current working tree version using Ediff.
+
+With prefix ARG, invoke `vc-diff' instead."
     (interactive "P")
     (let ((file (or (buffer-file-name)
-                    (error "[No file associated with this buffer]"))))
+                    (user-error "[No file associated with this buffer]"))))
       (if arg
           (vc-diff nil)
         (lvn--ediff-revision file
                             (read-string "Revision? " "HEAD" nil "HEAD")
                             ""))))
 
-  (define-key vc-prefix-map (kbd "=") #'lvn-vc-diff-buffer-file)
+  (define-key vc-prefix-map (kbd "=") #'boost-vc-diff-or-ediff-revision)
 #+end_src
 
 It is also interactive. I can cycle through revisions using p and n, open the

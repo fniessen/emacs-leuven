@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260803.1148>
+;; Version: <20260803.1429>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260803.1148>"
+(defconst boost-version "<20260803.1429>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -5650,22 +5650,23 @@ This prevents loading stale byte-compiled code."
       (funcall (intern (format "ediff-%s-internal" ediff-version-control-package))
                rev1 (rev2 "" nil))))
 
-  (defun lvn-vc-diff-buffer-file (arg)
-    "Diff the current file against a revision using Ediff, or run
- `vc-diff' with prefix ARG.
-  With prefix ARG, call `vc-diff' interactively.
-  Without ARG, prompt for a revision to compare against the current file
-  using Ediff."
+  (defun boost-vc-diff-or-ediff-revision (arg)
+    "Compare the current file against a revision.
+
+Without a prefix argument, prompt for a revision and compare it
+with the current working tree version using Ediff.
+
+With prefix ARG, invoke `vc-diff' instead."
     (interactive "P")
     (let ((file (or (buffer-file-name)
-                    (error "[No file associated with this buffer]"))))
+                    (user-error "[No file associated with this buffer]"))))
       (if arg
           (vc-diff nil)
         (lvn--ediff-revision file
                             (read-string "Revision? " "HEAD" nil "HEAD")
                             ""))))
 
-  (define-key vc-prefix-map (kbd "=") #'lvn-vc-diff-buffer-file)
+  (define-key vc-prefix-map (kbd "=") #'boost-vc-diff-or-ediff-revision)
 
 (setq vc-annotate-display-mode nil)
 
