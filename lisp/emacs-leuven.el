@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260811.0954>
+;; Version: <20260811.0957>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260811.0954>"
+(defconst boost-version "<20260811.0957>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -719,6 +719,9 @@ Shows a warning message if the file does not exist or is not executable."
 
   ;; Bind F11 to a conventional IDE-style undo command.
   (global-set-key (kbd "<f11>") #'undo-only)
+
+  ;; Bind S-F11 to redo the last undone change.
+  (global-set-key (kbd "S-<f11>") #'undo-redo)
 
   ;; Configuration for undo-tree.
   (with-eval-after-load 'undo-tree-autoloads

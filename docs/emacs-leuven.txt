@@ -1034,6 +1034,9 @@ Shortcuts:
 
   ;; Bind F11 to a conventional IDE-style undo command.
   (global-set-key (kbd "<f11>") #'undo-only)
+
+  ;; Bind S-F11 to redo the last undone change.
+  (global-set-key (kbd "S-<f11>") #'undo-redo)
 #+end_src
 
 #+begin_src emacs-lisp
