@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260811.0848>
+;; Version: <20260811.0900>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260811.0848>"
+(defconst boost-version "<20260811.0900>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2133,31 +2133,18 @@ After initiating the grep search, the isearch is aborted."
 
   (leuven--section "18.1 (emacs)Basic Keyboard Macro Use")
 
-  (defun lvn-kmacro-toggle-recording ()
-    "Toggle keyboard macro recording on and off."
+  (defun boost-toggle-kmacro-recording ()
+    "Toggle keyboard macro recording.
+
+Start recording a keyboard macro if none is being recorded.
+Otherwise, stop the current recording."
     (interactive)
     (if defining-kbd-macro
-        (progn
-          (global-set-key (kbd "S-<f8>") #'lvn-kmacro-turn-on-recording)
-          (kmacro-end-macro nil))
-      (progn
-        (global-set-key (kbd "S-<f8>") #'lvn-kmacro-turn-off-recording)
-        (kmacro-start-macro nil))))
-
-  (defun lvn-kmacro-turn-on-recording ()
-    "Start recording a keyboard macro."
-    (interactive)
-    (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
-    (kmacro-start-macro nil))
-
-  (defun lvn-kmacro-turn-off-recording ()
-    "Stop recording a keyboard macro."
-    (interactive)
-    (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
-    (kmacro-end-macro nil))
+        (kmacro-end-macro nil)
+      (kmacro-start-macro nil)))
 
   ;; Start/stop recording a keyboard macro.
-  (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
+  (global-set-key (kbd "S-<f8>") #'boost-toggle-kmacro-recording)
 
   ;; Execute the most recent keyboard macro.
   (global-set-key (kbd "<f8>") #'kmacro-call-macro)

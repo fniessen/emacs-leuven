@@ -3841,31 +3841,18 @@ If you want to repeat forever or until error, type ~C-u 0 <F8>~.
 
   (leuven--section "18.1 (emacs)Basic Keyboard Macro Use")
 
-  (defun lvn-kmacro-toggle-recording ()
-    "Toggle keyboard macro recording on and off."
+  (defun boost-toggle-kmacro-recording ()
+    "Toggle keyboard macro recording.
+
+Start recording a keyboard macro if none is being recorded.
+Otherwise, stop the current recording."
     (interactive)
     (if defining-kbd-macro
-        (progn
-          (global-set-key (kbd "S-<f8>") #'lvn-kmacro-turn-on-recording)
-          (kmacro-end-macro nil))
-      (progn
-        (global-set-key (kbd "S-<f8>") #'lvn-kmacro-turn-off-recording)
-        (kmacro-start-macro nil))))
-
-  (defun lvn-kmacro-turn-on-recording ()
-    "Start recording a keyboard macro."
-    (interactive)
-    (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
-    (kmacro-start-macro nil))
-
-  (defun lvn-kmacro-turn-off-recording ()
-    "Stop recording a keyboard macro."
-    (interactive)
-    (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
-    (kmacro-end-macro nil))
+        (kmacro-end-macro nil)
+      (kmacro-start-macro nil)))
 
   ;; Start/stop recording a keyboard macro.
-  (global-set-key (kbd "S-<f8>") #'lvn-kmacro-toggle-recording)
+  (global-set-key (kbd "S-<f8>") #'boost-toggle-kmacro-recording)
 
   ;; Execute the most recent keyboard macro.
   (global-set-key (kbd "<f8>") #'kmacro-call-macro)
