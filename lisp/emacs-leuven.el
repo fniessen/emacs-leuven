@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260803.1453>
+;; Version: <20260811.0843>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260803.1453>"
+(defconst boost-version "<20260811.0843>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3123,27 +3123,24 @@ cyclic order."
 
   (leuven--section "21.5 (emacs)Change Window")
 
-  (defun lvn-toggle-or-delete-window-layout ()
-    "Toggle or delete the window layout.
+  (defun boost-toggle-window-split ()
+    "Toggle between a single window and a two-window layout.
 
-If there is only one window in the frame, this function will split the window
-either horizontally or vertically, depending on the frame's width, as defined by
-`split-width-threshold' variable. If the frame width is greater than
-`split-width-threshold', it will split the window horizontally, otherwise
-vertically.
+When only one window is present, split it according to
+`split-width-threshold' and select the newly created window.
 
-If there are multiple windows in the frame, this function will delete all other
-windows, leaving only the currently active window visible."
+When multiple windows are present, delete all other windows,
+leaving only the currently selected window visible."
     (interactive)
-    (cond ((one-window-p t)
-           (select-window
-            (if (> (frame-width) split-width-threshold)
-                (split-window-right)
-              (split-window-below))))
-          (t
-           (delete-other-windows))))
+    ;; Ignore an active minibuffer window.
+    (if (one-window-p t)
+        (select-window
+         (if (> (frame-width) split-width-threshold)
+             (split-window-right)
+           (split-window-below)))
+      (delete-other-windows)))
 
-  (global-set-key (kbd "<f5>") #'lvn-toggle-or-delete-window-layout)
+  (global-set-key (kbd "<f5>") #'boost-toggle-window-split)
 
   ;; Swap 2 windows.
   (defun leuven-swap-windows ()
