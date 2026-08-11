@@ -6157,8 +6157,18 @@ one.
   ;; ;; Maximize Emacs frame by default.
   ;; (modify-all-frames-parameters '((fullscreen . maximized)))
 
+  (defun boost-toggle-fullscreen ()
+    "Toggle fullscreen on and off."
+    (interactive)
+    (set-frame-parameter
+     nil
+     'fullscreen
+     (if (eq (frame-parameter nil 'fullscreen) 'fullboth)
+         nil
+       'fullboth)))
+
   ;; Full screen.
-  (global-set-key (kbd "C-S-<f12>") #'toggle-frame-fullscreen)
+  (global-set-key (kbd "C-S-<f12>") #'boost-toggle-fullscreen)
 #+end_src
 
 ** Speedbar Frames

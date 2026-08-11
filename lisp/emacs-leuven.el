@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260811.0927>
+;; Version: <20260811.0941>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260811.0927>"
+(defconst boost-version "<20260811.0941>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3263,8 +3263,18 @@ leaving only the currently selected window visible."
   ;; ;; Maximize Emacs frame by default.
   ;; (modify-all-frames-parameters '((fullscreen . maximized)))
 
+  (defun boost-toggle-fullscreen ()
+    "Toggle fullscreen on and off."
+    (interactive)
+    (set-frame-parameter
+     nil
+     'fullscreen
+     (if (eq (frame-parameter nil 'fullscreen) 'fullboth)
+         nil
+       'fullboth)))
+
   ;; Full screen.
-  (global-set-key (kbd "C-S-<f12>") #'toggle-frame-fullscreen)
+  (global-set-key (kbd "C-S-<f12>") #'boost-toggle-fullscreen)
 
 ;;** 22.9 (info "(emacs)Speedbar")
 
