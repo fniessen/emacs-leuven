@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260811.0957>
+;; Version: <20260811.1005>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260811.0957>"
+(defconst boost-version "<20260811.1005>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2149,8 +2149,8 @@ Otherwise, stop the current recording."
   ;; Start/stop recording a keyboard macro.
   (global-set-key (kbd "S-<f8>") #'boost-toggle-kmacro-recording)
 
-  ;; Execute the most recent keyboard macro.
-  (global-set-key (kbd "<f8>") #'kmacro-call-macro)
+  ;; Replay the most recently recorded keyboard macro.
+  (global-set-key (kbd "<f8>") #'call-last-kbd-macro)
 
 ;;** 18.5 Name and (info "(emacs)Save Keyboard Macro")s
 

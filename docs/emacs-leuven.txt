@@ -3857,8 +3857,8 @@ Otherwise, stop the current recording."
   ;; Start/stop recording a keyboard macro.
   (global-set-key (kbd "S-<f8>") #'boost-toggle-kmacro-recording)
 
-  ;; Execute the most recent keyboard macro.
-  (global-set-key (kbd "<f8>") #'kmacro-call-macro)
+  ;; Replay the most recently recorded keyboard macro.
+  (global-set-key (kbd "<f8>") #'call-last-kbd-macro)
 #+end_src
 
 ** Naming and Saving Keyboard Macros
