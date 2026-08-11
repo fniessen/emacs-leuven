@@ -10690,20 +10690,21 @@ Shortcuts in the popup (once displayed):
 
   (advice-add 'vc-dir-prepare-status-buffer :around #'lvn--vcs-goto-top-directory-advice)
 
-  (defun lvn-jump-to-vc-status-buffer-for-current-directory ()
-    "Jump to the VC status buffer for the current directory."
+  (defun boost-vc-status-here ()
+    "Show VC status for the current directory.
+
+When visiting a file, use its parent directory.
+Otherwise, use `default-directory'."
     (interactive)
-    (let* ((buffer-file (buffer-file-name))
-           (directory (if buffer-file
-                          (if (file-directory-p buffer-file)
-                              buffer-file
-                            (file-name-directory buffer-file))
-                        default-directory)))
+    (let ((directory
+           (if-let ((file (buffer-file-name)))
+               (file-name-directory file)
+             default-directory)))
       (message "[VC status for directory: %s]" directory)
       (vc-dir directory)))
 
-  ;; VC status without asking for a directory.
-  (global-set-key (kbd "C-<f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
+  ;; Show VC status without prompting for a directory.
+  (global-set-key (kbd "C-<f9>") #'boost-vc-status-here)
 
   (add-hook 'vc-dir-mode-hook
             (lambda ()

@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260811.0900>
+;; Version: <20260811.0927>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260811.0900>"
+(defconst boost-version "<20260811.0927>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -5539,20 +5539,21 @@ This prevents loading stale byte-compiled code."
 
   (advice-add 'vc-dir-prepare-status-buffer :around #'lvn--vcs-goto-top-directory-advice)
 
-  (defun lvn-jump-to-vc-status-buffer-for-current-directory ()
-    "Jump to the VC status buffer for the current directory."
+  (defun boost-vc-status-here ()
+    "Show VC status for the current directory.
+
+When visiting a file, use its parent directory.
+Otherwise, use `default-directory'."
     (interactive)
-    (let* ((buffer-file (buffer-file-name))
-           (directory (if buffer-file
-                          (if (file-directory-p buffer-file)
-                              buffer-file
-                            (file-name-directory buffer-file))
-                        default-directory)))
+    (let ((directory
+           (if-let ((file (buffer-file-name)))
+               (file-name-directory file)
+             default-directory)))
       (message "[VC status for directory: %s]" directory)
       (vc-dir directory)))
 
-  ;; VC status without asking for a directory.
-  (global-set-key (kbd "C-<f9>") #'lvn-jump-to-vc-status-buffer-for-current-directory)
+  ;; Show VC status without prompting for a directory.
+  (global-set-key (kbd "C-<f9>") #'boost-vc-status-here)
 
   (add-hook 'vc-dir-mode-hook
             (lambda ()
