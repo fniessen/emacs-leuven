@@ -1032,8 +1032,8 @@ Shortcuts:
 
   (leuven--section "8.4 (emacs)Basic Undoing Changes")
 
-  ;; Bind F11 to the undo command.
-  (global-set-key (kbd "<f11>") #'undo)
+  ;; Bind F11 to a conventional IDE-style undo command.
+  (global-set-key (kbd "<f11>") #'undo-only)
 #+end_src
 
 #+begin_src emacs-lisp
