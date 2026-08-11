@@ -5909,24 +5909,21 @@ Get EXIF data with ~image-dired-get-exif-data~.
   previous buffer in the buffer list.
 
 #+begin_src emacs-lisp
-  (defun lvn-switch-or-rotate-buffer ()
-    "Switch to the previous buffer or rotate window configuration.
+  (defun boost-previous-buffer-or-window ()
+    "Switch to the previous buffer or window.
 
-If there is only one window in the frame, this function switches
-to the previous buffer, cycling through the buffer list in the
-current window.
+When only one window is present, switch to the previous buffer.
 
-If there are multiple windows in the frame, this function rotates
-the window configuration, moving to the previous window in the
-cyclic order."
+When multiple windows are present, select the previous window."
     (interactive)
+    ;; Ignore an active minibuffer window.
     (if (one-window-p t)
         ;; Switch to the previous buffer.
         (switch-to-buffer (other-buffer (current-buffer) 1))
       ;; Move to the previous window in a multi-window configuration.
       (other-window -1)))
 
-  (global-set-key (kbd "<f6>") #'lvn-switch-or-rotate-buffer)
+  (global-set-key (kbd "<f6>") #'boost-previous-buffer-or-window)
 #+end_src
 
 ** Deleting and Rearranging Windows

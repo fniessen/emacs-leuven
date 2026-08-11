@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260811.0843>
+;; Version: <20260811.0848>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260811.0843>"
+(defconst boost-version "<20260811.0848>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3100,24 +3100,21 @@ file B."
 
   (global-set-key (kbd "<f6>") #'other-window)
 
-  (defun lvn-switch-or-rotate-buffer ()
-    "Switch to the previous buffer or rotate window configuration.
+  (defun boost-previous-buffer-or-window ()
+    "Switch to the previous buffer or window.
 
-If there is only one window in the frame, this function switches
-to the previous buffer, cycling through the buffer list in the
-current window.
+When only one window is present, switch to the previous buffer.
 
-If there are multiple windows in the frame, this function rotates
-the window configuration, moving to the previous window in the
-cyclic order."
+When multiple windows are present, select the previous window."
     (interactive)
+    ;; Ignore an active minibuffer window.
     (if (one-window-p t)
         ;; Switch to the previous buffer.
         (switch-to-buffer (other-buffer (current-buffer) 1))
       ;; Move to the previous window in a multi-window configuration.
       (other-window -1)))
 
-  (global-set-key (kbd "<f6>") #'lvn-switch-or-rotate-buffer)
+  (global-set-key (kbd "<f6>") #'boost-previous-buffer-or-window)
 
 ;;** 21.5 (info "(emacs)Change Window")
 
