@@ -6855,16 +6855,13 @@ In Org mode, use `org-fill-paragraph'."
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun leuven-replace-nbsp-by-spc ()
-    "Replace all nbsp by normal spaces."
+  (defun boost-replace-nbsp-by-space ()
+    "Replace all non-breaking spaces with ordinary spaces."
     (interactive "*")
     (save-excursion
-      (save-restriction
-        (save-match-data
-          (progn
-            (goto-char (point-min))
-            (while (re-search-forward "[  ]" nil t)
-              (replace-match " " nil nil)))))))
+      (goto-char (point-min))
+      (while (re-search-forward "[\u00A0\u202F]" nil t)
+        (replace-match " " t t))))
 #+end_src
 
 #+begin_src emacs-lisp

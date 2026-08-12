@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260812.0822>
+;; Version: <20260812.0839>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260812.0822>"
+(defconst boost-version "<20260812.0839>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3675,16 +3675,13 @@ In Org mode, use `org-fill-paragraph'."
   ;; Activate Auto Fill for all text mode buffers.
   (add-hook 'text-mode-hook #'auto-fill-mode)
 
-  (defun leuven-replace-nbsp-by-spc ()
-    "Replace all nbsp by normal spaces."
+  (defun boost-replace-nbsp-by-space ()
+    "Replace all non-breaking spaces with ordinary spaces."
     (interactive "*")
     (save-excursion
-      (save-restriction
-        (save-match-data
-          (progn
-            (goto-char (point-min))
-            (while (re-search-forward "[  ]" nil t)
-              (replace-match " " nil nil)))))))
+      (goto-char (point-min))
+      (while (re-search-forward "[\u00A0\u202F]" nil t)
+        (replace-match " " t t))))
 
   (defun leuven-good-old-fill-paragraph ()
     (interactive)
