@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260812.1136>
+;; Version: <20260812.1538>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260812.1136>"
+(defconst boost-version "<20260812.1538>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3959,8 +3959,8 @@ In Org mode, use `org-fill-paragraph'."
 
   ;; 25.8.2
   ;; Toggle visibility of hidden text.
-  (defun boost-reveal-hidden-text (&optional arg)
-    "Reveal hidden text in the current buffer.
+  (defun boost-show-hidden-text (&optional arg)
+    "Show hidden text in the current buffer.
 
 When `hs-minor-mode' is active, show all hidden blocks.
 Otherwise toggle `visible-mode' using ARG."
@@ -3970,7 +3970,7 @@ Otherwise toggle `visible-mode' using ARG."
       (visible-mode arg)))
 
   ;; Emacs represents `M-S-a' as `M-A'.
-  (global-set-key (kbd "M-A") #'boost-reveal-hidden-text)
+  (global-set-key (kbd "M-A") #'boost-show-hidden-text)
 
 ;;** (info "(emacs-goodies-el)boxquote")
 

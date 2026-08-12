@@ -7254,8 +7254,8 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 #+begin_src emacs-lisp
   ;; 25.8.2
   ;; Toggle visibility of hidden text.
-  (defun boost-reveal-hidden-text (&optional arg)
-    "Reveal hidden text in the current buffer.
+  (defun boost-show-hidden-text (&optional arg)
+    "Show hidden text in the current buffer.
 
 When `hs-minor-mode' is active, show all hidden blocks.
 Otherwise toggle `visible-mode' using ARG."
@@ -7265,7 +7265,7 @@ Otherwise toggle `visible-mode' using ARG."
       (visible-mode arg)))
 
   ;; Emacs represents `M-S-a' as `M-A'.
-  (global-set-key (kbd "M-A") #'boost-reveal-hidden-text)
+  (global-set-key (kbd "M-A") #'boost-show-hidden-text)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
