@@ -1709,7 +1709,7 @@ or added into the given directory, defaulting to the current one."
          (file-newer-than-file-p source-file target-file)))
 
   ;; Main function.
-  (defun org-save-buffer-and-do-related ()
+  (defun boost--org-rebuild-dependent-files ()
     "Save Org buffer, execute/tangle code blocks, and export it to various
 formats (Markdown, HTML, or PDF)."
     (interactive)
@@ -1726,8 +1726,9 @@ formats (Markdown, HTML, or PDF)."
       (unless (and orgfile (file-exists-p orgfile))
         (user-error "[Buffer is not visiting a file]"))
 
-      ;; Initial save buffer.
-      (save-buffer)
+      ;; Save buffer to ensure updates.
+      (measure-time-wrapper "Buffer saved"
+       (save-buffer))
 
       ;; ;; Restart Org mode (useful for refreshing settings).
       ;; (measure-time-wrapper "Restarted Org mode" #'org-mode)
@@ -1745,24 +1746,6 @@ formats (Markdown, HTML, or PDF)."
                 (sit-for 1))
               (unless lint-result
                 (message "[Org-lint completed: No issues found]"))))))
-
-      ;; ;; Update the results in the Org buffer.
-      ;; (org-babel-execute-buffer)    ; In this case, better than
-      ;;                               ; (add-hook 'org-export-first-hook
-      ;;                               ;           #'org-babel-execute-buffer):
-      ;;                               ; executed only once for both exports.
-
-      ;; It'd make sense to eval all code blocks which have :cache yes or :exports
-      ;; results or both... And, before that, to delete all code block results!?
-      ;; Well, almost all code blocks: not the ones of "cached" blocks (they may have
-      ;; taken a long time to be computed, or may not be computable another time), nor
-      ;; the ones with a caption on the results block...
-
-      ;; Save buffer again to ensure updates.
-      (measure-time-wrapper "Buffer saved"
-        (lambda ()
-          (let ((before-save-hook nil))
-            (save-buffer))))
 
       ;; Tangle code blocks.
       (measure-time-wrapper "Buffer tangled" #'org-babel-tangle)
@@ -1797,7 +1780,7 @@ formats (Markdown, HTML, or PDF)."
       (beep)))
 
   ;; Bind function to F9 key in Org mode.
-  (define-key org-mode-map (kbd "<f9>") #'org-save-buffer-and-do-related))
+  (define-key org-mode-map (kbd "<f9>") #'boost--org-rebuild-dependent-files))
 
 ;;** 12.2 (info "(org)Export options")
 
@@ -2923,6 +2906,27 @@ Example: \"Hello\" becomes \"xxxxx\"."
                        "^[ \t]*#\\+TBLFM:" nil t))
                 (measure-time "Re-applied formulas to all tables"
                   (org-table-iterate-buffer-tables)))))
+
+        ;; Refresh Org Babel results.
+        ;;
+        ;; This is intentionally done after dynamic blocks and table formulas
+        ;; have been updated, so source blocks see the latest document state.
+        ;;
+        ;; Ideally, only blocks with :cache yes and/or :exports results would be
+        ;; considered. Cached blocks may be expensive (or even impossible) to
+        ;; recompute and should generally be left untouched.
+        ;;
+        ;; Likewise, results that have been manually curated (for example,
+        ;; results blocks with captions) might deserve special treatment.
+        ;;
+        ;; For now, this step is disabled.
+        ;;
+        ;; (measure-time "Updated Org Babel results"
+        ;;   (org-babel-execute-buffer)) ; In this case, better than
+        ;;                               ; (add-hook 'org-export-first-hook
+        ;;                               ;           #'org-babel-execute-buffer):
+        ;;                               ; executed only once for both exports.
+
         ;; Restore disabled modes in reverse order.
         (dolist (mode mode-states)
           (when (fboundp mode)
