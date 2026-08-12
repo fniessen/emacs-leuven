@@ -7700,9 +7700,6 @@ demand.
     ;; Rebind the compile command to the default AUCTeX command in LaTeX mode
     ;; only.
     (define-key LaTeX-mode-map (kbd "<f9>") #'boost-tex-command-default)
-
-    ;; ;; Produce PDF output by default.
-    ;; (setq-default TeX-PDF-mode t)
 #+end_src
 
 A decent viewer reloads the PDF automatically when the file has changed while
