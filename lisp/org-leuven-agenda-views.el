@@ -730,100 +730,79 @@ N should be a non-negative integer representing the number of days."
                ((occur-tree "\\<\\(TODO\\|FIXME\\|XXX\\|BUG\\)\\>")))
              t)
 
-(defun lvn-org-git-root-todo ()
-  "Display an Org agenda view of unscheduled TODO items from the Git root directory."
+(defun boost-project-unscheduled-todos ()
+  "Display unscheduled TODO items from all Org and text files in the current project."
   (interactive)
-  (require 'vc-git)
-  (let* ((git-root (vc-git-root default-directory)))
-    (cond
-     ((not git-root)
-      (user-error "[Not in a Git repository]"))
-     (t
-      (let* ((org-files (condition-case err
-                            (directory-files-recursively
-                             git-root "\\.\\(org\\|txt\\)$" nil
-                             (lambda (file)
-                               (not (string-match-p "/\\.git/" file))))
-                          (error
-                           (message "[Error reading files: %s]" err)
-                           nil))))
-        (if (not (and org-files (seq-some #'file-exists-p org-files)))
-            (message "[No .org or .txt files found under Git root: %s]" git-root)
-          (let ((org-agenda-files org-files)
-                (org-agenda-sorting-strategy '(todo-state-up priority-down))
-                (org-agenda-overriding-header
-                 (format "Unscheduled TODO items in directory: %s" git-root))
-                (org-agenda-sticky nil)
-                (org-agenda-skip-scheduled-if-done t)
-                (org-agenda-skip-deadline-if-done t)
-                (org-agenda-todo-ignore-scheduled 'future))
-            (message "[%s]" org-agenda-overriding-header)
-            (org-todo-list))))))))
+  (require 'project)
+
+  (let* ((root
+          (or (when-let ((project (project-current)))
+                (project-root project))
+              (user-error "Not in a project")))
+         (org-files
+          (directory-files-recursively
+           root "\\.\\(org\\|txt\\)\\'")))
+
+    (if (null org-files)
+        (message "[No .org or .txt files found in %s]"
+                 (abbreviate-file-name root))
+      (let ((org-agenda-files org-files)
+            (org-agenda-overriding-header
+             (format "Unscheduled TODOs in project: %s"
+                     (abbreviate-file-name root)))
+            (org-agenda-todo-ignore-scheduled 'future))
+        (org-todo-list)))))
 
 ;; Bind to M-S-<f6>.
-(global-set-key (kbd "M-S-<f6>") #'lvn-org-git-root-todo)
+(global-set-key (kbd "M-S-<f6>") #'boost-project-unscheduled-todos)
 
-(defun lvn-org-agenda-for-current-buffer (&optional arg)
-  "Open the Org mode agenda with entries restricted based on ARG.
-ARG determines the scope:
-- No ARG (nil): Restrict to the current buffer's file.
-- Single C-u (4): Restrict to the current buffer's file and all .org files
-  in the current directory and its subdirectories.
-- Double C-u (16): Restrict to the current buffer's file, all .org files,
-  and all .txt files in the current directory and its subdirectories.
-If the buffer is in a version-controlled project (e.g., vc-dir),
-use the project's root directory instead of the current directory."
+(defun boost-org-agenda-with-file-scope (&optional arg)
+  "Run `org-agenda' on files related to the current buffer.
+
+No prefix: current file only.
+C-u: current file + Org files in the project.
+C-u C-u: current file + Org and text files in the project."
   (interactive "P")
-  (require 'vc)
-  (let* ((current-dir
-          (or (when (buffer-file-name) (file-name-directory (buffer-file-name)))
-              (vc-root-dir)))  ; Git root directory if available.
+  (require 'project)
+
+  (let* ((root
+          (or (when-let ((project (project-current)))
+                (project-root project))
+              default-directory))
+         (regexp
+          (pcase arg
+            ('(4)  "\\.org$")
+            ('(16) "\\.\\(org\\|txt\\)$")))
          (org-agenda-files
-          (cond
-           ((not current-dir)
-            (error "[Cannot determine a directory for this buffer]"))
-           ;; No argument: Restrict to the current buffer's file.
-           ((not arg)
-            (list (buffer-file-name)))
-           ;; Single C-u: Current buffer + .org files in current dir/subdirs.
-           ((equal arg '(4))
-            (delete-dups
-             (append
-              (when (buffer-file-name) (list (buffer-file-name)))
-              (directory-files-recursively
-               current-dir ".*\\.org$" nil
-               (lambda (file)
-                 (not (string-match-p "/\\.git/" file)))))))
-           ;; Double C-u: Current buffer + .org and .txt files in current dir/subdirs.
-           ((equal arg '(16))
-            (delete-dups
-             (append
-              (when (buffer-file-name) (list (buffer-file-name)))
-              (directory-files-recursively
-               current-dir ".*\\(\\.org\\|\\.txt\\)$" nil
-               (lambda (file)
-                 (not (string-match-p "/\\.git/" file)))))))))
-         (org-default-notes-file nil))  ; Disable default notes file temporarily
-    (org-agenda)))                      ; Open the standard agenda view.
+          (if regexp
+              (delete-dups
+               (append
+                (when-let ((file (buffer-file-name)))
+                  (list file))
+                (directory-files-recursively root regexp)))
+            (list (or (buffer-file-name)
+                      (user-error "Current buffer is not visiting a file"))))))
 
-(defun lvn-open-agenda-current-buffer ()
-  "Show the Org agenda for the current buffer only (no additional files)."
+    (org-agenda)))
+
+(defun boost-org-agenda-current-file ()
+  "Show the Org agenda for the current file only."
   (interactive)
-  (lvn-org-agenda-for-current-buffer nil))
+  (boost-org-agenda-with-file-scope nil))
 
-(defun lvn-open-agenda-buffer-and-org-files ()
-  "Show the Org agenda for the current buffer and all .org files in the current directory (recursively)."
+(defun boost-org-agenda-project-org ()
+  "Show the Org agenda for the current file and all .org files in the current project."
   (interactive)
-  (lvn-org-agenda-for-current-buffer '(4)))
+  (boost-org-agenda-with-file-scope '(4)))
 
-(defun lvn-open-agenda-buffer-org-and-txt-files ()
-  "Show the Org agenda for the current buffer, all .org and .txt files in the current directory (recursively)."
+(defun boost-org-agenda-project-org-and-txt ()
+  "Show the Org agenda for the current file, all .org files and all .txt files in the current project."
   (interactive)
-  (lvn-org-agenda-for-current-buffer '(16)))
+  (boost-org-agenda-with-file-scope '(16)))
 
-(global-set-key (kbd "S-<f6>") #'lvn-open-agenda-current-buffer)            ; Current buffer only.
-(global-set-key (kbd "C-<f6>") #'lvn-open-agenda-buffer-and-org-files)      ; + .org files.
-(global-set-key (kbd "M-<f6>") #'lvn-open-agenda-buffer-org-and-txt-files)  ; + .org + .txt files.
+(global-set-key (kbd "S-<f6>") #'boost-org-agenda-current-file)        ; Current file only.
+(global-set-key (kbd "C-<f6>") #'boost-org-agenda-project-org)         ; + .org files.
+(global-set-key (kbd "M-<f6>") #'boost-org-agenda-project-org-and-txt) ; + .org + .txt files.
 
 (add-to-list 'org-agenda-custom-commands
              `("d" "Dashboard" ; Shows all tasks...
