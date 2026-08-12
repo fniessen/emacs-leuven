@@ -7985,8 +7985,8 @@ blocks (client/server side).
   ;; Major mode for editing web templates.
   (with-eval-after-load 'web-mode
 
-    (define-key web-mode-map (kbd "C--")      #'web-mode-fold-or-unfold)
-    (define-key web-mode-map (kbd "C-+")      #'web-mode-fold-or-unfold)
+    (define-key web-mode-map (kbd "M--")      #'web-mode-fold-or-unfold)
+    (define-key web-mode-map (kbd "M-+")      #'web-mode-fold-or-unfold)
     (define-key web-mode-map (kbd "M-(")      #'web-mode-element-wrap)
 
     (define-key web-mode-map (kbd "M-h")      #'web-mode-mark-and-expand)
@@ -8744,27 +8744,29 @@ New minor mode ~global-eldoc-mode~ is enabled by default in Emacs 25.
 :ID:       a36b1dbd-1d05-4ff2-b19a-167e50c4f1f7
 :END:
 
-XXX See http://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs
+For a discussion on code folding in Emacs, see:
+https://stackoverflow.com/questions/2399612/why-is-there-no-code-folding-in-emacs.
 
-Hideshow can *fold* and unfold (i.e. hide and un-hide) logical blocks of *code* in
-many programming modes.
+Hideshow provides code folding for many programming languages. It can
+*fold* (collapse) and *unfold* (expand) logical code blocks, making it
+easier to navigate large source files.
 
-~hs-minor-mode.el~ collapses code for a lot of languages, not only Lisp. See
-[[id:42ad895e-c049-4710-a877-5014a7f6acfc][outline-minor-mode]] as well.
+~hs-minor-mode~ supports many major modes, not only Lisp, and it can hide
+functions, classes, conditionals and other syntactic constructs. See also
+[[id:42ad895e-c049-4710-a877-5014a7f6acfc][outline-minor-mode]] for a complementary approach.
 
-And the pretty awesome ~hideshow-org~. Folding made useful.
+For Org users, the excellent ~hideshow-org~ package extends the same folding
+workflow to Org documents.
 
-Keyboard shortcuts:
+Common folding shortcuts used by popular editors and IDEs:
 
-| Command                         | Emacs | Sublime Text | Visual Studio | Webstorm |
-|---------------------------------+-------+--------------+---------------+----------|
-| Fold (collapse) region          |       | C-S-[        | C-S-[         | C--      |
-| Unfold (uncollapse) region      |       | C-S-]        | C-S-]         | C-+      |
-|---------------------------------+-------+--------------+---------------+----------|
-| Fold (collpase) All regions     |       |              | C-k C-0       | C-S--    |
-| Unfold (uncollapse) All regions |       | C-k C-j      |               | C-S-+    |
-|---------------------------------+-------+--------------+---------------+----------|
-| Fold (collapse) Tag Attributes  |       | C-k C-t      |               |          |
+| Editor       | Fold  | Unfold | Fold all | Unfold all |
+|--------------+-------+--------+----------+------------|
+| VS Code      | C-S-[ | C-S-]  | C-k C-0  |            |
+| Sublime Text | C-S-[ | C-S-]  |          | C-k C-j    |
+| JetBrains    | C--   | C-+    | C-S--    | C-S-+      |
+|--------------+-------+--------+----------+------------|
+| Emacs        | C--   | C-+    | C-M--    | C-M-+      |
 
 #+begin_src emacs-lisp
 ;;** 27.7 (info "(emacs)Hideshow") minor mode
@@ -8789,27 +8791,28 @@ Keyboard shortcuts:
     (advice-add 'xref-find-definitions :after #'lvn--expand-after-goto)
 #+end_src
 
-| Command     | Description                          |
-|-------------+--------------------------------------|
-| C-c @ C-h   | Hide a block / Collapse current fold |
-| C-c @ C-s   | Show a block / Expand current fold   |
-| C-c @ C-M-h | Hide all blocks / Collapse all folds |
-| C-c @ C-M-s | Show all blocks / Expand all folds   |
+| Command     | Action               |
+|-------------+----------------------|
+| C-c @ C-h   | Fold current block   |
+| C-c @ C-s   | Unfold current block |
+| C-c @ C-M-h | Fold all blocks      |
+| C-c @ C-M-s | Unfold all blocks    |
 
 Change those really awkward key bindings with ~@~ in the middle:
 
 #+begin_src emacs-lisp
-    ;; Define prefix `C-c f' for folding commands.
+    ;; Replace the default `C-c @' prefix with a more memorable `C-c f' folding
+    ;; prefix.
     (define-key hs-minor-mode-map (kbd "C-c f h") #'hs-hide-block)
     (define-key hs-minor-mode-map (kbd "C-c f s") #'hs-show-block)
-    (define-key hs-minor-mode-map (kbd "C-c f H") #'hs-hide-all)
-    (define-key hs-minor-mode-map (kbd "C-c f S") #'hs-show-all)
+    (define-key hs-minor-mode-map (kbd "C-c f M-h") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "C-c f M-s") #'hs-show-all)
 
     ;; Alternative numpad shortcuts.
     (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; `C--'.
     (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; `C-+'.
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-subtract>") #'hs-hide-all)    ;; `C-S--'.
-    (define-key hs-minor-mode-map (kbd "<C-S-kp-add>")      #'hs-show-all)    ;; `C-S-+'.
+    (define-key hs-minor-mode-map (kbd "<C-M-kp-subtract>") #'hs-hide-all)    ;; `C-M--'.
+    (define-key hs-minor-mode-map (kbd "<C-M-kp-add>")      #'hs-show-all)    ;; `C-M-+'.
 
     ;; Remove default `C-c @' prefix.
     (define-key hs-minor-mode-map (kbd "C-c @") nil)
