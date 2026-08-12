@@ -8180,23 +8180,18 @@ Some key bindings:
 ** Highlight the closing tag (Pair highlighting)
 
 #+begin_src emacs-lisp
-  ;; Highlight the current SGML tag context (`hl-tags-face').
-  (boost--try-require 'hl-tags-mode)
-  (with-eval-after-load 'hl-tags-mode
-
-    (add-hook 'html-mode-hook
-              (lambda ()
-                (require 'sgml-mode)
-                ;; When `html-mode-hook' is called from `html-helper-mode'.
-                (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
+  ;; Highlight the current tag and its matching opening/closing tag.
+  (when (boost--try-require 'hl-tags-mode)
+    (add-hook 'html-mode-hook #'hl-tags-mode)
 
     (add-hook 'nxml-mode-hook
               (lambda ()
-                (when (< (buffer-size) boost-large-file-warning-threshold) ; View large files.
+                (when (< (buffer-size) boost-large-file-warning-threshold)
+                  ;; Avoid enabling `hl-tags-mode' in large files.
                   (hl-tags-mode 1))))
 
     ;; (add-hook 'web-mode-hook #'hl-tags-mode)
-    )
+  )
 #+end_src
 
 ** CSS

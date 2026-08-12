@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260812.1117>
+;; Version: <20260812.1128>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260812.1117>"
+(defconst boost-version "<20260812.1128>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4530,23 +4530,18 @@ the parent element."
 
     (add-hook 'nxml-mode-hook 'hs-minor-mode))
 
-  ;; Highlight the current SGML tag context (`hl-tags-face').
-  (boost--try-require 'hl-tags-mode)
-  (with-eval-after-load 'hl-tags-mode
-
-    (add-hook 'html-mode-hook
-              (lambda ()
-                (require 'sgml-mode)
-                ;; When `html-mode-hook' is called from `html-helper-mode'.
-                (hl-tags-mode 1)))      ; XXX Can't we simplify this form?
+  ;; Highlight the current tag and its matching opening/closing tag.
+  (when (boost--try-require 'hl-tags-mode)
+    (add-hook 'html-mode-hook #'hl-tags-mode)
 
     (add-hook 'nxml-mode-hook
               (lambda ()
-                (when (< (buffer-size) boost-large-file-warning-threshold) ; View large files.
+                (when (< (buffer-size) boost-large-file-warning-threshold)
+                  ;; Avoid enabling `hl-tags-mode' in large files.
                   (hl-tags-mode 1))))
 
     ;; (add-hook 'web-mode-hook #'hl-tags-mode)
-    )
+  )
 
   ;; TODO: Handle media queries
   ;; TODO: Handle wrapped lines
