@@ -2799,8 +2799,7 @@ formats (Markdown, HTML, or PDF)."
         (user-error "[Buffer is not visiting a file]"))
 
       ;; Save buffer to ensure updates.
-      (measure-time-wrapper "Buffer saved"
-       (save-buffer))
+      (measure-time-wrapper "Buffer saved" #'save-buffer)
 
       ;; ;; Restart Org mode (useful for refreshing settings).
       ;; (measure-time-wrapper "Restarted Org mode" #'org-mode)
