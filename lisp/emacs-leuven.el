@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260812.0940>
+;; Version: <20260812.0958>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260812.0940>"
+(defconst boost-version "<20260812.0958>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4127,21 +4127,29 @@ Otherwise toggle `visible-mode' using ARG."
 
     (leuven--section "2.6 (auctex)Completion")
 
-    ;; If this is non-nil when AUCTeX is loaded, the TeX escape character `\'
-    ;; will be bound to `TeX-electric-macro'.
+    ;; Use `TeX-electric-macro' when typing the TeX escape character.
     (setq TeX-electric-escape t)
 
 ;;** 2.9 (info "(auctex)Indenting")
 
     (leuven--section "2.9 (auctex)Indenting")
 
-    ;; Leave some environments un-indented when using `M-q'.
-    (dolist (env '("tikzpicture" "comment" "sverbatim"))
-      (add-to-list 'LaTeX-indent-environment-list (list env 'current-indentation)))
+    ;; Do not re-indent verbatim, code, comment, or TikZ environments when
+    ;; filling paragraphs (`M-q').
+    (dolist (env '("Verbatim"
+                   "comment"
+                   "lstlisting"
+                   "minted"
+                   "sverbatim"
+                   "tikzpicture"
+                   "verbatim"))
+      (add-to-list 'LaTeX-indent-environment-list
+                   (list env #'current-indentation)))
 
-    ;; Auto-indentation (suggested by the AUCTeX manual -- instead of adding
-    ;; a local key binding to `RET' in the `LaTeX-mode-hook').
-    (setq TeX-newline-function 'newline-and-indent)
+    ;; Make `RET' insert an indented new line (as recommended by the AUCTeX
+    ;; manual).
+    ;; TODO: Still needed now (with `electric-indent-mode' enabled by default)?
+    (setq TeX-newline-function #'newline-and-indent)
 
 ;;** 4.1 Executing (info "(auctex)Commands")
 
