@@ -7264,7 +7264,7 @@ Otherwise toggle `visible-mode' using ARG."
         (hs-show-all)
       (visible-mode arg)))
 
-  (global-set-key (kbd "M-S-a") #'boost-reveal-hidden-text)
+  (global-set-key (kbd "M-A") #'boost-reveal-hidden-text) ; M-S-a
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
