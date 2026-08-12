@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260812.1057>
+;; Version: <20260812.1117>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260812.1057>"
+(defconst boost-version "<20260812.1117>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4361,26 +4361,18 @@ Otherwise toggle `visible-mode' using ARG."
 
   (leuven--section "26.12 (emacs)HTML Mode") ; XXXXXXXXXXX
 
-  (when (locate-library "html-helper-mode")
-
-    (autoload 'html-helper-mode "html-helper-mode"
-      "Mode for editing HTML documents." t)
-
-    ;; Invoke html-helper-mode automatically on .html files.
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . html-helper-mode))
-
-    ;; Invoke html-helper-mode automatically on .asp files.
-    (add-to-list 'auto-mode-alist '("\\.asp\\'" . html-helper-mode))
-
-    ;; Invoke html-helper-mode automatically on .jsp files.
-    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
-
+  ;; Edit HTML, XHTML, XML-based, ASPX, and JSP files with `web-mode'.
   (with-eval-after-load 'web-mode-autoloads
-    (add-to-list 'auto-mode-alist '("\\.aspx\\'"   . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.jsp\\'"    . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.x[ms]l\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . web-mode)))
+    (dolist (pattern '("\\.html?\\'"
+                       "\\.xhtml?\\'"
+                       "\\.aspx\\'"
+                       "\\.jsp\\'"
+                       "\\.xml\\'"
+                       "\\.xsl\\'"
+                       "\\.xslt\\'"
+                       "\\.svg\\'"))
+      (add-to-list 'auto-mode-alist
+                   `(,pattern . web-mode))))
 
   ;; Major mode for editing web templates.
   (with-eval-after-load 'web-mode

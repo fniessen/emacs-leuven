@@ -7941,37 +7941,6 @@ works quite well for editing HTML4 documents (whose tags don't have to close).
 - ~C-M-i~ ::
      ~ispell-complete-word~.
 
-*** html-helper-mode
-
-You might also want to consider ~html-helper-mode~, which has a lot more
-features than plain ~html-mode~:
-
-- autocompletion,
-- auto-insertion of closing tags... and
-- a lot more.
-
-When you open a buffer for HTML editing, a didactic HTML menu appears, so you
-can use your mouse to invoke commands.
-
-Using the prefix-arg (~C-u~) to relevant HTML tags, ~html-helper-mode~ will put
-tags around a region you've specified.
-
-#+begin_src emacs-lisp
-  (when (locate-library "html-helper-mode")
-
-    (autoload 'html-helper-mode "html-helper-mode"
-      "Mode for editing HTML documents." t)
-
-    ;; Invoke html-helper-mode automatically on .html files.
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . html-helper-mode))
-
-    ;; Invoke html-helper-mode automatically on .asp files.
-    (add-to-list 'auto-mode-alist '("\\.asp\\'" . html-helper-mode))
-
-    ;; Invoke html-helper-mode automatically on .jsp files.
-    (add-to-list 'auto-mode-alist '("\\.jsp\\'" . html-helper-mode)))
-#+end_src
-
 ** XHTML
 
 [[id:786a2051-476a-4277-82df-d8ebf8ba0e99][nXML]] seems to be the most recommended mode to view and edit well-formed *XHTML*
@@ -8000,12 +7969,18 @@ Though, it takes a while to load.
 blocks (client/server side).
 
 #+begin_src emacs-lisp
+  ;; Edit HTML, XHTML, XML-based, ASPX, and JSP files with `web-mode'.
   (with-eval-after-load 'web-mode-autoloads
-    (add-to-list 'auto-mode-alist '("\\.aspx\\'"   . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.jsp\\'"    . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.x[ms]l\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.xhtml?\\'" . web-mode)))
+    (dolist (pattern '("\\.html?\\'"
+                       "\\.xhtml?\\'"
+                       "\\.aspx\\'"
+                       "\\.jsp\\'"
+                       "\\.xml\\'"
+                       "\\.xsl\\'"
+                       "\\.xslt\\'"
+                       "\\.svg\\'"))
+      (add-to-list 'auto-mode-alist
+                   `(,pattern . web-mode))))
 
   ;; Major mode for editing web templates.
   (with-eval-after-load 'web-mode
