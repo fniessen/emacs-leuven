@@ -8196,19 +8196,10 @@ Some key bindings:
 
 ** CSS
 
-#+begin_src emacs-lisp
-  ;; TODO: Handle media queries
-  ;; TODO: Handle wrapped lines
-  ;; TODO: Ignore vendor prefixes
-  (defun leuven-sort-css-properties ()
-    "Sort CSS properties alphabetically."
-    (interactive)
-    (let ((start (search-forward "{"))
-          (end (search-forward "}")))
-      (when (and start end)
-        (sort-lines nil start end)
-        (sort-declarations))))
-#+end_src
+*************** TODO Format the current CSS buffer using Stylelint
+Run Stylelint with "--fix" on the current file and reload it.
+Use reformatter.el?
+*************** END
 
 #+begin_src emacs-lisp
 )                                       ; Chapter 26 ends here.
