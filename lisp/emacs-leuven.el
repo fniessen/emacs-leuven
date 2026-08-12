@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260811.1005>
+;; Version: <20260812.0822>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260811.1005>"
+(defconst boost-version "<20260812.0822>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -1001,7 +1001,7 @@ Shows a warning message if the file does not exist or is not executable."
             js2-mode-show-node
             just-one-space
             kill-region
-            lvn-toggle-paragraph-fill
+            boost-fill-paragraph-dwim
             leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
@@ -2734,8 +2734,9 @@ file B."
     ;; ;; navigation.
     ;; (global-set-key [remap find-file] #'helm-find-files)
 
-    ;; Buffer list.
+    ;; Switch to another buffer.
     (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
+    (global-set-key (kbd "<f12>") #'helm-mini)
                                         ; = `helm-buffers-list' + recents.
 
     (global-set-key [remap list-buffers] #'helm-buffers-list) ; OK. C-x C-b
@@ -3040,6 +3041,10 @@ file B."
 ;;* 20 Using Multiple (info "(emacs)Buffers")
 
 (leuven--chapter leuven-load-chapter-20-buffers "20 Using Multiple Buffers"
+
+  ;; Switch to another buffer.
+  (boost--set-key-if-free 'global-map (kbd "<f12>")
+                          #'switch-to-buffer "global map")
 
 ;;** 20.2 (info "(emacs)List Buffers")
 
@@ -3639,28 +3644,30 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   (setq-default fill-column 80)
 
   ;; Toggle paragraph filling/unfilling with optional custom width.
-  (defun lvn-toggle-paragraph-fill (arg)
-    "Fill or unfill paragraph/region with customizable column width.
-  With numeric ARG (e.g., C-u 80), set fill column width explicitly.
-  When called twice consecutively without prefix, unfills the paragraph.
-  In Org mode, uses `org-fill-paragraph` for specialized formatting."
+  (defun boost-fill-paragraph-dwim (arg)
+    "Fill or unfill the current paragraph.
+
+With a numeric prefix ARG, use that value as `fill-column'.
+Invoking the command twice consecutively unfills the paragraph.
+In Org mode, use `org-fill-paragraph'."
     (interactive "P")
-    (let ((fill-column (cond
-                        (arg
-                         (prefix-numeric-value arg))
-                        ((eq last-command 'lvn-toggle-paragraph-fill)
-                         (setq this-command nil)
-                         (point-max))
-                        (t
-                         fill-column))))
+    (let ((fill-column
+           (cond
+            (arg
+             (prefix-numeric-value arg))
+            ((eq last-command this-command)
+             (setq this-command nil)
+             (point-max))
+            (t
+             fill-column))))
       (if (derived-mode-p 'org-mode)
           (org-fill-paragraph)
         (fill-paragraph))))
 
   ;; M-q.
-  (global-set-key [remap fill-paragraph] #'lvn-toggle-paragraph-fill)
+  (global-set-key (kbd "M-q") #'boost-fill-paragraph-dwim)
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "M-q") #'lvn-toggle-paragraph-fill))
+    (keymap-set org-mode-map "M-q" #'boost-fill-paragraph-dwim))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)

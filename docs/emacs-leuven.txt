@@ -1667,7 +1667,7 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
             js2-mode-show-node
             just-one-space
             kill-region
-            lvn-toggle-paragraph-fill
+            boost-fill-paragraph-dwim
             leuven-smart-punctuation-quotation-mark
             org-beginning-of-line
             org-end-of-line
@@ -5187,8 +5187,9 @@ XXX Look at helm-dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Buffer list.
+    ;; Switch to another buffer.
     (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
+    (global-set-key (kbd "<f12>") #'helm-mini)
                                         ; = `helm-buffers-list' + recents.
 
     (global-set-key [remap list-buffers] #'helm-buffers-list) ; OK. C-x C-b
@@ -5809,6 +5810,14 @@ Get EXIF data with ~image-dired-get-exif-data~.
 ;;* 20 Using Multiple (info "(emacs)Buffers")
 
 (leuven--chapter leuven-load-chapter-20-buffers "20 Using Multiple Buffers"
+#+end_src
+
+Creating and Selecting Buffers:
+
+#+begin_src emacs-lisp
+  ;; Switch to another buffer.
+  (boost--set-key-if-free 'global-map (kbd "<f12>")
+                          #'switch-to-buffer "global map")
 #+end_src
 
 ** Listing Existing Buffers
@@ -6813,28 +6822,30 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
   (setq-default fill-column 80)
 
   ;; Toggle paragraph filling/unfilling with optional custom width.
-  (defun lvn-toggle-paragraph-fill (arg)
-    "Fill or unfill paragraph/region with customizable column width.
-  With numeric ARG (e.g., C-u 80), set fill column width explicitly.
-  When called twice consecutively without prefix, unfills the paragraph.
-  In Org mode, uses `org-fill-paragraph` for specialized formatting."
+  (defun boost-fill-paragraph-dwim (arg)
+    "Fill or unfill the current paragraph.
+
+With a numeric prefix ARG, use that value as `fill-column'.
+Invoking the command twice consecutively unfills the paragraph.
+In Org mode, use `org-fill-paragraph'."
     (interactive "P")
-    (let ((fill-column (cond
-                        (arg
-                         (prefix-numeric-value arg))
-                        ((eq last-command 'lvn-toggle-paragraph-fill)
-                         (setq this-command nil)
-                         (point-max))
-                        (t
-                         fill-column))))
+    (let ((fill-column
+           (cond
+            (arg
+             (prefix-numeric-value arg))
+            ((eq last-command this-command)
+             (setq this-command nil)
+             (point-max))
+            (t
+             fill-column))))
       (if (derived-mode-p 'org-mode)
           (org-fill-paragraph)
         (fill-paragraph))))
 
   ;; M-q.
-  (global-set-key [remap fill-paragraph] #'lvn-toggle-paragraph-fill)
+  (global-set-key (kbd "M-q") #'boost-fill-paragraph-dwim)
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "M-q") #'lvn-toggle-paragraph-fill))
+    (keymap-set org-mode-map "M-q" #'boost-fill-paragraph-dwim))
 
   ;; Prevent breaking lines just before a punctuation mark such as `?' or `:'.
   (add-hook 'fill-nobreak-predicate #'fill-french-nobreak-p)
@@ -7798,8 +7809,8 @@ Nor a default when point is on a command name...
 
 ** Preview-LaTeX
 
-You can detect the successful activation of ~preview-latex~: after loading a
-LaTeX file, ~preview-latex~ gives you a ~Preview~ menu.
+You can detect the successful activation of ~preview-latex~: after loading a LaTeX
+file, ~preview-latex~ gives you a ~Preview~ menu.
 
 #+begin_src emacs-lisp
 ;;** (info "(preview-latex)Top")
