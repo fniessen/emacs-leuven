@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260812.0839>
+;; Version: <20260812.0940>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260812.0839>"
+(defconst boost-version "<20260812.0940>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3683,7 +3683,8 @@ In Org mode, use `org-fill-paragraph'."
       (while (re-search-forward "[\u00A0\u202F]" nil t)
         (replace-match " " t t))))
 
-  (defun leuven-good-old-fill-paragraph ()
+  (defun boost-basic-fill-paragraph ()
+    "Fill paragraph without mode-specific or adaptive filling."
     (interactive)
     (let ((fill-paragraph-function nil)
           (adaptive-fill-function nil))
@@ -3802,12 +3803,10 @@ In Org mode, use `org-fill-paragraph'."
 
   (leuven--section "26.7 (emacs)Case Conversion Commands")
 
-  ;; Enable the use of some commands without confirmation.
-  (dolist (command
-           ;; Disabled commands.
-           '(downcase-region
-             upcase-region))
-    (put command 'disabled nil))
+  ;; Re-enable selected commands disabled by default by Emacs.
+  (dolist (fn '(downcase-region
+                upcase-region))
+    (put fn 'disabled nil))
 
 ;;** 26.9 (info "(emacs)Outline Mode")
 
@@ -3959,15 +3958,18 @@ In Org mode, use `org-fill-paragraph'."
   ;; (boost--try-require 'fold-dwim-org)
 
   ;; 25.8.2
-  ;; Toggle display of invisible text.
-  (defun leuven-toggle-show-everything (&optional arg)
-    "Show all invisible text."
+  ;; Toggle visibility of hidden text.
+  (defun boost-reveal-hidden-text (&optional arg)
+    "Reveal hidden text in the current buffer.
+
+When `hs-minor-mode' is active, show all hidden blocks.
+Otherwise toggle `visible-mode' using ARG."
     (interactive (list (or current-prefix-arg 'toggle)))
-    (if (derived-mode-p 'prog-mode)
+    (if (bound-and-true-p hs-minor-mode)
         (hs-show-all)
       (visible-mode arg)))
 
-  (global-set-key (kbd "M-A") #'leuven-toggle-show-everything) ; `M-S-a'.
+  (global-set-key (kbd "M-S-a") #'boost-reveal-hidden-text)
 
 ;;** (info "(emacs-goodies-el)boxquote")
 

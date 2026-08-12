@@ -6865,7 +6865,8 @@ In Org mode, use `org-fill-paragraph'."
 #+end_src
 
 #+begin_src emacs-lisp
-  (defun leuven-good-old-fill-paragraph ()
+  (defun boost-basic-fill-paragraph ()
+    "Fill paragraph without mode-specific or adaptive filling."
     (interactive)
     (let ((fill-paragraph-function nil)
           (adaptive-fill-function nil))
@@ -6995,12 +6996,10 @@ In Org mode, use `org-fill-paragraph'."
 
   (leuven--section "26.7 (emacs)Case Conversion Commands")
 
-  ;; Enable the use of some commands without confirmation.
-  (dolist (command
-           ;; Disabled commands.
-           '(downcase-region
-             upcase-region))
-    (put command 'disabled nil))
+  ;; Re-enable selected commands disabled by default by Emacs.
+  (dolist (fn '(downcase-region
+                upcase-region))
+    (put fn 'disabled nil))
 #+end_src
 
 ** Outline Mode
@@ -7254,15 +7253,18 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 #+begin_src emacs-lisp
   ;; 25.8.2
-  ;; Toggle display of invisible text.
-  (defun leuven-toggle-show-everything (&optional arg)
-    "Show all invisible text."
+  ;; Toggle visibility of hidden text.
+  (defun boost-reveal-hidden-text (&optional arg)
+    "Reveal hidden text in the current buffer.
+
+When `hs-minor-mode' is active, show all hidden blocks.
+Otherwise toggle `visible-mode' using ARG."
     (interactive (list (or current-prefix-arg 'toggle)))
-    (if (derived-mode-p 'prog-mode)
+    (if (bound-and-true-p hs-minor-mode)
         (hs-show-all)
       (visible-mode arg)))
 
-  (global-set-key (kbd "M-A") #'leuven-toggle-show-everything) ; `M-S-a'.
+  (global-set-key (kbd "M-S-a") #'boost-reveal-hidden-text)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
