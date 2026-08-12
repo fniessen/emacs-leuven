@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260812.0958>
+;; Version: <20260812.1032>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260812.0958>"
+(defconst boost-version "<20260812.1032>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4148,16 +4148,13 @@ Otherwise toggle `visible-mode' using ARG."
 
     ;; Make `RET' insert an indented new line (as recommended by the AUCTeX
     ;; manual).
-    ;; TODO: Still needed now (with `electric-indent-mode' enabled by default)?
+    ;; TODO: Re-evaluate whether this remains necessary with
+    ;; `electric-indent-mode' enabled by default.
     (setq TeX-newline-function #'newline-and-indent)
 
 ;;** 4.1 Executing (info "(auctex)Commands")
 
     (leuven--section "4.1 Executing (auctex)Commands")
-
-    (defun boost--set-latexmk ()
-      "Use LaTeXMk as the default AUCTeX compilation command."
-      (setq-local TeX-command-default "LaTeXMk"))
 
     (with-eval-after-load 'tex             ; AUCTeX.
       ;; Simplify the AUCTeX command menu by removing unused commands.
@@ -4184,12 +4181,12 @@ Otherwise toggle `visible-mode' using ARG."
         (setq TeX-command-list
               (assoc-delete-all name TeX-command-list #'string=)))
 
-      ;; Remove AUCTeX's existing LaTeXMk definition, which may include
-      ;; `%(mode)' and consequently force `latexmk -pdf'.
+      ;; Remove AUCTeX's built-in `LaTeXMk' command, which may include `%(mode)'
+      ;; and consequently force `latexmk -pdf'.
       (setq TeX-command-list
             (assoc-delete-all "LaTeXMk" TeX-command-list #'string=))
 
-      ;; Let .latexmkrc choose the TeX engine. Do not use neither `%(mode)' nor
+      ;; Let .latexmkrc select the TeX engine. Do not use neither `%(mode)' nor
       ;; `%(latexmk-out)', since AUCTeX may expand them to `-pdf', forcing
       ;; latexmk to use pdfLaTeX.
       (add-to-list
@@ -4201,8 +4198,15 @@ Otherwise toggle `visible-mode' using ARG."
          (latex-mode)
          :help "Run latexmk using the engine selected by .latexmkrc"))
 
-      ;; Make `LaTeXMk' the default compilation command.
+      ;; Make `LaTeXMk' the default compilation command in LaTeX buffers.
+      (defun boost--set-latexmk ()
+        "Use LaTeXMk as the default AUCTeX compilation command."
+        (setq-local TeX-command-default "LaTeXMk"))
+
       (add-hook 'LaTeX-mode-hook #'boost--set-latexmk))
+
+    ;; Enable folding of macros, comments, and environments in LaTeX buffers.
+    (add-hook 'LaTeX-mode-hook #'TeX-fold-mode)
 
     ;; Automatically use French dictionary when a LaTeX document uses French.
     (defun boost--set-french-dictionary-for-latex ()
@@ -4228,24 +4232,25 @@ Otherwise toggle `visible-mode' using ARG."
       (TeX-save-document "")
       (TeX-command TeX-command-default 'TeX-master-file))
 
-    ;; Rebind the compile command to the default AUCTeX command in LaTeX mode only.
+    ;; Rebind the compile command to the default AUCTeX command in LaTeX mode
+    ;; only.
     (define-key LaTeX-mode-map (kbd "<f9>") #'boost-tex-command-default)
 
-    ;; Use PDF mode by default (instead of DVI).
-    (setq-default TeX-PDF-mode t)
+    ;; ;; Produce PDF output by default.
+    ;; (setq-default TeX-PDF-mode t)
 
 ;;** 4.2 (info "(auctex)Viewing") the formatted output
 
     (leuven--section "4.2 (auctex)Viewing the formatted output")
 
-    ;; Use a saner PDF viewer (SumatraPDF, the default Windows PDF application).
-    (defvar leuven--sumatrapdf-command
-      (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
-      "Path to the SumatraPDF executable.")
-
-    ;; Configure the PDF viewer.
+    ;; Configure PDF viewers used by AUCTeX.
     (when (boundp 'TeX-view-program-list)
-      ;; Native Windows: invoke SumatraPDF directly.
+
+      (defvar leuven--sumatrapdf-command
+        (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
+        "Path to the SumatraPDF executable.")
+
+      ;; Native Windows: use SumatraPDF as the preferred PDF viewer.
       (when (and lvn--win32-p
                  (file-executable-p leuven--sumatrapdf-command))
         (add-to-list 'TeX-view-program-list
@@ -4255,7 +4260,7 @@ Otherwise toggle `visible-mode' using ARG."
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 
-      ;; WSL: open the PDF with the default Windows PDF application.
+      ;; WSL: delegate PDF opening to the default Windows application.
       (when lvn--wsl-p
         (add-to-list 'TeX-view-program-list
                      '("Windows PDF Viewer"

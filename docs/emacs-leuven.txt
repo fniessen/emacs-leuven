@@ -7593,18 +7593,17 @@ file, AUCTeX gives you a ~Command~ menu.
 
     ;; Make `RET' insert an indented new line (as recommended by the AUCTeX
     ;; manual).
-    ;; TODO: Still needed now (with `electric-indent-mode' enabled by default)?
+    ;; TODO: Re-evaluate whether this remains necessary with
+    ;; `electric-indent-mode' enabled by default.
     (setq TeX-newline-function #'newline-and-indent)
 #+end_src
+
+AUCTeX edits documents; latexmk builds them.
 
 #+begin_src emacs-lisp
 ;;** 4.1 Executing (info "(auctex)Commands")
 
     (leuven--section "4.1 Executing (auctex)Commands")
-
-    (defun boost--set-latexmk ()
-      "Use LaTeXMk as the default AUCTeX compilation command."
-      (setq-local TeX-command-default "LaTeXMk"))
 
     (with-eval-after-load 'tex             ; AUCTeX.
       ;; Simplify the AUCTeX command menu by removing unused commands.
@@ -7631,12 +7630,12 @@ file, AUCTeX gives you a ~Command~ menu.
         (setq TeX-command-list
               (assoc-delete-all name TeX-command-list #'string=)))
 
-      ;; Remove AUCTeX's existing LaTeXMk definition, which may include
-      ;; `%(mode)' and consequently force `latexmk -pdf'.
+      ;; Remove AUCTeX's built-in `LaTeXMk' command, which may include `%(mode)'
+      ;; and consequently force `latexmk -pdf'.
       (setq TeX-command-list
             (assoc-delete-all "LaTeXMk" TeX-command-list #'string=))
 
-      ;; Let .latexmkrc choose the TeX engine. Do not use neither `%(mode)' nor
+      ;; Let .latexmkrc select the TeX engine. Do not use neither `%(mode)' nor
       ;; `%(latexmk-out)', since AUCTeX may expand them to `-pdf', forcing
       ;; latexmk to use pdfLaTeX.
       (add-to-list
@@ -7648,32 +7647,29 @@ file, AUCTeX gives you a ~Command~ menu.
          (latex-mode)
          :help "Run latexmk using the engine selected by .latexmkrc"))
 
-      ;; Make `LaTeXMk' the default compilation command.
+      ;; Make `LaTeXMk' the default compilation command in LaTeX buffers.
+      (defun boost--set-latexmk ()
+        "Use LaTeXMk as the default AUCTeX compilation command."
+        (setq-local TeX-command-default "LaTeXMk"))
+
       (add-hook 'LaTeX-mode-hook #'boost--set-latexmk))
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-    (defun boost--setup-latex-mode ()
-      "Customize LaTeX mode."
-      (setq TeX-command-default (boost--determine-tex-command))
-      (TeX-fold-mode 1))
+The TeX engine is now selected entirely by ~latexmk~ through the user's
+~.latexmkrc~, making AUCTeX engine-agnostic.
 
-    (defun boost--determine-tex-command ()
-      "Determine the appropriate TeX command based on package usage."
-      (let ((fontspec-regex
-             "^\\s-*\\\\usepackage\\(?:\\[.*\\]\\)?{.*\\<\\(?:font\\|math\\)spec\\>.*}")
-            (search-limit 3000))
-        (if (boost--buffer-contains-regex fontspec-regex search-limit)
-            "XeLaTeX"
-          "LaTeX")))
+As a result, there is no longer any need to inspect the document preamble to
+decide whether to use LaTeX, XeLaTeX, or another engine. Build configuration is
+handled exclusively by ~latexmk~, while AUCTeX focuses on editing, navigation,
+previewing, and invoking the compilation process.
 
-    (defun boost--buffer-contains-regex (regex limit)
-      "Return non-nil if the current buffer contains REGEX before position LIMIT."
-      (save-excursion
-        (save-restriction
-          (widen)
-          (goto-char (point-min))
-          (re-search-forward regex limit t))))
+For a less cluttered editing experience, ~TeX-fold-mode~ is enabled automatically
+in LaTeX buffers so that macros, comments, and environments can be folded on
+demand.
+
+#+begin_src emacs-lisp
+    ;; Enable folding of macros, comments, and environments in LaTeX buffers.
+    (add-hook 'LaTeX-mode-hook #'TeX-fold-mode)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7701,11 +7697,12 @@ file, AUCTeX gives you a ~Command~ menu.
       (TeX-save-document "")
       (TeX-command TeX-command-default 'TeX-master-file))
 
-    ;; Rebind the compile command to the default AUCTeX command in LaTeX mode only.
+    ;; Rebind the compile command to the default AUCTeX command in LaTeX mode
+    ;; only.
     (define-key LaTeX-mode-map (kbd "<f9>") #'boost-tex-command-default)
 
-    ;; Use PDF mode by default (instead of DVI).
-    (setq-default TeX-PDF-mode t)
+    ;; ;; Produce PDF output by default.
+    ;; (setq-default TeX-PDF-mode t)
 #+end_src
 
 A decent viewer reloads the PDF automatically when the file has changed while
@@ -7737,14 +7734,14 @@ application registered as the default PDF viewer.
 
     (leuven--section "4.2 (auctex)Viewing the formatted output")
 
-    ;; Use a saner PDF viewer (SumatraPDF, the default Windows PDF application).
-    (defvar leuven--sumatrapdf-command
-      (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
-      "Path to the SumatraPDF executable.")
-
-    ;; Configure the PDF viewer.
+    ;; Configure PDF viewers used by AUCTeX.
     (when (boundp 'TeX-view-program-list)
-      ;; Native Windows: invoke SumatraPDF directly.
+
+      (defvar leuven--sumatrapdf-command
+        (concat leuven--windows-program-files-dir "SumatraPDF/SumatraPDF.exe")
+        "Path to the SumatraPDF executable.")
+
+      ;; Native Windows: use SumatraPDF as the preferred PDF viewer.
       (when (and lvn--win32-p
                  (file-executable-p leuven--sumatrapdf-command))
         (add-to-list 'TeX-view-program-list
@@ -7754,7 +7751,7 @@ application registered as the default PDF viewer.
         (setcdr (assoc 'output-pdf TeX-view-program-selection)
                 '("SumatraPDF")))
 
-      ;; WSL: open the PDF with the default Windows PDF application.
+      ;; WSL: delegate PDF opening to the default Windows application.
       (when lvn--wsl-p
         (add-to-list 'TeX-view-program-list
                      '("Windows PDF Viewer"
