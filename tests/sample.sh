@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-#? bak, Time-stamp: <2026-08-14 Fri 13:52>
+#? bak, Time-stamp: <2026-08-14 Fri 15:08>
 
-##? Usage: bak FILE
-##?
 ##? Create a quick back-up copy of a file.
 ##?
 ##? Arguments:
@@ -17,6 +15,8 @@ set -uo pipefail
 # BSD sysexits(3) exit codes.
 readonly EX_OK=0
 readonly EX_USAGE=64
+
+docopts_output=$(docopts -h "$help" -V "$version" : "$@") || exit $?
 
 # }}}
 
@@ -39,6 +39,8 @@ write_log() {
 }
 
 # }}}
+
+filename=$(basename -- "$FILE")
 
 echo "Enter Your Name"
 read name
