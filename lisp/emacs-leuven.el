@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1553>
+;; Version: <20260814.2221>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1553>"
+(defconst boost-version "<20260814.2221>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -509,6 +509,7 @@ Shows a warning message if the file does not exist or is not executable."
         markdown-mode
         ;; multi-term
         multiple-cursors
+        outli
         pager
         ;; paredit
         ;; pdf-tools
@@ -1162,7 +1163,7 @@ called interactively."
   ;;   "Paste the contents of the Windows clipboard in WSL."
   ;;   (interactive)
   ;;   (let ((clipboard
-  ;;          (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2> /dev/null")))
+  ;;          (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2>/dev/null")))
   ;;     (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters.
   ;;     (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell.
   ;;
@@ -3811,6 +3812,12 @@ In Org mode, use `org-fill-paragraph'."
 
   (leuven--section "26.9 (emacs)Outline Mode")
 
+(add-hook 'emacs-lisp-mode-hook #'outli-mode)
+(add-hook 'sh-mode-hook #'outli-mode)
+(add-hook 'conf-mode-hook #'outli-mode)
+(add-hook 'latex-mode-hook #'outli-mode)
+(add-hook 'LaTeX-mode-hook #'outli-mode)
+
   ;; Outline mode commands for Emacs.
   (with-eval-after-load 'outline
 
@@ -3899,11 +3906,6 @@ In Org mode, use `org-fill-paragraph'."
               (lambda ()
                 (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
                   (hide-sublevels 1000))))
-
-  ;; (add-hook 'outline-minor-mode-hook
-  ;;           (lambda ()
-  ;;             (define-key outline-minor-mode-map (kbd "<C-tab>") #'org-cycle)
-  ;;             (define-key outline-minor-mode-map (kbd "<S-tab>") #'org-global-cycle))) ; backtab?
 
   ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
   (setq org-cycle-global-at-bob t)
@@ -4531,7 +4533,9 @@ the parent element."
                    nxml-forward-element
                    nil))
 
-    (add-hook 'nxml-mode-hook 'hs-minor-mode))
+    (add-hook 'nxml-mode-hook 'hs-minor-mode)
+                                        ; Derived from text-mode.
+)
 
   ;; Highlight the current tag and its matching opening/closing tag.
   (when (boost--try-require 'hl-tags-mode)
@@ -4827,8 +4831,7 @@ the parent element."
   (leuven--section "27.7 (emacs)Hideshow minor mode")
 
   ;; Enable Hideshow (code folding) for programming modes.
-  (add-hook 'prog-mode-hook #'hs-minor-mode)
-                                        ; No regions are folded by default?
+  (add-hook 'prog-mode-hook #'hs-minor-mode)  ; No regions are folded by default.
 
   (defface boost-hs-face
     '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
@@ -4861,7 +4864,7 @@ corresponding region."
 
               (overlay-put
                ov 'display
-               (propertize "# {{{ Boilerplate…"
+               (propertize "# {{{ Boilerplate… }}}"
                            'face 'boost-hs-face))))))))
 
   (defun boost--hs-fold-setup ()
@@ -4935,11 +4938,7 @@ corresponding region."
     (define-key hs-minor-mode-map (kbd "<C-M-kp-add>")      #'hs-show-all)
 
     ;; Remove the default `C-c @' prefix.
-    (define-key hs-minor-mode-map (kbd "C-c @") nil)
-
-    ;; ;; Hide all top level blocks.
-    ;; (add-hook 'find-file-hook #'hs-hide-all)
-)
+    (define-key hs-minor-mode-map (kbd "C-c @") nil))
 
 ;;** 27.8 (info "(emacs)Symbol Completion")
 
@@ -5290,7 +5289,7 @@ corresponding region."
 
       ;; Default command to run for `M-x rgrep'.
       (grep-apply-setting 'grep-find-template
-                          "find <D> <X> -type f <F> -exec rg <C> --no-heading -H <R> /dev/null {} +"))
+                          "find <D> <X> -type f <F> -exec rg <C> --no-heading -H <R>/dev/null {} +"))
                                         ; `<D>' = path.
                                         ; `<X>' for the find options to restrict
                                         ;       directory list.
