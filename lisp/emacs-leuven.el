@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1054>
+;; Version: <20260814.1105>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1054>"
+(defconst boost-version "<20260814.1105>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4828,17 +4828,23 @@ the parent element."
 
   (with-eval-after-load 'hideshow
 
-    ;; Unhide both code and comment hidden blocks when doing incremental search.
+    ;; Keep comment blocks visible when folding all code.
+    (setq hs-hide-comments-when-hiding-all nil)
+
+    ;; Show hidden blocks during incremental search.
     (setq hs-isearch-open t)
 
-    (defun lvn--expand-after-goto (orig-fun &rest args)
+    ;; Show folded code after jumping to a definition.
+    (add-hook 'xref-after-jump-hook #'hs-show-block)
+
+    ;; Show folded code after jumping to a line.
+    (defun boost--expand-after-goto (orig-fun &rest args)
       "Expand the block at point after jumping to a line or definition."
       (let ((result (apply orig-fun args)))
-        (save-excursion (hs-show-block))
+        (hs-show-block)
         result))
 
-    (advice-add 'goto-line :after #'lvn--expand-after-goto)
-    (advice-add 'xref-find-definitions :after #'lvn--expand-after-goto)
+    (advice-add 'goto-line :after #'boost--expand-after-goto)
 
     ;; Replace the default `C-c @' prefix with the more mnemonic `C-c f'
     ;; ("fold") prefix.
