@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1423>
+;; Version: <20260814.1430>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1423>"
+(defconst boost-version "<20260814.1430>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4846,24 +4846,24 @@ the parent element."
 
     (advice-add 'goto-line :after #'boost--expand-after-goto)
 
-    ;; Replace the default `C-c @' prefix with the more mnemonic `C-c f'
-    ;; ("fold") prefix.
+    ;; Replace the default `C-c @' prefix with the more mnemonic `C-c f' ("fold")
+    ;; prefix.
     (define-key hs-minor-mode-map (kbd "C-c f h") #'hs-hide-block)
     (define-key hs-minor-mode-map (kbd "C-c f s") #'hs-show-block)
     (define-key hs-minor-mode-map (kbd "C-c f M-h") #'hs-hide-all)
     (define-key hs-minor-mode-map (kbd "C-c f M-s") #'hs-show-all)
 
     ;; Alternative folding shortcuts using the main keyboard `+' and `-' keys.
-    (define-key hs-minor-mode-map (kbd "C--")   #'hs-hide-block)  ;; `C--'.
-    (define-key hs-minor-mode-map (kbd "C-+")   #'hs-show-block)  ;; `C-+'.
-    (define-key hs-minor-mode-map (kbd "C-M--") #'hs-hide-all)    ;; `C-M--'.
-    (define-key hs-minor-mode-map (kbd "C-M-+") #'hs-show-all)    ;; `C-M-+'.
+    (define-key hs-minor-mode-map (kbd "C--")   #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C-+")   #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-M--") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "C-M-+") #'hs-show-all)
 
     ;; Equivalent folding shortcuts for users who prefer the numeric keypad.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; `C--'.
-    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; `C-+'.
-    (define-key hs-minor-mode-map (kbd "<C-M-kp-subtract>") #'hs-hide-all)    ;; `C-M--'.
-    (define-key hs-minor-mode-map (kbd "<C-M-kp-add>")      #'hs-show-all)    ;; `C-M-+'.
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "<C-M-kp-subtract>") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "<C-M-kp-add>")      #'hs-show-all)
 
     ;; Remove default `C-c @' prefix.
     (define-key hs-minor-mode-map (kbd "C-c @") nil)

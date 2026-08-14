@@ -8788,15 +8788,18 @@ Common folding shortcuts used by popular editors and IDEs:
            nil)
          hs-special-modes-alist))
 
-  (defun boost-hs-fold-setup ()
+  (defun boost--hs-fold-setup ()
+    "Enable `hs-minor-mode' and fold the Boilerplate block.
+
+If a top-level \"# {{{ Boilerplate\" block is found, hide it
+automatically while leaving all other blocks expanded."
     (hs-minor-mode 1)
-    ;; (hs-hide-all)
     (save-excursion
       (goto-char (point-min))
-      (while (re-search-forward "^# {{{" nil t)
+      (when (re-search-forward "^# {{{ Boilerplate\\>" nil t)
         (hs-hide-block))))
 
-  (add-hook 'sh-mode-hook #'boost-hs-fold-setup)
+  (add-hook 'sh-mode-hook #'boost--hs-fold-setup)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8831,24 +8834,24 @@ Common folding shortcuts used by popular editors and IDEs:
 Change those really awkward key bindings with ~@~ in the middle:
 
 #+begin_src emacs-lisp
-    ;; Replace the default `C-c @' prefix with the more mnemonic `C-c f'
-    ;; ("fold") prefix.
+    ;; Replace the default `C-c @' prefix with the more mnemonic `C-c f' ("fold")
+    ;; prefix.
     (define-key hs-minor-mode-map (kbd "C-c f h") #'hs-hide-block)
     (define-key hs-minor-mode-map (kbd "C-c f s") #'hs-show-block)
     (define-key hs-minor-mode-map (kbd "C-c f M-h") #'hs-hide-all)
     (define-key hs-minor-mode-map (kbd "C-c f M-s") #'hs-show-all)
 
     ;; Alternative folding shortcuts using the main keyboard `+' and `-' keys.
-    (define-key hs-minor-mode-map (kbd "C--")   #'hs-hide-block)  ;; `C--'.
-    (define-key hs-minor-mode-map (kbd "C-+")   #'hs-show-block)  ;; `C-+'.
-    (define-key hs-minor-mode-map (kbd "C-M--") #'hs-hide-all)    ;; `C-M--'.
-    (define-key hs-minor-mode-map (kbd "C-M-+") #'hs-show-all)    ;; `C-M-+'.
+    (define-key hs-minor-mode-map (kbd "C--")   #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "C-+")   #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "C-M--") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "C-M-+") #'hs-show-all)
 
     ;; Equivalent folding shortcuts for users who prefer the numeric keypad.
-    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)  ;; `C--'.
-    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)  ;; `C-+'.
-    (define-key hs-minor-mode-map (kbd "<C-M-kp-subtract>") #'hs-hide-all)    ;; `C-M--'.
-    (define-key hs-minor-mode-map (kbd "<C-M-kp-add>")      #'hs-show-all)    ;; `C-M-+'.
+    (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
+    (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
+    (define-key hs-minor-mode-map (kbd "<C-M-kp-subtract>") #'hs-hide-all)
+    (define-key hs-minor-mode-map (kbd "<C-M-kp-add>")      #'hs-show-all)
 
     ;; Remove default `C-c @' prefix.
     (define-key hs-minor-mode-map (kbd "C-c @") nil)
