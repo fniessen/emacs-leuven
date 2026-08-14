@@ -8863,11 +8863,13 @@ Change those really awkward key bindings with ~@~ in the middle:
     (defun boost-hs-display-hidden-region (ov)
       "Display the number of hidden lines."
       (when (eq (overlay-get ov 'hs) 'code)
-        (let ((n-lines (count-lines (overlay-start ov)
-                                    (overlay-end ov))))
+        (let* ((n-lines (max 0
+                             (1- (count-lines (overlay-start ov)
+                                              (overlay-end ov)))))
+               (label   (if (= n-lines 1) "line" "lines")))
           (overlay-put
            ov 'display
-           (propertize (format "…%d lines…" n-lines)
+           (propertize (format "… %d %s …" n-lines label)
                        'face 'boost-hs-face)))))
 
     (setq hs-set-up-overlay #'boost-hs-display-hidden-region)

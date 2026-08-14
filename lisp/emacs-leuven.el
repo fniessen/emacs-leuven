@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1148>
+;; Version: <20260814.1359>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1148>"
+(defconst boost-version "<20260814.1359>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4876,11 +4876,13 @@ the parent element."
     (defun boost-hs-display-hidden-region (ov)
       "Display the number of hidden lines."
       (when (eq (overlay-get ov 'hs) 'code)
-        (let ((n-lines (count-lines (overlay-start ov)
-                                    (overlay-end ov))))
+        (let* ((n-lines (max 0
+                             (1- (count-lines (overlay-start ov)
+                                              (overlay-end ov)))))
+               (label   (if (= n-lines 1) "line" "lines")))
           (overlay-put
            ov 'display
-           (propertize (format "…%d lines…" n-lines)
+           (propertize (format "… %d %s …" n-lines label)
                        'face 'boost-hs-face)))))
 
     (setq hs-set-up-overlay #'boost-hs-display-hidden-region)
