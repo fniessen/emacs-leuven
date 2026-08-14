@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1520>
+;; Version: <20260814.1553>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1520>"
+(defconst boost-version "<20260814.1553>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4830,6 +4830,11 @@ the parent element."
   (add-hook 'prog-mode-hook #'hs-minor-mode)
                                         ; No regions are folded by default?
 
+  (defface boost-hs-face
+    '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
+    "Face used for hidden code indicators."
+    :group 'boost)
+
   (defun boost--hide-boilerplate ()
     "Hide the '# {{{ Boilerplate' section.
 
@@ -4860,10 +4865,33 @@ corresponding region."
                            'face 'boost-hs-face))))))))
 
   (defun boost--hs-fold-setup ()
+    "Enable folding support for shell scripts."
     (hs-minor-mode 1)
     (boost--hide-boilerplate))
 
   (add-hook 'sh-mode-hook #'boost--hs-fold-setup)
+
+  (defun boost--hs-display-hidden-region (ov)
+    "Display the number of hidden lines."
+    (when (eq (overlay-get ov 'hs) 'code)
+      (let* ((n-lines (max 0
+                           (1- (count-lines (overlay-start ov)
+                                            (overlay-end ov)))))
+             (label   (if (= n-lines 1) "line" "lines")))
+
+        ;; Display a right triangle in the left fringe.
+        (overlay-put
+         ov 'before-string
+         (propertize
+          " "
+          'display
+          '(left-fringe right-triangle boost-hs-face)))
+
+        ;; Display the hidden-line count in the buffer.
+        (overlay-put
+         ov 'display
+         (propertize (format "… %d %s …" n-lines label)
+                     'face 'boost-hs-face)))))
 
   (with-eval-after-load 'hideshow
 
@@ -4872,6 +4900,9 @@ corresponding region."
 
     ;; Show hidden blocks during incremental search.
     (setq hs-isearch-open t)
+
+    ;; Custom overlay display.
+    (setq hs-set-up-overlay #'boost--hs-display-hidden-region)
 
     ;; Show folded code after jumping to a definition.
     (add-hook 'xref-after-jump-hook #'hs-show-block)
@@ -4885,56 +4916,26 @@ corresponding region."
 
     (advice-add 'goto-line :after #'boost--expand-after-goto)
 
-    ;; Replace the default `C-c @' prefix with the more mnemonic `C-c f' ("fold")
-    ;; prefix.
+    ;; Replace the default `C-c @' prefix with `C-c f' ("fold").
     (define-key hs-minor-mode-map (kbd "C-c f h") #'hs-hide-block)
     (define-key hs-minor-mode-map (kbd "C-c f s") #'hs-show-block)
     (define-key hs-minor-mode-map (kbd "C-c f M-h") #'hs-hide-all)
     (define-key hs-minor-mode-map (kbd "C-c f M-s") #'hs-show-all)
 
-    ;; Alternative folding shortcuts using the main keyboard `+' and `-' keys.
+    ;; Alternative bindings using the main keyboard `+' and `-' keys.
     (define-key hs-minor-mode-map (kbd "C--")   #'hs-hide-block)
     (define-key hs-minor-mode-map (kbd "C-+")   #'hs-show-block)
     (define-key hs-minor-mode-map (kbd "C-M--") #'hs-hide-all)
     (define-key hs-minor-mode-map (kbd "C-M-+") #'hs-show-all)
 
-    ;; Equivalent folding shortcuts for users who prefer the numeric keypad.
+    ;; Equivalent bindings on the numeric keypad.
     (define-key hs-minor-mode-map (kbd "<C-kp-subtract>")   #'hs-hide-block)
     (define-key hs-minor-mode-map (kbd "<C-kp-add>")        #'hs-show-block)
     (define-key hs-minor-mode-map (kbd "<C-M-kp-subtract>") #'hs-hide-all)
     (define-key hs-minor-mode-map (kbd "<C-M-kp-add>")      #'hs-show-all)
 
-    ;; Remove default `C-c @' prefix.
+    ;; Remove the default `C-c @' prefix.
     (define-key hs-minor-mode-map (kbd "C-c @") nil)
-
-    (defface boost-hs-face
-      '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
-      "Face used for hidden code indicators."
-      :group 'boost)
-
-    (defun boost-hs-display-hidden-region (ov)
-      "Display the number of hidden lines."
-      (when (eq (overlay-get ov 'hs) 'code)
-        (let* ((n-lines (max 0
-                             (1- (count-lines (overlay-start ov)
-                                              (overlay-end ov)))))
-               (label   (if (= n-lines 1) "line" "lines")))
-
-          ;; Display a right triangle in the left fringe.
-          (overlay-put
-           ov 'before-string
-           (propertize
-            " "
-            'display
-            '(left-fringe right-triangle boost-hs-face)))
-
-          ;; Display the hidden-line count in the buffer.
-          (overlay-put
-           ov 'display
-           (propertize (format "… %d %s …" n-lines label)
-                       'face 'boost-hs-face)))))
-
-    (setq hs-set-up-overlay #'boost-hs-display-hidden-region)
 
     ;; ;; Hide all top level blocks.
     ;; (add-hook 'find-file-hook #'hs-hide-all)
