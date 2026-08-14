@@ -2944,10 +2944,11 @@ Example: \"Hello\" becomes \"xxxxx\"."
 
 (defvar boost--org-clean-typography-excluded-files
   '("README.org"
+    "emacs-leuven.txt"
     "emacs-leuven-org.txt"
     "emacs.org"
     "init.org")
-  "List of Org filenames where `boost--org-clean-typography` should NOT run.")
+  "List of Org filenames where `boost--org-clean-typography' should NOT run.")
 
 (defun boost--org-clean-typography ()
   "Replace typographic characters with ASCII equivalents before saving, unless in excluded Org files."
