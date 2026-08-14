@@ -7256,11 +7256,15 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
   (defun boost-show-hidden-text (&optional arg)
     "Show hidden text in the current buffer.
 
-When `hs-minor-mode' is active, show all hidden blocks.
+When `hs-minor-mode' is active, show all hidden blocks and
+remove any overlays hiding text.
+
 Otherwise toggle `visible-mode' using ARG."
     (interactive (list (or current-prefix-arg 'toggle)))
     (if (bound-and-true-p hs-minor-mode)
-        (hs-show-all)
+        (progn
+          (hs-show-all)
+          (remove-overlays))
       (visible-mode arg)))
 
   ;; Emacs represents `M-S-a' as `M-A'.
@@ -8778,26 +8782,26 @@ Common folding shortcuts used by popular editors and IDEs:
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-  (setq hs-special-modes-alist
-        (cons
-         '(sh-mode
-           "^# ooo.*$"
-           "^# ccc$"
-           "#"
-           nil
-           nil)
-         hs-special-modes-alist))
+  (defun boost--hide-boilerplate ()
+    "Hide the '# {{{ Boilerplate' section.
 
-  (defun boost--hs-fold-setup ()
-    "Enable `hs-minor-mode' and fold the Boilerplate block.
-
-If a top-level \"# {{{ Boilerplate\" block is found, hide it
-automatically while leaving all other blocks expanded."
-    (hs-minor-mode 1)
+This implementation does not rely on hideshow's block detection
+engine.  Instead, it searches explicitly for the '# {{{ Boilerplate'
+and matching '# }}}' markers and creates an overlay to hide the
+corresponding region."
     (save-excursion
       (goto-char (point-min))
       (when (re-search-forward "^# {{{ Boilerplate\\>" nil t)
-        (hs-hide-block))))
+        (let ((beg (line-beginning-position)))
+          (when (re-search-forward "^# }}}$" nil t)
+            (let ((ov (make-overlay beg (line-end-position))))
+              (overlay-put ov 'invisible t)
+              (overlay-put ov 'isearch-open-invisible #'delete-overlay)
+              (overlay-put ov 'display "# {{{ Boilerplate...")))))))
+
+  (defun boost--hs-fold-setup ()
+    (hs-minor-mode 1)
+    (boost--hide-boilerplate))
 
   (add-hook 'sh-mode-hook #'boost--hs-fold-setup)
 #+end_src
