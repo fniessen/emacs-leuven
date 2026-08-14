@@ -7017,16 +7017,30 @@ Outline is line-oriented and does not distinguish end-of-block.
 
 *** Outli
 
-Outli devient intéressant lorsque tu veux davantage que le folding : speed
-commands, gestion plus élaborée des headings, imenu, faces, comportement
-automatique selon les commentaires du major mode, etc.
+Outli extends =outline-minor-mode= with a more Org-like experience, including
+section cycling, speed commands, heading navigation, Imenu integration,
+dedicated faces, and automatic detection of the comment prefix used by each
+major mode.
+
+Enable it for all modes derived from =prog-mode=, as well as a few additional
+modes:
 
 #+begin_src emacs-lisp
-(add-hook 'emacs-lisp-mode-hook #'outli-mode)
-(add-hook 'sh-mode-hook #'outli-mode)
-(add-hook 'conf-mode-hook #'outli-mode)
-(add-hook 'latex-mode-hook #'outli-mode)
-(add-hook 'LaTeX-mode-hook #'outli-mode)
+(dolist (hook '(prog-mode-hook
+                conf-mode-hook
+                LaTeX-mode-hook))
+  (add-hook hook #'outli-mode))
+#+end_src
+
+The heading syntax can be customized per major mode via
+=outli-heading-config=. For example, to use =;; *=, =;; **=, etc. in =emacs-lisp-mode=:
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'outli
+  ;; I prefer a space between the comment prefix and the heading marker, as it
+  ;; is more readable.
+  (setf (alist-get 'emacs-lisp-mode outli-heading-config)
+        '(";; " ?*)))
 #+end_src
 
 *** TODO outline-minor-mode (inside plain latex-mode as well)
@@ -7049,7 +7063,7 @@ You can use ~org-cycle~ in other modes, with ~outline-minor-mode~.
 
 See https://github.com/zk-phi/dotfiles/blob/master/emacs/init.el.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Outline mode commands for Emacs.
   (with-eval-after-load 'outline
 
@@ -7137,7 +7151,7 @@ See https://github.com/zk-phi/dotfiles/blob/master/emacs/init.el.
 
 For Emacs Lisp, Stefan Monnier additionally uses:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     (add-hook 'outline-minor-mode-hook
               (lambda ()
                 (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
@@ -7152,7 +7166,7 @@ use for opening/closing elements).
 
 *** org
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
   (setq org-cycle-global-at-bob t)
 
@@ -7183,7 +7197,7 @@ non-Org buffers?
 
 As for handling "large" files, I use this:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; from Bastien
 
   ;; ;; XXX 2010-06-21 Conflicts with outline-minor-mode bindings
@@ -7231,7 +7245,7 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 *** fold-dwim-org
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; ;; Unified user interface for Emacs folding modes, bound to Org key-strokes.
   ;; (boost--try-require 'fold-dwim-org)
 #+end_src

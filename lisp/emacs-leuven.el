@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.2221>
+;; Version: <20260814.2256>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.2221>"
+(defconst boost-version "<20260814.2256>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3812,151 +3812,16 @@ In Org mode, use `org-fill-paragraph'."
 
   (leuven--section "26.9 (emacs)Outline Mode")
 
-(add-hook 'emacs-lisp-mode-hook #'outli-mode)
-(add-hook 'sh-mode-hook #'outli-mode)
-(add-hook 'conf-mode-hook #'outli-mode)
-(add-hook 'latex-mode-hook #'outli-mode)
-(add-hook 'LaTeX-mode-hook #'outli-mode)
+(dolist (hook '(prog-mode-hook
+                conf-mode-hook
+                LaTeX-mode-hook))
+  (add-hook hook #'outli-mode))
 
-  ;; Outline mode commands for Emacs.
-  (with-eval-after-load 'outline
-
-    ;; Bind the outline minor mode functions to an easy to remember prefix
-    ;; key (more accessible than the horrible prefix `C-c @').
-    (setq outline-minor-mode-prefix (kbd "C-c C-o")) ; like in nXML mode
-
-    ;; ;; Make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
-    ;; ;; mode outline navigation (written by Carsten Dominik).
-    ;; (boost--try-require 'outline-magic)
-    ;; (with-eval-after-load 'outline-magic
-    ;;   (add-hook 'outline-minor-mode-hook
-    ;;             (lambda ()
-    ;;               (define-key outline-minor-mode-map
-    ;;                           (kbd "<S-tab>") #'outline-cycle)
-    ;;               (define-key outline-minor-mode-map
-    ;;                           (kbd "<M-left>") #'outline-promote)
-    ;;               (define-key outline-minor-mode-map
-    ;;                           (kbd "<M-right>") #'outline-demote)
-    ;;               (define-key outline-minor-mode-map
-    ;;                           (kbd "<M-up>") #'outline-move-subtree-up)
-    ;;               (define-key outline-minor-mode-map
-    ;;                           (kbd "<M-down>") #'outline-move-subtree-down))))
-
-    ;; ;; Extra support for outline minor mode.
-    ;; (boost--try-require 'out-xtra)
-
-
-    ;; Org-style folding for a `.emacs' (and much more).
-
-    ;; FIXME This should be in an `eval-after-load' of Org, so that
-    ;; `org-level-N' are defined when used
-
-    (defun leuven--outline-regexp ()
-      "Return an outline heading regexp, robust when `comment-start` is nil."
-      (if (not (stringp comment-start))
-          ;; Case where the mode has no comment syntax.
-          "^\\*+ "
-        (let* ((comment-starter
-                (replace-regexp-in-string "[[:space:]]+" "" comment-start))
-               ;; Emacs Lisp special case: a single ';' → force ';;'.
-               (comment-starter
-                (if (string= comment-start ";")
-                    ";;"
-                  comment-starter)))
-          (concat "^" comment-starter "[*]+ "))))
-
-    ;; Fontify the whole line for headings (with a background color).
-    (setq org-fontify-whole-heading-line t)
-
-    (defun leuven--outline-minor-mode-hook ()
-      (setq outline-regexp (leuven--outline-regexp))
-      (let* ((org-fontify-whole-headline-regexp "") ; "\n?")
-             (heading-1-regexp
-              (concat (substring outline-regexp 0 -1)
-                      "\\{1\\} \\(.*" org-fontify-whole-headline-regexp "\\)"))
-             (heading-2-regexp
-              (concat (substring outline-regexp 0 -1)
-                      "\\{2\\} \\(.*" org-fontify-whole-headline-regexp "\\)"))
-             (heading-3-regexp
-              (concat (substring outline-regexp 0 -1)
-                      "\\{3\\} \\(.*" org-fontify-whole-headline-regexp "\\)"))
-             (heading-4-regexp
-              (concat (substring outline-regexp 0 -1)
-                      "\\{4,\\} \\(.*" org-fontify-whole-headline-regexp "\\)")))
-        (font-lock-add-keywords nil
-         `((,heading-1-regexp 1 'org-level-1 t)
-           (,heading-2-regexp 1 'org-level-2 t)
-           (,heading-3-regexp 1 'org-level-3 t)
-           (,heading-4-regexp 1 'org-level-4 t)))))
-
-    (add-hook 'outline-minor-mode-hook #'leuven--outline-minor-mode-hook)
-
-    ;; Add the following as the top line of your `.emacs':
-    ;;
-    ;; ; -*- mode: emacs-lisp; eval: (outline-minor-mode 1); -*-
-    ;;
-    ;; Now you can add `;;' and `;;*', etc. as headings in your `.emacs'
-    ;; and cycle using `<S-tab>', `<M-left>' and `<M-right>' will collapse
-    ;; or expand all headings respectively. I am guessing you mean to make
-    ;; segments such as `;; SHORTCUTS' and `;; VARIABLES', this will do
-    ;; that, but not too much more.
-    )
-
-    (add-hook 'outline-minor-mode-hook
-              (lambda ()
-                (when (and outline-minor-mode (derived-mode-p 'emacs-lisp-mode))
-                  (hide-sublevels 1000))))
-
-  ;; Cycle globally if cursor is at beginning of buffer and not at a headline.
-  (setq org-cycle-global-at-bob t)
-
-  ;; (setq org-cycle-level-after-item/entry-creation nil)
-
-  ;; ;; 'org-cycle' should never emulate TAB.
-  ;; (setq org-cycle-emulate-tab nil)
-
-  (global-set-key (kbd "<S-tab>") #'org-cycle) ; that works (but on level 1+)
-  ;; (global-set-key (kbd "S-<tab>") (kbd "C-u M-x org-cycle")) ; that works (but on level 1+)
-
-  ;; TODO Look at org-cycle-global and local below, they work better, but
-  ;; still on level 1+
-  ;; TODO Replace it by a function which alternatively does `hide-body' and
-  ;; `show-all'
-
-  ;; from Bastien
-
-  ;; ;; XXX 2010-06-21 Conflicts with outline-minor-mode bindings
-  ;; ;; add a hook to use `orgstruct-mode' in Emacs Lisp buffers
-  ;; (add-hook 'emacs-lisp-mode-hook #'orgstruct-mode)
-
-  (defun org-cycle-global ()
-    (interactive)
-    (org-cycle t))
-
-  (global-set-key (kbd "C-M-]") #'org-cycle-global)
-                                        ; XXX ok on Emacs Lisp, not on LaTeX
-                                        ; S-TAB?
-
-  ;; (defun org-cycle-local ()
-  ;;   (interactive)
-  ;;   (save-excursion
-  ;;     (move-beginning-of-line nil)
-  ;;     (org-cycle)))
-
-  (defun org-cycle-local ()
-    (interactive)
-    (ignore-errors
-      (end-of-defun)
-      (beginning-of-defun))
-    (org-cycle))
-
-  (global-set-key (kbd "M-]") #'org-cycle-local)
-                                        ; XXX ok on Emacs Lisp, not on LaTeX
-
-;; C-M-] and M-] fold the whole buffer or the current defun.
-
-  ;; ;; Unified user interface for Emacs folding modes, bound to Org key-strokes.
-  ;; (boost--try-require 'fold-dwim-org)
+(with-eval-after-load 'outli
+  ;; I prefer a space between the comment prefix and the heading marker, as it
+  ;; is more readable.
+  (setf (alist-get 'emacs-lisp-mode outli-heading-config)
+        '(";; " ?*)))
 
   ;; 25.8.2
   ;; Toggle visibility of hidden text.
