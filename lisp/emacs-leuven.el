@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1105>
+;; Version: <20260814.1134>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1105>"
+(defconst boost-version "<20260814.1134>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4825,6 +4825,8 @@ the parent element."
 
   ;; Enable Hideshow (code folding) for programming modes.
   (add-hook 'prog-mode-hook #'hs-minor-mode)
+                                        ; Regions remain visible until
+                                        ; explicitly folded?
 
   (with-eval-after-load 'hideshow
 

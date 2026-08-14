@@ -8775,7 +8775,33 @@ Common folding shortcuts used by popular editors and IDEs:
 
   ;; Enable Hideshow (code folding) for programming modes.
   (add-hook 'prog-mode-hook #'hs-minor-mode)
+                                        ; Regions remain visible until
+                                        ; explicitly folded?
+#+end_src
 
+#+begin_src emacs-lisp :tangle no
+  (setq hs-special-modes-alist
+        (cons
+         '(sh-mode
+           "^# {{{.*$"
+           "^# }}}$"
+           "#"
+           nil
+           nil)
+         hs-special-modes-alist))
+
+  (defun boost-hs-fold-setup ()
+    (hs-minor-mode 1)
+    ;; (hs-hide-all)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^# {{{" nil t)
+        (hs-hide-block))))
+
+  (add-hook 'sh-mode-hook #'boost-hs-fold-setup)
+#+end_src
+
+#+begin_src emacs-lisp
   (with-eval-after-load 'hideshow
 
     ;; Keep comment blocks visible when folding all code.
