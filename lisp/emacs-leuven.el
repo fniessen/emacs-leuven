@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1134>
+;; Version: <20260814.1148>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1134>"
+(defconst boost-version "<20260814.1148>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2651,46 +2651,45 @@ file B."
 
   (leuven--section "19.18 (emacs)File Conveniences")
 
-  ;; Filenames excluded from the recent list.
-  (setq recentf-exclude                 ; Has to be set before you require
-                                        ; `recentf'!
-        '(
-          ".recentf"
-          "~$"                          ; Emacs (and others) backup.
-          "\\.aux$" "\\.log$" "\\.toc$" ; LaTeX.
-          "/tmp/"
-          ))
+  ;; Exclude temporary, generated, backup, and cache files from the recent
+  ;; files list.
+  (setq recentf-exclude
+        '("/tmp/"
+          "/\\.cache/"
+          "/\\.git/"
+          "\\.aux$"
+          "\\.bbl$"
+          "\\.blg$"
+          "\\.toc$"
+          "\\.synctex\\.gz$"
+          "~$"))                        ; Must be set before loading `recentf'!
+
+  ;; ;; Disable automatic cleanup.
+  ;; ;; (Remote TRAMP entries may be slow to check or temporarily unavailable.)
+  ;; (setq recentf-auto-cleanup 'never)    ; Must be set before loading `recentf'!
 
   ;; Setup a menu of recently opened files.
   (idle-require 'recentf)
 
   (with-eval-after-load 'recentf
 
-    ;; Maximum number of items that will be saved.
-    (setq recentf-max-saved-items 300)  ; Just 20 is too recent.
+    ;; Keep a reasonably long recent files history.
+    (setq recentf-max-saved-items 200)  ; Just 20 is too recent.
 
     ;; File to save the recent list into.
     (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 
-    ;; (When using TRAMP) turn off the cleanup feature of `recentf'.
-    (setq recentf-auto-cleanup 'never)  ; Disable before we start recentf!
-
-    ;; Save file names relative to my current home directory.
+    ;; Store paths using `~', whenever possible, instead of absolute home
+    ;; directory names. This makes the recent files list more portable across
+    ;; machines and user accounts.
     (setq recentf-filename-handlers '(abbreviate-file-name))
 
-    ;; Enable recentf-mode
+    ;; Enable tracking of recently visited files.
     (recentf-mode 1)
 
-    ;; Remove non-existent files from the recent files list automatically.
-    (defun lvn-recentf-cleanup ()
-      "Clean up recentf list by removing non-existent files."
-      (interactive)
-      (setq recentf-list (cl-remove-if-not 'file-exists-p recentf-list))
-      (recentf-cleanup))
-
-    ;; Advice recentf-load-list to perform cleanup after loading the recentf
-    ;; list.
-    (advice-add 'recentf-load-list :after #'lvn-recentf-cleanup))
+    ;; Remove stale, duplicate, and excluded entries from the recent files list
+    ;; after loading it from disk.
+    (advice-add 'recentf-load-list :after #'recentf-cleanup))
 
   (leuven--section "Helm")
 
@@ -4825,8 +4824,7 @@ the parent element."
 
   ;; Enable Hideshow (code folding) for programming modes.
   (add-hook 'prog-mode-hook #'hs-minor-mode)
-                                        ; Regions remain visible until
-                                        ; explicitly folded?
+                                        ; No regions are folded by default?
 
   (with-eval-after-load 'hideshow
 
