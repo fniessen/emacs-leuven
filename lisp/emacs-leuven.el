@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1359>
+;; Version: <20260814.1423>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1359>"
+(defconst boost-version "<20260814.1423>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -4880,6 +4880,16 @@ the parent element."
                              (1- (count-lines (overlay-start ov)
                                               (overlay-end ov)))))
                (label   (if (= n-lines 1) "line" "lines")))
+
+          ;; Display a right triangle in the left fringe.
+          (overlay-put
+           ov 'before-string
+           (propertize
+            " "
+            'display
+            '(left-fringe right-triangle boost-hs-face)))
+
+          ;; Display the hidden-line count in the buffer.
           (overlay-put
            ov 'display
            (propertize (format "… %d %s …" n-lines label)

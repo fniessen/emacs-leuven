@@ -8781,8 +8781,8 @@ Common folding shortcuts used by popular editors and IDEs:
   (setq hs-special-modes-alist
         (cons
          '(sh-mode
-           "^# {{{.*$"
-           "^# }}}$"
+           "^# ooo.*$"
+           "^# ccc$"
            "#"
            nil
            nil)
@@ -8867,6 +8867,16 @@ Change those really awkward key bindings with ~@~ in the middle:
                              (1- (count-lines (overlay-start ov)
                                               (overlay-end ov)))))
                (label   (if (= n-lines 1) "line" "lines")))
+
+          ;; Display a right triangle in the left fringe.
+          (overlay-put
+           ov 'before-string
+           (propertize
+            " "
+            'display
+            '(left-fringe right-triangle boost-hs-face)))
+
+          ;; Display the hidden-line count in the buffer.
           (overlay-put
            ov 'display
            (propertize (format "… %d %s …" n-lines label)
