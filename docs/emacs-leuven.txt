@@ -4266,7 +4266,7 @@ If the version on disk is the one you want, simply ignore the warning.
   (defface boost-recover-overlay-face
     '((t (:weight bold :background "#FF3F3F")))
     "Face used to highlight buffers with newer auto-save data."
-    :group 'files)
+    :group 'boost)
 
   (defvar boost--recover-overlay nil
     "Overlay highlighting that the visited file has newer auto-save data.")
@@ -8825,21 +8825,22 @@ Change those really awkward key bindings with ~@~ in the middle:
 #+end_src
 
 #+begin_src emacs-lisp
-    (defcustom hs-face 'hs-face
-      "*Specify the face to to use for the hidden region indicator"
-      :group 'hideshow
-      :type 'face)
-
-    (defface hs-face
+    (defface boost-hs-face
       '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
-      "Face to hightlight the \"…\" area of hidden regions"
-      :group 'hideshow)
+      "Face used for hidden code indicators."
+      :group 'boost)
 
-    (defun hs-display-code-line-counts (ov)
-      (when (eq 'code (overlay-get ov 'hs))
-        (overlay-put ov 'display (propertize "…" 'face 'hs-face))))
+    (defun boost-hs-display-hidden-region (ov)
+      "Display the number of hidden lines."
+      (when (eq (overlay-get ov 'hs) 'code)
+        (let ((n-lines (count-lines (overlay-start ov)
+                                    (overlay-end ov))))
+          (overlay-put
+           ov 'display
+           (propertize (format "…%d lines…" n-lines)
+                       'face 'boost-hs-face)))))
 
-    (setq hs-set-up-overlay 'hs-display-code-line-counts)
+    (setq hs-set-up-overlay #'boost-hs-display-hidden-region)
 
     ;; ;; Hide all top level blocks.
     ;; (add-hook 'find-file-hook #'hs-hide-all)
@@ -8917,7 +8918,7 @@ without modifying the buffer contents.
     (defface boost-glasses-face
       '((t (:weight bold)))
       "Face used to highlight CamelCase word boundaries."
-      :group 'glasses)
+      :group 'boost)
 
     ;; String to be displayed as a visual separator in unreadable identifiers.
     (setq glasses-separator "")

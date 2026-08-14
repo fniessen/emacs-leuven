@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1019>
+;; Version: <20260814.1054>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1019>"
+(defconst boost-version "<20260814.1054>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2415,7 +2415,7 @@ Otherwise, stop the current recording."
   (defface boost-recover-overlay-face
     '((t (:weight bold :background "#FF3F3F")))
     "Face used to highlight buffers with newer auto-save data."
-    :group 'files)
+    :group 'boost)
 
   (defvar boost--recover-overlay nil
     "Overlay highlighting that the visited file has newer auto-save data.")
@@ -4862,21 +4862,22 @@ the parent element."
     ;; Remove default `C-c @' prefix.
     (define-key hs-minor-mode-map (kbd "C-c @") nil)
 
-    (defcustom hs-face 'hs-face
-      "*Specify the face to to use for the hidden region indicator"
-      :group 'hideshow
-      :type 'face)
-
-    (defface hs-face
+    (defface boost-hs-face
       '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
-      "Face to hightlight the \"…\" area of hidden regions"
-      :group 'hideshow)
+      "Face used for hidden code indicators."
+      :group 'boost)
 
-    (defun hs-display-code-line-counts (ov)
-      (when (eq 'code (overlay-get ov 'hs))
-        (overlay-put ov 'display (propertize "…" 'face 'hs-face))))
+    (defun boost-hs-display-hidden-region (ov)
+      "Display the number of hidden lines."
+      (when (eq (overlay-get ov 'hs) 'code)
+        (let ((n-lines (count-lines (overlay-start ov)
+                                    (overlay-end ov))))
+          (overlay-put
+           ov 'display
+           (propertize (format "…%d lines…" n-lines)
+                       'face 'boost-hs-face)))))
 
-    (setq hs-set-up-overlay 'hs-display-code-line-counts)
+    (setq hs-set-up-overlay #'boost-hs-display-hidden-region)
 
     ;; ;; Hide all top level blocks.
     ;; (add-hook 'find-file-hook #'hs-hide-all)
@@ -4899,7 +4900,7 @@ the parent element."
     (defface boost-glasses-face
       '((t (:weight bold)))
       "Face used to highlight CamelCase word boundaries."
-      :group 'glasses)
+      :group 'boost)
 
     ;; String to be displayed as a visual separator in unreadable identifiers.
     (setq glasses-separator "")
