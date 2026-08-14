@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#? bak, Time-stamp: <2026-08-14 Fri 15:08>
+#? bak, Time-stamp: <2026-08-14 Fri 22:26>
 
 ##? Create a quick back-up copy of a file.
 ##?
@@ -20,25 +20,27 @@ docopts_output=$(docopts -h "$help" -V "$version" : "$@") || exit $?
 
 # }}}
 
-# {{{ Variables
+# * Variables
 
 n=10
 
-# }}}
+# * Functions
 
-# {{{ Functions
+# ** Helper
 
 say_hello() {
     local name="$1"
     echo "Hello, ${name}!"
 }
 
+# ** Logging
+
 write_log() {
     local message="$1"
     printf '%s\n' "$message" >> "$LOG_FILE"
 }
 
-# }}}
+# * Main
 
 filename=$(basename -- "$FILE")
 
