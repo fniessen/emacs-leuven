@@ -8781,7 +8781,7 @@ Common folding shortcuts used by popular editors and IDEs:
                                         ; No regions are folded by default?
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (defun boost--hide-boilerplate ()
     "Hide the '# {{{ Boilerplate' section.
 
@@ -8797,7 +8797,19 @@ corresponding region."
             (let ((ov (make-overlay beg (line-end-position))))
               (overlay-put ov 'invisible t)
               (overlay-put ov 'isearch-open-invisible #'delete-overlay)
-              (overlay-put ov 'display "# {{{ Boilerplate...")))))))
+
+              ;; Display a right triangle in the left fringe.
+              (overlay-put
+               ov 'before-string
+               (propertize
+                " "
+                'display
+                '(left-fringe right-triangle boost-hs-face)))
+
+              (overlay-put
+               ov 'display
+               (propertize "# {{{ Boilerplate…"
+                           'face 'boost-hs-face))))))))
 
   (defun boost--hs-fold-setup ()
     (hs-minor-mode 1)

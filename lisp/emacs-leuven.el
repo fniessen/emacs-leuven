@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260814.1511>
+;; Version: <20260814.1520>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260814.1511>"
+(defconst boost-version "<20260814.1520>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -3961,7 +3961,7 @@ In Org mode, use `org-fill-paragraph'."
   (defun boost-show-hidden-text (&optional arg)
     "Show hidden text in the current buffer.
 
-When `hs-minor-mode' is active, reveal all hidden blocks and
+When `hs-minor-mode' is active, show all hidden blocks and
 remove any overlays hiding text.
 
 Otherwise toggle `visible-mode' using ARG."
@@ -4829,6 +4829,41 @@ the parent element."
   ;; Enable Hideshow (code folding) for programming modes.
   (add-hook 'prog-mode-hook #'hs-minor-mode)
                                         ; No regions are folded by default?
+
+  (defun boost--hide-boilerplate ()
+    "Hide the '# {{{ Boilerplate' section.
+
+This implementation does not rely on hideshow's block detection
+engine.  Instead, it searches explicitly for the '# {{{ Boilerplate'
+and matching '# }}}' markers and creates an overlay to hide the
+corresponding region."
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^# {{{ Boilerplate\\>" nil t)
+        (let ((beg (line-beginning-position)))
+          (when (re-search-forward "^# }}}$" nil t)
+            (let ((ov (make-overlay beg (line-end-position))))
+              (overlay-put ov 'invisible t)
+              (overlay-put ov 'isearch-open-invisible #'delete-overlay)
+
+              ;; Display a right triangle in the left fringe.
+              (overlay-put
+               ov 'before-string
+               (propertize
+                " "
+                'display
+                '(left-fringe right-triangle boost-hs-face)))
+
+              (overlay-put
+               ov 'display
+               (propertize "# {{{ Boilerplate…"
+                           'face 'boost-hs-face))))))))
+
+  (defun boost--hs-fold-setup ()
+    (hs-minor-mode 1)
+    (boost--hide-boilerplate))
+
+  (add-hook 'sh-mode-hook #'boost--hs-fold-setup)
 
   (with-eval-after-load 'hideshow
 
