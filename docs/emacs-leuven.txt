@@ -5553,7 +5553,7 @@ You can also use the ~@~ prefix to *search buffer contents*.
     (setq helm-buffer-details-flag nil)
 
     ;; String to display at end of truncated buffer names.
-    (setq helm-buffers-end-truncated-string "..."))
+    (setq helm-buffers-end-truncated-string "…"))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8376,7 +8376,7 @@ Truncate the current function name (for the mode line):
       (or (when-let ((current (gethash (selected-window) which-func-table)))
             (truncate-string-to-width current
                                       lvn-which-func-max-length
-                                      nil nil "..."))
+                                      nil nil "…"))
           which-func-unknown))
 
     (setq which-func-format
@@ -8832,12 +8832,12 @@ Change those really awkward key bindings with ~@~ in the middle:
 
     (defface hs-face
       '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
-      "Face to hightlight the \"...\" area of hidden regions"
+      "Face to hightlight the \"…\" area of hidden regions"
       :group 'hideshow)
 
     (defun hs-display-code-line-counts (ov)
       (when (eq 'code (overlay-get ov 'hs))
-        (overlay-put ov 'display (propertize "..." 'face 'hs-face))))
+        (overlay-put ov 'display (propertize "…" 'face 'hs-face))))
 
     (setq hs-set-up-overlay 'hs-display-code-line-counts)
 

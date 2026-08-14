@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260812.2152>
+;; Version: <20260814.1019>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260812.2152>"
+(defconst boost-version "<20260814.1019>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -2933,7 +2933,7 @@ file B."
     (setq helm-buffer-details-flag nil)
 
     ;; String to display at end of truncated buffer names.
-    (setq helm-buffers-end-truncated-string "..."))
+    (setq helm-buffers-end-truncated-string "…"))
 
   ;; (with-eval-after-load 'helm-adaptive
   ;;
@@ -4645,7 +4645,7 @@ the parent element."
       (or (when-let ((current (gethash (selected-window) which-func-table)))
             (truncate-string-to-width current
                                       lvn-which-func-max-length
-                                      nil nil "..."))
+                                      nil nil "…"))
           which-func-unknown))
 
     (setq which-func-format
@@ -4869,12 +4869,12 @@ the parent element."
 
     (defface hs-face
       '((t (:box "#777777" :foreground "#9A9A6A" :background "#F3F349")))
-      "Face to hightlight the \"...\" area of hidden regions"
+      "Face to hightlight the \"…\" area of hidden regions"
       :group 'hideshow)
 
     (defun hs-display-code-line-counts (ov)
       (when (eq 'code (overlay-get ov 'hs))
-        (overlay-put ov 'display (propertize "..." 'face 'hs-face))))
+        (overlay-put ov 'display (propertize "…" 'face 'hs-face))))
 
     (setq hs-set-up-overlay 'hs-display-code-line-counts)
 
