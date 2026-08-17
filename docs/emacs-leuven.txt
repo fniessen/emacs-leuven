@@ -5902,27 +5902,27 @@ Creating and Selecting Buffers:
 #+end_src
 
 - If there are two windows displayed, behave like the built-in Emacs command
-  ~C-x o~, which moves the cursor to the other window.
+  ~C-x o~, which moves the cursor to the other window.
 
 - If there is only one window displayed, swap the current buffer with the
   previous buffer in the buffer list.
 
 #+begin_src emacs-lisp
-  (defun boost-previous-buffer-or-window ()
-    "Switch to the previous buffer or window.
+  (defun boost-previous-buffer-or-next-window ()
+    "Switch to the previous buffer or the next window.
 
 When only one window is present, switch to the previous buffer.
 
-When multiple windows are present, select the previous window."
+When multiple windows are present, select the next window."
     (interactive)
     ;; Ignore an active minibuffer window.
     (if (one-window-p t)
         ;; Switch to the previous buffer.
-        (switch-to-buffer (other-buffer (current-buffer) 1))
-      ;; Move to the previous window in a multi-window configuration.
-      (other-window -1)))
+        (switch-to-buffer (other-buffer))
+      ;; Move to the next window.
+      (other-window 1)))
 
-  (global-set-key (kbd "<f6>") #'boost-previous-buffer-or-window)
+  (global-set-key (kbd "<f6>") #'boost-previous-buffer-or-next-window)
 #+end_src
 
 ** Deleting and Rearranging Windows
@@ -7042,6 +7042,13 @@ The heading syntax can be customized per major mode via
     (setf (alist-get 'emacs-lisp-mode outli-heading-config)
           '(";; " ?*)))
 #+end_src
+
+  (with-eval-after-load 'outli
+    ;; I prefer a space between the comment prefix and the heading marker, as it
+    ;; is more readable.
+    (setf (alist-get 'tex-mode outli-heading-config)
+          '("% " ?*)))
+
 
 *** TODO outline-minor-mode (inside plain latex-mode as well)
 
