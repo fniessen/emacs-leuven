@@ -363,35 +363,72 @@ Available tools: ~gptel-tools~.
 ;; Modify/edit a buffer (use with caution!).
 (gptel-make-tool
  :name "modify_buffer"
- :description "Modify the contents of an Emacs buffer. Use with caution. Confirm before use."
- :args (list '(:name "buffer"  :type "string" :description "Buffer name")
-             '(:name "content" :type "string" :description "New content to set or append")
-             '(:name "action"  :type "string" :description "One of: 'replace', 'append' or 'prepend'"))
- :function (lambda (buffer content action)
-             (when (y-or-n-p (format "Modify buffer %s? " buffer))
-               (with-current-buffer (get-buffer buffer)
-                 (cond ((string= action "replace") (erase-buffer) (insert content))
-                       ((string= action "append")  (goto-char (point-max)) (insert content))
-                       ((string= action "prepend") (goto-char (point-min)) (insert content))
-                       (t (error "Invalid action")))
-                 "Buffer modified successfully.")
-               "Modification cancelled."))
+ :description "Modify the contents of an Emacs buffer."
+ :args
+ (list
+  '(:name "buffer"
+    :type "string"
+    :description "Buffer name")
+  '(:name "content"
+    :type "string"
+    :description "Content to insert")
+  '(:name "action"
+    :type "string"
+    :enum ["replace" "append" "prepend"]
+    :description "Modification to perform"))
+ :function
+ (lambda (buffer content action)
+   (let ((target-buffer (get-buffer buffer)))
+     (unless (buffer-live-p target-buffer)
+       (error "Buffer is not live: %s" buffer))
+     (if (y-or-n-p (format "Modify buffer %s? " buffer))
+         (with-current-buffer target-buffer
+           (pcase action
+             ("replace"
+              (erase-buffer)
+              (insert content))
+             ("append"
+              (goto-char (point-max))
+              (insert content))
+             ("prepend"
+              (goto-char (point-min))
+              (insert content))
+             (_
+              (error "Invalid action: %s" action)))
+           "Buffer modified successfully.")
+       "Modification cancelled.")))
  :category "emacs")
 #+end_src
 
 #+begin_src emacs-lisp
 (gptel-make-tool
  :name "create_file"
- :description "Create a new file with the specified content"
- :args (list '(:name "path"     :type "string" :description "The directory where to create the file")
-             '(:name "filename" :type "string" :description "The name of the file to create")
-             '(:name "content"  :type "string" :description "The content to write to the file"))
- :function (lambda (path filename content)
-             (let ((full-path (expand-file-name filename path)))
-               (with-temp-buffer
-                 (insert content)
-                 (write-file full-path))
-               (format "Created file %s in %s" filename path)))
+ :description "Create a new file with the specified content."
+ :args
+ (list
+  '(:name "path"
+    :type "string"
+    :description "Directory in which to create the file")
+  '(:name "filename"
+    :type "string"
+    :description "File name")
+  '(:name "content"
+    :type "string"
+    :description "File content"))
+ :function
+ (lambda (path filename content)
+   (let* ((directory (file-name-as-directory
+                      (expand-file-name path)))
+          (full-path (expand-file-name filename directory)))
+     (unless (file-directory-p directory)
+       (error "Directory does not exist: %s" directory))
+     (unless (file-in-directory-p full-path directory)
+       (error "Refusing to write outside directory: %s" directory))
+     (when (file-exists-p full-path)
+       (error "Refusing to overwrite existing file: %s" full-path))
+     (with-temp-file full-path
+       (insert content))
+     (format "Created file: %s" full-path)))
  :category "filesystem")
 #+end_src
 
