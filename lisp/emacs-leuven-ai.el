@@ -131,7 +131,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
 
 (defcustom boost-gptel-directives-directory
   (expand-file-name "~/ai-prompts/")
-  "Répertoire racine contenant des fichiers .txt pour les directives GPTel (recurse)."
+  "Root directory containing .txt files for GPTel directives (recurse)."
   :type 'directory
   :group 'boost-gptel)
 
@@ -324,48 +324,58 @@ based on the project's code and documentation."
   ;;             (pop-to-buffer buf)
   ;;           (funcall #'gptel buffer-name))))))
 
-;;;###autoload
-  (defun boost-gptel-org-send-to-chatgpt ()
-    "Send selected region or Org subtree to the *ChatGPT* buffer.
-    If a region is selected, send its text; otherwise, send the content of the Org subtree.
-    Displays the response in the *ChatGPT* buffer."
+  ;;;###autoload
+  (defun boost-gptel-org-send-to-ai ()
+    "Send the selected region or current Org subtree to an AI assistant.
+
+If a region is active, send its text. Otherwise, send the content
+of the current Org subtree.
+
+The interaction and response are displayed in the dedicated AI buffer."
     (interactive)
 
     ;; Validate context.
     (unless (derived-mode-p 'org-mode)
       (user-error "[This command works in Org buffers only]"))
+
     (unless (or (use-region-p) (org-at-heading-p))
       (user-error "[Place point on an Org heading or select a region]"))
 
-    ;; Extract text.
+    ;; Extract text to send.
     (let ((text (if (use-region-p)
-                    (buffer-substring-no-properties (region-beginning) (region-end))
+                    (buffer-substring-no-properties
+                     (region-beginning)
+                     (region-end))
                   (save-excursion
                     (org-back-to-heading t)
                     (let ((beg (point)))
                       (org-end-of-subtree t)
                       (buffer-substring-no-properties beg (point)))))))
 
-      ;; Prepare output buffer.
-      (let ((buffer (get-buffer-create "*ChatGPT*")))
+      ;; Prepare conversation buffer.
+      (let ((buffer (get-buffer-create "*AI Assistant*")))
         (with-current-buffer buffer
           (goto-char (point-max))
-          (insert (format-time-string
-                   "\n\n* -------------------- GPT Session [%Y-%m-%d %H:%M] --------------------")
-                  "\n\n" boost-gptel-prompt-prefix
-                  text
-                  "\n\n" boost-gptel-response-prefix)
+          (insert
+           (format-time-string
+            "\n\n* -------------------- AI Session [%Y-%m-%d %H:%M] --------------------")
+           "\n\n"
+           boost-gptel-prompt-prefix
+           text
+           "\n\n"
+           boost-gptel-response-prefix)
           (goto-char (point-max)))
 
-        ;; Send to GPTel with error handling.
+        ;; Send request through GPTel.
         (condition-case err
             (gptel-request text :buffer buffer)
-          (error (message "[GPTel error: %s]"
-                          (error-message-string err))))
+          (error
+           (message "[GPTel error: %s]"
+                    (error-message-string err))))
 
-        ;; Display the buffer and provide user feedback.
+        ;; Display results.
         (pop-to-buffer buffer)
-        (message "[GPTel: Prompt sent...]"))))
+        (message "[AI request sent...]"))))
 
 ;; Commit-prompt file customization.
 (defcustom boost-gptel-commit-prompt-file
@@ -599,7 +609,7 @@ its purpose."
   ;; Org mode keybinding (only if free).
   (with-eval-after-load 'org
     (boost--set-key-if-free 'org-mode-map (kbd "C-c q")
-                             #'boost-gptel-org-send-to-chatgpt "Org mode"))
+                             #'boost-gptel-org-send-to-ai "Org mode"))
 
   ;; Diff mode keybinding (only if free).
   (with-eval-after-load 'diff-mode
