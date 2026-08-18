@@ -142,6 +142,37 @@ If already bound, emit a warning mentioning SCOPE (string)."
       (push (cons 'org-mode boost-gptel-response-prefix)
             gptel-response-prefix-alist)))
 
+(defcustom boost-gptel-fill-column 80
+  "Column at which prose paragraphs in GPTel responses are filled.
+
+Set this option to nil to preserve the original response formatting."
+  :type '(choice
+          (const :tag "Do not fill responses" nil)
+          (integer :tag "Fill column"))
+  :group 'boost-gptel)
+
+(defun boost--gptel-fill-response (beg end)
+  "Fill the GPTel response between BEG and END."
+  (when (derived-mode-p 'org-mode)
+    (let ((fill-column boost-gptel-fill-column))
+      (fill-region beg end))))
+
+(add-hook 'gptel-post-response-functions
+          #'boost--gptel-fill-response
+          80)
+
+(defun boost--gptel-scroll-to-response-end (_beg end)
+  "Move point to END after GPTel inserts a complete response.
+
+Also update every window displaying the GPTel buffer."
+  (goto-char end)
+  (dolist (window (get-buffer-window-list (current-buffer) nil t))
+    (set-window-point window end)))
+
+(add-hook 'gptel-post-response-functions
+          #'boost--gptel-scroll-to-response-end
+          90)
+
 (defcustom boost-gptel-directives-directory
   (expand-file-name "~/ai-prompts/")
   "Root directory containing .txt files for GPTel directives (recurse)."

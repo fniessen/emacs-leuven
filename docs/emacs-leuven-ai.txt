@@ -244,23 +244,45 @@ Useful functions:
 
 *** Post-response hooks
 
-#+begin_src emacs-lisp :tangle no
-  ;; Add auto-scrolling after GPTel stream ends.
-  (when (fboundp 'gptel-auto-scroll)
-    (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll))
+#+begin_src emacs-lisp
+(defcustom boost-gptel-fill-column 80
+  "Column at which prose paragraphs in GPTel responses are filled.
 
-  ;; Automatically move cursor to end of response.
-  (when (fboundp 'gptel-end-of-response)
-    (add-hook 'gptel-post-response-functions #'gptel-end-of-response))
+Set this option to nil to preserve the original response formatting."
+  :type '(choice
+          (const :tag "Do not fill responses" nil)
+          (integer :tag "Fill column"))
+  :group 'boost-gptel)
+
+(defun boost--gptel-fill-response (beg end)
+  "Fill the GPTel response between BEG and END."
+  (when (derived-mode-p 'org-mode)
+    (let ((fill-column boost-gptel-fill-column))
+      (fill-region beg end))))
+
+(add-hook 'gptel-post-response-functions
+          #'boost--gptel-fill-response
+          80)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-  ;; Auto-formatage des réponses
-  (add-hook 'gptel-post-response-hook
-            (lambda (process response)
-              (when (eq major-mode 'gptel-mode)
-                (fill-paragraph))))
+The cursor must move *after* filling, because filling can change the response
+length:
+
+#+begin_src emacs-lisp
+(defun boost--gptel-scroll-to-response-end (_beg end)
+  "Move point to END after GPTel inserts a complete response.
+
+Also update every window displaying the GPTel buffer."
+  (goto-char end)
+  (dolist (window (get-buffer-window-list (current-buffer) nil t))
+    (set-window-point window end)))
+
+(add-hook 'gptel-post-response-functions
+          #'boost--gptel-scroll-to-response-end
+          90)
 #+end_src
+
+That's why we control their execution order with hook depth.
 
 ** System prompts (directives)
 
