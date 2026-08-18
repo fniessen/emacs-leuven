@@ -10621,7 +10621,7 @@ it into the commit buffer. So there is no need to "write the same thing twice".
   (autoload 'vc-git-root "vc-git")
 
   (with-eval-after-load 'vc-git
-    ;; Align with Git's 50-character commit summary convention.
+    ;; Encourage the conventional 50-character limit for Git commit summaries.
     (setq vc-git-log-edit-summary-max-len 50)
 
     ;; Load 'git-commit' if available (now provided by Magit).
