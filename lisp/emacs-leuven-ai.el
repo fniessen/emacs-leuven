@@ -161,13 +161,12 @@ Set this option to nil to preserve the original response formatting."
           #'boost--gptel-fill-response
           80)
 
-(defun boost--gptel-scroll-to-response-end (_beg end)
-  "Move point to END after GPTel inserts a complete response.
-
-Also update every window displaying the GPTel buffer."
-  (goto-char end)
-  (dolist (window (get-buffer-window-list (current-buffer) nil t))
-    (set-window-point window end)))
+(defun boost--gptel-scroll-to-response-end (_beg _end)
+  "Move point to the end of the GPTel conversation buffer."
+  (let ((pos (point-max)))
+    (goto-char pos)
+    (dolist (window (get-buffer-window-list (current-buffer) nil t))
+      (set-window-point window pos))))
 
 (add-hook 'gptel-post-response-functions
           #'boost--gptel-scroll-to-response-end
