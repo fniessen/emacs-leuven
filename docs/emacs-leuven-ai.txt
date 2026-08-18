@@ -292,23 +292,32 @@ Return the directive content, or nil on failure."
                 (append gptel-directives (list (cons name content)))))
         content))))
 
-(defun boost--gptel-read-directives-from-directory (dir)
-  "Populate `gptel-directives` from all .txt files under DIR (recursively),
-sorted in ascending order by filename.
+;; Clear all existing directives (before reloading them).
+(setq gptel-directives nil)
 
-Delete all directives previously configured."
-  (setq gptel-directives nil)           ; Reset old entries.
-  ;; Now iterate.
-  (dolist (f (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
-    (condition-case err
-        (let ((name (intern (file-name-base f))))
-          (boost--gptel-read-directive-file name f))
-      (error
-       (display-warning 'boost
-                        (format "[Failed to read directive %s: %s]"
-                                f (error-message-string err))
-                        :warning))))
-  gptel-directives)
+(defun boost--gptel-read-directives-from-directory (dir)
+  "Load GPTel directives from all .txt files under DIR recursively.
+
+Files are processed in ascending filename order.  Existing directives
+with the same name are replaced; unrelated directives are preserved."
+  (let ((files
+         (sort
+          (directory-files-recursively
+           (expand-file-name dir)
+           "\\.txt\\'")
+          #'string-lessp)))
+    (dolist (file files)
+      (condition-case err
+          (let ((name (intern (file-name-base file))))
+            (boost--gptel-read-directive-file name file))
+        (error
+         (display-warning
+          'boost
+          (format "Failed to read directive %s: %s"
+                  file
+                  (error-message-string err))
+          :warning))))
+    gptel-directives))
 
 ;; Load directives from the specified directory.
 (if (file-directory-p boost-gptel-directives-directory)
