@@ -1,4 +1,4 @@
-;;; emacs-leuven-ai.el --- GPTel & org-ai Integration  -*- lexical-binding: t -*-
+;;; emacs-leuven-ai.el --- GPTel & org-ai integration  -*- lexical-binding: t -*-
 
 ;; Author: Fabrice Niessen
 ;; Keywords: tools, ai, convenience
@@ -357,8 +357,7 @@ based on the project's code and documentation."
     (let ((buffer-name "*ChatGPT*"))
       (if (get-buffer buffer-name)
           (pop-to-buffer buffer-name)
-        (progn
-          (call-interactively 'gptel)))))
+        (call-interactively #'gptel))))
 
   ;; (defun boost-gptel-chat-buffer (&optional arg)
   ;;   "Switch to the GPTel chat buffer.
@@ -445,7 +444,8 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
       (user-error "[No content to analyze]"))
     (let* ((prompt-file boost-gptel-commit-prompt-file)
            (default-prompt
-            "Write a commit message (imperative mood, ≤72 char subject line) for this diff:\n\n")
+            "Write a Git commit message for the supplied diff. Use the imperative
+mood and limit the subject line to 72 characters.")
            (system-prompt
             (if (file-readable-p prompt-file)
                 (with-temp-buffer
@@ -473,8 +473,16 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                             (erase-buffer)
                             (let ((msg (string-trim response)))
                               ;; Strip ``` fences if present.
-                              (setq msg (replace-regexp-in-string "\\````[^\n]*\n?" "" msg))
-                              (setq msg (replace-regexp-in-string "\n?```\\'" "" msg))
+                              (setq msg
+                                    (replace-regexp-in-string
+                                     "\\````[^\n]*\n?"
+                                     ""
+                                     msg))
+                              (setq msg
+                                    (replace-regexp-in-string
+                                     "\n?```\\'"
+                                     ""
+                                     msg))
                               ;; Optional: convert backticks-quotes.
                               (setq msg (replace-regexp-in-string "`" "'" msg))
                               (kill-new msg) ; Add to kill ring.
@@ -487,13 +495,13 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                                (plist-get info :status)))))))
 
   (defun boost--extract-defun-source ()
-    "Return the source of the defun at point, or signal an error."
-    (save-excursion
-      (unless (ignore-errors (beginning-of-defun 1))
-        (error "[No function found at point]"))
-      (let ((beg (point)))
-        (end-of-defun)
-        (buffer-substring-no-properties beg (point)))))
+    "Return the source of the defun at point, or signal a user error."
+    (let ((bounds (bounds-of-thing-at-point 'defun)))
+      (unless bounds
+        (user-error "[No function found at point]"))
+      (buffer-substring-no-properties
+       (car bounds)
+       (cdr bounds))))
 
   (defun boost-gptel-generate-contextual-test ()
     "Generate a unit test for the current function by sending its source code to GPTel."
@@ -515,7 +523,7 @@ Provide the refactored code and explain the improvements." function-source)))
       (gptel-request prompt)))
 
   (defun boost-gptel-generate-docstring ()
-    "Generate a docstring for the current function using GPTel."
+    "Ask GPTel to generate a docstring for the defun at point."
     (interactive)
     (let* ((function-source (boost--extract-defun-source))
            (prompt (format "Generate a detailed docstring for the following function:
