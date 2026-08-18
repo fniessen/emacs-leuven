@@ -51,16 +51,29 @@ SPC $ g m : Ouvrir le menu transient.
 
 ;; Author: Fabrice Niessen
 ;; Keywords: tools, ai, convenience
-;; URL: https://...
+;; URL: https://github.com/fniessen/emacs-leuven
 ;; Version: 0.1
 
 ;;; Commentary:
 
-;; Provides helpers for GPTel and org-ai.
+;; Configure GPTel and org-ai integration for Emacs Leuven.
+;;
+;; This library provides:
+;;
+;; - optional GPTel and org-ai loading;
+;; - API credential lookup;
+;; - file-based GPTel directives;
+;; - buffer and filesystem tools;
+;; - reusable GPTel presets;
+;; - Org subtree and region submission;
+;; - Git commit-message generation;
+;; - Emacs Lisp review and refactoring commands;
+;; - associated keybindings.
 
 ;;; Code:
 
 (require 'subr-x)  ;; string-trim, string-empty-p, etc.
+(require 'seq)     ;; seq-uniq
 #+end_src
 
 ** Helper functions
@@ -114,11 +127,11 @@ If already bound, emit a warning mentioning SCOPE (string)."
 
 #+begin_src emacs-lisp
 ;; Set OpenAI API key.
-(defvar boost-openai-api-key nil
+(defvar boost-openai-key nil
   "OpenAI API key from env or ~/.openai_api_key; nil if unavailable.")
 
-(defun boost--load-openai-api-key ()
-  "Retourne la clé OpenAI ou affiche un warning si absente."
+(defun boost--get-openai-key ()
+  "Return the OpenAI API key, or warn when none is available."
   (let* ((api-key (or (getenv "OPENAI_API_KEY")
                       (let ((f (expand-file-name "~/.openai_api_key")))
                         (when (file-exists-p f)
@@ -135,7 +148,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
         (display-warning 'boost "No valid OpenAI API key found!" :warning))
       nil))))
 
-(setq boost-openai-api-key (boost--load-openai-api-key))
+(setq boost-openai-key (boost--get-openai-key))
 #+end_src
 
 * GPTel
@@ -169,8 +182,8 @@ Useful functions:
 (when (boost--try-require 'gptel)
 
   ;; Set OpenAI API key.
-  (when (bound-and-true-p boost-openai-api-key)
-    (setq gptel-api-key boost-openai-api-key))
+  (when (bound-and-true-p boost-openai-key)
+    (setq gptel-api-key boost-openai-key))
 
   (setq gptel-model 'gpt-5-mini)
 
@@ -282,7 +295,8 @@ Return the directive content, or nil on failure."
 (defun boost--gptel-read-directives-from-directory (dir)
   "Populate `gptel-directives` from all .txt files under DIR (recursively),
 sorted in ascending order by filename.
-Existing entries with the same NAME are overwritten."
+
+Delete all directives previously configured."
   (setq gptel-directives nil)           ; Reset old entries.
   ;; Now iterate.
   (dolist (f (directory-files-recursively (expand-file-name dir) "\\.txt\\'"))
@@ -369,9 +383,9 @@ Available tools: ~gptel-tools~.
 (gptel-make-tool
  :name "create_file"
  :description "Create a new file with the specified content"
- :args (list '(:name "path"     :type string :description "The directory where to create the file")
-             '(:name "filename" :type string :description "The name of the file to create")
-             '(:name "content"  :type string :description "The content to write to the file"))
+ :args (list '(:name "path"     :type "string" :description "The directory where to create the file")
+             '(:name "filename" :type "string" :description "The name of the file to create")
+             '(:name "content"  :type "string" :description "The content to write to the file"))
  :function (lambda (path filename content)
              (let ((full-path (expand-file-name filename path)))
                (with-temp-buffer
@@ -422,6 +436,16 @@ Available tools: ~gptel-tools~.
 *** Preset Definitions
 
 **** Coding
+
+#+begin_src emacs-lisp :tangle no
+(defcustom boost-gptel-default-model 'gpt-5-mini
+  "Default GPTel model."
+  :type 'symbol
+  :group 'boost-gptel)
+#+end_src
+
+*************** TODO Define a default backend and model pair
+*************** END
 
 #+begin_src emacs-lisp
   ;; Coding preset - optimized for serious programming work.
@@ -633,8 +657,8 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
                           (display-buffer output-buffer
                            '((display-buffer-reuse-window display-buffer-pop-up-window)
                              (inhibit-same-window . t))))
-                      (error "[Failed to generate commit message: %s]"
-                             (plist-get info :status)))))))
+                      (message "[Failed to generate commit message: %s]"
+                               (plist-get info :status)))))))
 #+end_src
 
 **** gptel-commit (optional package)
@@ -649,7 +673,7 @@ If ~/ai-prompts/write-commit-message.txt exists, use its contents as the system 
 
 #+begin_src emacs-lisp
   (defun boost--extract-defun-source ()
-    "Retourne le code de la defun courante ou signale une erreur."
+    "Return the source of the defun at point, or signal an error."
     (save-excursion
       (unless (ignore-errors (beginning-of-defun 1))
         (error "[No function found at point]"))
@@ -813,7 +837,7 @@ suggestions for improvement."
                (with-current-buffer buf
                  (erase-buffer)
                  (insert (or response "[No response received from GPTel]"))
-                 (emacs-lisp-mode)
+                 (org-mode)
                  (display-buffer buf))
                (message "[Code review completed!]"))))
         (error (message "[Code review failed: %s]" err)))))
@@ -983,8 +1007,8 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
   (add-hook 'org-mode-hook #'org-ai-mode)
 
   ;; Set OpenAI API key.
-  (when (bound-and-true-p boost-openai-api-key)
-    (setq org-ai-openai-api-token boost-openai-api-key))
+  (when (bound-and-true-p boost-openai-key)
+    (setq org-ai-openai-api-token boost-openai-key))
 
   ;; Install YASnippet templates for org-ai.
   (when (boost--try-require 'yasnippet)
