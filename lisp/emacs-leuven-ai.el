@@ -100,8 +100,8 @@ If already bound, emit a warning mentioning SCOPE (string)."
   ;; Enable media tracking.
   (setq gptel-track-media t)
 
-  ;; Controls randomness (lower = more deterministic).
-  (setq gptel-temperature 0.7)
+  ;; ;; Controls randomness (lower = more deterministic).
+  ;; (setq gptel-temperature 0.7)
 
   ;; Set default mode for response buffer.
   (setq gptel-default-mode 'org-mode)
@@ -162,11 +162,14 @@ Set this option to nil to preserve the original response formatting."
           80)
 
 (defun boost--gptel-scroll-to-response-end (_beg _end)
-  "Move point to the end of the GPTel conversation buffer."
-  (let ((pos (point-max)))
-    (goto-char pos)
-    (dolist (window (get-buffer-window-list (current-buffer) nil t))
-      (set-window-point window pos))))
+  "Move point to the end of the dedicated *ChatGPT* buffer.
+
+Do nothing when the GPTel response belongs to another buffer."
+  (when (string= (buffer-name) "*ChatGPT*")
+    (let ((pos (point-max)))
+      (goto-char pos)
+      (dolist (window (get-buffer-window-list (current-buffer) nil t))
+        (set-window-point window pos)))))
 
 (add-hook 'gptel-post-response-functions
           #'boost--gptel-scroll-to-response-end
@@ -353,8 +356,7 @@ with the same name are replaced; unrelated directives are preserved."
 precise, well-structured and well-commented code solutions,
 refactorings, and clear explanations. Ensure correctness, clarity, and
 best practices in every response."
-    :tools '("read_buffer" "modify_buffer")
-    :temperature 0.7)
+    :tools '("read_buffer" "modify_buffer"))
 
   ;; Proofreading / editing preset.
   (gptel-make-preset 'proofreading
@@ -376,8 +378,7 @@ well-structured text."
     :model 'gpt-5-mini
     :system
     "You are a helpful assistant providing clear and concise answers to
-a wide range of questions."
-    :temperature 0.9)
+a wide range of questions.")
 
   ;; Project-specific preset (good for .dir-locals.el).
   (gptel-make-preset 'project-agent
@@ -390,13 +391,17 @@ based on the project's code and documentation."
     :tools '("read_buffer" "lsp_context")
     :temperature 0.7)
 
-  (defun boost-gptel-chat-buffer ()
-    "Switch to the GPTel chat buffer, creating it if it doesn't exist."
-    (interactive)
-    (let ((buffer-name "*ChatGPT*"))
-      (if (get-buffer buffer-name)
-          (pop-to-buffer buffer-name)
-        (call-interactively #'gptel))))
+  (defun boost-gptel-chat-buffer (&optional arg)
+    "Switch to the dedicated *ChatGPT* GPTel buffer.
+
+Without prefix ARG, open or create the *ChatGPT* buffer directly.
+
+With prefix ARG, invoke `gptel' interactively and let the user choose
+or create a conversation buffer."
+    (interactive "P")
+    (if arg
+        (call-interactively #'gptel)
+      (pop-to-buffer (gptel "*ChatGPT*"))))
 
   ;; (defun boost-gptel-chat-buffer (&optional arg)
   ;;   "Switch to the GPTel chat buffer.
