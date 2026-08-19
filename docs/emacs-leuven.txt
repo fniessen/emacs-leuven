@@ -6763,12 +6763,42 @@ Don't tabify. Instead, _reindent_ everything, e.g. with ~C-M-\~.
   :bind ("<escape>" . whisper-run))
 #+end_src
 
+To use [[https://superwhisper.com/][Superwhisper]] from Emacs, I had to add a dedicated Emacs Lisp function.
+
+The issue is that, regardless of which keyboard shortcut I configured for
+Superwhisper, the key press was always intercepted by *Emacs* first. As a result,
+the shortcut never reached Superwhisper directly.
+
+Since Emacs is the only application that actually receives the key press, the
+solution is to let Emacs handle the shortcut and trigger Superwhisper from an
+Emacs Lisp function instead.
+
+The ~boost-toggle-superwhisper-recording~ function uses the ~superwhisper://record~
+URL through PowerShell to start or stop recording. It also keeps track of the
+recording state locally so that it can distinguish between the two calls:
+
+1. On the first call, Superwhisper starts recording.
+2. On the second call, recording is stopped.
+3. After a short delay, the transcription placed in the clipboard by
+   Superwhisper is automatically inserted at the current point in Emacs.
+
+The shortcut can therefore be defined directly in Emacs:
+
+#+begin_src emacs-lisp :tangle no
+(global-set-key (kbd "<escape>") #'boost-toggle-superwhisper-recording)
+#+end_src
+
+This function is therefore not required because of a limitation in Superwhisper
+itself. It is needed because *Emacs intercepts the keyboard shortcut before it
+can reach Superwhisper*, so the Superwhisper action has to be triggered
+explicitly from Emacs.
+
 #+begin_src emacs-lisp :tangle no
 (defvar boost-superwhisper-recording-p nil
-  "Non-nil while SuperWhisper is recording.")
+  "Non-nil while Superwhisper is recording.")
 
-(defun boost-superwhisper-record ()
-  "Start or stop SuperWhisper.
+(defun boost-toggle-superwhisper-recording ()
+  "Start or stop Superwhisper.
 
 On the first call, start recording.
 On the second call, stop recording and insert the clipboard contents."
@@ -6799,7 +6829,7 @@ On the second call, stop recording and insert the clipboard contents."
     ;; Toggle the local recording state.
     (setq boost-superwhisper-recording-p (not stopping))
 
-    ;; On the second call, briefly wait for SuperWhisper
+    ;; On the second call, briefly wait for Superwhisper
     ;; to put the transcription into the clipboard, then insert it.
     (when stopping
       (let ((target-buffer (current-buffer))
@@ -6817,7 +6847,7 @@ On the second call, stop recording and insert the clipboard contents."
          target-buffer
          target-marker)))))
 
-(global-set-key (kbd "<escape>") #'boost-superwhisper-record)
+(global-set-key (kbd "<escape>") #'boost-toggle-superwhisper-recording)
 #+end_src
 
 ** Words
