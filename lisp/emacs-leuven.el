@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260818.1104>
+;; Version: <20260819.1511>
 ;; Keywords: emacs, dotfile, config
 
 ;;
@@ -53,7 +53,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260818.1104>"
+(defconst boost-version "<20260819.1511>"
   "Version of Emacs-Leuven configuration.")
 
 ;; Announce the start of the loading process.
@@ -70,7 +70,7 @@
 (setq gc-cons-threshold most-positive-fixnum)
 
 (defun lvn--restore-gc-settings-and-clean ()
-  "Restore default GC settings and perform an initial garbage collection."
+  "Restore conservative GC settings and run a full garbage-collection."
   (setq gc-cons-threshold 800000)       ; Restore default threshold (0.76 MB).
   (setq gc-cons-percentage 0.1)         ; Restore default percentage.
   (garbage-collect)                     ; Perform cleanup.
@@ -481,6 +481,7 @@ Shows a warning message if the file does not exist or is not executable."
         ;; git-timemachine
         google-translate
         goto-chg
+        gptel
         graphviz-dot-mode
         helm
         helm-ag
@@ -509,6 +510,7 @@ Shows a warning message if the file does not exist or is not executable."
         markdown-mode
         ;; multi-term
         multiple-cursors
+        org-super-agenda
         outli
         pager
         ;; paredit
@@ -1298,31 +1300,29 @@ called interactively."
   ;; Customize the keywords to highlight.
   (setq hl-todo-keyword-faces
         '(;; Priority and issues first.
-          ("URGENT"     . "#FF3B30")    ; Vivid red - High priority, urgent tasks.
-          ("BUG"        . "#D50000")    ; Strong red - Known bugs.
-          ("FIXME"      . "#FF4500")    ; Orange red - Issues to fix.
-          ("XXX"        . "#8B0000")    ; Dark red - Critical issues.
+          ("FIXME"      . "#FF4500")    ; Issues to fix.
+          ("BUG"        . "#FF4500")    ; Known bugs.
+          ("XXX"        . "#FF4500")    ; Critical issues.
+          ("URGENT"     . "#FF4500")    ; High priority, urgent tasks.
 
           ;; Active development.
           ("TODO"       . (:weight bold :box (:line-width 1 :color "#D8ABA7") :foreground "#D8ABA7" :background "#FFE6E4"))
-                                        ; Light red with a box - Tasks to do (matches org-todo).
-          ("WIP"        . "#FFA500")    ; Orange - Work in progress.
-          ("HACK"       . "#FFD700")    ; Gold - Temporary solutions.
-          ("REFACTOR"   . "#1E90FF")    ; Dodger blue - Code cleanup,
-                                        ; improvement tasks.
+                                        ; Tasks to do (matches org-todo).
+          ("WIP"        . "#FFA500")    ; Work in progress.
+          ("DEBUG"      . "#FFA500")
+          ("HACK"       . "#FFA500")    ; Temporary solutions.
 
           ;; Verification and collaboration.
-          ("TEST"       . "#0066CC")    ; Medium blue - For test cases.
-          ("REVIEW"     . "#1E90FF")    ; Dodger blue - For review.
-          ("QUESTION"   . "#008B8B")    ; Dark cyan - Clarifications needed.
+          ("REFACTOR"   . "#1E90FF")    ; Code cleanup, improvement tasks.
+          ("REVIEW"     . "#1E90FF")    ; For review.
 
           ;; Documentation and closure.
-          ("NOTE"       . "#1E90FF")    ; Dodger blue - Informational notes.
-          ("DEPRECATED" . "#B22222")    ; Fire brick - Deprecated code.
+          ("NOTE"       . "#1E90FF")    ; Informational notes.
+          ("DEPRECATED" . "#B22222")    ; Deprecated code.
 
           ;; Completion status.
           ("DONE"       . (:weight bold :box "#89C58F" :foreground "#89C58F" :background "#E2FEDE"))
-                                        ; Soft green with a box - Completed tasks (matches org-done).
+                                        ; Completed tasks (matches org-done).
   ))
 
   ;; Highlight TODOs followed by colon.

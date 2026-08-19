@@ -192,7 +192,7 @@ we restore default GC settings and perform an initial cleanup via
 (setq gc-cons-threshold most-positive-fixnum)
 
 (defun lvn--restore-gc-settings-and-clean ()
-  "Restore default GC settings and perform an initial garbage collection."
+  "Restore conservative GC settings and run a full garbage-collection."
   (setq gc-cons-threshold 800000)       ; Restore default threshold (0.76 MB).
   (setq gc-cons-percentage 0.1)         ; Restore default percentage.
   (garbage-collect)                     ; Perform cleanup.
@@ -733,6 +733,7 @@ like this into your configuration file:
         ;; git-timemachine
         google-translate
         goto-chg
+        gptel
         graphviz-dot-mode
         helm
         helm-ag
@@ -761,6 +762,7 @@ like this into your configuration file:
         markdown-mode
         ;; multi-term
         multiple-cursors
+        org-super-agenda
         outli
         pager
         ;; paredit
@@ -2415,31 +2417,29 @@ In IntelliJ IDEA, the are recognized in both lower and upper case.
   ;; Customize the keywords to highlight.
   (setq hl-todo-keyword-faces
         '(;; Priority and issues first.
-          ("URGENT"     . "#FF3B30")    ; Vivid red - High priority, urgent tasks.
-          ("BUG"        . "#D50000")    ; Strong red - Known bugs.
-          ("FIXME"      . "#FF4500")    ; Orange red - Issues to fix.
-          ("XXX"        . "#8B0000")    ; Dark red - Critical issues.
+          ("FIXME"      . "#FF4500")    ; Issues to fix.
+          ("BUG"        . "#FF4500")    ; Known bugs.
+          ("XXX"        . "#FF4500")    ; Critical issues.
+          ("URGENT"     . "#FF4500")    ; High priority, urgent tasks.
 
           ;; Active development.
           ("TODO"       . (:weight bold :box (:line-width 1 :color "#D8ABA7") :foreground "#D8ABA7" :background "#FFE6E4"))
-                                        ; Light red with a box - Tasks to do (matches org-todo).
-          ("WIP"        . "#FFA500")    ; Orange - Work in progress.
-          ("HACK"       . "#FFD700")    ; Gold - Temporary solutions.
-          ("REFACTOR"   . "#1E90FF")    ; Dodger blue - Code cleanup,
-                                        ; improvement tasks.
+                                        ; Tasks to do (matches org-todo).
+          ("WIP"        . "#FFA500")    ; Work in progress.
+          ("DEBUG"      . "#FFA500")
+          ("HACK"       . "#FFA500")    ; Temporary solutions.
 
           ;; Verification and collaboration.
-          ("TEST"       . "#0066CC")    ; Medium blue - For test cases.
-          ("REVIEW"     . "#1E90FF")    ; Dodger blue - For review.
-          ("QUESTION"   . "#008B8B")    ; Dark cyan - Clarifications needed.
+          ("REFACTOR"   . "#1E90FF")    ; Code cleanup, improvement tasks.
+          ("REVIEW"     . "#1E90FF")    ; For review.
 
           ;; Documentation and closure.
-          ("NOTE"       . "#1E90FF")    ; Dodger blue - Informational notes.
-          ("DEPRECATED" . "#B22222")    ; Fire brick - Deprecated code.
+          ("NOTE"       . "#1E90FF")    ; Informational notes.
+          ("DEPRECATED" . "#B22222")    ; Deprecated code.
 
           ;; Completion status.
           ("DONE"       . (:weight bold :box "#89C58F" :foreground "#89C58F" :background "#E2FEDE"))
-                                        ; Soft green with a box - Completed tasks (matches org-done).
+                                        ; Completed tasks (matches org-done).
   ))
 
   ;; Highlight TODOs followed by colon.
@@ -6753,6 +6753,71 @@ Don't tabify. Instead, _reindent_ everything, e.g. with ~C-M-\~.
 ;;* 26 Commands for (info "(emacs)Text") Human Languages
 
 (leuven--chapter leuven-load-chapter-26-text "26 Commands for Human Languages"
+#+end_src
+
+** Speech recognition
+
+#+begin_src emacs-lisp :tangle no
+(use-package whisper
+  :vc (:url "https://github.com/natrys/whisper.el")
+  :bind ("<escape>" . whisper-run))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(defvar boost-superwhisper-recording-p nil
+  "Non-nil lorsque SuperWhisper est en cours d'enregistrement.")
+
+(defun boost-superwhisper-record ()
+  "Démarrer ou arrêter SuperWhisper.
+
+Au premier appel, démarre l'enregistrement.
+Au deuxième appel, arrête l'enregistrement puis insère le presse-papiers."
+  (interactive)
+  (let* ((stopping boost-superwhisper-recording-p)
+         (powershell
+          (or
+           (executable-find "powershell.exe")
+           (let ((path
+                  "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"))
+             (and (file-exists-p path) path)))))
+
+    (unless powershell
+      (user-error
+       "PowerShell Windows est inaccessible depuis cette instance d'Emacs"))
+
+    ;; Le lien superwhisper://record agit comme un toggle.
+    (let ((process-connection-type nil))
+      (start-process
+       "superwhisper-record"
+       nil
+       powershell
+       "-NoProfile"
+       "-NonInteractive"
+       "-Command"
+       "Start-Process 'superwhisper://record'"))
+
+    ;; Inverser l'état local.
+    (setq boost-superwhisper-recording-p (not stopping))
+
+    ;; Au deuxième appel, attendre brièvement que SuperWhisper
+    ;; mette la transcription dans le presse-papiers, puis l'insérer.
+    (when stopping
+      (let ((target-buffer (current-buffer))
+            (target-marker (copy-marker (point) t)))
+        (run-at-time
+         0.8
+         nil
+         (lambda (buffer marker)
+           (unwind-protect
+               (when (buffer-live-p buffer)
+                 (with-current-buffer buffer
+                   (goto-char marker)
+                   (yank)))
+             (set-marker marker nil)))
+         target-buffer
+         target-marker)))))
+
+(global-set-key (kbd "<escape>") #'boost-superwhisper-record)
 #+end_src
 
 ** Words
