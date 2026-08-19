@@ -6765,13 +6765,13 @@ Don't tabify. Instead, _reindent_ everything, e.g. with ~C-M-\~.
 
 #+begin_src emacs-lisp :tangle no
 (defvar boost-superwhisper-recording-p nil
-  "Non-nil lorsque SuperWhisper est en cours d'enregistrement.")
+  "Non-nil while SuperWhisper is recording.")
 
 (defun boost-superwhisper-record ()
-  "Démarrer ou arrêter SuperWhisper.
+  "Start or stop SuperWhisper.
 
-Au premier appel, démarre l'enregistrement.
-Au deuxième appel, arrête l'enregistrement puis insère le presse-papiers."
+On the first call, start recording.
+On the second call, stop recording and insert the clipboard contents."
   (interactive)
   (let* ((stopping boost-superwhisper-recording-p)
          (powershell
@@ -6783,9 +6783,9 @@ Au deuxième appel, arrête l'enregistrement puis insère le presse-papiers."
 
     (unless powershell
       (user-error
-       "PowerShell Windows est inaccessible depuis cette instance d'Emacs"))
+       "Windows PowerShell is not accessible from this Emacs instance"))
 
-    ;; Le lien superwhisper://record agit comme un toggle.
+    ;; The superwhisper://record URL acts as a toggle.
     (let ((process-connection-type nil))
       (start-process
        "superwhisper-record"
@@ -6796,11 +6796,11 @@ Au deuxième appel, arrête l'enregistrement puis insère le presse-papiers."
        "-Command"
        "Start-Process 'superwhisper://record'"))
 
-    ;; Inverser l'état local.
+    ;; Toggle the local recording state.
     (setq boost-superwhisper-recording-p (not stopping))
 
-    ;; Au deuxième appel, attendre brièvement que SuperWhisper
-    ;; mette la transcription dans le presse-papiers, puis l'insérer.
+    ;; On the second call, briefly wait for SuperWhisper
+    ;; to put the transcription into the clipboard, then insert it.
     (when stopping
       (let ((target-buffer (current-buffer))
             (target-marker (copy-marker (point) t)))
