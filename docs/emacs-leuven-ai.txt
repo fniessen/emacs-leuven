@@ -998,7 +998,6 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
 | Key     | Command                          | Context     | Status                            |
 |---------+----------------------------------+-------------+-----------------------------------|
 | C-c RET | gptel-send                       | global      | recommended                       |
-| C-c g   | boost-gptel-chat-buffer or gptel | global      | OK                                |
 | <f1>    | boost-gptel-chat-buffer          | global      | ← Warning: overwrites Emacs help! |
 | C-c g   | gptel-menu (transient)           | global      | very useful                       |
 | C-c q   | boost-gptel-org-send-to-ai       | org-mode    | useful                            |
@@ -1013,11 +1012,16 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
 #+begin_src emacs-lisp :tangle no
 (defvar boost-ai-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "c" #'boost-gptel-chat-buffer)
-    (define-key map "s" #'gptel-send)
+    (define-key map "g" #'gptel)         ; Chat. Talk to AI. Ask about current buffer.
+    (define-key map "s" #'gptel-send)    ; Send. Continue generation.
+    (define-key map "r" #'gptel-rewrite) ; Rewrite selected region.
+    (define-key map "a" #'gptel-add)     ; Add context. Add region to chat context.
     (define-key map "m" #'gptel-menu)
+
+    (define-key map "c" #'boost-gptel-chat-buffer)
     (define-key map "q" #'boost-gptel-org-send-to-ai)
     (define-key map "w" #'boost-gptel-write-commit-message)
+
     map))
 
 (global-set-key (kbd "C-c g") boost-ai-map)
@@ -1037,9 +1041,9 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Global keybinding (only if free).
-  (boost--set-key-if-free global-map (kbd "C-c g")
-                           #'boost-gptel-chat-buffer "global map")
+  ;; ;; Global keybinding (only if free).
+  ;; (boost--set-key-if-free global-map (kbd "C-c g")
+  ;;                          #'boost-gptel-chat-buffer "global map")
 
   ;; ;; Global keybinding (only if free).
   ;; (boost--set-key-if-free global-map (kbd "<f1>")

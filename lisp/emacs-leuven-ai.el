@@ -391,17 +391,13 @@ based on the project's code and documentation."
     :tools '("read_buffer" "lsp_context")
     :temperature 0.7)
 
-  (defun boost-gptel-chat-buffer (&optional arg)
-    "Switch to the dedicated *ChatGPT* GPTel buffer.
-
-Without prefix ARG, open or create the *ChatGPT* buffer directly.
-
-With prefix ARG, invoke `gptel' interactively and let the user choose
-or create a conversation buffer."
-    (interactive "P")
-    (if arg
-        (call-interactively #'gptel)
-      (pop-to-buffer (gptel "*ChatGPT*"))))
+  (defun boost-gptel-chat-buffer ()
+    "Switch to the GPTel chat buffer, creating it if it doesn't exist."
+    (interactive)
+    (let ((buffer-name "*ChatGPT*"))
+      (if (get-buffer buffer-name)
+          (pop-to-buffer buffer-name)
+        (pop-to-buffer (gptel "*ChatGPT*")))))
 
   ;; (defun boost-gptel-chat-buffer (&optional arg)
   ;;   "Switch to the GPTel chat buffer.
@@ -700,9 +696,9 @@ its purpose."
     (boost--set-key-if-free global-map (kbd "C-c RET")
                              #'gptel-send "global map"))
 
-  ;; Global keybinding (only if free).
-  (boost--set-key-if-free global-map (kbd "C-c g")
-                           #'boost-gptel-chat-buffer "global map")
+  ;; ;; Global keybinding (only if free).
+  ;; (boost--set-key-if-free global-map (kbd "C-c g")
+  ;;                          #'boost-gptel-chat-buffer "global map")
 
   ;; ;; Global keybinding (only if free).
   ;; (boost--set-key-if-free global-map (kbd "<f1>")
