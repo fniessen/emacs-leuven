@@ -80,14 +80,15 @@ details.
 #+end_src
 
 #+begin_src emacs-lisp :noweb yes
-;;; emacs-leuven.el --- Emacs configuration file with more pleasant defaults
+;;; emacs-leuven.el --- Pleasant defaults for GNU Emacs -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 1999-2026 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
 ;; Version: <<current-time()>>
-;; Keywords: emacs, dotfile, config
+;; Package-Requires: ((emacs "29.1"))
+;; Keywords: emacs, dotfile, config, convenience, tools
 
 ;;
 ;;    ___ _ __ ___   __ _  ___ ___
@@ -150,7 +151,7 @@ version (timestamped with the last modification date) to the user.
 #+begin_src emacs-lisp :noweb yes
 ;; Define the version as the current timestamp of the last change.
 (defconst boost-version "<<current-time()>>"
-  "Version of Emacs-Leuven configuration.")
+  "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
 (message "* --[ Loading Emacs-Leuven %s ]--" boost-version)
@@ -376,9 +377,10 @@ need to load a single file that define autoloaded functions.
             (add-to-list 'load-path abs-dir)
             (when lvn-verbose-loading
               (message "[Added '%s' to load-path]" abs-dir)))
-        (display-warning 'boost
-                         (format "Directory '%s' does not exist" abs-dir)
-                         :warning))))
+        (display-warning
+         'boost
+         (format "Directory '%s' does not exist" abs-dir)
+         :warning))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -419,26 +421,11 @@ emit a warning when the feature can't be loaded."
     (if (require feature nil 'noerror)
         t
       (when (bound-and-true-p init-file-debug)
-        (display-warning 'boost
-                         (format "Cannot load `%s'" feature)
-                         :warning))
+        (display-warning
+         'boost
+         (format "Cannot load `%s'" feature)
+         :warning))
       nil))
-#+end_src
-
-#+begin_src emacs-lisp
-  (unless (fboundp 'with-eval-after-load)
-    (defmacro with-eval-after-load (feature &rest body)
-      "Execute forms in BODY after the specified FEATURE is loaded.
-This macro is a wrapper around `eval-after-load' (introduced in Emacs 24.4).
-FEATURE is the feature symbol or library name to wait for before executing BODY.
-BODY contains the forms to be executed after FEATURE is loaded.
-The forms in BODY are enclosed within a `progn' to ensure proper evaluation.
-
-Example usage:
-  (with-eval-after-load 'magit
-    (setq magit-auto-revert-mode nil))"
-      `(eval-after-load ,feature
-         '(progn ,@body))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -453,32 +440,45 @@ If already bound, emit a warning mentioning SCOPE (string)."
          (existing-binding (and map (lookup-key map key t))))
     (cond
      ((not map)
-      (display-warning 'boost "Keymap not available (yet)" :warning))
+      (display-warning
+       'boost
+       "Keymap not available (yet)"
+       :warning))
      ((or (null existing-binding) (numberp existing-binding))
       (define-key map key command))
      (t
       (when init-file-debug
-        (display-warning 'boost
-                         (format "Keyboard shortcut %s conflicts with an existing one%s!"
-                                 (key-description key)
-                                 (if scope (format " in %s" scope) ""))
-                         :warning))))))
+        (display-warning
+         'boost
+         (format "Keyboard shortcut %s conflicts with an existing one%s!"
+                 (key-description key)
+                 (if scope (format " in %s" scope) ""))
+         :warning))))))
 #+end_src
 
 ** Creating and selecting buffers
 
 #+begin_src emacs-lisp
-  (defun boost--switch-or-start (fn buffer)
-    "If BUFFER is the current buffer, bury it.
-  If a buffer with the name BUFFER exists, switch to it;
-  otherwise, invoke FN, which should be a function to run."
-    (let ((current-buffer-name (buffer-name (current-buffer))))
-      (if (string= current-buffer-name buffer)
-          (bury-buffer)
-        (if (get-buffer buffer)
-            (switch-to-buffer buffer)
-          (when (functionp fn)
-            (funcall fn))))))
+  (defun boost--switch-or-start (function buffer-name)
+    "Switch to BUFFER-NAME, invoke FUNCTION, or bury the current buffer.
+
+When BUFFER-NAME is current, bury it. When it already exists, switch
+to it. Otherwise call FUNCTION interactively."
+    (cond
+     ((equal (buffer-name) buffer-name)
+      (bury-buffer))
+
+     ((get-buffer buffer-name)
+      (pop-to-buffer buffer-name))
+
+     ((commandp function)
+      (call-interactively function))
+
+     ((functionp function)
+      (funcall function))
+
+     (t
+      (user-error "Invalid function: %S" function))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -554,30 +554,32 @@ Use ~(display-graphic-p)~ (instead of ~window-system~) in conditions.
 
 ;;** Testing file accessibility
 
-  (defun lvn--validate-file-executable-p (file)
-    "Ensure FILE exists and is executable.
-Returns FILE if it is both existent and executable, otherwise returns nil.
-Shows a warning message if the file does not exist or is not executable."
-    (when (not file)
-      (error "[Missing argument to `lvn--validate-file-executable-p']"))
-
+  (defun boost--validate-executable (file)
+    "Return FILE when it exists and is executable, otherwise return nil."
     (cond
+     ((not (stringp file))
+      (display-warning
+       'boost
+       "Executable file name is missing"
+       :warning)
+      nil)
+
      ((not (file-exists-p file))
-      (display-warning 'boost
-                       (format "File `%s' does not exist." file)
-                       :warning)
-      (sit-for 1.5)
+      (display-warning
+       'boost
+       (format "File does not exist: %s" file)
+       :warning)
       nil)
 
      ((not (file-executable-p file))
-      (display-warning 'boost
-                       (format "File `%s' is not executable." file)
-                       :warning)
-      (sit-for 1.5)
+      (display-warning
+       'boost
+       (format "File is not executable: %s" file)
+       :warning)
       nil)
 
-     ;; Return the file if it exists and is executable.
-     (t file)))
+     (t
+      file)))
 
 ;;** Init
 
@@ -997,7 +999,7 @@ Show line numbers temporarily -- just when you're going to a line number with
 ~goto-line~.
 
 #+begin_src emacs-lisp
-  (defun boost-goto-line-with-line-numbers ()
+  (defun boost-goto-line ()
     "Go to a specific line while temporarily enabling line numbers.
 
   This function prompts the user to enter a line number to navigate to.
@@ -1018,7 +1020,7 @@ Show line numbers temporarily -- just when you're going to a line number with
         (display-line-numbers-mode line-numbers-enabled))))
 
   ;; Remap goto-line.
-  (global-set-key [remap goto-line] #'boost-goto-line-with-line-numbers)
+  (global-set-key [remap goto-line] #'boost-goto-line)
 #+end_src
 
 ** Basic Undoing Changes
@@ -1068,7 +1070,12 @@ Shortcuts:
     (global-set-key (kbd "S-<f11>") #'undo-tree-redo))
 #+end_src
 
-Visual feedback on some operations (~undo~, ~yank~, etc.).
+*** Temporary visual feedback
+
+Temporarily highlight text affected by common editing commands such as ~yank~,
+~undo~, ~kill-ring-save~, ~query-replace~, and others. This provides immediate visual
+confirmation of the performed action without permanently altering the buffer's
+appearance.
 
 #+begin_src emacs-lisp
   (with-eval-after-load 'volatile-highlights-autoloads
@@ -1077,6 +1084,14 @@ Visual feedback on some operations (~undo~, ~yank~, etc.).
   (with-eval-after-load 'volatile-highlights
     (volatile-highlights-mode 1))
 #+end_src
+
+#+begin_seealso
+The built-in function ~pulse-momentary-highlight-region~ can be used in custom
+commands to provide visual flash. The two approaches are complementary:
+~volatile-highlights~ automatically handles many standard editing operations,
+while ~pulse~ is convenient for briefly highlighting changes made by user-defined
+commands.
+#+end_seealso
 
 #+begin_src emacs-lisp
 )                                       ; Chapter 8 ends here.
@@ -1715,6 +1730,8 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 #+end_src
 
+*** Slick cut and copy
+
 With the following functions, you can easily cut or copy the line where the
 cursor is located using simple key combinations:
 
@@ -1728,10 +1745,12 @@ selected text.
 #+end_note
 
 #+begin_src emacs-lisp
-  ;; Function to perform slick cut for the kill-region command.
-  (defun lvn-slick-cut-region (orig-fn beg end &rest args)
-    "Cut the selected region or the current line if no region is active and
-called interactively."
+  ;; Inspired by the classic "slick-copy/slick-cut" behaviour: operate on
+  ;; the active region when present, otherwise on the current line.
+
+  ;; Function to perform slick cut for the `kill-region' command.
+  (defun boost--slick-kill-region (orig-fn beg end &rest args)
+    "Cut the active region or, if none is active, the current line."
     (interactive (if (use-region-p)
                      (list (region-beginning) (region-end))
                    (list (line-beginning-position) (line-beginning-position 2))))
@@ -1747,12 +1766,11 @@ called interactively."
       ;; If not called interactively, pass the original arguments unchanged.
       (apply orig-fn beg end args)))
 
-  (advice-add 'kill-region :around #'lvn-slick-cut-region)
+  (advice-add 'kill-region :around #'boost--slick-kill-region)
 
-  ;; Function to perform slick copy for the kill-ring-save command.
-  (defun lvn-slick-copy-region (orig-fn beg end &rest args)
-    "Copy the selected region or the current line if no region is active and
-called interactively."
+  ;; Function to perform slick copy for the `kill-ring-save' command.
+  (defun boost--slick-kill-ring-save (orig-fn beg end &rest args)
+    "Copy the active region or, if none is active, the current line."
     (interactive (if (use-region-p)
                      (list (region-beginning) (region-end))
                    (list (line-beginning-position) (line-beginning-position 2))))
@@ -1768,34 +1786,68 @@ called interactively."
       ;; If not called interactively, pass the original arguments unchanged.
       (apply orig-fn beg end args)))
 
-  (advice-add 'kill-ring-save :around #'lvn-slick-copy-region)
+  (advice-add 'kill-ring-save :around #'boost--slick-kill-ring-save)
 #+end_src
 
-| Command                     | Emacs | Sublime Text | TextMate |
-|-----------------------------+-------+--------------+----------|
-| Duplicate line or selection | C-S-d | C-S-d        | C-S-d    |
+*** Duplicate line or region
+
+| Editor        | Duplicate line or selection |
+|---------------+-----------------------------|
+| Sublime Text  | C-S-d                       |
+| TextMate      | C-S-d                       |
+| BBEdit        | C-S-d                       |
+| VS Code       | M-S-<down>                  |
+| IntelliJ IDEA | C-d                         |
+| Eclipse       | C-M-<down>                  |
+|---------------+-----------------------------|
+| Emacs         | C-S-d                       |
 
 #+begin_src emacs-lisp
-  (defun lvn-duplicate-line-or-region ()
-    "Duplicate the current line or region."
-    (interactive)
-    (save-mark-and-excursion
-      (if (use-region-p)
-          (progn
-            (kill-ring-save (region-beginning) (region-end))
-            (goto-char (region-end))
-            (yank))
-        (progn
-          (kill-ring-save (line-beginning-position) (line-end-position))
-          (end-of-line)
-          (newline)
-          (yank)))))
+  (defun boost-duplicate-line-or-region ()
+    "Duplicate the current line, or the active region if any.
 
-  (global-set-key (kbd "C-S-d") #'lvn-duplicate-line-or-region)
+When a region is active, duplicate it immediately after its end,
+keep the duplicated text selected, and briefly highlight it.
+
+When no region is active, duplicate the current line below, place
+point on the duplicated line, and briefly highlight it."
+    (interactive)
+    (if (use-region-p)
+        (let* ((beg (region-beginning))
+               (end (region-end))
+               (text (buffer-substring-no-properties beg end))
+               (new-beg end)
+               new-end)
+          (goto-char end)
+          (insert text)
+          (setq new-end (point))
+          (pulse-momentary-highlight-region new-beg new-end)
+          (goto-char new-end)
+          (set-mark new-beg)
+          (activate-mark))
+      (let* ((col (current-column))
+             (beg (line-beginning-position))
+             (end (line-beginning-position 2))
+             (text (buffer-substring-no-properties beg end))
+             new-beg
+             new-end)
+        (goto-char end)
+        (setq new-beg (point))
+        (insert text)
+        (setq new-end (point))
+        (pulse-momentary-highlight-region new-beg new-end)
+        (goto-char new-beg)
+        (move-to-column col))))
+
+  (global-set-key (kbd "C-S-d") #'boost-duplicate-line-or-region)
 #+end_src
+
+*** Highlighting duplicate lines
 
 To *highlight duplicate lines*, see
 https://emacs.stackexchange.com/questions/13092/how-can-i-highlight-duplicate-lines
+
+*** Removing duplicate lines
 
 In Emacs 24.4 and later, the recommended way to *uniquify lines* is the built-in
 command ~delete-duplicate-lines~.
@@ -1876,18 +1928,21 @@ Auto-indent on paste.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Preserve the previous system clipboard contents in the kill ring before
+  ;; Save the previous system clipboard contents to the kill ring before
   ;; replacing them with an Emacs kill.
   (setq save-interprogram-paste-before-kill t)
-
-  ;; ;; Rotating the kill ring changes the window system selection.
-  ;; (setq yank-pop-change-selection t)
 #+end_src
 
-*** Yanking Earlier Kills
+*** Yanking earlier kills
 
 Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
 [[id:59418189-b87e-45a2-b128-5cbdc8a16430][Helm]]).
+
+#+begin_src emacs-lisp :tangle no
+  ;; Rotating through previous kills with `yank-pop' does update the system
+  ;; clipboard.
+  (setq yank-pop-change-selection t)
+#+end_src
 
 ** Cutting and Pasting on Graphical Displays
 
@@ -1899,70 +1954,6 @@ Interactively insert items from kill ring with ~M-x helm-show-kill-ring~ (see
   ;; Make cut, copy and paste use the clipboard.
   (menu-bar-enable-clipboard)
 #+end_src
-
-# Copy/paste from Windows clipboard in WSL Emacs:
-#
-# #+begin_src emacs-lisp
-#   (setq interprogram-paste-function
-#         (if (equal interprogram-paste-function 'x-cut-buffer-or-selection-value)
-#             #'x-selection-value
-#           interprogram-paste-function))
-# #+end_src
-#
-# See [[https://stackoverflow.com/questions/11186370/symbols-function-definition-is-void-x-cut-buffer-or-selection-value][Symbol's function definition is void: x-cut-buffer-or-selection-value]].
-
-#+begin_src emacs-lisp
-  ;; ;; Define the copy command for WSL.
-  ;; (defun lvn-wsl-slick-copy-region (beg end &optional region)
-  ;;   "Copy the selected region or the current line to the Windows clipboard in WSL.
-  ;; BEG and END specify the region to copy if a region is selected."
-  ;;   (interactive
-  ;;    (if (use-region-p)
-  ;;        (list (region-beginning) (region-end))
-  ;;      (list (line-beginning-position) (line-beginning-position 2))))
-  ;;   (let ((region-text (buffer-substring-no-properties beg end)))
-  ;;     (kill-new region-text)
-  ;;     (shell-command-on-region beg end "clip.exe")
-  ;;     (deactivate-mark)
-  ;;     (message "[Copied to Windows clipboard and kill-ring]")))
-
-  ;; ;; Override the kill-ring-save command when in WSL config.
-  ;; (when lvn--wsl-p
-  ;;   (advice-add 'kill-region :before #'lvn-wsl-slick-copy-region))
-
-
-  ;; (when lvn--wsl-p
-  ;;   (defun lvn-wsl-slick-copy-region (beg end &rest args)
-  ;;     "Copy region to Windows clipboard in WSL."
-  ;;     (interactive "r")
-  ;;     (shell-command-on-region beg end "clip.exe")
-  ;;     (message "[Copied to Windows clipboard]"))
-  ;;   (advice-add 'kill-ring-save :before #'lvn-wsl-slick-copy-region))
-
-
-  ;; ;; Define the paste command for WSL.
-  ;; (defun lvn-wsl-paste-region ()
-  ;;   "Paste the contents of the Windows clipboard in WSL."
-  ;;   (interactive)
-  ;;   (let ((clipboard
-  ;;          (shell-command-to-string "powershell.exe -command 'Get-Clipboard' 2>/dev/null")))
-  ;;     (setq clipboard (replace-regexp-in-string "\r" "" clipboard)) ; Remove Windows ^M characters.
-  ;;     (setq clipboard (substring clipboard 0 -1)) ; Remove newline added by Powershell.
-  ;;
-  ;;     ;; Delete the selected region before inserting clipboard content.
-  ;;     (when (region-active-p)
-  ;;       (delete-region (region-beginning) (region-end)))
-  ;;
-  ;;     (insert clipboard))
-  ;;   (message "[Pasted from Windows clipboard]"))
-
-  ;; ;; Override the yank command when in WSL config.
-  ;; (when lvn--wsl-p
-  ;;   (global-set-key (kbd "C-y") 'lvn-wsl-paste-region))
-#+end_src
-
-See https://emacs.stackexchange.com/questions/39210/copy-paste-from-windows-clipboard-in-wsl-terminal
-and xclip.el?
 
 ** Rectangles
 
@@ -4165,9 +4156,10 @@ Turn on auto-revert mode globally.
     ;; Check and warn about remote files setting.
     (when (and (boundp 'auto-revert-remote-files)
                auto-revert-remote-files)
-      (display-warning 'boost
-                       "`auto-revert-remote-files' is non-nil, this may generate significant network traffic."
-                       :warning)))
+      (display-warning
+       'boost
+       "`auto-revert-remote-files' is non-nil, this may generate significant network traffic."
+       :warning)))
 
   ;; Consider setting `auto-revert-remote-files' to nil to reduce network
   ;; traffic.
@@ -5167,13 +5159,6 @@ XXX Look at helm-dictionary.
 #+end_src
 
 #+begin_src emacs-lisp
-    ;; Better version of `occur'.
-;;    (global-set-key [remap occur] #'helm-occur) ; helm-regexp.el
-    (global-set-key (kbd "C-o")   #'helm-occur) ; helm-regexp.el
-    (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
-#+end_src
-
-#+begin_src emacs-lisp
     (global-set-key (kbd "M-x") #'helm-M-x)
 #+end_src
 
@@ -5718,6 +5703,13 @@ changing the buffer's contents!
 
 **** Helm swoop
 
+#+begin_src emacs-lisp
+    ;; Better version of `occur'.
+;;    (global-set-key [remap occur] #'helm-occur) ; helm-regexp.el
+    (global-set-key (kbd "C-o")   #'helm-occur) ; helm-regexp.el
+    (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
+#+end_src
+
 # Occur Edit mode applies edits made in ~*Occur*~ buffers to the original buffers.
 # It is bound to ~e~ in Occur mode.
 
@@ -5731,23 +5723,19 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
     ;; Better version of `(helm-)occur'.
     (global-set-key (kbd "C-o")   #'helm-swoop)
     (global-set-key (kbd "M-s o") #'helm-swoop)
-    ;; (global-set-key (kbd "M-i") #'helm-swoop)
+
     ;; (global-set-key (kbd "M-I") #'helm-swoop-back-to-last-point)
 
     (global-set-key (kbd "M-s O") #'helm-multi-swoop)
     (global-set-key (kbd "M-s /") #'helm-multi-swoop)
-    ;; (global-set-key (kbd "C-c M-i") #'helm-multi-swoop)
 
     ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
 
-    ;; When doing Isearch, hand the word over to `helm-swoop'.
+    ;; Instead of using the standard `isearch-occur', when doing Isearch, hand
+    ;; the word over to `helm-swoop', providing a more interactive view of all
+    ;; matches.
     (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
-    ;; (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)
-
-    (with-eval-after-load 'dired
-      (define-key dired-mode-map (kbd "C-o") #'helm-swoop)
-      ;; (define-key dired-mode-map (kbd "M-i") #'helm-swoop)
-      ))
+  )
 
   (with-eval-after-load 'helm-swoop
 
@@ -5759,7 +5747,6 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
 
     ;; From `helm-swoop' to `helm-multi-swoop-all'.
     (define-key helm-swoop-map (kbd "C-o") #'helm-multi-swoop-all-from-helm-swoop)
-    ;; (define-key helm-swoop-map (kbd "M-i") #'helm-multi-swoop-all-from-helm-swoop)
 
     ;; Don't slightly boost invoke speed in exchange for text color.
     (setq helm-swoop-speed-or-color t)
@@ -7940,7 +7927,7 @@ file, ~preview-latex~ gives you a ~Preview~ menu.
                   "/usr/bin/gs"))))     ; Default Ghostscript path for Unix-like systems.
 
       ;; Ensure the `gs' command is executable, or signal an error if not.
-      (lvn--validate-file-executable-p preview-gs-command)
+      (boost--validate-executable preview-gs-command)
 
       ;; Scale factor for included previews.
       (setq preview-scale-function 1.2))
@@ -12925,7 +12912,8 @@ In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
      Visit the parent directory.
 
 - ~C-o~ ::
-     Open the file while remaining in the Dired buffer.
+     *Display the file* on the current line in another window, but don't select
+     that window.
 
 - ~o~ ::
      Open all marked files (or the current file) with the operating system's
@@ -13892,18 +13880,16 @@ output going to that buffer.
   ;; (boost--try-require 'comint)
   ;; (with-eval-after-load 'comint
 
-    ;; Comint prompt is read only.
+    ;; Prevent accidental modification of interpreter prompts.
     (setq comint-prompt-read-only t)    ; Text is read-only (in ESS)?
 
-    ;; No duplicates in command history.
+    ;; Do not store duplicate commands in history.
     (setq-default comint-input-ignoredups t)
 
-    ;; Input to interpreter causes windows showing the buffer to scroll
-    ;; (insert at the bottom).
+    ;; Keep the prompt visible by scrolling to the bottom when sending input.
     (setq-default comint-scroll-to-bottom-on-input t)
 
-    ;; Output to interpreter causes windows showing the buffer to scroll
-    ;; (add output at the bottom).
+    ;; Follow process output as it arrives.
     (setq-default comint-move-point-for-output t)
 
     ;; Maximum size in lines for Comint buffers.
@@ -13912,7 +13898,8 @@ output going to that buffer.
                                         ; `comint-truncate-buffer' is added to
                                         ; `comint-output-filter-functions'.
 
-    ;; Strip `^M' characters.
+    ;; Automatically convert DOS line endings from shell processes to Unix line
+    ;; endings, avoiding stray `^M' characters.
     (add-to-list 'process-coding-system-alist
                  '("sh" . (undecided-dos . undecided-unix))) ; `es' process.
     (add-to-list 'process-coding-system-alist
@@ -13920,16 +13907,17 @@ output going to that buffer.
     (add-to-list 'process-coding-system-alist
                  '("zsh" . (undecided-dos . undecided-unix)))
 
-    ;; Show completion list when ambiguous.
+    ;; Display completion candidates automatically when completion is ambiguous.
     (setq comint-completion-autolist t)
 
     (defun leuven-comint-clear-buffer ()
-      "Clear the Comint buffer."
+      "Erase all previous output from the current Comint buffer."
       (interactive)
       (let ((comint-buffer-maximum-size 0))
         (comint-truncate-buffer)))
 
     (with-eval-after-load 'comint
+      ;; Provide a convenient shortcut to clear the current Comint buffer.
       (define-key comint-mode-map (kbd "C-c C-k") #'leuven-comint-clear-buffer))
 
 ;; )
@@ -13947,8 +13935,13 @@ bufffer from Emacs.
 
   (leuven--section "38.4 Shell Prompts")
 
-  ;; Regexp to match prompts in the inferior shell.
-  (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
+  ;; ;; Regexp to match prompts in the inferior shell.
+  ;; (setq shell-prompt-pattern "^[^#$%>\n]*[#$%>] *")
+
+  ;; Recognise the final prompt line rather than the full prompt. This is more
+  ;; reliable with modern shells that display contextual information (Git
+  ;; branch, status, icons, etc.) on previous lines.
+  (setq shell-prompt-pattern "^[#$%>] *")
 
   ;; Regexp to recognize prompts in the inferior process.
 ;;   (setq comint-prompt-regexp shell-prompt-pattern) ; Used as well by SQLi!
@@ -13995,7 +13988,7 @@ bufffer from Emacs.
      Display the current buffer's *history* of shell commands.
 
 #+begin_src emacs-lisp
-    ;; Cycle backwards/forwards through input history.
+    ;; Navigate through previous commands.
     (define-key comint-mode-map
       (kbd "C-p") #'comint-previous-input) ; Shell.
     (define-key comint-mode-map
@@ -14005,8 +13998,7 @@ bufffer from Emacs.
     (define-key comint-mode-map
       (kbd "<down>") #'comint-next-input) ; Shell + RStudio.
 
-    ;; Search backwards/forwards through input history for match for current
-    ;; input.
+    ;; Search command history for entries matching the current input as a prefix.
     (define-key comint-mode-map
       (kbd "M-p") #'comint-previous-matching-input-from-input) ; Shell.
     (define-key comint-mode-map
@@ -14017,7 +14009,7 @@ bufffer from Emacs.
       (kbd "<C-down>") #'comint-next-matching-input-from-input) ; RStudio.
 
     (with-eval-after-load 'helm-autoloads
-      ;; Use Helm to search `comint' history.
+      ;; Browse command history with Helm.
       (define-key comint-mode-map
         (kbd "C-c C-l") #'helm-comint-input-ring)))
 #+end_src
@@ -14713,7 +14705,7 @@ printing on Windows.
       "Path to the printing program.")
     (setq ps-lpr-command leuven--print-program)
 
-    (lvn--validate-file-executable-p leuven--print-program)
+    (boost--validate-executable leuven--print-program)
 
     (if (and leuven--print-program (executable-find leuven--print-program))
         (progn
@@ -14902,13 +14894,7 @@ Pick up where you left off.
     (global-set-key (kbd "<f3>") #'find-file-at-point))
 #+end_src
 
-** Google search
-
-#+begin_src emacs-lisp
-;;** Web search
-
-  (leuven--section "Web search")
-#+end_src
+** Web search
 
 #+begin_tip
 The ~M-s M-w~ key binding (new in Emacs 25) uses ~eww~ to search the web for the
@@ -14919,27 +14905,7 @@ The search engine to use for this is specified by the customizable variable
 ~eww-search-prefix~.
 #+end_tip
 
-** Google translate
-
-Switch between different translation directions directly from minibuffer by
-using ~C-n~ and ~C-p~ key bindings.
-
 #+begin_src emacs-lisp
-  ;; Emacs interface to Google Translate.
-  (with-eval-after-load 'google-translate-autoloads
-
-    ;; Translate a text using translation directions.
-    (global-set-key (kbd "C-c T") #'google-translate-smooth-translate))
-
-  ;; Just another UI to Google.
-  (with-eval-after-load 'google-translate-smooth-ui
-
-    ;; Translation directions.
-    (setq google-translate-translation-directions-alist
-          '(("fr" . "en") ("en" . "fr")
-            ("fr" . "nl") ("nl" . "fr")
-            ("fr" . "es") ("es" . "fr"))))
-
 )                                       ; Chapter 47 ends here.
 #+end_src
 
@@ -15539,8 +15505,14 @@ Git repository directory."
                     (progn
                       (sit-for 1.5)
                       (message "[Configuration updated. Please restart Emacs to complete the update]"))
-                  (display-warning 'boost "Error: Failed to update configuration" :warning))))
-          (display-warning 'boost "You have unstaged changes. Please commit or stash them before updating." :warning)
+                  (display-warning
+                   'boost
+                   "Error: Failed to update configuration"
+                   :warning))))
+          (display-warning
+           'boost
+           "You have unstaged changes. Please commit or stash them before updating."
+           :warning)
           (message "[Unstaged changes:\n%s]" unstaged-changes))
       (message "[Error: 'emacs-leuven.el' file not found]"))))
 
