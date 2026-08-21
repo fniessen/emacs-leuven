@@ -39,11 +39,6 @@ References:
   :description "Effectue une recherche web"
   :function (lambda (query) (my-web-search-function query)))
 
-Les raccourcis associés incluent :
-SPC $ g g : Démarrer une session GPTel.
-SPC $ g s : Envoyer un message.
-SPC $ g m : Ouvrir le menu transient.
-
 * Introduction
 
 #+begin_src emacs-lisp
@@ -607,7 +602,7 @@ based on the project's code and documentation."
   ;;           (funcall #'gptel buffer-name))))))
 #+end_src
 
-**** boost-gptel-org-send-to-ai (Org subtree or region → *ChatGPT* buffer)
+**** boost-gptel-org-send-to-ai (Org subtree or region → `*AI Assistant*' buffer)
 
 #+begin_src emacs-lisp
   ;;;###autoload
@@ -995,36 +990,42 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
 
 ** Keybindings
 
-| Key     | Command                          | Context     | Status                            |
-|---------+----------------------------------+-------------+-----------------------------------|
-| C-c RET | gptel-send                       | global      | recommended                       |
-| <f1>    | boost-gptel-chat-buffer          | global      | ← Warning: overwrites Emacs help! |
-| C-c g   | gptel-menu (transient)           | global      | very useful                       |
-| C-c q   | boost-gptel-org-send-to-ai       | org-mode    | useful                            |
-| C-x v w | boost-gptel-write-commit-message | global/diff | handy                             |
+GPTel-related commands are grouped under the global ~C-c g~ prefix.
 
-(global-set-key (kbd "C-c g") 'gptel-send)
-(global-set-key (kbd "C-c r") 'gptel-rewrite)
+| Keybinding | Command                            | Description                                 |
+|------------+------------------------------------+---------------------------------------------|
+| ~C-c g g~ *  | ~gptel~                              | Open or switch to the GPTel chat buffer     |
+| ~C-c g s~ *  | ~gptel-send~                         | Send the prompt or continue generation      |
+| ~C-c g r~    | ~gptel-rewrite~                      | Rewrite the selected region                 |
+| ~C-c g a~    | ~gptel-add~                          | Add the current region to the GPTel context |
+| ~C-c g m~ *  | ~gptel-menu~                         | Open the GPTel (transient) menu             |
+|------------+------------------------------------+---------------------------------------------|
+| ~C-c g c~    | ~boost-gptel-chat-buffer~            | Open the custom chat buffer                 |
+| ~C-c g q~    | ~boost-gptel-org-send-to-ai~         | Send Org content to the AI                  |
+| ~C-c g w~    | ~boost-gptel-write-commit-message~   | Generate a Git commit message               |
 
-:bind ("C-<f1>" . gptel)               ;; ← main entry: start / switch to chat buffer
-:bind (("C-c g"   . gptel-menu)        ;; transient menu: change model, backend, etc.
+#+begin_src emacs-lisp
+(with-eval-after-load 'gptel
+  (define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send))
 
-#+begin_src emacs-lisp :tangle no
-(defvar boost-ai-map
+(defvar boost-gptel-mode-map
   (let ((map (make-sparse-keymap)))
+    ;; GPTel.
     (define-key map "g" #'gptel)         ; Chat. Talk to AI. Ask about current buffer.
     (define-key map "s" #'gptel-send)    ; Send. Continue generation.
     (define-key map "r" #'gptel-rewrite) ; Rewrite selected region.
     (define-key map "a" #'gptel-add)     ; Add context. Add region to chat context.
-    (define-key map "m" #'gptel-menu)
+    (define-key map (kbd "m") #'gptel-menu)
 
-    (define-key map "c" #'boost-gptel-chat-buffer)
-    (define-key map "q" #'boost-gptel-org-send-to-ai)
-    (define-key map "w" #'boost-gptel-write-commit-message)
+    ;; Custom commands.
+    (define-key map (kbd "c") #'boost-gptel-chat-buffer)
+    (define-key map (kbd "q") #'boost-gptel-org-send-to-ai)
+    (define-key map (kbd "w") #'boost-gptel-write-commit-message)
 
-    map))
+    map)
+  "Prefix keymap for GPTel commands.")
 
-(global-set-key (kbd "C-c g") boost-ai-map)
+(global-set-key (kbd "C-c g") boost-gptel-mode-map)
 #+end_src
 
 *** Global bindings
@@ -1040,6 +1041,8 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
                              #'gptel-send "global map"))
 #+end_src
 
+It would also be better to avoid:
+
 #+begin_src emacs-lisp
   ;; ;; Global keybinding (only if free).
   ;; (boost--set-key-if-free global-map (kbd "C-c g")
@@ -1048,8 +1051,13 @@ Structure: Hook puissant, Body (problème→solution→bénéfice), CTA pour s'a
   ;; ;; Global keybinding (only if free).
   ;; (boost--set-key-if-free global-map (kbd "<f1>")
   ;;                          #'boost-gptel-chat-buffer "global map")
-  (global-set-key (kbd "<f1>") #'boost-gptel-chat-buffer)
+  (global-set-key (kbd "C-<f1>") #'boost-gptel-chat-buffer)
 #+end_src
+
+~<f1>~ is bound to *Emacs help by default*. Rebinding it (to
+~boost-gptel-chat-buffer~) is possible, but doing so overrides a standard Emacs
+key, so using another keybinding is generally preferable if we want to preserve
+the default help interface.
 
 *** Org-mode specific
 

@@ -687,6 +687,28 @@ its purpose."
                            function-name function-source)))
       (gptel-request prompt)))
 
+(with-eval-after-load 'gptel
+  (define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send))
+
+(defvar boost-gptel-mode-map
+  (let ((map (make-sparse-keymap)))
+    ;; GPTel.
+    (define-key map "g" #'gptel)         ; Chat. Talk to AI. Ask about current buffer.
+    (define-key map "s" #'gptel-send)    ; Send. Continue generation.
+    (define-key map "r" #'gptel-rewrite) ; Rewrite selected region.
+    (define-key map "a" #'gptel-add)     ; Add context. Add region to chat context.
+    (define-key map (kbd "m") #'gptel-menu)
+
+    ;; Custom commands.
+    (define-key map (kbd "c") #'boost-gptel-chat-buffer)
+    (define-key map (kbd "q") #'boost-gptel-org-send-to-ai)
+    (define-key map (kbd "w") #'boost-gptel-write-commit-message)
+
+    map)
+  "Prefix keymap for GPTel commands.")
+
+(global-set-key (kbd "C-c g") boost-gptel-mode-map)
+
   ;; Unbind `C-c RET' in Org mode.
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-c RET") nil))
@@ -703,7 +725,7 @@ its purpose."
   ;; ;; Global keybinding (only if free).
   ;; (boost--set-key-if-free global-map (kbd "<f1>")
   ;;                          #'boost-gptel-chat-buffer "global map")
-  (global-set-key (kbd "<f1>") #'boost-gptel-chat-buffer)
+  (global-set-key (kbd "C-<f1>") #'boost-gptel-chat-buffer)
 
   ;; Org mode keybinding (only if free).
   (with-eval-after-load 'org
