@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260821.1753>
+;; Version: <20260822.1104>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260821.1753>"
+(defconst boost-version "<20260822.1104>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -3582,6 +3582,86 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 ;;* 26 Commands for (info "(emacs)Text") Human Languages
 
 (leuven--chapter leuven-load-chapter-26-text "26 Commands for Human Languages"
+
+;; Detecting Superwhisper.
+(defun boost--superwhisper-available-p ()
+  "Return non-nil if Superwhisper is registered as a Windows application."
+  (let ((powershell
+         (or (executable-find "powershell.exe")
+             (let ((path
+                    "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe"))
+               (and (file-exists-p path)
+                    path)))))
+    (and powershell
+         (eq 0
+             (call-process
+              powershell
+              nil
+              nil
+              nil
+              "-NoProfile"
+              "-NonInteractive"
+              "-Command"
+              (concat
+               "$app = Get-StartApps | "
+               "Where-Object { $_.AppID -eq 'com.superwhisper.app' }; "
+               "if ($app) { exit 0 } else { exit 1 }"))))))
+
+(when (boost--superwhisper-available-p)
+  (defvar boost-superwhisper-recording-p nil
+    "Non-nil while Superwhisper is recording.")
+
+  (defun boost-toggle-superwhisper-recording ()
+    "Start or stop Superwhisper.
+
+On the first call, start recording.
+On the second call, stop recording and insert the clipboard contents."
+    (interactive)
+    (let* ((stopping boost-superwhisper-recording-p)
+           (powershell
+            (or
+             (executable-find "powershell.exe")
+             (let ((path
+                    "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"))
+               (and (file-exists-p path) path)))))
+
+      (unless powershell
+        (user-error
+         "Windows PowerShell is not accessible from this Emacs instance"))
+
+      ;; The superwhisper://record URL acts as a toggle.
+      (let ((process-connection-type nil))
+        (start-process
+         "superwhisper-record"
+         nil
+         powershell
+         "-NoProfile"
+         "-NonInteractive"
+         "-Command"
+         "Start-Process 'superwhisper://record'"))
+
+      ;; Toggle the local recording state.
+      (setq boost-superwhisper-recording-p (not stopping))
+
+      ;; On the second call, briefly wait for Superwhisper
+      ;; to put the transcription into the clipboard, then insert it.
+      (when stopping
+        (let ((target-buffer (current-buffer))
+              (target-marker (copy-marker (point) t)))
+          (run-at-time
+           0.8
+           nil
+           (lambda (buffer marker)
+             (unwind-protect
+                 (when (buffer-live-p buffer)
+                   (with-current-buffer buffer
+                     (goto-char marker)
+                     (yank)))
+               (set-marker marker nil)))
+           target-buffer
+           target-marker)))))
+
+  (global-set-key (kbd "<escape>") #'boost-toggle-superwhisper-recording))
 
 ;;** 26.1 (info "(emacs)Words")
 
