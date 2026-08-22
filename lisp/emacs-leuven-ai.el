@@ -151,11 +151,38 @@ Set this option to nil to preserve the original response formatting."
           (integer :tag "Fill column"))
   :group 'boost-gptel)
 
+(require 'org-element)
+
 (defun boost--gptel-fill-response (beg end)
-  "Fill the GPTel response between BEG and END."
-  (when (derived-mode-p 'org-mode)
-    (let ((fill-column boost-gptel-fill-column))
-      (fill-region beg end))))
+  "Fill prose paragraphs in the GPTel response between BEG and END.
+
+Only Org paragraph elements are filled.  Source blocks, example
+blocks, tables, drawers, and other structural elements are left
+unchanged."
+  (when (and boost-gptel-fill-column
+             (derived-mode-p 'org-mode))
+    (save-excursion
+      (save-restriction
+        (narrow-to-region beg end)
+        (let* ((tree
+                (org-element-parse-buffer 'element))
+               (paragraphs
+                (org-element-map tree 'paragraph
+                  (lambda (paragraph)
+                    (or
+                     (org-element-property
+                      :post-affiliated
+                      paragraph)
+                     (org-element-property
+                      :begin
+                      paragraph))))))
+          ;; Process paragraphs from the end of the response to the beginning so
+          ;; that buffer changes do not shift positions that have not yet been
+          ;; processed.
+          (let ((fill-column boost-gptel-fill-column))
+            (dolist (position (reverse paragraphs))
+              (goto-char position)
+              (org-fill-paragraph))))))))
 
 (add-hook 'gptel-post-response-functions
           #'boost--gptel-fill-response
