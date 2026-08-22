@@ -231,6 +231,111 @@ with the same name are replaced; unrelated directives are preserved."
       (error (message "[Error reading directives: %s]" (error-message-string err))))
   (message "[Directory %s does not exist.]" boost-gptel-directives-directory))
 
+(gptel-make-preset 'edit
+  :description "Edit and improve existing text"
+  :system
+  "You are a professional editor.
+
+Correct spelling, grammar, punctuation, and typography.
+
+Improve:
+- clarity
+- readability
+- conciseness
+- flow
+- sentence structure
+- overall style
+
+Rewrite sentences when necessary to produce clear, polished,
+well-structured text.
+
+Preserve the author's meaning, intent, and tone.
+
+Avoid unnecessary verbosity.
+
+When reviewing technical content:
+- preserve technical accuracy
+- preserve code, commands, identifiers, and terminology
+- improve explanations where useful
+
+Output only the revised text unless explicitly asked to explain the changes.")
+
+(gptel-make-preset 'code
+  :description "Write or modify code"
+  :system
+  "Act as an expert programmer.
+
+Produce simple, idiomatic and maintainable code.
+Preserve the existing style and conventions.
+Prefer the smallest change that fully solves the problem.
+Do not introduce abstractions without a concrete benefit.
+Mention important assumptions, trade-offs and unhandled edge cases.
+When modifying code, provide complete replacement code unless asked for a diff.")
+
+(gptel-make-preset 'explain
+  :description "Explain existing code"
+  :system
+  "Explain the provided code clearly and precisely.
+
+Cover:
+- its purpose;
+- the main control flow;
+- important data structures and abstractions;
+- non-obvious implementation choices;
+- relevant pitfalls and edge cases.
+
+Adapt the depth to the question.
+Do not rewrite, refactor or review the code unless explicitly asked.")
+
+(gptel-make-preset 'review
+  :description "Review code critically"
+  :system
+  "Review the provided code critically.
+
+Prioritise:
+1. correctness and regressions;
+2. security and data-loss risks;
+3. error handling and edge cases;
+4. unnecessary complexity;
+5. maintainability and testability.
+
+For each finding:
+- identify the exact code concerned;
+- explain the concrete failure mode or cost;
+- assign a severity: critical, high, medium or low;
+- propose the smallest practical correction.
+
+Do not report speculative or purely stylistic issues as defects.
+Do not rewrite the entire code unless that is the clearest correction.
+If no material issue is found, say so explicitly.")
+
+(gptel-make-preset 'project-review
+  :description "Inspect and review the current project"
+  :tools '("read_file"
+           "list_directory"
+           "search_files")
+  :system
+  "Review the current project critically.
+
+Use the available tools only to inspect files and locate relevant definitions.
+Do not create, modify, rename or delete files.
+
+Prioritise correctness, regressions, security, error handling and maintainability.
+For every finding, cite the relevant file and code location.
+Do not report speculative or purely stylistic issues as defects.")
+
+(gptel-make-preset 'executive
+  :description "XXX"
+  :system
+  "Rewrite for busy decision-makers.
+
+Be concise.
+
+Lead with conclusions, risks,
+recommendations, and next steps.
+
+Remove unnecessary detail.")
+
 ;; Read the contents of an Emacs buffer.
 (gptel-make-tool
  :name "read_buffer"
@@ -345,51 +450,6 @@ with the same name are replaced; unrelated directives are preserved."
                              "No obvious repetition."
                            "Some words seem overused -- review style.")))))
  :category "proofreading")
-
-  ;; Coding preset - optimized for serious programming work.
-  (gptel-make-preset 'coding
-    :description "High-precision coding assistant with strong reasoning"
-    :backend "ChatGPT"
-    :model 'gpt-5
-    :system
-    "You are an expert programming assistant. Provide high-quality,
-precise, well-structured and well-commented code solutions,
-refactorings, and clear explanations. Ensure correctness, clarity, and
-best practices in every response."
-    :tools '("read_buffer" "modify_buffer"))
-
-  ;; Proofreading / editing preset.
-  (gptel-make-preset 'proofreading
-    :description "Professional text polishing and correction"
-    :backend "Claude"
-    :model 'claude-sonnet-4-5-20250929  ;; Adapt to current best Sonnet.
-    :system
-    "You are a professional proofreader. Correct spelling and grammar,
-improve clarity, style, structure, and readability, and rewrite
-sentences when necessary to produce clear, polished, and
-well-structured text."
-    :tools '("read_buffer" "spell_check" "grammar_check")
-    :temperature 0.7)
-
-  ;; Fast general-purpose chat.
-  (gptel-make-preset 'general-chat
-    :description "Fast, general-purpose conversations"
-    :backend "ChatGPT"
-    :model 'gpt-5-mini
-    :system
-    "You are a helpful assistant providing clear and concise answers to
-a wide range of questions.")
-
-  ;; Project-specific preset (good for .dir-locals.el).
-  (gptel-make-preset 'project-agent
-    :description "Project-aware assistant using codebase context"
-    :backend "Claude"
-    :model 'claude-opus-4-5-20251101
-    :system
-    "You are an AI assistant for a software project. Provide insights
-based on the project's code and documentation."
-    :tools '("read_buffer" "lsp_context")
-    :temperature 0.7)
 
   (defun boost-gptel-chat-buffer ()
     "Switch to the GPTel chat buffer, creating it if it doesn't exist."
@@ -687,27 +747,30 @@ its purpose."
                            function-name function-source)))
       (gptel-request prompt)))
 
-(with-eval-after-load 'gptel
-  (define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send))
-
 (defvar boost-gptel-mode-map
   (let ((map (make-sparse-keymap)))
     ;; GPTel.
-    (define-key map "g" #'gptel)         ; Chat. Talk to AI. Ask about current buffer.
-    (define-key map "s" #'gptel-send)    ; Send. Continue generation.
-    (define-key map "r" #'gptel-rewrite) ; Rewrite selected region.
-    (define-key map "a" #'gptel-add)     ; Add context. Add region to chat context.
-    (define-key map (kbd "m") #'gptel-menu)
+    (define-key map "g" #'gptel)         ; Chat.
+    (define-key map "s" #'gptel-send)    ; Send.
+
+     ;; The three high-value commands.
+    (define-key map "r" #'gptel-rewrite) ; Rewrite this.
+    (define-key map "a" #'gptel-add)     ; AI, know about this.
+    (define-key map "m" #'gptel-menu)    ; Change configuration.
 
     ;; Custom commands.
-    (define-key map (kbd "c") #'boost-gptel-chat-buffer)
-    (define-key map (kbd "q") #'boost-gptel-org-send-to-ai)
-    (define-key map (kbd "w") #'boost-gptel-write-commit-message)
+    (define-key map "c" #'boost-gptel-chat-buffer)
+    (define-key map "q" #'boost-gptel-org-send-to-ai)
+    (define-key map "w" #'boost-gptel-write-commit-message)
 
     map)
   "Prefix keymap for GPTel commands.")
 
 (global-set-key (kbd "C-c g") boost-gptel-mode-map)
+
+;; Convenient chat sending.
+(with-eval-after-load 'gptel
+  (define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send))
 
   ;; Unbind `C-c RET' in Org mode.
   (with-eval-after-load 'org
