@@ -1333,7 +1333,8 @@ one-shot request instead of accidentally inheriting unrelated buffer state.
          (gptel-context nil)
          (gptel-use-tools nil)
          (gptel-tools nil)
-         (gptel-include-reasoning nil))
+         (gptel-include-reasoning nil)
+         (gptel-temperature nil))
     (with-current-buffer buffer
       (org-mode)
       (insert "#+TITLE: " title "\n")
