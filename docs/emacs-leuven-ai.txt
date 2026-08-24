@@ -30,11 +30,6 @@ References:
 
 ** Sort out
 
-;; Backend Claude
-(gptel-make-anthropic "Claude"
-  :stream t
-  :key (getenv "ANTHROPIC_API_KEY"))
-
 (gptel-make-tool "web_search"
   :description "Effectue une recherche web"
   :function (lambda (query) (my-web-search-function query)))
@@ -69,6 +64,24 @@ References:
 
 (require 'subr-x)  ;; string-trim, string-empty-p, etc.
 (require 'seq)     ;; seq-uniq
+#+end_src
+
+#+begin_src emacs-lisp
+(when (boost--try-require 'gptel-anthropic)
+
+  (setq gptel-api-key
+      (let* ((api-key (or (getenv "ANTHROPIC_API_KEY")
+                          (let ((f (expand-file-name "~/.anthropic_api_key")))
+                            (when (file-exists-p f)
+                              (with-temp-buffer
+                                (insert-file-contents f)
+                                (buffer-string)))))))
+        api-key))
+
+  ;; Backend Claude
+  (gptel-make-anthropic "Claude"
+    :stream t
+    :key gptel-api-key))
 #+end_src
 
 ** Helper functions
@@ -199,6 +212,11 @@ Useful functions:
   (setq gptel-expert-commands t)
 #+end_src
 
+#+begin_src emacs-lisp
+  (with-eval-after-load 'gptel-rewrite
+    (setq gptel-rewrite-default-action 'diff))
+#+end_src
+
 Keymap for gptel rewrite actions at point:
   "C-c C-d" #'gptel--rewrite-diff
   "C-c C-e" #'gptel--rewrite-ediff
@@ -218,12 +236,12 @@ Keymap for gptel rewrite actions at point:
     :group 'applications
     :prefix "boost-gptel-")
 
-  (defcustom boost-gptel-prompt-prefix "** --- User prompt ---\n\n"
+  (defcustom boost-gptel-prompt-prefix "** User prompt\n\n"
     "Prompt prefix inserted before user text in GPTel Org buffers."
     :type 'string
     :group 'boost-gptel)
 
-  (defcustom boost-gptel-response-prefix "** --- AI response ---\n\n"
+  (defcustom boost-gptel-response-prefix "** Response\n\n"
     "Response prefix inserted before AI output in GPTel Org buffers."
     :type 'string
     :group 'boost-gptel)
@@ -313,7 +331,7 @@ Do nothing when the GPTel response belongs to another buffer."
 
 That's why we control their execution order with hook depth.
 
-** System prompts (directives)
+** System prompts ("directives")
 
 *************** TODO Add quick selection key/menu (like in Karthink / c3po demos)
 [[YouTube:yAL0cw1ePqw]] at 05:35
@@ -1198,7 +1216,7 @@ GPTel-related commands are grouped under the global ~C-c g~ prefix.
     (define-key map "g" #'gptel)         ; Chat.
     (define-key map "s" #'gptel-send)    ; Send.
 
-     ;; The three high-value commands.
+    ;; The three high-value commands.
     (define-key map "r" #'gptel-rewrite) ; Rewrite this.
     (define-key map "a" #'gptel-add)     ; AI, know about this.
     (define-key map "m" #'gptel-menu)    ; Change configuration.
@@ -1216,6 +1234,21 @@ GPTel-related commands are grouped under the global ~C-c g~ prefix.
 ;; Convenient chat sending.
 (with-eval-after-load 'gptel
   (define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun boost-gptel-clear-chat ()
+  "Efface la conversation GPTEL du buffer courant."
+  (interactive)
+  (unless (bound-and-true-p gptel-mode)
+    (user-error "Le buffer courant n'est pas un buffer GPTEL"))
+  (when (yes-or-no-p "Effacer toute cette conversation GPTEL ? ")
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (insert (gptel-prompt-prefix-string)))))
+
+(with-eval-after-load 'gptel
+  (define-key gptel-mode-map (kbd "C-c C-l") #'boost-gptel-clear-chat))
 #+end_src
 
 *** Global bindings

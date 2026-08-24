@@ -26,6 +26,22 @@
 (require 'subr-x)  ;; string-trim, string-empty-p, etc.
 (require 'seq)     ;; seq-uniq
 
+(when (boost--try-require 'gptel-anthropic)
+
+  (setq gptel-api-key
+      (let* ((api-key (or (getenv "ANTHROPIC_API_KEY")
+                          (let ((f (expand-file-name "~/.anthropic_api_key")))
+                            (when (file-exists-p f)
+                              (with-temp-buffer
+                                (insert-file-contents f)
+                                (buffer-string)))))))
+        api-key))
+
+  ;; Backend Claude
+  (gptel-make-anthropic "Claude"
+    :stream t
+    :key gptel-api-key))
+
 ;; Require a feature/library if available; if not, fail silently.
 (defun boost--try-require (feature)
   "Try to (require FEATURE) silently.
@@ -109,6 +125,9 @@ If already bound, emit a warning mentioning SCOPE (string)."
   ;; Enable GPTel's expert/power-user commands.
   (setq gptel-expert-commands t)
 
+  (with-eval-after-load 'gptel-rewrite
+    (setq gptel-rewrite-default-action 'diff))
+
   (add-hook 'gptel-mode-hook #'gptel-highlight-mode)
 
   ;; Choose highlighting methods.
@@ -119,12 +138,12 @@ If already bound, emit a warning mentioning SCOPE (string)."
     :group 'applications
     :prefix "boost-gptel-")
 
-  (defcustom boost-gptel-prompt-prefix "** --- User prompt ---\n\n"
+  (defcustom boost-gptel-prompt-prefix "** User prompt\n\n"
     "Prompt prefix inserted before user text in GPTel Org buffers."
     :type 'string
     :group 'boost-gptel)
 
-  (defcustom boost-gptel-response-prefix "** --- AI response ---\n\n"
+  (defcustom boost-gptel-response-prefix "** Response\n\n"
     "Response prefix inserted before AI output in GPTel Org buffers."
     :type 'string
     :group 'boost-gptel)
@@ -780,7 +799,7 @@ its purpose."
     (define-key map "g" #'gptel)         ; Chat.
     (define-key map "s" #'gptel-send)    ; Send.
 
-     ;; The three high-value commands.
+    ;; The three high-value commands.
     (define-key map "r" #'gptel-rewrite) ; Rewrite this.
     (define-key map "a" #'gptel-add)     ; AI, know about this.
     (define-key map "m" #'gptel-menu)    ; Change configuration.
@@ -798,6 +817,19 @@ its purpose."
 ;; Convenient chat sending.
 (with-eval-after-load 'gptel
   (define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send))
+
+(defun boost-gptel-clear-chat ()
+  "Efface la conversation GPTEL du buffer courant."
+  (interactive)
+  (unless (bound-and-true-p gptel-mode)
+    (user-error "Le buffer courant n'est pas un buffer GPTEL"))
+  (when (yes-or-no-p "Effacer toute cette conversation GPTEL ? ")
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (insert (gptel-prompt-prefix-string)))))
+
+(with-eval-after-load 'gptel
+  (define-key gptel-mode-map (kbd "C-c C-l") #'boost-gptel-clear-chat))
 
   ;; Unbind `C-c RET' in Org mode.
   (with-eval-after-load 'org
