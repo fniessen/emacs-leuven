@@ -138,7 +138,7 @@ If already bound, emit a warning mentioning SCOPE (string)."
     :group 'applications
     :prefix "boost-gptel-")
 
-  (defcustom boost-gptel-prompt-prefix "** User prompt\n\n"
+  (defcustom boost-gptel-prompt-prefix "** Prompt\n\n"
     "Prompt prefix inserted before user text in GPTel Org buffers."
     :type 'string
     :group 'boost-gptel)
