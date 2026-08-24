@@ -416,38 +416,13 @@ These are conservative defaults.  Tools are allowed by GPTel but no tool is
 selected globally.  Presets opt into specific tools.
 
 #+begin_src emacs-lisp
-(setq gptel-use-curl (and (executable-find "curl") t))
-
-(setq gptel-stream t)
-
-;; (setq gptel-temperature 0.2)
-
-(setq gptel-max-tokens nil)
-
-(setq gptel-cache nil)
-
-(setq gptel-use-context 'system)
-
-(setq gptel-context nil)
-
 (setq gptel-context-restrict-to-project-files t)
-
-(setq gptel-use-tools t)
-
-(setq gptel-tools nil)
-
-(setq gptel-confirm-tool-calls 'auto)
-
-(setq gptel-include-tool-results 'auto)
-
-(setq gptel-include-reasoning 'ignore)
 
 (setq gptel-track-media nil)
 
-(setq gptel-track-response t)
-
 (setq gptel-log-level nil)
 
+;; Enable GPTel's expert/power-user commands.
 (setq gptel-expert-commands t)
 #+end_src
 
