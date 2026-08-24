@@ -1266,7 +1266,7 @@ lifetime.
 #+begin_src emacs-lisp
 (with-eval-after-load 'gptel
   ;; Highlight GPTel responses with a light gray background and a slightly
-  ;; darker bar in the left margin.
+  ;; darker bar in the left fringe.
   (setq gptel-highlight-methods '(face fringe))
 
   (set-face-attribute 'gptel-response-highlight nil
@@ -1275,6 +1275,106 @@ lifetime.
 
   (set-face-attribute 'gptel-response-fringe-highlight nil
                       :foreground "#B8B8B8")
+#+end_src
+
+*** Extending the response background to the final newline
+
+GPTel's response region may end immediately after the last character of the
+response, without including the terminating newline. In that case, ~:extend t~
+cannot extend ~gptel-response-highlight~ to the right edge of the last line.
+
+The code below adds a small, background-only overlay from the end of the
+response through its terminating newline. This lets the response background fill
+the complete final line without colouring the following prompt.
+
+The overlay does not modify GPTel's ~gptel~ text property, so GPTel's logical
+response boundaries remain unchanged. Created overlays are stored in
+a buffer-local variable and removed before the same region is highlighted again.
+
+#+begin_src emacs-lisp
+  (defvar-local boost-gptel-response-tail-overlays nil
+    "Overlays extending GPTel response backgrounds to the next line.
+
+GPTel response regions can end immediately after the final character of the
+response, before the terminating newline.  In that situation the `:extend'
+attribute of `gptel-response-highlight' cannot paint the remainder of the
+visual line.
+
+These overlays cover the terminating newline without modifying GPTel's
+`gptel' text property.")
+
+  (defun boost--gptel-delete-response-tail-overlays (&optional begin end)
+    "Delete response-tail overlays intersecting BEGIN and END.
+
+BEGIN defaults to `point-min' and END defaults to `point-max'."
+
+    (let ((begin (or begin (point-min)))
+          (end   (or end   (point-max))))
+      (dolist (overlay (overlays-in begin end))
+        (when (overlay-get overlay 'boost-gptel-response-tail-overlay)
+          (delete-overlay overlay))))
+
+    ;; Remove references to overlays that no longer exist.
+    (setq boost-gptel-response-tail-overlays
+          (cl-delete-if-not #'overlay-buffer
+                            boost-gptel-response-tail-overlays)))
+
+  (defun boost--gptel-extend-response-background (begin end)
+    "Extend a GPTel response background from END to the next line.
+
+BEGIN and END are supplied by `gptel-post-response-functions'.
+
+GPTel can terminate its response overlay immediately after the final response
+character.  Since the terminating newline is then outside the overlay,
+`:extend t' cannot paint the background through the remainder of the line.
+
+This function adds a background-only overlay from END through the terminating
+newline.  It deliberately does not add or modify the `gptel' text property."
+
+    (when (and (< begin end)
+               (< end (point-max)))
+      (boost--gptel-delete-response-tail-overlays
+       end
+       (min (1+ end) (point-max)))
+
+      (save-excursion
+        (goto-char end)
+
+        ;; Only extend when END is not already positioned after a newline.
+        (unless (bolp)
+          (let* ((tail-begin end)
+                 ;; Include the terminating newline, but do not colour the
+                 ;; contents of the following prompt.
+                 (tail-end
+                  (min (line-beginning-position 2)
+                       (point-max)))
+                 (overlay
+                  (make-overlay tail-begin tail-end nil t nil)))
+
+            (overlay-put overlay
+                         'boost-gptel-response-tail-overlay
+                         t)
+
+            (overlay-put overlay 'evaporate t)
+
+            ;; Use the same GPTel face.  Because the overlay includes the
+            ;; newline, `:extend t' paints the background to the right edge.
+            (overlay-put overlay
+                         'face
+                         'gptel-response-highlight)
+
+            ;; Keep the extension above incidental low-priority overlays
+            ;; such as `hl-line'.
+            (overlay-put overlay 'priority 90)
+
+            (push overlay
+                  boost-gptel-response-tail-overlays))))))
+
+  ;; GPTel calls functions in this abnormal hook with the beginning and end
+  ;; positions of the completed response.
+  (add-hook 'gptel-post-response-functions
+            #'boost--gptel-extend-response-background
+            90)
 #+end_src
 
 ** Org source block highlighting inside responses
