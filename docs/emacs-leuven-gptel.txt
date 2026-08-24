@@ -155,7 +155,7 @@ assumes that credentials exist.  Enable only the providers you use.
   :type 'boolean
   :group 'boost-gptel)
 
-(defcustom boost-gptel-openai-model 'gpt-4.1-mini
+(defcustom boost-gptel-openai-model 'gpt-5-mini
   "Example model identifier for the OpenAI API backend."
   :type 'symbol
   :group 'boost-gptel)
@@ -165,7 +165,7 @@ assumes that credentials exist.  Enable only the providers you use.
   :type 'boolean
   :group 'boost-gptel)
 
-(defcustom boost-gptel-anthropic-model 'claude-sonnet-4-20250514
+(defcustom boost-gptel-anthropic-model 'claude-opus-4-8
   "Example model identifier for the Anthropic backend."
   :type 'symbol
   :group 'boost-gptel)
@@ -1323,15 +1323,22 @@ one-shot request instead of accidentally inheriting unrelated buffer state.
 #+begin_src emacs-lisp
 (defun boost-gptel-request-in-new-buffer (title prompt directive)
   "Send PROMPT with DIRECTIVE and display the result under TITLE."
-  (let ((buffer (generate-new-buffer (format "*gptel: %s*" title)))
-        (gptel-use-context nil)
-        (gptel-context nil)
-        (gptel-use-tools nil)
-        (gptel-tools nil)
-        (gptel-include-reasoning nil))
+  (let* ((buffer (generate-new-buffer (format "*gptel: %s*" title)))
+         (backend gptel-backend)
+         (model gptel-model)
+         (backend-name
+          (when backend
+            (gptel-backend-name backend)))
+         (gptel-use-context nil)
+         (gptel-context nil)
+         (gptel-use-tools nil)
+         (gptel-tools nil)
+         (gptel-include-reasoning nil))
     (with-current-buffer buffer
       (org-mode)
-      (insert "#+TITLE: " title "\n\n")
+      (insert "#+TITLE: " title "\n")
+      (insert "#+GPTEL_BACKEND: " (or backend-name "unknown") "\n")
+      (insert "#+GPTEL_MODEL: " (format "%s" model) "\n\n")
       (insert "* Response\n\n"))
     (display-buffer buffer)
     (gptel-request
