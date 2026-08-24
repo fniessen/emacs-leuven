@@ -1,0 +1,1759 @@
+# Hey Emacs, this is a -*- org -*- file ...
+#+TITLE:     GPTel Configuration
+#+SUBTITLE:  A documented and executable example
+#+AUTHOR:    Fabrice Niessen
+#+EMAIL:     (concat "fniessen" at-sign "pirilampo.org")
+#+DESCRIPTION:
+#+KEYWORDS:  emacs, gptel, config
+#+LANGUAGE:  en
+#+STARTUP:   overview
+#+OPTIONS:   toc:3 num:t
+#+PROPERTY:  header-args:emacs-lisp :tangle ../lisp/emacs-leuven-gptel.el :mkdirp yes :comments link :results silent
+
+* About this configuration
+
+This file is an example of a literate gptel configuration.  It is designed to be
+read from top to bottom and tangled into a single Emacs Lisp file.
+
+The example contains:
+
+- global gptel options;
+- optional OpenAI, and Anthropic backends;
+- API key lookup through =auth-source=;
+- reusable prompt strings and dynamic directives;
+- project-aware helper functions;
+- read-only tools and one confirmed write tool;
+- presets with inheritance;
+- Org mode integration;
+- hooks, keybindings, and custom interactive commands;
+- optional MCP integration;
+- diagnostic helpers.
+
+Model identifiers in this document are examples.  Replace them with identifiers
+available to your account or local inference server.
+
+No API key is stored in this document or in the generated file.
+
+** Tangled Output
+
+The default tangled file is:
+
+#+begin_example
+./generated/boost-gptel.el
+#+end_example
+
+Change the global =:tangle= header argument if your generated configuration
+belongs elsewhere.
+
+** Suggested Directory Layout
+
+#+begin_example
+emacs-config/
+├── gptel.org
+├── generated/
+│   └── boost-gptel.el
+├── prompts/
+│   └── gptel/
+│       └── house-style.txt
+└── private/
+    └── local-gptel.el
+#+end_example
+
+* How to Use This File
+
+** Requirements
+
+This example assumes that the following packages are available:
+
+- gptel;
+- Org mode;
+- Transient, as required by gptel.
+
+The optional MCP section additionally requires =mcp.el=.
+
+** Package Installation Example
+
+This block is documentation only and is not tangled.
+
+#+begin_src emacs-lisp :tangle no
+(use-package gptel
+  :ensure t
+  :commands (gptel gptel-send gptel-menu gptel-rewrite))
+#+end_src
+
+** Tangling
+
+From this Org file, run:
+
+#+begin_example
+M-x org-babel-tangle
+#+end_example
+
+** Loading the Generated File
+
+Add a form like this to your main Emacs configuration:
+
+#+begin_src emacs-lisp :tangle no
+(load (expand-file-name "generated/boost-gptel.el" user-emacs-directory)
+      nil
+      'nomessage)
+#+end_src
+
+** Secret Storage
+
+A =~/.authinfo.gpg= file can contain entries such as the following.  The values
+below are placeholders.
+
+#+begin_example
+machine api.openai.com login apikey password OPENAI_API_KEY_HERE
+machine api.anthropic.com login apikey password ANTHROPIC_API_KEY_HERE
+#+end_example
+
+The generated configuration looks up these secrets only when a request is sent.
+
+* Generated File Prologue
+
+The first tangled block disables link comments so that the lexical-binding file
+variable remains on the first line of the generated file.
+
+#+name: generated-file-prologue
+#+begin_src emacs-lisp :comments no
+;;; boost-gptel.el --- Generated gptel configuration  -*- lexical-binding: t; -*-
+
+;; This file is generated from gptel-literate-example.org.
+;; Edit the Org source, then tangle it again.
+
+;;; Code:
+#+end_src
+
+* Package Loading
+
+The configuration uses only built-in Emacs libraries in addition to gptel.
+Provider-specific libraries are required before their constructor functions are
+used.
+
+#+name: package-loading
+#+begin_src emacs-lisp
+(try-require 'cl-lib)
+(try-require 'seq)
+(try-require 'subr-x)
+(try-require 'rx)
+(try-require 'auth-source)
+(try-require 'project)
+(try-require 'pp)
+(try-require 'org)
+(try-require 'gptel)
+(try-require 'gptel-context)
+(try-require 'gptel-org)
+(try-require 'gptel-openai)
+(try-require 'gptel-anthropic)
+#+end_src
+
+* Personal Customization Group
+
+All user-facing variables live under a dedicated Customize group.
+
+#+name: personal-customization-group
+#+begin_src emacs-lisp
+(defgroup boost-gptel nil
+  "Personal configuration layered on top of gptel."
+  :group 'gptel
+  :prefix "boost-gptel-")
+
+(defcustom boost-gptel-prompt-directory
+  (expand-file-name "prompts/gptel/" user-emacs-directory)
+  "Directory containing optional external prompt files."
+  :type 'directory
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-note-directory
+  (expand-file-name "gptel-notes/" user-emacs-directory)
+  "Directory in which the confirmed create_note tool may write Org files."
+  :type 'directory
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-private-file
+  (expand-file-name "private/local-gptel.el" user-emacs-directory)
+  "Optional non-versioned file loaded before backend registration."
+  :type 'file
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-tool-max-output-chars 50000
+  "Maximum number of characters returned by a read tool."
+  :type 'natnum
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-tool-max-search-files 300
+  "Maximum number of project files inspected by search_project."
+  :type 'natnum
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-tool-max-search-matches 80
+  "Maximum number of matches returned by search_project."
+  :type 'natnum
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-command-max-input-chars 120000
+  "Maximum amount of buffer text used by custom one-shot commands."
+  :type 'natnum
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-auto-scroll t
+  "Whether to keep a streaming response visible."
+  :type 'boolean
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-move-point-after-response nil
+  "Whether to move point to the end of a completed response."
+  :type 'boolean
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-sensitive-file-regexp
+  (rx (seq
+       (or string-start "/")
+       (or ".env" ".envrc" ".direnv" ".authinfo" ".netrc"
+           ".ssh" ".gnupg" "id_rsa" "id_ed25519"
+           "credentials" "secret" "secrets")
+       (or string-end "/" ".")))
+  "Regexp for project paths that gptel read tools must reject.
+
+This is a conservative example, not a complete secret-detection mechanism."
+  :type 'regexp
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-sensitive-buffer-regexp
+  (rx string-start
+      (or " " "*auth-source" "*password" "*secret" "*credentials"))
+  "Regexp for buffer names that the read_buffer tool must reject."
+  :type 'regexp
+  :group 'boost-gptel)
+#+end_src
+
+** Backend Toggles and Model Identifiers
+
+Remote backends are disabled by default so that evaluating this example never
+assumes that credentials exist.  Enable only the providers you use.
+
+#+name: backend-customization
+#+begin_src emacs-lisp
+(defcustom boost-gptel-enable-openai nil
+  "Whether to register the example OpenAI API backend."
+  :type 'boolean
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-openai-model 'gpt-4.1-mini
+  "Example model identifier for the OpenAI API backend."
+  :type 'symbol
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-enable-anthropic nil
+  "Whether to register the example Anthropic backend."
+  :type 'boolean
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-anthropic-model 'claude-sonnet-4-20250514
+  "Example model identifier for the Anthropic backend."
+  :type 'symbol
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-enable-ollama nil
+  "Whether to register the example local Ollama backend."
+  :type 'boolean
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-ollama-host "localhost:11434"
+  "Host and port of the local Ollama server."
+  :type 'string
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-ollama-model 'qwen3:8b
+  "Example local Ollama model identifier."
+  :type 'symbol
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-default-provider 'current
+  "Provider used as the global default after backend registration.
+
+The value `current' leaves gptel's existing backend and model unchanged."
+  :type '(choice
+          (const :tag "Keep the current gptel default" current)
+          (const :tag "OpenAI API" openai)
+          (const :tag "Anthropic" anthropic)
+          (const :tag "Ollama" ollama))
+  :group 'boost-gptel)
+#+end_src
+
+* Private Machine-Local Settings
+
+This optional file is loaded before backend registration.  It may therefore
+enable providers, change model identifiers, or customize paths without placing
+machine-specific values in the public Org file.
+
+#+name: private-local-settings
+#+begin_src emacs-lisp
+(when (file-readable-p boost-gptel-private-file)
+  (load boost-gptel-private-file nil 'nomessage))
+#+end_src
+
+* Shared Utility Functions
+
+** Authentication
+
+The backend constructors accept a zero-argument function as their =:key= value.
+The returned function performs an =auth-source= lookup when gptel needs the key.
+
+#+name: auth-source-helpers
+#+begin_src emacs-lisp
+(defun boost-gptel-auth-source-secret (host user)
+  "Read and return an auth-source secret for HOST and USER."
+  (let* ((entry
+          (car
+           (auth-source-search
+            :host host
+            :user user
+            :require '(:secret)
+            :max 1)))
+         (secret (plist-get entry :secret)))
+    (unless secret
+      (user-error
+       "No auth-source secret for host %s and user %s"
+       host user))
+    (if (functionp secret)
+        (funcall secret)
+      secret)))
+
+(defun boost-gptel-auth-source-key (host &optional user)
+  "Return a zero-argument credential function for HOST and USER.
+
+USER defaults to \"apikey\".  The result is suitable for a gptel backend's
+=:key= argument and remains valid when this Org block is evaluated directly."
+  (apply-partially
+   #'boost-gptel-auth-source-secret
+   host
+   (or user "apikey")))
+#+end_src
+
+** Project Helpers
+
+#+name: project-helpers
+#+begin_src emacs-lisp
+(defun boost-gptel-project-root (&optional directory)
+  "Return the current project root for DIRECTORY, or nil."
+  (when-let* ((project (project-current nil directory)))
+    (file-name-as-directory
+     (expand-file-name (project-root project)))))
+
+(defun boost-gptel-project-name ()
+  "Return a short name for the current project."
+  (if-let* ((root (boost-gptel-project-root)))
+      (file-name-nondirectory (directory-file-name root))
+    "no-project"))
+
+(defun boost-gptel-sensitive-file-p (file)
+  "Return non-nil when FILE matches the configured sensitive path regexp."
+  (let ((case-fold-search t))
+    (string-match-p
+     boost-gptel-sensitive-file-regexp
+     (expand-file-name file))))
+
+(defun boost-gptel-sensitive-buffer-p (buffer)
+  "Return non-nil when BUFFER should not be exposed through a read tool."
+  (if (not (buffer-live-p buffer))
+      t
+    (with-current-buffer buffer
+      (let ((case-fold-search t))
+        (or (string-match-p boost-gptel-sensitive-buffer-regexp (buffer-name))
+            (and buffer-file-name
+                 (boost-gptel-sensitive-file-p buffer-file-name)))))))
+
+(defun boost-gptel-safe-project-file (relative-path)
+  "Return an existing project file identified by RELATIVE-PATH.
+
+The resolved file must remain inside the current project, including after
+symbolic links are resolved."
+  (when (file-name-absolute-p relative-path)
+    (user-error "Expected a path relative to the current project"))
+  (let* ((root (or (boost-gptel-project-root)
+                   (user-error "No current project")))
+         (candidate (expand-file-name relative-path root)))
+    (unless (file-exists-p candidate)
+      (user-error "Project file does not exist: %s" relative-path))
+    (let ((true-root (file-truename root))
+          (true-file (file-truename candidate)))
+      (unless (file-in-directory-p true-file true-root)
+        (user-error "Path escapes the current project: %s" relative-path))
+      (when (boost-gptel-sensitive-file-p true-file)
+        (user-error "Refusing to read a sensitive project path: %s"
+                    relative-path))
+      true-file)))
+#+end_src
+
+** String and File Helpers
+
+#+name: string-and-file-helpers
+#+begin_src emacs-lisp
+(defun boost-gptel-truncate-string (text limit)
+  "Return TEXT truncated to LIMIT characters with a clear marker."
+  (if (<= (length text) limit)
+      text
+    (concat
+     (substring text 0 limit)
+     (format "\n\n[Output truncated after %d characters.]" limit))))
+
+(defun boost-gptel-buffer-substring-limited (begin end limit)
+  "Return buffer text from BEGIN to END without copying more than LIMIT chars."
+  (let* ((start (min begin end))
+         (finish (max begin end))
+         (cutoff (min finish (+ start limit)))
+         (text (buffer-substring-no-properties start cutoff)))
+    (if (< cutoff finish)
+        (concat
+         text
+         (format "\n\n[Output truncated after %d characters.]" limit))
+      text)))
+
+(defun boost-gptel-read-file-limited (file &optional limit)
+  "Read FILE and return at most LIMIT characters.
+
+LIMIT defaults to `boost-gptel-tool-max-output-chars'."
+  (let ((max-chars (or limit boost-gptel-tool-max-output-chars)))
+    (unless (and (file-regular-p file) (file-readable-p file))
+      (user-error "Not a readable regular file: %s" file))
+    (with-temp-buffer
+      (insert-file-contents file nil 0 (min (file-attribute-size
+                                             (file-attributes file))
+                                            (* 4 max-chars)))
+      (when (save-excursion
+              (goto-char (point-min))
+              (search-forward "\0" nil t))
+        (user-error "Refusing to read a binary file: %s" file))
+      (boost-gptel-truncate-string
+       (buffer-substring-no-properties (point-min) (point-max))
+       max-chars))))
+
+(defun boost-gptel-read-prompt-file (name &optional fallback)
+  "Read prompt NAME from `boost-gptel-prompt-directory'.
+
+NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
+  (let ((file (expand-file-name (concat name ".txt")
+                                boost-gptel-prompt-directory)))
+    (cond
+     ((file-readable-p file)
+      (string-trim (boost-gptel-read-file-limited file 100000)))
+     (fallback fallback)
+     (t
+      (user-error "Prompt file is not readable: %s" file)))))
+
+(defun boost-gptel-slugify (text)
+  "Convert TEXT to a conservative lowercase file-name component."
+  (let ((slug (downcase (string-trim text))))
+    (setq slug (replace-regexp-in-string "[^[:alnum:]]+" "-" slug))
+    (setq slug (replace-regexp-in-string "^-+\\|-+$" "" slug))
+    (if (string-empty-p slug) "note" slug)))
+#+end_src
+
+* Backend Configuration
+
+The variables below retain the actual backend objects.  This makes it possible
+to select them programmatically without relying only on their display names.
+
+#+name: backend-object-variables
+#+begin_src emacs-lisp
+(defvar boost-gptel-openai-backend nil)
+(defvar boost-gptel-anthropic-backend nil)
+(defvar boost-gptel-ollama-backend nil)
+#+end_src
+
+** OpenAI API
+
+#+name: openai-backend
+#+begin_src emacs-lisp
+(when boost-gptel-enable-openai
+  (setq boost-gptel-openai-backend
+        (gptel-make-openai
+            "OpenAI-API"
+          :host "api.openai.com"
+          :stream t
+          :key (boost-gptel-auth-source-key "api.openai.com")
+          :models (list boost-gptel-openai-model))))
+#+end_src
+
+** Anthropic
+
+#+name: anthropic-backend
+#+begin_src emacs-lisp
+(when boost-gptel-enable-anthropic
+  (setq boost-gptel-anthropic-backend
+        (gptel-make-anthropic
+            "Anthropic"
+          :stream t
+          :key (boost-gptel-auth-source-key "api.anthropic.com")
+          :models (list boost-gptel-anthropic-model))))
+#+end_src
+
+** Ollama
+
+#+name: ollama-backend
+#+begin_src emacs-lisp
+(when boost-gptel-enable-ollama
+  (setq boost-gptel-ollama-backend
+        (gptel-make-ollama
+            "Ollama"
+          :host boost-gptel-ollama-host
+          :stream t
+          :models (list boost-gptel-ollama-model))))
+#+end_src
+
+** Default Backend Selection
+
+The =current= option leaves gptel's pre-existing default untouched.  Selecting a
+provider that has not been enabled produces a warning and also leaves the
+existing default untouched.
+
+#+name: default-backend-selection
+#+begin_src emacs-lisp
+(defun boost-gptel-select-default-provider ()
+  "Set the global gptel backend and model from `boost-gptel-default-provider'."
+  (pcase boost-gptel-default-provider
+    ('current nil)
+    ('openai
+     (if boost-gptel-openai-backend
+         (setq gptel-backend boost-gptel-openai-backend
+               gptel-model boost-gptel-openai-model)
+       (display-warning
+        'boost-gptel
+        "OpenAI was selected as default but its backend is disabled.")))
+    ('anthropic
+     (if boost-gptel-anthropic-backend
+         (setq gptel-backend boost-gptel-anthropic-backend
+               gptel-model boost-gptel-anthropic-model)
+       (display-warning
+        'boost-gptel
+        "Anthropic was selected as default but its backend is disabled.")))
+    ('ollama
+     (if boost-gptel-ollama-backend
+         (setq gptel-backend boost-gptel-ollama-backend
+               gptel-model boost-gptel-ollama-model)
+       (display-warning
+        'boost-gptel
+        "Ollama was selected as default but its backend is disabled.")))))
+
+(boost-gptel-select-default-provider)
+#+end_src
+
+* Global Request Defaults
+
+These are conservative defaults.  Tools are allowed by gptel but no tool is
+selected globally.  Presets opt into specific tools.
+
+#+name: global-request-defaults
+#+begin_src emacs-lisp
+(setq gptel-use-curl (and (executable-find "curl") t)
+      gptel-stream t
+      gptel-temperature 0.2
+      gptel-max-tokens nil
+      gptel-cache nil
+      gptel-use-context 'system
+      gptel-context nil
+      gptel-context-restrict-to-project-files t
+      gptel-use-tools t
+      gptel-tools nil
+      gptel-confirm-tool-calls 'auto
+      gptel-include-tool-results 'auto
+      gptel-include-reasoning 'ignore
+      gptel-track-media nil
+      gptel-track-response t
+      gptel-log-level nil
+      gptel-expert-commands t)
+#+end_src
+
+* Prompt Library
+
+Prompts are ordinary Emacs Lisp values.  Keeping them separate from directives
+makes it easy to reuse them in presets and custom commands.
+
+** General Assistant Prompt
+
+#+name: prompt-default
+#+begin_src emacs-lisp
+(defconst boost-gptel-prompt-default
+  (string-join
+   '("You are a careful assistant working inside Emacs."
+     "Answer the user's actual question directly."
+     "Distinguish facts, assumptions, and recommendations."
+     "When information is missing, say what is missing instead of inventing it."
+     "Prefer clear structure, concrete examples, and concise explanations."
+     "Do not claim to have inspected files or executed actions unless a tool result confirms it.")
+   "\n"))
+#+end_src
+
+** Precise Answer Prompt
+
+#+name: prompt-precise
+#+begin_src emacs-lisp
+(defconst boost-gptel-prompt-precise
+  (concat
+   boost-gptel-prompt-default
+   "\n\n"
+   (string-join
+    '("Keep the answer compact."
+      "Lead with the conclusion."
+      "Include only details needed to justify or apply the conclusion.")
+    "\n")))
+#+end_src
+
+** Programming Prompt
+
+#+name: prompt-programming
+#+begin_src emacs-lisp
+(defconst boost-gptel-prompt-programming
+  (string-join
+   '("You are a senior software engineer working inside Emacs."
+     "Inspect the supplied code and context before proposing changes."
+     "Preserve existing behavior unless the user explicitly requests a change."
+     "State important assumptions."
+     "Prefer small, reviewable changes over broad rewrites."
+     "Return complete code when the user asks for code."
+     "Mention security, compatibility, and failure-mode implications when relevant."
+     "Never claim that code was executed unless a tool result confirms execution.")
+   "\n"))
+#+end_src
+
+** Code Review Prompt
+
+#+name: prompt-code-review
+#+begin_src emacs-lisp
+(defconst boost-gptel-prompt-code-review
+  (string-join
+   '("Act as a rigorous code reviewer."
+     "Prioritize correctness, data loss, security, concurrency, and compatibility."
+     "Separate confirmed defects from possible risks."
+     "For every finding, identify the relevant code and explain the failure scenario."
+     "Avoid style-only comments unless they materially affect maintenance or correctness."
+     "End with a short assessment of residual risk.")
+   "\n"))
+#+end_src
+
+** Writing Prompt
+
+#+name: prompt-writing
+#+begin_src emacs-lisp
+(defconst boost-gptel-prompt-writing
+  (string-join
+   '("You are an exacting writing editor."
+     "Preserve the author's meaning, factual claims, and intended audience."
+     "Improve clarity, structure, rhythm, and precision."
+     "Do not introduce new facts."
+     "Keep terminology consistent."
+     "When rewriting, return the revised text first.")
+   "\n"))
+#+end_src
+
+** Research Prompt
+
+#+name: prompt-research
+#+begin_src emacs-lisp
+(defconst boost-gptel-prompt-research
+  (string-join
+   '("You are a cautious research assistant."
+     "Base conclusions only on the material supplied in the conversation or by tools."
+     "Separate direct evidence from inference."
+     "Identify disagreements, missing evidence, and uncertainty."
+     "Do not fabricate citations, quotations, dates, or source details."
+     "Use a comparison table when it genuinely improves the analysis.")
+   "\n"))
+#+end_src
+
+** Summarization Prompt
+
+#+name: prompt-summarization
+#+begin_src emacs-lisp
+(defconst boost-gptel-prompt-summarization
+  (string-join
+   '("Summarize the supplied material faithfully."
+     "Preserve decisions, constraints, numbers, dates, names, and unresolved questions."
+     "Do not add information that is not present in the source."
+     "Use headings only when they improve navigation."
+     "Finish with a short list of open questions when any remain.")
+   "\n"))
+#+end_src
+
+** Dynamic Project-Aware Prompt
+
+A system prompt may be a zero-argument function.  This function adds basic
+Emacs and project metadata at request time.
+
+#+name: dynamic-project-directive
+#+begin_src emacs-lisp
+(defun boost-gptel-project-directive ()
+  "Return a programming directive enriched with current Emacs context."
+  (format
+   "%s\n\nCurrent Emacs context:\n- Project: %s\n- Major mode: %s\n- File: %s"
+   boost-gptel-prompt-programming
+   (boost-gptel-project-name)
+   major-mode
+   (if buffer-file-name
+       (abbreviate-file-name buffer-file-name)
+     "no-file")))
+#+end_src
+
+** External House Style Prompt
+
+This directive reads =house-style.txt= when it exists and otherwise falls back
+to the built-in writing prompt.
+
+#+name: external-house-style-directive
+#+begin_src emacs-lisp
+(defun boost-gptel-house-style-directive ()
+  "Return the external house-style prompt or a safe built-in fallback."
+  (boost-gptel-read-prompt-file
+   "house-style"
+   boost-gptel-prompt-writing))
+#+end_src
+
+*** Example house-style.txt
+
+This file is external to the tangled configuration and can be edited without
+changing the Emacs Lisp source.
+
+#+begin_example
+You are the writing editor for Example Organization.
+Use plain international English.
+Prefer short paragraphs and descriptive headings.
+Preserve technical terms, proper names, dates, and numerical values.
+Do not add claims that are absent from the source material.
+Return the revised text before any editorial notes.
+#+end_example
+
+** Conversation Template
+
+A directive may also be a list.  The first element is the system prompt, and the
+remaining elements form alternating user and assistant turns.
+
+#+name: pair-programming-template
+#+begin_src emacs-lisp
+(defconst boost-gptel-pair-programming-template
+  (list
+   boost-gptel-prompt-programming
+   "Before changing code, briefly restate the requirement and list material assumptions."
+   "Understood. I will first restate the requirement and identify material assumptions, then propose the smallest safe change."))
+#+end_src
+
+* Directives
+
+This updates individual entries instead of replacing gptel's entire directive
+alist.
+
+#+name: directive-registration
+#+begin_src emacs-lisp
+(dolist
+    (entry
+     (list
+      (cons 'default boost-gptel-prompt-default)
+      (cons 'precise boost-gptel-prompt-precise)
+      (cons 'programming boost-gptel-prompt-programming)
+      (cons 'code-review boost-gptel-prompt-code-review)
+      (cons 'writing boost-gptel-prompt-writing)
+      (cons 'research boost-gptel-prompt-research)
+      (cons 'summarize boost-gptel-prompt-summarization)
+      (cons 'project-aware #'boost-gptel-project-directive)
+      (cons 'house-style #'boost-gptel-house-style-directive)
+      (cons 'pair-programming boost-gptel-pair-programming-template)))
+  (setf (alist-get (car entry) gptel-directives) (cdr entry)))
+
+(setq gptel-system-prompt (alist-get 'default gptel-directives))
+#+end_src
+
+* Context Management
+
+Additional context is live.  Files and buffers are read again when a request is
+constructed.
+
+** Project Context Files
+
+#+name: context-customization
+#+begin_src emacs-lisp
+(defcustom boost-gptel-project-context-files
+  '("README.md" "README.org" "CONTRIBUTING.md" "AGENTS.md")
+  "Project-relative files considered by `boost-gptel-add-project-context'."
+  :type '(repeat string)
+  :group 'boost-gptel)
+#+end_src
+
+** Buffer-Local Context Isolation
+
+The custom context commands below intentionally start an independent
+buffer-local context.  They never mutate the default value inherited by other
+buffers.
+
+#+name: buffer-local-context-isolation
+#+begin_src emacs-lisp
+(defun boost-gptel--ensure-local-context ()
+  "Ensure that the current buffer has an independent gptel context."
+  (unless (local-variable-p 'gptel-context)
+    (setq-local gptel-context nil)))
+#+end_src
+
+** Add Common Project Context
+
+#+name: add-project-context
+#+begin_src emacs-lisp
+(defun boost-gptel-add-project-context ()
+  "Add existing files from `boost-gptel-project-context-files' to local context."
+  (interactive)
+  (boost-gptel--ensure-local-context)
+  (let ((root (or (boost-gptel-project-root)
+                  (user-error "No current project")))
+        (added 0))
+    (dolist (relative boost-gptel-project-context-files)
+      (let ((file (expand-file-name relative root)))
+        (when (file-readable-p file)
+          (gptel-context-add-file
+           (boost-gptel-safe-project-file relative))
+          (cl-incf added))))
+    (message "Added %d project context file%s"
+             added
+             (if (= added 1) "" "s"))))
+#+end_src
+
+** Clear Buffer-Local Context
+
+#+name: clear-buffer-context
+#+begin_src emacs-lisp
+(defun boost-gptel-clear-buffer-context ()
+  "Remove every gptel context source local to the current buffer."
+  (interactive)
+  (boost-gptel--ensure-local-context)
+  (gptel-context-remove-all)
+  (message "Cleared buffer-local gptel context"))
+#+end_src
+
+** Inspect Context
+
+#+name: inspect-context
+#+begin_src emacs-lisp
+(defun boost-gptel-show-context ()
+  "Display the active gptel context value in a temporary buffer."
+  (interactive)
+  (with-help-window "*boost-gptel-context*"
+    (princ "Active gptel context:\n\n")
+    (pp gptel-context)))
+#+end_src
+
+* Tool Functions
+
+The functions in this section are ordinary Emacs Lisp functions.  They become
+LLM tools only after being wrapped with =gptel-make-tool=.
+
+The path and buffer filters below are guardrails rather than a guarantee that
+all confidential data will be recognized.  Review and extend the regular
+expressions before enabling tools in sensitive environments.
+
+** Current Date and Time
+
+#+name: tool-function-current-datetime
+#+begin_src emacs-lisp
+(defun boost-gptel-tool-current-datetime ()
+  "Return the current local date, time, and time-zone offset."
+  (format-time-string "%Y-%m-%d %H:%M:%S %z (%A)"))
+#+end_src
+
+** Read an Emacs Buffer
+
+#+name: tool-function-read-buffer
+#+begin_src emacs-lisp
+(defun boost-gptel-tool-read-buffer (buffer-name)
+  "Return BUFFER-NAME contents, truncated to the configured limit."
+  (let ((buffer (get-buffer buffer-name)))
+    (unless buffer
+      (user-error "No live buffer named %s" buffer-name))
+    (when (boost-gptel-sensitive-buffer-p buffer)
+      (user-error "Refusing to read a sensitive buffer: %s" buffer-name))
+    (with-current-buffer buffer
+      (boost-gptel-buffer-substring-limited
+       (point-min)
+       (point-max)
+       boost-gptel-tool-max-output-chars))))
+#+end_src
+
+** List Project Files
+
+#+name: tool-function-list-project-files
+#+begin_src emacs-lisp
+(defun boost-gptel-tool-list-project-files (&optional extension)
+  "Return project-relative file names, optionally filtered by EXTENSION."
+  (let* ((project (or (project-current nil)
+                      (user-error "No current project")))
+         (root (file-name-as-directory (project-root project)))
+         (files (project-files project))
+         (suffix
+          (when (and extension (not (string-empty-p extension)))
+            (if (string-prefix-p "." extension)
+                extension
+              (concat "." extension)))))
+    (setq files
+          (seq-remove
+           (lambda (file)
+             (boost-gptel-sensitive-file-p
+              (expand-file-name file root)))
+           files))
+    (when suffix
+      (setq files
+            (seq-filter
+             (lambda (file)
+               (string-suffix-p suffix file t))
+             files)))
+    (boost-gptel-truncate-string
+     (string-join
+      (mapcar (lambda (file) (file-relative-name file root)) files)
+      "\n")
+     boost-gptel-tool-max-output-chars)))
+#+end_src
+
+** Read a Project File
+
+#+name: tool-function-read-project-file
+#+begin_src emacs-lisp
+(defun boost-gptel-tool-read-project-file (relative-path)
+  "Return the contents of project file RELATIVE-PATH."
+  (boost-gptel-read-file-limited
+   (boost-gptel-safe-project-file relative-path)))
+#+end_src
+
+** Search Project Text
+
+The search is literal, case-insensitive, bounded by file and match limits, and
+implemented without invoking a shell command.
+
+#+name: tool-function-search-project
+#+begin_src emacs-lisp
+(defun boost-gptel-tool-search-project (query)
+  "Search project files for literal string QUERY and return matching lines."
+  (when (string-empty-p (string-trim query))
+    (user-error "Search query must not be empty"))
+  (let* ((project (or (project-current nil)
+                      (user-error "No current project")))
+         (root (file-name-as-directory (project-root project)))
+         (true-root (file-truename root))
+         (files (seq-take (project-files project)
+                          boost-gptel-tool-max-search-files))
+         (case-fold-search t)
+         (matches nil)
+         (match-count 0))
+    (catch 'enough-matches
+      (dolist (project-file files)
+        (let ((file (expand-file-name project-file root)))
+          (condition-case nil
+              (when (and (file-in-directory-p (file-truename file) true-root)
+                         (not (boost-gptel-sensitive-file-p file))
+                         (file-regular-p file)
+                         (file-readable-p file)
+                         (< (file-attribute-size (file-attributes file))
+                            1000000))
+                (with-temp-buffer
+                  (insert-file-contents file)
+                  (unless (save-excursion
+                            (goto-char (point-min))
+                            (search-forward "\0" nil t))
+                    (goto-char (point-min))
+                    (while (search-forward query nil t)
+                      (let* ((line (line-number-at-pos))
+                             (text
+                              (string-trim
+                               (buffer-substring-no-properties
+                                (line-beginning-position)
+                                (line-end-position)))))
+                        (push
+                         (format "%s:%d: %s"
+                                 (file-relative-name file root)
+                                 line
+                                 text)
+                         matches)
+                        (cl-incf match-count)
+                        (when (>= match-count
+                                  boost-gptel-tool-max-search-matches)
+                          (throw 'enough-matches nil)))))))
+            (error nil)))))
+    (if matches
+        (boost-gptel-truncate-string
+         (string-join (nreverse matches) "\n")
+         boost-gptel-tool-max-output-chars)
+      "No matches found.")))
+#+end_src
+
+** Create a Note
+
+This is the only write tool in the example.  It can write only inside
+=boost-gptel-note-directory= and always requires confirmation.
+
+#+name: tool-function-create-note
+#+begin_src emacs-lisp
+(defun boost-gptel-tool-create-note (title content)
+  "Create an Org note with TITLE and CONTENT in the configured note directory."
+  (when (string-empty-p (string-trim title))
+    (user-error "Note title must not be empty"))
+  (make-directory boost-gptel-note-directory t)
+  (let* ((clean-title
+          (replace-regexp-in-string "[\r\n]+" " " (string-trim title)))
+         (stamp (format-time-string "%Y%m%d-%H%M%S"))
+         (slug
+          (truncate-string-to-width
+           (boost-gptel-slugify clean-title)
+           60
+           nil
+           nil))
+         (file
+          (make-temp-file
+           (expand-file-name
+            (format "%s-%s-" stamp slug)
+            boost-gptel-note-directory)
+           nil
+           ".org")))
+    (with-temp-file file
+      (insert "#+TITLE: " clean-title "\n")
+      (insert "#+DATE: " (format-time-string "[%Y-%m-%d %a %H:%M]") "\n\n")
+      (insert content)
+      (unless (string-suffix-p "\n" content)
+        (insert "\n")))
+    (format "Created note: %s" (abbreviate-file-name file))))
+#+end_src
+
+* Tool Registration
+
+Each call to =gptel-make-tool= also registers the tool by name and category.
+Presets may therefore select tools using their string names.
+
+** Tool Variables
+
+#+name: tool-object-variables
+#+begin_src emacs-lisp
+(defvar boost-gptel-tool-current-datetime nil)
+(defvar boost-gptel-tool-read-buffer nil)
+(defvar boost-gptel-tool-list-project-files nil)
+(defvar boost-gptel-tool-read-project-file nil)
+(defvar boost-gptel-tool-search-project nil)
+(defvar boost-gptel-tool-create-note nil)
+(defvar boost-gptel-tools-read-only nil)
+(defvar boost-gptel-tools-with-notes nil)
+#+end_src
+
+** Register current_datetime
+
+#+name: register-tool-current-datetime
+#+begin_src emacs-lisp
+(setq boost-gptel-tool-current-datetime
+      (gptel-make-tool
+       :name "current_datetime"
+       :function #'boost-gptel-tool-current-datetime
+       :description
+       "Return the current local date, time, weekday, and numeric time-zone offset."
+       :args nil
+       :category "environment"
+       :confirm nil
+       :include t))
+#+end_src
+
+** Register read_buffer
+
+#+name: register-tool-read-buffer
+#+begin_src emacs-lisp
+(setq boost-gptel-tool-read-buffer
+      (gptel-make-tool
+       :name "read_buffer"
+       :function #'boost-gptel-tool-read-buffer
+       :description
+       "Return the plain-text contents of a currently live Emacs buffer. Sensitive buffers are rejected, the result may be truncated, and the call requires confirmation."
+       :args
+       (list
+        '(:name "buffer_name"
+          :type string
+          :description "Exact name of the Emacs buffer to read"))
+       :category "emacs-read"
+       :confirm t
+       :include t))
+#+end_src
+
+** Register list_project_files
+
+#+name: register-tool-list-project-files
+#+begin_src emacs-lisp
+(setq boost-gptel-tool-list-project-files
+      (gptel-make-tool
+       :name "list_project_files"
+       :function #'boost-gptel-tool-list-project-files
+       :description
+       "List files in the current Emacs project. Optionally filter by a file extension such as el, py, or org."
+       :args
+       (list
+        '(:name "extension"
+          :type string
+          :description "Optional file extension, with or without a leading dot"
+          :optional t))
+       :category "project-read"
+       :confirm nil
+       :include t))
+#+end_src
+
+** Register read_project_file
+
+#+name: register-tool-read-project-file
+#+begin_src emacs-lisp
+(setq boost-gptel-tool-read-project-file
+      (gptel-make-tool
+       :name "read_project_file"
+       :function #'boost-gptel-tool-read-project-file
+       :description
+       "Read a text file inside the current Emacs project. The path must be relative to the project root and may not escape it."
+       :args
+       (list
+        '(:name "relative_path"
+          :type string
+          :description "Path relative to the current project root"))
+       :category "project-read"
+       :confirm nil
+       :include t))
+#+end_src
+
+** Register search_project
+
+#+name: register-tool-search-project
+#+begin_src emacs-lisp
+(setq boost-gptel-tool-search-project
+      (gptel-make-tool
+       :name "search_project"
+       :function #'boost-gptel-tool-search-project
+       :description
+       "Search a bounded set of project text files for a literal, case-insensitive string and return file, line number, and matching line."
+       :args
+       (list
+        '(:name "query"
+          :type string
+          :description "Non-empty literal text to search for"))
+       :category "project-read"
+       :confirm nil
+       :include t))
+#+end_src
+
+** Register create_note
+
+#+name: register-tool-create-note
+#+begin_src emacs-lisp
+(setq boost-gptel-tool-create-note
+      (gptel-make-tool
+       :name "create_note"
+       :function #'boost-gptel-tool-create-note
+       :description
+       "Create a new timestamped Org note inside the configured gptel note directory. This tool cannot choose an arbitrary output path."
+       :args
+       (list
+        '(:name "title"
+          :type string
+          :description "Short note title")
+        '(:name "content"
+          :type string
+          :description "Complete Org-formatted note content"))
+       :category "notes-write"
+       :confirm t
+       :include t))
+#+end_src
+
+** Tool Collections
+
+#+name: tool-collections
+#+begin_src emacs-lisp
+(setq boost-gptel-tools-read-only
+      (list
+       boost-gptel-tool-current-datetime
+       boost-gptel-tool-read-buffer
+       boost-gptel-tool-list-project-files
+       boost-gptel-tool-read-project-file
+       boost-gptel-tool-search-project))
+
+(setq boost-gptel-tools-with-notes
+      (append boost-gptel-tools-read-only
+              (list boost-gptel-tool-create-note)))
+#+end_src
+
+* Tool Policies and Hooks
+
+The tool itself already requests confirmation.  The pre-tool hook below adds a
+second policy layer for all tools known to modify data.
+
+#+name: pre-tool-policy
+#+begin_src emacs-lisp
+(defun boost-gptel-pre-tool-policy (call)
+  "Apply additional policy to a gptel tool CALL plist."
+  (let ((name (plist-get call :name)))
+    (cond
+     ((member name '("create_note"))
+      '(:confirm t))
+     (t nil))))
+
+(add-hook 'gptel-pre-tool-call-functions #'boost-gptel-pre-tool-policy)
+#+end_src
+
+The post-tool hook logs only the tool name, not its arguments or result.
+
+#+name: post-tool-logging
+#+begin_src emacs-lisp
+(defun boost-gptel-post-tool-log (call)
+  "Log completion of a gptel tool CALL without logging sensitive contents."
+  (message "gptel tool completed: %s" (plist-get call :name))
+  nil)
+
+(add-hook 'gptel-post-tool-call-functions #'boost-gptel-post-tool-log)
+#+end_src
+
+* Presets
+
+Presets are registered after backends, directives, and tools so every reference
+is already available.
+
+A preset cookie such as =@boost-coding= may be placed in a prompt to apply a preset
+to that request.
+
+** Base Preset
+
+#+name: preset-base
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-base
+  :description "Conservative defaults with no tools selected."
+  :system 'default
+  :tools nil
+  :temperature 0.2
+  :max-tokens nil
+  :stream t
+  :use-context 'system
+  :track-media nil
+  :include-reasoning 'ignore
+  :confirm-tool-calls 'auto
+  :include-tool-results 'auto)
+#+end_src
+
+** Precise Preset
+
+#+name: preset-precise
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-precise
+  :description "Compact answers with low randomness."
+  :parents 'boost-base
+  :system 'precise
+  :temperature 0.1)
+#+end_src
+
+** Coding Preset
+
+#+name: preset-coding
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-coding
+  :description "Project-aware programming with read-only Emacs and project tools."
+  :parents 'boost-base
+  :system 'project-aware
+  :tools '("read_buffer"
+           "list_project_files"
+           "read_project_file"
+           "search_project")
+  :temperature 0.2
+  :use-context 'system)
+#+end_src
+
+** Code Review Preset
+
+#+name: preset-code-review
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-code-review
+  :description "Rigorous code review using read-only project tools."
+  :parents 'boost-coding
+  :system 'code-review
+  :temperature 0.1)
+#+end_src
+
+** Pair Programming Preset
+
+#+name: preset-pair-programming
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-pair-programming
+  :description "Programming preset with an initial conversation template."
+  :parents 'boost-coding
+  :system 'pair-programming)
+#+end_src
+
+** Writing Preset
+
+#+name: preset-writing
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-writing
+  :description "Editing and rewriting with access to the current buffer."
+  :parents 'boost-base
+  :system 'writing
+  :tools '("read_buffer")
+  :temperature 0.6
+  :use-context 'user)
+#+end_src
+
+** House Style Preset
+
+#+name: preset-house-style
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-house-style
+  :description "Writing with an optional external house-style prompt."
+  :parents 'boost-writing
+  :system 'house-style
+  :temperature 0.4)
+#+end_src
+
+** Research Preset
+
+#+name: preset-research
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-research
+  :description "Evidence-focused analysis with bounded read-only tools."
+  :parents 'boost-base
+  :system 'research
+  :tools '("current_datetime"
+           "read_buffer"
+           "list_project_files"
+           "read_project_file"
+           "search_project")
+  :temperature 0.2
+  :use-context 'system)
+#+end_src
+
+** Visible Buffers Preset
+
+This demonstrates a dynamic preset value.  The context is computed when the
+preset is applied.
+
+#+name: preset-visible-buffers
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-visible-buffers
+  :description "Research preset with all visible non-internal buffers as context."
+  :parents 'boost-research
+  :context
+  '(:eval
+    (cl-remove-if
+     (lambda (buffer)
+       (or (string-prefix-p " " (buffer-name buffer))
+           (boost-gptel-sensitive-buffer-p buffer)))
+     (delete-dups (mapcar #'window-buffer (window-list)))))
+  :use-context 'user)
+#+end_src
+
+** Note-Taking Preset
+
+This preset opts into the confirmed write tool.
+
+#+name: preset-note-taking
+#+begin_src emacs-lisp
+(gptel-make-preset 'boost-note-taking
+  :description "Research plus confirmed creation of Org notes."
+  :parents 'boost-research
+  :tools '("current_datetime"
+           "read_buffer"
+           "list_project_files"
+           "read_project_file"
+           "search_project"
+           "create_note")
+  :confirm-tool-calls 'auto)
+#+end_src
+
+** Provider-Specific Presets
+
+These presets exist only when their corresponding backend has been enabled and
+registered.
+
+#+name: provider-specific-presets
+#+begin_src emacs-lisp
+(when boost-gptel-openai-backend
+  (gptel-make-preset 'boost-openai
+    :description "Use the configured OpenAI API backend."
+    :parents 'boost-base
+    :backend "OpenAI-API"
+    :model boost-gptel-openai-model))
+
+(when boost-gptel-anthropic-backend
+  (gptel-make-preset 'boost-anthropic
+    :description "Use the configured Anthropic backend."
+    :parents 'boost-base
+    :backend "Anthropic"
+    :model boost-gptel-anthropic-model))
+
+(when boost-gptel-ollama-backend
+  (gptel-make-preset 'boost-local-private
+    :description "Use the configured local Ollama backend with no tools."
+    :parents 'boost-base
+    :backend "Ollama"
+    :model boost-gptel-ollama-model
+    :tools nil
+    :track-media nil))
+#+end_src
+
+* Org Mode Integration
+
+** Org Chat Defaults
+
+Branching context is enabled only when the installed Org version exposes the
+required API.  Prompt and response prefixes are plain text so that they do not
+create extra Org headings.
+
+#+name: org-mode-configuration
+#+begin_src emacs-lisp
+(setq gptel-default-mode 'org-mode
+      gptel-org-convert-response t
+      gptel-org-ignore-elements '(property-drawer)
+      gptel-org-branching-context
+      (version<= "9.7" (org-version)))
+
+(setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
+(setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
+#+end_src
+
+** Reproducible Org Conversation Example
+
+The following is documentation only.  =gptel-org-set-properties= can write the
+active configuration as heading properties interactively.
+
+#+begin_example
+* Review the authentication module
+:PROPERTIES:
+:GPTEL_TOPIC: Review the authentication module
+:GPTEL_PRESET: boost-code-review
+:END:
+
+@user
+Review the authentication flow. Focus on privilege boundaries and token
+lifetime.
+#+end_example
+
+* Chat Interface
+
+** Chat Buffer Setup
+
+#+name: chat-buffer-setup
+#+begin_src emacs-lisp
+(defun boost-gptel-chat-mode-setup ()
+  "Personal presentation settings for a dedicated gptel chat buffer."
+  (visual-line-mode 1)
+  (gptel-highlight-mode 1))
+
+(add-hook 'gptel-mode-hook #'boost-gptel-chat-mode-setup)
+#+end_src
+
+** Streaming and Completion Hooks
+
+#+name: response-hooks
+#+begin_src emacs-lisp
+(defun boost-gptel-maybe-auto-scroll ()
+  "Keep the streaming response visible when configured to do so."
+  (when boost-gptel-auto-scroll
+    (gptel-auto-scroll)))
+
+(defun boost-gptel-after-response (begin end)
+  "Run lightweight UI actions after a response from BEGIN to END."
+  (when (> end begin)
+    (when boost-gptel-move-point-after-response
+      (gptel-end-of-response begin end))
+    (message "gptel response completed: %d character%s"
+             (- end begin)
+             (if (= (- end begin) 1) "" "s"))))
+
+(add-hook 'gptel-post-stream-hook #'boost-gptel-maybe-auto-scroll)
+(add-hook 'gptel-post-response-functions #'boost-gptel-after-response t)
+#+end_src
+
+* Custom Programmatic Requests
+
+These commands use =gptel-request= for one-shot workflows and display the result
+in a new Org buffer.  They use the active backend and model.
+
+** Directive Lookup
+
+#+name: directive-lookup
+#+begin_src emacs-lisp
+(defun boost-gptel-directive (name)
+  "Return directive NAME or signal a user-facing error."
+  (or (alist-get name gptel-directives)
+      (user-error "Unknown gptel directive: %s" name)))
+#+end_src
+
+** Result Buffer Callback
+
+#+name: programmatic-result-callback
+#+begin_src emacs-lisp
+(defun boost-gptel--write-result (buffer response info)
+  "Write a gptel RESPONSE and INFO event into BUFFER."
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t))
+        (goto-char (point-max))
+        (cond
+         ((plist-get info :error)
+          (insert
+           (format "\nRequest failed: %s\n"
+                   (or (plist-get info :error)
+                       (plist-get info :status)
+                       "unknown error"))))
+         ((stringp response)
+          (insert response))
+         ((eq response t)
+          (unless (bolp) (insert "\n"))
+          (insert "\nRequest completed.\n"))
+         ((eq response 'abort)
+          (insert "\nRequest aborted.\n")))))))
+
+(defun boost-gptel-result-callback (buffer)
+  "Return a callback that writes gptel events into BUFFER."
+  (apply-partially #'boost-gptel--write-result buffer))
+#+end_src
+
+** Generic One-Shot Command
+
+The custom callback handles plain text, errors, and abort events.  This helper
+therefore disables tools, additional context, and reasoning events for the
+one-shot request instead of accidentally inheriting unrelated buffer state.
+
+#+name: programmatic-request-command
+#+begin_src emacs-lisp
+(defun boost-gptel-request-in-new-buffer (title prompt directive)
+  "Send PROMPT with DIRECTIVE and display the result under TITLE."
+  (let ((buffer (generate-new-buffer (format "*gptel: %s*" title)))
+        (gptel-use-context nil)
+        (gptel-context nil)
+        (gptel-use-tools nil)
+        (gptel-tools nil)
+        (gptel-include-reasoning nil))
+    (with-current-buffer buffer
+      (org-mode)
+      (insert "#+TITLE: " title "\n\n")
+      (insert "* Response\n\n"))
+    (display-buffer buffer)
+    (gptel-request
+        prompt
+      :system (boost-gptel-directive directive)
+      :stream nil
+      :callback (boost-gptel-result-callback buffer))
+    buffer))
+#+end_src
+
+** Explain the Active Region
+
+#+name: command-explain-region
+#+begin_src emacs-lisp
+(defun boost-gptel-explain-region (begin end)
+  "Explain the active region between BEGIN and END."
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (user-error "Select a region first")))
+  (let ((source
+         (boost-gptel-buffer-substring-limited
+          begin
+          end
+          boost-gptel-command-max-input-chars)))
+    (boost-gptel-request-in-new-buffer
+     "Region explanation"
+     (format
+      "Explain the following material. Describe its purpose, structure, important assumptions, and likely failure modes.\n\n%s"
+      source)
+     'programming)))
+#+end_src
+
+** Summarize the Current Buffer
+
+#+name: command-summarize-buffer
+#+begin_src emacs-lisp
+(defun boost-gptel-summarize-buffer ()
+  "Summarize the current buffer in a new Org buffer."
+  (interactive)
+  (let ((source
+         (boost-gptel-buffer-substring-limited
+          (point-min)
+          (point-max)
+          boost-gptel-command-max-input-chars)))
+    (boost-gptel-request-in-new-buffer
+     (format "Summary of %s" (buffer-name))
+     (format "Summarize the following source faithfully.\n\n%s" source)
+     'summarize)))
+#+end_src
+
+** Translate the Active Region
+
+#+name: command-translate-region
+#+begin_src emacs-lisp
+(defun boost-gptel-translate-region (begin end target-language)
+  "Translate the active region between BEGIN and END to TARGET-LANGUAGE."
+  (interactive
+   (if (use-region-p)
+       (list
+        (region-beginning)
+        (region-end)
+        (read-string "Target language: " "English"))
+     (user-error "Select a region first")))
+  (let ((source
+         (boost-gptel-buffer-substring-limited
+          begin
+          end
+          boost-gptel-command-max-input-chars)))
+    (boost-gptel-request-in-new-buffer
+     (format "Translation to %s" target-language)
+     (format
+      "Translate the following text to %s. Preserve meaning, formatting, names, numbers, and technical terms. Return only the translation.\n\n%s"
+      target-language
+      source)
+     'writing)))
+#+end_src
+
+* Keybindings
+
+The prefix is intentionally isolated so the entire binding group can be changed
+or removed in one place.
+
+The prefix is intentionally isolated so the entire binding group can be changed
+or removed in one place.
+
+
+#+name: keybindings
+#+begin_src emacs-lisp
+(define-prefix-command 'boost-gptel-prefix-map)
+(global-set-key (kbd "C-c g") 'boost-gptel-prefix-map)
+
+(define-key boost-gptel-prefix-map (kbd "g") #'gptel)
+(define-key boost-gptel-prefix-map (kbd "s") #'gptel-send)
+(define-key boost-gptel-prefix-map (kbd "m") #'gptel-menu)
+(define-key boost-gptel-prefix-map (kbd "r") #'gptel-rewrite)
+(define-key boost-gptel-prefix-map (kbd "a") #'gptel-add)
+(define-key boost-gptel-prefix-map (kbd "f") #'gptel-add-file)
+(define-key boost-gptel-prefix-map (kbd "p") #'boost-gptel-add-project-context)
+(define-key boost-gptel-prefix-map (kbd "c") #'boost-gptel-clear-buffer-context)
+(define-key boost-gptel-prefix-map (kbd "i") #'boost-gptel-show-context)
+(define-key boost-gptel-prefix-map (kbd "e") #'boost-gptel-explain-region)
+(define-key boost-gptel-prefix-map (kbd "S") #'boost-gptel-summarize-buffer)
+(define-key boost-gptel-prefix-map (kbd "t") #'boost-gptel-translate-region)
+#+end_src
+
+* Optional MCP Integration
+
+This section only loads gptel's MCP bridge.  Server definitions belong to the
+=mcp.el= configuration and are intentionally not invented here.
+
+#+name: mcp-customization
+#+begin_src emacs-lisp
+(defcustom boost-gptel-enable-mcp-integration nil
+  "Whether to load gptel's optional MCP integration library."
+  :type 'boolean
+  :group 'boost-gptel)
+
+(when boost-gptel-enable-mcp-integration
+  (require 'gptel-integrations))
+#+end_src
+
+After configuring servers through =mcp.el=, use these commands interactively:
+
+- =M-x gptel-mcp-connect=
+- =M-x gptel-mcp-disconnect=
+
+* Diagnostics
+
+** Active Configuration Report
+
+#+name: active-configuration-report
+#+begin_src emacs-lisp
+(defun boost-gptel-describe-active-configuration ()
+  "Display the active gptel configuration without revealing API keys."
+  (interactive)
+  (with-help-window "*boost-gptel-configuration*"
+    (princ "Active gptel configuration\n\n")
+    (pp
+     (list
+      :backend
+      (when gptel-backend
+        (gptel-backend-name gptel-backend))
+      :model gptel-model
+      :stream gptel-stream
+      :temperature gptel-temperature
+      :max-tokens gptel-max-tokens
+      :system-prompt
+      (cond
+       ((stringp gptel-system-prompt) "string")
+       ((functionp gptel-system-prompt) "function")
+       ((listp gptel-system-prompt) "conversation-template")
+       (t nil))
+      :use-context gptel-use-context
+      :context-count (length gptel-context)
+      :use-tools gptel-use-tools
+      :tools (mapcar #'gptel-tool-name gptel-tools)
+      :confirm-tool-calls gptel-confirm-tool-calls
+      :include-tool-results gptel-include-tool-results
+      :include-reasoning gptel-include-reasoning
+      :track-media gptel-track-media
+      :log-level gptel-log-level))))
+#+end_src
+
+** Toggle Debug Logging
+
+Debug logs can contain prompts and responses.  Enable them only for a specific
+diagnostic session and inspect the log before sharing it.
+
+#+name: toggle-debug-logging
+#+begin_src emacs-lisp
+(defun boost-gptel-toggle-debug-logging ()
+  "Toggle gptel debug logging for the current Emacs session."
+  (interactive)
+  (setq gptel-log-level
+        (if (eq gptel-log-level 'debug) nil 'debug))
+  (message "gptel logging: %s" (or gptel-log-level "disabled")))
+#+end_src
+
+** Diagnostic Keybindings
+
+#+name: diagnostic-keybindings
+#+begin_src emacs-lisp
+(define-key boost-gptel-prefix-map (kbd "d")
+            #'boost-gptel-describe-active-configuration)
+(define-key boost-gptel-prefix-map (kbd "l")
+            #'boost-gptel-toggle-debug-logging)
+#+end_src
+
+* Generated File Epilogue
+
+#+name: generated-file-epilogue
+#+begin_src emacs-lisp :comments no
+(provide 'boost-gptel)
+
+;;; boost-gptel.el ends here
+#+end_src
+
+* Preset Reference
+
+| Preset               | Directive       | Tools                     | Intended Use                    |
+|----------------------+-----------------+---------------------------+---------------------------------|
+| =boost-base=              | =default=         | none                      | General baseline                |
+| =boost-precise=           | =precise=         | none                      | Compact factual answers         |
+| =boost-coding=            | =project-aware=   | read-only project tools   | Coding and project questions    |
+| =boost-code-review=       | =code-review=     | read-only project tools   | Defect-focused review           |
+| =boost-pair-programming=  | template        | read-only project tools   | Iterative implementation        |
+| =boost-writing=           | =writing=         | buffer reader             | Editing and rewriting           |
+| =boost-house-style=       | external prompt | buffer reader             | Organization-specific writing   |
+| =boost-research=          | =research=        | bounded read-only tools   | Evidence-focused analysis       |
+| =boost-visible-buffers= | =research=        | bounded read-only tools   | Analysis across visible buffers |
+| =boost-note-taking=       | =research=        | read plus confirmed write | Create an Org note              |
+| =boost-openai=            | =default=         | none                      | OpenAI provider selection       |
+| =boost-anthropic=         | =default=         | none                      | Anthropic provider selection    |
+| =boost-local-private=     | =default=         | none                      | Local Ollama conversation       |
+
+* Tool Reference
+
+| Tool               | Category     | Reads Data | Writes Data | Confirmation |
+|--------------------+--------------+------------+-------------+--------------|
+| =current_datetime=   | environment  | no         | no          | no           |
+| =read_buffer=        | emacs-read   | yes        | no          | always       |
+| =list_project_files= | project-read | yes        | no          | no           |
+| =read_project_file=  | project-read | yes        | no          | no           |
+| =search_project=     | project-read | yes        | no          | no           |
+| =create_note=        | notes-write  | no         | yes         | always       |
+
+* References
+
+- gptel repository and README: https://github.com/karthink/gptel
+- gptel source: https://github.com/karthink/gptel/blob/master/gptel.el
+- Org Babel tangling: https://orgmode.org/manual/Extracting-Source-Code.html
