@@ -12,12 +12,12 @@
 
 * About this configuration
 
-This file is an example of a literate gptel configuration.  It is designed to be
+This file is an example of a literate GPTel configuration.  It is designed to be
 read from top to bottom and tangled into a single Emacs Lisp file.
 
 The example contains:
 
-- global gptel options;
+- global GPTel options;
 - optional OpenAI, and Anthropic backends;
 - API key lookup through =auth-source=;
 - reusable prompt strings and dynamic directives;
@@ -40,7 +40,7 @@ The first tangled block disables link comments so that the lexical-binding file
 variable remains on the first line of the generated file.
 
 #+begin_src emacs-lisp
-;;; boost-gptel.el --- gptel configuration  -*- lexical-binding: t; -*-
+;;; boost-gptel.el --- GPTel configuration  -*- lexical-binding: t; -*-
 
 ;; This file is generated from emacs-leuven-gptel.txt.
 ;; Edit the Org source, then tangle it again.
@@ -50,7 +50,7 @@ variable remains on the first line of the generated file.
 
 * Package loading
 
-The configuration uses only built-in Emacs libraries in addition to gptel.
+The configuration uses only built-in Emacs libraries in addition to GPTel.
 Provider-specific libraries are required before their constructor functions are
 used.
 
@@ -76,7 +76,7 @@ All user-facing variables live under a dedicated Customize group.
 
 #+begin_src emacs-lisp
 (defgroup boost-gptel nil
-  "Personal configuration layered on top of gptel."
+  "Personal configuration layered on top of GPTel."
   :group 'gptel
   :prefix "boost-gptel-")
 
@@ -130,7 +130,7 @@ All user-facing variables live under a dedicated Customize group.
            ".ssh" ".gnupg" "id_rsa" "id_ed25519"
            "credentials" "secret" "secrets")
        (or string-end "/" ".")))
-  "Regexp for project paths that gptel read tools must reject.
+  "Regexp for project paths that GPTel read tools must reject.
 
 This is a conservative example, not a complete secret-detection mechanism."
   :type 'regexp
@@ -173,9 +173,9 @@ assumes that credentials exist.  Enable only the providers you use.
 (defcustom boost-gptel-default-provider 'current
   "Provider used as the global default after backend registration.
 
-The value `current' leaves gptel's existing backend and model unchanged."
+The value `current' leaves GPTel's existing backend and model unchanged."
   :type '(choice
-          (const :tag "Keep the current gptel default" current)
+          (const :tag "Keep the current GPTel default" current)
           (const :tag "OpenAI API" openai)
           (const :tag "Anthropic" anthropic))
   :group 'boost-gptel)
@@ -197,7 +197,7 @@ machine-specific values in the public Org file.
 ** Authentication
 
 The backend constructors accept a zero-argument function as their =:key= value.
-The returned function performs an =auth-source= lookup when gptel needs the key.
+The returned function performs an =auth-source= lookup when GPTel needs the key.
 
 #+begin_src emacs-lisp
 (defun boost-gptel-auth-source-secret (host user)
@@ -221,7 +221,7 @@ The returned function performs an =auth-source= lookup when gptel needs the key.
 (defun boost-gptel-auth-source-key (host &optional user)
   "Return a zero-argument credential function for HOST and USER.
 
-USER defaults to \"apikey\".  The result is suitable for a gptel backend's
+USER defaults to \"apikey\".  The result is suitable for a GPTel backend's
 =:key= argument and remains valid when this Org block is evaluated directly."
   (apply-partially
    #'boost-gptel-auth-source-secret
@@ -383,13 +383,13 @@ to select them programmatically without relying only on their display names.
 
 ** Default backend selection
 
-The =current= option leaves gptel's pre-existing default untouched.  Selecting a
+The =current= option leaves GPTel's pre-existing default untouched.  Selecting a
 provider that has not been enabled produces a warning and also leaves the
 existing default untouched.
 
 #+begin_src emacs-lisp
 (defun boost-gptel-select-default-provider ()
-  "Set the global gptel backend and model from `boost-gptel-default-provider'."
+  "Set the global GPTel backend and model from `boost-gptel-default-provider'."
   (pcase boost-gptel-default-provider
     ('current nil)
     ('openai
@@ -412,7 +412,7 @@ existing default untouched.
 
 * Global request defaults
 
-These are conservative defaults.  Tools are allowed by gptel but no tool is
+These are conservative defaults.  Tools are allowed by GPTel but no tool is
 selected globally.  Presets opt into specific tools.
 
 #+begin_src emacs-lisp
@@ -615,7 +615,7 @@ remaining elements form alternating user and assistant turns.
 
 * Directives
 
-This updates individual entries instead of replacing gptel's entire directive
+This updates individual entries instead of replacing GPTel's entire directive
 alist.
 
 #+begin_src emacs-lisp
@@ -660,7 +660,7 @@ buffers.
 
 #+begin_src emacs-lisp
 (defun boost-gptel--ensure-local-context ()
-  "Ensure that the current buffer has an independent gptel context."
+  "Ensure that the current buffer has an independent GPTel context."
   (unless (local-variable-p 'gptel-context)
     (setq-local gptel-context nil)))
 #+end_src
@@ -690,21 +690,21 @@ buffers.
 
 #+begin_src emacs-lisp
 (defun boost-gptel-clear-buffer-context ()
-  "Remove every gptel context source local to the current buffer."
+  "Remove every GPTel context source local to the current buffer."
   (interactive)
   (boost-gptel--ensure-local-context)
   (gptel-context-remove-all)
-  (message "[Cleared buffer-local gptel context]"))
+  (message "[Cleared buffer-local GPTel context]"))
 #+end_src
 
 ** Inspect context
 
 #+begin_src emacs-lisp
 (defun boost-gptel-show-context ()
-  "Display the active gptel context value in a temporary buffer."
+  "Display the active GPTel context value in a temporary buffer."
   (interactive)
   (with-help-window "*boost-gptel-context*"
-    (princ "Active gptel context:\n\n")
+    (princ "Active GPTel context:\n\n")
     (pp gptel-context)))
 #+end_src
 
@@ -998,7 +998,7 @@ Presets may therefore select tools using their string names.
        :name "create_note"
        :function #'boost-gptel-tool-create-note
        :description
-       "Create a new timestamped Org note inside the configured gptel note directory. This tool cannot choose an arbitrary output path."
+       "Create a new timestamped Org note inside the configured GPTel note directory. This tool cannot choose an arbitrary output path."
        :args
        (list
         '(:name "title"
@@ -1035,7 +1035,7 @@ second policy layer for all tools known to modify data.
 
 #+begin_src emacs-lisp
 (defun boost-gptel-pre-tool-policy (call)
-  "Apply additional policy to a gptel tool CALL plist."
+  "Apply additional policy to a GPTel tool CALL plist."
   (let ((name (plist-get call :name)))
     (cond
      ((member name '("create_note"))
@@ -1049,7 +1049,7 @@ The post-tool hook logs only the tool name, not its arguments or result.
 
 #+begin_src emacs-lisp
 (defun boost-gptel-post-tool-log (call)
-  "Log completion of a gptel tool CALL without logging sensitive contents."
+  "Log completion of a GPTel tool CALL without logging sensitive contents."
   (message "[gptel tool completed: %s]" (plist-get call :name))
   nil)
 
@@ -1505,13 +1505,27 @@ font-lock faces remain visible inside Org source blocks."
 
 ** Chat buffer setup
 
+Dedicated GPTel chat buffers use visual line wrapping, response highlighting,
+and ~C-c C-c~ to send the current prompt.
+
+The send binding is installed in ~gptel-mode-map~, not globally or in
+~org-mode-map~. Therefore, ~C-c C-c~ retains its normal Org behaviour in ordinary
+Org buffers and invokes ~gptel-send~ only while ~gptel-mode~ is active.
+
 #+begin_src emacs-lisp
 (defun boost-gptel-chat-mode-setup ()
-  "Personal presentation settings for a dedicated gptel chat buffer."
+  "Configure presentation in buffers managed by `gptel-mode'."
   (visual-line-mode 1)
   (gptel-highlight-mode 1))
 
 (add-hook 'gptel-mode-hook #'boost-gptel-chat-mode-setup)
+
+;; Send the current prompt with C-c C-c in GPTel conversation buffers.
+;;
+;; This binding belongs to `gptel-mode-map', whose minor-mode binding takes
+;; precedence over the major-mode binding in `org-mode-map'.  Ordinary Org
+;; buffers where `gptel-mode' is inactive retain `org-ctrl-c-ctrl-c'.
+(define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send)
 #+end_src
 
 ** Streaming and completion hooks
@@ -1525,7 +1539,7 @@ font-lock faces remain visible inside Org source blocks."
   (when (> end begin)
     (when boost-gptel-move-point-after-response
       (gptel-end-of-response begin end))
-    (message "[gptel response completed: %d character%s]"
+    (message "[GPTel response completed: %d character%s]"
              (- end begin)
              (if (= (- end begin) 1) "" "s"))))
 
@@ -1543,14 +1557,14 @@ in a new Org buffer.  They use the active backend and model.
 (defun boost-gptel-directive (name)
   "Return directive NAME or signal a user-facing error."
   (or (alist-get name gptel-directives)
-      (user-error "Unknown gptel directive: %s" name)))
+      (user-error "Unknown GPTel directive: %s" name)))
 #+end_src
 
 ** Result buffer callback
 
 #+begin_src emacs-lisp
 (defun boost-gptel--write-result (buffer response info)
-  "Write a gptel RESPONSE and INFO event into BUFFER."
+  "Write a GPTel RESPONSE and INFO event into BUFFER."
   (when (buffer-live-p buffer)
     (with-current-buffer buffer
       (let ((inhibit-read-only t))
@@ -1571,7 +1585,7 @@ in a new Org buffer.  They use the active backend and model.
           (insert "\nRequest aborted.\n")))))))
 
 (defun boost-gptel-result-callback (buffer)
-  "Return a callback that writes gptel events into BUFFER."
+  "Return a callback that writes GPTel events into BUFFER."
   (apply-partially #'boost-gptel--write-result buffer))
 #+end_src
 
@@ -1695,11 +1709,11 @@ or removed in one place.
 (define-prefix-command 'boost-gptel-prefix-map)
 (global-set-key (kbd "C-c g") 'boost-gptel-prefix-map)
 
-(define-key boost-gptel-prefix-map (kbd "g") #'gptel)
-(define-key boost-gptel-prefix-map (kbd "s") #'gptel-send)
-(define-key boost-gptel-prefix-map (kbd "m") #'gptel-menu)
-(define-key boost-gptel-prefix-map (kbd "r") #'gptel-rewrite)
-(define-key boost-gptel-prefix-map (kbd "a") #'gptel-add)
+(define-key boost-gptel-prefix-map (kbd "g") #'gptel)  ; Chat.
+(define-key boost-gptel-prefix-map (kbd "s") #'gptel-send)  ; Send.
+(define-key boost-gptel-prefix-map (kbd "m") #'gptel-menu)  ; Change configuration.
+(define-key boost-gptel-prefix-map (kbd "r") #'gptel-rewrite)  ; Rewrite this.
+(define-key boost-gptel-prefix-map (kbd "a") #'gptel-add)  ; AI, know about this.
 (define-key boost-gptel-prefix-map (kbd "f") #'gptel-add-file)
 
 (define-key boost-gptel-prefix-map (kbd "p") #'boost-gptel-add-project-context)
@@ -1712,12 +1726,12 @@ or removed in one place.
 
 * Optional MCP integration
 
-This section only loads gptel's MCP bridge.  Server definitions belong to the
+This section only loads GPTel's MCP bridge.  Server definitions belong to the
 =mcp.el= configuration and are intentionally not invented here.
 
 #+begin_src emacs-lisp
 (defcustom boost-gptel-enable-mcp-integration nil
-  "Whether to load gptel's optional MCP integration library."
+  "Whether to load GPTel's optional MCP integration library."
   :type 'boolean
   :group 'boost-gptel)
 
@@ -1736,10 +1750,10 @@ After configuring servers through =mcp.el=, use these commands interactively:
 
 #+Begin_src emacs-lisp
 (defun boost-gptel-describe-active-configuration ()
-  "Display the active gptel configuration without revealing API keys."
+  "Display the active GPTel configuration without revealing API keys."
   (interactive)
   (with-help-window "*boost-gptel-configuration*"
-    (princ "Active gptel configuration\n\n")
+    (princ "Active GPTel configuration\n\n")
     (pp
      (list
       :backend
@@ -1773,11 +1787,11 @@ diagnostic session and inspect the log before sharing it.
 
 #+begin_src emacs-lisp
 (defun boost-gptel-toggle-debug-logging ()
-  "Toggle gptel debug logging for the current Emacs session."
+  "Toggle GPTel debug logging for the current Emacs session."
   (interactive)
   (setq gptel-log-level
         (if (eq gptel-log-level 'debug) nil 'debug))
-  (message "[gptel logging: %s]" (or gptel-log-level "disabled")))
+  (message "[GPTel logging: %s]" (or gptel-log-level "disabled")))
 #+end_src
 
 ** Diagnostic keybindings
@@ -1827,6 +1841,6 @@ diagnostic session and inspect the log before sharing it.
 
 * References
 
-- gptel repository and README: https://github.com/karthink/gptel
-- gptel source: https://github.com/karthink/gptel/blob/master/gptel.el
+- GPTel repository and README: https://github.com/karthink/gptel
+- GPTel source: https://github.com/karthink/gptel/blob/master/gpteln.el
 - Org Babel tangling: https://orgmode.org/manual/Extracting-Source-Code.html
