@@ -416,23 +416,39 @@ These are conservative defaults.  Tools are allowed by gptel but no tool is
 selected globally.  Presets opt into specific tools.
 
 #+begin_src emacs-lisp
-(setq gptel-use-curl (and (executable-find "curl") t)
-      gptel-stream t
-      gptel-temperature 0.2
-      gptel-max-tokens nil
-      gptel-cache nil
-      gptel-use-context 'system
-      gptel-context nil
-      gptel-context-restrict-to-project-files t
-      gptel-use-tools t
-      gptel-tools nil
-      gptel-confirm-tool-calls 'auto
-      gptel-include-tool-results 'auto
-      gptel-include-reasoning 'ignore
-      gptel-track-media nil
-      gptel-track-response t
-      gptel-log-level nil
-      gptel-expert-commands t)
+(setq gptel-use-curl (and (executable-find "curl") t))
+
+(setq gptel-stream t)
+
+;; (setq gptel-temperature 0.2)
+
+(setq gptel-max-tokens nil)
+
+(setq gptel-cache nil)
+
+(setq gptel-use-context 'system)
+
+(setq gptel-context nil)
+
+(setq gptel-context-restrict-to-project-files t)
+
+(setq gptel-use-tools t)
+
+(setq gptel-tools nil)
+
+(setq gptel-confirm-tool-calls 'auto)
+
+(setq gptel-include-tool-results 'auto)
+
+(setq gptel-include-reasoning 'ignore)
+
+(setq gptel-track-media nil)
+
+(setq gptel-track-response t)
+
+(setq gptel-log-level nil)
+
+(setq gptel-expert-commands t)
 #+end_src
 
 * Prompt library
@@ -856,8 +872,8 @@ This is the only write tool in the example.  It can write only inside
            nil
            ".org")))
     (with-temp-file file
-      (insert "#+TITLE: " clean-title "\n")
-      (insert "#+DATE: " (format-time-string "[%Y-%m-%d %a %H:%M]") "\n\n")
+      (insert "#+TITLE:     " clean-title "\n")
+      (insert "#+DATE:      " (format-time-string "[%Y-%m-%d %a %H:%M]") "\n\n")
       (insert content)
       (unless (string-suffix-p "\n" content)
         (insert "\n")))
@@ -1055,7 +1071,7 @@ to that request.
   :description "Conservative defaults with no tools selected."
   :system 'default
   :tools nil
-  :temperature 0.2
+  ;; :temperature 0.2
   :max-tokens nil
   :stream t
   :use-context 'system
@@ -1072,7 +1088,8 @@ to that request.
   :description "Compact answers with low randomness."
   :parents 'boost-base
   :system 'precise
-  :temperature 0.1)
+  ;; :temperature 0.1
+  )
 #+end_src
 
 ** Coding preset
@@ -1086,7 +1103,7 @@ to that request.
            "list_project_files"
            "read_project_file"
            "search_project")
-  :temperature 0.2
+  ;; :temperature 0.2
   :use-context 'system)
 #+end_src
 
@@ -1097,7 +1114,8 @@ to that request.
   :description "Rigorous code review using read-only project tools."
   :parents 'boost-coding
   :system 'code-review
-  :temperature 0.1)
+  ;; :temperature 0.1
+  )
 #+end_src
 
 ** Pair programming preset
@@ -1117,7 +1135,7 @@ to that request.
   :parents 'boost-base
   :system 'writing
   :tools '("read_buffer")
-  :temperature 0.6
+  ;; :temperature 0.6
   :use-context 'user)
 #+end_src
 
@@ -1128,7 +1146,8 @@ to that request.
   :description "Writing with an optional external house-style prompt."
   :parents 'boost-writing
   :system 'house-style
-  :temperature 0.4)
+  ;; :temperature 0.4
+  )
 #+end_src
 
 ** Research preset
@@ -1143,7 +1162,7 @@ to that request.
            "list_project_files"
            "read_project_file"
            "search_project")
-  :temperature 0.2
+  ;; :temperature 0.2
   :use-context 'system)
 #+end_src
 
@@ -1242,6 +1261,148 @@ lifetime.
 
 * Chat interface
 
+** Response highlighting
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'gptel
+  ;; Highlight GPTel responses with a light gray background and a slightly
+  ;; darker bar in the left margin.
+  (setq gptel-highlight-methods '(face fringe))
+
+  (set-face-attribute 'gptel-response-highlight nil
+                      :background "#F3F3F3"
+                      :extend t)
+
+  (set-face-attribute 'gptel-response-fringe-highlight nil
+                      :foreground "#B8B8B8")
+#+end_src
+
+** Org source block highlighting inside responses
+
+When ~gptel-highlight-mode~ uses the ~face~ highlighting method, GPTel applies
+~gptel-response-highlight~ to the complete response, including Org source
+blocks. Consequently, the response background can override the background of the
+following Org faces:
+
+- ~org-block~
+- ~org-block-begin-line~
+- ~org-block-end-line~
+
+The code below restores those backgrounds by adding higher-priority overlays
+over Org source blocks.
+
+Only the ~:background~ and ~:extend~ attributes are added. The overlays do not
+inherit the complete Org faces because doing so would override the
+language-specific font-lock foreground colours inside source blocks.
+
+The contents of source blocks are detected through the ~src-block~ text property
+installed by Org fontification. The ~#+begin_src~ and ~#+end_src~ lines are detected
+separately because they do not necessarily carry that property.
+
+The refresh function is registered in ~gptel-post-response-functions~. GPTel
+calls it with the beginning and end positions of the newly inserted response.
+
+#+begin_src emacs-lisp
+  (defvar-local boost-gptel-org-src-overlays nil
+    "Overlays restoring Org source-block backgrounds over GPTel highlighting.")
+
+  (defun boost--gptel-org-delete-src-overlays (&optional begin end)
+    "Delete custom source-block overlays between BEGIN and END."
+    (let ((begin (or begin (point-min)))
+          (end   (or end   (point-max))))
+      (dolist (overlay (overlays-in begin end))
+        (when (overlay-get overlay 'boost-gptel-org-src-overlay)
+          (delete-overlay overlay)))))
+
+  (defun boost--gptel-org-put-src-overlay (begin end face)
+    "Put a background-only overlay from BEGIN to END.
+
+FACE is used only to retrieve its background colour.  The overlay
+deliberately does not inherit FACE, so that language-specific
+font-lock faces remain visible inside Org source blocks."
+    (when (and begin end (< begin end))
+      (let ((overlay (make-overlay begin end nil t nil)))
+        (overlay-put overlay 'boost-gptel-org-src-overlay t)
+        (overlay-put overlay 'evaporate t)
+
+        ;; Override only the background applied by GPTel.
+        ;;
+        ;; Do not use `:inherit FACE' here: inheriting `org-block' would
+        ;; override the language-specific font-lock foreground colours.
+        (overlay-put
+         overlay 'face
+         `(:background
+           ,(or (face-background face nil t)
+                (face-background 'default nil t))
+           :extend t))
+
+        ;; Higher than GPTel's response overlay.
+        (overlay-put overlay 'priority 100)
+
+        (push overlay boost-gptel-org-src-overlays))))
+
+  (defun boost--gptel-org-src-property-regions (begin end)
+    "Return contiguous regions carrying the `src-block' property."
+    (let ((position begin)
+          regions)
+      (while (< position end)
+        (if (get-text-property position 'src-block)
+            (let ((next
+                   (or (next-single-property-change
+                        position 'src-block nil end)
+                       end)))
+              (push (cons position next) regions)
+              (setq position next))
+          (setq position
+                (or (next-single-property-change
+                     position 'src-block nil end)
+                    end))))
+      (nreverse regions)))
+
+  (defun boost--gptel-org-refresh-src-backgrounds (begin end)
+    "Restore Org source-block backgrounds in GPTel response BEGIN to END."
+    (when (derived-mode-p 'org-mode)
+      ;; Org must create `src-block' text properties before we inspect them.
+      (font-lock-flush begin end)
+      (font-lock-ensure begin end)
+
+      (boost--gptel-org-delete-src-overlays begin end)
+
+      ;; Code contents, identified by Org's own `src-block' property.
+      (dolist (region
+               (boost--gptel-org-src-property-regions begin end))
+        (boost--gptel-org-put-src-overlay
+         (car region)
+         (cdr region)
+         'org-block))
+
+      ;; Delimiter lines do not necessarily carry `src-block'.
+      (save-excursion
+        (goto-char begin)
+
+        (while (re-search-forward
+                "^[ \t]*#\\+begin_src\\(?:[ \t].*\\)?$"
+                end t)
+          (boost--gptel-org-put-src-overlay
+           (line-beginning-position)
+           (min (1+ (line-end-position)) end)
+           'org-block-begin-line))
+
+        (goto-char begin)
+
+        (while (re-search-forward
+                "^[ \t]*#\\+end_src[ \t]*$"
+                end t)
+          (boost--gptel-org-put-src-overlay
+           (line-beginning-position)
+           (min (1+ (line-end-position)) end)
+           'org-block-end-line)))))
+
+  (add-hook 'gptel-post-response-functions
+            #'boost--gptel-org-refresh-src-backgrounds
+            95))
+#+end_src
+
 ** Chat buffer setup
 
 #+begin_src emacs-lisp
@@ -1337,7 +1498,7 @@ one-shot request instead of accidentally inheriting unrelated buffer state.
          (gptel-temperature nil))
     (with-current-buffer buffer
       (org-mode)
-      (insert "#+TITLE: " title "\n")
+      (insert "#+TITLE:     " title "\n")
       (insert "#+GPTEL_BACKEND: " (or backend-name "unknown") "\n")
       (insert "#+GPTEL_MODEL: " (format "%s" model) "\n\n")
       (insert "* Response\n\n"))
