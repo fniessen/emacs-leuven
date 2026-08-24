@@ -2332,10 +2332,10 @@ of the ignored headline."
 ;; Indent the content of a source code block.
 (setq org-edit-src-content-indentation 2)
 
-;; Fontify code in code blocks (highlight syntax in the Org buffer).
-(setq org-src-fontify-natively t)       ;! Create overlay
-                                        ;! `org-block-background' and remove
-                                        ;! text property `org-block'.
+;; Fontify source code blocks using the corresponding major mode.
+(setq org-src-fontify-natively t)       ; Org preserves the `org-block' face
+                                        ; while applying language-specific
+                                        ; syntax highlighting.
 
 ;; Preserve spaces and `TAB' characters in source code blocks.
 (setq org-src-preserve-indentation t) ; Or add a `-i' flag to you source block.
