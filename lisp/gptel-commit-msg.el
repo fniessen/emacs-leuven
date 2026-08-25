@@ -22,82 +22,83 @@ The result is shown in *Commit Message* and copied to the kill ring.
 
 If `gptel-commit-prompt-file' exists, its contents are used
 as the system prompt."
-    (interactive)
-    (unless (or (use-region-p)
-                (> (buffer-size) 0))
-      (user-error "[No content to analyze]"))
+  (interactive)
+  (unless (or (use-region-p)
+              (> (buffer-size) 0))
+    (user-error "[No content to analyze]"))
 
-    (let* ((prompt-file gptel-commit-prompt-file)
-           (default-prompt
-            "Write a Git commit message for the supplied diff. Use the imperative mood and limit the subject line to 72 characters.")
-           (system-prompt
-            (if (file-readable-p prompt-file)
-                (with-temp-buffer
-                  (insert-file-contents prompt-file)
-                  (buffer-string))
-              default-prompt))
-           (diff-text
-            (if (use-region-p)
-                (buffer-substring-no-properties
-                 (region-beginning)
-                 (region-end))
+  (let* ((prompt-file gptel-commit-prompt-file)
+         (default-prompt
+          "Write a Git commit message for the supplied diff. Use the imperative mood and limit the subject line to 72 characters.")
+         (system-prompt
+          (if (file-readable-p prompt-file)
+              (with-temp-buffer
+                (insert-file-contents prompt-file)
+                (buffer-string))
+            default-prompt))
+         (diff-text
+          (if (use-region-p)
               (buffer-substring-no-properties
-               (point-min)
-               (point-max)))))
-      ;; Notify user that the process has started.
-      (message "[Writing commit message...]")
+               (region-beginning)
+               (region-end))
+            (buffer-substring-no-properties
+             (point-min)
+             (point-max)))))
+    ;; Notify user that the process has started.
+    (message "[Writing commit message...]")
 
-      ;; Create and clear the buffer initially.
-      (with-current-buffer
-          (get-buffer-create "*Commit Message*")
-        (erase-buffer))
+    ;; Create and clear the buffer initially.
+    (with-current-buffer
+        (get-buffer-create "*Commit Message*")
+      (erase-buffer))
 
-      ;; Send request without menu.
-      (gptel-request
-          diff-text
-        :system system-prompt
-        :callback (lambda (response info)
-                    (if (stringp response)
-                        (let ((output-buffer
-                               (get-buffer-create "*Commit Message*")))
-                                                  ; Create a new reference to the buffer
-                                                  ; to avoid closure dependency.
-                          (with-current-buffer output-buffer
-                            (erase-buffer)
+    ;; Send request without menu.
+    (gptel-request
+        diff-text
+      :system system-prompt
+      :callback
+      (lambda (response info)
+        (if (stringp response)
+            (let ((output-buffer
+                   (get-buffer-create "*Commit Message*")))
+                                      ; Create a new reference to the buffer
+                                      ; to avoid closure dependency.
+              (with-current-buffer output-buffer
+                (erase-buffer)
 
-                            (let ((msg (string-trim response)))
-                              ;; Strip Markdown fences.
-                              (setq msg
-                                    (replace-regexp-in-string
-                                     "\\````[^\n]*\n?"
-                                     ""
-                                     msg))
+                (let ((msg (string-trim response)))
+                  ;; Strip Markdown fences.
+                  (setq msg
+                        (replace-regexp-in-string
+                         "\\````[^\n]*\n?"
+                         ""
+                         msg))
 
-                              (setq msg
-                                    (replace-regexp-in-string
-                                     "\n?```\\'"
-                                     ""
-                                     msg))
+                  (setq msg
+                        (replace-regexp-in-string
+                         "\n?```\\'"
+                         ""
+                         msg))
 
-                              ;; Use normal quotes.
-                              (setq msg
-                                    (replace-regexp-in-string "`" "'" msg))
+                  ;; Use normal quotes.
+                  (setq msg
+                        (replace-regexp-in-string "`" "'" msg))
 
-                              (kill-new msg) ; Add to kill ring.
-                              (insert msg)
+                  (kill-new msg) ; Add to kill ring.
+                  (insert msg)
 
-                              (message
-                               "[Commit message copied to kill ring.]")))
+                  (message
+                   "[Commit message copied to kill ring.]")))
 
-                          (display-buffer
-                           output-buffer
-                           '((display-buffer-reuse-window
-                              display-buffer-pop-up-window)
-                             (inhibit-same-window . t))))
+              (display-buffer
+               output-buffer
+               '((display-buffer-reuse-window
+                  display-buffer-pop-up-window)
+                 (inhibit-same-window . t))))
 
-                      (message
-                       "[Failed to generate commit message: %s]"
-                       (plist-get info :status)))))))
+          (message
+           "[Failed to generate commit message: %s]"
+           (plist-get info :status)))))))
 
 (defvar gptel-commit-mode-map
   (let ((map (make-sparse-keymap)))
