@@ -1,41 +1,48 @@
-;;; gptel-commit-message.el --- Generate commit messages from Diff with GPTel -*- lexical-binding: t -*-
+;;; gptel-commit-msg.el --- Generate commit messages from Diff with GPTel -*- lexical-binding: t -*-
 
 (require 'gptel)
 (require 'subr-x)
 
-(defgroup gptel-commit nil
-  "Generate Git commit messages using GPTel."
-  :group 'gptel)
-
-(defcustom gptel-commit-prompt-file
-  (expand-file-name "write-commit-message.txt"
-                    user-emacs-directory)
-  "System prompt file for commit-message generation."
-  :type 'file
-  :group 'gptel-commit)
-
 ;;;###autoload
-(defun gptel-write-commit-message ()
+(defun gptel-write-commit-msg ()
   "Generate a Git commit message from the current diff region or buffer.
 
-The result is shown in *Commit Message* and copied to the kill ring.
-
-If `gptel-commit-prompt-file' exists, its contents are used
-as the system prompt."
+The result is shown in *Commit Message* and copied to the kill ring."
   (interactive)
   (unless (or (use-region-p)
               (> (buffer-size) 0))
     (user-error "[No content to analyze]"))
 
-  (let* ((prompt-file gptel-commit-prompt-file)
-         (default-prompt
-          "Write a Git commit message for the supplied diff. Use the imperative mood and limit the subject line to 72 characters.")
-         (system-prompt
-          (if (file-readable-p prompt-file)
-              (with-temp-buffer
-                (insert-file-contents prompt-file)
-                (buffer-string))
-            default-prompt))
+  (let* ((system-prompt
+          "## 1. Role
+You are an expert in writing Git commit messages.
+Your mission is to write a clear and concise commit message that describes the
+changes introduced by the provided diffs.
+
+## 2. Tasks
+- Carefully read each provided diff
+- Write a commit message following Git best practices
+
+## 3. Response format
+- Subject only if it fully explains the change
+- Body only if it adds useful detail (never repetition)
+- Subject between 50 and 72 characters max, imperative style, capitalized, no
+  period
+- Separate subject and body with one blank line
+- Body wrapped at 80 characters per line
+- Never use backticks (`) to quote symbols, always use apostrophes (')
+
+## 4. Points of attention
+- Do not include the raw diffs in the response
+- Do not add meta commentary or explanations
+- Return only the commit message itself
+
+## 5. Context
+The file diffs are provided below.
+
+## 6. The file diffs
+```diff
+")
          (diff-text
           (if (use-region-p)
               (buffer-substring-no-properties
@@ -100,25 +107,16 @@ as the system prompt."
            "[Failed to generate commit message: %s]"
            (plist-get info :status)))))))
 
-(defvar gptel-commit-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "w" #'gptel-write-commit-message)
-    map)
-  "Prefix keymap for GPTel commit utilities.")
-
-;;;###autoload
-(global-set-key (kbd "C-c g") gptel-commit-mode-map)
-
 ;;;###autoload
 (with-eval-after-load 'diff-mode
   (define-key diff-mode-map
               (kbd "w")
-              #'gptel-write-commit-message))
+              #'gptel-write-commit-msg))
 
 ;;;###autoload
 (global-set-key (kbd "C-x v w")
-                #'gptel-write-commit-message)
+                #'gptel-write-commit-msg)
 
-(provide 'gptel-commit-message)
+(provide 'gptel-commit-msg)
 
-;;; gptel-commit-message.el ends here
+;;; gptel-commit-msg.el ends here
