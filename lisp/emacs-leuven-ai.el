@@ -108,7 +108,8 @@ If already bound, emit a warning mentioning SCOPE (string)."
   (when (bound-and-true-p boost-openai-key)
     (setq gptel-api-key boost-openai-key))
 
-  (setq gptel-model 'gpt-5-mini)
+  ;; (setq gptel-backend '(...))
+  ;; (setq gptel-model 'gpt-5-mini)
 
   ;; Set logging level to info.
   (setq gptel-log-level 'info)

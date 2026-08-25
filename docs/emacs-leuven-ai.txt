@@ -194,7 +194,8 @@ Useful functions:
   (when (bound-and-true-p boost-openai-key)
     (setq gptel-api-key boost-openai-key))
 
-  (setq gptel-model 'gpt-5-mini)
+  ;; (setq gptel-backend '(...))
+  ;; (setq gptel-model 'gpt-5-mini)
 
   ;; Set logging level to info.
   (setq gptel-log-level 'info)
@@ -934,12 +935,6 @@ mood and limit the subject line to 72 characters.")
                              (inhibit-same-window . t))))
                       (message "[Failed to generate commit message: %s]"
                                (plist-get info :status)))))))
-#+end_src
-
-**** gptel-commit (optional package)
-
-#+begin_src emacs-lisp :tangle no
-  (boost--try-require 'gptel-commit)
 #+end_src
 
 *** Code tools (Emacs Lisp)
