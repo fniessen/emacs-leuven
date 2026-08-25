@@ -4,7 +4,7 @@
 (require 'subr-x)
 
 ;;;###autoload
-(defun gptel-write-commit-msg ()
+(defun gptel-commit-msg-write ()
   "Generate a Git commit message from the current diff region or buffer.
 
 The result is shown in *Commit Message* and copied to the kill ring."
@@ -111,11 +111,11 @@ The file diffs are provided below.
 (with-eval-after-load 'diff-mode
   (define-key diff-mode-map
               (kbd "w")
-              #'gptel-write-commit-msg))
+              #'gptel-commit-msg-write))
 
 ;;;###autoload
 (global-set-key (kbd "C-x v w")
-                #'gptel-write-commit-msg)
+                #'gptel-commit-msg-write)
 
 (provide 'gptel-commit-msg)
 
