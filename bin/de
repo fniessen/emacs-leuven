@@ -17,7 +17,9 @@ pipe="$(mktemp -u)"
 mkfifo "$pipe"
 emacsclient -e '(with-current-buffer
                     (window-buffer (selected-window))
-                  (write-region (concat (file-name-directory (buffer-file-name)) "\n") nil "'"$pipe"'" nil :quiet))
+                  (write-region
+                   (concat (expand-file-name default-directory) "\n")
+                   nil "'"$pipe"'" nil :quiet))
                ' >/dev/null &
 while IFS= read -r line; do
     printf '%s\n' "$line"
