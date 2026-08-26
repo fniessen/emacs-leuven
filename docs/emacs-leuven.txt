@@ -2439,7 +2439,7 @@ In IntelliJ IDEA, the are recognized in both lower and upper case.
                                         ; Optional: Highlight with these.
 
   ;; Show all TODOs in an occur buffer.
-  (global-set-key (kbd "C-c t") 'hl-todo-occur)
+  (global-set-key (kbd "C-c t") #'hl-todo-occur)
   ;; See also `org-agenda-custom-command' '1'.
 )
 #+end_src
@@ -2454,6 +2454,11 @@ Testing it -- Example usage:
 ;; REVIEW[fpz]: Please check this code
 ;; TEST: Add more unit tests
 #+end_src
+
+#+begin_seealso
+Example from the codebase:
+- Docstring of `gptel-cache' in gptel-request.el
+#+end_seealso
 
 #+begin_src emacs-lisp
   ;; Just-in-time (JIT) fontification.
@@ -2615,12 +2620,12 @@ such a background behind or underneath the text. Think of a marker pen
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-;; (when (boost--try-require 'symbol-overlay)
-;;   (global-set-key (kbd "C-S-<f7>") 'symbol-overlay-put)
-;;   (global-set-key (kbd "<f3>") 'symbol-overlay-switch-forward)
-;;   (global-set-key (kbd "S-<f3>") 'symbol-overlay-switch-backward)
-;;   (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
-;;   (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all))
+;; (when (boost--try-require #'symbol-overlay)
+;;   (global-set-key (kbd "C-S-<f7>") #'symbol-overlay-put)
+;;   (global-set-key (kbd "<f3>") #'symbol-overlay-switch-forward)
+;;   (global-set-key (kbd "S-<f3>") #'symbol-overlay-switch-backward)
+;;   (global-set-key (kbd "<f7>") #'symbol-overlay-mode)
+;;   (global-set-key (kbd "<f8>") #'symbol-overlay-remove-all))
 #+end_src
 
 Use Auto-Highlight-Symbol to *automatically highlight* all found *usages of* the
@@ -5171,10 +5176,13 @@ XXX Look at helm-dictionary.
     ;; (global-set-key [remap find-file] #'helm-find-files)
 #+end_src
 
+Creating and Selecting Buffers:
+
 #+begin_src emacs-lisp
     ;; Switch to another buffer.
     (global-set-key (kbd "C-x b") #'helm-mini) ; OK.
-    (global-set-key (kbd "<f12>") #'helm-mini)
+    (boost--set-key-if-free 'global-map (kbd "<f12>")
+                            #'helm-mini "global map")
                                         ; = `helm-buffers-list' + recents.
 
     (global-set-key [remap list-buffers] #'helm-buffers-list) ; OK. C-x C-b
@@ -5797,14 +5805,6 @@ Get EXIF data with ~image-dired-get-exif-data~.
 ;;* 20 Using Multiple (info "(emacs)Buffers")
 
 (leuven--chapter leuven-load-chapter-20-buffers "20 Using Multiple Buffers"
-#+end_src
-
-Creating and Selecting Buffers:
-
-#+begin_src emacs-lisp
-  ;; Switch to another buffer.
-  (boost--set-key-if-free 'global-map (kbd "<f12>")
-                          #'switch-to-buffer "global map")
 #+end_src
 
 ** Listing Existing Buffers
@@ -10285,11 +10285,6 @@ ag %s -l --nocolor --hidden -g ""
 
     ;; Use `find -print0' and `xargs -0'.
     (setq grep-find-use-xargs 'gnu))    ; with-eval-after-load "grep" ends here.
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; Run `grep' via `find', with user-friendly interface.
-  (global-set-key (kbd "C-c 3") #'rgrep)
 #+end_src
 
 *** Editing the Grep Buffer
