@@ -1247,7 +1247,7 @@ It's far more efficient than constantly copy-pasting context into ChatGPT.
 
 * Org-ai
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; Load org-ai.
 (when (boost--try-require 'org-ai)
 

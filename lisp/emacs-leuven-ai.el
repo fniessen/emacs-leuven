@@ -789,20 +789,6 @@ its purpose."
 
 )
 
-;; Load org-ai.
-(when (boost--try-require 'org-ai)
-
-  ;; Enable org-ai-mode in Org mode.
-  (add-hook 'org-mode-hook #'org-ai-mode)
-
-  ;; Set OpenAI API key.
-  (when (bound-and-true-p boost-openai-key)
-    (setq org-ai-openai-api-token boost-openai-key))
-
-  ;; Install YASnippet templates for org-ai.
-  (when (boost--try-require 'yasnippet)
-    (org-ai-install-yasnippets)))
-
 (message "* --[ Loaded Emacs-Leuven AI %s ]--"
          (if (boundp 'lvn--emacs-version) lvn--emacs-version ""))
 
