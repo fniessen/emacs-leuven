@@ -296,19 +296,9 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 (defvar boost-gptel-openai-backend nil)
 (defvar boost-gptel-anthropic-backend nil)
 
-(when boost-gptel-enable-openai
-  (setq boost-gptel-openai-backend
-        (gptel-make-openai
-            "OpenAI-API"
-          :host "api.openai.com"
-          :stream t
-          :key (boost--gptel-api-key-from-file)
-          :models (list boost-gptel-openai-model))))
-
 (when boost-gptel-enable-anthropic
   (setq boost-gptel-anthropic-backend
-        (gptel-make-anthropic
-            "Anthropic"
+        (gptel-make-anthropic "Anthropic"
           :stream t
           :key (boost--gptel-api-key-from-file)
           :models (list boost-gptel-anthropic-model))))
@@ -870,20 +860,48 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 ;; Use Org mode for GPTel chat buffers.
 (setq gptel-default-mode 'org-mode)
 
-(setf (alist-get 'org-mode gptel-prompt-prefix-alist) "Prompt -> ")
-(setf (alist-get 'org-mode gptel-response-prefix-alist) "Response <-\n")
+(setf (alist-get 'org-mode gptel-prompt-prefix-alist) "Prompt ")
+(setf (alist-get 'org-mode gptel-response-prefix-alist) "Response\n\n")
+
+(defface boost-gptel-user-face
+  '((t
+     :background "#c7d9a7"
+     :foreground "black"
+     :box (:line-width 1 :color "#8ea35c")
+     :weight bold))
+  "GPTel user label.")
+
+(defface boost-gptel-assistant-face
+  '((t
+     :background "#a9d6d2"
+     :foreground "black"
+     :box (:line-width 1 :color "#5f9ea0")
+     :weight bold))
+  "GPTel assistant label.")
+
+(defun boost--gptel-font-lock ()
+  (font-lock-add-keywords
+   nil
+   '(("^Prompt"
+      (0 'boost-gptel-user-face prepend))
+     ("^Response"
+      (0 'boost-gptel-assistant-face prepend)))
+   'append))
+
+(add-hook 'gptel-mode-hook #'boost--gptel-font-lock)
 
 (with-eval-after-load 'gptel
-  ;; Highlight GPTel responses with a light gray background and a slightly
+  ;; Highlight GPTel responses with a light blue background and a slightly
   ;; darker bar in the left fringe.
   (setq gptel-highlight-methods '(face fringe))
 
   (set-face-attribute 'gptel-response-highlight nil
-                      :background "#F3F3F3"
+                      :background "#E8F3FE"
                       :extend t)
 
   (set-face-attribute 'gptel-response-fringe-highlight nil
-                      :foreground "#BF6896")
+                      :foreground "#4A90E2"
+                      :weight 'bold)
 
   (defvar-local boost-gptel-response-tail-overlays nil
     "Overlays extending GPTel response backgrounds to the next line.
