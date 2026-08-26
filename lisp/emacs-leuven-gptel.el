@@ -87,7 +87,7 @@ This is a conservative example, not a complete secret-detection mechanism."
   :type 'regexp
   :group 'boost-gptel)
 
-(defcustom boost-gptel-enable-openai nil
+(defcustom boost-gptel-enable-openai t
   "Whether to register the example OpenAI API backend."
   :type 'boolean
   :group 'boost-gptel)
@@ -97,7 +97,7 @@ This is a conservative example, not a complete secret-detection mechanism."
   :type 'symbol
   :group 'boost-gptel)
 
-(defcustom boost-gptel-enable-anthropic nil
+(defcustom boost-gptel-enable-anthropic t
   "Whether to register the example Anthropic backend."
   :type 'boolean
   :group 'boost-gptel)
@@ -147,6 +147,42 @@ USER defaults to \"apikey\".  The result is suitable for a GPTel backend's
    #'boost-gptel-auth-source-secret
    host
    (or user "apikey")))
+
+(defun boost--gptel-api-key-from-file (&optional file)
+  "Return a function that reads an API key from FILE.
+
+When FILE is nil, derive the filename from the active backend type.
+For example, an `gptel-openai' backend resolves to:
+
+  ~/.openai_api_key
+
+The file must contain only the API key, optionally followed by a
+trailing newline.
+
+The returned function performs the lookup when GPTel requests the
+credential."
+  (lambda ()
+    (let* ((key-file
+            (or file
+                (expand-file-name
+                 (format ".%s_api_key"
+                         (thread-first
+                           (type-of gptel-backend)
+                           (symbol-name)
+                           (substring 6)
+                           (downcase)))
+                 "~")))
+           (key
+            (when (file-readable-p key-file)
+              (with-temp-buffer
+                (insert-file-contents key-file)
+                (string-trim
+                 (buffer-substring-no-properties
+                  (point-min)
+                  (point-max)))))))
+      (unless (and key (not (string-empty-p key)))
+        (user-error "No API key found in %s" key-file))
+      key)))
 
 (defun boost-gptel-project-root (&optional directory)
   "Return the current project root for DIRECTORY, or nil."
@@ -266,7 +302,7 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
             "OpenAI-API"
           :host "api.openai.com"
           :stream t
-          :key (boost-gptel-auth-source-key "api.openai.com")
+          :key (boost--gptel-api-key-from-file)
           :models (list boost-gptel-openai-model))))
 
 (when boost-gptel-enable-anthropic
@@ -274,7 +310,7 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
         (gptel-make-anthropic
             "Anthropic"
           :stream t
-          :key (boost-gptel-auth-source-key "api.anthropic.com")
+          :key (boost--gptel-api-key-from-file)
           :models (list boost-gptel-anthropic-model))))
 
 (defun boost-gptel-select-default-provider ()
@@ -298,7 +334,7 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 
 (boost-gptel-select-default-provider)
 
-;; Ne pas inclure le raisonnement du tout
+;; Do not include the reasoning at all.
 (setq gptel-include-reasoning nil)
 
 (setq gptel-context-restrict-to-project-files t)
@@ -831,11 +867,8 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
     :backend "Anthropic"
     :model boost-gptel-anthropic-model))
 
-;; Set default mode for GPTel chat buffers.
+;; Use Org mode for GPTel chat buffers.
 (setq gptel-default-mode 'org-mode)
-
-;; Use the Org heading hierarchy as conversational context when supported.
-(setq gptel-org-branching-context nil)
 
 (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "Prompt -> ")
 (setf (alist-get 'org-mode gptel-response-prefix-alist) "Response <-\n")

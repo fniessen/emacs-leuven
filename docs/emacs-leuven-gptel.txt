@@ -10,6 +10,9 @@
 #+OPTIONS:   toc:3 num:t
 #+PROPERTY:  header-args:emacs-lisp :tangle ../lisp/emacs-leuven-gptel.el :mkdirp yes :results silent
 
+Multiple Backends, Dynamic Discovery, Rewrite and Chat
+https://sukany.cz/blog/2026-03-23-emacs-gptel-setup/
+
 * About this configuration
 
 This file is an example of a literate GPTel configuration.  It is designed to be
@@ -150,7 +153,7 @@ Remote backends are disabled by default so that evaluating this example never
 assumes that credentials exist.  Enable only the providers you use.
 
 #+begin_src emacs-lisp
-(defcustom boost-gptel-enable-openai nil
+(defcustom boost-gptel-enable-openai t
   "Whether to register the example OpenAI API backend."
   :type 'boolean
   :group 'boost-gptel)
@@ -160,7 +163,7 @@ assumes that credentials exist.  Enable only the providers you use.
   :type 'symbol
   :group 'boost-gptel)
 
-(defcustom boost-gptel-enable-anthropic nil
+(defcustom boost-gptel-enable-anthropic t
   "Whether to register the example Anthropic backend."
   :type 'boolean
   :group 'boost-gptel)
@@ -227,6 +230,63 @@ USER defaults to \"apikey\".  The result is suitable for a GPTel backend's
    #'boost-gptel-auth-source-secret
    host
    (or user "apikey")))
+#+end_src
+
+*** API keys from local files
+
+As an alternative to =auth-source=, credentials may be read lazily from files in
+the user's home directory.
+
+When FILE is provided explicitly, that file is used.
+
+Otherwise, the file name is derived from the active backend type:
+
+- =gptel-openai= → =~/.openai_api_key=
+- =gptel-anthropic= → =~/.anthropic_api_key=
+- =gptel-gemini= → =~/.gemini_api_key=
+
+The file is expected to contain only the API key, optionally terminated by
+a newline.
+
+The returned zero-argument function is suitable for a GPTel backend's =:key=
+argument.
+
+#+begin_src emacs-lisp
+(defun boost--gptel-api-key-from-file (&optional file)
+  "Return a function that reads an API key from FILE.
+
+When FILE is nil, derive the filename from the active backend type.
+For example, an `gptel-openai' backend resolves to:
+
+  ~/.openai_api_key
+
+The file must contain only the API key, optionally followed by a
+trailing newline.
+
+The returned function performs the lookup when GPTel requests the
+credential."
+  (lambda ()
+    (let* ((key-file
+            (or file
+                (expand-file-name
+                 (format ".%s_api_key"
+                         (thread-first
+                           (type-of gptel-backend)
+                           (symbol-name)
+                           (substring 6)
+                           (downcase)))
+                 "~")))
+           (key
+            (when (file-readable-p key-file)
+              (with-temp-buffer
+                (insert-file-contents key-file)
+                (string-trim
+                 (buffer-substring-no-properties
+                  (point-min)
+                  (point-max)))))))
+      (unless (and key (not (string-empty-p key)))
+        (user-error "No API key found in %s" key-file))
+      key)))
 #+end_src
 
 ** Project helpers
@@ -365,7 +425,7 @@ to select them programmatically without relying only on their display names.
             "OpenAI-API"
           :host "api.openai.com"
           :stream t
-          :key (boost-gptel-auth-source-key "api.openai.com")
+          :key (boost--gptel-api-key-from-file)
           :models (list boost-gptel-openai-model))))
 #+end_src
 
@@ -377,7 +437,7 @@ to select them programmatically without relying only on their display names.
         (gptel-make-anthropic
             "Anthropic"
           :stream t
-          :key (boost-gptel-auth-source-key "api.anthropic.com")
+          :key (boost--gptel-api-key-from-file)
           :models (list boost-gptel-anthropic-model))))
 #+end_src
 
@@ -416,6 +476,9 @@ These are conservative defaults.  Tools are allowed by GPTel but no tool is
 selected globally.  Presets opt into specific tools.
 
 #+begin_src emacs-lisp
+;; Do not include the reasoning at all.
+(setq gptel-include-reasoning nil)
+
 (setq gptel-context-restrict-to-project-files t)
 
 (setq gptel-track-media nil)
@@ -684,6 +747,11 @@ buffers.
 #+end_src
 
 * Tool functions
+
+#+begin_seealso
+https://github.com/karthink/gptel/discussions/1093#discussioncomment-14728014
+Exemple d'utilisation des tools.
+#+end_seealso
 
 The functions in this section are ordinary Emacs Lisp functions.  They become
 LLM tools only after being wrapped with =gptel-make-tool=.
@@ -1202,20 +1270,150 @@ registered.
 
 ** Org chat defaults
 
-Branching context is enabled only when the installed Org version exposes the
-required API.  Prompt and response prefixes are plain text so that they do not
-create extra Org headings.
+#+begin_src emacs-lisp
+;; Use Org mode for GPTel chat buffers.
+(setq gptel-default-mode 'org-mode)
+#+end_src
+
+** How GPTel builds the conversation context
+
+GPTel can use Org mode either as a simple linear chat buffer or as a branching
+conversation tree. The default configuration below keeps the behaviour simple
+and predictable by sending all text before point as context.
+
+*** Linear context (default behaviour)
+
+By default, GPTel sends all text that appears before point to the LLM,
+regardless of the Org structure.
+
+This behaves exactly like a traditional chat buffer: every previous prompt and
+response becomes part of the conversation history.
+
+#+begin_example
+,** Prompt 1
+,** Response 1
+
+,** Prompt 2
+,** Response 2
+
+,** Prompt 3 ← point here
+#+end_example
+
+When you send ~Prompt 3~, GPTel includes everything above it as context.
+
+This mode is simple, predictable, and usually the best choice for general use.
+
+*** Branching context with Org headings
+
+Recent versions of GPTel can treat an Org document as a conversation tree rather
+than a linear transcript.
+
+When branching context is enabled, GPTel sends only the path from the root
+heading to the current heading. Sibling branches are ignored.
+
+#+begin_src emacs-lisp :tangle no
+;; Enable Org conversation branching when supported.
+(setq gptel-org-branching-context
+      (version<= "9.7" (org-version)))
+#+end_src
+
+Given the following document:
+
+#+begin_example
+,* Initial question
+Some context...
+
+,** Response
+...
+
+,** Follow-up A
+...
+
+,** Follow-up B
+...
+#+end_example
+
+If point is located under *Follow-up B*, GPTel sends only:
+
+#+begin_example
+Initial question
+Follow-up B
+#+end_example
+
+The contents of *Response* and *Follow-up A* are excluded from the prompt.
+
+This allows multiple conversational branches to coexist within a single Org file
+without influencing one another.
+
+*** When to use branching context
+
+Branching context is particularly useful when:
+
+- Exploring alternative solutions to the same problem.
+- Maintaining several lines of reasoning in one file.
+- Using Org mode as a conversation journal.
+- Experimenting with different prompts while preserving a shared starting point.
+
+Conceptually, this is similar to conversation branching in the ChatGPT web
+interface.
+
+If you do not need this workflow, it is usually better to disable branching and
+keep the simpler linear behaviour:
+
+#+begin_src emacs-lisp :tangle no
+;; Send all content before point as context, ignoring the Org hierarchy.
+(setq gptel-org-branching-context nil)
+#+end_src
+
+** Prompt and response prefixes
+
+GPTel allows custom prefixes to be inserted before prompts and responses.
+
+For Org mode, using plain text prefixes avoids creating extra headings in the
+document hierarchy.
+
+Recommended configuration:
 
 #+begin_src emacs-lisp
-(setq gptel-default-mode 'org-mode
-      gptel-org-convert-response t
-      gptel-org-ignore-elements '(property-drawer)
-      gptel-org-branching-context
-      (version<= "9.7" (org-version)))
-
-(setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
-(setf (alist-get 'org-mode gptel-response-prefix-alist) "@assistant\n")
+(setf (alist-get 'org-mode gptel-prompt-prefix-alist) "Prompt -> ")
+(setf (alist-get 'org-mode gptel-response-prefix-alist) "Response <-\n")
 #+end_src
+
+#+begin_seealso
+For an absolutely beautiful example of prefixes, see Robert Charusta's setup:
+
+https://github.com/karthink/gptel/discussions/1093#discussioncomment-14733451.
+#+end_seealso
+
+Alternative prefix styles:
+
+- Org headings
+
+  #+begin_src emacs-lisp :tangle no
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "** Prompt\n\n")
+  (setf (alist-get 'org-mode gptel-response-prefix-alist) "** Response\n\n")
+  #+end_src
+
+- Nested responses
+
+  #+begin_src emacs-lisp :tangle no
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "** Prompt\n\n")
+  (setf (alist-get 'org-mode gptel-response-prefix-alist) "*** Response\n\n")
+  #+end_src
+
+- Prompt heading only
+
+  #+begin_src emacs-lisp :tangle no
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "** Prompt\n\n")
+  (setf (alist-get 'org-mode gptel-response-prefix-alist) "")
+  #+end_src
+
+- No prefixes
+
+  #+begin_src emacs-lisp :tangle no
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "")
+  (setf (alist-get 'org-mode gptel-response-prefix-alist) "")
+  #+end_src
 
 ** Reproducible Org conversation example
 
@@ -1249,7 +1447,7 @@ lifetime.
                       :extend t)
 
   (set-face-attribute 'gptel-response-fringe-highlight nil
-                      :foreground "#B8B8B8")
+                      :foreground "#BF6896")
 #+end_src
 
 *** Extending the response background to the final newline
@@ -1682,7 +1880,7 @@ or removed in one place.
 
 #+begin_src emacs-lisp
 (define-prefix-command 'boost-gptel-prefix-map)
-(global-set-key (kbd "C-c g") 'boost-gptel-prefix-map)
+(global-set-key (kbd "C-c g") #'boost-gptel-prefix-map)
 
 (define-key boost-gptel-prefix-map (kbd "g") #'gptel)  ; Chat.
 (define-key boost-gptel-prefix-map (kbd "s") #'gptel-send)  ; Send.
@@ -1819,3 +2017,27 @@ diagnostic session and inspect the log before sharing it.
 - GPTel repository and README: https://github.com/karthink/gptel
 - GPTel source: https://github.com/karthink/gptel/blob/master/gpteln.el
 - Org Babel tangling: https://orgmode.org/manual/Extracting-Source-Code.html
+
+* GPTel-commit-msg
+
+#+begin_src emacs-lisp
+(boost--try-require 'gptel-commit-msg)
+#+end_src
+
+* GPTel-watch
+
+#+begin_src emacs-lisp :tangle no
+(when (boost--try-require 'gptel-watch)
+  (gptel-watch-global-mode 1)
+
+  (setq gptel-watch-trigger-patterns
+        '("AI!$"))
+
+  (setq gptel-watch-trigger-commands
+        '(newline org-return))
+
+  (setq gptel-watch-system-prompt
+        "Return only the requested content.
+Preserve existing formatting.
+No explanations."))
+#+end_src
