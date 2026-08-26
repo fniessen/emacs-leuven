@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Print the contents of the current buffer in Emacs to the terminal.
+# Print the directory of the current buffer in Emacs to the terminal.
 
 # Check if 'emacsclient' command is available.
 if ! command -v emacsclient > /dev/null 2>&1; then
@@ -17,7 +17,9 @@ pipe="$(mktemp -u)"
 mkfifo "$pipe"
 emacsclient -e '(with-current-buffer
                     (window-buffer (selected-window))
-                  (write-region (point-min) (point-max) "'"$pipe"'" nil :quiet))
+                  (write-region (concat (file-name-directory (buffer-file-name)) "\n") nil "'"$pipe"'" nil :quiet))
                ' > /dev/null &
-cat "$pipe"  # Handle files even without trailing newlines
+while IFS= read -r line; do
+    printf '%s\n' "$line"
+done < "$pipe"
 rm "$pipe"
