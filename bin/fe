@@ -6,13 +6,13 @@
 # instead, quoted for shell arguments so that spaces are escaped.
 
 # Check if 'emacsclient' command is available.
-if ! command -v emacsclient > /dev/null 2>&1; then
-    printf >&2 "Error: 'emacsclient' command not found.\n"
+if ! command -v emacsclient >/dev/null 2>&1; then
+    printf "Error: 'emacsclient' command not found.\n" >&2
     exit 2
 fi
 
-if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
-    printf >&2 "Error: Emacs server is not running. Please start the Emacs server first.\n"
+if ! emacsclient -e '(server-running-p)' >/dev/null 2>&1; then
+    printf "Error: Emacs server is not running. Please start the Emacs server first.\n" >&2
     exit 2
 fi
 
@@ -21,13 +21,13 @@ mkfifo "$pipe"
 emacsclient -e '(with-current-buffer
                     (window-buffer (selected-window))
                   (write-region (concat
-                    (if (and (derived-mode-p '\''dired-mode)
-										         (dired-get-marked-files))
-                        (mapconcat '\''shell-quote-argument
-                             (dired-get-marked-files) " ")
-														 (buffer-file-name))
-													 	  "\n") nil "'"$pipe"'" nil :quiet))
-               ' > /dev/null &
+                                 (if (and (derived-mode-p '\''dired-mode)
+                                          (dired-get-marked-files))
+                                     (mapconcat '\''shell-quote-argument
+                                                (dired-get-marked-files) " ")
+                                   (buffer-file-name))
+                                 "\n") nil "'"$pipe"'" nil :quiet))
+               ' >/dev/null &
 while IFS= read -r line; do
     printf '%s\n' "$line"
 done < "$pipe"

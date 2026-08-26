@@ -3,13 +3,13 @@
 # Print the directory of the current buffer in Emacs to the terminal.
 
 # Check if 'emacsclient' command is available.
-if ! command -v emacsclient > /dev/null 2>&1; then
-    printf >&2 "Error: 'emacsclient' command not found.\n"
+if ! command -v emacsclient >/dev/null 2>&1; then
+    printf "Error: 'emacsclient' command not found.\n" >&2
     exit 2
 fi
 
-if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
-    printf >&2 "Error: Emacs server is not running. Please start the Emacs server first.\n"
+if ! emacsclient -e '(server-running-p)' >/dev/null 2>&1; then
+    printf "Error: Emacs server is not running. Please start the Emacs server first.\n" >&2
     exit 2
 fi
 
@@ -18,7 +18,7 @@ mkfifo "$pipe"
 emacsclient -e '(with-current-buffer
                     (window-buffer (selected-window))
                   (write-region (concat (file-name-directory (buffer-file-name)) "\n") nil "'"$pipe"'" nil :quiet))
-               ' > /dev/null &
+               ' >/dev/null &
 while IFS= read -r line; do
     printf '%s\n' "$line"
 done < "$pipe"
