@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Print the filename of the current buffer in Emacs to the terminal.
+
+# If multiple filenames are selected in Dired, return those filenames
+# instead, quoted for shell arguments so that spaces are escaped.
+
+# Check if 'emacsclient' command is available.
+if ! command -v emacsclient > /dev/null 2>&1; then
+    printf >&2 "Error: 'emacsclient' command not found.\n"
+    exit 2
+fi
+
+if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
+    printf >&2 "Error: Emacs server is not running. Please start the Emacs server first.\n"
+    exit 2
+fi
+
+pipe="$(mktemp -u)"
+mkfifo "$pipe"
+emacsclient -e '(with-current-buffer
+                    (window-buffer (selected-window))
+                  (write-region (concat
+                    (if (and (derived-mode-p '\''dired-mode)
+										         (dired-get-marked-files))
+                        (mapconcat '\''shell-quote-argument
+                             (dired-get-marked-files) " ")
+														 (buffer-file-name))
+													 	  "\n") nil "'"$pipe"'" nil :quiet))
+               ' > /dev/null &
+while IFS= read -r line; do
+    printf '%s\n' "$line"
+done < "$pipe"
+rm "$pipe"
