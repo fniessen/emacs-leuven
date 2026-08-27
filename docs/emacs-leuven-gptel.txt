@@ -1747,6 +1747,26 @@ Org buffers and invokes ~gptel-send~ only while ~gptel-mode~ is active.
 (add-hook 'gptel-post-response-functions #'boost-gptel-after-response t)
 #+end_src
 
+** Chat buffer management
+
+Convenience commands for managing GPTel chat buffers.
+
+#+begin_src emacs-lisp
+(defun gptel-clear-buffer ()
+  "Clear the current GPTel chat buffer and insert a fresh prompt."
+  (interactive)
+  (when (y-or-n-p "Clear chat buffer? ")
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (insert (gptel-prompt-prefix-string))
+      (goto-char (point-max)))))
+
+(with-eval-after-load 'gptel
+  (define-key gptel-mode-map
+              (kbd "C-c M-k")
+              #'gptel-clear-buffer))
+#+end_src
+
 * Custom programmatic requests
 
 These commands use =gptel-request= for one-shot workflows and display the result
