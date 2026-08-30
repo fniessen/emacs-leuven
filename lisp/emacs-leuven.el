@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260830.2000>
+;; Version: <20260830.2001>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260830.2000>"
+(defconst boost-version "<20260830.2001>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -3852,12 +3852,13 @@ In Org mode, use `org-fill-paragraph'."
 
   (leuven--section "26.9 (emacs)Outline Mode")
 
-  (with-eval-after-load 'outli
+  (with-eval-after-load 'outli-autoloads
     (dolist (hook '(prog-mode-hook
                     conf-mode-hook
                     LaTeX-mode-hook))
-      (add-hook hook #'outli-mode))
+      (add-hook hook #'outli-mode)))
 
+  (with-eval-after-load 'outli
     ;; I prefer a space between the comment prefix and the heading marker, as it
     ;; is more readable.
     (setf (alist-get 'emacs-lisp-mode outli-heading-config)

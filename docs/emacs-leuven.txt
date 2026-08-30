@@ -7133,17 +7133,18 @@ Enable it for all modes derived from =prog-mode=, as well as a few additional
 modes:
 
 #+begin_src emacs-lisp
-  (with-eval-after-load 'outli
+  (with-eval-after-load 'outli-autoloads
     (dolist (hook '(prog-mode-hook
                     conf-mode-hook
                     LaTeX-mode-hook))
-      (add-hook hook #'outli-mode))
+      (add-hook hook #'outli-mode)))
 #+end_src
 
 The heading syntax can be customized per major mode via
 =outli-heading-config=. For example, to use =;; *=, =;; **=, etc. in =emacs-lisp-mode=:
 
 #+begin_src emacs-lisp
+  (with-eval-after-load 'outli
     ;; I prefer a space between the comment prefix and the heading marker, as it
     ;; is more readable.
     (setf (alist-get 'emacs-lisp-mode outli-heading-config)
