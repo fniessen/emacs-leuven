@@ -18,7 +18,7 @@ When we add more consolidated views (multi-blocks), we gain confidence that we
 won't loose tasks (together with reviews), and we're finally able to use
 deadline and scheduled for what they're meant.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; Custom commands for the agenda -- start with a clean slate.
 ;; (setq org-agenda-custom-commands nil)
 #+end_src
@@ -26,7 +26,7 @@ deadline and scheduled for what they're meant.
 * Key bindings
 
 #+begin_src emacs-lisp
-;;; org-leuven-agenda-views.el --- Org customized views
+;;; org-leuven-agenda-views.el --- Org customized views  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -1889,7 +1889,7 @@ current project and focuses on TODO items that have not yet been scheduled.
   (require 'project)
 
   (let* ((root
-          (or (when-let ((project (project-current)))
+          (or (when-let* ((project (project-current)))
                 (project-root project))
               (user-error "Not in a project")))
          (org-files
@@ -1935,7 +1935,7 @@ C-u C-u: current file + Org and text files in the project."
   (require 'project)
 
   (let* ((root
-          (or (when-let ((project (project-current)))
+          (or (when-let* ((project (project-current)))
                 (project-root project))
               default-directory))
          (regexp
@@ -1946,7 +1946,7 @@ C-u C-u: current file + Org and text files in the project."
           (if regexp
               (delete-dups
                (append
-                (when-let ((file (buffer-file-name)))
+                (when-let* ((file (buffer-file-name)))
                   (list file))
                 (directory-files-recursively root regexp)))
             (list (or (buffer-file-name)

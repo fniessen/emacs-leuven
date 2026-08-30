@@ -1,7 +1,4 @@
-;; Custom commands for the agenda -- start with a clean slate.  -*- lexical-binding: t; -*-
-;; (setq org-agenda-custom-commands nil)
-
-;;; org-leuven-agenda-views.el --- Org customized views
+;;; org-leuven-agenda-views.el --- Org customized views  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -736,7 +733,7 @@ N should be a non-negative integer representing the number of days."
   (require 'project)
 
   (let* ((root
-          (or (when-let ((project (project-current)))
+          (or (when-let* ((project (project-current)))
                 (project-root project))
               (user-error "Not in a project")))
          (org-files
@@ -766,7 +763,7 @@ C-u C-u: current file + Org and text files in the project."
   (require 'project)
 
   (let* ((root
-          (or (when-let ((project (project-current)))
+          (or (when-let* ((project (project-current)))
                 (project-root project))
               default-directory))
          (regexp
@@ -777,7 +774,7 @@ C-u C-u: current file + Org and text files in the project."
           (if regexp
               (delete-dups
                (append
-                (when-let ((file (buffer-file-name)))
+                (when-let* ((file (buffer-file-name)))
                   (list file))
                 (directory-files-recursively root regexp)))
             (list (or (buffer-file-name)
