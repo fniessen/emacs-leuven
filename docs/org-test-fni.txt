@@ -16,10 +16,10 @@ See http://www.randomsample.de:4457/waterfall.
 
 * Library
 
-** Header
+** File prologue
 
 #+begin_src emacs-lisp
-;;;; org-test-fni.el --- Extra tests for Org mode
+;;;; org-test-fni.el --- Extra tests for Org mode -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2014-2026 Fabrice Niessen. All rights reserved.
 
@@ -180,7 +180,7 @@ Files to test:
 ;; (ert 'test-org-export/html-ert-refcard-file)
 #+end_src
 
-** Footer
+** File epilogue
 
 #+begin_src emacs-lisp
 (provide 'org-test-fni)
@@ -197,7 +197,7 @@ org_test() {
     (
         cd "$HOME"/Public/Repositories/org-mode" \
             || { echo "Error: Could not change directory to $HOME/Public/Repositories/org-mode"; return 1; }
-        mkdir "$tmpdir" 2> /dev/null \
+        mkdir "$tmpdir" 2>/dev/null \
             || { echo "Error: Could not create temporary directory"; return 1; } # TMPDIR must exist!
         TMPDIR="$tmpdir" \
             emacs -Q --batch -L lisp/ -L testing/ -l org-test.el --eval '(setq org-confirm-babel-evaluate nil)' -f org-test-run-batch-tests || { echo "Error: Failed to run org-mode tests"; return 1; }
