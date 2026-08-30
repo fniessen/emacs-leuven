@@ -12,6 +12,34 @@
 
 #+SETUPFILE: ~/org/setup/html-theme-readtheorg.setup
 
+* File prologue
+
+#+begin_src emacs-lisp
+;;; emacs-leuven-org.el --- Org mode configuration for the Emacs Leuven setup -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2006-2026  Leuven Emacs
+
+;; Author: Fabrice Niessen
+;; Keywords: outlines, org
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;;; Commentary:
+
+;; This file configures Org mode: capture templates, agenda views,
+;; TODO workflow, clocking, export back-ends (HTML, LaTeX/Beamer, ODT),
+;; Babel source-block languages, and various Leuven-specific tweaks
+;; (faces, typography clean-up, dynamic-block/table refresh on save,
+;; org-modern styling, etc.).
+
+;;; Code:
+#+end_src
+
+* Helpers
+
 #+begin_src emacs-lisp
 ;; Require a feature/library if available; if not, fail silently.
 (defun boost--try-require (feature)
@@ -272,7 +300,6 @@ unsetting local keys?
 
 #+begin_src emacs-lisp
 (boost--try-require 'helm-org)
-(boost--try-require 'ox-jira)
 
 (with-eval-after-load 'org
   (message "[... Org Introduction]")
@@ -3720,7 +3747,7 @@ Mapping between languages (listings in LaTeX) and their major mode (in Emacs).
                                         ; syntax highlighting.
 
 ;; Preserve spaces and `TAB' characters in source code blocks.
-(setq org-src-preserve-indentation t) ; Or add a `-i' flag to you source block.
+(setq org-src-preserve-indentation t)   ; Or add a `-i' flag to your source block.
 
 ;; Same effect for `TAB' as in the language major mode buffer (indenting
 ;; properly when hitting the `TAB' key).
@@ -4891,7 +4918,7 @@ characters.
   )
 #+end_src
 
-* Feature
+* File epilogue
 
 #+begin_src emacs-lisp
 (provide 'emacs-leuven-org)

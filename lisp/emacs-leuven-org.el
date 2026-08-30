@@ -1,4 +1,26 @@
-;; Require a feature/library if available; if not, fail silently.  -*- lexical-binding: t; -*-
+;;; emacs-leuven-org.el --- Org mode configuration for the Emacs Leuven setup -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2006-2026  Leuven Emacs
+
+;; Author: Fabrice Niessen
+;; Keywords: outlines, org
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;;; Commentary:
+
+;; This file configures Org mode: capture templates, agenda views,
+;; TODO workflow, clocking, export back-ends (HTML, LaTeX/Beamer, ODT),
+;; Babel source-block languages, and various Leuven-specific tweaks
+;; (faces, typography clean-up, dynamic-block/table refresh on save,
+;; org-modern styling, etc.).
+
+;;; Code:
+
+;; Require a feature/library if available; if not, fail silently.
 (defun boost--try-require (feature)
   "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
@@ -113,7 +135,6 @@ emit a warning when the feature can't be loaded."
             ))
 
 (boost--try-require 'helm-org)
-(boost--try-require 'ox-jira)
 
 (with-eval-after-load 'org
   (message "[... Org Introduction]")
@@ -2338,7 +2359,7 @@ of the ignored headline."
                                         ; syntax highlighting.
 
 ;; Preserve spaces and `TAB' characters in source code blocks.
-(setq org-src-preserve-indentation t) ; Or add a `-i' flag to you source block.
+(setq org-src-preserve-indentation t)   ; Or add a `-i' flag to your source block.
 
 ;; Same effect for `TAB' as in the language major mode buffer (indenting
 ;; properly when hitting the `TAB' key).
