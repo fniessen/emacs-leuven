@@ -23,14 +23,13 @@
 ;; Require a feature/library if available; if not, fail silently.
 (defun boost--try-require (feature)
   "Try to (require FEATURE) silently.
+
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
-emit a warning when the feature can't be loaded."
+emit a message when the feature can't be loaded."
   (if (require feature nil 'noerror)
       t
     (when (bound-and-true-p init-file-debug)
-      (display-warning 'boost
-                       (format "Cannot load `%s'" feature)
-                       :warning))
+      (message "[boost: Cannot load `%s']" feature))
     nil))
 
 ;; (info "(org)Top") outline-based notes management and organizer
