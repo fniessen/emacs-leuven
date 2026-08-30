@@ -1,4 +1,4 @@
-;;* (info "(bbdb)Installation")
+;;* (info "(bbdb)Installation")  -*- lexical-binding: t; -*-
 
 (unless (ignore-errors (load-library "bbdb-autoloads")) ; "hand-made"
   (autoload 'bbdb "bbdb-com"

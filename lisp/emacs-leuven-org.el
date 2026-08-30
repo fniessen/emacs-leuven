@@ -1,4 +1,4 @@
-;; Require a feature/library if available; if not, fail silently.
+;; Require a feature/library if available; if not, fail silently.  -*- lexical-binding: t; -*-
 (defun boost--try-require (feature)
   "Try to (require FEATURE) silently.
 Return t on success, nil on failure. If `init-file-debug' is non-nil,

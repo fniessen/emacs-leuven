@@ -1,4 +1,4 @@
-;;;; org-test-fni.el --- Extra tests for Org mode
+;;;; org-test-fni.el --- Extra tests for Org mode  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2014-2026 Fabrice Niessen. All rights reserved.
 

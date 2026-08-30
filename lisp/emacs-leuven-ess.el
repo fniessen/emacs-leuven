@@ -1,4 +1,4 @@
-;; ESS: Emacs Speaks Statistics
+;; ESS: Emacs Speaks Statistics  -*- lexical-binding: t; -*-
 (add-to-list 'package-selected-packages 'ess)
 (package-install-selected-packages)
 

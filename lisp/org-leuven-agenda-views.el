@@ -1,4 +1,4 @@
-;; Custom commands for the agenda -- start with a clean slate.
+;; Custom commands for the agenda -- start with a clean slate.  -*- lexical-binding: t; -*-
 ;; (setq org-agenda-custom-commands nil)
 
 ;;; org-leuven-agenda-views.el --- Org customized views

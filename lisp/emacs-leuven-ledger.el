@@ -1,4 +1,4 @@
-;; Packages to be installed by the user.
+;; Packages to be installed by the user.  -*- lexical-binding: t; -*-
 (add-to-list 'package-selected-packages 'ledger-mode)
 
 ;; Helper code for use with the "ledger" command-line tool.

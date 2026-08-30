@@ -1,4 +1,4 @@
-;;; FNI Org agenda dashboard
+;;; FNI Org agenda dashboard  -*- lexical-binding: t; -*-
 
 (with-eval-after-load 'org-agenda
 
