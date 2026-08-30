@@ -43,7 +43,7 @@ The first tangled block disables link comments so that the lexical-binding file
 variable remains on the first line of the generated file.
 
 #+begin_src emacs-lisp
-;;; boost-gptel.el --- GPTel configuration  -*- lexical-binding: t; -*-
+;;; emacs-leuven-gptel.el --- GPTel configuration  -*- lexical-binding: t; -*-
 
 ;; This file is generated from emacs-leuven-gptel.txt.
 ;; Edit the Org source, then tangle it again.
@@ -2027,7 +2027,7 @@ diagnostic session and inspect the log before sharing it.
 * File epilogue
 
 #+begin_src emacs-lisp
-(provide 'boost-gptel)
+(provide 'emacs-leuven-gptel)
 
 ;;; boost-gptel.el ends here
 #+end_src

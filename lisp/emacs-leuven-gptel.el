@@ -1,4 +1,4 @@
-;;; boost-gptel.el --- GPTel configuration  -*- lexical-binding: t; -*-
+;;; emacs-leuven-gptel.el --- GPTel configuration  -*- lexical-binding: t; -*-
 
 ;; This file is generated from emacs-leuven-gptel.txt.
 ;; Edit the Org source, then tangle it again.
@@ -1316,7 +1316,7 @@ font-lock faces remain visible inside Org source blocks."
 (define-key boost-gptel-prefix-map (kbd "l")
             #'boost-gptel-toggle-debug-logging)
 
-(provide 'boost-gptel)
+(provide 'emacs-leuven-gptel)
 
 ;;; boost-gptel.el ends here
 
