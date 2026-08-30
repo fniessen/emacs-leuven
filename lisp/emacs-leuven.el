@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260826.1032>
+;; Version: <20260830.1225>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260826.1032>"
+(defconst boost-version "<20260830.1225>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -4562,7 +4562,7 @@ the parent element."
 
     (defun boost--which-func-current-name ()
       "Return the current function name, truncated to `lvn-which-func-max-length'."
-      (or (when-let ((current (gethash (selected-window) which-func-table)))
+      (or (when-let* ((current (gethash (selected-window) which-func-table)))
             (truncate-string-to-width current
                                       lvn-which-func-max-length
                                       nil nil "…"))
@@ -5368,7 +5368,7 @@ corresponding region."
 Lisp source file.
 
 This prevents loading stale byte-compiled code."
-    (when-let ((src buffer-file-name))
+    (when-let* ((src buffer-file-name))
       (let ((elc (byte-compile-dest-file src)))
         ;; Remove the stale byte-compiled file so Emacs always loads the
         ;; latest source until it is explicitly recompiled.
@@ -5526,7 +5526,7 @@ When visiting a file, use its parent directory.
 Otherwise, use `default-directory'."
     (interactive)
     (let ((directory
-           (if-let ((file (buffer-file-name)))
+           (if-let* ((file (buffer-file-name)))
                (file-name-directory file)
              default-directory)))
       (message "[VC status for directory: %s]" directory)
