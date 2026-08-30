@@ -1,4 +1,4 @@
-﻿;;; hl-tags-mode --- Highlight the current SGML tag context
+﻿;;; hl-tags-mode --- Highlight the current SGML tag context  -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2011 Mike Spindel <deactivated@gmail.com>
 ;; Modified by Amit J Patel <amitp@cs.stanford.edu> for nxml-mode
