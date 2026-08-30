@@ -72,7 +72,7 @@ By using Emacs-Leuven, you can quickly set up a powerful and user-friendly Emacs
 environment, allowing you to focus on your work rather than configuration
 details.
 
-* Header
+* File prologue
 
 #+name: current-time
 #+begin_src emacs-lisp :eval yes :results value :tangle no
@@ -15674,7 +15674,7 @@ extensions can be installed.
       (message "[Library not found: %s]" library))))
 #+end_src
 
-** Feature
+** File epilogue
 
 #+begin_src emacs-lisp
 (provide 'emacs-leuven)
