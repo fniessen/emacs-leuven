@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260830.1225>
+;; Version: <20260830.1715>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260830.1225>"
+(defconst boost-version "<20260830.1715>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -408,14 +408,6 @@ to it. Otherwise call FUNCTION interactively."
   ;;  '((height . 32)))
 
 )                                       ; Chapter 0 ends here.
-
-;; Import environment variables from the user's login shell.
-(when (or lvn--linux-p lvn--mac-p)
-  (when (boost--try-require 'exec-path-from-shell)
-    (exec-path-from-shell-copy-envs
-     '("PATH"
-       "MANPATH"
-       "INFOPATH"))))
 
 ;;* Debugging
 

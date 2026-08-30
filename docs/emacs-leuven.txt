@@ -599,7 +599,7 @@ This imports selected environment variables from the user's login shell so that
 Emacs inherits the same ~PATH~, ~MANPATH~, and ~INFOPATH~. This makes TeX Live and
 other external tools available without hardcoding installation directories.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; Import environment variables from the user's login shell.
 (when (or lvn--linux-p lvn--mac-p)
   (when (boost--try-require 'exec-path-from-shell)
