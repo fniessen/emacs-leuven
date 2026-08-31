@@ -606,7 +606,23 @@ other external tools available without hardcoding installation directories.
     (exec-path-from-shell-copy-envs
      '("PATH"
        "MANPATH"
-       "INFOPATH"))))
+       "INFOPATH"
+       ;; "LANG"
+       ;; "LC_ALL"
+       ;; "LANGUAGE"
+       ))))
+#+end_src
+
+#+begin_src emacs-lisp
+;; Emacs installed via Snap sandboxes LOCPATH to a private cache
+;; (~/snap/emacs/common/.cache/locale), which shadows the system locales
+;; generated under /usr/lib/locale (locale-archive). As a result, subprocesses
+;; launched from Emacs (e.g. lualatex via latexmk) fail with "Unable to read
+;; locale data", even though everything works fine from a regular terminal. Only
+;; unset LOCPATH when running the Snap build, so other platforms/installs are
+;; left untouched.
+(when (getenv "EMACS_SNAP_DIR")
+  (setenv "LOCPATH" nil))
 #+end_src
 
 * Debugging
