@@ -3505,6 +3505,12 @@ customized to a non-nil value.
 
 ** Other Search-and-Loop Commands
 
+#+begin_src emacs-lisp
+;;** 16.11 (info "(emacs)Other Repeating Search") Commands
+
+  (leuven--section "16.11 (emacs)Other Repeating Search Commands")
+#+end_src
+
 The command ~M-x flush-lines~ (or ~delete-matching-lines~) *removes* each *line* in
 which there is a *match* for the specified regular expression (REGEXP).
 
@@ -3512,9 +3518,33 @@ Conversely, there exists an opposite command, ~M-x keep-lines~, which *retains* 
 the *lines* containing *matches* for REGEXP, removing all other lines.
 
 #+begin_src emacs-lisp
-;;** 16.11 (info "(emacs)Other Repeating Search") Commands
+  (defun boost-flush-lines-matching-reference-buffer (buffer-a buffer-b)
+    "Delete lines in BUFFER-A that also appear verbatim in BUFFER-B.
 
-  (leuven--section "16.11 (emacs)Other Repeating Search Commands")
+A line in BUFFER-A is removed only if it exactly matches (whole
+line, case-sensitive) one of the lines found in BUFFER-B.  Matching
+is done against literal line content, not against a regexp.
+
+Lines are compared without trailing whitespace normalization: a
+trailing space or different line-ending style will prevent a match.
+
+BUFFER-A is modified in place; BUFFER-B is only read and left
+unchanged.  Both may be buffer objects or buffer names.
+
+Interactively, prompts for BUFFER-A then BUFFER-B."
+    (interactive
+     (list (read-buffer "Buffer A to flush lines from: " (current-buffer) t)
+           (read-buffer "Buffer B with reference lines: " (other-buffer) t)))
+    (let ((patterns (with-current-buffer buffer-b
+                      (split-string (buffer-string) "\n" t))))
+      (with-current-buffer buffer-a
+        (goto-char (point-min))
+        (while (not (eobp))
+          (let ((line (buffer-substring (line-beginning-position) (line-end-position))))
+            (if (member line patterns)
+                (delete-region (line-beginning-position)
+                                (min (1+ (line-end-position)) (point-max)))
+              (forward-line 1)))))))
 #+end_src
 
 #+begin_src emacs-lisp

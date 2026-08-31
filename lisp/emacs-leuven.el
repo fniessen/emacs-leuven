@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260830.2001>
+;; Version: <20260831.1214>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260830.2001>"
+(defconst boost-version "<20260831.1214>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -1904,6 +1904,34 @@ TOTAL is the total number of matches."
 ;;** 16.11 (info "(emacs)Other Repeating Search") Commands
 
   (leuven--section "16.11 (emacs)Other Repeating Search Commands")
+
+  (defun boost-flush-lines-matching-reference-buffer (buffer-a buffer-b)
+    "Delete lines in BUFFER-A that also appear verbatim in BUFFER-B.
+
+A line in BUFFER-A is removed only if it exactly matches (whole
+line, case-sensitive) one of the lines found in BUFFER-B.  Matching
+is done against literal line content, not against a regexp.
+
+Lines are compared without trailing whitespace normalization: a
+trailing space or different line-ending style will prevent a match.
+
+BUFFER-A is modified in place; BUFFER-B is only read and left
+unchanged.  Both may be buffer objects or buffer names.
+
+Interactively, prompts for BUFFER-A then BUFFER-B."
+    (interactive
+     (list (read-buffer "Buffer A to flush lines from: " (current-buffer) t)
+           (read-buffer "Buffer B with reference lines: " (other-buffer) t)))
+    (let ((patterns (with-current-buffer buffer-b
+                      (split-string (buffer-string) "\n" t))))
+      (with-current-buffer buffer-a
+        (goto-char (point-min))
+        (while (not (eobp))
+          (let ((line (buffer-substring (line-beginning-position) (line-end-position))))
+            (if (member line patterns)
+                (delete-region (line-beginning-position)
+                                (min (1+ (line-end-position)) (point-max)))
+              (forward-line 1)))))))
 
   ;; Unset keybinding to avoid conflicts. XXX???
   (global-unset-key (kbd "M-o"))
