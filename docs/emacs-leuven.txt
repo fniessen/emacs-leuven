@@ -4121,10 +4121,7 @@ Update time stamps (and copyright notice) automatically.
 
   ;; Configure timestamp format after loading `time-stamp'.
   (with-eval-after-load 'time-stamp
-    (setq-default time-stamp-format "%:y-%02m-%02d %3a %02H:%02M")
-    ;; %:y = 4-digit year, %02m = 2-digit month, %02d = 2-digit day,
-    ;; %3a = 3-letter day abbreviation, %02H:%02M = 24-hour:minutes.
-  )
+    (setq-default time-stamp-format "%Y-%m-%d %a %H:%M"))
 
   ;; Add update function to `before-save-hook'.
   (add-hook 'before-save-hook #'lvn--update-timestamps-and-copyright)
