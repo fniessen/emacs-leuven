@@ -416,15 +416,13 @@ distro) without impacting on stuff you have added by hand.
   ;; Require a feature/library if available; if not, fail silently.
   (defun boost--try-require (feature)
     "Try to (require FEATURE) silently.
+
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
-emit a warning when the feature can't be loaded."
+emit a warning message when the feature can't be loaded."
     (if (require feature nil 'noerror)
         t
       (when (bound-and-true-p init-file-debug)
-        (display-warning
-         'boost
-         (format "Cannot load `%s'" feature)
-         :warning))
+        (message "WARNING [boost]: Cannot load `%s'" feature))
       nil))
 #+end_src
 
@@ -1746,63 +1744,54 @@ To go from multiple selections to a single selection, press ~C-g~ or ~RET~.
   (global-set-key (kbd "M-SPC") #'cycle-spacing) ; vs `just-one-space'.
 #+end_src
 
-*** Slick cut and copy
+*** Slick copy and cut
 
-With the following functions, you can easily cut or copy the line where the
-cursor is located using simple key combinations:
+With the following functions, you can easily cut or copy the current line using
+simple key combinations, without needing to first select a region.
 
-- ~C-w~ cuts (kills) the current line.
-- ~M-w~ copies the current line.
+| Key | Command | Action                         |
+|-----+---------+--------------------------------|
+| ~C-w~ | Cut     | Cuts (kills) the current line. |
+| ~M-w~ | Copy    | Copies the current line.       |
 
 #+begin_note
-If a region is active (text is selected), the standard ~kill-region~ and
-~kill-ring-save~ commands will retain their usual behavior: cutting or copying the
+If a region is active (text is selected), the standard ~kill-region~
+and ~kill-ring-save~ commands retain their usual behavior: cutting or copying the
 selected text.
 #+end_note
 
+This is inspired by the classic "slick-copy/slick-cut" behavior:
+
+- When a region is active, operate on the selected text.
+- Otherwise, operate on the current line.
+
 #+begin_src emacs-lisp
-  ;; Inspired by the classic "slick-copy/slick-cut" behaviour: operate on
-  ;; the active region when present, otherwise on the current line.
-
   ;; Function to perform slick cut for the `kill-region' command.
-  (defun boost--slick-kill-region (orig-fn beg end &rest args)
+  (defun boost--slick-kill-region (beg end)
     "Cut the active region or, if none is active, the current line."
-    (interactive (if (use-region-p)
-                     (list (region-beginning) (region-end))
-                   (list (line-beginning-position) (line-beginning-position 2))))
-    (if (called-interactively-p 'any)
-        (let ((region-active (and (mark t) (use-region-p))))
-          (if region-active
-              ;; Region is active and mark is set, use the region bounds.
-              (apply orig-fn (region-beginning) (region-end) args)
-            ;; No active region or mark not set, cut the current line.
-            (progn
-              (message "[Cut the current line]")
-              (apply orig-fn (line-beginning-position) (line-beginning-position 2) args))))
-      ;; If not called interactively, pass the original arguments unchanged.
-      (apply orig-fn beg end args)))
-
-  (advice-add 'kill-region :around #'boost--slick-kill-region)
+    (interactive
+     (if (use-region-p)
+         (list (region-beginning) (region-end))
+       (list (line-beginning-position)
+             (line-beginning-position 2))))
+    (kill-region beg end)
+    (unless (use-region-p)
+      (message "[Cut the current line]")))
 
   ;; Function to perform slick copy for the `kill-ring-save' command.
-  (defun boost--slick-kill-ring-save (orig-fn beg end &rest args)
+  (defun boost--slick-kill-ring-save (beg end)
     "Copy the active region or, if none is active, the current line."
-    (interactive (if (use-region-p)
-                     (list (region-beginning) (region-end))
-                   (list (line-beginning-position) (line-beginning-position 2))))
-    (if (called-interactively-p 'any)
-        (let ((region-active (and (mark t) (use-region-p))))
-          (if region-active
-              ;; Region is active and mark is set, use the region bounds.
-              (apply orig-fn (region-beginning) (region-end) args)
-            ;; No active region or mark not set, copy the current line.
-            (progn
-              (message "[Copied the current line]")
-              (apply orig-fn (line-beginning-position) (line-beginning-position 2) args))))
-      ;; If not called interactively, pass the original arguments unchanged.
-      (apply orig-fn beg end args)))
+    (interactive
+     (if (use-region-p)
+         (list (region-beginning) (region-end))
+       (list (line-beginning-position)
+             (line-beginning-position 2))))
+    (kill-ring-save beg end)
+    (unless (use-region-p)
+      (message "[Copied the current line]")))
 
-  (advice-add 'kill-ring-save :around #'boost--slick-kill-ring-save)
+  (global-set-key [remap kill-region]    #'boost--slick-kill-region)
+  (global-set-key [remap kill-ring-save] #'boost--slick-kill-ring-save)
 #+end_src
 
 *** Duplicate line or region
