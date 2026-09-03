@@ -25,11 +25,11 @@
   "Try to (require FEATURE) silently.
 
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
-emit a message when the feature can't be loaded."
+emit a warning message when the feature can't be loaded."
   (if (require feature nil 'noerror)
       t
     (when (bound-and-true-p init-file-debug)
-      (message "[boost: Cannot load `%s']" feature))
+      (message "WARNING [boost]: Cannot load `%s'" feature))
     nil))
 
 ;; (info "(org)Top") outline-based notes management and organizer
