@@ -6965,20 +6965,18 @@ Another solution to avoid that is to add ~fill-french-nobreak-p~ to
     "Fill or unfill the current paragraph.
 
 With a numeric prefix ARG, use that value as `fill-column'.
-Invoking the command twice consecutively unfills the paragraph.
-In Org mode, use `org-fill-paragraph'."
+Invoking the command twice consecutively unfills the paragraph."
     (interactive "P")
-    (let ((fill-column
-           (cond
-            (arg
-             (prefix-numeric-value arg))
-            ((eq last-command this-command)
-             (setq this-command nil)
-             (point-max))
-            (t
-             fill-column))))
-      (if (derived-mode-p 'org-mode)
-          (org-fill-paragraph)
+    (if (and (null arg)
+             (eq last-command this-command))
+        ;; Second consecutive invocation: unfill.
+        (progn
+          (setq this-command nil)
+          (unfill-paragraph t))
+      ;; Otherwise fill, honoring an optional custom width.
+      (let ((fill-column (if arg
+                             (prefix-numeric-value arg)
+                           fill-column)))
         (fill-paragraph))))
 
   ;; M-q.
@@ -8017,12 +8015,12 @@ you get a menu with all labels of a given type and context of the label
 definition. The selected label is inserted as a ~\ref~ macro.
 
 Citations can be made with ~C-c [~ which will use a regular expression to pull out
-a *formatted* list of articles from your BibTeX database. The selected citation
-is inserted as a ~\cite~ macro.
+a *formatted* list of articles from your BibTeX database. The selected citation is
+inserted as a ~\cite~ macro.
 
 Index entries can be made with ~C-c /~ which indexes the word at point or the
-current selection. More general index entries are created with ~C-c <~.
-~C-c >~ displays the compiled index.
+current selection. More general index entries are created with ~C-c <~.  ~C-c >~
+displays the compiled index.
 
 #+begin_src emacs-lisp
     (add-hook 'LaTeX-mode-hook #'reftex-mode) ; with AUCTeX LaTeX mode
