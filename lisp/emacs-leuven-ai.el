@@ -45,14 +45,13 @@
 ;; Require a feature/library if available; if not, fail silently.
 (defun boost--try-require (feature)
   "Try to (require FEATURE) silently.
+
 Return t on success, nil on failure. If `init-file-debug' is non-nil,
-emit a warning when the feature can't be loaded."
+emit a warning message when the feature can't be loaded."
   (if (require feature nil 'noerror)
       t
     (when (bound-and-true-p init-file-debug)
-      (display-warning 'boost
-                       (format "Cannot load `%s'" feature)
-                       :warning))
+      (message "WARNING [boost]: Cannot load `%s'" feature))
     nil))
 
 (defun boost--set-key-if-free (keymap key command &optional scope)
