@@ -903,6 +903,8 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
                       :foreground "#4A90E2"
                       :weight 'bold)
 
+  (add-hook 'gptel-pre-response-hook #'global-hl-line-unhighlight)
+
   (defvar-local boost-gptel-response-tail-overlays nil
     "Overlays extending GPTel response backgrounds to the next line.
 

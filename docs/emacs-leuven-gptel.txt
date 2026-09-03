@@ -1478,6 +1478,12 @@ lifetime.
                       :weight 'bold)
 #+end_src
 
+*** Turn off the line-highlight before the response appears
+
+#+begin_src emacs-lisp
+  (add-hook 'gptel-pre-response-hook #'global-hl-line-unhighlight)
+#+end_src
+
 *** Extending the response background to the final newline
 
 GPTel's response region may end immediately after the last character of the
