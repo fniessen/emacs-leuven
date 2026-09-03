@@ -329,7 +329,7 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 
 (setq gptel-context-restrict-to-project-files t)
 
-(setq gptel-track-media nil)
+(setq gptel-track-media t)
 
 (setq gptel-log-level nil)
 
