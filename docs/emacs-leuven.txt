@@ -2244,6 +2244,47 @@ jumping onto them...
       (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks))
 #+end_src
 
+*** Bookmark maintenance
+
+Over time, some bookmarks can become stale because the files they point to have
+been moved, renamed, or deleted. These dead bookmarks remain in the bookmark
+list and can clutter navigation.
+
+The following function removes bookmarks whose target files no longer exist.
+Remote (TRAMP) bookmarks are preserved because checking their existence may be
+slow or unreliable.
+
+#+begin_src emacs-lisp
+  (defun boost-bookmark-cleanup ()
+    "Delete bookmarks pointing to non-existent files."
+    (interactive)
+    (require 'bookmark)
+    (bookmark-maybe-load-default-file)
+    (let ((removed 0))
+      (dolist (bmk (bookmark-all-names))
+        (when-let* ((record (bookmark-get-bookmark bmk 'noerror))
+                    (file (bookmark-prop-get record 'filename)))
+          (when (and (not (file-remote-p file)) ; ignore TRAMP bookmarks
+                     (not (file-exists-p file)))
+            (bookmark-delete bmk)
+            (setq removed (1+ removed)))))
+      (when (> removed 0)
+        (bookmark-save))
+      (message "%d bookmark(s) deleted" removed)))
+#+end_src
+
+To keep the bookmark database clean automatically, run the cleanup once during
+Emacs startup:
+
+#+begin_src emacs-lisp
+  (add-hook 'after-init-hook #'boost-bookmark-cleanup)
+#+end_src
+
+#+begin_note
+This cleanup affects only file-based bookmarks whose target files no longer
+exist. Non-file bookmarks and remote bookmarks are left untouched.
+#+end_note
+
 ** Avy (alternative to Ace Jump)
 
 #+begin_src emacs-lisp
@@ -6841,11 +6882,51 @@ explicitly from Emacs.
   (defvar boost-superwhisper-recording-p nil
     "Non-nil while Superwhisper is recording.")
 
-  (defun boost-toggle-superwhisper-recording ()
-    "Start or stop Superwhisper.
+  ;; Expected Superwhisper configuration:
+  ;; - Clipboard Behavior : Bypass clipboard
+  ;; - Restore clipboard delay : 1 second
+  ;;
+  ;; Even with "Bypass clipboard" enabled, Superwhisper appears to expose the
+  ;; transcription through the Windows clipboard briefly after transcription
+  ;; completes. We therefore retrieve the transcription through Get-Clipboard
+  ;; rather than using Emacs' kill-ring.
+  ;;
+  ;; The 1-second delay below has been determined empirically. Reading the
+  ;; clipboard immediately after stopping a recording often returns the previous
+  ;; transcription because Superwhisper has not finished updating the clipboard
+  ;; yet.
 
-On the first call, start recording.
-On the second call, stop recording and insert the clipboard contents."
+  (defun boost--get-windows-clipboard ()
+    "Return the current Windows clipboard contents as UTF-8 text."
+    (with-temp-buffer
+      (let ((coding-system-for-read 'utf-8))
+        (call-process
+         "powershell.exe"
+         nil
+         t
+         nil
+         "-NoProfile"
+         "-Command"
+         "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Clipboard"))
+      (string-trim
+       (buffer-string))))
+
+  (defun boost--insert-superwhisper-text (text)
+    "Insert TEXT at point, adding a separator when needed."
+    (unless (or (bobp)
+                (memq (char-before)
+                      '(?\s ?\n ?\t)))
+      (insert " "))
+    (insert text))
+
+  (defun boost-toggle-superwhisper-recording ()
+    "Toggle Superwhisper recording.
+
+First invocation starts recording.
+
+Second invocation stops recording, waits for Superwhisper to finish
+transcribing, then inserts the resulting text retrieved from the Windows
+clipboard."
     (interactive)
     (let* ((stopping boost-superwhisper-recording-p)
            (powershell
@@ -6871,23 +6952,24 @@ On the second call, stop recording and insert the clipboard contents."
          "Start-Process 'superwhisper://record'"))
 
       ;; Toggle the local recording state.
-      (setq boost-superwhisper-recording-p (not stopping))
+      (setq boost-superwhisper-recording-p
+            (not stopping))
 
-      ;; On the second call, briefly wait for Superwhisper
-      ;; to put the transcription into the clipboard, then insert it.
+      ;; When stopping, wait for Superwhisper to finish updating the clipboard
+      ;; before retrieving the transcription.
       (when stopping
         (let ((target-buffer (current-buffer))
               (target-marker (copy-marker (point) t)))
           (run-at-time
-           0.8
+           1.0
            nil
            (lambda (buffer marker)
-             (unwind-protect
-                 (when (buffer-live-p buffer)
-                   (with-current-buffer buffer
-                     (goto-char marker)
-                     (yank)))
-               (set-marker marker nil)))
+             (when (buffer-live-p buffer)
+               (with-current-buffer buffer
+                 (goto-char marker)
+                 (boost--insert-superwhisper-text
+                  (boost--get-windows-clipboard))))
+             (set-marker marker nil))
            target-buffer
            target-marker)))))
 
@@ -8990,7 +9072,7 @@ The hidden-region indicator displays the number of folded lines directly in the
 buffer and adds a visual marker in the left fringe, making folded sections
 easier to identify at a glance.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (defun boost--hs-display-hidden-region (ov)
     "Display the number of hidden lines."
     (when (eq (overlay-get ov 'hs) 'code)
@@ -9017,6 +9099,10 @@ easier to identify at a glance.
 #+begin_src emacs-lisp
   (with-eval-after-load 'hideshow
 
+    (setq hs-show-indicators t)
+    (setq hs-display-lines-hidden t)
+
+
     ;; Keep comment blocks visible when folding all code.
     (setq hs-hide-comments-when-hiding-all nil)
 
@@ -9024,7 +9110,7 @@ easier to identify at a glance.
     (setq hs-isearch-open t)
 
     ;; Custom overlay display.
-    (setq hs-set-up-overlay #'boost--hs-display-hidden-region)
+    ;; (setq hs-set-up-overlay #'boost--hs-display-hidden-region)
 
     ;; Show folded code after jumping to a definition.
     (add-hook 'xref-after-jump-hook #'hs-show-block)
@@ -15081,8 +15167,7 @@ particular color...
 
   (leuven--section "50.2 (emacs)Variables")
 
-  ;; File local variables specifications are obeyed, without query --
-  ;; RISKY!
+  ;; File local variables specifications are obeyed, without query -- RISKY!
   (setq enable-local-variables t)
 
   ;; Obey `eval' variables -- RISKY!
@@ -15547,24 +15632,29 @@ See https://github.com/emacs-dashboard/emacs-dashboard/issues/57 (very nice
 dashboard):
 
 #+begin_src emacs-lisp
-;; ;; (use-package dashboard
-;; ;;   :if (< (length command-line-args) 2)
-;; ;;   :preface
-;;   (defun my/dashboard-banner ()
-;;     "Sets a dashboard banner including information on package initialization
-;;      time and garbage collections."
-;;     (setq dashboard-banner-logo-title
-;;           (format "Emacs ready in %.2f seconds with %d garbage collections."
-;;                   (float-time
-;;                    (time-subtract after-init-time before-init-time)) gcs-done)))
-;;   ;; :init
-;;   (add-hook 'emacs-startup-hook 'dashboard-refresh-buffer)
-;;   (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
-;;   ;; :custom
-;;   ;; (dashboard-startup-banner 'logo)
-;;   ;; :config
-;;   (dashboard-setup-startup-hook)
-;; ;; )
+(when (< (length command-line-args) 2)
+  (require 'dashboard)
+
+  (setq dashboard-items
+        '((agenda . 10)
+          (projects . 3)
+          (recents . 5)
+          (bookmarks . 3)))
+
+  (defun boost--dashboard-banner ()
+    "Sets a dashboard banner including information on package initialization
+     time and garbage collections."
+    (setq dashboard-banner-logo-title
+          (format "Emacs ready in %.2f seconds with %d garbage collections."
+                  (float-time
+                   (time-subtract after-init-time before-init-time)) gcs-done)))
+
+  (add-hook 'emacs-startup-hook 'dashboard-refresh-buffer)
+  (add-hook 'dashboard-mode-hook 'boost--dashboard-banner)
+
+  (setq dashboard-startup-banner 'logo)
+
+  (dashboard-setup-startup-hook))
 #+end_src
 
 #+begin_src emacs-lisp

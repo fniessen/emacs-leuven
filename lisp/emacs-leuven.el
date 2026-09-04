@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260903.1428>
+;; Version: <20260904.1639>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260903.1428>"
+(defconst boost-version "<20260904.1639>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -1168,6 +1168,25 @@ point on the duplicated line, and briefly highlight it."
     (with-eval-after-load 'helm-autoloads
       ;; Helm for bookmarks (filtered by category).
       (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks))
+
+  (defun boost-bookmark-cleanup ()
+    "Delete bookmarks pointing to non-existent files."
+    (interactive)
+    (require 'bookmark)
+    (bookmark-maybe-load-default-file)
+    (let ((removed 0))
+      (dolist (bmk (bookmark-all-names))
+        (when-let* ((record (bookmark-get-bookmark bmk 'noerror))
+                    (file (bookmark-prop-get record 'filename)))
+          (when (and (not (file-remote-p file)) ; ignore TRAMP bookmarks
+                     (not (file-exists-p file)))
+            (bookmark-delete bmk)
+            (setq removed (1+ removed)))))
+      (when (> removed 0)
+        (bookmark-save))
+      (message "%d bookmark(s) deleted" removed)))
+
+  (add-hook 'after-init-hook #'boost-bookmark-cleanup)
 
   (with-eval-after-load 'avy-autoloads
 
@@ -3617,11 +3636,51 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   (defvar boost-superwhisper-recording-p nil
     "Non-nil while Superwhisper is recording.")
 
-  (defun boost-toggle-superwhisper-recording ()
-    "Start or stop Superwhisper.
+  ;; Expected Superwhisper configuration:
+  ;; - Clipboard Behavior : Bypass clipboard
+  ;; - Restore clipboard delay : 1 second
+  ;;
+  ;; Even with "Bypass clipboard" enabled, Superwhisper appears to expose the
+  ;; transcription through the Windows clipboard briefly after transcription
+  ;; completes. We therefore retrieve the transcription through Get-Clipboard
+  ;; rather than using Emacs' kill-ring.
+  ;;
+  ;; The 1-second delay below has been determined empirically. Reading the
+  ;; clipboard immediately after stopping a recording often returns the previous
+  ;; transcription because Superwhisper has not finished updating the clipboard
+  ;; yet.
 
-On the first call, start recording.
-On the second call, stop recording and insert the clipboard contents."
+  (defun boost--get-windows-clipboard ()
+    "Return the current Windows clipboard contents as UTF-8 text."
+    (with-temp-buffer
+      (let ((coding-system-for-read 'utf-8))
+        (call-process
+         "powershell.exe"
+         nil
+         t
+         nil
+         "-NoProfile"
+         "-Command"
+         "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Clipboard"))
+      (string-trim
+       (buffer-string))))
+
+  (defun boost--insert-superwhisper-text (text)
+    "Insert TEXT at point, adding a separator when needed."
+    (unless (or (bobp)
+                (memq (char-before)
+                      '(?\s ?\n ?\t)))
+      (insert " "))
+    (insert text))
+
+  (defun boost-toggle-superwhisper-recording ()
+    "Toggle Superwhisper recording.
+
+First invocation starts recording.
+
+Second invocation stops recording, waits for Superwhisper to finish
+transcribing, then inserts the resulting text retrieved from the Windows
+clipboard."
     (interactive)
     (let* ((stopping boost-superwhisper-recording-p)
            (powershell
@@ -3647,23 +3706,24 @@ On the second call, stop recording and insert the clipboard contents."
          "Start-Process 'superwhisper://record'"))
 
       ;; Toggle the local recording state.
-      (setq boost-superwhisper-recording-p (not stopping))
+      (setq boost-superwhisper-recording-p
+            (not stopping))
 
-      ;; On the second call, briefly wait for Superwhisper
-      ;; to put the transcription into the clipboard, then insert it.
+      ;; When stopping, wait for Superwhisper to finish updating the clipboard
+      ;; before retrieving the transcription.
       (when stopping
         (let ((target-buffer (current-buffer))
               (target-marker (copy-marker (point) t)))
           (run-at-time
-           0.8
+           1.0
            nil
            (lambda (buffer marker)
-             (unwind-protect
-                 (when (buffer-live-p buffer)
-                   (with-current-buffer buffer
-                     (goto-char marker)
-                     (yank)))
-               (set-marker marker nil)))
+             (when (buffer-live-p buffer)
+               (with-current-buffer buffer
+                 (goto-char marker)
+                 (boost--insert-superwhisper-text
+                  (boost--get-windows-clipboard))))
+             (set-marker marker nil))
            target-buffer
            target-marker)))))
 
@@ -4795,29 +4855,11 @@ corresponding region."
 
   (add-hook 'sh-mode-hook #'boost--hs-fold-setup)
 
-  (defun boost--hs-display-hidden-region (ov)
-    "Display the number of hidden lines."
-    (when (eq (overlay-get ov 'hs) 'code)
-      (let* ((n-lines (max 0
-                           (1- (count-lines (overlay-start ov)
-                                            (overlay-end ov)))))
-             (label   (if (= n-lines 1) "line" "lines")))
-
-        ;; Display a right triangle in the left fringe.
-        (overlay-put
-         ov 'before-string
-         (propertize
-          " "
-          'display
-          '(left-fringe right-triangle boost-hs-face)))
-
-        ;; Display the hidden-line count in the buffer.
-        (overlay-put
-         ov 'display
-         (propertize (format "… %d %s …" n-lines label)
-                     'face 'boost-hs-face)))))
-
   (with-eval-after-load 'hideshow
+
+    (setq hs-show-indicators t)
+    (setq hs-display-lines-hidden t)
+
 
     ;; Keep comment blocks visible when folding all code.
     (setq hs-hide-comments-when-hiding-all nil)
@@ -4826,7 +4868,7 @@ corresponding region."
     (setq hs-isearch-open t)
 
     ;; Custom overlay display.
-    (setq hs-set-up-overlay #'boost--hs-display-hidden-region)
+    ;; (setq hs-set-up-overlay #'boost--hs-display-hidden-region)
 
     ;; Show folded code after jumping to a definition.
     (add-hook 'xref-after-jump-hook #'hs-show-block)
@@ -7232,8 +7274,7 @@ This example lists Azerty layout second row keys."
 
   (leuven--section "50.2 (emacs)Variables")
 
-  ;; File local variables specifications are obeyed, without query --
-  ;; RISKY!
+  ;; File local variables specifications are obeyed, without query -- RISKY!
   (setq enable-local-variables t)
 
   ;; Obey `eval' variables -- RISKY!
@@ -7407,24 +7448,29 @@ This example lists Azerty layout second row keys."
   (message "[Loaded %s in %.2f seconds]" load-file-name load-time)
   (sit-for 0.5))
 
-;; ;; (use-package dashboard
-;; ;;   :if (< (length command-line-args) 2)
-;; ;;   :preface
-;;   (defun my/dashboard-banner ()
-;;     "Sets a dashboard banner including information on package initialization
-;;      time and garbage collections."
-;;     (setq dashboard-banner-logo-title
-;;           (format "Emacs ready in %.2f seconds with %d garbage collections."
-;;                   (float-time
-;;                    (time-subtract after-init-time before-init-time)) gcs-done)))
-;;   ;; :init
-;;   (add-hook 'emacs-startup-hook 'dashboard-refresh-buffer)
-;;   (add-hook 'dashboard-mode-hook 'my/dashboard-banner)
-;;   ;; :custom
-;;   ;; (dashboard-startup-banner 'logo)
-;;   ;; :config
-;;   (dashboard-setup-startup-hook)
-;; ;; )
+(when (< (length command-line-args) 2)
+  (require 'dashboard)
+
+  (setq dashboard-items
+        '((agenda . 10)
+          (projects . 3)
+          (recents . 5)
+          (bookmarks . 3)))
+
+  (defun boost--dashboard-banner ()
+    "Sets a dashboard banner including information on package initialization
+     time and garbage collections."
+    (setq dashboard-banner-logo-title
+          (format "Emacs ready in %.2f seconds with %d garbage collections."
+                  (float-time
+                   (time-subtract after-init-time before-init-time)) gcs-done)))
+
+  (add-hook 'emacs-startup-hook 'dashboard-refresh-buffer)
+  (add-hook 'dashboard-mode-hook 'boost--dashboard-banner)
+
+  (setq dashboard-startup-banner 'logo)
+
+  (dashboard-setup-startup-hook))
 
 ;; Report Emacs startup time and GC status after full initialization.
 (add-hook 'emacs-startup-hook
