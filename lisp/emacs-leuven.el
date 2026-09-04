@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260904.1639>
+;; Version: <20260904.1654>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260904.1639>"
+(defconst boost-version "<20260904.1654>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -3633,11 +3633,12 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
                "if ($app) { exit 0 } else { exit 1 }"))))))
 
 (when (boost--superwhisper-available-p)
+
   (defvar boost-superwhisper-recording-p nil
     "Non-nil while Superwhisper is recording.")
 
   ;; Expected Superwhisper configuration:
-  ;; - Clipboard Behavior : Bypass clipboard
+  ;; - Clipboard Behavior      : Bypass clipboard
   ;; - Restore clipboard delay : 1 second
   ;;
   ;; Even with "Bypass clipboard" enabled, Superwhisper appears to expose the
@@ -3662,14 +3663,12 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
          "-NoProfile"
          "-Command"
          "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; Get-Clipboard"))
-      (string-trim
-       (buffer-string))))
+      (string-trim (buffer-string))))
 
   (defun boost--insert-superwhisper-text (text)
     "Insert TEXT at point, adding a separator when needed."
     (unless (or (bobp)
-                (memq (char-before)
-                      '(?\s ?\n ?\t)))
+                (memq (char-before) '(?\s ?\n ?\t)))
       (insert " "))
     (insert text))
 
@@ -3682,13 +3681,15 @@ Second invocation stops recording, waits for Superwhisper to finish
 transcribing, then inserts the resulting text retrieved from the Windows
 clipboard."
     (interactive)
+
     (let* ((stopping boost-superwhisper-recording-p)
            (powershell
             (or
              (executable-find "powershell.exe")
              (let ((path
                     "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"))
-               (and (file-exists-p path) path)))))
+               (and (file-exists-p path)
+                    path)))))
 
       (unless powershell
         (user-error
@@ -3705,7 +3706,7 @@ clipboard."
          "-Command"
          "Start-Process 'superwhisper://record'"))
 
-      ;; Toggle the local recording state.
+      ;; Toggle local state.
       (setq boost-superwhisper-recording-p
             (not stopping))
 
@@ -3714,16 +3715,21 @@ clipboard."
       (when stopping
         (let ((target-buffer (current-buffer))
               (target-marker (copy-marker (point) t)))
+
           (run-at-time
            1.0
            nil
            (lambda (buffer marker)
-             (when (buffer-live-p buffer)
-               (with-current-buffer buffer
-                 (goto-char marker)
-                 (boost--insert-superwhisper-text
-                  (boost--get-windows-clipboard))))
-             (set-marker marker nil))
+             (unwind-protect
+                 (when (buffer-live-p buffer)
+                   (with-current-buffer buffer
+                     (goto-char marker)
+                     (let ((text
+                            (boost--get-windows-clipboard)))
+                       (when (and text
+                                  (not (string-empty-p text)))
+                         (boost--insert-superwhisper-text text)))))
+               (set-marker marker nil)))
            target-buffer
            target-marker)))))
 
