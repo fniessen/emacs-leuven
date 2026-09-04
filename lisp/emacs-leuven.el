@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260904.1654>
+;; Version: <20260904.1936>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260904.1654>"
+(defconst boost-version "<20260904.1936>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -1431,6 +1431,9 @@ Should be selected from `fringe-bitmaps'.")
 
   ;; Set vertical indicator at column 80.
   (setq-default display-fill-column-indicator-column 80)
+
+  ;; Highlight text extending beyond the fill column.
+  (setq-default display-fill-column-indicator-warning t)
 
   ;; Enable column indicator display for all modes.
   (global-display-fill-column-indicator-mode 1) ; Available in Emacs 27+.
@@ -3717,7 +3720,7 @@ clipboard."
               (target-marker (copy-marker (point) t)))
 
           (run-at-time
-           1.0
+           0.8
            nil
            (lambda (buffer marker)
              (unwind-protect
