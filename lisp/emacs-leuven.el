@@ -4,8 +4,8 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260907.1254>
-;; Package-Requires: ((emacs "29.1"))
+;; Version: <20260907.1307>
+;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
 ;;
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260907.1254>"
+(defconst boost-version "<20260907.1307>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -1046,26 +1046,21 @@ to it. Otherwise call FUNCTION interactively."
   ;; Function to perform slick cut for the `kill-region' command.
   (defun boost--slick-kill-region (beg end)
     "Cut the active region or, if none is active, the current line."
-    (interactive
-     (if (use-region-p)
-         (list (region-beginning) (region-end))
-       (list (line-beginning-position)
-             (line-beginning-position 2))))
-    (kill-region beg end)
-    (unless (use-region-p)
-      (message "[Cut the current line]")))
+    (interactive "R")
+    (if beg
+        (kill-region beg end)
+      (kill-whole-line)
+      (message "[Cut current line]")))
 
   ;; Function to perform slick copy for the `kill-ring-save' command.
   (defun boost--slick-kill-ring-save (beg end)
     "Copy the active region or, if none is active, the current line."
-    (interactive
-     (if (use-region-p)
-         (list (region-beginning) (region-end))
-       (list (line-beginning-position)
-             (line-beginning-position 2))))
-    (kill-ring-save beg end)
-    (unless (use-region-p)
-      (message "[Copied the current line]")))
+    (interactive "R")
+    (if beg
+        (kill-ring-save beg end)
+      (kill-ring-save (line-beginning-position)
+                      (line-beginning-position 2))
+      (message "[Copied current line]")))
 
   (global-set-key [remap kill-region]    #'boost--slick-kill-region)
   (global-set-key [remap kill-ring-save] #'boost--slick-kill-ring-save)
