@@ -1916,20 +1916,19 @@ region, then removes duplicate lines:
 
 Auto-indent on paste.
 
-#+begin_src emacs-lisp
-  ;; Auto-indentation of pasted code in programming modes,
-  ;; but not in Makefile modes.
-  ;; (fall back to default, non-indented, yanking by preceding the yanking
-  ;; command `C-y' with `C-u').
+#+begin_src emacs-lisp :tangle no
+  ;; Reindent yanked text in programming modes (except `makefile-mode').
+  ;; Use `C-u C-y' to yank without reindentation.
+  (defun boost-indent-yanked-text (&rest _)
+    "Indent yanked text in programming modes."
+    (when (and (not current-prefix-arg)
+               (derived-mode-p 'prog-mode)
+               (not (derived-mode-p 'makefile-mode)))
+      (let ((mark-even-if-inactive t))
+        (indent-region (region-beginning) (region-end) nil))))
+
   (dolist (command '(yank yank-pop))
-    (advice-add command :after
-                (lambda (&rest _)
-                  "Indent yanked text in programming mode (unless prefix arg or in Makefile mode)."
-                  (when (and (not current-prefix-arg)
-                             (derived-mode-p 'prog-mode)
-                             (not (derived-mode-p 'makefile-mode)))
-                    (let ((mark-even-if-inactive t))
-                      (indent-region (region-beginning) (region-end) nil))))))
+    (advice-add command :after #'boost-indent-yanked-text))
 #+end_src
 
 #+begin_src emacs-lisp

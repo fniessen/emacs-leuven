@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260907.1350>
+;; Version: <20260907.1416>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260907.1350>"
+(defconst boost-version "<20260907.1416>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -1107,20 +1107,6 @@ point on the duplicated line, and briefly highlight it."
 ;;** 13.2 (info "(emacs)Yanking")
 
   (leuven--section "13.2 (emacs)Yanking")
-
-  ;; Auto-indentation of pasted code in programming modes,
-  ;; but not in Makefile modes.
-  ;; (fall back to default, non-indented, yanking by preceding the yanking
-  ;; command `C-y' with `C-u').
-  (dolist (command '(yank yank-pop))
-    (advice-add command :after
-                (lambda (&rest _)
-                  "Indent yanked text in programming mode (unless prefix arg or in Makefile mode)."
-                  (when (and (not current-prefix-arg)
-                             (derived-mode-p 'prog-mode)
-                             (not (derived-mode-p 'makefile-mode)))
-                    (let ((mark-even-if-inactive t))
-                      (indent-region (region-beginning) (region-end) nil))))))
 
   ;; Save the previous system clipboard contents to the kill ring before
   ;; replacing them with an Emacs kill.
