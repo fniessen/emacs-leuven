@@ -181,26 +181,36 @@ ample resources, we can optimize this behavior.
 
 During startup, we temporarily disable GC by setting ~gc-cons-threshold~ to
 ~most-positive-fixnum~ (the largest integer Emacs supports). This prevents
-interruptions, speeding up the loading process. After *initialization completes*,
-we restore default GC settings and perform an initial cleanup via
-~emacs-startup-hook~, ensuring *efficient memory management* post-startup.
+interruptions, speeding up the loading process.
 
 #+begin_src emacs-lisp
 ;; Suppress GC messages for a cleaner startup log.
 (setq garbage-collection-messages nil)
+#+end_src
 
-;; Disable garbage collection during startup for performance.
+#+begin_src emacs-lisp
+;; Limit garbage collection during startup (for performance).
 (setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-percentage 0.6)
+#+end_src
 
-(defun lvn--restore-gc-settings-and-clean ()
-  "Restore conservative GC settings and run a full garbage-collection."
-  (setq gc-cons-threshold 800000)       ; Restore default threshold (0.76 MB).
+After *initialization completes*, we restore default GC settings and perform an
+initial cleanup via ~emacs-startup-hook~, ensuring *efficient memory management*
+post-startup.
+
+#+begin_src emacs-lisp
+(defun boost--restore-startup-gc-settings ()
+  "Restore normal garbage collection settings after startup."
+  (setq gc-cons-threshold (* 32 1024 1024)) ; 32 MB.
   (setq gc-cons-percentage 0.1)         ; Restore default percentage.
-  (garbage-collect)                     ; Perform cleanup.
-  (message "[GC optimization complete: Settings restored, memory cleaned]"))
+  (message "[Startup: %.2fs, %d GC]"
+           (float-time (time-subtract after-init-time before-init-time))
+           gcs-done))
 
-;; Restore GC settings (and trigger GC) after full startup.
-(add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-clean t)
+;; Restore GC settings after full startup.
+(add-hook 'emacs-startup-hook #'boost--restore-startup-gc-settings 100)
+
+(run-with-idle-timer 5 nil #'garbage-collect)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1118,8 +1128,8 @@ commands.
 
 (leuven--chapter leuven-load-chapter-9-minibuffer "9 The Minibuffer"
 
-  ;; How long to display an echo-area message when the minibuffer is active.
-  (setq minibuffer-message-timeout 0.5)
+  ;; Timeout message minibuffer.
+  (setq minibuffer-message-timeout 0.75)
 #+end_src
 
 ** Completion
@@ -3309,6 +3319,37 @@ View-lossage is much improved in Emacs 25, showing directly which commands were
 run by each keypress.
 #+end_note
 
+** Visual Bell
+
+Highlight the mode line briefly instead of ringing the terminal bell.
+
+#+begin_src emacs-lisp :tangle no
+;; (info "(emacs)Visual Bell")
+
+  (leuven--section "15.17 (emacs)Visual Bell")
+
+  ;; ;; Use the audible bell.
+  ;; (setq visible-bell t)
+
+  ;; ;; Use a visual flash instead of an audible bell.
+  ;; (setq ring-bell-function #'flash-face-bell-function)
+
+  (defun boost--ring-bell-with-flash ()
+    "Flash the mode line and emit an audible bell."
+    (flash-face-bell-function)
+    (let ((ring-bell-function nil))
+      (ding)))
+
+  (setq ring-bell-function #'boost--ring-bell-with-flash)
+
+  ;; Flash the mode line when an error occurs.
+  (setq flash-face-faces '(mode-line mode-line-inactive))
+
+  ;; Attributes used during the flash.
+  (setq flash-face-attributes
+        '(:inverse-video t))
+#+end_src
+
 #+begin_src emacs-lisp
 )                                       ; Chapter 15 ends here.
 #+end_src
@@ -4489,7 +4530,7 @@ a file containing conflict markers.
         (when (re-search-forward "^<<<<<<< " nil t)
           (smerge-mode 1)))))
 
-  (add-hook 'find-file-hook 'boost--try-smerge t)
+  (add-hook 'find-file-hook 'boost--try-smerge 100)
 #+end_src
 
 *** Interface for merging files
@@ -5236,7 +5277,7 @@ XXX Look at helm-dictionary.
     ;;                               `(:background ,bg-color :foreground ,bg-color)))
     ;;       (setq-local cursor-type nil))))
     ;;
-    ;; (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
+    ;; (add-hook 'helm-minibuffer-set-up-hook #'helm-hide-minibuffer-maybe)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7720,8 +7761,7 @@ to a TeX-related command before installing the extra font-lock rules:
     (when (boost--latex-compilation-buffer-p)
       (boost--fontify-latex-output)))
 
-  (add-hook 'compilation-mode-hook
-            #'boost--configure-latex-compilation-buffer)
+  (add-hook 'compilation-mode-hook #'boost--configure-latex-compilation-buffer)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8413,7 +8453,7 @@ Some key bindings:
                    nxml-forward-element
                    nil))
 
-    (add-hook 'nxml-mode-hook 'hs-minor-mode)
+    (add-hook 'nxml-mode-hook #'hs-minor-mode)
                                         ; Derived from text-mode.
 )
 #+end_src
@@ -8715,7 +8755,7 @@ things.
   (dolist (mode '(emacs-lisp clojure js2 js))
     (add-hook (intern (format "%s-mode-hook" mode))
               (lambda ()
-                (add-hook 'after-save-hook 'check-parens nil t))))
+                (add-hook 'after-save-hook #'check-parens nil t))))
 
   ;; Move the cursor to the offscreen open-paren when a close-paren is inserted.
   (setq blink-matching-paren 'jump-offscreen)
@@ -9605,7 +9645,7 @@ http://www.wilfred.me.uk/blog/2014/09/27/the-definitive-guide-to-syntax-highligh
 #+begin_src emacs-lisp
     ;; Color identifiers based on their names.
     (with-eval-after-load 'color-identifiers-mode-autoloads
-      (add-hook 'js2-mode-hook 'color-identifiers-mode))
+      (add-hook 'js2-mode-hook #'color-identifiers-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -9799,9 +9839,9 @@ Kick things off with ~run-skewer~, and then:
 
 #+begin_src emacs-lisp :tangle no
   (with-eval-after-load 'skewer-mode-autoloads ; Not using it yet.
-    (add-hook 'js2-mode-hook 'skewer-mode)
-    (add-hook 'css-mode-hook 'skewer-css-mode)
-    (add-hook 'html-mode-hook 'skewer-html-mode))
+    (add-hook 'js2-mode-hook #'skewer-mode)
+    (add-hook 'css-mode-hook #'skewer-css-mode)
+    (add-hook 'html-mode-hook #'skewer-html-mode))
 #+end_src
 
 To ensure that everything is working correctly:
@@ -10002,10 +10042,9 @@ noticeable.
 
   (defun sqli--add-hooks ()
     "Add hooks to `sql-interactive-mode-hook'."
-    (add-hook 'comint-preoutput-filter-functions
-              'sql-add-newline-first))
+    (add-hook 'comint-preoutput-filter-functions #'sql-add-newline-first))
 
-  (add-hook 'sql-interactive-mode-hook 'sqli--add-hooks)
+  (add-hook 'sql-interactive-mode-hook #'sqli--add-hooks)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -10061,7 +10100,7 @@ I have found it pretty useful at times.
 
 #+begin_src emacs-lisp :tangle no
   (with-eval-after-load 'sql-indent
-    (add-hook 'sql-mode-hook 'sqlind-setup))
+    (add-hook 'sql-mode-hook #'sqlind-setup))
 #+end_src
 
 *** SQL beautify
@@ -10075,8 +10114,8 @@ Automatically convert SQL *keywords to* the *upper case* (see general well-known
 
 #+begin_src emacs-lisp :tangle no
   (with-eval-after-load 'sqlup-mode-autoloads
-    (add-hook 'sql-mode-hook 'sqlup-mode)
-    (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
+    (add-hook 'sql-mode-hook #'sqlup-mode)
+    (add-hook 'sql-interactive-mode-hook #'sqlup-mode))
 #+end_src
 
 *** SQL Remove Square Brackets
@@ -10134,8 +10173,8 @@ Make the compilation window go away -- if there were no compilation errors:
     (if (string-match "exited abnormally" message)
         ;; There were errors. Provide a suggestion to visit errors.
         (message "[Compilation errors detected. Press C-x ` to visit.]")
-      ;; No errors, close the compilation window after 0.5 seconds.
-      (run-at-time 0.5 nil #'delete-windows-on buffer)
+      ;; No errors, close the compilation window after 0.75 seconds.
+      (run-at-time 0.75 nil #'delete-windows-on buffer)
       (message "[No compilation errors!]")))
 
   ;; (add-to-list 'compilation-finish-functions #'lvn--compilation-hide-window-if-successful)
@@ -10202,7 +10241,7 @@ See jdc.el
 #+begin_src emacs-lisp
   ;; Color identifiers based on their names.
   (with-eval-after-load 'color-identifiers-mode-autoloads
-    (add-hook 'java-mode-hook 'color-identifiers-mode))
+    (add-hook 'java-mode-hook #'color-identifiers-mode))
 #+end_src
 
 ** Compilation Mode
@@ -10527,7 +10566,7 @@ mode line on bottom. Make it blue!
 #+begin_src emacs-lisp
     ;; Change mode line color with Flycheck status.
     (with-eval-after-load 'flycheck-color-mode-line
-      (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
+      (add-hook 'flycheck-mode-hook #'flycheck-color-mode-line-mode)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -10665,7 +10704,7 @@ This prevents loading stale byte-compiled code."
 
   (defun boost--setup-elc-cleanup ()
     "Install a buffer-local `after-save-hook' that deletes stale .elc files."
-    (add-hook 'after-save-hook #'boost--delete-elc-after-save nil t))
+    (add-hook 'after-save-hook #'boost--delete-elc-after-save nil 100))
 
   (add-hook 'emacs-lisp-mode-hook #'boost--setup-elc-cleanup)
 
@@ -11204,7 +11243,7 @@ Returns the age as an integer."
         (end (line-end-position)))
     (put-text-property start end 'face face)))
 
-(add-hook 'vc-annotate-mode-hook 'my-vc-annotate-apply-faces)
+(add-hook 'vc-annotate-mode-hook #'my-vc-annotate-apply-faces)
 #+end_src
 
 *************** TODO Customize `vc-annotate-background' (and future `vc-annotate-foreground')
@@ -12781,7 +12820,7 @@ altering the keymaps of company and yas-minor modes.
   (define-key company-active-map [tab]         #'tab-indent-or-complete)
   (define-key company-active-map (kbd "TAB")   #'tab-indent-or-complete))
 
-(add-hook 'company-mode-hook 'bind-tab-properly)
+(add-hook 'company-mode-hook #'bind-tab-properly)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -15633,8 +15672,7 @@ calls to message), set the variable ~debug-on-message~.
 #+begin_src emacs-lisp
 ;; Compute and display the load time.
 (let ((load-time (float-time (time-subtract (current-time) emacs-leuven--load-start-time))))
-  (message "[Loaded %s in %.2f seconds]" load-file-name load-time)
-  (sit-for 0.5))
+  (minibuffer-message "[Loaded %s in %.2f seconds]" load-file-name load-time))
 #+end_src
 
 See https://github.com/emacs-dashboard/emacs-dashboard/issues/57 (very nice
@@ -15655,11 +15693,11 @@ dashboard):
      time and garbage collections."
     (setq dashboard-banner-logo-title
           (format "Emacs ready in %.2f seconds with %d garbage collections."
-                  (float-time
-                   (time-subtract after-init-time before-init-time)) gcs-done)))
+                  (float-time (time-subtract after-init-time before-init-time))
+                  gcs-done)))
 
-  (add-hook 'emacs-startup-hook 'dashboard-refresh-buffer)
-  (add-hook 'dashboard-mode-hook 'boost--dashboard-banner)
+  (add-hook 'emacs-startup-hook #'dashboard-refresh-buffer)
+  (add-hook 'dashboard-mode-hook #'boost--dashboard-banner)
 
   (setq dashboard-startup-banner 'logo)
 
@@ -15671,9 +15709,8 @@ dashboard):
 (add-hook 'emacs-startup-hook
           (lambda ()
             (let ((init-time (string-to-number (emacs-init-time))))
-              (message "[Emacs startup time: %.2f seconds; GC done: %S]"
-                       init-time gcs-done)
-              (sit-for 0.5)))
+              (minibuffer-message "[Emacs startup time: %.2f seconds; GC done: %S]"
+                                  init-time gcs-done)))
           t)
 #+end_src
 

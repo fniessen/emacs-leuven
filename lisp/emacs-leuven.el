@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260904.1936>
+;; Version: <20260907.1115>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260904.1936>"
+(defconst boost-version "<20260907.1115>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -67,18 +67,22 @@
 ;; Suppress GC messages for a cleaner startup log.
 (setq garbage-collection-messages nil)
 
-;; Disable garbage collection during startup for performance.
+;; Limit garbage collection during startup (for performance).
 (setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-percentage 0.6)
 
-(defun lvn--restore-gc-settings-and-clean ()
-  "Restore conservative GC settings and run a full garbage-collection."
-  (setq gc-cons-threshold 800000)       ; Restore default threshold (0.76 MB).
+(defun boost--restore-startup-gc-settings ()
+  "Restore normal garbage collection settings after startup."
+  (setq gc-cons-threshold (* 32 1024 1024)) ; 32 MB.
   (setq gc-cons-percentage 0.1)         ; Restore default percentage.
-  (garbage-collect)                     ; Perform cleanup.
-  (message "[GC optimization complete: Settings restored, memory cleaned]"))
+  (message "[Startup: %.2fs, %d GC]"
+           (float-time (time-subtract after-init-time before-init-time))
+           gcs-done))
 
-;; Restore GC settings (and trigger GC) after full startup.
-(add-hook 'emacs-startup-hook #'lvn--restore-gc-settings-and-clean t)
+;; Restore GC settings after full startup.
+(add-hook 'emacs-startup-hook #'boost--restore-startup-gc-settings 100)
+
+(run-with-idle-timer 5 nil #'garbage-collect)
 
 (defmacro measure-time (message &rest body)
   "Measure the time it takes to evaluate BODY."
@@ -766,8 +770,8 @@ to it. Otherwise call FUNCTION interactively."
 
 (leuven--chapter leuven-load-chapter-9-minibuffer "9 The Minibuffer"
 
-  ;; How long to display an echo-area message when the minibuffer is active.
-  (setq minibuffer-message-timeout 0.5)
+  ;; Timeout message minibuffer.
+  (setq minibuffer-message-timeout 0.75)
 
 ;;** 9.4 (info "(emacs)Completion")
 
@@ -2725,7 +2729,7 @@ file B."
     ;;                               `(:background ,bg-color :foreground ,bg-color)))
     ;;       (setq-local cursor-type nil))))
     ;;
-    ;; (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
+    ;; (add-hook 'helm-minibuffer-set-up-hook #'helm-hide-minibuffer-maybe)
 
     (global-set-key (kbd "M-x") #'helm-M-x)
 
@@ -4070,8 +4074,7 @@ Otherwise toggle `visible-mode' using ARG."
     (when (boost--latex-compilation-buffer-p)
       (boost--fontify-latex-output)))
 
-  (add-hook 'compilation-mode-hook
-            #'boost--configure-latex-compilation-buffer)
+  (add-hook 'compilation-mode-hook #'boost--configure-latex-compilation-buffer)
 
   ;; Align LaTeX table columns and row terminators in the selected region.
   (defun boost-align-latex-tables (start end &optional only-rows)
@@ -4523,7 +4526,7 @@ the parent element."
                    nxml-forward-element
                    nil))
 
-    (add-hook 'nxml-mode-hook 'hs-minor-mode)
+    (add-hook 'nxml-mode-hook #'hs-minor-mode)
                                         ; Derived from text-mode.
 )
 
@@ -4714,7 +4717,7 @@ the parent element."
   (dolist (mode '(emacs-lisp clojure js2 js))
     (add-hook (intern (format "%s-mode-hook" mode))
               (lambda ()
-                (add-hook 'after-save-hook 'check-parens nil t))))
+                (add-hook 'after-save-hook #'check-parens nil t))))
 
   ;; Move the cursor to the offscreen open-paren when a close-paren is inserted.
   (setq blink-matching-paren 'jump-offscreen)
@@ -5033,7 +5036,7 @@ corresponding region."
 
     ;; Color identifiers based on their names.
     (with-eval-after-load 'color-identifiers-mode-autoloads
-      (add-hook 'js2-mode-hook 'color-identifiers-mode))
+      (add-hook 'js2-mode-hook #'color-identifiers-mode))
 
     ;; JS-comint.
     ;; (define-key js2-mode-map (kbd "C-c b")   #'js-send-buffer)
@@ -5152,8 +5155,8 @@ corresponding region."
     (if (string-match "exited abnormally" message)
         ;; There were errors. Provide a suggestion to visit errors.
         (message "[Compilation errors detected. Press C-x ` to visit.]")
-      ;; No errors, close the compilation window after 0.5 seconds.
-      (run-at-time 0.5 nil #'delete-windows-on buffer)
+      ;; No errors, close the compilation window after 0.75 seconds.
+      (run-at-time 0.75 nil #'delete-windows-on buffer)
       (message "[No compilation errors!]")))
 
   ;; (add-to-list 'compilation-finish-functions #'lvn--compilation-hide-window-if-successful)
@@ -5201,7 +5204,7 @@ corresponding region."
 
   ;; Color identifiers based on their names.
   (with-eval-after-load 'color-identifiers-mode-autoloads
-    (add-hook 'java-mode-hook 'color-identifiers-mode))
+    (add-hook 'java-mode-hook #'color-identifiers-mode))
 
 ;;** 28.2 (info "(emacs)Compilation Mode")
 
@@ -5354,7 +5357,7 @@ corresponding region."
 
     ;; Change mode line color with Flycheck status.
     (with-eval-after-load 'flycheck-color-mode-line
-      (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
+      (add-hook 'flycheck-mode-hook #'flycheck-color-mode-line-mode)))
 
   (global-set-key (kbd "C-x C-S-e") #'elint-current-buffer)
 
@@ -5436,7 +5439,7 @@ This prevents loading stale byte-compiled code."
 
   (defun boost--setup-elc-cleanup ()
     "Install a buffer-local `after-save-hook' that deletes stale .elc files."
-    (add-hook 'after-save-hook #'boost--delete-elc-after-save nil t))
+    (add-hook 'after-save-hook #'boost--delete-elc-after-save nil 100))
 
   (add-hook 'emacs-lisp-mode-hook #'boost--setup-elc-cleanup)
 
@@ -7454,8 +7457,7 @@ This example lists Azerty layout second row keys."
 
 ;; Compute and display the load time.
 (let ((load-time (float-time (time-subtract (current-time) emacs-leuven--load-start-time))))
-  (message "[Loaded %s in %.2f seconds]" load-file-name load-time)
-  (sit-for 0.5))
+  (minibuffer-message "[Loaded %s in %.2f seconds]" load-file-name load-time))
 
 (when (< (length command-line-args) 2)
   (require 'dashboard)
@@ -7471,11 +7473,11 @@ This example lists Azerty layout second row keys."
      time and garbage collections."
     (setq dashboard-banner-logo-title
           (format "Emacs ready in %.2f seconds with %d garbage collections."
-                  (float-time
-                   (time-subtract after-init-time before-init-time)) gcs-done)))
+                  (float-time (time-subtract after-init-time before-init-time))
+                  gcs-done)))
 
-  (add-hook 'emacs-startup-hook 'dashboard-refresh-buffer)
-  (add-hook 'dashboard-mode-hook 'boost--dashboard-banner)
+  (add-hook 'emacs-startup-hook #'dashboard-refresh-buffer)
+  (add-hook 'dashboard-mode-hook #'boost--dashboard-banner)
 
   (setq dashboard-startup-banner 'logo)
 
@@ -7485,9 +7487,8 @@ This example lists Azerty layout second row keys."
 (add-hook 'emacs-startup-hook
           (lambda ()
             (let ((init-time (string-to-number (emacs-init-time))))
-              (message "[Emacs startup time: %.2f seconds; GC done: %S]"
-                       init-time gcs-done)
-              (sit-for 0.5)))
+              (minibuffer-message "[Emacs startup time: %.2f seconds; GC done: %S]"
+                                  init-time gcs-done)))
           t)
 
 (defun lvn-update-emacs-leuven-configuration ()
