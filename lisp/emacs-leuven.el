@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260907.1416>
+;; Version: <20260907.1445>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -42,7 +42,7 @@
 ;;     (require 'emacs-leuven)
 ;;
 ;; Optional:
-;;   (setq lvn-verbose-loading t)                  ; Show loading progress
+;;   (setq boost-message-timestamps t)                  ; Show loading progress
 ;;   (setq package-selected-packages nil)          ; Skip package installs
 ;;
 ;; See https://github.com/fniessen/emacs-leuven for details.
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260907.1416>"
+(defconst boost-version "<20260907.1445>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -97,23 +97,24 @@
   "Emacs-Leuven customizations."
   :group 'convenience)
 
-(defcustom lvn-verbose-loading nil
-  "If non-nil, display loading progress messages for Emacs-Leuven."
+(defcustom boost-message-timestamps nil
+  "Non-nil means prepend timestamps to messages."
   :group 'leuven
   :type 'boolean)
 
-(when lvn-verbose-loading
-  (defun lvn--add-timestamp-to-message (old-fun &rest args)
-    "Add timestamps to `message' output."
-    (when (car args)
-      (apply old-fun
-             (cons (format "[%s.%03d] %s"
-                          (format-time-string "%Y-%m-%d %T")
-                          (string-to-number (substring (format-time-string "%N") 0 3))
-                          (car args))
-                   (cdr args)))))
+  (when boost-message-timestamps
+    (defun boost--add-startup-time-to-message (old-fun &rest args)
+      "Prepend elapsed startup time to `message' output."
+      (when-let* ((fmt (car args)))
+        (apply old-fun
+               (cons (format "[%.2fs] %s"
+                             (float-time
+                              (time-subtract (current-time)
+                                             before-init-time))
+                             fmt)
+                     (cdr args)))))
 
-  (advice-add 'message :around #'lvn--add-timestamp-to-message))
+  (advice-add 'message :around #'boost--add-startup-time-to-message))
 
 ;; Allow quick include/exclude of setup parts -- DO NOT EDIT the DEFVAR!
 (defvar leuven-load-chapter-0-environment t) ; required
@@ -173,7 +174,7 @@ Records execution time in `leuven--load-times-list'."
            (section-start-time (float-time))
            chapter-duration)
        ;; Display chapter start message if verbose mode is enabled.
-       (when lvn-verbose-loading
+       (when boost-message-timestamps
          (message "[** %s]" ,chaptername))
 
        ;; Initialize section timing.
@@ -203,7 +204,7 @@ If END-OF-CHAPTER is non-nil, it will not print the section name."
 
   (let ((this-section-time (- (float-time)
                               leuven--before-section-time))
-        (verbose lvn-verbose-loading))  ;; Store verbose mode in a local variable
+        (verbose boost-message-timestamps))  ;; Store verbose mode in a local variable
     (when verbose
       (when (not (equal this-section-time 0.00))
         (message "[    Section time: %.2f seconds]" this-section-time))
@@ -225,7 +226,7 @@ If END-OF-CHAPTER is non-nil, it will not print the section name."
       (if (file-directory-p abs-dir)
           (unless (file-exists-p (expand-file-name ".nosearch" abs-dir))
             (add-to-list 'load-path abs-dir)
-            (when lvn-verbose-loading
+            (when boost-message-timestamps
               (message "[Added '%s' to load-path]" abs-dir)))
         (display-warning
          'boost
@@ -6584,10 +6585,10 @@ This example lists Azerty layout second row keys."
     (setq appt-disp-window-function #'lvn--appt-notify)
 
     ;; Turn appointment checking on (enable reminders).
-    (when lvn-verbose-loading
+    (when boost-message-timestamps
       (message "[Enable appointment reminders...]"))
     (appt-activate 1)
-    (when lvn-verbose-loading
+    (when boost-message-timestamps
       (message "[Enable appointment reminders... Done]"))
 
     ;; Enable appointment notification, several minutes beforehand.
@@ -7411,10 +7412,10 @@ This example lists Azerty layout second row keys."
 ;;   :bind ("C-c e t" . ert-run-tests-interactively))
 
 ;; Stop timestamping messages post-initialization.
-(when lvn-verbose-loading
-  (advice-remove 'message #'lvn--add-timestamp-to-message))
+(when boost-message-timestamps
+  (advice-remove 'message #'boost--add-startup-time-to-message))
 
-(when lvn-verbose-loading
+(when boost-message-timestamps
   (message "| Chapter | Time |")
   (message "|---------+------|")
   (dolist (el (nreverse leuven--load-times-list))
