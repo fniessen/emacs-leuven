@@ -4410,7 +4410,7 @@ to recover the auto-saved changes using `recover-this-file'."
         (message
          "[%s has auto-save data.  Use M-x recover-this-file to recover it.]"
          (file-name-nondirectory buffer-file-name))
-        (sit-for 3))))
+        (sit-for 2))))
 
   (add-hook 'find-file-hook #'boost--recover-this-file)
 #+end_src
@@ -12535,11 +12535,11 @@ The best alternative to Auto-Complete seems to be Company mode.
         (auto-complete-mode -1)
         (company-mode 1)
         (message "[Disable AC. Enable Company]")
-        (sit-for 2))
+        (sit-for 0.75))
     (auto-complete-mode 1)
     (company-mode -1)
     (message "[Disable Company. Enable AC]")
-    (sit-for 2)))
+    (sit-for 0.75)))
 
 (global-set-key (kbd "M-<f1>") #'toggle-auto-complete-company-modes)
 #+end_src
@@ -13605,7 +13605,7 @@ Or better look at the ~alert~ package?
                  (format "notify-send -i /usr/share/icons/gnome/32x32/status/appointment-soon.png -t 1000 'Appointment' %s"
                          escaped-msg)))
             (message "[%s]" msg)
-            (sit-for 1)))))
+            (sit-for 0.75)))))
 
     ;; Set custom function to display appointment reminders in a window.
     (setq appt-disp-window-function #'lvn--appt-notify)
@@ -15748,29 +15748,38 @@ After the update, it recommends restarting Emacs to complete the update.
 Before using this function, make sure 'lvn--directory' points to the
 directory containing 'emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
-  (interactive)
-  (boost-display-version)
-  (let* ((repository-directory (file-name-directory (file-truename (locate-library "emacs-leuven.el"))))
-         (unstaged-changes (shell-command-to-string (format "cd %s && git status --porcelain" repository-directory))))
-    (if (file-directory-p repository-directory)
-        (if (string-empty-p unstaged-changes)
-            (let ((status (shell-command (format "cd %s && LC_ALL=C git pull --rebase" repository-directory))))
-              (if (string-match-p "\\(up to date\\|up-to-date\\)" (buffer-string))
-                  (message "[Configuration is already up-to-date]")
-                (if (= status 0)
-                    (progn
-                      (sit-for 1.5)
-                      (message "[Configuration updated. Please restart Emacs to complete the update]"))
+    (interactive)
+    (boost-display-version)
+    (if-let* ((library (locate-library "emacs-leuven.el"))
+              (repository-directory
+               (file-name-directory (file-truename library))))
+        (let ((default-directory repository-directory))
+          (if (not (string-empty-p
+                    (shell-command-to-string "git status --porcelain")))
+              (display-warning
+               'boost
+               "You have local changes. Please commit or stash them before updating."
+               :warning)
+            (with-temp-buffer
+              (let ((status
+                     (call-process
+                      "git" nil t nil
+                      "pull" "--rebase"))
+                    (output (buffer-string)))
+                (cond
+                 ((/= status 0)
                   (display-warning
                    'boost
-                   "Error: Failed to update configuration"
-                   :warning))))
-          (display-warning
-           'boost
-           "You have unstaged changes. Please commit or stash them before updating."
-           :warning)
-          (message "[Unstaged changes:\n%s]" unstaged-changes))
-      (message "[Error: 'emacs-leuven.el' file not found]"))))
+                   (format "Git update failed:\n%s" output)
+                   :warning))
+                 ((string-match-p
+                   "Already up[ -]to[ -]date"
+                   output)
+                  (message "[Configuration is already up-to-date]"))
+                 (t
+                  (message
+                   "[Configuration updated. Please restart Emacs]")))))))
+      (message "[Error: emacs-leuven.el not found]")))
 
   (defun lvn-display-emacs-leuven-latest-commits ()
     "Display the latest commits in the Emacs-Leuven configuration.
