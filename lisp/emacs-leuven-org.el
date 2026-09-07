@@ -2385,50 +2385,62 @@ of the ignored headline."
 ;;           (lambda ()
 ;;             (define-key org-src-mode-map (kbd "<f2>") #'org-edit-src-save)))
 
-(defvar only-code-overlays nil
-  "Overlays hiding non-code blocks.")
-(make-variable-buffer-local 'only-code-overlays)
+(defvar boost-only-code-overlays nil
+  "Overlays hiding non-code blocks in the current buffer.")
 
-(defun hide-non-code ()
-  "Hide non-code-block content of the current Org mode buffer."
-  (interactive)
+(make-variable-buffer-local 'boost-only-code-overlays)
+
+(defun boost--org-view-code-only-show ()
+  "Show all hidden non-code text."
+  (when boost-only-code-overlays
+    (mapc #'delete-overlay boost-only-code-overlays)
+    (setq boost-only-code-overlays nil))
+  (remove-from-invisibility-spec '(non-code)))
+
+(defun boost--org-view-code-only-hide ()
+  "Hide all text outside Org source blocks."
+  (boost--org-view-code-only-show)
   (add-to-invisibility-spec '(non-code))
   (let (begs ends)
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward org-babel-src-block-regexp nil t)
         (push (match-beginning 5) begs)
-        (push (match-end 5)       ends))
-      (map 'list (lambda (beg end)
-                   (let ((ov (make-overlay beg end)))
-                     (push ov only-code-overlays)
-                     (overlay-put ov 'invisible 'non-code)))
-           (cons (point-min) (reverse ends))
-           (append (reverse begs) (list (point-max)))))))
+        (push (match-end 5) ends))
+      (cl-mapc
+       (lambda (beg end)
+         (let ((ov (make-overlay beg end)))
+           (overlay-put ov 'invisible 'non-code)
+           (push ov boost-only-code-overlays)))
+       (cons (point-min) (reverse ends))
+       (append (reverse begs) (list (point-max)))))))
 
-(defun show-non-code ()
-  "Show non-code-block content of the current Org mode buffer."
+(defun boost-org-view-code-only-toggle ()
+  "Toggle visibility of non-code text in the current Org buffer."
   (interactive)
-  (dolist (ov only-code-overlays)
-    (delete-overlay ov)))
+  (if boost-only-code-overlays
+      (progn
+        (boost--org-view-code-only-show)
+        (message "[Code only OFF]"))
+    (boost--org-view-code-only-hide)
+    (message "[Code only ON]")))
+
+(define-key org-mode-map (kbd "C-c C-v |") #'boost-org-view-code-only-toggle)
 
 (with-eval-after-load 'org
-  (defun boost-org-copy-current-code-block ()
-    "Copy the contents of the current Org mode code block to the kill ring."
+  (defun boost-org-babel-copy-src-block ()
+    "Copy the body of the current source block."
     (interactive)
-    (if (not (derived-mode-p 'org-mode))
-        (message "[Not in an Org mode buffer]")
-      (let* ((info (org-babel-get-src-block-info t))
-             (beg (nth 5 info))
-             (end (nth 6 info)))
-        (if (and beg end)
-            (progn
-              (copy-region-as-kill beg end)
-              (message "[Code block copied to kill ring]"))
-          (message "[No source block found at point]")))))
+    (unless (org-in-src-block-p)
+      (user-error "[Not in a source block]"))
+    (save-excursion
+      (org-babel-mark-block)
+      (kill-ring-save (region-beginning) (region-end)))
+    (message "[Code block copied]"))
 
   ;; Copy current code block.
-  (define-key org-mode-map (kbd "H-w") #'boost-org-copy-current-code-block))
+  (define-key org-mode-map (kbd "C-c C-v w") #'boost-org-babel-copy-src-block)
+  (define-key org-mode-map (kbd "H-w") #'boost-org-babel-copy-src-block))
 
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
@@ -2531,7 +2543,7 @@ of the ignored headline."
     ;;          (buffer-name (buffer-base-buffer)))
     )
 
-  (add-hook 'org-mode-hook #'org-src-block-check t))
+  (add-hook 'org-mode-hook #'org-src-block-check 100))
                                         ; Place this at the end to ensure that
                                         ; errors do not stop applying other
                                         ; functions in the `org-mode-hook' (such
@@ -2629,8 +2641,8 @@ Ignore non-Org buffers."
                         (force-mode-line-update))
                     (error
                      (message "[Dictionary error for %s: %s.]" lang err)))
-                (message "[No dictionary configured for language `%s'.]" lang)
-                (sit-for 0.5)))))))))
+                (minibuffer-message
+                 "[No dictionary configured for language `%s'.]" lang)))))))))
 
 ;; Guess dictionary in Org buffers.
 (add-hook 'org-mode-hook #'boost--org-switch-dictionary)
