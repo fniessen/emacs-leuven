@@ -1114,7 +1114,7 @@ font-lock faces remain visible inside Org source blocks."
              (- end begin)
              (if (= (- end begin) 1) "" "s"))))
 
-(add-hook 'gptel-post-response-functions #'boost-gptel-after-response t)
+(add-hook 'gptel-post-response-functions #'boost-gptel-after-response 100)
 
 (defun gptel-clear-buffer ()
   "Clear the current GPTel chat buffer and insert a fresh prompt."
@@ -1190,10 +1190,9 @@ font-lock faces remain visible inside Org source blocks."
 
 (defun boost-gptel-explain-region (begin end)
   "Explain the active region between BEGIN and END."
-  (interactive
-   (if (use-region-p)
-       (list (region-beginning) (region-end))
-     (user-error "Select a region first")))
+  (interactive "R")                     ; Emacs 31.1.
+  (unless beg
+    (user-error "Select a region first"))
   (let ((source
          (boost-gptel-buffer-substring-limited
           begin
