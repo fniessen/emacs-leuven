@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260907.1245>
+;; Version: <20260907.1254>
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260907.1245>"
+(defconst boost-version "<20260907.1254>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -4793,18 +4793,8 @@ the parent element."
   ;; Always comment out empty lines.
   (setq comment-empty-lines t)
 
-  (defun lvn--comment-advice (orig-fun &rest args)
-    "Comment or uncomment lines intelligently.
-
-  When called interactively with no active region, comment a single
-  line instead."
-    (if (or (use-region-p) (not (called-interactively-p 'any)))
-        (apply orig-fun args)
-      (comment-or-uncomment-region (line-beginning-position)
-                                   (line-end-position))
-      (message "[Commented line]")))
-
-  (advice-add 'comment-dwim :around #'lvn--comment-advice)
+  ;; Make `M-;' comment or uncomment the current line when no region is active.
+  (global-set-key [remap comment-dwim] #'comment-line)
 
 ;;** 27.6 (info "(emacs)Documentation") Lookup
 
