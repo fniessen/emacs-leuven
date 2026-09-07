@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260907.1307>
+;; Version: <20260907.1350>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260907.1307>"
+(defconst boost-version "<20260907.1350>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -1046,7 +1046,7 @@ to it. Otherwise call FUNCTION interactively."
   ;; Function to perform slick cut for the `kill-region' command.
   (defun boost--slick-kill-region (beg end)
     "Cut the active region or, if none is active, the current line."
-    (interactive "R")
+    (interactive "R")                   ; Emacs 31.1.
     (if beg
         (kill-region beg end)
       (kill-whole-line)
@@ -1055,7 +1055,7 @@ to it. Otherwise call FUNCTION interactively."
   ;; Function to perform slick copy for the `kill-ring-save' command.
   (defun boost--slick-kill-ring-save (beg end)
     "Copy the active region or, if none is active, the current line."
-    (interactive "R")
+    (interactive "R")                   ; Emacs 31.1.
     (if beg
         (kill-ring-save beg end)
       (kill-ring-save (line-beginning-position)
@@ -1065,7 +1065,7 @@ to it. Otherwise call FUNCTION interactively."
   (global-set-key [remap kill-region]    #'boost--slick-kill-region)
   (global-set-key [remap kill-ring-save] #'boost--slick-kill-ring-save)
 
-  (defun boost-duplicate-line-or-region ()
+  (defun boost-duplicate-line-or-region (beg end)
     "Duplicate the current line, or the active region if any.
 
 When a region is active, duplicate it immediately after its end,
@@ -1073,31 +1073,26 @@ keep the duplicated text selected, and briefly highlight it.
 
 When no region is active, duplicate the current line below, place
 point on the duplicated line, and briefly highlight it."
-    (interactive)
-    (if (use-region-p)
-        (let* ((beg (region-beginning))
-               (end (region-end))
-               (text (buffer-substring-no-properties beg end))
-               (new-beg end)
-               new-end)
-          (goto-char end)
-          (insert text)
-          (setq new-end (point))
-          (pulse-momentary-highlight-region new-beg new-end)
-          (goto-char new-end)
-          (set-mark new-beg)
-          (activate-mark))
-      (let* ((col (current-column))
-             (beg (line-beginning-position))
-             (end (line-beginning-position 2))
-             (text (buffer-substring-no-properties beg end))
-             new-beg
-             new-end)
-        (goto-char end)
-        (setq new-beg (point))
-        (insert text)
-        (setq new-end (point))
-        (pulse-momentary-highlight-region new-beg new-end)
+    (interactive "R")                   ; Emacs 31.1.
+    (let* ((regionp beg)
+           (beg (if regionp
+                    beg
+                  (line-beginning-position)))
+           (end (if regionp
+                    end
+                  (line-beginning-position 2)))
+           (col (current-column))
+           (text (buffer-substring-no-properties beg end))
+           new-beg new-end)
+      (goto-char end)
+      (setq new-beg (point))
+      (insert text)
+      (setq new-end (point))
+      (pulse-momentary-highlight-region new-beg new-end)
+      (if regionp
+          (progn
+            (goto-char new-end)
+            (push-mark new-beg t t))
         (goto-char new-beg)
         (move-to-column col))))
 
@@ -3561,23 +3556,22 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
   (leuven--section "25.1 (emacs)Indentation Commands and Techniques")
 
-  (defun leuven-indent-buffer ()
-    "Indent each non-blank line in the buffer."
+  (defun boost-indent-buffer ()
+    "Indent the current buffer."
     (interactive)
     (save-excursion
-      (indent-region (point-min) (point-max) nil)))
+      (indent-region (point-min) (point-max))))
 
-  (defun leuven-align-code (begin end)
+  (defun boost-align-equals-and-colons (beg end)
     "Align region to equal signs and colons."
     (interactive "r")
     ;; Keep them separate align calls, otherwise colons align with spaces if
     ;; they're in the same region.
-    (align-regexp begin end "\\(\\s-*\\)=" 1 1)
-    (align-regexp begin end "\\(\\s-*\\):" 1 1))
+    (align-regexp beg end "\\(\\s-*\\)=" 1 1)
+    (align-regexp beg end "\\(\\s-*\\):" 1 1))
 
   ;; Align your code in a pretty way.
-  (global-set-key (kbd "C-x \\") #'leuven-align-code)
-  (global-set-key (kbd "C-c =")  #'leuven-align-code)
+  (global-set-key (kbd "C-c =")  #'boost-align-equals-and-colons)
 
   ;; Show vertical lines to guide indentation.
   (with-eval-after-load 'indent-guide-autoloads-XXX ; Display problems with CrossMapIntegration.java
@@ -3589,9 +3583,9 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
 
     ;; Character used as vertical line.
     (setq indent-guide-char
-          (cond ((char-displayable-p ?\u254E) "╎")
-                ((char-displayable-p ?\u2502) "│")
-                (t ":")))
+      (if (char-displayable-p ?╎)
+          "╎"
+        "│"))
 
     (diminish 'indent-guide-mode))
 
@@ -3695,7 +3689,7 @@ clipboard."
 
       (unless powershell
         (user-error
-         "Windows PowerShell is not accessible from this Emacs instance"))
+         "[Windows PowerShell is not accessible from this Emacs instance]"))
 
       ;; The superwhisper://record URL acts as a toggle.
       (let ((process-connection-type nil))
@@ -7163,23 +7157,25 @@ This example lists Azerty layout second row keys."
   ;; Key binding.
   (global-set-key (kbd "C-c ^") #'sort-lines)
 
-  (defun boost-sort-names-by-last-name ()
-    "Sort lines in the selected region by last name (everything after the first space)."
-    (interactive)
-    (if (use-region-p)
-        (save-excursion
-          (let* ((region-text (buffer-substring-no-properties (region-beginning) (region-end)))
-                 (lines (split-string region-text "\n" t)))
-            (setq lines
-                  (sort lines
-                        (lambda (a b)
-                          (let ((last-name-a (car (last (split-string a))))
-                                (last-name-b (car (last (split-string b)))))
-                            (string< last-name-a last-name-b)))))
-            (delete-region (region-beginning) (region-end))
-            (insert (mapconcat 'identity lines "\n"))
-            (insert "\n")))
-      (message "[No region selected]")))
+  (defun boost-sort-names-by-last-name (beg end)
+    "Sort lines in the selected region by last name."
+    (interactive "R")                   ; Emacs 31.1.
+    (unless beg
+      (user-error "[No region selected]"))
+    (save-excursion
+      (let* ((region-text
+              (buffer-substring-no-properties beg end))
+             (lines
+              (split-string region-text "\n" t)))
+        (setq lines
+              (sort lines
+                    (lambda (a b)
+                      (string<
+                       (car (last (split-string a)))
+                       (car (last (split-string b)))))))
+        (delete-region beg end)
+        (insert (mapconcat #'identity lines "\n"))
+        (insert "\n"))))
 
 )                                       ; Chapter 42 ends here.
 
