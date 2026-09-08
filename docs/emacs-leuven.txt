@@ -728,7 +728,6 @@ like this into your configuration file:
         ant
         anzu
         auctex
-        ;; auto-complete
         auto-highlight-symbol
         auto-package-update
         avy
@@ -747,7 +746,6 @@ like this into your configuration file:
         diminish
         docker-compose-mode
         dumb-jump
-        ;; emacs-eclim
         emr
         exec-path-from-shell
         expand-region
@@ -757,7 +755,7 @@ like this into your configuration file:
         fuzzy
         ;; git-commit-insert-issue
         git-messenger
-        ;; git-timemachine
+        git-timemachine
         google-translate
         goto-chg
         gptel
@@ -806,6 +804,7 @@ like this into your configuration file:
         symbol-overlay
         tern
         toc-org
+        transpose-frame
         ;; undo-tree
         use-package
         volatile-highlights
@@ -1052,10 +1051,10 @@ Show line numbers temporarily -- just when you're going to a line number with
 
 Shortcuts:
 
-| Command | Emacs | Emacs-Leuven   |
-|---------+-------+----------------|
-| Undo    | C-/   | <f11>          |
-| Redo    |       | C-S-z, S-<f11> |
+| Command | Emacs Default | Emacs-Leuven   |
+|---------+---------------+----------------|
+| Undo    | C-/           | <f11>          |
+| Redo    | None          | C-S-z, S-<f11> |
 
 #+begin_src emacs-lisp
 ;;** 8.4 (info "(emacs)Basic Undo")ing Changes
@@ -1065,7 +1064,8 @@ Shortcuts:
   ;; Bind F11 to a conventional IDE-style undo command.
   (global-set-key (kbd "<f11>") #'undo-only)
 
-  ;; Bind S-F11 to redo the last undone change.
+  ;; Redo the last undone change.
+  (global-set-key (kbd "C-S-z")   #'undo-redo)
   (global-set-key (kbd "S-<f11>") #'undo-redo)
 #+end_src
 
@@ -4260,7 +4260,8 @@ Turn on auto-revert mode globally.
     :defer t
     :init
     ;; Load autorevert after 2 seconds of idle time.
-    (run-with-idle-timer 2 nil (lambda () (require 'autorevert)))
+    (run-with-idle-timer 2 nil (lambda ()
+                                 (require 'autorevert)))
     :config
     ;; This runs when autorevert is loaded.
     ;; Enable Global Auto-Revert mode to auto-refresh buffers.
@@ -6021,94 +6022,47 @@ When multiple windows are present, select the next window."
 
 ** Deleting and Rearranging Windows
 
-If there is only one window displayed, act like ~C-x 2~ or ~C-x 3~. If there are
-two (or more) windows displayed, act like ~C-x 1~.
+The following command toggles between a single-window and a two-window layout.
+
+When only one window is visible, it behaves like ~C-x 2~ or ~C-x 3~ by creating
+a second window using the preferred splitting direction (according to
+~split-width-threshold~).
+
+When multiple windows are visible, it behaves like ~C-x 1~ by deleting all other
+windows and keeping only the currently selected one.
 
 #+begin_src emacs-lisp
 ;;** 21.5 (info "(emacs)Change Window")
 
   (leuven--section "21.5 (emacs)Change Window")
 
-  (defun boost-toggle-window-split ()
-    "Toggle between a single window and a two-window layout.
-
-When only one window is present, split it according to
-`split-width-threshold' and select the newly created window.
-
-When multiple windows are present, delete all other windows,
-leaving only the currently selected window visible."
+  (defun boost-toggle-window-layout ()
+    "Toggle between one window and a sensible two-window layout."
     (interactive)
-    ;; Ignore an active minibuffer window.
     (if (one-window-p t)
-        (select-window
-         (if (> (frame-width) split-width-threshold)
-             (split-window-right)
-           (split-window-below)))
+        (when-let* ((window (split-window-sensibly)))
+          (select-window window))
       (delete-other-windows)))
 
-  (global-set-key (kbd "<f5>") #'boost-toggle-window-split)
+  (global-set-key (kbd "<f5>") #'boost-toggle-window-layout)
 #+end_src
 
-The following code flips a two-window frame, so that left is right, or up is
-down.
+The following code flips a two-window frame so that left becomes right.
 
 #+begin_src emacs-lisp
-  ;; Swap 2 windows.
-  (defun leuven-swap-windows ()
-    "If you have 2 windows, swap them."
-    (interactive)
-    (cond ((not (= (count-windows) 2))
-           (message "[You need exactly 2 windows to swap them]"))
-          (t
-           (let* ((wind-1 (first (window-list)))
-                  (wind-2 (second (window-list)))
-                  (buf-1 (window-buffer wind-1))
-                  (buf-2 (window-buffer wind-2))
-                  (start-1 (window-start wind-1))
-                  (start-2 (window-start wind-2)))
-             (set-window-buffer wind-1 buf-2)
-             (set-window-buffer wind-2 buf-1)
-             (set-window-start wind-1 start-2)
-             (set-window-start wind-2 start-1)))))
+  (when (boost--try-require 'transpose-frame)
 
-  (global-set-key (kbd "C-c ~") #'leuven-swap-windows)
+    ;; Swap the left/right positions of the windows in the current frame.
+    (global-set-key (kbd "C-c ~") #'flop-frame)
 #+end_src
 
-The following code toggles between horizontal and vertical layout of two
-windows. Useful when Emacs opens the window below instead at the side.
+The following code toggles the layout of the current frame between a
+side-by-side split and a top-and-bottom split. This is useful when Emacs opens
+a window below the current one instead of beside it.
 
 #+begin_src emacs-lisp
-  (defun leuven-toggle-window-split ()
-    "Toggle between vertical and horizontal split.
-  Vertical split shows more of each line, horizontal split shows more lines.
-  This code only works for frames with exactly two windows."
-    (interactive)
-    (cond ((not (= (count-windows) 2))
-           (message "[You need exactly 2 windows to toggle the window split]"))
-          (t
-           (let* ((this-win-buffer (window-buffer))
-                  (next-win-buffer (window-buffer (next-window)))
-                  (this-win-edges (window-edges (selected-window)))
-                  (next-win-edges (window-edges (next-window)))
-                  (this-win-2nd (not (and (<= (car this-win-edges)
-                                              (car next-win-edges))
-                                          (<= (cadr this-win-edges)
-                                              (cadr next-win-edges)))))
-                  (splitter
-                   (if (= (car this-win-edges)
-                          (car (window-edges (next-window))))
-                       'split-window-right
-                     'split-window-below)))
-             (delete-other-windows)
-             (let ((first-win (selected-window)))
-               (funcall splitter)
-               (if this-win-2nd (other-window 1))
-               (set-window-buffer (selected-window) this-win-buffer)
-               (set-window-buffer (next-window) next-win-buffer)
-               (select-window first-win)
-               (if this-win-2nd (other-window 1)))))))
-
-  (global-set-key (kbd "C-c |") #'leuven-toggle-window-split)
+    ;; Toggle between side-by-side and top-and-bottom window layouts.
+    (global-set-key (kbd "C-c |") #'transpose-frame))
 #+end_src
 
 ** Dedicated windows
@@ -8971,8 +8925,17 @@ Balanced editing: inserting two matching parentheses at once, etc.
   ;; Always comment out empty lines.
   (setq comment-empty-lines t)
 
+  (defun boost-comment-dwim (beg end)
+    "Comment or uncomment region, or current line if no region is active."
+    (interactive "R")
+    (if beg
+        (comment-dwim nil)
+      (comment-or-uncomment-region
+       (line-beginning-position)
+       (line-end-position))))
+
   ;; Make `M-;' comment or uncomment the current line when no region is active.
-  (global-set-key [remap comment-dwim] #'comment-line)
+  (global-set-key (kbd "M-;") #'boost-comment-dwim)
 #+end_src
 
 ** Documentation Lookup
@@ -9285,167 +9248,6 @@ Unlike ~subword-mode~, ~glasses-mode~ is purely visual: it changes only the disp
 of identifiers, not cursor movement, editing commands, or the file contents.
 
 ** C and related modes
-
-*** Eclim
-
-[[http://eclim.org/][Eclim]] provides the ability to *bring [[http://www.eclipse.org/][Eclipse]] code editing features* (to Vim, but
-also to other editors thanks to third party clients):
-
-- "true" *code completion* (i.e., only context-sensitive completions),
-- *code validation* (report any validation errors found),
-- searching for declarations or references, and
-- [[http://eclim.org/features.html][many more]].
-
-The initial goal was to provide Eclipse *Java* functionality, but support for
-various other languages (*C/C++*, HTML/CSS, Groovy, JavaScript, *PHP*, *Python*, *Ruby*,
-XML/DTD/XSD, etc.) has been added.
-
-See https://github.com/senny/emacs-eclim/issues/178.
-
-**** Download / install
-
-1. Install [[http://www.eclipse.org/downloads/][Eclipse]].
-2. Install [[http://eclim.org/install.html][Eclim]] (see ~vim.skip~ and ~vim.skip.hint~).
-3. Install [[https://github.com/senny/emacs-eclim][Emacs-eclim]] from MELPA.
-
-**** Getting started
-
-You should *create an Eclipse project first*, and then you can create a Java file
-and open it in Emacs. Open plain Java file without creating an Eclipse project
-will not work.
-
-#+begin_note
-"Could not find eclipse project for <file>.java"?  Are you using *Cygwin Emacs*
-with a Windows Java installation?  ~/cygdrive~ paths won't be understood...
-#+end_note
-
-**** The Eclim daemon
-
-Eclimd (Eclim's daemon) can run without a graphical Eclipse, but you can also
-run it from plain Eclipse. So whenever you need some eclipse's functionalities
-that aren't (yet) supported by either ~emacs-eclim~ or ~eclim~, you can switch to it
-(e.g. the debugger or the profiler).
-
-**** [[http://eclim.org/faq.html][FAQ / Troubleshooting]]
-
-To tell eclim *which Eclipse workspace to use*, you can start eclimd like so:
-
-#+begin_src shell :tangle no
-eclimd -Dosgi.instance.area.default=@user.home/another_workspace
-#+end_src
-
-**** Core functionality
-
-- ~M-x eclim-project-build~ ::
-     Triggers a *build* of *the current project*.
-
-- M-x eclim-run-class ::
-     *Run the current class*.
-
-- ~C-c C-e t~ (or ~M-x eclim-run-junit~) ::
-     *Run* the current *JUnit* class or method at point.
-
-Browsing:
-
-- C-c C-e h (M-x eclim-java-hierarchy) ::
-     Class hierarchy tree.
-
-- C-c C-e f t (M-x eclim-java-find-type) ::
-     Types.
-
-- ~C-c C-e f d~ (~M-x eclim-java-find-declaration~ or ~M-.~ in Emacs-Leuven) ::
-     *Find* and display the *declaration* of the *Java identifier at point*.
-
-- ~C-c C-e f r~ (~M-x eclim-java-find-references~) ::
-     *Find* and display *references* for the *Java identifier at point*
-     = list callers.
-     = Find Usages?
-
-Problems and Errors:
-
-- ~C-c C-e b~ (~M-x eclim-problems~) ::
-     *Show current compilation problems* in a separate window.
-
-- ~C-c C-e o~ (~M-x eclim-problems-open~) ::
-     Opens a new window inside the current frame showing the current project
-     *compilation problems*.
-
-Projects:
-
-- ~C-c C-e p c~ (~M-x eclim-project-create~) ::
-     Not documented.
-
-- ~M-x eclim-manage-projects~ ::
-     *Manage all your eclim projects* in one buffer.
-
-#+begin_src emacs-lisp
-  ;; An interface to the Eclipse IDE.
-  (with-eval-after-load 'emacs-eclim-autoloads-XXX
-
-    ;; Enable Eclim mode in Java.
-    (add-hook 'java-mode-hook #'eclim-mode))
-
-  (with-eval-after-load 'eclim
-
-    ;; Find Eclim installation.
-    (setq eclim-executable
-          (or (executable-find "eclim")
-              (concat leuven--windows-program-files-dir "eclipse/eclim.bat")))
-    ;; (setq eclim-executable "C:/PROGRA~2/eclipse/eclim.bat")
-    ;; (setq eclim-executable "C:/Users/Fabrice/Downloads/eclipse/eclim.bat")
-
-    ;; (add-to-list 'eclim-eclipse-dirs
-    ;;              (concat leuven--windows-program-files-dir "eclipse/eclim"))
-
-    ;; Print debug messages.
-    (setq eclim-print-debug-messages t)
-
-    ;; Add key binding.
-    (define-key eclim-mode-map (kbd "M-.") #'eclim-java-find-declaration)
-#+end_src
-
-#+begin_src emacs-lisp
-    ;; Display compilation error messages in the echo area.
-    (setq help-at-pt-display-when-idle t)
-    (setq help-at-pt-timer-delay 0.1)
-    (help-at-pt-set-timer)
-#+end_src
-
-#+begin_src emacs-lisp
-    ;; Add the emacs-eclim source.
-    (require 'ac-emacs-eclim-source)
-
-    ;;! Limit `ac-sources' to Eclim source.
-    (defun ac-emacs-eclim-java-setup ()
-      (setq ac-sources '(ac-source-emacs-eclim)))
-   ;; (setq ac-sources (delete 'ac-source-words-in-same-mode-buffers ac-sources))
-
-    (ac-emacs-eclim-config)
-#+end_src
-
-https://github.com/senny/emacs-eclim/wiki/Code-Completion
-
-#+begin_note
-There are 2 Eclim Company-mode backends:
-- ~company-eclim~, the built-in one.
-- ~company-emacs-eclim~, which is a bit more feature-rich (it uses YASnippet, for
-  instance), and also a bit buggier.
-#+end_note
-
-See http://java-coders.com/p/tsdh/emacs-eclim for Company.
-
-#+begin_src emacs-lisp
-    ;; Configure company-mode.
-    (require 'company-emacs-eclim)
-    (company-emacs-eclim-setup)
-#+end_src
-
-#+begin_src emacs-lisp
-    ;; Control the Eclim daemon from Emacs.
-    (require 'eclimd)
-
-    )
-#+end_src
 
 ** Java
 
@@ -12252,21 +12054,26 @@ See [[id:4b262301-5370-40c6-8da6-019215634e20][completion for symbol names]].
 
 ** Code Completion
 
-However, there are 3 amazing "intelligent guessing completion frameworks" in
-Emacs:
+Emacs offers several completion systems.
 
-- "Hippie" expansion,
-- Auto-Complete and
-- Company.
+`hippie-expand' is a powerful built-in expansion command capable of completing
+words, symbols, lines, and code fragments.
 
-Hippe-expand is great (can complete whole code blocks for you, making it possible
-to e.g. cycle through all if-tests in your projects).
+Modern Emacs completion is based on Completion At Point Functions (CAPF).
+Corfu provides a lightweight and fast completion UI on top of CAPF and works
+well with Eglot, Vertico, Orderless, and Cape.
 
-But Auto-Complete and Company mode are even better. They'll give you a nice
-IntelliSense style menu, will "learn" as you use it, and allows you to define
-a file with the completions you'd like to be available in the various languages.
+Company Mode remains a mature and popular completion framework, but for new
+Emacs configurations Corfu is often the preferred choice.
 
-I prefer Company over Auto-Complete but YMMV.
+Auto-Complete is largely obsolete and has been superseded by Company and
+CAPF-based solutions.
+
+Both Corfu and Company are excellent choices.
+
+- "intelligent guessing completion frameworks" with nice IntelliSense style
+  menu?
+- will "learn" as you use it?
 
 *** "Hippie" expansion (Autotype)
 
@@ -12335,196 +12142,9 @@ Configure Hippie-expand to also expand YASnippets (on the key used by
                                         ; top of the list.
 #+end_src
 
-*** Auto-Complete ("IntelliSensy" completion when writing code)
-
-Auto-Complete shows completions as you type, so you can fill in long words by
-typing only a few characters -- really brilliant!
-
-Auto-complete uses the variable ~ac-modes~ to decide whether to enable
-auto-completion in a particular mode; by default, ~org-mode~ (which interprets the
-~TAB~ key) is not present in this list. So, to enable auto-completion in Org
-mode, simply add it to the ~ac-modes~:
-
-#+begin_example
-(add-to-list 'ac-modes 'org-mode)
-#+end_example
-
-Popups:
-
-- *Completion menu*
-
-  Candidates suffix:
-  + (nothing) -- means it is buffer string cache complete.
-  + ~v~ -- Variable
-  + ~f~ -- Function
-  + ~s~ -- Symbol
-  + ~c~ -- Constant
-  + ~a~ -- Abbrev, YASnippet
-  + ~d~ -- Dictionary, environment variable (e.g. ~LC_CTYPE~)
-  + ~m~ -- Module
-
-- *Quick help* (tooltip appearing at the side of the completion menu)
-
-According to the default settings, completion is done by ~TAB~ or ~RET~:
-
-- ~ac-expand~ (~TAB~) ::
-     Select candidates in cycle.
-
-- ~ac-complete~ (~RET~) ::
-     Complete a selected candidate immediately.
-
-There are other ways to select candidates:
-- ~M-1~ to select candidate 1,
-- ~M-2~ to select candidate 2,
-- and so on (until 9).
-
-Other operations are enabled temporarily *once the completion is started*:
-
-- ~C-n~ or ~C-p~ ::
-     Proceed to the *next match* or to the *previous match*.
-
-- ~C-s~ (~ac-isearch~) ::
-     *Filter* completion candidates.
-
-- ~<C-down>~ or ~C-M-n~ (~ac-quick-help-scroll-down~) ::
-     Scroll down quick help.
-
-- ~<C-up>~ or ~C-M-p~ (~ac-quick-help-scroll-up~) ::
-     Scroll up quick help.
-
-- ~<F1>~ (or ~C-?~, ~ac-help~) ::
-     Show additional *help* (for functions, arguments and objects) in *temporary
-     buffer*.
-
-     Use ~C-M-v~ (or ~C-M-S-v~) to scroll down (or up).
-
-- ~M-<F1>~ (or ~C-M-?~, ~ac-persist-help~) ::
-     Show additional *help* in *persistent buffer*.
-
-Eventually, see [[http://stackoverflow.com/questions/19900949/how-to-make-auto-complete-work-with-yasnippet-and-abbrev][How to make auto-complete work with yasnippet and abbrev?]]
-
-#+begin_src emacs-lisp :tangle no
-;; Let's have snippets in the auto-complete dropdown
-(add-to-list 'ac-sources 'ac-source-yasnippet)
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; Auto Completion.
-  (with-eval-after-load 'auto-complete-autoloads-XXX
-    (idle-require 'auto-complete-config)
-
-    (global-set-key (kbd "C-/")     #'auto-complete)
-    (global-set-key (kbd "C-S-SPC") #'auto-complete))
-
-  (with-eval-after-load 'auto-complete-config
-
-    ;; 6.1 Set a list of sources to use (by default + for some major modes)
-    (ac-config-default))                ; ... and enable Auto-Complete mode in
-                                        ; all buffers.
-
-  (with-eval-after-load 'auto-complete
-                                        ; Required by ESS.
-
-    ;; 5.4 Completion will be started automatically by inserting 1 character.
-    (setq ac-auto-start 1)              ; Also applies on arguments after
-                                        ; opening parenthesis in ESS.
-
-    ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
-    ;; displayed).
-    (setq ac-use-menu-map t)
-
-    ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<tab>")   #'ac-complete)
-
-    ;; ;; Completion by RET.
-    ;; (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
-
-    ;; Unbind some keys (inconvenient in Comint buffers).
-    (define-key ac-completing-map (kbd "M-n")     nil)
-    (define-key ac-completing-map (kbd "M-p")     nil)
-
-    (define-key ac-completing-map (kbd "C-h")     #'ac-help)
-
-    ;; Abort.
-    (define-key ac-completing-map (kbd "C-g")     #'ac-stop)
-    (define-key ac-completing-map (kbd "<left>")  #'ac-stop)
-    ;; (define-key ac-completing-map (kbd "<right>") #'ac-stop)
-
-    ;; Extend the `ac-modes' list with additional modes.
-    (setq ac-modes
-          (append ac-modes
-                  '(change-log-mode
-                    latex-mode
-                    ;; org-mode
-                    prog-mode           ; Programming modes.
-                    snippet-mode
-                    sql-mode
-                    text-mode)))
-
-    ;; 7.9 Just ignore case.
-    (setq ac-ignore-case t)             ; ???
-
-    ;; 8.1 Delay to completions will be available.
-    (setq ac-delay 0)                   ; Faster than default 0.1.
-    ;; Eclipse uses 500ms?
-
-    ;; 8.2 Completion menu will be automatically shown.
-    (setq ac-auto-show-menu 0.2)        ; [Default: 0.8].
-
-    ;; 8.13 Delay to show quick help.
-    (setq ac-quick-help-delay 0.5)
-
-    ;; 8.15 Max height of quick help.
-    (setq ac-quick-help-height 10)      ; Same as `ac-menu-height'.
-
-    ;; 8.16 Limit on number of candidates.
-    (setq ac-candidate-limit 100)
-
-    ;; (setq ac-disable-inline t)
-    ;; (setq ac-candidate-menu-min 0)
-
-    ;; 11.1 Avoid Flyspell processes when auto completion is being started.
-    (ac-flyspell-workaround)
-#+end_src
-
-#+begin_src emacs-lisp
-)
-#+end_src
-
-XXX Test the following.
-
-#+begin_src emacs-lisp :tangle no
-    ;; Enable the drop down auto complete inside comment lines.
-    (setq ac-disable-faces nil)
-#+end_src
-
-Integration of YASnipets:
-https://github.com/joaotavora/yasnippet/issues/526
-
 *** Company ("COMPlete ANYthing")
 
-The best alternative to Auto-Complete seems to be Company mode.
-
-#+begin_src emacs-lisp
-(defun toggle-auto-complete-company-modes ()
-  "Toggle beteen AC and Company modes."
-  (interactive)
-  (if auto-complete-mode
-      (progn
-        (auto-complete-mode -1)
-        (company-mode 1)
-        (message "[Disable AC. Enable Company]")
-        (sit-for 0.75))
-    (auto-complete-mode 1)
-    (company-mode -1)
-    (message "[Disable Company. Enable AC]")
-    (sit-for 0.75)))
-
-(global-set-key (kbd "M-<f1>") #'toggle-auto-complete-company-modes)
-#+end_src
-
-Besides that the maintainer of company-mode is incredibly competent and
-friendly,
+The maintainer of company-mode is incredibly competent and friendly,
 
 - Company mode is super easy to extend (whereas you often have to write 3-4
   times as much code to get the equivalent functionality out of AC backend);
@@ -15207,9 +14827,6 @@ particular color...
         '(
           ;; Tell AUCTeX that the current file is the master document.
           (TeX-master . t)
-
-          ;; Specify auto-complete sources.
-          (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
 
           ;; Initialize packages for flycheck-mode.
           (flycheck-emacs-lisp-initialize-packages . t)

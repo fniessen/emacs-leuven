@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260907.1445>
+;; Version: <20260908.0940>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260907.1445>"
+(defconst boost-version "<20260908.0940>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -458,7 +458,6 @@ to it. Otherwise call FUNCTION interactively."
         ant
         anzu
         auctex
-        ;; auto-complete
         auto-highlight-symbol
         auto-package-update
         avy
@@ -477,7 +476,6 @@ to it. Otherwise call FUNCTION interactively."
         diminish
         docker-compose-mode
         dumb-jump
-        ;; emacs-eclim
         emr
         exec-path-from-shell
         expand-region
@@ -487,7 +485,7 @@ to it. Otherwise call FUNCTION interactively."
         fuzzy
         ;; git-commit-insert-issue
         git-messenger
-        ;; git-timemachine
+        git-timemachine
         google-translate
         goto-chg
         gptel
@@ -536,6 +534,7 @@ to it. Otherwise call FUNCTION interactively."
         symbol-overlay
         tern
         toc-org
+        transpose-frame
         ;; undo-tree
         use-package
         volatile-highlights
@@ -732,7 +731,8 @@ to it. Otherwise call FUNCTION interactively."
   ;; Bind F11 to a conventional IDE-style undo command.
   (global-set-key (kbd "<f11>") #'undo-only)
 
-  ;; Bind S-F11 to redo the last undone change.
+  ;; Redo the last undone change.
+  (global-set-key (kbd "C-S-z")   #'undo-redo)
   (global-set-key (kbd "S-<f11>") #'undo-redo)
 
   ;; Configuration for undo-tree.
@@ -2343,7 +2343,8 @@ Otherwise, stop the current recording."
     :defer t
     :init
     ;; Load autorevert after 2 seconds of idle time.
-    (run-with-idle-timer 2 nil (lambda () (require 'autorevert)))
+    (run-with-idle-timer 2 nil (lambda ()
+                                 (require 'autorevert)))
     :config
     ;; This runs when autorevert is loaded.
     ;; Enable Global Auto-Revert mode to auto-refresh buffers.
@@ -3095,76 +3096,23 @@ When multiple windows are present, select the next window."
 
   (leuven--section "21.5 (emacs)Change Window")
 
-  (defun boost-toggle-window-split ()
-    "Toggle between a single window and a two-window layout.
-
-When only one window is present, split it according to
-`split-width-threshold' and select the newly created window.
-
-When multiple windows are present, delete all other windows,
-leaving only the currently selected window visible."
+  (defun boost-toggle-window-layout ()
+    "Toggle between one window and a sensible two-window layout."
     (interactive)
-    ;; Ignore an active minibuffer window.
     (if (one-window-p t)
-        (select-window
-         (if (> (frame-width) split-width-threshold)
-             (split-window-right)
-           (split-window-below)))
+        (when-let* ((window (split-window-sensibly)))
+          (select-window window))
       (delete-other-windows)))
 
-  (global-set-key (kbd "<f5>") #'boost-toggle-window-split)
+  (global-set-key (kbd "<f5>") #'boost-toggle-window-layout)
 
-  ;; Swap 2 windows.
-  (defun leuven-swap-windows ()
-    "If you have 2 windows, swap them."
-    (interactive)
-    (cond ((not (= (count-windows) 2))
-           (message "[You need exactly 2 windows to swap them]"))
-          (t
-           (let* ((wind-1 (first (window-list)))
-                  (wind-2 (second (window-list)))
-                  (buf-1 (window-buffer wind-1))
-                  (buf-2 (window-buffer wind-2))
-                  (start-1 (window-start wind-1))
-                  (start-2 (window-start wind-2)))
-             (set-window-buffer wind-1 buf-2)
-             (set-window-buffer wind-2 buf-1)
-             (set-window-start wind-1 start-2)
-             (set-window-start wind-2 start-1)))))
+  (when (boost--try-require 'transpose-frame)
 
-  (global-set-key (kbd "C-c ~") #'leuven-swap-windows)
+    ;; Swap the left/right positions of the windows in the current frame.
+    (global-set-key (kbd "C-c ~") #'flop-frame)
 
-  (defun leuven-toggle-window-split ()
-    "Toggle between vertical and horizontal split.
-  Vertical split shows more of each line, horizontal split shows more lines.
-  This code only works for frames with exactly two windows."
-    (interactive)
-    (cond ((not (= (count-windows) 2))
-           (message "[You need exactly 2 windows to toggle the window split]"))
-          (t
-           (let* ((this-win-buffer (window-buffer))
-                  (next-win-buffer (window-buffer (next-window)))
-                  (this-win-edges (window-edges (selected-window)))
-                  (next-win-edges (window-edges (next-window)))
-                  (this-win-2nd (not (and (<= (car this-win-edges)
-                                              (car next-win-edges))
-                                          (<= (cadr this-win-edges)
-                                              (cadr next-win-edges)))))
-                  (splitter
-                   (if (= (car this-win-edges)
-                          (car (window-edges (next-window))))
-                       'split-window-right
-                     'split-window-below)))
-             (delete-other-windows)
-             (let ((first-win (selected-window)))
-               (funcall splitter)
-               (if this-win-2nd (other-window 1))
-               (set-window-buffer (selected-window) this-win-buffer)
-               (set-window-buffer (next-window) next-win-buffer)
-               (select-window first-win)
-               (if this-win-2nd (other-window 1)))))))
-
-  (global-set-key (kbd "C-c |") #'leuven-toggle-window-split)
+    ;; Toggle between side-by-side and top-and-bottom window layouts.
+    (global-set-key (kbd "C-c |") #'transpose-frame))
 
   (defun toggle-current-window-dedication ()
     "Toggle whether the current active window is dedicated or not."
@@ -4769,8 +4717,17 @@ the parent element."
   ;; Always comment out empty lines.
   (setq comment-empty-lines t)
 
+  (defun boost-comment-dwim (beg end)
+    "Comment or uncomment region, or current line if no region is active."
+    (interactive "R")
+    (if beg
+        (comment-dwim nil)
+      (comment-or-uncomment-region
+       (line-beginning-position)
+       (line-end-position))))
+
   ;; Make `M-;' comment or uncomment the current line when no region is active.
-  (global-set-key [remap comment-dwim] #'comment-line)
+  (global-set-key (kbd "M-;") #'boost-comment-dwim)
 
 ;;** 27.6 (info "(emacs)Documentation") Lookup
 
@@ -4914,54 +4871,6 @@ corresponding region."
 
     ;; Set properties of glasses overlays.
     (glasses-set-overlay-properties))
-
-  ;; An interface to the Eclipse IDE.
-  (with-eval-after-load 'emacs-eclim-autoloads-XXX
-
-    ;; Enable Eclim mode in Java.
-    (add-hook 'java-mode-hook #'eclim-mode))
-
-  (with-eval-after-load 'eclim
-
-    ;; Find Eclim installation.
-    (setq eclim-executable
-          (or (executable-find "eclim")
-              (concat leuven--windows-program-files-dir "eclipse/eclim.bat")))
-    ;; (setq eclim-executable "C:/PROGRA~2/eclipse/eclim.bat")
-    ;; (setq eclim-executable "C:/Users/Fabrice/Downloads/eclipse/eclim.bat")
-
-    ;; (add-to-list 'eclim-eclipse-dirs
-    ;;              (concat leuven--windows-program-files-dir "eclipse/eclim"))
-
-    ;; Print debug messages.
-    (setq eclim-print-debug-messages t)
-
-    ;; Add key binding.
-    (define-key eclim-mode-map (kbd "M-.") #'eclim-java-find-declaration)
-
-    ;; Display compilation error messages in the echo area.
-    (setq help-at-pt-display-when-idle t)
-    (setq help-at-pt-timer-delay 0.1)
-    (help-at-pt-set-timer)
-
-    ;; Add the emacs-eclim source.
-    (require 'ac-emacs-eclim-source)
-
-    ;;! Limit `ac-sources' to Eclim source.
-    (defun ac-emacs-eclim-java-setup ()
-      (setq ac-sources '(ac-source-emacs-eclim)))
-   ;; (setq ac-sources (delete 'ac-source-words-in-same-mode-buffers ac-sources))
-
-    (ac-emacs-eclim-config)
-
-    ;; Configure company-mode.
-    (require 'company-emacs-eclim)
-    (company-emacs-eclim-setup)
-
-    ;; Control the Eclim daemon from Emacs.
-    (require 'eclimd)
-
-    )
 
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
 
@@ -5996,101 +5905,6 @@ With prefix ARG, invoke `vc-diff' instead."
                    'yas-hippie-try-expand)))
                                         ; Makes more sense when placed at the
                                         ; top of the list.
-
-  ;; Auto Completion.
-  (with-eval-after-load 'auto-complete-autoloads-XXX
-    (idle-require 'auto-complete-config)
-
-    (global-set-key (kbd "C-/")     #'auto-complete)
-    (global-set-key (kbd "C-S-SPC") #'auto-complete))
-
-  (with-eval-after-load 'auto-complete-config
-
-    ;; 6.1 Set a list of sources to use (by default + for some major modes)
-    (ac-config-default))                ; ... and enable Auto-Complete mode in
-                                        ; all buffers.
-
-  (with-eval-after-load 'auto-complete
-                                        ; Required by ESS.
-
-    ;; 5.4 Completion will be started automatically by inserting 1 character.
-    (setq ac-auto-start 1)              ; Also applies on arguments after
-                                        ; opening parenthesis in ESS.
-
-    ;; 7.5 Use `C-n/C-p' to select candidates (only when completion menu is
-    ;; displayed).
-    (setq ac-use-menu-map t)
-
-    ;; Completion by TAB.
-    (define-key ac-completing-map (kbd "<tab>")   #'ac-complete)
-
-    ;; ;; Completion by RET.
-    ;; (define-key ac-completing-map (kbd "<RET>") #'ac-complete)
-
-    ;; Unbind some keys (inconvenient in Comint buffers).
-    (define-key ac-completing-map (kbd "M-n")     nil)
-    (define-key ac-completing-map (kbd "M-p")     nil)
-
-    (define-key ac-completing-map (kbd "C-h")     #'ac-help)
-
-    ;; Abort.
-    (define-key ac-completing-map (kbd "C-g")     #'ac-stop)
-    (define-key ac-completing-map (kbd "<left>")  #'ac-stop)
-    ;; (define-key ac-completing-map (kbd "<right>") #'ac-stop)
-
-    ;; Extend the `ac-modes' list with additional modes.
-    (setq ac-modes
-          (append ac-modes
-                  '(change-log-mode
-                    latex-mode
-                    ;; org-mode
-                    prog-mode           ; Programming modes.
-                    snippet-mode
-                    sql-mode
-                    text-mode)))
-
-    ;; 7.9 Just ignore case.
-    (setq ac-ignore-case t)             ; ???
-
-    ;; 8.1 Delay to completions will be available.
-    (setq ac-delay 0)                   ; Faster than default 0.1.
-    ;; Eclipse uses 500ms?
-
-    ;; 8.2 Completion menu will be automatically shown.
-    (setq ac-auto-show-menu 0.2)        ; [Default: 0.8].
-
-    ;; 8.13 Delay to show quick help.
-    (setq ac-quick-help-delay 0.5)
-
-    ;; 8.15 Max height of quick help.
-    (setq ac-quick-help-height 10)      ; Same as `ac-menu-height'.
-
-    ;; 8.16 Limit on number of candidates.
-    (setq ac-candidate-limit 100)
-
-    ;; (setq ac-disable-inline t)
-    ;; (setq ac-candidate-menu-min 0)
-
-    ;; 11.1 Avoid Flyspell processes when auto completion is being started.
-    (ac-flyspell-workaround)
-
-)
-
-(defun toggle-auto-complete-company-modes ()
-  "Toggle beteen AC and Company modes."
-  (interactive)
-  (if auto-complete-mode
-      (progn
-        (auto-complete-mode -1)
-        (company-mode 1)
-        (message "[Disable AC. Enable Company]")
-        (sit-for 0.75))
-    (auto-complete-mode 1)
-    (company-mode -1)
-    (message "[Disable Company. Enable AC]")
-    (sit-for 0.75)))
-
-(global-set-key (kbd "M-<f1>") #'toggle-auto-complete-company-modes)
 
   ;; Modular text completion framework.
   (with-eval-after-load 'company-autoloads
@@ -7265,9 +7079,6 @@ This example lists Azerty layout second row keys."
         '(
           ;; Tell AUCTeX that the current file is the master document.
           (TeX-master . t)
-
-          ;; Specify auto-complete sources.
-          (ac-sources . (ac-source-words-in-buffer ac-source-dictionary))
 
           ;; Initialize packages for flycheck-mode.
           (flycheck-emacs-lisp-initialize-packages . t)
