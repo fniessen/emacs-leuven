@@ -810,7 +810,6 @@ like this into your configuration file:
         volatile-highlights
         web-mode
         wgrep
-        which-key
         ws-butler
         yasnippet
         ztree)
@@ -1362,17 +1361,11 @@ Emacs). XXX Could we set ~Info-default-directory-list~ instead???
 
 #+begin_src emacs-lisp
   (with-eval-after-load 'info
-    ;; List of directories to search for Info documentation files (in the order
-    ;; they are listed).
-    (when lvn--win32-p
-      ;; (info-initialize)
-      (let ((org-info-dir (expand-file-name
-                           (concat (file-name-directory (locate-library "org")) "../doc/"))))
-        (when (file-directory-p org-info-dir)
-          (add-to-list 'Info-directory-list org-info-dir :append)))
-      (let ((cygwin-info-dir "c:/cygwin/usr/share/info/"))
-        (when (file-directory-p cygwin-info-dir)
-          (add-to-list 'Info-directory-list cygwin-info-dir :append))))
+    ;; Ensure standard Emacs Info directories are present (Linux, WSL, macOS).
+    (dolist (dir '("/usr/share/info/"
+                   "/usr/local/share/info/"))
+      (when (file-directory-p dir)
+        (add-to-list 'Info-directory-list dir :append)))
 #+end_src
 
 ~Info+~ fontifies entries for reference items (functions, macros, commands,
@@ -1383,14 +1376,14 @@ With ~Info+~, you can also merge an Info node with its subnodes into the same
 buffer, by calling ~Info-merge-subnodes~ (bound to ~+~).
 
 #+begin_src emacs-lisp
-  (with-eval-after-load 'info+-autoloads
-    (idle-require 'info+)
-    (with-eval-after-load 'info+
-      ;; Show breadcrumbs in the header line.
-      (setq Info-breadcrumbs-in-header-flag t)
+    (with-eval-after-load 'info+-autoloads
+      (idle-require 'info+)
+      (with-eval-after-load 'info+
+        ;; Show breadcrumbs in the header line.
+        (setq Info-breadcrumbs-in-header-flag t)
 
-      ;; Don't show breadcrumbs in the mode line.
-      (setq Info-breadcrumbs-in-mode-line-mode nil)))
+        ;; Don't show breadcrumbs in the mode line.
+        (setq Info-breadcrumbs-in-mode-line-mode nil)))
 #+end_src
 
 In an Info page, ~w~ (~M-x Info-copy-current-node-name~) will copy the reference to
@@ -1814,38 +1807,9 @@ This is inspired by the classic "slick-copy/slick-cut" behavior:
 | Emacs         | C-S-d                       |
 
 #+begin_src emacs-lisp
-  (defun boost-duplicate-line-or-region (beg end)
-    "Duplicate the current line, or the active region if any.
+  (global-set-key (kbd "C-S-d") #'duplicate-dwim)
 
-When a region is active, duplicate it immediately after its end,
-keep the duplicated text selected, and briefly highlight it.
-
-When no region is active, duplicate the current line below, place
-point on the duplicated line, and briefly highlight it."
-    (interactive "R")                   ; Emacs 31.1.
-    (let* ((regionp beg)
-           (beg (if regionp
-                    beg
-                  (line-beginning-position)))
-           (end (if regionp
-                    end
-                  (line-beginning-position 2)))
-           (col (current-column))
-           (text (buffer-substring-no-properties beg end))
-           new-beg new-end)
-      (goto-char end)
-      (setq new-beg (point))
-      (insert text)
-      (setq new-end (point))
-      (pulse-momentary-highlight-region new-beg new-end)
-      (if regionp
-          (progn
-            (goto-char new-end)
-            (push-mark new-beg t t))
-        (goto-char new-beg)
-        (move-to-column col))))
-
-  (global-set-key (kbd "C-S-d") #'boost-duplicate-line-or-region)
+  ;; (setq duplicate-region-final-position 0)
 #+end_src
 
 *** Highlighting duplicate lines
@@ -5874,6 +5838,327 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
     ;; Don't save each buffer you edit when editing is complete.
     (setq helm-multi-swoop-edit-save nil))
 #+end_src
+
+*** Vertico
+
+#+begin_src emacs-lisp :tangle no
+(when (require 'consult)
+  ;; (global-set-key (kbd "M-y") #'consult-yank-pop)
+
+  (global-set-key (kbd "C-x b") #'consult-buffer)
+)
+
+;; M-x
+;; (global-set-key [remap execute-extended-command]
+;;                 #'consult-mode-command)
+;; (global-set-key (kbd "M-x")
+;;                 #'consult-mode-command)
+
+(setq read-extended-command-predicate nil)
+
+(global-set-key (kbd "M-x") #'execute-extended-command)
+
+
+(when (require 'consult)
+
+  ;; C-x b
+  (add-to-list 'consult-buffer-sources
+               'consult-source-locate t)
+
+  (global-set-key (kbd "C-x b") #'consult-buffer)
+
+  (global-set-key (kbd "C-c l") #'consult-locate)
+  (global-set-key (kbd "C-c f") #'consult-find)
+  )
+#+end_src
+
+- M-y              -> consult-yank-pop
+- M-x              -> Vertico
+- consult-buffer   -> helm-mini
+- consult-line     -> helm-occur
+- consult-ripgrep  -> helm-rg
+
+Point important :
+
+- *Vertico* = affichage / navigation dans les candidats
+- *Orderless* = algorithme de correspondance
+- (*Marginalia* = annotations, optionnel)
+- (*Consult* = commandes améliorées, optionnel)
+
+#+begin_src emacs-lisp :tangle no
+;;; ---------------------------------------------------------------------------
+;;; Vertico + Orderless + Consult + Marginalia + Embark (remplace Helm)
+;;; ---------------------------------------------------------------------------
+
+;; --- Vertico : UI de complétion verticale dans le minibuffer -------------
+
+(with-eval-after-load 'vertico-autoloads
+  (vertico-mode 1))
+
+(with-eval-after-load 'vertico
+  ;; Affiche l'entrée dans la header-line
+  ;; (équivalent approximatif de helm-echo-input-in-header-line).
+  ;; Vertico affiche déjà le prompt en tête.
+  ;;
+  ;; Optionnel : cycle en haut/bas de liste.
+  (setq vertico-cycle t))
+
+(when (require 'vertico-buffer nil t)
+  (vertico-buffer-mode 1))
+
+(setq vertico-group-format
+      (concat "\n"
+              (propertize "  " 'face 'vertico-group-separator)
+              (propertize " %s " 'face 'vertico-group-title)
+              (propertize " " 'face 'vertico-group-separator
+                          'display '(space :align-to right))))
+
+
+;; --- Orderless : filtrage (remplace le matching Helm) --------------------
+
+;; NOTE : fuzzy désactivé côté Helm chez toi.
+;; Orderless effectue un matching par composants séparés par des espaces,
+;; ce qui est proche du comportement souhaité et souvent préférable.
+
+;; (with-eval-after-load 'orderless
+;;   (setq completion-styles '(orderless basic))
+;;   (setq completion-category-overrides
+;;         '((file (styles basic partial-completion)))))
+
+;; À charger tôt :
+(require 'orderless nil t)
+
+(setq completion-styles '(orderless basic))
+
+(setq completion-category-defaults nil)
+
+(setq completion-category-overrides
+      '((file    (styles partial-completion))))
+
+;; --- Marginalia : annotations (docstrings, infos fichiers…) --------------
+
+(with-eval-after-load 'marginalia-autoloads
+  (marginalia-mode 1))
+
+;; --- Savehist : historique (utile pour trier M-x, comme Helm history) ----
+
+(savehist-mode 1)
+
+;;; ---------------------------------------------------------------------------
+;;; Raccourcis (remplacent les global-set-key Helm)
+;;; ---------------------------------------------------------------------------
+
+;; M-x (helm-M-x)
+;; -> execute-extended-command via Vertico (défaut Emacs OK).
+;;
+;; On garde le binding explicite au cas où.
+(global-set-key (kbd "M-x") #'execute-extended-command)
+
+;; Bookmarks (helm-filtered-bookmarks)
+;; -> consult-bookmark
+
+(with-eval-after-load 'consult-autoloads
+  (global-set-key (kbd "C-x r l") #'consult-bookmark))
+
+;; Buffers (helm-mini / helm-buffers-list)
+;; -> consult-buffer
+(global-set-key (kbd "C-x b") #'consult-buffer)
+
+;; helm-mini
+(global-set-key [remap list-buffers] #'consult-buffer)
+
+;; C-x C-b, helm-buffers-list
+
+(boost--set-key-if-free 'global-map
+ (kbd "<f12>") #'consult-buffer
+ "global map")
+
+;; helm-for-files
+;; (fichiers récents + buffers + bookmarks + projets)
+;; -> consult-buffer
+
+;; (global-set-key (kbd "<f3>") #'consult-buffer)
+
+;; (boost--set-key-if-free
+;;  'global-map
+;;  (kbd "<f12>")
+;;  #'consult-buffer
+;;  "global map")
+
+;; kill-ring (helm-show-kill-ring)
+;; -> consult-yank-pop
+(global-set-key (kbd "M-y") #'consult-yank-pop)
+
+;; occur / helm-occur / helm-swoop
+;; -> consult-line
+(global-set-key (kbd "C-o") #'consult-line)
+(global-set-key (kbd "C-c o") #'consult-line)
+(global-set-key (kbd "M-s o") #'consult-line)
+
+;; multi-swoop
+;; -> consult-line-multi
+(global-set-key (kbd "M-s O") #'consult-line-multi)
+(global-set-key (kbd "M-s /") #'consult-line-multi)
+
+;; multi-occur pendant Isearch
+;; (M-o était helm-multi-swoop-all)
+
+(define-key isearch-mode-map (kbd "M-o") #'consult-line-multi)
+
+;; helm-swoop-from-isearch
+;; -> consult-line (poursuivre depuis Isearch)
+(define-key isearch-mode-map (kbd "C-o") #'consult-line)
+
+;; imenu (helm-imenu / helm-semantic-or-imenu)
+;; -> consult-imenu
+(global-set-key [remap imenu] #'consult-imenu)
+
+;; Version générique
+;; (org-mode headings sinon imenu),
+;; équivalent de boost-helm-generic-imenu.
+
+(defun boost-consult-generic-imenu (arg)
+  "Jump to a place in the current buffer using the most appropriate index."
+  (interactive "P")
+  (cond
+   ((and (derived-mode-p 'org-mode)
+         (fboundp 'consult-org-heading))
+    (consult-org-heading))
+   (t
+    (consult-imenu))))
+
+(boost--set-key-if-free 'global-map
+ (kbd "C-<f12>") #'boost-consult-generic-imenu
+ "global map")
+
+;; Org headings dans les fichiers agenda
+;; (helm-org-agenda-files-headings)
+;; -> consult-org-agenda
+(with-eval-after-load 'consult-autoloads
+  (when (fboundp 'consult-org-agenda)
+    (boost--set-key-if-free 'global-map
+     (kbd "C-h O") #'consult-org-agenda
+     "global map")))
+
+;; Aide
+;;
+;; helm-apropos
+;; -> apropos-command
+(global-set-key (kbd "C-h a") #'apropos-command)
+
+;; helm-info-emacs
+;; -> info
+(global-set-key (kbd "C-h i") #'info)
+
+;; helm-descbinds
+;; -> embark-bindings
+(with-eval-after-load 'embark-autoloads
+  (global-set-key (kbd "C-h b") #'embark-bindings))
+
+;; Historique comint
+;; (helm-comint-input-ring)
+;; -> consult-history
+(with-eval-after-load 'comint
+  (define-key comint-mode-map (kbd "C-c C-l") #'consult-history))
+
+;;; ---------------------------------------------------------------------------
+;;; Grep / ripgrep (remplace helm-ag / helm-do-grep-ag)
+;;; ---------------------------------------------------------------------------
+
+;; Consult utilise ripgrep (rg) plutôt que ag.
+
+(when (executable-find "rg")
+  ;; helm-do-grep-ag
+  (global-set-key (kbd "M-g a") #'consult-ripgrep)
+
+  ;; helm-ag
+  (global-set-key (kbd "C-c s") #'consult-ripgrep)
+  (global-set-key (kbd "M-s s") #'consult-ripgrep)
+
+  ;; find in project root
+  (global-set-key (kbd "C-S-f") #'consult-ripgrep)
+
+  (global-set-key (kbd "C-M-S-f") #'consult-ripgrep)
+
+  ;; projectile-ag
+  (global-set-key (kbd "C-S-a") #'consult-ripgrep))
+
+;; grep classique
+;; (helm-do-grep)
+
+(global-set-key (kbd "M-g ,") #'consult-grep)
+
+;; helm-ag-this-file
+;; -> consult-line
+
+(global-set-key (kbd "M-g >") #'consult-line)
+
+(with-eval-after-load 'consult
+  ;; Personnalise la commande ripgrep si besoin.
+  ;;
+  ;; consult-ripgrep utilise déjà :
+  ;; --smart-case
+  ;; --no-heading
+  ;; --line-number
+
+  (setq consult-ripgrep-args
+        "rg --null --line-buffered --color=never \
+--max-columns=1000 \
+--path-separator / \
+--smart-case \
+--no-heading \
+--with-filename \
+--line-number")
+
+  ;; Aperçu (preview) au lieu des persistent actions Helm.
+  (setq consult-preview-key 'any))
+
+;;; ---------------------------------------------------------------------------
+;;; Embark : actions sur candidats
+;;; (remplace persistent/select-action Helm)
+;;; ---------------------------------------------------------------------------
+
+;; (with-eval-after-load 'embark-autoloads
+;;
+;;   ;; embark-act = liste/lance des actions sur le candidat courant
+;;   ;; (équivalent de helm-select-action / <backtab>)
+;;
+;;   (define-key minibuffer-local-map
+;;     (kbd "C-z")
+;;     #'embark-act)
+;;
+;;   ;; helm C-z
+;;   (global-set-key (kbd "C-.")
+;;                   #'embark-act)
+;;
+;;   (global-set-key (kbd "C-;")
+;;                   #'embark-dwim))
+
+(with-eval-after-load 'embark
+  (require 'embark-consult nil t))
+
+;;; ---------------------------------------------------------------------------
+;;; Corfu : complétion in-buffer
+;;; (remplace helm-lisp-completion-at-point)
+;;; ---------------------------------------------------------------------------
+
+;; (with-eval-after-load 'corfu-autoloads
+;;   (global-corfu-mode 1))
+
+;; Plus besoin de remapper completion-at-point.
+;; Corfu s'affiche automatiquement sur completion-at-point
+;; (TAB / M-TAB selon la configuration).
+
+;;; ---------------------------------------------------------------------------
+;;; Projectile : système de complétion
+;;; ---------------------------------------------------------------------------
+
+;; Avec Vertico, Projectile utilise le completing-read par défaut.
+
+;; (setq projectile-completion-system 'default)
+#+end_src
+
+
 
 *** Image mode
 
@@ -11922,7 +12207,7 @@ Emacs-Leuven):
 
 See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippet.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     (defvar leuven-contextual-menu-map
       (let ((map (make-sparse-keymap "Contextual menu")))
         (define-key map [help-for-help] (cons "Help" 'help-for-help))
@@ -11943,6 +12228,35 @@ See http://stackoverflow.com/questions/10155181/display-all-snippets-of-yasnippe
         (popup-menu leuven-contextual-menu-map event prefix))
 
     (global-set-key [mouse-3] #'leuven-popup-contextual-menu)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+    ;; ;; Ajoute l'entrée d'aide, le menu du major-mode et l'insertion de snippet
+    ;; ;; YASnippet au menu contextuel construit par `context-menu-mode'.
+    ;; (defun leuven--context-menu-major-mode-and-snippets (menu click)
+    ;;   "Enrichit MENU (le menu contextuel) avec Help, le menu du mode et YASnippet."
+    ;;   (define-key-after menu [separator-leuven] menu-bar-separator)
+    ;;
+    ;;   (define-key-after menu [help-for-help] (cons "Help" 'help-for-help))
+    ;;
+    ;;   (define-key-after menu [leuven-major-mode-menu]
+    ;;     `(menu-item ,(symbol-name major-mode)
+    ;;                 ,(mouse-menu-major-mode-map)
+    ;;                 :visible t))
+    ;;
+    ;;   (when (and (bound-and-true-p yas-minor-mode)
+    ;;              (gethash major-mode yas--menu-table))
+    ;;     (define-key-after menu (vector major-mode)
+    ;;       `(menu-item ,(concat "Insert " (symbol-name major-mode) " snippet")
+    ;;                   ,(gethash major-mode yas--menu-table)
+    ;;                   :visible (yas--show-menu-p ',major-mode))))
+    ;;
+    ;;   menu)
+    ;;
+    ;; (add-hook 'context-menu-functions #'leuven--context-menu-major-mode-and-snippets)
+
+    ;; Active le clic-droit contextuel global (remplace `mouse-save-then-kill').
+    (context-menu-mode 1)
 #+end_src
 
 *** Frequently Asked Questions
@@ -12569,6 +12883,30 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 )                                       ; Chapter 30 ends here.
 #+end_src
 
+*** Corfu
+
+completion-at-point-functions
+  ↳ eglot-completion-at-point
+  ↳ cape-file
+  ↳ cape-dabbrev
+  ↳ elisp-completion-at-point
+
+Corfu = UI
+
+#+begin_src emacs-lisp :tangle no
+(add-hook 'python-mode-hook #'eglot-ensure)
+(add-hook 'java-mode-hook   #'eglot-ensure)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(when (boost--try-require 'corfu)
+  (global-corfu-mode 1))
+
+(when (boost--try-require 'cape)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+#+end_src
+
 * Dired, the Directory Editor
 
 #+begin_src emacs-lisp
@@ -12636,30 +12974,43 @@ Use Emacs's own emulation of ~ls~ in all versions of Emacs.
 
 ** Navigation in the Dired Buffer
 
-In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
-
 #+begin_src emacs-lisp
 ;;** (info "(emacs)Dired Navigation")
 
     (leuven--section "31.2 (emacs)Dired Navigation")
 
+    ;; Keep line-by-line navigation within file lines only.
+    (setq dired-movement-style 'cycle-files)
+#+end_src
+
+In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.
+
+#+begin_src emacs-lisp
     ;; Function to move the cursor to the top of the Dired buffer.
-    (defun lvn-dired-back-to-top ()
+    (defun boost-dired-move-to-first-file ()
+      "Move to the first file line in the Dired buffer.
+
+Position the point past the header lines (the directory name and
+the `total used' line) rather than at the very top."
       (interactive)
       (goto-char (point-min))
-      (dired-next-line 4))
+      (dired-next-line 3))
 
     (define-key dired-mode-map
-                [remap beginning-of-buffer] #'lvn-dired-back-to-top)
+                [remap beginning-of-buffer] #'boost-dired-move-to-first-file)
 
     ;; Function to move the cursor to the bottom of the Dired buffer.
-    (defun lvn-dired-jump-to-bottom ()
+    (defun boost-dired-move-to-last-file ()
+      "Move to the last file line in the Dired buffer.
+
+Position the point on the final entry rather than on the empty
+line at the very bottom."
       (interactive)
       (goto-char (point-max))
       (dired-next-line -1))
 
     (define-key dired-mode-map
-                [remap end-of-buffer] #'lvn-dired-jump-to-bottom)
+                [remap end-of-buffer] #'boost-dired-move-to-last-file)
 #+end_src
 
 #+begin_src emacs-lisp

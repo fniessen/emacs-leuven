@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260908.0940>
+;; Version: <20260908.2039>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260908.0940>"
+(defconst boost-version "<20260908.2039>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -540,7 +540,6 @@ to it. Otherwise call FUNCTION interactively."
         volatile-highlights
         web-mode
         wgrep
-        which-key
         ws-butler
         yasnippet
         ztree)
@@ -864,26 +863,20 @@ to it. Otherwise call FUNCTION interactively."
   ;; (global-set-key (kbd "C-<f1>") #'info-lookup-symbol)
 
   (with-eval-after-load 'info
-    ;; List of directories to search for Info documentation files (in the order
-    ;; they are listed).
-    (when lvn--win32-p
-      ;; (info-initialize)
-      (let ((org-info-dir (expand-file-name
-                           (concat (file-name-directory (locate-library "org")) "../doc/"))))
-        (when (file-directory-p org-info-dir)
-          (add-to-list 'Info-directory-list org-info-dir :append)))
-      (let ((cygwin-info-dir "c:/cygwin/usr/share/info/"))
-        (when (file-directory-p cygwin-info-dir)
-          (add-to-list 'Info-directory-list cygwin-info-dir :append))))
+    ;; Ensure standard Emacs Info directories are present (Linux, WSL, macOS).
+    (dolist (dir '("/usr/share/info/"
+                   "/usr/local/share/info/"))
+      (when (file-directory-p dir)
+        (add-to-list 'Info-directory-list dir :append)))
 
-  (with-eval-after-load 'info+-autoloads
-    (idle-require 'info+)
-    (with-eval-after-load 'info+
-      ;; Show breadcrumbs in the header line.
-      (setq Info-breadcrumbs-in-header-flag t)
+    (with-eval-after-load 'info+-autoloads
+      (idle-require 'info+)
+      (with-eval-after-load 'info+
+        ;; Show breadcrumbs in the header line.
+        (setq Info-breadcrumbs-in-header-flag t)
 
-      ;; Don't show breadcrumbs in the mode line.
-      (setq Info-breadcrumbs-in-mode-line-mode nil)))
+        ;; Don't show breadcrumbs in the mode line.
+        (setq Info-breadcrumbs-in-mode-line-mode nil)))
 
     )
 
@@ -1066,38 +1059,9 @@ to it. Otherwise call FUNCTION interactively."
   (global-set-key [remap kill-region]    #'boost--slick-kill-region)
   (global-set-key [remap kill-ring-save] #'boost--slick-kill-ring-save)
 
-  (defun boost-duplicate-line-or-region (beg end)
-    "Duplicate the current line, or the active region if any.
+  (global-set-key (kbd "C-S-d") #'duplicate-dwim)
 
-When a region is active, duplicate it immediately after its end,
-keep the duplicated text selected, and briefly highlight it.
-
-When no region is active, duplicate the current line below, place
-point on the duplicated line, and briefly highlight it."
-    (interactive "R")                   ; Emacs 31.1.
-    (let* ((regionp beg)
-           (beg (if regionp
-                    beg
-                  (line-beginning-position)))
-           (end (if regionp
-                    end
-                  (line-beginning-position 2)))
-           (col (current-column))
-           (text (buffer-substring-no-properties beg end))
-           new-beg new-end)
-      (goto-char end)
-      (setq new-beg (point))
-      (insert text)
-      (setq new-end (point))
-      (pulse-momentary-highlight-region new-beg new-end)
-      (if regionp
-          (progn
-            (goto-char new-end)
-            (push-mark new-beg t t))
-        (goto-char new-beg)
-        (move-to-column col))))
-
-  (global-set-key (kbd "C-S-d") #'boost-duplicate-line-or-region)
+  ;; (setq duplicate-region-final-position 0)
 
   (defun boost-delete-duplicate-lines-trim (beg end)
     "Delete trailing whitespace, then remove duplicate lines in the region."
@@ -5819,27 +5783,6 @@ With prefix ARG, invoke `vc-diff' instead."
 
     (global-set-key (kbd "C-c & C-l") #'yas-describe-tables)
 
-    (defvar leuven-contextual-menu-map
-      (let ((map (make-sparse-keymap "Contextual menu")))
-        (define-key map [help-for-help] (cons "Help" 'help-for-help))
-        (define-key map [separator-two] '(menu-item "--"))
-        map)
-      "Keymap for the contextual menu.")
-
-    (defun leuven-popup-contextual-menu (event &optional prefix)
-      "Popup a contextual menu."
-      (interactive "@e \nP")
-        (define-key leuven-contextual-menu-map [lawlist-major-mode-menu]
-          `(menu-item ,(symbol-name major-mode)
-            ,(mouse-menu-major-mode-map) :visible t))
-        (define-key leuven-contextual-menu-map (vector major-mode)
-          `(menu-item ,(concat "Insert " (symbol-name major-mode) " snippet")
-            ,(gethash major-mode yas--menu-table)
-              :visible (yas--show-menu-p ',major-mode)))
-        (popup-menu leuven-contextual-menu-map event prefix))
-
-    (global-set-key [mouse-3] #'leuven-popup-contextual-menu)
-
     (add-hook 'snippet-mode-hook
               (lambda ()
                 (setq require-final-newline nil)))
@@ -6121,23 +6064,34 @@ This example lists Azerty layout second row keys."
 
     (leuven--section "31.2 (emacs)Dired Navigation")
 
+    ;; Keep line-by-line navigation within file lines only.
+    (setq dired-movement-style 'cycle-files)
+
     ;; Function to move the cursor to the top of the Dired buffer.
-    (defun lvn-dired-back-to-top ()
+    (defun boost-dired-move-to-first-file ()
+      "Move to the first file line in the Dired buffer.
+
+Position the point past the header lines (the directory name and
+the `total used' line) rather than at the very top."
       (interactive)
       (goto-char (point-min))
-      (dired-next-line 4))
+      (dired-next-line 3))
 
     (define-key dired-mode-map
-                [remap beginning-of-buffer] #'lvn-dired-back-to-top)
+                [remap beginning-of-buffer] #'boost-dired-move-to-first-file)
 
     ;; Function to move the cursor to the bottom of the Dired buffer.
-    (defun lvn-dired-jump-to-bottom ()
+    (defun boost-dired-move-to-last-file ()
+      "Move to the last file line in the Dired buffer.
+
+Position the point on the final entry rather than on the empty
+line at the very bottom."
       (interactive)
       (goto-char (point-max))
       (dired-next-line -1))
 
     (define-key dired-mode-map
-                [remap end-of-buffer] #'lvn-dired-jump-to-bottom)
+                [remap end-of-buffer] #'boost-dired-move-to-last-file)
 
     ;; Search in filenames (instead of in everything).
     (define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)
