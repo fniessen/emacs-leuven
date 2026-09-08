@@ -3839,7 +3839,8 @@ logically equivalent to "tangle", but without creating a separate file).
 
   ;; Copy current code block.
   (define-key org-mode-map (kbd "C-c C-v w") #'boost-org-babel-copy-src-block)
-  ;; (define-key org-mode-map (kbd "H-w") #'boost-org-babel-copy-src-block))
+  ;; (define-key org-mode-map (kbd "H-w") #'boost-org-babel-copy-src-block)
+  )
 #+end_src
 
 *** Evaluating code blocks

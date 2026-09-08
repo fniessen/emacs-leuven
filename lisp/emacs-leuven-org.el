@@ -2440,7 +2440,8 @@ of the ignored headline."
 
   ;; Copy current code block.
   (define-key org-mode-map (kbd "C-c C-v w") #'boost-org-babel-copy-src-block)
-  ;; (define-key org-mode-map (kbd "H-w") #'boost-org-babel-copy-src-block))
+  ;; (define-key org-mode-map (kbd "H-w") #'boost-org-babel-copy-src-block)
+  )
 
 ;;** 14.5 (info "(org)Evaluating code blocks")
 
