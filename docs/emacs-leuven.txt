@@ -3425,7 +3425,7 @@ the search count periodically.
   (setq isearch-lazy-count t)
 
   ;; Customize the lazy-count display format.
-  (setq lazy-count-prefix-format "(%s of %s) "))
+  (setq lazy-count-prefix-format "%s of %s "))
 #+end_src
 
 ** Symbol Search
