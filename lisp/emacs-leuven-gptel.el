@@ -1070,6 +1070,20 @@ font-lock faces remain visible inside Org source blocks."
 ;; Keep the streaming response visible.
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
 
+(defun boost--gptel-scroll-to-response-end (_beg _end)
+  "Move point to the end of the dedicated *gptel* buffer.
+
+Do nothing when the GPTel response belongs to another buffer."
+  (when (string= (buffer-name) "*gptel*")
+    (let ((pos (point-max)))
+      (goto-char pos)
+      (dolist (window (get-buffer-window-list (current-buffer) nil t))
+        (set-window-point window pos)))))
+
+(add-hook 'gptel-post-response-functions
+          #'boost--gptel-scroll-to-response-end
+          90)
+
 (defun boost-gptel-after-response (beg end)
   "Run lightweight UI actions after a response from BEG to END."
   (when (> end beg)

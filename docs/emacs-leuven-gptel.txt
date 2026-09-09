@@ -1750,7 +1750,30 @@ Org buffers and invokes ~gptel-send~ only while ~gptel-mode~ is active.
 #+begin_src emacs-lisp
 ;; Keep the streaming response visible.
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
+#+end_src
 
+Move the cursor only *after* filling, since filling may change the response
+length.
+
+#+begin_src emacs-lisp
+(defun boost--gptel-scroll-to-response-end (_beg _end)
+  "Move point to the end of the dedicated *gptel* buffer.
+
+Do nothing when the GPTel response belongs to another buffer."
+  (when (string= (buffer-name) "*gptel*")
+    (let ((pos (point-max)))
+      (goto-char pos)
+      (dolist (window (get-buffer-window-list (current-buffer) nil t))
+        (set-window-point window pos)))))
+
+(add-hook 'gptel-post-response-functions
+          #'boost--gptel-scroll-to-response-end
+          90)
+#+end_src
+
+That's why we control their execution order with hook depth.
+
+#+begin_src emacs-lisp
 (defun boost-gptel-after-response (beg end)
   "Run lightweight UI actions after a response from BEG to END."
   (when (> end beg)
