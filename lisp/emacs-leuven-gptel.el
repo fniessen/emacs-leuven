@@ -202,7 +202,7 @@ symbolic links are resolved."
       text)))
 
 (defun boost-gptel-read-file-limited (file &optional limit)
-  "Read FILE and return at most LIMIT characters.
+  "Read FILE and return no more than LIMIT decoded characters.
 
 LIMIT defaults to `boost-gptel-tool-max-output-chars'."
   (let ((max-chars (or limit boost-gptel-tool-max-output-chars)))
@@ -576,8 +576,6 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 (defvar boost-gptel-tool-read-project-file nil)
 (defvar boost-gptel-tool-search-project nil)
 (defvar boost-gptel-tool-create-note nil)
-(defvar boost-gptel-tools-read-only nil)
-(defvar boost-gptel-tools-with-notes nil)
 
 (setq boost-gptel-tool-current-datetime
       (gptel-make-tool
@@ -669,18 +667,6 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
        :confirm t
        :include t))
 
-(setq boost-gptel-tools-read-only
-      (list
-       boost-gptel-tool-current-datetime
-       boost-gptel-tool-read-buffer
-       boost-gptel-tool-list-project-files
-       boost-gptel-tool-read-project-file
-       boost-gptel-tool-search-project))
-
-(setq boost-gptel-tools-with-notes
-      (append boost-gptel-tools-read-only
-              (list boost-gptel-tool-create-note)))
-
 (defun boost-gptel-pre-tool-policy (call)
   "Apply additional policy to a GPTel tool CALL plist."
   (let ((name (plist-get call :name)))
@@ -769,7 +755,7 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
   :use-context 'system)
 
 (gptel-make-preset 'boost-visible-buffers
-  :description "Research preset with all visible non-internal buffers as context."
+  :description "Research preset using all visible buffers in the selected frame as context."
   :parents 'boost-research
   :context
   '(:eval
@@ -1268,8 +1254,8 @@ font-lock faces remain visible inside Org source blocks."
 (keymap-set boost-gptel-prefix-map
             "l" #'boost-gptel-toggle-debug-logging)
 
+(boost--try-require 'gptel-commit-msg)
+
 (provide 'emacs-leuven-gptel)
 
-;;; boost-gptel.el ends here
-
-(boost--try-require 'gptel-commit-msg)
+;;; emacs-leuven-gptel.el ends here
