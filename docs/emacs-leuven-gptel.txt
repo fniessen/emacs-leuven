@@ -144,43 +144,6 @@ This is a conservative example, not a complete secret-detection mechanism."
   :group 'boost-gptel)
 #+end_src
 
-** Backend toggles and model identifiers
-
-Remote backends are disabled by default so that evaluating this example never
-assumes that credentials exist.  Enable only the providers you use.
-
-#+begin_src emacs-lisp
-(defcustom boost-gptel-enable-openai t
-  "Whether to register the example OpenAI API backend."
-  :type 'boolean
-  :group 'boost-gptel)
-
-(defcustom boost-gptel-openai-model 'gpt-5-mini
-  "Example model identifier for the OpenAI API backend."
-  :type 'symbol
-  :group 'boost-gptel)
-
-(defcustom boost-gptel-enable-anthropic t
-  "Whether to register the example Anthropic backend."
-  :type 'boolean
-  :group 'boost-gptel)
-
-(defcustom boost-gptel-anthropic-model 'claude-opus-4-8
-  "Example model identifier for the Anthropic backend."
-  :type 'symbol
-  :group 'boost-gptel)
-
-(defcustom boost-gptel-default-provider 'current
-  "Provider used as the global default after backend registration.
-
-The value `current' leaves GPTel's existing backend and model unchanged."
-  :type '(choice
-          (const :tag "Keep the current GPTel default" current)
-          (const :tag "OpenAI API" openai)
-          (const :tag "Anthropic" anthropic))
-  :group 'boost-gptel)
-#+end_src
-
 * Private machine-local settings
 
 This optional file is loaded before backend registration.  It may therefore
@@ -263,14 +226,6 @@ argument.
         (user-error "[API key file is empty: %s]" file))
       key)))
 #+end_src
-
-J'ai :
-
-#s(gptel-openai-responses "OpenAI" "api.openai.com" #<subr F616e6f6e796d6f75732d6c616d626461_anonymous_lambda_22> "https" t "/v1/responses" #[nil ((let* ((key-file (or file (expand-file-name (format ".%s_api_key" (downcase (substring (symbol-name (type-of gptel-backend)) 6))) "~"))) (key (if (file-readable-p key-file) (progn (let ((temp-buffer (generate-new-buffer " *temp*" t))) (save-current-buffer (set-buffer temp-buffer) (unwind-protect (progn (insert-file-contents key-file) (string-trim (buffer-substring-no-properties (point-min) (point-max)))) (and (buffer-name temp-buffer) (kill-buffer temp-buffer))))))))) (if (and key (not (string-empty-p key))) nil (user-error "No API key found in %s" key-file)) key)) ((file))] (gpt-5-mini) "https://api.openai.com/v1/responses" nil nil nil)
-if: No API key found in /home/fni/.openai-responses_api_key
-
-Comment c'est possible ?
-
 
 ** Project helpers
 
@@ -391,40 +346,112 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 
 * Backend configuration
 
-The variables below retain the actual backend objects.  This makes it possible
-to select them programmatically without relying only on their display names.
+** Backend toggles and model identifiers
+
+Remote backends are disabled by default so that evaluating this example never
+assumes that credentials exist.  Enable only the providers you use.
 
 #+begin_src emacs-lisp
-(defvar boost-gptel-openai-backend t)
-(defvar boost-gptel-anthropic-backend t)
+(defcustom boost-gptel-enable-openai t
+  "Whether to register the example OpenAI API backend."
+  :type 'boolean
+  :group 'boost-gptel)
+
+(defcustom boost-gptel-openai-model 'gpt-5-mini
+  "Example model identifier for the OpenAI API backend."
+  :type 'symbol
+  :group 'boost-gptel)
 #+end_src
 
-** OpenAI API
+#+begin_src emacs-lisp
+(defcustom boost-gptel-enable-anthropic t
+  "Whether to register the example Anthropic backend."
+  :type 'boolean
+  :group 'boost-gptel)
 
-#+begin_src emacs-lisp :tangle no
+(defcustom boost-gptel-anthropic-model 'claude-opus-4-6
+  "Example model identifier for the Anthropic backend."
+  :type 'symbol
+  :group 'boost-gptel)
+#+end_src
+
+#+begin_src emacs-lisp
+(defcustom boost-gptel-default-provider 'current
+  "Provider used as the global default after backend registration.
+
+The value `current' leaves GPTel's existing backend and model unchanged."
+  :type '(choice
+          (const :tag "Keep the current GPTel default" current)
+          (const :tag "OpenAI API" openai)
+          (const :tag "Anthropic" anthropic))
+  :group 'boost-gptel)
+#+end_src
+
+** Backend sentinels
+
+#+begin_src emacs-lisp
+(defun boost-gptel--get-known-backend (name)
+  "Return the GPTel backend already registered under NAME, or nil.
+
+This lets us reuse a backend GPTel ships with by default (such as its
+built-in \"Claude\" Anthropic backend, complete with its curated model
+list, pricing and context-window metadata) instead of registering a
+second, redundant backend next to it."
+  (and (boundp 'gptel--known-backends)
+       (alist-get name gptel--known-backends nil nil #'equal)))
+#+end_src
+
+** OpenAI backend registration
+
+GPTel does not ship a pre-registered OpenAI backend.
+
+This block registers our own backend.
+
+#+begin_src emacs-lisp
+(defvar boost-gptel-openai-backend nil)
+
 (when boost-gptel-enable-openai
   (require 'gptel-openai)
-  (setq boost-gptel-openai-backend
-        (gptel-make-openai "OpenAI"
-          :host "api.openai.com"
-          :stream t
-          :key (boost--gptel-api-key-from-file "~/.openai_api_key")
-          :models (list boost-gptel-openai-model))))
+  (let ((backend (gptel-make-openai "OpenAI"
+                   :stream t
+                   :key (boost--gptel-api-key-from-file "~/.openai_api_key"))))
+    (unless (member boost-gptel-openai-model (gptel-backend-models backend))
+      (user-error "Model %s is not available in GPTel's \"OpenAI\" backend"
+                  boost-gptel-openai-model))
+    (setq boost-gptel-openai-backend backend)))
 #+end_src
 
-** Anthropic
+=:models= is deliberately omitted so it keeps GPTel's full, richly-annotated
+default model list (=gptel--openai-models=, which already includes descriptions
+and pricing) instead of narrowing it down to a single bare symbol.
+
+** Anthropic backend registration
+
+This block registers our own Anthropic backend.
 
 #+begin_src emacs-lisp
+(defvar boost-gptel-anthropic-backend nil)
+
 (when boost-gptel-enable-anthropic
   (require 'gptel-anthropic)
-  (setq boost-gptel-anthropic-backend
-        (gptel-make-anthropic "Anthropic"
-          :stream t
-          :key (boost--gptel-api-key-from-file "~/.anthropic_api_key")
-          :models (list boost-gptel-anthropic-model))))
+  (let ((backend (gptel-make-anthropic "Anthropic"
+                   :stream t
+                   :key (boost--gptel-api-key-from-file "~/.anthropic_api_key"))))
+    (unless (cl-find boost-gptel-anthropic-model (gptel-backend-models backend)
+                     :key (lambda (m) (if (consp m) (car m) m)))
+      (user-error "[Model %s is not available in GPTel's \"Anthropic\" backend]"
+                  boost-gptel-anthropic-model))
+    (setq boost-gptel-anthropic-backend backend)))
 #+end_src
 
-** Default backend selection
+=:models= is deliberately omitted so it keeps GPTel's full, richly-annotated
+default model list (=gptel--anthropic-models=) instead of narrowing it to a single
+bare symbol.
+
+Membership is checked against either a bare model symbol or a =(symbol . plist)=
+entry, since it is unclear which shape ~gptel--process-models~ produces.
+
+** Default backend and model selection
 
 The =current= option leaves GPTel's pre-existing default untouched.  Selecting a
 provider that has not been enabled produces a warning and also leaves the
@@ -434,21 +461,22 @@ existing default untouched.
 (defun boost-gptel-select-default-provider ()
   "Set the global GPTel backend and model from `boost-gptel-default-provider'."
   (pcase boost-gptel-default-provider
-    ('current nil)
+    ('current
+     nil)
     ('openai
      (if boost-gptel-openai-backend
          (setq gptel-backend boost-gptel-openai-backend
                gptel-model boost-gptel-openai-model)
        (display-warning
         'boost-gptel
-        "OpenAI was selected as default but its backend is disabled.")))
+        "[OpenAI was selected as default but its backend is disabled.]")))
     ('anthropic
      (if boost-gptel-anthropic-backend
          (setq gptel-backend boost-gptel-anthropic-backend
                gptel-model boost-gptel-anthropic-model)
        (display-warning
         'boost-gptel
-        "Anthropic was selected as default but its backend is disabled.")))))
+        "[Anthropic was selected as default but its backend is disabled.]")))))
 
 (boost-gptel-select-default-provider)
 #+end_src
@@ -1430,6 +1458,19 @@ lifetime.
 #+end_example
 
 * Chat interface
+
+** Chat buffer keybinding
+
+Jump to (or create) the GPTel chat buffer.
+
+#+begin_src emacs-lisp
+(defun boost-gptel-open-chat ()
+  "Switch to the GPTel chat buffer, creating it if it doesn't exist."
+  (interactive)
+  (pop-to-buffer (gptel "*gptel*")))
+
+(global-set-key (kbd "C-<f1>") #'boost-gptel-open-chat)
+#+end_src
 
 ** Response highlighting
 
