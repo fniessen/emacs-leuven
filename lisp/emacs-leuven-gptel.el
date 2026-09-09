@@ -311,12 +311,15 @@ second, redundant backend next to it."
 
 (defconst boost-gptel-prompt-default
   (string-join
-   '("You are a careful assistant working inside Emacs."
-     "Answer the user's actual question directly."
-     "Distinguish facts, assumptions, and recommendations."
-     "When information is missing, say what is missing instead of inventing it."
-     "Prefer clear structure, concrete examples, and concise explanations."
-     "Do not claim to have inspected files or executed actions unless a tool result confirms it.")
+   '("You are a precise technical assistant working inside Emacs."
+     ""
+     "Lead with the answer to the actual question asked -- don't bury it under setup or preamble."
+     "Clearly separate what is confirmed, what is assumed, and what is your recommendation; never blur the three together."
+     "When a claim depends on information you don't have, say what's missing instead of filling the gap with a plausible guess."
+     "Never claim to have read a file, run code, or performed an action unless a tool result actually confirms it -- point to the specific result backing the claim."
+     "Default to plain prose for short answers; reach for structure (lists, headers, code blocks) only when the content is genuinely long or complex enough to need it, not as decoration."
+     "Match code and configuration to the conventions already present in the user's files rather than imposing a different style."
+     "If something you or the user assumed earlier turns out to be wrong, say so plainly and correct course -- don't quietly work around it.")
    "\n"))
 
 (defconst boost-gptel-prompt-precise
@@ -406,16 +409,16 @@ second, redundant backend next to it."
 (dolist
     (entry
      (list
-      (cons 'default boost-gptel-prompt-default)
-      (cons 'precise boost-gptel-prompt-precise)
-      (cons 'programming boost-gptel-prompt-programming)
-      (cons 'code-review boost-gptel-prompt-code-review)
-      (cons 'writing boost-gptel-prompt-writing)
-      (cons 'research boost-gptel-prompt-research)
-      (cons 'summarize boost-gptel-prompt-summarization)
-      (cons 'project-aware #'boost-gptel-project-directive)
-      (cons 'house-style #'boost-gptel-house-style-directive)
-      (cons 'pair-programming boost-gptel-pair-programming-template)))
+      (cons 'default           boost-gptel-prompt-default)
+      (cons 'precise           boost-gptel-prompt-precise)
+      (cons 'programming       boost-gptel-prompt-programming)
+      (cons 'code-review       boost-gptel-prompt-code-review)
+      (cons 'writing           boost-gptel-prompt-writing)
+      (cons 'research          boost-gptel-prompt-research)
+      (cons 'summarize         boost-gptel-prompt-summarization)
+      (cons 'project-aware     #'boost-gptel-project-directive)
+      (cons 'house-style       #'boost-gptel-house-style-directive)
+      (cons 'pair-programming  boost-gptel-pair-programming-template)))
   (setf (alist-get (car entry) gptel-directives) (cdr entry)))
 
 (setq gptel-system-prompt (alist-get 'default gptel-directives))
@@ -1060,12 +1063,17 @@ font-lock faces remain visible inside Org source blocks."
 
 (add-hook 'gptel-mode-hook #'boost-gptel-chat-mode-setup)
 
-;; Send the current prompt with C-c C-c in GPTel conversation buffers.
-;;
-;; This binding belongs to `gptel-mode-map', whose minor-mode binding takes
-;; precedence over the major-mode binding in `org-mode-map'.  Ordinary Org
-;; buffers where `gptel-mode' is inactive retain `org-ctrl-c-ctrl-c'.
+;; Convenient chat sending (in GPTel conversation buffers).
 (keymap-set gptel-mode-map "C-c C-c" #'gptel-send)
+
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c <return>") nil))
+
+;; Quick access to gptel-send (only if key is free).
+(boost--set-key-if-free global-map (kbd "C-c <return>")
+                        #'gptel-send "global map")
+
+(global-set-key (kbd "C-c C-<return>") #'gptel-send)
 
 ;; Keep the streaming response visible.
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)

@@ -510,12 +510,15 @@ makes it easy to reuse them in presets and custom commands.
 #+begin_src emacs-lisp
 (defconst boost-gptel-prompt-default
   (string-join
-   '("You are a careful assistant working inside Emacs."
-     "Answer the user's actual question directly."
-     "Distinguish facts, assumptions, and recommendations."
-     "When information is missing, say what is missing instead of inventing it."
-     "Prefer clear structure, concrete examples, and concise explanations."
-     "Do not claim to have inspected files or executed actions unless a tool result confirms it.")
+   '("You are a precise technical assistant working inside Emacs."
+     ""
+     "Lead with the answer to the actual question asked -- don't bury it under setup or preamble."
+     "Clearly separate what is confirmed, what is assumed, and what is your recommendation; never blur the three together."
+     "When a claim depends on information you don't have, say what's missing instead of filling the gap with a plausible guess."
+     "Never claim to have read a file, run code, or performed an action unless a tool result actually confirms it -- point to the specific result backing the claim."
+     "Default to plain prose for short answers; reach for structure (lists, headers, code blocks) only when the content is genuinely long or complex enough to need it, not as decoration."
+     "Match code and configuration to the conventions already present in the user's files rather than imposing a different style."
+     "If something you or the user assumed earlier turns out to be wrong, say so plainly and correct course -- don't quietly work around it.")
    "\n"))
 #+end_src
 
@@ -671,16 +674,16 @@ alist.
 (dolist
     (entry
      (list
-      (cons 'default boost-gptel-prompt-default)
-      (cons 'precise boost-gptel-prompt-precise)
-      (cons 'programming boost-gptel-prompt-programming)
-      (cons 'code-review boost-gptel-prompt-code-review)
-      (cons 'writing boost-gptel-prompt-writing)
-      (cons 'research boost-gptel-prompt-research)
-      (cons 'summarize boost-gptel-prompt-summarization)
-      (cons 'project-aware #'boost-gptel-project-directive)
-      (cons 'house-style #'boost-gptel-house-style-directive)
-      (cons 'pair-programming boost-gptel-pair-programming-template)))
+      (cons 'default           boost-gptel-prompt-default)
+      (cons 'precise           boost-gptel-prompt-precise)
+      (cons 'programming       boost-gptel-prompt-programming)
+      (cons 'code-review       boost-gptel-prompt-code-review)
+      (cons 'writing           boost-gptel-prompt-writing)
+      (cons 'research          boost-gptel-prompt-research)
+      (cons 'summarize         boost-gptel-prompt-summarization)
+      (cons 'project-aware     #'boost-gptel-project-directive)
+      (cons 'house-style       #'boost-gptel-house-style-directive)
+      (cons 'pair-programming  boost-gptel-pair-programming-template)))
   (setf (alist-get (car entry) gptel-directives) (cdr entry)))
 
 (setq gptel-system-prompt (alist-get 'default gptel-directives))
@@ -757,21 +760,38 @@ buffers.
     (pp gptel-context)))
 #+end_src
 
-* Tool functions
+* GPTel tools
+
+This chapter defines the complete GPTel tool integration:
+
+- ordinary Emacs Lisp functions that implement the tool behaviour;
+- GPTel tool objects that expose those functions to the LLM;
+- policy hooks that control and audit tool execution.
+
+The functions are deliberately separated from their GPTel registration. This
+keeps the underlying behaviour independently testable and makes the permissions
+associated with each tool explicit.
+
+The path and buffer filters used here are guardrails rather than a guarantee
+that all confidential data will be recognised. Review and extend the regular
+expressions before enabling these tools in sensitive environments.
 
 #+begin_seealso
-https://github.com/karthink/gptel/discussions/1093#discussioncomment-14728014
-Exemple d'utilisation des tools.
+See [[https://github.com/karthink/gptel/discussions/1093#discussioncomment-14728014][this GPTel discussion]] for an example of tool usage.
 #+end_seealso
+
+** Tool functions
 
 The functions in this section are ordinary Emacs Lisp functions.  They become
 LLM tools only after being wrapped with =gptel-make-tool=.
 
+#+begin_tip
 The path and buffer filters below are guardrails rather than a guarantee that
 all confidential data will be recognized.  Review and extend the regular
 expressions before enabling tools in sensitive environments.
+#+end_tip
 
-** Current date and time
+*** Current date and time
 
 #+begin_src emacs-lisp
 (defun boost-gptel-tool-current-datetime ()
@@ -779,7 +799,7 @@ expressions before enabling tools in sensitive environments.
   (format-time-string "[%Y-%m-%d %a %H:%M]"))
 #+end_src
 
-** Read an Emacs buffer
+*** Read an Emacs buffer
 
 #+begin_src emacs-lisp
 (defun boost-gptel-tool-read-buffer (buffer-name)
@@ -796,7 +816,7 @@ expressions before enabling tools in sensitive environments.
        boost-gptel-tool-max-output-chars))))
 #+end_src
 
-** List project files
+*** List project files
 
 #+begin_src emacs-lisp
 (defun boost-gptel-tool-list-project-files (&optional extension)
@@ -829,7 +849,7 @@ expressions before enabling tools in sensitive environments.
      boost-gptel-tool-max-output-chars)))
 #+end_src
 
-** Read a project file
+*** Read a project file
 
 #+begin_src emacs-lisp
 (defun boost-gptel-tool-read-project-file (relative-path)
@@ -838,7 +858,7 @@ expressions before enabling tools in sensitive environments.
    (boost-gptel-safe-project-file relative-path)))
 #+end_src
 
-** Search project text
+*** Search project text
 
 The search is literal, case-insensitive, bounded by file and match limits, and
 implemented without invoking a shell command.
@@ -898,7 +918,7 @@ implemented without invoking a shell command.
       "No matches found.")))
 #+end_src
 
-** Create a note
+*** Create a note
 
 This is the only write tool in the example.  It can write only inside
 =boost-gptel-note-directory= and always requires confirmation.
@@ -934,12 +954,13 @@ This is the only write tool in the example.  It can write only inside
     (format "Created note: %s" (abbreviate-file-name file))))
 #+end_src
 
-* Tool registration
+** Tool registration
 
-Each call to =gptel-make-tool= also registers the tool by name and category.
-Presets may therefore select tools using their string names.
+Each call to =gptel-make-tool= creates and registers a tool with a name, category,
+argument schema, confirmation policy, and inclusion state. Presets may therefore
+select registered tools by their string names.
 
-** Tool collections
+*** Tool collection
 
 | Tool               | Category     | Reads Data | Writes Data | Confirmation |
 |--------------------+--------------+------------+-------------+--------------|
@@ -950,7 +971,7 @@ Presets may therefore select tools using their string names.
 | =search_project=     | project-read | yes        | no          | no           |
 | =create_note=        | notes-write  | no         | yes         | always       |
 
-** Tool variables
+*** Tool variables
 
 #+begin_src emacs-lisp
 (defvar boost-gptel-tool-current-datetime nil)
@@ -961,7 +982,7 @@ Presets may therefore select tools using their string names.
 (defvar boost-gptel-tool-create-note nil)
 #+end_src
 
-** Register current_datetime
+*** Register current_datetime
 
 #+begin_src emacs-lisp
 (setq boost-gptel-tool-current-datetime
@@ -976,7 +997,7 @@ Presets may therefore select tools using their string names.
        :include t))
 #+end_src
 
-** Register read_buffer
+*** Register read_buffer
 
 #+begin_src emacs-lisp
 (setq boost-gptel-tool-read-buffer
@@ -995,7 +1016,7 @@ Presets may therefore select tools using their string names.
        :include t))
 #+end_src
 
-** Register list_project_files
+*** Register list_project_files
 
 #+begin_src emacs-lisp
 (setq boost-gptel-tool-list-project-files
@@ -1015,7 +1036,7 @@ Presets may therefore select tools using their string names.
        :include t))
 #+end_src
 
-** Register read_project_file
+*** Register read_project_file
 
 #+begin_src emacs-lisp
 (setq boost-gptel-tool-read-project-file
@@ -1034,7 +1055,7 @@ Presets may therefore select tools using their string names.
        :include t))
 #+end_src
 
-** Register search_project
+*** Register search_project
 
 #+begin_src emacs-lisp
 (setq boost-gptel-tool-search-project
@@ -1053,7 +1074,7 @@ Presets may therefore select tools using their string names.
        :include t))
 #+end_src
 
-** Register create_note
+*** Register create_note
 
 #+begin_src emacs-lisp
 (setq boost-gptel-tool-create-note
@@ -1075,10 +1096,13 @@ Presets may therefore select tools using their string names.
        :include t))
 #+end_src
 
-* Tool policies and hooks
+** Tool policies and hooks
 
-The tool itself already requests confirmation.  The pre-tool hook below adds a
-second policy layer for all tools known to modify data.
+Tool-level confirmation remains the primary safeguard.
+
+*** Pre-tool policy
+
+The pre-tool hook adds a second policy layer for tools known to modify data.
 
 #+begin_src emacs-lisp
 (defun boost-gptel-pre-tool-policy (call)
@@ -1092,7 +1116,10 @@ second policy layer for all tools known to modify data.
 (add-hook 'gptel-pre-tool-call-functions #'boost-gptel-pre-tool-policy)
 #+end_src
 
-The post-tool hook logs only the tool name, not its arguments or result.
+*** Post-tool logging
+
+The post-tool hook only records tool completion without logging arguments or
+returned data.
 
 #+begin_src emacs-lisp
 (defun boost-gptel-post-tool-log (call)
@@ -1725,10 +1752,6 @@ font-lock faces remain visible inside Org source blocks."
 Dedicated GPTel chat buffers use visual line wrapping, response highlighting,
 and ~C-c C-c~ to send the current prompt.
 
-The send binding is installed in ~gptel-mode-map~, not globally or in
-~org-mode-map~. Therefore, ~C-c C-c~ retains its normal Org behaviour in ordinary
-Org buffers and invokes ~gptel-send~ only while ~gptel-mode~ is active.
-
 #+begin_src emacs-lisp
 (defun boost-gptel-chat-mode-setup ()
   "Configure presentation in buffers managed by `gptel-mode'."
@@ -1737,12 +1760,27 @@ Org buffers and invokes ~gptel-send~ only while ~gptel-mode~ is active.
 
 (add-hook 'gptel-mode-hook #'boost-gptel-chat-mode-setup)
 
-;; Send the current prompt with C-c C-c in GPTel conversation buffers.
-;;
-;; This binding belongs to `gptel-mode-map', whose minor-mode binding takes
-;; precedence over the major-mode binding in `org-mode-map'.  Ordinary Org
-;; buffers where `gptel-mode' is inactive retain `org-ctrl-c-ctrl-c'.
+;; Convenient chat sending (in GPTel conversation buffers).
 (keymap-set gptel-mode-map "C-c C-c" #'gptel-send)
+#+end_src
+
+The send binding is installed in ~gptel-mode-map~, not globally or in
+~org-mode-map~. Therefore, ~C-c C-c~ retains its normal Org behaviour in ordinary
+Org buffers and invokes ~gptel-send~ only while ~gptel-mode~ is active.
+
+Global bindings:
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c <return>") nil))
+
+;; Quick access to gptel-send (only if key is free).
+(boost--set-key-if-free global-map (kbd "C-c <return>")
+                        #'gptel-send "global map")
+#+end_src
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c C-<return>") #'gptel-send)
 #+end_src
 
 ** Streaming and completion hooks
