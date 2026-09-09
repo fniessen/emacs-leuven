@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260908.2039>
+;; Version: <20260909.0822>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260908.2039>"
+(defconst boost-version "<20260909.0822>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -535,7 +535,6 @@ to it. Otherwise call FUNCTION interactively."
         tern
         toc-org
         transpose-frame
-        ;; undo-tree
         use-package
         volatile-highlights
         web-mode
@@ -733,30 +732,6 @@ to it. Otherwise call FUNCTION interactively."
   ;; Redo the last undone change.
   (global-set-key (kbd "C-S-z")   #'undo-redo)
   (global-set-key (kbd "S-<f11>") #'undo-redo)
-
-  ;; Configuration for undo-tree.
-  (with-eval-after-load 'undo-tree-autoloads
-    ;; Enable Global-Undo-Tree mode.
-    (global-undo-tree-mode 1))
-
-  (with-eval-after-load 'undo-tree
-    ;; Diminish undo-tree-mode from mode line.
-    (with-eval-after-load 'diminish-autoloads
-      (diminish 'undo-tree-mode))
-
-    ;; Visualizer settings - Display relative timestamps.
-    (setq undo-tree-visualizer-relative-timestamps t)
-
-    ;; Visualizer settings - Show timestamps by default.
-    (setq undo-tree-visualizer-timestamps t)
-                                        ; Toggle time-stamps display using `t'.
-
-    ;; Visualizer settings - Show diff by default.
-    (setq undo-tree-visualizer-diff t)  ; Toggle the diff display using `d'.
-
-    ;; Keybindings for redo.
-    (global-set-key (kbd "C-S-z")   #'undo-tree-redo)
-    (global-set-key (kbd "S-<f11>") #'undo-tree-redo))
 
   (with-eval-after-load 'volatile-highlights-autoloads
     (idle-require 'volatile-highlights))
