@@ -1,4 +1,4 @@
-;;; dircolors.el -- provide the same facility of ls --color inside emacs
+;;; dircolors.el -- provide the same facility of ls --color inside emacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2000  Padioleau yoann <padiolea@irisa.fr>
 ;; Copyright (C) 2000  Besson frédéric <fbesson@irisa.fr>
