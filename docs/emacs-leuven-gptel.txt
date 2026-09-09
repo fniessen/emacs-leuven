@@ -58,19 +58,14 @@ Provider-specific libraries are required before their constructor functions are
 used.
 
 #+begin_src emacs-lisp
-(boost--try-require 'cl-lib)
-(boost--try-require 'seq)
-(boost--try-require 'subr-x)
-(boost--try-require 'rx)
-(boost--try-require 'auth-source)
+(boost--try-require 'cl-lib)            ; cl-incf, cl-delete-if-not, cl-remove-if
+(boost--try-require 'seq)               ; seq-remove, seq-filter, seq-take
+(boost--try-require 'subr-x)            ; string-trim, string-empty-p, string-join, when-let*
+;; (boost--try-require 'auth-source)
 (boost--try-require 'project)
 (boost--try-require 'pp)
 (boost--try-require 'org)
 (boost--try-require 'gptel)
-(boost--try-require 'gptel-context)
-(boost--try-require 'gptel-org)
-(boost--try-require 'gptel-openai)
-(boost--try-require 'gptel-anthropic)
 #+end_src
 
 * Personal customization group
@@ -420,14 +415,15 @@ The variables below retain the actual backend objects.  This makes it possible
 to select them programmatically without relying only on their display names.
 
 #+begin_src emacs-lisp
-(defvar boost-gptel-openai-backend nil)
-(defvar boost-gptel-anthropic-backend nil)
+(defvar boost-gptel-openai-backend t)
+(defvar boost-gptel-anthropic-backend t)
 #+end_src
 
 ** OpenAI API
 
 #+begin_src emacs-lisp :tangle no
 (when boost-gptel-enable-openai
+  (require 'gptel-openai)
   (setq boost-gptel-openai-backend
         (gptel-make-openai "OpenAI"
           :host "api.openai.com"
@@ -440,6 +436,7 @@ to select them programmatically without relying only on their display names.
 
 #+begin_src emacs-lisp
 (when boost-gptel-enable-anthropic
+  (require 'gptel-anthropic)
   (setq boost-gptel-anthropic-backend
         (gptel-make-anthropic "Anthropic"
           :stream t
@@ -1259,9 +1256,9 @@ registered.
 #+begin_src emacs-lisp
 (when boost-gptel-openai-backend
   (gptel-make-preset 'boost-openai
-    :description "Use the configured OpenAI API backend."
+    :description "Use the configured OpenAI backend."
     :parents 'boost-base
-    :backend "OpenAI-API"
+    :backend "OpenAI"
     :model boost-gptel-openai-model))
 
 (when boost-gptel-anthropic-backend

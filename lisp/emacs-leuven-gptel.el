@@ -5,19 +5,14 @@
 
 ;;; Code:
 
-(boost--try-require 'cl-lib)
-(boost--try-require 'seq)
-(boost--try-require 'subr-x)
-(boost--try-require 'rx)
-(boost--try-require 'auth-source)
+(boost--try-require 'cl-lib)            ; cl-incf, cl-delete-if-not, cl-remove-if
+(boost--try-require 'seq)               ; seq-remove, seq-filter, seq-take
+(boost--try-require 'subr-x)            ; string-trim, string-empty-p, string-join, when-let*
+;; (boost--try-require 'auth-source)
 (boost--try-require 'project)
 (boost--try-require 'pp)
 (boost--try-require 'org)
 (boost--try-require 'gptel)
-(boost--try-require 'gptel-context)
-(boost--try-require 'gptel-org)
-(boost--try-require 'gptel-openai)
-(boost--try-require 'gptel-anthropic)
 
 (defgroup boost-gptel nil
   "Personal configuration layered on top of GPTel."
@@ -293,10 +288,11 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
     (setq slug (replace-regexp-in-string "^-+\\|-+$" "" slug))
     (if (string-empty-p slug) "note" slug)))
 
-(defvar boost-gptel-openai-backend nil)
-(defvar boost-gptel-anthropic-backend nil)
+(defvar boost-gptel-openai-backend t)
+(defvar boost-gptel-anthropic-backend t)
 
 (when boost-gptel-enable-anthropic
+  (require 'gptel-anthropic)
   (setq boost-gptel-anthropic-backend
         (gptel-make-anthropic "Anthropic"
           :stream t
@@ -845,9 +841,9 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 
 (when boost-gptel-openai-backend
   (gptel-make-preset 'boost-openai
-    :description "Use the configured OpenAI API backend."
+    :description "Use the configured OpenAI backend."
     :parents 'boost-base
-    :backend "OpenAI-API"
+    :backend "OpenAI"
     :model boost-gptel-openai-model))
 
 (when boost-gptel-anthropic-backend
