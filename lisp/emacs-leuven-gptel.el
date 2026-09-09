@@ -1201,7 +1201,10 @@ font-lock faces remain visible inside Org source blocks."
     (boost-gptel-request-in-new-buffer
      "Region explanation"
      (format
-      "Explain the following material. Describe its purpose, structure, important assumptions, and likely failure modes.\n\n%s"
+      (concat
+       "Explain the following material. "
+       "Describe its purpose, structure, important assumptions, "
+       "and likely failure modes.\n\n%s")
       source)
      'programming)))
 

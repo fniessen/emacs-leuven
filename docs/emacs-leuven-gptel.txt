@@ -1868,7 +1868,10 @@ one-shot request instead of accidentally inheriting unrelated buffer state.
     (boost-gptel-request-in-new-buffer
      "Region explanation"
      (format
-      "Explain the following material. Describe its purpose, structure, important assumptions, and likely failure modes.\n\n%s"
+      (concat
+       "Explain the following material. "
+       "Describe its purpose, structure, important assumptions, "
+       "and likely failure modes.\n\n%s")
       source)
      'programming)))
 #+end_src
