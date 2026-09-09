@@ -315,10 +315,10 @@ length.
 
 #+begin_src emacs-lisp
 (defun boost--gptel-scroll-to-response-end (_beg _end)
-  "Move point to the end of the dedicated *ChatGPT* buffer.
+  "Move point to the end of the dedicated *gptel* buffer.
 
 Do nothing when the GPTel response belongs to another buffer."
-  (when (string= (buffer-name) "*ChatGPT*")
+  (when (string= (buffer-name) "*gptel*")
     (let ((pos (point-max)))
       (goto-char pos)
       (dolist (window (get-buffer-window-list (current-buffer) nil t))
@@ -779,33 +779,6 @@ Available tools: ~gptel-tools~.
 
 *** Chat & Org integration
 
-**** boost-gptel-chat-buffer
-
-#+begin_src emacs-lisp
-  (defun boost-gptel-chat-buffer ()
-    "Switch to the GPTel chat buffer, creating it if it doesn't exist."
-    (interactive)
-    (let ((buffer-name "*ChatGPT*"))
-      (if (get-buffer buffer-name)
-          (pop-to-buffer buffer-name)
-        (pop-to-buffer (gptel "*ChatGPT*")))))
-
-  ;; (defun boost-gptel-chat-buffer (&optional arg)
-  ;;   "Switch to the GPTel chat buffer.
-  ;; Without prefix ARG, jump to `*ChatGPT*` creating it if needed (no prompt).
-  ;; With C-u prefix, defer to `gptel`'s usual interactive flow (with prompts)."
-  ;;   (interactive "P")
-  ;;   (let ((buffer-name "*ChatGPT*"))
-  ;;     (if arg
-  ;;         ;; C-u -> keep original prompting/confirmation behavior.
-  ;;         (call-interactively #'gptel)
-  ;;       ;; No prefix -> reuse or create *ChatGPT* without prompting.
-  ;;       (let ((buf (get-buffer buffer-name)))
-  ;;         (if buf
-  ;;             (pop-to-buffer buf)
-  ;;           (funcall #'gptel buffer-name))))))
-#+end_src
-
 **** boost-gptel-org-send-to-ai (Org subtree or region → `*AI Assistant*' buffer)
 
 #+begin_src emacs-lisp
@@ -1182,24 +1155,6 @@ GPTel-related commands are grouped under the global ~C-c g~ prefix.
     (boost--set-key-if-free global-map (kbd "C-c RET")
                              #'gptel-send "global map"))
 #+end_src
-
-It would also be better to avoid:
-
-#+begin_src emacs-lisp
-  ;; ;; Global keybinding (only if free).
-  ;; (boost--set-key-if-free global-map (kbd "C-c g")
-  ;;                          #'boost-gptel-chat-buffer "global map")
-
-  ;; ;; Global keybinding (only if free).
-  ;; (boost--set-key-if-free global-map (kbd "<f1>")
-  ;;                          #'boost-gptel-chat-buffer "global map")
-  (global-set-key (kbd "C-<f1>") #'boost-gptel-chat-buffer)
-#+end_src
-
-~<f1>~ is bound to *Emacs help by default*. Rebinding it (to
-~boost-gptel-chat-buffer~) is possible, but doing so overrides a standard Emacs
-key, so using another keybinding is generally preferable if we want to preserve
-the default help interface.
 
 *** Org-mode specific
 
