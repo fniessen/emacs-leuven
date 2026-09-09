@@ -65,7 +65,9 @@ used.
 (boost--try-require 'project)
 (boost--try-require 'pp)
 (boost--try-require 'org)
-(boost--try-require 'gptel)
+
+(unless (boost--try-require 'gptel)
+  (error "GPTel is required by emacs-leuven-gptel"))
 #+end_src
 
 * Personal customization group
@@ -197,7 +199,7 @@ machine-specific values in the public Org file.
 The backend constructors accept a zero-argument function as their =:key= value.
 The returned function performs an =auth-source= lookup when GPTel needs the key.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defun boost-gptel-auth-source-secret (host user)
   "Read and return an auth-source secret for HOST and USER."
   (let* ((entry
@@ -247,40 +249,18 @@ The returned zero-argument function is suitable for a GPTel backend's =:key=
 argument.
 
 #+begin_src emacs-lisp
-(defun boost--gptel-api-key-from-file (&optional file)
-  "Return a function that reads an API key from FILE.
-
-When FILE is nil, derive the filename from the active backend type.
-For example, an `gptel-openai' backend resolves to:
-
-  ~/.openai_api_key
-
-The file must contain only the API key, optionally followed by a
-trailing newline.
-
-The returned function performs the lookup when GPTel requests the
-credential."
+(defun boost--gptel-api-key-from-file (file)
+  "Return a function that reads an API key from FILE."
   (lambda ()
-    (let* ((key-file
-            (or file
-                (expand-file-name
-                 (format ".%s_api_key"
-                         (thread-first
-                           (type-of gptel-backend)
-                           (symbol-name)
-                           (substring 6)
-                           (downcase)))
-                 "~")))
-           (key
-            (when (file-readable-p key-file)
-              (with-temp-buffer
-                (insert-file-contents key-file)
-                (string-trim
-                 (buffer-substring-no-properties
-                  (point-min)
-                  (point-max)))))))
-      (unless (and key (not (string-empty-p key)))
-        (user-error "No API key found in %s" key-file))
+    (unless (file-readable-p file)
+      (user-error "[API key file is not readable: %s]" file))
+    (let ((key
+           (string-trim
+            (with-temp-buffer
+              (insert-file-contents file)
+              (buffer-string)))))
+      (when (string-empty-p key)
+        (user-error "[API key file is empty: %s]" file))
       key)))
 #+end_src
 
@@ -440,7 +420,7 @@ to select them programmatically without relying only on their display names.
   (setq boost-gptel-anthropic-backend
         (gptel-make-anthropic "Anthropic"
           :stream t
-          :key (boost--gptel-api-key-from-file)
+          :key (boost--gptel-api-key-from-file "~/.anthropic_api_key")
           :models (list boost-gptel-anthropic-model))))
 #+end_src
 
@@ -1461,7 +1441,6 @@ lifetime.
 ** Response highlighting
 
 #+begin_src emacs-lisp
-(with-eval-after-load 'gptel
   ;; Highlight GPTel responses with a light blue background and a slightly
   ;; darker bar in the left fringe.
   (setq gptel-highlight-methods '(face fringe))
@@ -1704,7 +1683,7 @@ font-lock faces remain visible inside Org source blocks."
 
   (add-hook 'gptel-post-response-functions
             #'boost--gptel-org-refresh-src-backgrounds
-            95))
+            95)
 #+end_src
 
 ** Chat buffer setup
@@ -1729,7 +1708,7 @@ Org buffers and invokes ~gptel-send~ only while ~gptel-mode~ is active.
 ;; This binding belongs to `gptel-mode-map', whose minor-mode binding takes
 ;; precedence over the major-mode binding in `org-mode-map'.  Ordinary Org
 ;; buffers where `gptel-mode' is inactive retain `org-ctrl-c-ctrl-c'.
-(define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send)
+(keymap-set gptel-mode-map "C-c C-c" #'gptel-send)
 #+end_src
 
 ** Streaming and completion hooks
@@ -1764,10 +1743,7 @@ Convenience commands for managing GPTel chat buffers.
       (insert (gptel-prompt-prefix-string))
       (goto-char (point-max)))))
 
-(with-eval-after-load 'gptel
-  (define-key gptel-mode-map
-              (kbd "C-c M-k")
-              #'gptel-clear-buffer))
+(keymap-set gptel-mode-map "C-c M-k" #'gptel-clear-buffer)
 #+end_src
 
 * Custom programmatic requests
@@ -1932,22 +1908,25 @@ The prefix is intentionally isolated so the entire binding group can be changed
 or removed in one place.
 
 #+begin_src emacs-lisp
-(define-prefix-command 'boost-gptel-prefix-map)
+(defvar-keymap boost-gptel-prefix-map
+  :doc "Prefix map for GPTel commands."
+  :prefix t
+
+  "g" #'gptel                           ; Chat.
+  "s" #'gptel-send                      ; Send.
+  "m" #'gptel-menu                      ; Change configuration.
+  "r" #'gptel-rewrite                   ; Rewrite this.
+  "a" #'gptel-add                       ; AI, know about this.
+  "f" #'gptel-add-file
+
+  "p" #'boost-gptel-add-project-context
+  "c" #'boost-gptel-clear-buffer-context
+  "i" #'boost-gptel-show-context
+  "e" #'boost-gptel-explain-region
+  "S" #'boost-gptel-summarize-buffer
+  "t" #'boost-gptel-translate-region)
+
 (global-set-key (kbd "C-c g") #'boost-gptel-prefix-map)
-
-(define-key boost-gptel-prefix-map (kbd "g") #'gptel)  ; Chat.
-(define-key boost-gptel-prefix-map (kbd "s") #'gptel-send)  ; Send.
-(define-key boost-gptel-prefix-map (kbd "m") #'gptel-menu)  ; Change configuration.
-(define-key boost-gptel-prefix-map (kbd "r") #'gptel-rewrite)  ; Rewrite this.
-(define-key boost-gptel-prefix-map (kbd "a") #'gptel-add)  ; AI, know about this.
-(define-key boost-gptel-prefix-map (kbd "f") #'gptel-add-file)
-
-(define-key boost-gptel-prefix-map (kbd "p") #'boost-gptel-add-project-context)
-(define-key boost-gptel-prefix-map (kbd "c") #'boost-gptel-clear-buffer-context)
-(define-key boost-gptel-prefix-map (kbd "i") #'boost-gptel-show-context)
-(define-key boost-gptel-prefix-map (kbd "e") #'boost-gptel-explain-region)
-(define-key boost-gptel-prefix-map (kbd "S") #'boost-gptel-summarize-buffer)
-(define-key boost-gptel-prefix-map (kbd "t") #'boost-gptel-translate-region)
 #+end_src
 
 * Optional MCP integration
@@ -2023,10 +2002,10 @@ diagnostic session and inspect the log before sharing it.
 ** Diagnostic keybindings
 
 #+begin_src emacs-lisp
-(define-key boost-gptel-prefix-map (kbd "d")
-            #'boost-gptel-describe-active-configuration)
-(define-key boost-gptel-prefix-map (kbd "l")
-            #'boost-gptel-toggle-debug-logging)
+(keymap-set boost-gptel-prefix-map
+            "d" #'boost-gptel-describe-active-configuration)
+(keymap-set boost-gptel-prefix-map
+            "l" #'boost-gptel-toggle-debug-logging)
 #+end_src
 
 * File epilogue

@@ -12,7 +12,9 @@
 (boost--try-require 'project)
 (boost--try-require 'pp)
 (boost--try-require 'org)
-(boost--try-require 'gptel)
+
+(unless (boost--try-require 'gptel)
+  (error "GPTel is required by emacs-leuven-gptel"))
 
 (defgroup boost-gptel nil
   "Personal configuration layered on top of GPTel."
@@ -115,68 +117,18 @@ The value `current' leaves GPTel's existing backend and model unchanged."
 (when (file-readable-p boost-gptel-private-file)
   (load boost-gptel-private-file nil 'nomessage))
 
-(defun boost-gptel-auth-source-secret (host user)
-  "Read and return an auth-source secret for HOST and USER."
-  (let* ((entry
-          (car
-           (auth-source-search
-            :host host
-            :user user
-            :require '(:secret)
-            :max 1)))
-         (secret (plist-get entry :secret)))
-    (unless secret
-      (user-error
-       "No auth-source secret for host %s and user %s"
-       host user))
-    (if (functionp secret)
-        (funcall secret)
-      secret)))
-
-(defun boost-gptel-auth-source-key (host &optional user)
-  "Return a zero-argument credential function for HOST and USER.
-
-USER defaults to \"apikey\".  The result is suitable for a GPTel backend's
-=:key= argument and remains valid when this Org block is evaluated directly."
-  (apply-partially
-   #'boost-gptel-auth-source-secret
-   host
-   (or user "apikey")))
-
-(defun boost--gptel-api-key-from-file (&optional file)
-  "Return a function that reads an API key from FILE.
-
-When FILE is nil, derive the filename from the active backend type.
-For example, an `gptel-openai' backend resolves to:
-
-  ~/.openai_api_key
-
-The file must contain only the API key, optionally followed by a
-trailing newline.
-
-The returned function performs the lookup when GPTel requests the
-credential."
+(defun boost--gptel-api-key-from-file (file)
+  "Return a function that reads an API key from FILE."
   (lambda ()
-    (let* ((key-file
-            (or file
-                (expand-file-name
-                 (format ".%s_api_key"
-                         (thread-first
-                           (type-of gptel-backend)
-                           (symbol-name)
-                           (substring 6)
-                           (downcase)))
-                 "~")))
-           (key
-            (when (file-readable-p key-file)
-              (with-temp-buffer
-                (insert-file-contents key-file)
-                (string-trim
-                 (buffer-substring-no-properties
-                  (point-min)
-                  (point-max)))))))
-      (unless (and key (not (string-empty-p key)))
-        (user-error "No API key found in %s" key-file))
+    (unless (file-readable-p file)
+      (user-error "[API key file is not readable: %s]" file))
+    (let ((key
+           (string-trim
+            (with-temp-buffer
+              (insert-file-contents file)
+              (buffer-string)))))
+      (when (string-empty-p key)
+        (user-error "[API key file is empty: %s]" file))
       key)))
 
 (defun boost-gptel-project-root (&optional directory)
@@ -296,7 +248,7 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
   (setq boost-gptel-anthropic-backend
         (gptel-make-anthropic "Anthropic"
           :stream t
-          :key (boost--gptel-api-key-from-file)
+          :key (boost--gptel-api-key-from-file "~/.anthropic_api_key")
           :models (list boost-gptel-anthropic-model))))
 
 (defun boost-gptel-select-default-provider ()
@@ -886,7 +838,6 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 
 (add-hook 'gptel-mode-hook #'boost--gptel-font-lock)
 
-(with-eval-after-load 'gptel
   ;; Highlight GPTel responses with a light blue background and a slightly
   ;; darker bar in the left fringe.
   (setq gptel-highlight-methods '(face fringe))
@@ -1082,7 +1033,7 @@ font-lock faces remain visible inside Org source blocks."
 
   (add-hook 'gptel-post-response-functions
             #'boost--gptel-org-refresh-src-backgrounds
-            95))
+            95)
 
 (defun boost-gptel-chat-mode-setup ()
   "Configure presentation in buffers managed by `gptel-mode'."
@@ -1096,7 +1047,7 @@ font-lock faces remain visible inside Org source blocks."
 ;; This binding belongs to `gptel-mode-map', whose minor-mode binding takes
 ;; precedence over the major-mode binding in `org-mode-map'.  Ordinary Org
 ;; buffers where `gptel-mode' is inactive retain `org-ctrl-c-ctrl-c'.
-(define-key gptel-mode-map (kbd "C-c C-c") #'gptel-send)
+(keymap-set gptel-mode-map "C-c C-c" #'gptel-send)
 
 ;; Keep the streaming response visible.
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
@@ -1121,10 +1072,7 @@ font-lock faces remain visible inside Org source blocks."
       (insert (gptel-prompt-prefix-string))
       (goto-char (point-max)))))
 
-(with-eval-after-load 'gptel
-  (define-key gptel-mode-map
-              (kbd "C-c M-k")
-              #'gptel-clear-buffer))
+(keymap-set gptel-mode-map "C-c M-k" #'gptel-clear-buffer)
 
 (defun boost-gptel-directive (name)
   "Return directive NAME or signal a user-facing error."
@@ -1249,22 +1197,25 @@ font-lock faces remain visible inside Org source blocks."
       source)
      'writing)))
 
-(define-prefix-command 'boost-gptel-prefix-map)
+(defvar-keymap boost-gptel-prefix-map
+  :doc "Prefix map for GPTel commands."
+  :prefix t
+
+  "g" #'gptel                           ; Chat.
+  "s" #'gptel-send                      ; Send.
+  "m" #'gptel-menu                      ; Change configuration.
+  "r" #'gptel-rewrite                   ; Rewrite this.
+  "a" #'gptel-add                       ; AI, know about this.
+  "f" #'gptel-add-file
+
+  "p" #'boost-gptel-add-project-context
+  "c" #'boost-gptel-clear-buffer-context
+  "i" #'boost-gptel-show-context
+  "e" #'boost-gptel-explain-region
+  "S" #'boost-gptel-summarize-buffer
+  "t" #'boost-gptel-translate-region)
+
 (global-set-key (kbd "C-c g") #'boost-gptel-prefix-map)
-
-(define-key boost-gptel-prefix-map (kbd "g") #'gptel)  ; Chat.
-(define-key boost-gptel-prefix-map (kbd "s") #'gptel-send)  ; Send.
-(define-key boost-gptel-prefix-map (kbd "m") #'gptel-menu)  ; Change configuration.
-(define-key boost-gptel-prefix-map (kbd "r") #'gptel-rewrite)  ; Rewrite this.
-(define-key boost-gptel-prefix-map (kbd "a") #'gptel-add)  ; AI, know about this.
-(define-key boost-gptel-prefix-map (kbd "f") #'gptel-add-file)
-
-(define-key boost-gptel-prefix-map (kbd "p") #'boost-gptel-add-project-context)
-(define-key boost-gptel-prefix-map (kbd "c") #'boost-gptel-clear-buffer-context)
-(define-key boost-gptel-prefix-map (kbd "i") #'boost-gptel-show-context)
-(define-key boost-gptel-prefix-map (kbd "e") #'boost-gptel-explain-region)
-(define-key boost-gptel-prefix-map (kbd "S") #'boost-gptel-summarize-buffer)
-(define-key boost-gptel-prefix-map (kbd "t") #'boost-gptel-translate-region)
 
 (defcustom boost-gptel-enable-mcp-integration nil
   "Whether to load GPTel's optional MCP integration library."
@@ -1311,10 +1262,10 @@ font-lock faces remain visible inside Org source blocks."
         (if (eq gptel-log-level 'debug) nil 'debug))
   (message "[GPTel logging: %s]" (or gptel-log-level "disabled")))
 
-(define-key boost-gptel-prefix-map (kbd "d")
-            #'boost-gptel-describe-active-configuration)
-(define-key boost-gptel-prefix-map (kbd "l")
-            #'boost-gptel-toggle-debug-logging)
+(keymap-set boost-gptel-prefix-map
+            "d" #'boost-gptel-describe-active-configuration)
+(keymap-set boost-gptel-prefix-map
+            "l" #'boost-gptel-toggle-debug-logging)
 
 (provide 'emacs-leuven-gptel)
 
