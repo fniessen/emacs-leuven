@@ -423,6 +423,20 @@ second, redundant backend next to it."
 
 (setq gptel-system-prompt (alist-get 'default gptel-directives))
 
+(defun boost-shell-rewrite-directive ()
+  "Rewrite directive used in `shell-mode'."
+  (when (derived-mode-p 'shell-mode)
+    (concat
+     "You are an expert Unix shell engineer. "
+     "Rewrite or answer according to my request. "
+     "Output ONLY the final text that should be inserted into the buffer. "
+     "Do not add introductions, explanations, commentary, notes, markdown fences, "
+     "headings, bullet lists, or conversational text. "
+     "Preserve shell syntax, quoting, indentation, line breaks, and formatting. "
+     "Return raw shell content only.")))
+
+(add-hook 'gptel-rewrite-directives-hook #'boost-shell-rewrite-directive)
+
 (defcustom boost-gptel-project-context-files
   '("README.md" "README.org" "CONTRIBUTING.md" "AGENTS.md")
   "Project-relative files considered by `boost-gptel-add-project-context'."

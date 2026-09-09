@@ -500,10 +500,13 @@ selected globally.  Presets opt into specific tools.
 (setq gptel-expert-commands t)
 #+end_src
 
-* Prompt library
+* Directives
 
-Prompts are ordinary Emacs Lisp values.  Keeping them separate from directives
-makes it easy to reuse them in presets and custom commands.
+Prompts are ordinary Emacs Lisp values, kept separate from the directive alist
+itself so they can be reused in presets and custom commands.
+
+This chapter defines the prompt values first, then registers them as named
+directives in =gptel-directives= at the end.
 
 ** General assistant prompt
 
@@ -665,7 +668,7 @@ remaining elements form alternating user and assistant turns.
    "Understood. I will first restate the requirement and identify material assumptions, then propose the smallest safe change."))
 #+end_src
 
-* Directives
+** Registering directives
 
 This updates individual entries instead of replacing GPTel's entire directive
 alist.
@@ -687,6 +690,31 @@ alist.
   (setf (alist-get (car entry) gptel-directives) (cdr entry)))
 
 (setq gptel-system-prompt (alist-get 'default gptel-directives))
+#+end_src
+
+** Rewrite directives
+
+Functions added to =gptel-rewrite-directives-hook= are consulted by
+=gptel--rewrite-directive-default= (the value registered under the =rewrite= key in
+=gptel-directives=), and used until one returns non-nil; otherwise GPTel falls
+back to its own generic, major-mode-based rewrite instructions.
+
+*** Shell
+
+#+begin_src emacs-lisp
+(defun boost-shell-rewrite-directive ()
+  "Rewrite directive used in `shell-mode'."
+  (when (derived-mode-p 'shell-mode)
+    (concat
+     "You are an expert Unix shell engineer. "
+     "Rewrite or answer according to my request. "
+     "Output ONLY the final text that should be inserted into the buffer. "
+     "Do not add introductions, explanations, commentary, notes, markdown fences, "
+     "headings, bullet lists, or conversational text. "
+     "Preserve shell syntax, quoting, indentation, line breaks, and formatting. "
+     "Return raw shell content only.")))
+
+(add-hook 'gptel-rewrite-directives-hook #'boost-shell-rewrite-directive)
 #+end_src
 
 * Context management
