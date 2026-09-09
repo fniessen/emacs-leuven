@@ -492,13 +492,24 @@ selected globally.  Presets opt into specific tools.
 
 (setq gptel-context-restrict-to-project-files t)
 
-(setq gptel-track-media t)
+(setq gptel-track-media nil)
 
 (setq gptel-log-level nil)
 
 ;; Enable GPTel's expert/power-user commands.
 (setq gptel-expert-commands t)
 #+end_src
+
+When invoking =gptel-rewrite=, display the action dispatcher:
+
+#+begin_src emacs-lisp
+;; Rewrite UI.
+(setq gptel-rewrite-default-action 'dispatch)
+#+end_src
+
+Key bindings for GPTel rewrite actions at point:
+- ~C-c C-d~ - Run =gptel--rewrite-diff=
+- ~C-c C-e~ - Run =gptel--rewrite-ediff=
 
 * Directives
 

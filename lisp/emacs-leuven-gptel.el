@@ -302,12 +302,15 @@ second, redundant backend next to it."
 
 (setq gptel-context-restrict-to-project-files t)
 
-(setq gptel-track-media t)
+(setq gptel-track-media nil)
 
 (setq gptel-log-level nil)
 
 ;; Enable GPTel's expert/power-user commands.
 (setq gptel-expert-commands t)
+
+;; Rewrite UI.
+(setq gptel-rewrite-default-action 'dispatch)
 
 (defconst boost-gptel-prompt-default
   (string-join
