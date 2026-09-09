@@ -1734,16 +1734,17 @@ Org buffers and invokes ~gptel-send~ only while ~gptel-mode~ is active.
 Convenience commands for managing GPTel chat buffers.
 
 #+begin_src emacs-lisp
-(defun gptel-clear-buffer ()
+(defun boost-gptel-clear-buffer ()
   "Clear the current GPTel chat buffer and insert a fresh prompt."
   (interactive)
   (when (y-or-n-p "Clear chat buffer? ")
     (let ((inhibit-read-only t))
       (erase-buffer)
-      (insert (gptel-prompt-prefix-string))
+      (insert (or (alist-get major-mode gptel-prompt-prefix-alist)
+                  "Prompt "))
       (goto-char (point-max)))))
 
-(keymap-set gptel-mode-map "C-c M-k" #'gptel-clear-buffer)
+(keymap-set gptel-mode-map "C-c M-k" #'boost-gptel-clear-buffer)
 #+end_src
 
 * Custom programmatic requests

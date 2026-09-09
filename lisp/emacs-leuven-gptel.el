@@ -1063,16 +1063,17 @@ font-lock faces remain visible inside Org source blocks."
 
 (add-hook 'gptel-post-response-functions #'boost-gptel-after-response 100)
 
-(defun gptel-clear-buffer ()
+(defun boost-gptel-clear-buffer ()
   "Clear the current GPTel chat buffer and insert a fresh prompt."
   (interactive)
   (when (y-or-n-p "Clear chat buffer? ")
     (let ((inhibit-read-only t))
       (erase-buffer)
-      (insert (gptel-prompt-prefix-string))
+      (insert (or (alist-get major-mode gptel-prompt-prefix-alist)
+                  "Prompt "))
       (goto-char (point-max)))))
 
-(keymap-set gptel-mode-map "C-c M-k" #'gptel-clear-buffer)
+(keymap-set gptel-mode-map "C-c M-k" #'boost-gptel-clear-buffer)
 
 (defun boost-gptel-directive (name)
   "Return directive NAME or signal a user-facing error."
