@@ -386,6 +386,14 @@ second, redundant backend next to it."
      "Finish with a short list of open questions when any remain.")
    "\n"))
 
+(defconst boost-gptel-prompt-emacser
+  (string-join
+   '("You are an Emacs Maven."
+     "Reply only with the most appropriate built-in Emacs comment for the requested task."
+     "Do not generate any explanation, description, or commentary."
+     "Return only the comment text.")
+   "\n"))
+
 (defun boost-gptel-project-directive ()
   "Return a programming directive enriched with current Emacs context."
   (format
@@ -419,6 +427,7 @@ second, redundant backend next to it."
       (cons 'writing           boost-gptel-prompt-writing)
       (cons 'research          boost-gptel-prompt-research)
       (cons 'summarize         boost-gptel-prompt-summarization)
+      (cons 'emacser           boost-gptel-prompt-emacser)
       (cons 'project-aware     #'boost-gptel-project-directive)
       (cons 'house-style       #'boost-gptel-house-style-directive)
       (cons 'pair-programming  boost-gptel-pair-programming-template)))
@@ -1095,7 +1104,7 @@ font-lock faces remain visible inside Org source blocks."
 ;; Keep the streaming response visible.
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
 
-(defun boost--gptel-scroll-to-response-end (_beg _end)
+(defun boost--gptel-scroll-to-end-of-response (_beg _end)
   "Move point to the end of the dedicated *gptel* buffer.
 
 Do nothing when the GPTel response belongs to another buffer."
@@ -1106,7 +1115,7 @@ Do nothing when the GPTel response belongs to another buffer."
         (set-window-point window pos)))))
 
 (add-hook 'gptel-post-response-functions
-          #'boost--gptel-scroll-to-response-end
+          #'boost--gptel-scroll-to-end-of-response
           90)
 
 (defun boost-gptel-after-response (beg end)
