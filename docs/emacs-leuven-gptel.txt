@@ -1441,23 +1441,23 @@ lifetime.
 ** Response highlighting
 
 #+begin_src emacs-lisp
-  ;; Highlight GPTel responses with a light blue background and a slightly
-  ;; darker bar in the left fringe.
-  (setq gptel-highlight-methods '(face fringe))
+;; Highlight GPTel responses with a light blue background and a slightly
+;; darker bar in the left fringe.
+(setq gptel-highlight-methods '(face fringe))
 
-  (set-face-attribute 'gptel-response-highlight nil
-                      :background "#E8F3FE"
-                      :extend t)
+(set-face-attribute 'gptel-response-highlight nil
+                    :background "#E8F3FE"
+                    :extend t)
 
-  (set-face-attribute 'gptel-response-fringe-highlight nil
-                      :foreground "#4A90E2"
-                      :weight 'bold)
+(set-face-attribute 'gptel-response-fringe-highlight nil
+                    :foreground "#4A90E2"
+                    :weight 'bold)
 #+end_src
 
 *** Turn off the line-highlight before the response appears
 
 #+begin_src emacs-lisp
-  (add-hook 'gptel-pre-response-hook #'global-hl-line-unhighlight)
+(add-hook 'gptel-pre-response-hook #'global-hl-line-unhighlight)
 #+end_src
 
 *** Extending the response background to the final newline
@@ -1475,8 +1475,8 @@ response boundaries remain unchanged. Created overlays are stored in
 a buffer-local variable and removed before the same region is highlighted again.
 
 #+begin_src emacs-lisp
-  (defvar-local boost-gptel-response-tail-overlays nil
-    "Overlays extending GPTel response backgrounds to the next line.
+(defvar-local boost-gptel-response-tail-overlays nil
+  "Overlays extending GPTel response backgrounds to the next line.
 
 GPTel response regions can end immediately after the final character of the
 response, before the terminating newline.  In that situation the `:extend'
@@ -1486,24 +1486,24 @@ visual line.
 These overlays cover the terminating newline without modifying GPTel's
 `gptel' text property.")
 
-  (defun boost--gptel-delete-response-tail-overlays (&optional beg end)
-    "Delete response-tail overlays intersecting BEG and END.
+(defun boost--gptel-delete-response-tail-overlays (&optional beg end)
+  "Delete response-tail overlays intersecting BEG and END.
 
 BEG defaults to `point-min' and END defaults to `point-max'."
 
-    (let ((beg (or beg (point-min)))
-          (end (or end (point-max))))
-      (dolist (overlay (overlays-in beg end))
-        (when (overlay-get overlay 'boost-gptel-response-tail-overlay)
-          (delete-overlay overlay))))
+  (let ((beg (or beg (point-min)))
+        (end (or end (point-max))))
+    (dolist (overlay (overlays-in beg end))
+      (when (overlay-get overlay 'boost-gptel-response-tail-overlay)
+        (delete-overlay overlay))))
 
-    ;; Remove references to overlays that no longer exist.
-    (setq boost-gptel-response-tail-overlays
-          (cl-delete-if-not #'overlay-buffer
-                            boost-gptel-response-tail-overlays)))
+  ;; Remove references to overlays that no longer exist.
+  (setq boost-gptel-response-tail-overlays
+        (cl-delete-if-not #'overlay-buffer
+                          boost-gptel-response-tail-overlays)))
 
-  (defun boost--gptel-extend-response-background (beg end)
-    "Extend a GPTel response background from END to the next line.
+(defun boost--gptel-extend-response-background (beg end)
+  "Extend a GPTel response background from END to the next line.
 
 BEG and END are supplied by `gptel-post-response-functions'.
 
@@ -1514,50 +1514,50 @@ character.  Since the terminating newline is then outside the overlay,
 This function adds a background-only overlay from END through the terminating
 newline.  It deliberately does not add or modify the `gptel' text property."
 
-    (when (and (< beg end)
-               (< end (point-max)))
-      (boost--gptel-delete-response-tail-overlays
-       end
-       (min (1+ end) (point-max)))
+  (when (and (< beg end)
+             (< end (point-max)))
+    (boost--gptel-delete-response-tail-overlays
+     end
+     (min (1+ end) (point-max)))
 
-      (save-excursion
-        (goto-char end)
+    (save-excursion
+      (goto-char end)
 
-        ;; Only extend when END is not already positioned after a newline.
-        (unless (bolp)
-          (let* ((tail-beg end)
-                 ;; Include the terminating newline, but do not colour the
-                 ;; contents of the following prompt.
-                 (tail-end
-                  (min (line-beginning-position 2)
-                       (point-max)))
-                 (overlay
-                  (make-overlay tail-beg tail-end nil t nil)))
+      ;; Only extend when END is not already positioned after a newline.
+      (unless (bolp)
+        (let* ((tail-beg end)
+               ;; Include the terminating newline, but do not colour the
+               ;; contents of the following prompt.
+               (tail-end
+                (min (line-beginning-position 2)
+                     (point-max)))
+               (overlay
+                (make-overlay tail-beg tail-end nil t nil)))
 
-            (overlay-put overlay
-                         'boost-gptel-response-tail-overlay
-                         t)
+          (overlay-put overlay
+                       'boost-gptel-response-tail-overlay
+                       t)
 
-            (overlay-put overlay 'evaporate t)
+          (overlay-put overlay 'evaporate t)
 
-            ;; Use the same GPTel face.  Because the overlay includes the
-            ;; newline, `:extend t' paints the background to the right edge.
-            (overlay-put overlay
-                         'face
-                         'gptel-response-highlight)
+          ;; Use the same GPTel face.  Because the overlay includes the
+          ;; newline, `:extend t' paints the background to the right edge.
+          (overlay-put overlay
+                       'face
+                       'gptel-response-highlight)
 
-            ;; Keep the extension above incidental low-priority overlays
-            ;; such as `hl-line'.
-            (overlay-put overlay 'priority 90)
+          ;; Keep the extension above incidental low-priority overlays
+          ;; such as `hl-line'.
+          (overlay-put overlay 'priority 90)
 
-            (push overlay
-                  boost-gptel-response-tail-overlays))))))
+          (push overlay
+                boost-gptel-response-tail-overlays))))))
 
-  ;; GPTel calls functions in this abnormal hook with the beginning and end
-  ;; positions of the completed response.
-  (add-hook 'gptel-post-response-functions
-            #'boost--gptel-extend-response-background
-            90)
+;; GPTel calls functions in this abnormal hook with the beginning and end
+;; positions of the completed response.
+(add-hook 'gptel-post-response-functions
+          #'boost--gptel-extend-response-background
+          90)
 #+end_src
 
 ** Org source block highlighting inside responses
@@ -1586,104 +1586,104 @@ The refresh function is registered in ~gptel-post-response-functions~. GPTel
 calls it with the beginning and end positions of the newly inserted response.
 
 #+begin_src emacs-lisp
-  (defvar-local boost-gptel-org-src-overlays nil
-    "Overlays restoring Org source-block backgrounds over GPTel highlighting.")
+(defvar-local boost-gptel-org-src-overlays nil
+  "Overlays restoring Org source-block backgrounds over GPTel highlighting.")
 
-  (defun boost--gptel-org-delete-src-overlays (&optional beg end)
-    "Delete custom source-block overlays between BEG and END."
-    (let ((beg (or beg (point-min)))
-          (end (or end (point-max))))
-      (dolist (overlay (overlays-in beg end))
-        (when (overlay-get overlay 'boost-gptel-org-src-overlay)
-          (delete-overlay overlay)))))
+(defun boost--gptel-org-delete-src-overlays (&optional beg end)
+  "Delete custom source-block overlays between BEG and END."
+  (let ((beg (or beg (point-min)))
+        (end (or end (point-max))))
+    (dolist (overlay (overlays-in beg end))
+      (when (overlay-get overlay 'boost-gptel-org-src-overlay)
+        (delete-overlay overlay)))))
 
-  (defun boost--gptel-org-put-src-overlay (beg end face)
-    "Put a background-only overlay from BEG to END.
+(defun boost--gptel-org-put-src-overlay (beg end face)
+  "Put a background-only overlay from BEG to END.
 
 FACE is used only to retrieve its background colour.  The overlay
 deliberately does not inherit FACE, so that language-specific
 font-lock faces remain visible inside Org source blocks."
-    (when (and beg end (< beg end))
-      (let ((overlay (make-overlay beg end nil t nil)))
-        (overlay-put overlay 'boost-gptel-org-src-overlay t)
-        (overlay-put overlay 'evaporate t)
+  (when (and beg end (< beg end))
+    (let ((overlay (make-overlay beg end nil t nil)))
+      (overlay-put overlay 'boost-gptel-org-src-overlay t)
+      (overlay-put overlay 'evaporate t)
 
-        ;; Override only the background applied by GPTel.
-        ;;
-        ;; Do not use `:inherit FACE' here: inheriting `org-block' would
-        ;; override the language-specific font-lock foreground colours.
-        (overlay-put
-         overlay 'face
-         `(:background
-           ,(or (face-background face nil t)
-                (face-background 'default nil t))
-           :extend t))
+      ;; Override only the background applied by GPTel.
+      ;;
+      ;; Do not use `:inherit FACE' here: inheriting `org-block' would
+      ;; override the language-specific font-lock foreground colours.
+      (overlay-put
+       overlay 'face
+       `(:background
+         ,(or (face-background face nil t)
+              (face-background 'default nil t))
+         :extend t))
 
-        ;; Higher than GPTel's response overlay.
-        (overlay-put overlay 'priority 100)
+      ;; Higher than GPTel's response overlay.
+      (overlay-put overlay 'priority 100)
 
-        (push overlay boost-gptel-org-src-overlays))))
+      (push overlay boost-gptel-org-src-overlays))))
 
-  (defun boost--gptel-org-src-property-regions (beg end)
-    "Return contiguous regions carrying the `src-block' property."
-    (let ((position beg)
-          regions)
-      (while (< position end)
-        (if (get-text-property position 'src-block)
-            (let ((next
-                   (or (next-single-property-change
-                        position 'src-block nil end)
-                       end)))
-              (push (cons position next) regions)
-              (setq position next))
-          (setq position
-                (or (next-single-property-change
-                     position 'src-block nil end)
-                    end))))
-      (nreverse regions)))
+(defun boost--gptel-org-src-property-regions (beg end)
+  "Return contiguous regions carrying the `src-block' property."
+  (let ((position beg)
+        regions)
+    (while (< position end)
+      (if (get-text-property position 'src-block)
+          (let ((next
+                 (or (next-single-property-change
+                      position 'src-block nil end)
+                     end)))
+            (push (cons position next) regions)
+            (setq position next))
+        (setq position
+              (or (next-single-property-change
+                   position 'src-block nil end)
+                  end))))
+    (nreverse regions)))
 
-  (defun boost--gptel-org-refresh-src-backgrounds (beg end)
-    "Restore Org source-block backgrounds in GPTel response BEG to END."
-    (when (derived-mode-p 'org-mode)
-      ;; Org must create `src-block' text properties before we inspect them.
-      (font-lock-flush beg end)
-      (font-lock-ensure beg end)
+(defun boost--gptel-org-refresh-src-backgrounds (beg end)
+  "Restore Org source-block backgrounds in GPTel response BEG to END."
+  (when (derived-mode-p 'org-mode)
+    ;; Org must create `src-block' text properties before we inspect them.
+    (font-lock-flush beg end)
+    (font-lock-ensure beg end)
 
-      (boost--gptel-org-delete-src-overlays beg end)
+    (boost--gptel-org-delete-src-overlays beg end)
 
-      ;; Code contents, identified by Org's own `src-block' property.
-      (dolist (region
-               (boost--gptel-org-src-property-regions beg end))
+    ;; Code contents, identified by Org's own `src-block' property.
+    (dolist (region
+             (boost--gptel-org-src-property-regions beg end))
+      (boost--gptel-org-put-src-overlay
+       (car region)
+       (cdr region)
+       'org-block))
+
+    ;; Delimiter lines do not necessarily carry `src-block'.
+    (save-excursion
+      (goto-char beg)
+
+      (while (re-search-forward
+              "^[ \t]*#\\+begin_src\\(?:[ \t].*\\)?$"
+              end t)
         (boost--gptel-org-put-src-overlay
-         (car region)
-         (cdr region)
-         'org-block))
+         (line-beginning-position)
+         (min (1+ (line-end-position)) end)
+         'org-block-begin-line))
 
-      ;; Delimiter lines do not necessarily carry `src-block'.
-      (save-excursion
-        (goto-char beg)
+      (goto-char beg)
 
-        (while (re-search-forward
-                "^[ \t]*#\\+begin_src\\(?:[ \t].*\\)?$"
-                end t)
-          (boost--gptel-org-put-src-overlay
-           (line-beginning-position)
-           (min (1+ (line-end-position)) end)
-           'org-block-begin-line))
+      (while (re-search-forward
+              "^[ \t]*#\\+end_src[ \t]*$"
+              end t)
+        (boost--gptel-org-put-src-overlay
+         (line-beginning-position)
+         (min (1+ (line-end-position)) end)
+         'org-block-end-line)))))
 
-        (goto-char beg)
-
-        (while (re-search-forward
-                "^[ \t]*#\\+end_src[ \t]*$"
-                end t)
-          (boost--gptel-org-put-src-overlay
-           (line-beginning-position)
-           (min (1+ (line-end-position)) end)
-           'org-block-end-line)))))
-
-  (add-hook 'gptel-post-response-functions
-            #'boost--gptel-org-refresh-src-backgrounds
-            95)
+(add-hook 'gptel-post-response-functions
+          #'boost--gptel-org-refresh-src-backgrounds
+          95)
 #+end_src
 
 ** Chat buffer setup
