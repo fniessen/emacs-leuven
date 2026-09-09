@@ -4438,6 +4438,9 @@ Frequently used SMerge key bindings:
 - ~C-c m RET~ (~smerge-keep-current~) ::
      Keep the version at point.
 
+- ~C-c m R~ (~smerge-refine~) ::
+     Highlight the word-level differences within the current conflict.
+
 #+begin_note
 When merge conflicts are created through Emacs VC commands, recent Emacs
 versions *automatically enable* ~smerge-mode~ for the affected buffers.
@@ -4447,17 +4450,20 @@ helper below is still useful to enable ~smerge-mode~ automatically when opening
 a file containing conflict markers.
 #+end_note
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   ;; Enable SMerge automatically.
-  (defun boost--try-smerge ()
-    (when (and buffer-file-name
-               (vc-backend buffer-file-name))
-      (save-excursion
-        (goto-char (point-min))
-        (when (re-search-forward "^<<<<<<< " nil t)
-          (smerge-mode 1)))))
+  (defun boost--enable-smerge-maybe ()
+    "Automatically enable SMerge in merge-conflict files."
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^<<<<<<< " nil t)
+        (smerge-mode 1))))
 
-  (add-hook 'find-file-hook 'boost--try-smerge 100)
+  (add-hook 'find-file-hook #'boost--enable-smerge-maybe)
+#+end_src
+
+#+begin_src emacs-lisp
+  (add-hook 'smerge-mode-hook #'smerge-refine)
 #+end_src
 
 *** Interface for merging files
@@ -4465,7 +4471,12 @@ a file containing conflict markers.
 For complex conflicts, SMerge can delegate conflict resolution to Ediff.
 
 - ~C-c m E~ (~smerge-ediff~) ::
-     Start an Ediff session for the current conflicts.
+     Resolve the conflict using Ediff.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'smerge-mode
+    (define-key smerge-mode-map (kbd "E") #'smerge-ediff))
+#+end_src
 
 Useful Ediff key bindings:
 
@@ -7207,7 +7218,7 @@ clipboard."
               (target-marker (copy-marker (point) t)))
 
           (run-at-time
-           0.8
+           1.0
            nil
            (lambda (buffer marker)
              (unwind-protect
