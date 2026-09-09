@@ -789,7 +789,6 @@ like this into your configuration file:
         multiple-cursors
         org-super-agenda
         outli
-        pager
         ;; paredit
         ;; pdf-tools
         powerline
@@ -2277,7 +2276,7 @@ exist. Non-file bookmarks and remote bookmarks are left untouched.
   (setq scroll-preserve-screen-position t)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
   ;; place the point at the same place).
   (with-eval-after-load 'pager-autoloads

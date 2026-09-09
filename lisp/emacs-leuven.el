@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260909.0822>
+;; Version: <20260909.0832>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260909.0822>"
+(defconst boost-version "<20260909.0832>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -519,7 +519,6 @@ to it. Otherwise call FUNCTION interactively."
         multiple-cursors
         org-super-agenda
         outli
-        pager
         ;; paredit
         ;; pdf-tools
         powerline
@@ -1146,20 +1145,6 @@ to it. Otherwise call FUNCTION interactively."
   ;; When scrolling, point preserves the cursor position in the buffer if the
   ;; original position is still visible.
   (setq scroll-preserve-screen-position t)
-
-  ;; Better scrolling in Emacs (doing a <PageDown> followed by a <PageUp> will
-  ;; place the point at the same place).
-  (with-eval-after-load 'pager-autoloads
-
-    (autoload 'pager-page-up "pager"
-      "Like scroll-down, but moves a fixed amount of lines." t)
-                                        ; These autoloads aren't defined in
-                                        ; `pager-autoloads'!
-    (autoload 'pager-page-down "pager"
-      "Like scroll-up, but moves a fixed amount of lines." t)
-
-    (global-set-key (kbd "<prior>") #'pager-page-up)
-    (global-set-key (kbd "<next>")  #'pager-page-down))
 
 ;;** 15.3 (info "(emacs)Auto Scrolling")
 
