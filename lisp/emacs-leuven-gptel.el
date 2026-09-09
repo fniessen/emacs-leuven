@@ -1258,10 +1258,13 @@ Do nothing when the GPTel response belongs to another buffer."
           boost-gptel-command-max-input-chars)))
     (boost-gptel-request-in-new-buffer
      (format "Translation to %s" target-language)
-     (format
-      "Translate the following text to %s. Preserve meaning, formatting, names, numbers, and technical terms. Return only the translation.\n\n%s"
-      target-language
-      source)
+     (string-join
+      (list
+       "Translate the following text to " target-language ". "
+       "Preserve meaning, formatting, names, numbers, and technical terms. "
+       "Return only the translation.\n\n"
+       source)
+      "")
      'writing)))
 
 (defvar-keymap boost-gptel-prefix-map
@@ -1335,6 +1338,9 @@ Do nothing when the GPTel response belongs to another buffer."
             "l" #'boost-gptel-toggle-debug-logging)
 
 (boost--try-require 'gptel-commit-msg)
+
+(when (locate-library "uuid")
+  (boost--try-require 'gptel-proof))
 
 (provide 'emacs-leuven-gptel)
 

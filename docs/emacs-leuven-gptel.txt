@@ -13,6 +13,9 @@
 Multiple Backends, Dynamic Discovery, Rewrite and Chat
 https://sukany.cz/blog/2026-03-23-emacs-gptel-setup/
 
+Tous les LLM dans Emacs, avec gptel
+https://www.youtube.com/watch?v=bsRnh_brggM
+
 * About this configuration
 
 This file is an example of a literate GPTel configuration.  It is designed to be
@@ -1896,6 +1899,8 @@ Convenience commands for managing GPTel chat buffers.
 
 * Custom programmatic requests
 
+By leveraging =gptel-request=, it's possible to *automate common patterns*.
+
 These commands use =gptel-request= for one-shot workflows and display the result
 in a new Org buffer.  They use the active backend and model.
 
@@ -2043,10 +2048,13 @@ one-shot request instead of accidentally inheriting unrelated buffer state.
           boost-gptel-command-max-input-chars)))
     (boost-gptel-request-in-new-buffer
      (format "Translation to %s" target-language)
-     (format
-      "Translate the following text to %s. Preserve meaning, formatting, names, numbers, and technical terms. Return only the translation.\n\n%s"
-      target-language
-      source)
+     (string-join
+      (list
+       "Translate the following text to " target-language ". "
+       "Preserve meaning, formatting, names, numbers, and technical terms. "
+       "Return only the translation.\n\n"
+       source)
+      "")
      'writing)))
 #+end_src
 
@@ -2160,6 +2168,42 @@ diagnostic session and inspect the log before sharing it.
 
 #+begin_src emacs-lisp
 (boost--try-require 'gptel-commit-msg)
+#+end_src
+
+* GPTel-proof
+
+*Why use GPTel-Proof?*
+
+GPTel-Proof is an Emacs command that uses an LLM to proofread selected text
+while preserving the original structure as much as possible.
+
+*Key advantages:*
+
+- *Minimal diffs*: corrections are intentionally conservative, producing the
+  smallest possible changes so that diffs stay clean and easy to review.
+- *Preserves formatting*: line breaks, indentation, and overall visual layout
+  are kept close to the original text.
+- *Conflict-style review workflow*: proposed corrections are inserted as a merge
+  conflict, allowing easy inspection with smerge-mode, ediff, or standard diff
+  tools.
+- *Two proofreading modes*:
+  - *Gentle*: fixes spelling, grammar, and punctuation while preserving the
+    author's wording and tone.
+  - *Aggressive*: additionally rewrites for clarity, conciseness, active voice,
+    and readability.
+- *Works directly in Emacs*: no copy-and-paste to external tools or websites.
+- *Suitable for technical writing*: documentation, code comments, commit
+  messages, release notes, emails, and reports.
+- *Review before accepting*: the original text is always preserved until the
+  user explicitly resolves the proposed changes.
+
+In short, GPTel-Proof provides AI-assisted proofreading with
+a developer-friendly workflow: minimal edits, clean diffs, and full control over
+every change.
+
+#+begin_src emacs-lisp
+(when (locate-library "uuid")
+  (boost--try-require 'gptel-proof))
 #+end_src
 
 * File epilogue
