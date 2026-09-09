@@ -242,10 +242,10 @@ symbolic links are resolved."
      (substring text 0 limit)
      (format "\n\n[Output truncated after %d characters.]" limit))))
 
-(defun boost-gptel-buffer-substring-limited (begin end limit)
-  "Return buffer text from BEGIN to END without copying more than LIMIT chars."
-  (let* ((start (min begin end))
-         (finish (max begin end))
+(defun boost-gptel-buffer-substring-limited (beg end limit)
+  "Return buffer text from BEG to END without copying more than LIMIT chars."
+  (let* ((start (min beg end))
+         (finish (max beg end))
          (cutoff (min finish (+ start limit)))
          (text (buffer-substring-no-properties start cutoff)))
     (if (< cutoff finish)
@@ -916,14 +916,14 @@ visual line.
 These overlays cover the terminating newline without modifying GPTel's
 `gptel' text property.")
 
-  (defun boost--gptel-delete-response-tail-overlays (&optional begin end)
-    "Delete response-tail overlays intersecting BEGIN and END.
+  (defun boost--gptel-delete-response-tail-overlays (&optional beg end)
+    "Delete response-tail overlays intersecting BEG and END.
 
-BEGIN defaults to `point-min' and END defaults to `point-max'."
+BEG defaults to `point-min' and END defaults to `point-max'."
 
-    (let ((begin (or begin (point-min)))
-          (end   (or end   (point-max))))
-      (dolist (overlay (overlays-in begin end))
+    (let ((beg (or beg (point-min)))
+          (end (or end (point-max))))
+      (dolist (overlay (overlays-in beg end))
         (when (overlay-get overlay 'boost-gptel-response-tail-overlay)
           (delete-overlay overlay))))
 
@@ -932,10 +932,10 @@ BEGIN defaults to `point-min' and END defaults to `point-max'."
           (cl-delete-if-not #'overlay-buffer
                             boost-gptel-response-tail-overlays)))
 
-  (defun boost--gptel-extend-response-background (begin end)
+  (defun boost--gptel-extend-response-background (beg end)
     "Extend a GPTel response background from END to the next line.
 
-BEGIN and END are supplied by `gptel-post-response-functions'.
+BEG and END are supplied by `gptel-post-response-functions'.
 
 GPTel can terminate its response overlay immediately after the final response
 character.  Since the terminating newline is then outside the overlay,
@@ -944,7 +944,7 @@ character.  Since the terminating newline is then outside the overlay,
 This function adds a background-only overlay from END through the terminating
 newline.  It deliberately does not add or modify the `gptel' text property."
 
-    (when (and (< begin end)
+    (when (and (< beg end)
                (< end (point-max)))
       (boost--gptel-delete-response-tail-overlays
        end
@@ -955,14 +955,14 @@ newline.  It deliberately does not add or modify the `gptel' text property."
 
         ;; Only extend when END is not already positioned after a newline.
         (unless (bolp)
-          (let* ((tail-begin end)
+          (let* ((tail-beg end)
                  ;; Include the terminating newline, but do not colour the
                  ;; contents of the following prompt.
                  (tail-end
                   (min (line-beginning-position 2)
                        (point-max)))
                  (overlay
-                  (make-overlay tail-begin tail-end nil t nil)))
+                  (make-overlay tail-beg tail-end nil t nil)))
 
             (overlay-put overlay
                          'boost-gptel-response-tail-overlay
@@ -992,22 +992,22 @@ newline.  It deliberately does not add or modify the `gptel' text property."
   (defvar-local boost-gptel-org-src-overlays nil
     "Overlays restoring Org source-block backgrounds over GPTel highlighting.")
 
-  (defun boost--gptel-org-delete-src-overlays (&optional begin end)
-    "Delete custom source-block overlays between BEGIN and END."
-    (let ((begin (or begin (point-min)))
-          (end   (or end   (point-max))))
-      (dolist (overlay (overlays-in begin end))
+  (defun boost--gptel-org-delete-src-overlays (&optional beg end)
+    "Delete custom source-block overlays between BEG and END."
+    (let ((beg (or beg (point-min)))
+          (end (or end (point-max))))
+      (dolist (overlay (overlays-in beg end))
         (when (overlay-get overlay 'boost-gptel-org-src-overlay)
           (delete-overlay overlay)))))
 
-  (defun boost--gptel-org-put-src-overlay (begin end face)
-    "Put a background-only overlay from BEGIN to END.
+  (defun boost--gptel-org-put-src-overlay (beg end face)
+    "Put a background-only overlay from BEG to END.
 
 FACE is used only to retrieve its background colour.  The overlay
 deliberately does not inherit FACE, so that language-specific
 font-lock faces remain visible inside Org source blocks."
-    (when (and begin end (< begin end))
-      (let ((overlay (make-overlay begin end nil t nil)))
+    (when (and beg end (< beg end))
+      (let ((overlay (make-overlay beg end nil t nil)))
         (overlay-put overlay 'boost-gptel-org-src-overlay t)
         (overlay-put overlay 'evaporate t)
 
@@ -1027,9 +1027,9 @@ font-lock faces remain visible inside Org source blocks."
 
         (push overlay boost-gptel-org-src-overlays))))
 
-  (defun boost--gptel-org-src-property-regions (begin end)
+  (defun boost--gptel-org-src-property-regions (beg end)
     "Return contiguous regions carrying the `src-block' property."
-    (let ((position begin)
+    (let ((position beg)
           regions)
       (while (< position end)
         (if (get-text-property position 'src-block)
@@ -1045,18 +1045,18 @@ font-lock faces remain visible inside Org source blocks."
                     end))))
       (nreverse regions)))
 
-  (defun boost--gptel-org-refresh-src-backgrounds (begin end)
-    "Restore Org source-block backgrounds in GPTel response BEGIN to END."
+  (defun boost--gptel-org-refresh-src-backgrounds (beg end)
+    "Restore Org source-block backgrounds in GPTel response BEG to END."
     (when (derived-mode-p 'org-mode)
       ;; Org must create `src-block' text properties before we inspect them.
-      (font-lock-flush begin end)
-      (font-lock-ensure begin end)
+      (font-lock-flush beg end)
+      (font-lock-ensure beg end)
 
-      (boost--gptel-org-delete-src-overlays begin end)
+      (boost--gptel-org-delete-src-overlays beg end)
 
       ;; Code contents, identified by Org's own `src-block' property.
       (dolist (region
-               (boost--gptel-org-src-property-regions begin end))
+               (boost--gptel-org-src-property-regions beg end))
         (boost--gptel-org-put-src-overlay
          (car region)
          (cdr region)
@@ -1064,7 +1064,7 @@ font-lock faces remain visible inside Org source blocks."
 
       ;; Delimiter lines do not necessarily carry `src-block'.
       (save-excursion
-        (goto-char begin)
+        (goto-char beg)
 
         (while (re-search-forward
                 "^[ \t]*#\\+begin_src\\(?:[ \t].*\\)?$"
@@ -1074,7 +1074,7 @@ font-lock faces remain visible inside Org source blocks."
            (min (1+ (line-end-position)) end)
            'org-block-begin-line))
 
-        (goto-char begin)
+        (goto-char beg)
 
         (while (re-search-forward
                 "^[ \t]*#\\+end_src[ \t]*$"
@@ -1105,14 +1105,14 @@ font-lock faces remain visible inside Org source blocks."
 ;; Keep the streaming response visible.
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
 
-(defun boost-gptel-after-response (begin end)
-  "Run lightweight UI actions after a response from BEGIN to END."
-  (when (> end begin)
+(defun boost-gptel-after-response (beg end)
+  "Run lightweight UI actions after a response from BEG to END."
+  (when (> end beg)
     (when boost-gptel-move-point-after-response
-      (gptel-end-of-response begin end))
+      (gptel-end-of-response beg end))
     (message "[GPTel response completed: %d character%s]"
-             (- end begin)
-             (if (= (- end begin) 1) "" "s"))))
+             (- end beg)
+             (if (= (- end beg) 1) "" "s"))))
 
 (add-hook 'gptel-post-response-functions #'boost-gptel-after-response 100)
 
@@ -1188,14 +1188,14 @@ font-lock faces remain visible inside Org source blocks."
       :callback (boost-gptel-result-callback buffer))
     buffer))
 
-(defun boost-gptel-explain-region (begin end)
-  "Explain the active region between BEGIN and END."
+(defun boost-gptel-explain-region (beg end)
+  "Explain the active region between BEG and END."
   (interactive "R")                     ; Emacs 31.1.
   (unless beg
     (user-error "Select a region first"))
   (let ((source
          (boost-gptel-buffer-substring-limited
-          begin
+          beg
           end
           boost-gptel-command-max-input-chars)))
     (boost-gptel-request-in-new-buffer
@@ -1222,8 +1222,8 @@ font-lock faces remain visible inside Org source blocks."
   '("French" "Dutch" "English" "Spanish")
   "List of default target languages proposed to `boost-gptel-translate-region'.")
 
-(defun boost-gptel-translate-region (begin end target-language)
-  "Translate the active region between BEGIN and END to TARGET-LANGUAGE."
+(defun boost-gptel-translate-region (beg end target-language)
+  "Translate the active region between BEG and END to TARGET-LANGUAGE."
   (interactive
    (if (use-region-p)
        (list
@@ -1239,7 +1239,7 @@ font-lock faces remain visible inside Org source blocks."
      (user-error "Select a region first")))
   (let ((source
          (boost-gptel-buffer-substring-limited
-          begin
+          beg
           end
           boost-gptel-command-max-input-chars)))
     (boost-gptel-request-in-new-buffer
