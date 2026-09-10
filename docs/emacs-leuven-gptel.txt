@@ -16,6 +16,15 @@ https://sukany.cz/blog/2026-03-23-emacs-gptel-setup/
 Tous les LLM dans Emacs, avec gptel
 https://www.youtube.com/watch?v=bsRnh_brggM
 
+Shorten Org task titles to ≤67 chars
+prompts/shorten.txt from https://github.com/jwiegley/dot-emacs
+
+Generate concise action-oriented titles
+prompts/title.txt from https://github.com/jwiegley/dot-emacs
+
+Plan/execute actions
+https://github.com/dolmens/gptel-aibo
+
 * About this configuration
 
 This file is an example of a literate GPTel configuration.  It is designed to be
@@ -832,8 +841,26 @@ that all confidential data will be recognised. Review and extend the regular
 expressions before enabling these tools in sensitive environments.
 
 #+begin_seealso
-See [[https://github.com/karthink/gptel/discussions/1093#discussioncomment-14728014][this GPTel discussion]] for an example of tool usage.
+See [[https://github.com/karthink/gptel/discussions/1093#discussioncomment-14728014][this GPTel discussion]] for an example of tools usage:
+- =symbol_exists=
+- =function_documentation=
+- =execute_bash=
 #+end_seealso
+
+*************** TODO Tools available in [[https://github.com/andreasjansson/greger.el][Greger]]
+- =read-file=
+- =write-new-file=
+- =replace-file=
+- =str-replace=
+- =make-directory=
+- =rename-file=
+- =delete-files=
+- =list-directory=
+- =ripgrep=
+- =shell-command=
+- =web_search=
+- =read-webpage=
+*************** END
 
 ** Tool functions
 
@@ -1449,6 +1476,63 @@ keep the simpler linear behaviour:
 #+begin_src emacs-lisp :tangle no
 ;; Send all content before point as context, ignoring the Org hierarchy.
 (setq gptel-org-branching-context nil)
+#+end_src
+
+** Interactive review of GPTel context
+
+#+begin_src emacs-lisp
+(defun boost-gptel--context-item-label (src)
+  "Retourner une étiquette lisible pour un élément SRC du contexte GPTel."
+  (let* ((type (plist-get src :type))
+         (type-sym (if (symbolp type) type (and (stringp type) (intern type))))
+         (label
+          (cond
+           ((eq type-sym 'file)
+            (or (plist-get src :path)
+                (plist-get src :file)
+                "<fichier inconnu>"))
+           ((eq type-sym 'buffer)
+            (let ((b (plist-get src :buffer)))
+              (cond
+               ((bufferp b) (format "#<buffer %s>" (buffer-name b)))
+               ((stringp b) (format "#<buffer %s>" b))
+               (t "#<buffer inconnu>"))))
+           ((memq type-sym '(string snippet))
+            (let ((s (or (plist-get src :content)
+                         (plist-get src :string)
+                         (plist-get src :text)
+                         "")))
+              (format "texte: %s"
+                      (truncate-string-to-width
+                       (replace-regexp-in-string "[\n\r]+" " " s)
+                       60 nil nil "..."))))
+           (t (or (plist-get src :name)
+                  (plist-get src :label)
+                  (format "%S" src))))))
+    (format "[%s] %s" (or type 'inconnu) label)))
+
+(defun boost-gptel-review-context ()
+  "Passer en revue `gptel-context' et demander pour chaque élément s'il faut le garder.
+Met à jour la variable buffer-locale `gptel-context' avec les éléments conservés."
+  (interactive)
+  (unless (boundp 'gptel-context)
+    (user-error "Ce buffer n'a pas de contexte GPTel (gptel-context non lié)"))
+  (if (null gptel-context)
+      (message "Contexte GPTel vide")
+    (let* ((ctx gptel-context)
+           (kept nil))
+      (map-y-or-n-p
+       (lambda (src)
+         (format "Garder %s ? " (boost-gptel--context-item-label src)))
+       (lambda (src) (push src kept))
+       ctx
+       '("y = garder, n = supprimer, ! = garder le reste, q = arrêter"))
+      (setq-local gptel-context (nreverse kept))
+      (message "Contexte GPTel: %d gardé(s), %d supprimé(s)"
+               (length gptel-context) (- (length ctx) (length gptel-context))))))
+
+;; reView context.
+(keymap-set gptel-mode-map "C-c g v" #'boost-gptel-review-context)
 #+end_src
 
 ** Prompt and response prefixes

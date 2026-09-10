@@ -848,6 +848,59 @@ second, redundant backend next to it."
 ;; Use Org mode for GPTel chat buffers.
 (setq gptel-default-mode 'org-mode)
 
+(defun boost-gptel--context-item-label (src)
+  "Retourner une étiquette lisible pour un élément SRC du contexte GPTel."
+  (let* ((type (plist-get src :type))
+         (type-sym (if (symbolp type) type (and (stringp type) (intern type))))
+         (label
+          (cond
+           ((eq type-sym 'file)
+            (or (plist-get src :path)
+                (plist-get src :file)
+                "<fichier inconnu>"))
+           ((eq type-sym 'buffer)
+            (let ((b (plist-get src :buffer)))
+              (cond
+               ((bufferp b) (format "#<buffer %s>" (buffer-name b)))
+               ((stringp b) (format "#<buffer %s>" b))
+               (t "#<buffer inconnu>"))))
+           ((memq type-sym '(string snippet))
+            (let ((s (or (plist-get src :content)
+                         (plist-get src :string)
+                         (plist-get src :text)
+                         "")))
+              (format "texte: %s"
+                      (truncate-string-to-width
+                       (replace-regexp-in-string "[\n\r]+" " " s)
+                       60 nil nil "..."))))
+           (t (or (plist-get src :name)
+                  (plist-get src :label)
+                  (format "%S" src))))))
+    (format "[%s] %s" (or type 'inconnu) label)))
+
+(defun boost-gptel-review-context ()
+  "Passer en revue `gptel-context' et demander pour chaque élément s'il faut le garder.
+Met à jour la variable buffer-locale `gptel-context' avec les éléments conservés."
+  (interactive)
+  (unless (boundp 'gptel-context)
+    (user-error "Ce buffer n'a pas de contexte GPTel (gptel-context non lié)"))
+  (if (null gptel-context)
+      (message "Contexte GPTel vide")
+    (let* ((ctx gptel-context)
+           (kept nil))
+      (map-y-or-n-p
+       (lambda (src)
+         (format "Garder %s ? " (boost-gptel--context-item-label src)))
+       (lambda (src) (push src kept))
+       ctx
+       '("y = garder, n = supprimer, ! = garder le reste, q = arrêter"))
+      (setq-local gptel-context (nreverse kept))
+      (message "Contexte GPTel: %d gardé(s), %d supprimé(s)"
+               (length gptel-context) (- (length ctx) (length gptel-context))))))
+
+;; reView context.
+(keymap-set gptel-mode-map "C-c g v" #'boost-gptel-review-context)
+
 (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "Prompt ")
 (setf (alist-get 'org-mode gptel-response-prefix-alist) "Response\n\n")
 
