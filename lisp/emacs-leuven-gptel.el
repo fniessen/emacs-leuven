@@ -849,7 +849,7 @@ second, redundant backend next to it."
 (setq gptel-default-mode 'org-mode)
 
 (defun boost-gptel--context-item-label (src)
-  "Retourner une étiquette lisible pour un élément SRC du contexte GPTel."
+  "Return a human-readable label for a GPTel context SRC item."
   (let* ((type (plist-get src :type))
          (type-sym (if (symbolp type) type (and (stringp type) (intern type))))
          (label
@@ -857,45 +857,46 @@ second, redundant backend next to it."
            ((eq type-sym 'file)
             (or (plist-get src :path)
                 (plist-get src :file)
-                "<fichier inconnu>"))
+                "<unknown file>"))
            ((eq type-sym 'buffer)
             (let ((b (plist-get src :buffer)))
               (cond
                ((bufferp b) (format "#<buffer %s>" (buffer-name b)))
                ((stringp b) (format "#<buffer %s>" b))
-               (t "#<buffer inconnu>"))))
+               (t "#<unknown buffer>"))))
            ((memq type-sym '(string snippet))
             (let ((s (or (plist-get src :content)
                          (plist-get src :string)
                          (plist-get src :text)
                          "")))
-              (format "texte: %s"
+              (format "text: %s"
                       (truncate-string-to-width
                        (replace-regexp-in-string "[\n\r]+" " " s)
                        60 nil nil "..."))))
            (t (or (plist-get src :name)
                   (plist-get src :label)
                   (format "%S" src))))))
-    (format "[%s] %s" (or type 'inconnu) label)))
+    (format "[%s] %s" (or type 'unknown) label)))
 
 (defun boost-gptel-review-context ()
-  "Passer en revue `gptel-context' et demander pour chaque élément s'il faut le garder.
-Met à jour la variable buffer-locale `gptel-context' avec les éléments conservés."
+  "Review `gptel-context' and ask whether to keep each item.
+
+Update the buffer-local `gptel-context' variable with the retained items."
   (interactive)
   (unless (boundp 'gptel-context)
-    (user-error "Ce buffer n'a pas de contexte GPTel (gptel-context non lié)"))
+    (user-error "This buffer has no GPTel context (`gptel-context' is unbound)"))
   (if (null gptel-context)
-      (message "Contexte GPTel vide")
+      (message "GPTel context is empty")
     (let* ((ctx gptel-context)
            (kept nil))
       (map-y-or-n-p
        (lambda (src)
-         (format "Garder %s ? " (boost-gptel--context-item-label src)))
+         (format "Keep %s? " (boost-gptel--context-item-label src)))
        (lambda (src) (push src kept))
        ctx
-       '("y = garder, n = supprimer, ! = garder le reste, q = arrêter"))
+       '("y = keep, n = delete, ! = keep remaining, q = quit"))
       (setq-local gptel-context (nreverse kept))
-      (message "Contexte GPTel: %d gardé(s), %d supprimé(s)"
+      (message "GPTel context: %d kept, %d removed"
                (length gptel-context) (- (length ctx) (length gptel-context))))))
 
 ;; reView context.
@@ -1193,6 +1194,34 @@ Do nothing when the GPTel response belongs to another buffer."
       (goto-char (point-max)))))
 
 (keymap-set gptel-mode-map "C-c M-k" #'boost-gptel-clear-buffer)
+
+(defun boost-gptel-previous-prompt ()
+  "Jump to the previous GPTel prompt."
+  (interactive)
+  (let ((prefix (or (cdr (assq major-mode gptel-prompt-prefix-alist))
+                    "### ")))
+    (search-backward prefix nil t)))
+
+(defun boost-gptel-next-prompt ()
+  "Jump to the next GPTel prompt."
+  (interactive)
+  (let ((prefix (or (cdr (assq major-mode gptel-prompt-prefix-alist))
+                    "### ")))
+    (forward-char 1)
+    (search-forward prefix nil t)
+    (goto-char (match-beginning 0))))
+
+(define-key gptel-mode-map (kbd "C-c C-p")
+            #'boost-gptel-previous-prompt)
+
+(define-key gptel-mode-map (kbd "C-c C-n")
+            #'boost-gptel-next-prompt)
+
+;; (define-key gptel-mode-map (kbd "M-p")
+;;   #'boost-gptel-previous-prompt)
+;;
+;; (define-key gptel-mode-map (kbd "M-n")
+;;   #'boost-gptel-next-prompt)
 
 (defun boost-gptel-directive (name)
   "Return directive NAME or signal a user-facing error."
