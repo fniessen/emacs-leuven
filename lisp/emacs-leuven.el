@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260909.1918>
+;; Version: <20260911.1325>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260909.1918>"
+(defconst boost-version "<20260911.1325>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -699,24 +699,23 @@ to it. Otherwise call FUNCTION interactively."
   (global-set-key (kbd "M-G") #'what-line)
 
   (defun boost-goto-line ()
-    "Go to a specific line while temporarily enabling line numbers.
-
-  This function prompts the user to enter a line number to navigate to.
-  It temporarily enables line numbers, moves the point to the specified line,
-  and then restores the original state of line numbers after navigation."
+    "Go to a specific line while temporarily enabling line numbers."
     (interactive)
-    (let ((line-numbers-enabled (display-line-numbers-mode))
-          (line-number (read-number "Goto line: ")))
+    (let ((was-on (bound-and-true-p display-line-numbers-mode)))
       (unwind-protect
-          (progn
-            (display-line-numbers-mode 1)
-            (let ((line-count (count-lines (point-min) (point-max))))
-              (if (or (< line-number 1) (> line-number line-count))
-                  (error "[Line number must be between 1 and %d]" line-count)
-                (goto-char (point-min))
-                (forward-line (1- line-number))
-                (message "[Moved to line %d]" line-number))))
-        (display-line-numbers-mode line-numbers-enabled))))
+          (let* ((_ (display-line-numbers-mode 1))
+                 (line (read-number "Goto line: "
+                                    (line-number-at-pos)))
+                 (max-line (line-number-at-pos (point-max)))
+                 (adjusted (max 1 (min line max-line))))
+            (goto-char (point-min))
+            (forward-line (1- adjusted))
+            (if (= adjusted line)
+                (message "[Moved to line %d]" adjusted)
+              (message "[Adjusted to line %d (bounds 1..%d)]"
+                       adjusted max-line)))
+        (unless was-on
+          (display-line-numbers-mode -1)))))
 
   ;; Remap goto-line.
   (global-set-key [remap goto-line] #'boost-goto-line)
@@ -2403,6 +2402,8 @@ file B."
   ;; Change the cumbersome default prefix (C-c ^).
   (setq smerge-command-prefix (kbd "C-c m")) ; Mnemonic: merge.
 
+  (add-hook 'smerge-mode-hook #'smerge-refine)
+
   ;; Enable SMerge automatically.
   (defun boost--enable-smerge-maybe ()
     "Automatically enable SMerge in merge-conflict files."
@@ -2412,8 +2413,6 @@ file B."
         (smerge-mode 1))))
 
   (add-hook 'find-file-hook #'boost--enable-smerge-maybe)
-
-  (add-hook 'smerge-mode-hook #'smerge-refine)
 
   (with-eval-after-load 'smerge-mode
     (define-key smerge-mode-map (kbd "E") #'smerge-ediff))
@@ -2975,11 +2974,13 @@ file B."
   (leuven--section "20.4 (emacs)Kill Buffer")
 
   ;; Kill the current buffer, prompting only when Emacs normally requires
-  ;; confirmation.
+  ;; confirmation. Never kill gptel conversation buffers.
   (defun boost-kill-current-buffer ()
-    "Kill the current buffer."
+    "Kill the current buffer, unless it is a gptel conversation buffer."
     (interactive)
-    (kill-buffer nil))
+    (if (and (boundp 'gptel-mode) gptel-mode)
+        (message "Refusing to kill gptel buffer %s" (buffer-name))
+      (kill-buffer nil)))
 
   ;; Key binding.
   (global-set-key (kbd "S-<f12>") #'boost-kill-current-buffer)

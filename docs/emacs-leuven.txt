@@ -1021,24 +1021,23 @@ Show line numbers temporarily -- just when you're going to a line number with
 
 #+begin_src emacs-lisp
   (defun boost-goto-line ()
-    "Go to a specific line while temporarily enabling line numbers.
-
-  This function prompts the user to enter a line number to navigate to.
-  It temporarily enables line numbers, moves the point to the specified line,
-  and then restores the original state of line numbers after navigation."
+    "Go to a specific line while temporarily enabling line numbers."
     (interactive)
-    (let ((line-numbers-enabled (display-line-numbers-mode))
-          (line-number (read-number "Goto line: ")))
+    (let ((was-on (bound-and-true-p display-line-numbers-mode)))
       (unwind-protect
-          (progn
-            (display-line-numbers-mode 1)
-            (let ((line-count (count-lines (point-min) (point-max))))
-              (if (or (< line-number 1) (> line-number line-count))
-                  (error "[Line number must be between 1 and %d]" line-count)
-                (goto-char (point-min))
-                (forward-line (1- line-number))
-                (message "[Moved to line %d]" line-number))))
-        (display-line-numbers-mode line-numbers-enabled))))
+          (let* ((_ (display-line-numbers-mode 1))
+                 (line (read-number "Goto line: "
+                                    (line-number-at-pos)))
+                 (max-line (line-number-at-pos (point-max)))
+                 (adjusted (max 1 (min line max-line))))
+            (goto-char (point-min))
+            (forward-line (1- adjusted))
+            (if (= adjusted line)
+                (message "[Moved to line %d]" adjusted)
+              (message "[Adjusted to line %d (bounds 1..%d)]"
+                       adjusted max-line)))
+        (unless was-on
+          (display-line-numbers-mode -1)))))
 
   ;; Remap goto-line.
   (global-set-key [remap goto-line] #'boost-goto-line)
@@ -4410,8 +4409,8 @@ Notes:
 SMerge mode helps resolve merge conflicts directly in a *buffer containing
 conflict markers* (such as those produced by Git).
 
-It provides convenient commands to navigate between conflicts and to choose
-which version to keep.
+It provides handy commands to jump between conflicts and pick which version to
+keep.
 
 #+begin_src emacs-lisp
   ;; Change the cumbersome default prefix (C-c ^).
@@ -4441,6 +4440,17 @@ Frequently used SMerge key bindings:
 - ~C-c m R~ (~smerge-refine~) ::
      Highlight the word-level differences within the current conflict.
 
+#+begin_src emacs-lisp :tangle no
+  ;; DOES NOT WORK.
+  (with-eval-after-load 'smerge-mode
+    (define-key smerge-basic-map (kbd "*") #'smerge-refine)
+    (define-key smerge-mode-map (kbd "*") #'smerge-refine))
+#+end_src
+
+#+begin_src emacs-lisp
+  (add-hook 'smerge-mode-hook #'smerge-refine)
+#+end_src
+
 #+begin_note
 When merge conflicts are created through Emacs VC commands, recent Emacs
 versions *automatically enable* ~smerge-mode~ for the affected buffers.
@@ -4460,10 +4470,6 @@ a file containing conflict markers.
         (smerge-mode 1))))
 
   (add-hook 'find-file-hook #'boost--enable-smerge-maybe)
-#+end_src
-
-#+begin_src emacs-lisp
-  (add-hook 'smerge-mode-hook #'smerge-refine)
 #+end_src
 
 *** Interface for merging files
@@ -4492,9 +4498,9 @@ Useful Ediff key bindings:
 - ~q~ ::
      Quit the Ediff session.
 
-When the Ediff session ends, all accepted changes are written back to the
-original buffer. Once every conflict has been resolved, the buffer leaves
-~smerge-mode~ automatically. Saving the buffer then records the resolved file.
+When the Ediff session ends, it writes all accepted changes back to the original
+buffer. Once you resolve every conflict, the buffer leaves ~smerge-mode~
+automatically. Saving the buffer then records the resolved file.
 
 #+begin_note
 ~vc-resolve-conflicts~ is an alias for ~smerge-ediff~.
@@ -4517,8 +4523,8 @@ Use ~C-x v =~ (~vc-diff~) to display the changes made to the current file.
 In Diff mode, changes are grouped into *hunks*, that is, contiguous regions
 containing one or more modified lines.
 
-Diff mode is not only useful for reviewing changes: it can also apply or *revert
-individual hunks*, making it easy to keep or discard selected modifications.
+Diff mode isn't just for reviewing changes: it can also apply or *revert
+individual hunks*, so you can easily keep or discard specific changes.
 
 #+begin_src emacs-lisp
 ;;** 19.10 (info "(emacs)Diff Mode")
@@ -4526,8 +4532,7 @@ individual hunks*, making it easy to keep or discard selected modifications.
   (leuven--section "19.10 (emacs)Diff Mode")
 #+end_src
 
-To compare two text files, you can also use Ediff if the following command
-works.
+You can also compare two text files using Ediff, if the following command works.
 
 : M-: (executable-find "diff") RET
 
@@ -6205,11 +6210,13 @@ Get EXIF data with ~image-dired-get-exif-data~.
   (leuven--section "20.4 (emacs)Kill Buffer")
 
   ;; Kill the current buffer, prompting only when Emacs normally requires
-  ;; confirmation.
+  ;; confirmation. Never kill gptel conversation buffers.
   (defun boost-kill-current-buffer ()
-    "Kill the current buffer."
+    "Kill the current buffer, unless it is a gptel conversation buffer."
     (interactive)
-    (kill-buffer nil))
+    (if (and (boundp 'gptel-mode) gptel-mode)
+        (message "Refusing to kill gptel buffer %s" (buffer-name))
+      (kill-buffer nil)))
 
   ;; Key binding.
   (global-set-key (kbd "S-<f12>") #'boost-kill-current-buffer)
