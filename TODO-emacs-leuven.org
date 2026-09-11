@@ -23,6 +23,21 @@
 
 *** TODO Activer la correction orthographique (Ispell) dans les buffers Org
 
+*** TODO Enhance org-switch-language: disable flyspell-mode if dico is not found
+
+Error in post-command-hook: (error Error: The file "/usr/lib/aspell/fr_FR" can
+not be opened for reading.)
+
+*** TODO Spell check comments and strings in source code blocks
+
+#+begin_src emacs-lisp
+;; Does it really work?
+(setq abc "This is a string in English.")
+
+;; Cela marche-t-il ?
+(setq def "Ceci est une chaîne de caractères en français.")
+#+end_src
+
 *** NEXT Remove obsolete variables
 
 | Item                         | Type     | Status          | Replacement                                             |
@@ -482,6 +497,40 @@ See issue #144
 See [[https://list.orgmode.org/87pq02iyh7.fsf@univie.ac.at/T/][custom emphasis in org-emphasis-alist]]
 
 ** Optimisation et débogage
+
+*** Réécrire du code avec
+
+- sortie anticipée ;
+- moins d'indentation ;
+- plus idiomatique.
+
+Exemple :
+
+#+begin_src emacs-lisp
+(defun boost-org-copy-current-code-block ()
+  "Copy the body of the current source block."
+  (interactive)
+  (if (org-in-src-block-p)
+      (save-excursion
+        (org-babel-mark-block)
+        (kill-ring-save (region-beginning) (region-end))
+        (message "[Code block copied]"))
+    (user-error "[Not in a source block]")))
+#+end_src
+
+devient
+
+#+begin_src emacs-lisp
+(defun boost-org-babel-copy-src-block ()
+  "Copy the body of the current source block."
+  (interactive)
+  (unless (org-in-src-block-p)
+    (user-error "[Not in a source block]"))
+  (save-excursion
+    (org-babel-mark-block)
+    (kill-ring-save (region-beginning) (region-end)))
+  (message "[Code block copied]"))
+#+end_src
 
 *** TODO Replace mapcar with mapc when return values are unused
 
