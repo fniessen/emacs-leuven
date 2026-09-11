@@ -2006,12 +2006,14 @@ Convenience commands for managing GPTel chat buffers.
 
 (define-key gptel-mode-map (kbd "C-c C-n")
             #'boost-gptel-next-prompt)
+#+end_src
 
-;; (define-key gptel-mode-map (kbd "M-p")
-;;   #'boost-gptel-previous-prompt)
-;;
-;; (define-key gptel-mode-map (kbd "M-n")
-;;   #'boost-gptel-next-prompt)
+#+begin_src emacs-lisp
+(define-key gptel-mode-map (kbd "M-p")
+            #'boost-gptel-previous-prompt)
+
+(define-key gptel-mode-map (kbd "M-n")
+            #'boost-gptel-next-prompt)
 #+end_src
 
 * Custom programmatic requests

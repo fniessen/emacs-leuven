@@ -1217,11 +1217,11 @@ Do nothing when the GPTel response belongs to another buffer."
 (define-key gptel-mode-map (kbd "C-c C-n")
             #'boost-gptel-next-prompt)
 
-;; (define-key gptel-mode-map (kbd "M-p")
-;;   #'boost-gptel-previous-prompt)
-;;
-;; (define-key gptel-mode-map (kbd "M-n")
-;;   #'boost-gptel-next-prompt)
+(define-key gptel-mode-map (kbd "M-p")
+            #'boost-gptel-previous-prompt)
+
+(define-key gptel-mode-map (kbd "M-n")
+            #'boost-gptel-next-prompt)
 
 (defun boost-gptel-directive (name)
   "Return directive NAME or signal a user-facing error."
