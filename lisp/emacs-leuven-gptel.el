@@ -101,115 +101,6 @@ This is a conservative example, not a complete secret-detection mechanism."
         (user-error "[API key file is empty: %s]" file))
       key)))
 
-(defun boost-gptel-project-root (&optional directory)
-  "Return the current project root for DIRECTORY, or nil."
-  (when-let* ((project (project-current nil directory)))
-    (file-name-as-directory
-     (expand-file-name (project-root project)))))
-
-(defun boost-gptel-project-name ()
-  "Return a short name for the current project."
-  (if-let* ((root (boost-gptel-project-root)))
-      (file-name-nondirectory (directory-file-name root))
-    "no-project"))
-
-(defun boost-gptel-sensitive-file-p (file)
-  "Return non-nil when FILE matches the configured sensitive path regexp."
-  (let ((case-fold-search t))
-    (string-match-p
-     boost-gptel-sensitive-file-regexp
-     (expand-file-name file))))
-
-(defun boost-gptel-sensitive-buffer-p (buffer)
-  "Return non-nil when BUFFER should not be exposed through a read tool."
-  (if (not (buffer-live-p buffer))
-      t
-    (with-current-buffer buffer
-      (let ((case-fold-search t))
-        (or (string-match-p boost-gptel-sensitive-buffer-regexp (buffer-name))
-            (and buffer-file-name
-                 (boost-gptel-sensitive-file-p buffer-file-name)))))))
-
-(defun boost-gptel-safe-project-file (relative-path)
-  "Return an existing project file identified by RELATIVE-PATH.
-
-The resolved file must remain inside the current project, including after
-symbolic links are resolved."
-  (when (file-name-absolute-p relative-path)
-    (user-error "Expected a path relative to the current project"))
-  (let* ((root (or (boost-gptel-project-root)
-                   (user-error "No current project")))
-         (candidate (expand-file-name relative-path root)))
-    (unless (file-exists-p candidate)
-      (user-error "Project file does not exist: %s" relative-path))
-    (let ((true-root (file-truename root))
-          (true-file (file-truename candidate)))
-      (unless (file-in-directory-p true-file true-root)
-        (user-error "Path escapes the current project: %s" relative-path))
-      (when (boost-gptel-sensitive-file-p true-file)
-        (user-error "Refusing to read a sensitive project path: %s"
-                    relative-path))
-      true-file)))
-
-(defun boost-gptel-truncate-string (text limit)
-  "Return TEXT truncated to LIMIT characters with a clear marker."
-  (if (<= (length text) limit)
-      text
-    (concat
-     (substring text 0 limit)
-     (format "\n\n[Output truncated after %d characters.]" limit))))
-
-(defun boost-gptel-buffer-substring-limited (beg end limit)
-  "Return buffer text from BEG to END without copying more than LIMIT chars."
-  (let* ((start (min beg end))
-         (finish (max beg end))
-         (cutoff (min finish (+ start limit)))
-         (text (buffer-substring-no-properties start cutoff)))
-    (if (< cutoff finish)
-        (concat
-         text
-         (format "\n\n[Output truncated after %d characters.]" limit))
-      text)))
-
-(defun boost-gptel-read-file-limited (file &optional limit)
-  "Read FILE and return no more than LIMIT decoded characters.
-
-LIMIT defaults to `boost-gptel-tool-max-output-chars'."
-  (let ((max-chars (or limit boost-gptel-tool-max-output-chars)))
-    (unless (and (file-regular-p file) (file-readable-p file))
-      (user-error "Not a readable regular file: %s" file))
-    (with-temp-buffer
-      (insert-file-contents file nil 0 (min (file-attribute-size
-                                             (file-attributes file))
-                                            (* 4 max-chars)))
-      (when (save-excursion
-              (goto-char (point-min))
-              (search-forward "\0" nil t))
-        (user-error "Refusing to read a binary file: %s" file))
-      (boost-gptel-truncate-string
-       (buffer-substring-no-properties (point-min) (point-max))
-       max-chars))))
-
-(defun boost-gptel-read-prompt-file (name &optional fallback)
-  "Read prompt NAME from `boost-gptel-prompt-directory'.
-
-NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
-  (let ((file (expand-file-name (concat name ".txt")
-                                boost-gptel-prompt-directory)))
-    (cond
-     ((file-readable-p file)
-      (string-trim (boost-gptel-read-file-limited file 100000)))
-     (fallback fallback)
-     (t
-      (user-error "Prompt file is not readable: %s" file)))))
-
-(defun boost-gptel-slugify (text)
-  "Convert TEXT to a conservative lowercase file-name component."
-  (let ((slug (downcase (string-trim text))))
-    (setq slug (replace-regexp-in-string "[^[:alnum:]]+" "-" slug))
-    (setq slug (replace-regexp-in-string "^-+\\|-+$" "" slug))
-    (if (string-empty-p slug) "note" slug)))
-
 (defcustom boost-gptel-enable-openai t
   "Whether to register the example OpenAI API backend."
   :type 'boolean
@@ -490,6 +381,115 @@ second, redundant backend next to it."
   (with-help-window "*boost-gptel-context*"
     (princ "Active GPTel context:\n\n")
     (pp gptel-context)))
+
+(defun boost-gptel-project-root (&optional directory)
+  "Return the current project root for DIRECTORY, or nil."
+  (when-let* ((project (project-current nil directory)))
+    (file-name-as-directory
+     (expand-file-name (project-root project)))))
+
+(defun boost-gptel-project-name ()
+  "Return a short name for the current project."
+  (if-let* ((root (boost-gptel-project-root)))
+      (file-name-nondirectory (directory-file-name root))
+    "no-project"))
+
+(defun boost-gptel-sensitive-file-p (file)
+  "Return non-nil when FILE matches the configured sensitive path regexp."
+  (let ((case-fold-search t))
+    (string-match-p
+     boost-gptel-sensitive-file-regexp
+     (expand-file-name file))))
+
+(defun boost-gptel-sensitive-buffer-p (buffer)
+  "Return non-nil when BUFFER should not be exposed through a read tool."
+  (if (not (buffer-live-p buffer))
+      t
+    (with-current-buffer buffer
+      (let ((case-fold-search t))
+        (or (string-match-p boost-gptel-sensitive-buffer-regexp (buffer-name))
+            (and buffer-file-name
+                 (boost-gptel-sensitive-file-p buffer-file-name)))))))
+
+(defun boost-gptel-safe-project-file (relative-path)
+  "Return an existing project file identified by RELATIVE-PATH.
+
+The resolved file must remain inside the current project, including after
+symbolic links are resolved."
+  (when (file-name-absolute-p relative-path)
+    (user-error "Expected a path relative to the current project"))
+  (let* ((root (or (boost-gptel-project-root)
+                   (user-error "No current project")))
+         (candidate (expand-file-name relative-path root)))
+    (unless (file-exists-p candidate)
+      (user-error "Project file does not exist: %s" relative-path))
+    (let ((true-root (file-truename root))
+          (true-file (file-truename candidate)))
+      (unless (file-in-directory-p true-file true-root)
+        (user-error "Path escapes the current project: %s" relative-path))
+      (when (boost-gptel-sensitive-file-p true-file)
+        (user-error "Refusing to read a sensitive project path: %s"
+                    relative-path))
+      true-file)))
+
+(defun boost-gptel-truncate-string (text limit)
+  "Return TEXT truncated to LIMIT characters with a clear marker."
+  (if (<= (length text) limit)
+      text
+    (concat
+     (substring text 0 limit)
+     (format "\n\n[Output truncated after %d characters.]" limit))))
+
+(defun boost-gptel-buffer-substring-limited (beg end limit)
+  "Return buffer text from BEG to END without copying more than LIMIT chars."
+  (let* ((start (min beg end))
+         (finish (max beg end))
+         (cutoff (min finish (+ start limit)))
+         (text (buffer-substring-no-properties start cutoff)))
+    (if (< cutoff finish)
+        (concat
+         text
+         (format "\n\n[Output truncated after %d characters.]" limit))
+      text)))
+
+(defun boost-gptel-read-file-limited (file &optional limit)
+  "Read FILE and return no more than LIMIT decoded characters.
+
+LIMIT defaults to `boost-gptel-tool-max-output-chars'."
+  (let ((max-chars (or limit boost-gptel-tool-max-output-chars)))
+    (unless (and (file-regular-p file) (file-readable-p file))
+      (user-error "Not a readable regular file: %s" file))
+    (with-temp-buffer
+      (insert-file-contents file nil 0 (min (file-attribute-size
+                                             (file-attributes file))
+                                            (* 4 max-chars)))
+      (when (save-excursion
+              (goto-char (point-min))
+              (search-forward "\0" nil t))
+        (user-error "Refusing to read a binary file: %s" file))
+      (boost-gptel-truncate-string
+       (buffer-substring-no-properties (point-min) (point-max))
+       max-chars))))
+
+(defun boost-gptel-read-prompt-file (name &optional fallback)
+  "Read prompt NAME from `boost-gptel-prompt-directory'.
+
+NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
+  (let ((file (expand-file-name (concat name ".txt")
+                                boost-gptel-prompt-directory)))
+    (cond
+     ((file-readable-p file)
+      (string-trim (boost-gptel-read-file-limited file 100000)))
+     (fallback fallback)
+     (t
+      (user-error "Prompt file is not readable: %s" file)))))
+
+(defun boost-gptel-slugify (text)
+  "Convert TEXT to a conservative lowercase file-name component."
+  (let ((slug (downcase (string-trim text))))
+    (setq slug (replace-regexp-in-string "[^[:alnum:]]+" "-" slug))
+    (setq slug (replace-regexp-in-string "^-+\\|-+$" "" slug))
+    (if (string-empty-p slug) "note" slug)))
 
 (defun boost-gptel-tool-current-datetime ()
   "Return the current local date, time, and time-zone offset."
