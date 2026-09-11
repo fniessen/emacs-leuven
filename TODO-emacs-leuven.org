@@ -8,10 +8,10 @@
 - Effacer infos sur Ledger, sauf liste des accounts
 - Colors of org-todo / done dans Emacs Leuven theme
 - "(No Area of Focus)" ne peut pas exister : Misc categ if needed
-- Dder à Cgpt quels sont les rapports courants sous Todoist, Monday.com, Trello
+- Demander à Cgpt quels sont les rapports courants sous Todoist, Monday.com, Trello
   et Jira, par exemple
-- Preset "-MAYB" de manière auto; voir impact
-- Assignee tag (@nnn) permet de grepper dans tous les fichhiers et de voir tout
+- Preset "-MAYB" de manière auto ; voir impact
+- Assignee tag (@nnn) permet de grepper dans tous les fichiers et de voir tout
   d'un coup, et aussi d'utiliser les tags highlightés dans Bigblow (avantage par
   rapport à une propriété que l'on ne verrait pas dans Bigblow)
   + Sans assignee tag = "pour moi", ou "on ne sait pas pour qui" selon une
