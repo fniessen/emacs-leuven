@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260912.1025>
+;; Version: <20260912.1045>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260912.1025>"
+(defconst boost-version "<20260912.1045>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -2260,15 +2260,11 @@ Otherwise, stop the current recording."
     ;; Disable file notification functions.
     (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
-  (use-package autorevert
-    ;; Defer loading until explicitly needed or triggered.
-    :defer t
-    :init
-    ;; Load autorevert after 2 seconds of idle time.
-    (run-with-idle-timer 2 nil (lambda ()
-                                 (require 'autorevert)))
-    :config
-    ;; This runs when autorevert is loaded.
+  ;; Load autorevert after 2 seconds of idle time.
+  (idle-require 'autorevert)
+
+  ;; This runs when autorevert is loaded.
+  (with-eval-after-load 'autorevert
     ;; Enable Global Auto-Revert mode to auto-refresh buffers.
     (global-auto-revert-mode 1)
     ;; Check and warn about remote files setting.
@@ -2281,9 +2277,6 @@ Otherwise, stop the current recording."
 
   ;; Consider setting `auto-revert-remote-files' to nil to reduce network
   ;; traffic.
-
-  ;; Load autorevert after 2 seconds of idle time.
-  (idle-require 'autorevert)
 
   ;; Global Auto-Revert mode operates on all buffers (Dired, etc.)
   (setq global-auto-revert-non-file-buffers t)
@@ -5061,9 +5054,8 @@ corresponding region."
                                         ; Not necessary if the `grep' program
                                         ; used supports the `-H' option.
 
-  (with-eval-after-load 'grep
     ;; Files to ignore for MEPLA.
-    (add-to-list 'grep-find-ignored-files "archive-contents"))
+    (add-to-list 'grep-find-ignored-files "archive-contents")
 
     (when (executable-find "rgXXX")        ; ripgrep.
 
@@ -5635,7 +5627,7 @@ With prefix ARG, invoke `vc-diff' instead."
       (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
 
       ;; Set the completion system for projectile.
-      (setq projectile-completion-system 'helm)
+      ;; (setq projectile-completion-system 'helm)
       (setq projectile-completion-system 'helm-comp-read)
 
       ;; Turn on Helm key bindings for projectile if helm-projectile is

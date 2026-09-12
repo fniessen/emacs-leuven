@@ -4191,15 +4191,11 @@ Turn on auto-revert mode globally.
     ;; Disable file notification functions.
     (setq auto-revert-use-notify nil))  ; XXX Apply this in EmacsW32 if it doesn't revert!
 
-  (use-package autorevert
-    ;; Defer loading until explicitly needed or triggered.
-    :defer t
-    :init
-    ;; Load autorevert after 2 seconds of idle time.
-    (run-with-idle-timer 2 nil (lambda ()
-                                 (require 'autorevert)))
-    :config
-    ;; This runs when autorevert is loaded.
+  ;; Load autorevert after 2 seconds of idle time.
+  (idle-require 'autorevert)
+
+  ;; This runs when autorevert is loaded.
+  (with-eval-after-load 'autorevert
     ;; Enable Global Auto-Revert mode to auto-refresh buffers.
     (global-auto-revert-mode 1)
     ;; Check and warn about remote files setting.
@@ -4212,9 +4208,6 @@ Turn on auto-revert mode globally.
 
   ;; Consider setting `auto-revert-remote-files' to nil to reduce network
   ;; traffic.
-
-  ;; Load autorevert after 2 seconds of idle time.
-  (idle-require 'autorevert)
 #+end_src
 
 Auto-revert will automatically *reload files* that have been *modified outside of
@@ -10373,9 +10366,8 @@ To exclude files from ~lgrep~ and ~rgrep~ results (if you use ~rgrep~ instead of
 ~grep-find~), you can set up ignored files/dirs in advance:
 
 #+begin_src emacs-lisp
-  (with-eval-after-load 'grep
     ;; Files to ignore for MEPLA.
-    (add-to-list 'grep-find-ignored-files "archive-contents"))
+    (add-to-list 'grep-find-ignored-files "archive-contents")
 #+end_src
 
 #+begin_note
@@ -11921,7 +11913,7 @@ Projectile's features.
       (define-key projectile-mode-map (kbd "C-c p g") #'projectile-grep)
 
       ;; Set the completion system for projectile.
-      (setq projectile-completion-system 'helm)
+      ;; (setq projectile-completion-system 'helm)
       (setq projectile-completion-system 'helm-comp-read)
 
       ;; Turn on Helm key bindings for projectile if helm-projectile is
