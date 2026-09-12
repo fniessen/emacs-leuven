@@ -1110,32 +1110,31 @@ commands.
 ;;** 9.4 (info "(emacs)Completion")
 
   (leuven--section "9.4 (emacs)Completion")
+#+end_src
 
-  ;; Ignore case differences when completing file names.
-  (setq read-file-name-completion-ignore-case t)
-
+#+begin_src emacs-lisp
   ;; Don't consider case significant in completion.
   (setq completion-ignore-case t)
 #+end_src
 
-Within ~read-file-name~, this variable is overridden by
-~read-file-name-completion-ignore-case~.
+For file-name completion, ~read-file-name-completion-ignore-case~ takes precedence
+over ~completion-ignore-case~.
 
 #+begin_src emacs-lisp
-  ;; Ignore case when reading a file name.
-  (setq read-file-name-completion-ignore-case t) ; [Default: t on Windows]
+  ;; Ignore case when completing file names.
+  (setq read-file-name-completion-ignore-case t) ; [Default: nil on Linux]
 #+end_src
 
-Within ~read-buffer~, ~completion-ignore-case~ is overridden by
-~read-buffer-completion-ignore-case~.
+For buffer-name completion, ~read-buffer-completion-ignore-case~ takes precedence
+over ~completion-ignore-case~.
 
 #+begin_src emacs-lisp
-  ;; Ignore case when reading a buffer name.
-  (setq read-buffer-completion-ignore-case t) ; [Default: nil].
+  ;; Ignore case when completing buffer names.
+  (setq read-buffer-completion-ignore-case t) ; [Default: nil]
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Provide the same facility of `ls --color' inside Emacs.
+  ;; Provide the same facility as `ls --color' inside Emacs.
   (when (locate-library "dircolors")
     (autoload 'dircolors "dircolors" nil t)
     (add-hook 'completion-list-mode-hook #'dircolors))

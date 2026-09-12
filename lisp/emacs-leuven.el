@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260911.2201>
+;; Version: <20260912.1025>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260911.2201>"
+(defconst boost-version "<20260912.1025>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -751,19 +751,16 @@ to it. Otherwise call FUNCTION interactively."
 
   (leuven--section "9.4 (emacs)Completion")
 
-  ;; Ignore case differences when completing file names.
-  (setq read-file-name-completion-ignore-case t)
-
   ;; Don't consider case significant in completion.
   (setq completion-ignore-case t)
 
-  ;; Ignore case when reading a file name.
-  (setq read-file-name-completion-ignore-case t) ; [Default: t on Windows]
+  ;; Ignore case when completing file names.
+  (setq read-file-name-completion-ignore-case t) ; [Default: nil on Linux]
 
-  ;; Ignore case when reading a buffer name.
-  (setq read-buffer-completion-ignore-case t) ; [Default: nil].
+  ;; Ignore case when completing buffer names.
+  (setq read-buffer-completion-ignore-case t) ; [Default: nil]
 
-  ;; Provide the same facility of `ls --color' inside Emacs.
+  ;; Provide the same facility as `ls --color' inside Emacs.
   (when (locate-library "dircolors")
     (autoload 'dircolors "dircolors" nil t)
     (add-hook 'completion-list-mode-hook #'dircolors))
