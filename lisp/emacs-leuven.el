@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260912.1045>
+;; Version: <20260912.1132>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260912.1045>"
+(defconst boost-version "<20260912.1132>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -1176,7 +1176,6 @@ to it. Otherwise call FUNCTION interactively."
   ;; Enable hl-todo globally.
   (global-hl-todo-mode 1)
 
-  ;; Customize the keywords to highlight.
   ;; Customize the keywords to highlight.
   (setq hl-todo-keyword-faces
         '(;; Priority and issues first.
@@ -2902,27 +2901,24 @@ file B."
     ;; Better version of `occur'.
 ;;    (global-set-key [remap occur] #'helm-occur) ; helm-regexp.el
     (global-set-key (kbd "C-o")   #'helm-occur) ; helm-regexp.el
-    (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
 
   ;; Efficiently hopping squeezed lines powered by Helm interface
   ;; (= Helm occur + Follow mode!).
   (with-eval-after-load 'helm-swoop-autoloads
 
-    ;; Better version of `(helm-)occur'.
-    (global-set-key (kbd "C-o")   #'helm-swoop)
-    (global-set-key (kbd "M-s o") #'helm-swoop)
-
-    ;; (global-set-key (kbd "M-I") #'helm-swoop-back-to-last-point)
-
-    (global-set-key (kbd "M-s O") #'helm-multi-swoop)
-    (global-set-key (kbd "M-s /") #'helm-multi-swoop)
-
-    ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
-
     ;; Instead of using the standard `isearch-occur', when doing Isearch, hand
     ;; the word over to `helm-swoop', providing a more interactive view of all
     ;; matches.
     (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
+
+    (global-set-key (kbd "C-c s s") #'helm-multi-swoop) ; General multi-swoop
+
+    (global-set-key (kbd "C-c s m") #'helm-multi-swoop-current-mode) ; Multi-swoop in current mode
+    (global-set-key (kbd "C-c s p") #'helm-multi-swoop-projectile) ; Multi-swoop within Projectile projects
+    (global-set-key (kbd "C-c s o") #'helm-multi-swoop-org) ; Multi-swoop in Org mode
+    (global-set-key (kbd "C-c s a") #'helm-multi-swoop-all) ; Multi-swoop across all buffers
+
+    (global-set-key (kbd "C-c s b") #'helm-swoop-back-to-last-point) ; Back to last point after swoop
   )
 
   (with-eval-after-load 'helm-swoop
@@ -2933,7 +2929,7 @@ file B."
     (define-key helm-multi-swoop-map (kbd "C-r") #'helm-previous-line)
     (define-key helm-multi-swoop-map (kbd "C-s") #'helm-next-line)
 
-    ;; From `helm-swoop' to `helm-multi-swoop-all'.
+    ;; Pressing twice `C-o' goes from `helm-swoop' to `helm-multi-swoop-all'.
     (define-key helm-swoop-map (kbd "C-o") #'helm-multi-swoop-all-from-helm-swoop)
 
     ;; Don't slightly boost invoke speed in exchange for text color.

@@ -2386,7 +2386,6 @@ In IntelliJ IDEA, the are recognized in both lower and upper case.
   (global-hl-todo-mode 1)
 
   ;; Customize the keywords to highlight.
-  ;; Customize the keywords to highlight.
   (setq hl-todo-keyword-faces
         '(;; Priority and issues first.
           ("FIXME"      . "#FF4500")    ; Issues to fix.
@@ -5769,34 +5768,29 @@ changing the buffer's contents!
     ;; Better version of `occur'.
 ;;    (global-set-key [remap occur] #'helm-occur) ; helm-regexp.el
     (global-set-key (kbd "C-o")   #'helm-occur) ; helm-regexp.el
-    (global-set-key (kbd "C-c o") #'helm-occur) ; helm-regexp.el
 #+end_src
 
 # Occur Edit mode applies edits made in ~*Occur*~ buffers to the original buffers.
 # It is bound to ~e~ in Occur mode.
-
-Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
 
 #+begin_src emacs-lisp
   ;; Efficiently hopping squeezed lines powered by Helm interface
   ;; (= Helm occur + Follow mode!).
   (with-eval-after-load 'helm-swoop-autoloads
 
-    ;; Better version of `(helm-)occur'.
-    (global-set-key (kbd "C-o")   #'helm-swoop)
-    (global-set-key (kbd "M-s o") #'helm-swoop)
-
-    ;; (global-set-key (kbd "M-I") #'helm-swoop-back-to-last-point)
-
-    (global-set-key (kbd "M-s O") #'helm-multi-swoop)
-    (global-set-key (kbd "M-s /") #'helm-multi-swoop)
-
-    ;; (global-set-key (kbd "C-x M-i") #'helm-multi-swoop-all)
-
     ;; Instead of using the standard `isearch-occur', when doing Isearch, hand
     ;; the word over to `helm-swoop', providing a more interactive view of all
     ;; matches.
     (define-key isearch-mode-map (kbd "C-o") #'helm-swoop-from-isearch)
+
+    (global-set-key (kbd "C-c s s") #'helm-multi-swoop) ; General multi-swoop
+
+    (global-set-key (kbd "C-c s m") #'helm-multi-swoop-current-mode) ; Multi-swoop in current mode
+    (global-set-key (kbd "C-c s p") #'helm-multi-swoop-projectile) ; Multi-swoop within Projectile projects
+    (global-set-key (kbd "C-c s o") #'helm-multi-swoop-org) ; Multi-swoop in Org mode
+    (global-set-key (kbd "C-c s a") #'helm-multi-swoop-all) ; Multi-swoop across all buffers
+
+    (global-set-key (kbd "C-c s b") #'helm-swoop-back-to-last-point) ; Back to last point after swoop
   )
 
   (with-eval-after-load 'helm-swoop
@@ -5807,7 +5801,7 @@ Pressing twice C-o goes from Helm Swoop to Helm Multi Swoop...
     (define-key helm-multi-swoop-map (kbd "C-r") #'helm-previous-line)
     (define-key helm-multi-swoop-map (kbd "C-s") #'helm-next-line)
 
-    ;; From `helm-swoop' to `helm-multi-swoop-all'.
+    ;; Pressing twice `C-o' goes from `helm-swoop' to `helm-multi-swoop-all'.
     (define-key helm-swoop-map (kbd "C-o") #'helm-multi-swoop-all-from-helm-swoop)
 
     ;; Don't slightly boost invoke speed in exchange for text color.
@@ -5930,20 +5924,17 @@ Point important :
 ;;; Raccourcis (remplacent les global-set-key Helm)
 ;;; ---------------------------------------------------------------------------
 
-;; M-x (helm-M-x)
-;; -> execute-extended-command via Vertico (défaut Emacs OK).
+;; M-x (helm-M-x) -> execute-extended-command via Vertico (défaut Emacs OK).
 ;;
 ;; On garde le binding explicite au cas où.
 (global-set-key (kbd "M-x") #'execute-extended-command)
 
-;; Bookmarks (helm-filtered-bookmarks)
-;; -> consult-bookmark
+;; Bookmarks (helm-filtered-bookmarks) -> consult-bookmark
 
 (with-eval-after-load 'consult-autoloads
   (global-set-key (kbd "C-x r l") #'consult-bookmark))
 
-;; Buffers (helm-mini / helm-buffers-list)
-;; -> consult-buffer
+;; Buffers (helm-mini / helm-buffers-list) -> consult-buffer
 (global-set-key (kbd "C-x b") #'consult-buffer)
 
 ;; helm-mini
@@ -5956,8 +5947,7 @@ Point important :
  "global map")
 
 ;; helm-for-files
-;; (fichiers récents + buffers + bookmarks + projets)
-;; -> consult-buffer
+;; (fichiers récents + buffers + bookmarks + projets) -> consult-buffer
 
 ;; (global-set-key (kbd "<f3>") #'consult-buffer)
 
@@ -5967,32 +5957,19 @@ Point important :
 ;;  #'consult-buffer
 ;;  "global map")
 
-;; kill-ring (helm-show-kill-ring)
-;; -> consult-yank-pop
+;; kill-ring (helm-show-kill-ring) -> consult-yank-pop
 (global-set-key (kbd "M-y") #'consult-yank-pop)
 
-;; occur / helm-occur / helm-swoop
-;; -> consult-line
+;; occur / helm-occur / helm-swoop -> consult-line
 (global-set-key (kbd "C-o") #'consult-line)
-(global-set-key (kbd "C-c o") #'consult-line)
-(global-set-key (kbd "M-s o") #'consult-line)
 
-;; multi-swoop
-;; -> consult-line-multi
-(global-set-key (kbd "M-s O") #'consult-line-multi)
-(global-set-key (kbd "M-s /") #'consult-line-multi)
-
-;; multi-occur pendant Isearch
-;; (M-o était helm-multi-swoop-all)
-
-(define-key isearch-mode-map (kbd "M-o") #'consult-line-multi)
-
-;; helm-swoop-from-isearch
-;; -> consult-line (poursuivre depuis Isearch)
+;; helm-swoop-from-isearch -> consult-line (poursuivre depuis Isearch)
 (define-key isearch-mode-map (kbd "C-o") #'consult-line)
 
-;; imenu (helm-imenu / helm-semantic-or-imenu)
-;; -> consult-imenu
+;; multi-swoop -> consult-line-multi
+(global-set-key (kbd "C-c s s") #'consult-line-multi)
+
+;; imenu (helm-imenu / helm-semantic-or-imenu) -> consult-imenu
 (global-set-key [remap imenu] #'consult-imenu)
 
 ;; Version générique
@@ -6014,8 +5991,7 @@ Point important :
  "global map")
 
 ;; Org headings dans les fichiers agenda
-;; (helm-org-agenda-files-headings)
-;; -> consult-org-agenda
+;; (helm-org-agenda-files-headings) -> consult-org-agenda
 (with-eval-after-load 'consult-autoloads
   (when (fboundp 'consult-org-agenda)
     (boost--set-key-if-free 'global-map
@@ -6024,22 +6000,18 @@ Point important :
 
 ;; Aide
 ;;
-;; helm-apropos
-;; -> apropos-command
+;; helm-apropos -> apropos-command
 (global-set-key (kbd "C-h a") #'apropos-command)
 
-;; helm-info-emacs
-;; -> info
+;; helm-info-emacs -> info
 (global-set-key (kbd "C-h i") #'info)
 
-;; helm-descbinds
-;; -> embark-bindings
+;; helm-descbinds -> embark-bindings
 (with-eval-after-load 'embark-autoloads
   (global-set-key (kbd "C-h b") #'embark-bindings))
 
 ;; Historique comint
-;; (helm-comint-input-ring)
-;; -> consult-history
+;; (helm-comint-input-ring) -> consult-history
 (with-eval-after-load 'comint
   (define-key comint-mode-map (kbd "C-c C-l") #'consult-history))
 
@@ -6070,8 +6042,7 @@ Point important :
 
 (global-set-key (kbd "M-g ,") #'consult-grep)
 
-;; helm-ag-this-file
-;; -> consult-line
+;; helm-ag-this-file -> consult-line
 
 (global-set-key (kbd "M-g >") #'consult-line)
 
