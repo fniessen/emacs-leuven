@@ -4,7 +4,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260912.1132>
+;; Version: <20260912.1145>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -54,7 +54,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260912.1132>"
+(defconst boost-version "<20260912.1145>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -6453,10 +6453,12 @@ line at the very bottom."
 
 (leuven--chapter leuven-load-chapter-35-gnus "35 Gnus"
 
-  (global-set-key (kbd "C-c n")
-                  (lambda ()
-                    (interactive)
-                    (boost--switch-or-start 'gnus "*Group*")))
+  (defun boost-switch-or-start-gnus ()
+    "Switch to Gnus, starting it if necessary."
+    (interactive)
+    (boost--switch-or-start 'gnus "*Group*"))
+
+  (global-set-key (kbd "C-c n") #'boost-switch-or-start-gnus)
 
   ;; Directory beneath which additional per-user Gnus-specific files are placed.
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.

@@ -13692,10 +13692,12 @@ Minimal configuration for sending a bug report, for example.
 
 (leuven--chapter leuven-load-chapter-35-gnus "35 Gnus"
 
-  (global-set-key (kbd "C-c n")
-                  (lambda ()
-                    (interactive)
-                    (boost--switch-or-start 'gnus "*Group*")))
+  (defun boost-switch-or-start-gnus ()
+    "Switch to Gnus, starting it if necessary."
+    (interactive)
+    (boost--switch-or-start 'gnus "*Group*"))
+
+  (global-set-key (kbd "C-c n") #'boost-switch-or-start-gnus)
 
   ;; Directory beneath which additional per-user Gnus-specific files are placed.
   (setq gnus-directory "~/.gnus.d/")    ; Should end with a directory separator.
