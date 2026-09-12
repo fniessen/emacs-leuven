@@ -225,19 +225,19 @@ Global key bindings.
 | Shortcut | What it runs |
 |----------+--------------|
 | <f11>    | undo         |
-| C-S-z    | redo         |
-| <S-f11>  | redo         |
+| C-S-z    | undo-redo    |
+| <S-f11>  | undo-redo    |
 
 ** Windows
 
-| Shortcut | What it runs               |
-|----------+----------------------------|
-| <f5>     | delete-other-windows       |
-| <f6>     | other-window               |
-| <C-f6>   | balance-windows            |
-| C-=      | compare-windows            |
-| C-c ~    | leuven-swap-windows        |
-| C-c \vert    | leuven-toggle-window-split |
+| Shortcut | What it runs         |
+|----------+----------------------|
+| <f5>     | delete-other-windows |
+| <f6>     | other-window         |
+| <C-f6>   | balance-windows      |
+| C-=      | compare-windows      |
+| C-c ~    | flop-frame           |
+| C-c \vert    | transpose-frame      |
 
 ** Text
 
@@ -265,11 +265,15 @@ Global key bindings.
 
 ** Search / Find / Replace
 
-| Shortcut | What it runs          |
-|----------+-----------------------|
-| C-c o    | helm-occur            |
-| C-o      | leuven--isearch-occur |
-| C-o      | occur                 |
+| Shortcut | What it runs                  |
+|----------+-------------------------------|
+| C-o      | helm-occur                    |
+| C-c s s  | helm-multi-swoop              |
+| C-c s m  | helm-multi-swoop-current-mode |
+| C-c s p  | helm-multi-swoop-projectile   |
+| C-c s o  | helm-multi-swoop-org          |
+| C-c s a  | helm-multi-swoop-all          |
+| C-c s b  | helm-swoop-back-to-last-point |
 
 ** Spelling
 
@@ -387,16 +391,12 @@ I still have to sort them out, by mode (when applicable).
 | C-c d l       | dictionary-lookup-definition                   |
 | C-c d m       | dictionary-match-words                         |
 | C-c d s       | dictionary-search                              |
-| C-c g g       | leuven-google-search                           |
-| C-c g r       | leuven-google-search-region                    |
-| C-c g s       | google                                         |
-| C-c g w       | leuven-google-search-word-at-point             |
-| C-c n         |                                                |
+| C-c n         | boost-switch-or-start-gnus                     |
 | C-c s         | yas-insert-snippet                             |
 | C-c t         | toggle-truncate-lines                          |
 | C-c T         | multi-term                                     |
 | C-c z         | toggle-full-screen                             |
-| C-h A         | apropos-variable                               |
+| C-h a         | helm-apropos                          |
 | C-h E         | elisp-index-search                             |
 | C-S-n         | hlt-next-highlight                             |
 | C-S-p         | hlt-previous-highlight                         |
