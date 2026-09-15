@@ -27,14 +27,14 @@ https://github.com/dolmens/gptel-aibo
 
 * About this configuration
 
-This file is an example of a literate GPTel configuration.  It is designed to be
-read from top to bottom and tangled into a single Emacs Lisp file.
+This file shows an example literate GPTel config. Read it top to bottom--
+it tangles into one Emacs Lisp file.
 
-The example contains:
+The example includes:
 
 - global GPTel options;
-- optional OpenAI, and Anthropic backends;
-- API key lookup through =auth-source=;
+- optional OpenAI and Anthropic backends;
+- API key lookup via =auth-source=;
 - reusable prompt strings and dynamic directives;
 - project-aware helper functions;
 - read-only tools and one confirmed write tool;
@@ -44,10 +44,10 @@ The example contains:
 - optional MCP integration;
 - diagnostic helpers.
 
-Model identifiers in this document are examples.  Replace them with identifiers
-available to your account or local inference server.
+Model identifiers here are just examples. Swap them for ones your account or
+local inference server supports.
 
-No API key is stored in this document or in the generated file.
+No API key lives in this document or the generated file.
 
 * File prologue
 
@@ -347,6 +347,14 @@ Membership is checked against either a bare model symbol or a =(symbol . plist)=
 entry, since it is unclear which shape ~gptel--process-models~ produces.
 
 ** Default backend and model selection
+
+#+begin_src emacs-lisp
+;; Default backend.
+(setq gptel-backend 'openai)
+
+;; Default OpenAI model.
+(setq gptel-openai-model "gpt-3.5-turbo")
+#+end_src
 
 The =current= option leaves GPTel's pre-existing default untouched.  Selecting a
 provider that has not been enabled produces a warning and also leaves the
@@ -745,7 +753,29 @@ See [[https://github.com/karthink/gptel/discussions/1093#discussioncomment-14728
 - =read-webpage=
 *************** END
 
+Other tools to create?
+org_list_tasks
+org_find_task
+org_set_todo_state
+org_add_task
+org_add_subtask
+org_append_logbook
+
 ** Project helpers
+
+#+begin_src emacs-lisp
+(defvar boost-gptel-root (expand-file-name "~/")
+  "Authorized working directory for GPTel tools.")
+(make-directory boost-gptel-root t)
+
+(defun boost-gptel--safe-path (path)
+  "Return a secure absolute path under boost-gptel-root, or signal an error."
+  (let* ((abs (expand-file-name path boost-gptel-root)))
+    (if (and (file-in-directory-p abs boost-gptel-root)
+             (not (file-directory-p abs)))
+        abs
+      (error "Forbidden path: %s" path))))
+#+end_src
 
 #+begin_src emacs-lisp
 (defun boost-gptel-project-root (&optional directory)
@@ -872,6 +902,33 @@ The path and buffer filters below are guardrails rather than a guarantee that
 all confidential data will be recognized.  Review and extend the regular
 expressions before enabling tools in sensitive environments.
 #+end_tip
+
+#+begin_src emacs-lisp
+(defun boost-gptel--list-files ()
+  (seq-filter
+   (lambda (f) (not (file-directory-p (expand-file-name f boost-gptel-root))))
+   (directory-files boost-gptel-root nil "^[^.].*")))
+
+(defun boost-gptel--read-file (path)
+  (let ((abs (boost-gptel--safe-path path)))
+    (if (file-exists-p abs)
+        (with-temp-buffer
+          (insert-file-contents abs)
+          (buffer-string))
+      "")))
+
+(defun boost-gptel--write-file (path content &optional backup)
+  (let* ((abs (boost-gptel--safe-path path))
+         (backup (if (null backup) t backup)))
+    (make-directory (file-name-directory abs) t)
+    (when (and backup (file-exists-p abs))
+      (copy-file abs (concat abs ".bak") t))
+    (with-temp-file abs
+      (insert content))
+    (format "Wrote %s (%d bytes)"
+            (file-relative-name abs boost-gptel-root)
+            (string-bytes content))))
+#+end_src
 
 *** Current date and time
 
@@ -1062,6 +1119,110 @@ select registered tools by their string names.
 (defvar boost-gptel-tool-read-project-file nil)
 (defvar boost-gptel-tool-search-project nil)
 (defvar boost-gptel-tool-create-note nil)
+#+end_src
+
+File tools
+
+#+begin_src emacs-lisp
+(setq gptel-list-files
+      (gptel-make-tool
+       :name "boost-gptel-list-files"
+       :function (lambda ()
+                   (mapconcat #'identity (boost-gptel--list-files) "\n"))
+       :description
+       "List files below the authorised root directory."
+       :args nil
+       :category "filesystem"
+       :confirm nil
+       :include t))
+
+(setq gptel-read-file
+      (gptel-make-tool
+       :name "boost-gptel-read-file"
+       :function (lambda (path) (boost-gptel--read-file path))
+       :description
+       "Read a text file below the authorised root directory."
+       :args
+       (list
+        '(:name "path"
+           :type string
+           :description "Relative file path, for example 'todo.org'"))
+       :category "filesystem"
+       :confirm nil
+       :include t))
+
+(setq gptel-write-file
+      (gptel-make-tool
+       :name "boost-gptel-write-file"
+       :function (lambda (path content &optional backup)
+                   (boost-gptel--write-file path content backup))
+       :description
+       "Replace a text file below the authorised root directory."
+       :args
+       (list
+        '(:name "path"
+          :type string
+          :description
+          "Relative file path, for example 'todo.org'")
+        '(:name "content"
+          :type string
+          :description
+          "Complete replacement content of the file")
+        '(:name "backup"
+          :type boolean
+          :description
+          "Create a .bak copy before replacing an existing file (défaut: true)"
+          :optional t))
+       :category "filesystem"
+       :confirm t
+       :include t))
+#+end_src
+
+
+Rôle système / instructions au modèle:
+Tu disposes des outils suivants dans Emacs:
+- gptel-list-files(): liste les fichiers disponibles dans le répertoire autorisé.
+- gptel-read-file(path): lit un fichier dans le répertoire autorisé.
+- gptel-write-file(path, content, backup?): écrit un fichier dans le répertoire autorisé (sauvegarde .bak par défaut).
+
+Règles:
+1) Travaille uniquement dans le répertoire autorisé. Utilise des chemins relatifs (ex: "todo.org").
+2) Pour travailler sur le backlog, commence par lire "todo.org" avec gptel-read-file.
+3) Quand tu modifies le fichier, renvoie-le en intégralité au format Org strict (aucun texte hors du contenu Org).
+4) Conserve la structure, les tags, les propriétés et les timestamps existants. Mets à jour TODO → DONE uniquement si l'utilisateur te l'indique ou si des critères explicites sont donnés. Sinon, crée des sous-tâches, ajoute des dépendances, clarifie l'acceptance si nécessaire.
+5) Lorsque tu es prêt, écris le fichier final avec gptel-write-file(path="todo.org", content="<contenu Org complet>", backup=true).
+6) Si tu ajoutes de nouvelles rubriques (p.ex. Backlog, Notes, Bloqueurs), respecte la sémantique Org. Pas de code ou de prose hors du fichier.
+7) Si tu hésites, demande des précisions avant d'écrire.
+
+Tâche:
+- Lis "~/.dotfiles/emacs-leuven/TODO-emacs-leuven.org".
+- Propose des améliorations (sous-tâches, dépendances, clarifications) en respectant les règles.
+- Si je valide, écris la version mise à jour du fichier.
+
+
+
+
+
+Read 'todo.org'.
+
+Review every task and update the file as follows:
+
+1. Keep unfinished tasks as TODO.
+2. Mark a task DONE only when the available information proves that it is
+   completed.
+3. Add missing subtasks as second-level TODO headings.
+4. Do not invent completion results.
+5. Preserve valid existing Org syntax.
+6. Before writing, show a concise summary of the intended modifications.
+7. Then replace 'todo.org' with the complete updated content.
+
+
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'gptel
+  (add-to-list 'gptel-tools gptel-list-files)
+  (add-to-list 'gptel-tools gptel-read-file)
+  (add-to-list 'gptel-tools gptel-write-file))
 #+end_src
 
 *** Register current_datetime

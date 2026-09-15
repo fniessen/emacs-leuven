@@ -166,6 +166,12 @@ second, redundant backend next to it."
                   boost-gptel-anthropic-model))
     (setq boost-gptel-anthropic-backend backend)))
 
+;; Default backend.
+(setq gptel-backend 'openai)
+
+;; Default OpenAI model.
+(setq gptel-openai-model "gpt-3.5-turbo")
+
 (defun boost-gptel-select-default-provider ()
   "Set the global GPTel backend and model from `boost-gptel-default-provider'."
   (pcase boost-gptel-default-provider
@@ -382,6 +388,18 @@ second, redundant backend next to it."
     (princ "Active GPTel context:\n\n")
     (pp gptel-context)))
 
+(defvar boost-gptel-root (expand-file-name "~/")
+  "Authorized working directory for GPTel tools.")
+(make-directory boost-gptel-root t)
+
+(defun boost-gptel--safe-path (path)
+  "Return a secure absolute path under boost-gptel-root, or signal an error."
+  (let* ((abs (expand-file-name path boost-gptel-root)))
+    (if (and (file-in-directory-p abs boost-gptel-root)
+             (not (file-directory-p abs)))
+        abs
+      (error "Forbidden path: %s" path))))
+
 (defun boost-gptel-project-root (&optional directory)
   "Return the current project root for DIRECTORY, or nil."
   (when-let* ((project (project-current nil directory)))
@@ -490,6 +508,31 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
     (setq slug (replace-regexp-in-string "[^[:alnum:]]+" "-" slug))
     (setq slug (replace-regexp-in-string "^-+\\|-+$" "" slug))
     (if (string-empty-p slug) "note" slug)))
+
+(defun boost-gptel--list-files ()
+  (seq-filter
+   (lambda (f) (not (file-directory-p (expand-file-name f boost-gptel-root))))
+   (directory-files boost-gptel-root nil "^[^.].*")))
+
+(defun boost-gptel--read-file (path)
+  (let ((abs (boost-gptel--safe-path path)))
+    (if (file-exists-p abs)
+        (with-temp-buffer
+          (insert-file-contents abs)
+          (buffer-string))
+      "")))
+
+(defun boost-gptel--write-file (path content &optional backup)
+  (let* ((abs (boost-gptel--safe-path path))
+         (backup (if (null backup) t backup)))
+    (make-directory (file-name-directory abs) t)
+    (when (and backup (file-exists-p abs))
+      (copy-file abs (concat abs ".bak") t))
+    (with-temp-file abs
+      (insert content))
+    (format "Wrote %s (%d bytes)"
+            (file-relative-name abs boost-gptel-root)
+            (string-bytes content))))
 
 (defun boost-gptel-tool-current-datetime ()
   "Return the current local date, time, and time-zone offset."
@@ -630,6 +673,64 @@ NAME is read from NAME.txt.  Return FALLBACK when the file is absent."
 (defvar boost-gptel-tool-read-project-file nil)
 (defvar boost-gptel-tool-search-project nil)
 (defvar boost-gptel-tool-create-note nil)
+
+(setq gptel-list-files
+      (gptel-make-tool
+       :name "boost-gptel-list-files"
+       :function (lambda ()
+                   (mapconcat #'identity (boost-gptel--list-files) "\n"))
+       :description
+       "List files below the authorised root directory."
+       :args nil
+       :category "filesystem"
+       :confirm nil
+       :include t))
+
+(setq gptel-read-file
+      (gptel-make-tool
+       :name "boost-gptel-read-file"
+       :function (lambda (path) (boost-gptel--read-file path))
+       :description
+       "Read a text file below the authorised root directory."
+       :args
+       (list
+        '(:name "path"
+           :type string
+           :description "Relative file path, for example 'todo.org'"))
+       :category "filesystem"
+       :confirm nil
+       :include t))
+
+(setq gptel-write-file
+      (gptel-make-tool
+       :name "boost-gptel-write-file"
+       :function (lambda (path content &optional backup)
+                   (boost-gptel--write-file path content backup))
+       :description
+       "Replace a text file below the authorised root directory."
+       :args
+       (list
+        '(:name "path"
+          :type string
+          :description
+          "Relative file path, for example 'todo.org'")
+        '(:name "content"
+          :type string
+          :description
+          "Complete replacement content of the file")
+        '(:name "backup"
+          :type boolean
+          :description
+          "Create a .bak copy before replacing an existing file (défaut: true)"
+          :optional t))
+       :category "filesystem"
+       :confirm t
+       :include t))
+
+(with-eval-after-load 'gptel
+  (add-to-list 'gptel-tools gptel-list-files)
+  (add-to-list 'gptel-tools gptel-read-file)
+  (add-to-list 'gptel-tools gptel-write-file))
 
 (setq boost-gptel-tool-current-datetime
       (gptel-make-tool
