@@ -4,16 +4,24 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260912.1145>
+;; Version: <20260916.1357>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
-;;
-;;    ___ _ __ ___   __ _  ___ ___
-;;   / _ \ '_ ` _ \ / _` |/ __/ __|
-;;  |  __/ | | | | | (_| | (__\__ \
-;; (_)___|_| |_| |_|\__,_|\___|___/
-;;
+;;  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+;; ⠀⠀⠀⠀⠀⠀⢀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⡀⠀⠀⠀⠀⠀⠀
+;; ⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣿⣿⠿⠟⠛⠛⠉⠉⠛⢿⣿⣿⣿⣷⣄⠀⠀⠀⠀
+;; ⠀⠀⢀⣼⣿⣿⣿⣿⣿⡿⠿⠿⠿⠟⠛⠛⠛⠃⠀⠀⢈⣿⣿⣿⣿⣿⣧⡀⠀⠀
+;; ⠀⠀⣾⣿⣿⣿⣿⣿⠁⠀⠀⠀⢀⣀⣤⣤⣤⣤⣶⣶⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀
+;; ⠀⣸⣿⣿⣿⣿⣿⣿⣷⣤⡀⠀⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀
+;; ⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠷⠦⠤⠀⠀⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀
+;; ⠀⣿⣿⣿⣿⣿⠿⠋⠁⠀⠀⠀⢀⣀⣤⣤⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀
+;; ⠀⢻⣿⣿⣿⡏⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀
+;; ⠀⠈⢿⣿⣿⣿⣤⣀⠀⠀⠈⠙⠛⠛⠛⠿⠿⠿⠿⠿⠿⠿⣿⣿⣿⣿⣿⣿⠃⠀
+;; ⠀⠀⠈⢿⣿⣿⣿⣿⣿⣶⣶⣤⣤⣤⣤⣤⠤⠄⠀⠀⢀⣠⣼⣿⣿⣿⡿⠃⠀⠀
+;; ⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣟⣛⣩⣭⣤⣤⣴⣶⣶⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀
+;; ⠀⠀⠀⠀⠀⠀⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀
+;; ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠛⠿⠿⠿⠟⠛⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -54,7 +62,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260912.1145>"
+(defconst boost-version "<20260916.1357>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
