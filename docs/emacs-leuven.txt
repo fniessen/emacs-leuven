@@ -760,6 +760,7 @@ like this into your configuration file:
         fancy-narrow
         flycheck
         flycheck-color-mode-line
+        flyover
         fuzzy
         ;; git-commit-insert-issue
         git-messenger
@@ -1412,6 +1413,25 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
     ;; Use a side window, preferring the right side when space is available,
     ;; falling back to the bottom otherwise.
     (which-key-setup-side-window-right-bottom))
+#+end_src
+
+** Helpful
+
+#+begin_src emacs-lisp
+(when (boost--try-require 'helpful)
+  (global-set-key [remap describe-function] #'helpful-callable) ; C-h f.
+  (global-set-key [remap describe-command]  #'helpful-command)  ; C-h c.
+  (global-set-key [remap describe-variable] #'helpful-variable) ; C-h v.
+  (global-set-key [remap describe-key]      #'helpful-key)      ; C-h k.
+
+  (global-set-key [remap describe-symbol]   #'helpful-symbol)   ; C-h o.
+  )
+#+end_src
+
+#+begin_src emacs-lisp
+    (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
+    (global-set-key (kbd "C-h i") #'helm-info-emacs) ; OK.
+    (global-set-key (kbd "C-h b") #'helm-descbinds) ; OK.
 #+end_src
 
 #+begin_src emacs-lisp
@@ -5282,18 +5302,6 @@ Popup structure of the current file for quick navigation:
     (when (fboundp 'helm-org-agenda-files-headings)
       (boost--set-key-if-free 'global-map (kbd "C-h O")
                                #'helm-org-agenda-files-headings "global map"))
-#+end_src
-
-#+begin_src emacs-lisp
-    (global-set-key (kbd "C-h a") #'helm-apropos) ; OK!
-#+end_src
-
-#+begin_src emacs-lisp
-    (global-set-key (kbd "C-h i") #'helm-info-emacs) ; OK.
-#+end_src
-
-#+begin_src emacs-lisp
-    (global-set-key (kbd "C-h b") #'helm-descbinds) ; OK.
 #+end_src
 
 See helm-flycheck!
@@ -10589,6 +10597,43 @@ Navigate:
               #'boost--update-flycheck-idle-delay)
 #+end_src
 
+
+#+begin_src emacs-lisp
+(require 'flycheck)
+
+(flycheck-define-checker sql-sqlfluff
+  "Linter SQL avec SQLFluff."
+  :command ("sqlfluff" "lint"
+            "--format" "github-annotation-native"
+            source)
+  :error-patterns
+  ((error   line-start "::error title=SQLFluff,file=" (file-name)
+            ",line=" line ",col=" column
+            ",endLine=" end-line ",endColumn=" end-column
+            "::" (message) line-end)
+   (warning line-start "::warning title=SQLFluff,file=" (file-name)
+            ",line=" line ",col=" column
+            ",endLine=" end-line ",endColumn=" end-column
+            "::" (message) line-end))
+  :modes (sql-mode))
+
+(add-to-list 'flycheck-checkers 'sql-sqlfluff)
+
+(add-hook 'sql-mode-hook
+          (lambda ()
+            (flycheck-select-checker 'sql-sqlfluff)
+            ;; sqlfluff est lent au démarrage : on vérifie seulement à la sauvegarde
+            (setq-local flycheck-check-syntax-automatically '(save mode-enabled))))
+#+end_src
+
+#+begin_src sql :tangle no
+select distinct a,b x,Count(*),sum(c)
+from T1 t join t2 on t2.id=t.id
+where a = null and b != 1 and c <> 2
+group by a,2
+order by 1
+#+end_src
+
 A summary of the inspection results for the current file is shown in the colored
 mode line on bottom. Make it blue!
 
@@ -12857,17 +12902,28 @@ completion-at-point-functions
 Corfu = UI
 
 #+begin_src emacs-lisp :tangle no
-(add-hook 'python-mode-hook #'eglot-ensure)
-(add-hook 'java-mode-hook   #'eglot-ensure)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
 (when (boost--try-require 'corfu)
-  (global-corfu-mode 1))
+  (global-corfu-mode 1)
+
+  (setq corfu-auto t)
+  (setq corfu-auto-prefix 2)
+  (setq corfu-popupinfo-mode 1))
 
 (when (boost--try-require 'cape)
   (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+  (add-to-list 'completion-at-point-functions #'elisp-completion-at-point)
+  (add-to-list 'completion-at-point-functions #'ispell-completion-at-point)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'eglot-completion-at-point) ; LSP
+  (add-to-list 'completion-at-point-functions #'cape-yasnippet t) ; à la fin
+  )
+#+end_src
+
+Eglot = client LSP pour Emacs
+
+#+begin_src emacs-lisp :tangle no
+(add-hook 'python-mode-hook #'eglot-ensure)
+(add-hook 'java-mode-hook   #'eglot-ensure)
 #+end_src
 
 * Dired, the Directory Editor
