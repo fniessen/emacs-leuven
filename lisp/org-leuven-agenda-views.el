@@ -1,5 +1,8 @@
 ;;; org-leuven-agenda-views.el --- Org customized views  -*- lexical-binding: t; -*-
 
+;; This file is generated from org-leuven-agenda-views.txt.
+;; Edit the Org source, then tangle it again.
+
 ;;; Commentary:
 
 ;;; Code:
