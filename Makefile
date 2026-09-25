@@ -3,11 +3,15 @@ EMACS ?= emacs
 ELISP_DIRS := lisp
 ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
-.PHONY: all check check-parens compile clean help
+.PHONY: all check check-parens compile clean help tangle
 
 # Describe the available Makefile targets.
 help:
 	@awk '/^[[:space:]]*#[[:space:]]/ { description = $$0; sub(/^[[:space:]]*#[[:space:]]*/, "", description); next } /^[^[:space:]#A-Z]+:/ { target = $$0; sub(/:.*/, ":", target); if (description != "") printf "%-32s # %s\n", target, description; description = ""; next } { description = "" }' [Mm]akefile
+
+# Tangle every .org and .txt file in the repository.
+tangle:
+	$(EMACS) --batch --quick --eval "(progn (require 'org) (require 'ob-tangle) (dolist (file (directory-files-recursively default-directory \".*\")) (when (member (file-name-extension file) '(\"org\" \"txt\")) (message \"Tangling %s\" file) (condition-case error (with-temp-buffer (insert-file-contents file) (org-mode) (setq buffer-file-name file) (org-babel-tangle)) (error (message \"Failed to tangle %s: %s\" file (error-message-string error)))))))"
 
 # Run all validation and compilation targets.
 all: check compile
