@@ -1,5 +1,8 @@
 ;;;; org-test-fni.el --- Extra tests for Org mode -*- lexical-binding: t; -*-
 
+;; This file is generated from org-test-fni.txt.
+;; Edit the Org source, then tangle it again.
+
 ;; Copyright (C) 2014-2026 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen
@@ -30,9 +33,9 @@
 
 ;; Org mode (reverse order, so that the Org lisp directory will be found
 ;; before the Org contrib lisp directory).
-(add-to-list 'load-path "~/Public/Repositories/org-mode/testing")
-(add-to-list 'load-path "~/Public/Repositories/org-mode/contrib/lisp") ; htmlize
-(add-to-list 'load-path "~/Public/Repositories/org-mode/lisp")
+(add-to-list 'load-path "~/.dotfiles/org-mode/testing")
+(add-to-list 'load-path "~/.dotfiles/org-mode/contrib/lisp") ; htmlize
+(add-to-list 'load-path "~/.dotfiles/org-mode/lisp")
 ;; XXX This should be on the command-line!
 
 (require 'ert)
@@ -72,7 +75,7 @@ If UPDATE-REFERENCE is non-nil, generate and save the reference file."
 ;;; Internal tests.
 
 (defvar org-test-fni-test-files
-  '(("org-test-sample.org" . "~/src/emacs-leuven/")
+  '(("org-mode-syntax-reference.org" . "~/.dotfiles/org-html-themes/examples/")
     ("example.txt"         . "~/src/org-style/")
     ("ERT-refcard.txt"     . "~/src/reference-cards/"))
   "Alist of test files and their base directories for Org export tests.")

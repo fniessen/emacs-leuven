@@ -21,6 +21,9 @@ See http://www.randomsample.de:4457/waterfall.
 #+begin_src emacs-lisp
 ;;;; org-test-fni.el --- Extra tests for Org mode -*- lexical-binding: t; -*-
 
+;; This file is generated from org-test-fni.txt.
+;; Edit the Org source, then tangle it again.
+
 ;; Copyright (C) 2014-2026 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen
@@ -134,7 +137,7 @@ For inspiration:
 ;;; Internal tests.
 
 (defvar org-test-fni-test-files
-  '(("org-test-sample.org" . "~/src/emacs-leuven/")
+  '(("org-mode-syntax-reference.org" . "~/.dotfiles/org-html-themes/examples/")
     ("example.txt"         . "~/src/org-style/")
     ("ERT-refcard.txt"     . "~/src/reference-cards/"))
   "Alist of test files and their base directories for Org export tests.")
