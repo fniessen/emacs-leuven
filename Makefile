@@ -11,7 +11,22 @@ help:
 
 # Tangle every .org and .txt file in the repository.
 tangle:
-	$(EMACS) --batch --quick --eval "(progn (require 'org) (require 'ob-tangle) (dolist (file (directory-files-recursively default-directory \".*\")) (when (member (file-name-extension file) '(\"org\" \"txt\")) (message \"Tangling %s\" file) (condition-case error (with-temp-buffer (insert-file-contents file) (org-mode) (setq buffer-file-name file) (org-babel-tangle)) (error (message \"Failed to tangle %s: %s\" file (error-message-string error)))))))"
+	$(EMACS) --batch --quick \
+		--eval "\
+(progn \
+  (require 'org) \
+  (require 'ob-tangle) \
+  (dolist (file (directory-files-recursively default-directory \".*\")) \
+    (when (member (file-name-extension file) '(\"org\" \"txt\")) \
+      (message \"Tangling %s\" file) \
+      (condition-case error \
+          (with-temp-buffer \
+            (insert-file-contents file) \
+            (org-mode) \
+            (setq buffer-file-name file) \
+            (org-babel-tangle)) \
+        (error \
+         (message \"Failed to tangle %s: %s\" file (error-message-string error)))))))"
 
 # Run all validation and compilation targets.
 all: check compile
@@ -21,7 +36,15 @@ check: check-parens
 
 # Check parentheses in every Emacs Lisp source file.
 check-parens:
-	@$(EMACS) --batch --quick --eval "(dolist (directory (list \"lisp\")) (dolist (file (directory-files-recursively directory \"\\\\.el\\\\'\")) (with-temp-buffer (emacs-lisp-mode) (message \"Checking %s\" file) (insert-file-contents file) (check-parens))))"
+	@$(EMACS) --batch --quick \
+		--eval "\
+(dolist (directory (list \"lisp\")) \
+  (dolist (file (directory-files-recursively directory \"\\\\.el\\\\'\")) \
+    (with-temp-buffer \
+      (emacs-lisp-mode) \
+      (message \"Checking %s\" file) \
+      (insert-file-contents file) \
+      (check-parens))))"
 
 # Byte-compile the Emacs Lisp source files.
 compile:
