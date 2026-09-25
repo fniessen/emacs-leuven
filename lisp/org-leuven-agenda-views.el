@@ -1126,7 +1126,7 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
 
 ;;; org-leuven-agenda-views.el ends here
 
-(when (boost--try-require 'org-super-agenda)
+(when (require 'org-super-agenda nil 'noerror)
   (org-super-agenda-mode 1))
 
 (add-to-list 'org-agenda-custom-commands
