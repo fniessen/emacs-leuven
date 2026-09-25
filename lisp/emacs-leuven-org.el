@@ -1,5 +1,8 @@
 ;;; emacs-leuven-org.el --- Org mode configuration for the Emacs Leuven setup -*- lexical-binding: t; -*-
 
+;; This file is generated from emacs-leuven-org.txt.
+;; Edit the Org source, then tangle it again.
+
 ;; Copyright (C) 2006-2026  Leuven Emacs
 
 ;; Author: Fabrice Niessen
@@ -20,18 +23,6 @@
 
 ;;; Code:
 
-;; Require a feature/library if available; if not, fail silently.
-(defun boost--try-require (feature)
-  "Try to (require FEATURE) silently.
-
-Return t on success, nil on failure. If `init-file-debug' is non-nil,
-emit a warning message when the feature can't be loaded."
-  (if (require feature nil 'noerror)
-      t
-    (when (bound-and-true-p init-file-debug)
-      (message "WARNING [boost]: Cannot load `%s'" feature))
-    nil))
-
 ;; (info "(org)Top") outline-based notes management and organizer
 
 ;;* 1 (info "(org)Introduction")
@@ -39,7 +30,7 @@ emit a warning message when the feature can't be loaded."
 ;;** 1.2 (info "(org)Installation")
 
 ;; Autoloads.
-(boost--try-require 'org-loaddefs)
+(require 'org-loaddefs nil 'noerror)
 
 ;; Getting started.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
@@ -133,7 +124,7 @@ emit a warning message when the feature can't be loaded."
 
             ))
 
-(boost--try-require 'helm-org)
+(require 'helm-org nil 'noerror)
 
 (with-eval-after-load 'org
   (message "[... Org Introduction]")
@@ -192,7 +183,7 @@ emit a warning message when the feature can't be loaded."
   (message "[... Org Headlines]")
 
   ;; Insert an inline task (independent of outline hierarchy).
-  (boost--try-require 'org-inlinetask))      ; Needed.
+  (require 'org-inlinetask nil 'noerror))      ; Needed.
 
 (with-eval-after-load 'org-inlinetask
 
@@ -678,7 +669,7 @@ Signal an error if no ID or file is found."
 (with-eval-after-load 'org
   (message "[... Org Dates and Times]")
 
-  (boost--try-require 'appt))
+  (require 'appt nil 'noerror))
 
 ;;** 8.2 (info "(org)Creating timestamps")
 
@@ -1757,7 +1748,7 @@ formats (Markdown, HTML, or PDF)."
       ;; (measure-time-wrapper "Restarted Org mode" #'org-mode)
 
       ;; Run Org lint if available.
-      (when (boost--try-require 'org-lint)
+      (when (require 'org-lint nil 'noerror)
         (measure-time-wrapper "Linted Org mode"
           (lambda ()
             (let ((lint-result (org-lint)))
@@ -2492,7 +2483,7 @@ of the ignored headline."
   (add-to-list 'org-babel-load-languages '(sql      . t))
 
   ;; Add Mermaid support only if ob-mermaid is installed.
-  (when (boost--try-require 'ob-mermaid)
+  (when (require 'ob-mermaid nil 'noerror)
     (add-to-list 'org-babel-load-languages '(mermaid . t))
     (setq ob-mermaid-cli-path (or (executable-find "mmdc")
                                   ob-mermaid-cli-path)))
@@ -2729,7 +2720,7 @@ Ignore non-Org buffers."
 (with-eval-after-load 'org
   (message "[... Org Crypt]")
 
-  (boost--try-require 'org-crypt))           ; Loads org, gnus-sum, etc...
+  (require 'org-crypt nil 'noerror))           ; Loads org, gnus-sum, etc...
 
 (with-eval-after-load 'org-crypt
 
@@ -3018,7 +3009,7 @@ Example: \"Hello\" becomes \"xxxxx\"."
   "Return Org entry with the weather for LOCATION in LANGUAGE." t)
 
 (with-eval-after-load 'org-google-weather
-  ;; (boost--try-require 'url)
+  ;; (require 'url nil 'noerror)
 
   ;; Add the city.
   (setq org-google-weather-format "%C %i %c, %l°-%h°"))
