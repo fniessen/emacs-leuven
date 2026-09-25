@@ -7,7 +7,7 @@ ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
 # Describe the available Makefile targets.
 help:
-	@awk '/^[[:space:]]*#[[:space:]]/ { description = $$0; sub(/^[[:space:]]*#[[:space:]]*/, "", description); next } /^[^[:space:]#A-Z]+:/ { target = $$0; sub(/:.*/, ":", target); if (description != "") printf "%-40s # %s\n", target, description; description = ""; next } { description = "" }' [Mm]akefile
+	@awk '/^[[:space:]]*#[[:space:]]/ { description = $$0; sub(/^[[:space:]]*#[[:space:]]*/, "", description); next } /^[^[:space:]#A-Z]+:/ { target = $$0; sub(/:.*/, ":", target); if (description != "") printf "%-32s # %s\n", target, description; description = ""; next } { description = "" }' [Mm]akefile
 
 # Run all validation and compilation targets.
 all: check compile
