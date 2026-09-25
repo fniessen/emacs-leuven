@@ -3,7 +3,11 @@ EMACS ?= emacs
 ELISP_DIRS := lisp
 ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
-.PHONY: all check check-parens compile clean
+.PHONY: all check check-parens compile clean help
+
+# Describe the available Makefile targets.
+help:
+	@awk '/^[[:space:]]*#[[:space:]]/ { description = $$0; sub(/^[[:space:]]*#[[:space:]]*/, "", description); next } /^[^[:space:]#A-Z]+:/ { target = $$0; sub(/:.*/, ":", target); if (description != "") printf "%-40s # %s\n", target, description; description = ""; next } { description = "" }' [Mm]akefile
 
 # Run all validation and compilation targets.
 all: check compile
@@ -13,7 +17,7 @@ check: check-parens
 
 # Check parentheses in every Emacs Lisp source file.
 check-parens:
-	@$(EMACS) --batch --quick --eval "(dolist (directory (list \"lisp\")) (dolist (file (directory-files-recursively directory \"\\\\.el\")) (with-temp-buffer (emacs-lisp-mode) (message \"Checking %s\" file) (insert-file-contents file) (check-parens))))"
+	@$(EMACS) --batch --quick --eval "(dolist (directory (list \"lisp\")) (dolist (file (directory-files-recursively directory \"\\\\.el\\\\'\")) (with-temp-buffer (emacs-lisp-mode) (message \"Checking %s\" file) (insert-file-contents file) (check-parens))))"
 
 # Byte-compile the Emacs Lisp source files.
 compile:
