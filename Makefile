@@ -7,7 +7,7 @@ ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
 # Show this help.
 help:
-	@echo "Usage: make <target>"
+	@echo "Usage: make TARGET"
 	@echo ""
 	@echo "Targets:"
 	@awk '\
