@@ -5,9 +5,25 @@ ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
 .PHONY: all check check-parens compile clean help tangle
 
-# Describe the available Makefile targets.
+# Show this help.
 help:
-	@awk '/^[[:space:]]*#[[:space:]]/ { description = $$0; sub(/^[[:space:]]*#[[:space:]]*/, "", description); next } /^[^[:space:]#A-Z]+:/ { target = $$0; sub(/:.*/, ":", target); if (description != "") printf "%-32s # %s\n", target, description; description = ""; next } { description = "" }' [Mm]akefile
+	@echo "Usage: make <target>"
+	@echo ""
+	@echo "Targets:"
+	@awk '\
+	/^[[:space:]]*#[[:space:]]/ { \
+		description = $$0; \
+		sub(/^[[:space:]]*#[[:space:]]*/, "", description); \
+		next; \
+	} \
+	/^[a-zA-Z0-9_-]+:/ { \
+		target = $$0; \
+		sub(/:.*/, "", target); \
+		printf "  %-15s %s\n", target, description; \
+		description = ""; \
+		next; \
+	} \
+	{ description = "" }' [Mm]akefile
 
 # Tangle every .org and .txt file in the repository.
 tangle:
