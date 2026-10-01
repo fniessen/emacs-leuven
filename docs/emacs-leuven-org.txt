@@ -1141,6 +1141,11 @@ manually tagging them with ~ARCHIVE~ helps keep things organized.
   (interactive)
   (when (derived-mode-p 'org-mode)
     (save-excursion
+      ;; Use SCOPE=nil (current buffer) rather than 'file.
+      ;; The 'file scope goes through Org Agenda internals and may trigger
+      ;; `org-check-agenda-file', causing prompts such as:
+      ;;   "Non-existent agenda file ..."
+      ;; when editing Org files that are not part of `org-agenda-files`.
       (org-map-entries
        (lambda ()
          (let* ((local-tags (org-get-tags nil t))
@@ -1152,7 +1157,7 @@ manually tagging them with ~ARCHIVE~ helps keep things organized.
            (dolist (tag local-tags)
              (when (member tag inherited-tags)
                (org-toggle-tag tag 'off)))))
-       t 'file))))
+       t))))
 #+end_src
 
 * Properties and Columns

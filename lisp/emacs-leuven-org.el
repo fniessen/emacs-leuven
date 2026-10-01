@@ -634,6 +634,11 @@ Signal an error if no ID or file is found."
   (interactive)
   (when (derived-mode-p 'org-mode)
     (save-excursion
+      ;; Use SCOPE=nil (current buffer) rather than 'file.
+      ;; The 'file scope goes through Org Agenda internals and may trigger
+      ;; `org-check-agenda-file', causing prompts such as:
+      ;;   "Non-existent agenda file ..."
+      ;; when editing Org files that are not part of `org-agenda-files`.
       (org-map-entries
        (lambda ()
          (let* ((local-tags (org-get-tags nil t))
@@ -645,7 +650,7 @@ Signal an error if no ID or file is found."
            (dolist (tag local-tags)
              (when (member tag inherited-tags)
                (org-toggle-tag tag 'off)))))
-       t 'file))))
+       t))))
 
 ;;* 7 (info "(org)Properties and Columns")
 
