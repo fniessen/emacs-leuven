@@ -3,7 +3,7 @@ EMACS ?= emacs
 ELISP_DIRS := lisp
 ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
-.PHONY: all check check-parens compile clean help tangle
+.PHONY: all check check-parens test compile clean help tangle
 
 # Show this help.
 help:
@@ -49,6 +49,13 @@ all: check compile
 
 # Run the source checks.
 check: check-parens
+
+# Run WSL clipboard ERT tests with Emacs-Leuven.
+test:
+	$(EMACS) --batch --quick -L lisp -L tests \
+		-l lisp/emacs-leuven.el \
+		-l tests/boost-wsl-clipboard-test.el \
+		-f ert-run-tests-batch-and-exit
 
 # Check parentheses in every Emacs Lisp source file.
 check-parens:
