@@ -145,7 +145,6 @@ prompts, insert the following line before requiring Emacs-Leuven:
 | Document viewing                  | pdf-tools              |             |
 | Running shell commands from Emacs | multi-term             |             |
 |                                   | cygwin-mount           |             |
-|                                   | google-translate       |             |
 | Customization                     | guide-key              |             |
 |-----------------------------------+------------------------+-------------|
 |                                   | ace-window             |             |
