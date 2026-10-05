@@ -89,11 +89,12 @@ When WITHOUT-REGION is non-nil, copy the current line instead of a region."
   "Return TEXT as though it were read from the Windows clipboard."
   (cl-letf (((symbol-function 'boost-wsl--interop-available-p)
              (lambda () t))
-            ((symbol-function 'shell-command-to-string)
-             (lambda (command)
-               (should (equal command
-                              "powershell.exe -NoProfile -Command 'Get-Clipboard -Raw'"))
-               text)))
+            ((symbol-function 'call-process)
+             (lambda (program _infile destination _display &rest _arguments)
+               (should (equal program "powershell.exe"))
+               (should (eq destination t))
+               (insert text)
+               0)))
     (boost-wsl-paste-from-windows)))
 
 (defun boost-wsl-clipboard-test--yank-windows-at-point (text)
@@ -103,11 +104,12 @@ When WITHOUT-REGION is non-nil, copy the current line instead of a region."
         (kill-ring nil))
     (cl-letf (((symbol-function 'boost-wsl--interop-available-p)
                (lambda () t))
-              ((symbol-function 'shell-command-to-string)
-               (lambda (command)
-                 (should (equal command
-                                "powershell.exe -NoProfile -Command 'Get-Clipboard -Raw'"))
-                 text)))
+              ((symbol-function 'call-process)
+               (lambda (program _infile destination _display &rest _arguments)
+                 (should (equal program "powershell.exe"))
+                 (should (eq destination t))
+                 (insert text)
+                 0)))
       (with-temp-buffer
         (insert "prefix: ")
         (goto-char (point-max))
@@ -117,18 +119,20 @@ When WITHOUT-REGION is non-nil, copy the current line instead of a region."
         (buffer-string)))))
 
 (ert-deftest boost-wsl-clipboard-windows-to-emacs-monoline ()
-  (should (equal (boost-wsl-clipboard-test--paste-from-windows "one line\r\n")
-                 "one line\n")))
+  (should (equal
+           (boost-wsl-clipboard-test--paste-from-windows "\uFEFFone line\r\n")
+           "one line")))
 
 (ert-deftest boost-wsl-clipboard-windows-to-emacs-multiline ()
   (should (equal
-           (boost-wsl-clipboard-test--paste-from-windows "first\r\nsecond\r\n")
-           "first\nsecond\n")))
+           (boost-wsl-clipboard-test--paste-from-windows
+            "\uFEFFfirst\r\nsecond\r\n")
+           "first\nsecond")))
 
 (ert-deftest boost-wsl-clipboard-windows-to-emacs-without-region ()
   (should (equal
            (boost-wsl-clipboard-test--yank-windows-at-point "clipboard\r\n")
-           "prefix: clipboard\n")))
+           "prefix: clipboard")))
 
 (provide 'boost-wsl-clipboard-test)
 
