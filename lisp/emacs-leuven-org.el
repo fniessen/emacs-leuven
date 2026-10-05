@@ -30,6 +30,7 @@
 ;;** 1.2 (info "(org)Installation")
 
 ;; Autoloads.
+(require 'org)
 (require 'org-loaddefs nil 'noerror)
 
 ;; Getting started.
