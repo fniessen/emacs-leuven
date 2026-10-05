@@ -1392,13 +1392,13 @@ From the address <%a>"
   (ignore-errors
     (save-excursion
       (while (org-up-heading-safe))
-      (hide-subtree)))
+      (outline-hide-subtree)))
   (let ((org-show-siblings nil)
         (org-show-hierarchy-above t))
     (org-reveal))
   (save-excursion
     (org-back-to-heading t)
-    (show-children)))
+    (outline-show-children)))
 
 ;; FIXME When this is enabled, clicking on a clock line from `v c'
 ;; (log check) does not jump to the right line
@@ -1494,14 +1494,14 @@ Currently: 08:00-21:59."
   "Exclude certain tags from the agenda based on specific conditions.
 
 This function is designed to be used as the `org-agenda-auto-exclude-function'.
-It ensures that tags like ':inbox:' are never excluded!
+It ensures that tags like `:inbox:' are never excluded!
 
 TAG is the tag to be considered for exclusion.
 
 Examples:
-- Exclude 'personal' tag during working hours.
-- Exclude 'work' tag outside of working hours.
-- Exclude 'errands' and 'call' tags outside of calling hours."
+- Exclude tag personal during working hours.
+- Exclude tag work outside working hours.
+- Exclude tags errands and call outside calling hours."
   (and (cond
         ((string= tag "personal")
          (leuven--org-working-p))
@@ -1655,13 +1655,13 @@ or added into the given directory, defaulting to the current one."
             (message "[Taking screenshot...done]"))
         (error "[Cannot create image file]")))
     (insert (concat "[[" name "]]"))
-    (org-display-inline-images))
+    (org-link-preview-region (point-min) (point-max)))
 
   ;; Hide the brackets marking macro calls.
   (setq org-hide-macro-markers t)
 
   (defun org-macro-insert ()
-    "XXX"
+    "Insert an Org macro chosen from the available macros."
     (interactive)
     (let* ((macros (org-macro--collect-macros))
            (macro (completing-read "Insert macro: " (mapcar 'car macros)))
@@ -2116,7 +2116,8 @@ the table of contents, and similar cross-references can stabilize."
         (message "[Export command: %S]" org-latex-pdf-process))))
 
   ;; Configure the compiler in Org's temporary export buffer before parsing.
-  (add-hook 'org-export-before-parsing-hook #'boost--set-org-latex-pdf-process)
+  (add-hook 'org-export-before-parsing-functions
+            #'boost--set-org-latex-pdf-process)
 
   ;; 12.6.2 Default packages to be inserted in the header.
   ;; Include the `babel' package first for language-specific hyphenation and
@@ -2316,12 +2317,9 @@ of the ignored headline."
   ;; Make the images in the Emacs buffer automatically refresh after
   ;; execution.
 
-  ;; (add-hook 'org-babel-after-execute-hook
-  ;;           (lambda ()
-  ;;             (org-display-inline-images nil t))) ; DOESN'T WORK!
-  ;;                                       ; More efficient with refresh == t.
-
-  (add-hook 'org-babel-after-execute-hook #'org-display-inline-images))
+  (add-hook 'org-babel-after-execute-hook
+            (lambda ()
+              (org-link-preview-region (point-min) (point-max)))))
 
 ;;** 14.2 (info "(org)Editing source code")
 
@@ -2346,8 +2344,8 @@ of the ignored headline."
   (let ((org-src-window-setup 'reorganize-frame))
     (org-babel-expand-src-block)))
 
-;; Indent the content of a source code block.
-(setq org-edit-src-content-indentation 2)
+;; Number of spaces used to indent the contents of source blocks.
+(setq org-src-content-indentation 2)
 
 ;; Fontify source code blocks using the corresponding major mode.
 (setq org-src-fontify-natively t)       ; Org preserves the `org-block' face
@@ -2809,7 +2807,7 @@ Example: \"Hello\" becomes \"xxxxx\"."
      ;; ignoreheading tag for bibliographies and appendices.
      ":ignoreheading:")))
 
-(add-hook 'org-export-before-parsing-hook
+(add-hook 'org-export-before-parsing-functions
           #'boost--org-export-strip-ignoreheading-headlines)
 
 (defun boost--org-export-html-qn-container-class (backend)
@@ -2821,29 +2819,31 @@ Example: \"Hello\" becomes \"xxxxx\"."
        (org-set-property "HTML_CONTAINER_CLASS" "inlinetask"))
      "Qn")))
 
-(add-hook 'org-export-before-parsing-hook
+(add-hook 'org-export-before-parsing-functions
           #'boost--org-export-html-qn-container-class)
 
 (defun insert-one-equal-or-two ()
-  "XXX"
+  "Insert = or surround a symbol with =...= in Org."
   (interactive)
   (cond
-   ((or (bolp) (not (looking-back "=")))
-    ;; Insert just one =.
+   ((or (bolp)
+        (not (eq (char-before) ?=)))
     (self-insert-command 1))
    ((save-excursion
       (backward-char)
-      ;; Skip symbol backwards.
       (and (not (zerop (skip-syntax-backward "w_.")))
-           (not (looking-back "="))
-           (or (insert-and-inherit "=") t))))
+           (not (eq (char-before) ?=))
+           (progn
+             (insert-and-inherit "=")
+             t))))
    (t
-    ;; insert == around following symbol.
     (delete-char -1)
-    (unless (looking-back "=") (insert-and-inherit "="))
+    (unless (eq (char-before) ?=)
+      (insert-and-inherit "="))
     (save-excursion
       (skip-syntax-forward "w_.")
-      (unless (looking-at "=") (insert-and-inherit "="))))))
+      (unless (looking-at "=")
+        (insert-and-inherit "="))))))
 
 ;; Must be in eval-after-load "org"?
 ;; (define-key org-mode-map (kbd "=") #'insert-one-equal-or-two)
