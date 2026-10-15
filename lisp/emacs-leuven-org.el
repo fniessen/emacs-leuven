@@ -1718,10 +1718,10 @@ or added into the given directory, defaulting to the current one."
   (define-key org-mode-map (kbd "C-c C-e") #'org-export-dispatch))
 
 (with-eval-after-load 'org
-  ;; Helper function to measure execution time.
-  (defun measure-time-wrapper (message fn &rest args)
-    "Wrapper to measure and report execution time of a function."
-    (measure-time message (apply fn args)))
+  ;; Wrapper to measure and report execution time of a function.
+  (defmacro measure-time-wrapper (message fn &rest args)
+    `(measure-time ,message
+       (funcall ,fn ,@args)))
 
   ;; Helper function to check if export is needed.
   (defun needs-export-p (source-file target-file)
