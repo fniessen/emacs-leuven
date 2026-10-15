@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261015.1407>
+;; Version: <20261015.1430>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261015.1407>"
+(defconst boost-version "<20261015.1430>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -3897,7 +3897,7 @@ Otherwise toggle `visible-mode' using ARG."
   (leuven--section "25.11 (emacs)TeX Mode")
 
   (defface boost-latex-error-face
-    '((t (:weight bold :foreground "#E62020" :background "#FFCABF")))
+    '((t (:weight bold :foreground "#A00000" :background "#FFE0DC")))
     "Face used to highlight errors in LaTeX output."
     :group 'boost)
 

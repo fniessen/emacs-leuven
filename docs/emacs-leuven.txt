@@ -7881,7 +7881,7 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
 
 #+begin_src emacs-lisp
   (defface boost-latex-error-face
-    '((t (:weight bold :foreground "#E62020" :background "#FFCABF")))
+    '((t (:weight bold :foreground "#A00000" :background "#FFE0DC")))
     "Face used to highlight errors in LaTeX output."
     :group 'boost)
 
