@@ -7926,6 +7926,7 @@ Under Windows, in the *native* TeX mode, ~shell-file-name~ must be =cmdproxy.exe
 
       ;; Warnings.
       ("^.*Package .* Warning:.*" . compilation-warning-face)
+      ("^.*Class .* Warning:.*" . compilation-warning-face)
       ("^.*LaTeX.* Warning:.*" . compilation-warning-face)
       ("^.*Reference .* undefined" . compilation-warning-face)
 
