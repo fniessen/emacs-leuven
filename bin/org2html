@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [ "$#" -ne 1 ]; then
+    printf 'Usage: %s FILE.org\n' "${0##*/}" >&2
+    exit 2
+fi
+
+if [ ! -f "$1" ]; then
+    printf 'Error: not a regular file: %s\n' "$1" >&2
+    exit 2
+fi
+
+exec emacs --batch --quick "$1" \
+    --eval "(progn (require 'ox-html) (org-html-export-to-html))"
