@@ -82,6 +82,9 @@ details.
 #+begin_src emacs-lisp :noweb yes
 ;;; emacs-leuven.el --- Pleasant defaults for GNU Emacs -*- lexical-binding: t; -*-
 
+;; This file is generated from emacs-leuven.txt.
+;; Edit the Org source, then tangle it again.
+
 ;; Copyright (C) 1999-2026 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
@@ -432,20 +435,6 @@ distro) without impacting on stuff you have added by hand.
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Require a feature/library if available; if not, fail silently.
-  (defun boost--try-require (feature)
-    "Try to (require FEATURE) silently.
-
-Return t on success, nil on failure. If `init-file-debug' is non-nil,
-emit a warning message when the feature can't be loaded."
-    (if (require feature nil 'noerror)
-        t
-      (when (bound-and-true-p init-file-debug)
-        (message "WARNING [boost]: Cannot load `%s'" feature))
-      nil))
-#+end_src
-
-#+begin_src emacs-lisp
 (defun boost--set-key-if-free (keymap key command &optional scope)
   "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
 KEYMAP may be the map itself or a symbol naming it.
@@ -619,7 +608,7 @@ other external tools available without hardcoding installation directories.
 #+begin_src emacs-lisp :tangle no
 ;; Import environment variables from the user's login shell.
 (when (or lvn--linux-p lvn--mac-p)
-  (when (boost--try-require 'exec-path-from-shell)
+  (when (require 'exec-path-from-shell nil 'noerror)
     (exec-path-from-shell-copy-envs
      '("PATH"
        "MANPATH"
@@ -727,7 +716,7 @@ like this into your configuration file:
 #+end_src
 
 #+begin_src emacs-lisp
-  (boost--try-require 'package)
+  (require 'package nil 'noerror)
   (with-eval-after-load 'package
 
 
@@ -743,10 +732,11 @@ like this into your configuration file:
         bbdb
         boxquote
         ;; calfw
+        cape
         circe
         color-identifiers-mode
-        company
-        company-quickhelp
+        consult
+        corfu
         ;; csv-mode
         dashboard
         ;; delight                     ; Instead of diminish.
@@ -765,7 +755,6 @@ like this into your configuration file:
         ;; git-commit-insert-issue
         git-messenger
         git-timemachine
-        google-translate
         goto-chg
         gptel
         gptel-agent
@@ -897,7 +886,8 @@ like this into your configuration file:
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") :append)
-(package-initialize)
+(unless package--initialized
+  (package-initialize))
 
 ;; Install ESS if not already installed.
 (unless (package-installed-p 'ess)
@@ -932,12 +922,12 @@ like this into your configuration file:
 
 #+begin_src emacs-lisp
   ;; Load elisp libraries while Emacs is idle.
-  (boost--try-require 'idle-require)
+  (require 'idle-require nil 'noerror)
 
   ;; Fail-safe for `idle-require`.
   (if (not (featurep 'idle-require))
       (defun idle-require (feature &optional file noerror)
-        (boost--try-require feature)))
+        (require feature nil 'noerror)))
 
   (with-eval-after-load 'idle-require
 
@@ -1418,7 +1408,7 @@ When called with a 0 argument (~M-0 w~), you get ~(info \"(%s)%s\")~.
 ** Helpful
 
 #+begin_src emacs-lisp
-(when (boost--try-require 'helpful)
+(when (require 'helpful nil 'noerror)
   (global-set-key [remap describe-function] #'helpful-callable) ; C-h f.
   (global-set-key [remap describe-command]  #'helpful-command)  ; C-h c.
   (global-set-key [remap describe-variable] #'helpful-variable) ; C-h v.
@@ -1793,6 +1783,49 @@ This is inspired by the classic "slick-copy/slick-cut" behavior:
   (global-set-key [remap kill-ring-save] #'boost--slick-kill-ring-save)
 #+end_src
 
+WSL clipboard integration:
+
+#+begin_src emacs-lisp
+  (defun boost-wsl--interop-available-p ()
+    "Return non-nil when WSL clipboard interop is available."
+    (and (eq system-type 'gnu/linux)
+         (file-exists-p "/proc/sys/fs/binfmt_misc/WSLInterop")))
+
+  (defun boost-wsl-paste-from-windows ()
+    "Return the current Windows clipboard contents under WSL."
+    (when (boost-wsl--interop-available-p)
+      (with-temp-buffer
+        (let ((coding-system-for-read 'utf-8))
+          (call-process
+           "powershell.exe" nil t nil "-NoProfile" "-Command"
+           "[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false); Get-Clipboard -Raw"))
+        (let ((text (replace-regexp-in-string "\r" "" (buffer-string))))
+          (string-remove-suffix "\n" (string-remove-prefix "\uFEFF" text))))))
+
+  (when (boost-wsl--interop-available-p)
+    (setq interprogram-paste-function #'boost-wsl-paste-from-windows))
+
+  (defun boost--copy-to-windows (text)
+    "Copy TEXT to the Windows clipboard through clip.exe."
+    (gui-select-text text)
+    (let ((proc (make-process :name "clip.exe"
+                              :buffer nil
+                              :command '("clip.exe")
+                              :connection-type 'pipe
+                              :coding 'utf-16le-with-signature)))
+      (process-send-string proc (replace-regexp-in-string "\n" "\r\n" text))
+      (process-send-eof proc)))
+
+  (when (and (getenv "WSL_DISTRO_NAME")
+             (executable-find "clip.exe"))
+    (setq interprogram-cut-function #'boost--copy-to-windows))
+#+end_src
+
+Needed since I built Emacs 31.1 from source (~--with-pgtk~) on WSL2: copying
+a multi-line region no longer pasted into Windows through WSLg's clipboard
+bridge (single lines worked). Probably caused by the pgtk build under WSLg.
+Possibly removable if a future build/WSLg update fixes the bridge.
+
 *** Duplicate line or region
 
 | Editor        | Duplicate line or selection |
@@ -2131,7 +2164,7 @@ Annotating bookmarks.
 
 #+begin_src emacs-lisp :tangle no
     ;; Extensions to standard library `bookmark.el'.
-    (when (and (boost--try-require 'bookmark+)
+    (when (and (require 'bookmark+ nil 'noerror)
                (locate-library "dired-aux"))
 
       ;; Toggle an ANONYMOUS bookmark on the current line.
@@ -2409,7 +2442,7 @@ In IntelliJ IDEA, the are recognized in both lower and upper case.
 
 #+begin_src emacs-lisp
 ;; Load hl-todo only if it's available.
-(when (boost--try-require 'hl-todo)
+(when (require 'hl-todo nil 'noerror)
 
   ;; Enable hl-todo globally.
   (global-hl-todo-mode 1)
@@ -2629,7 +2662,7 @@ such a background behind or underneath the text. Think of a marker pen
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-;; (when (boost--try-require #'symbol-overlay)
+;; (when (require 'symbol-overlay nil 'noerror)
 ;;   (global-set-key (kbd "C-S-<f7>") #'symbol-overlay-put)
 ;;   (global-set-key (kbd "<f3>") #'symbol-overlay-switch-forward)
 ;;   (global-set-key (kbd "S-<f3>") #'symbol-overlay-switch-backward)
@@ -4584,7 +4617,7 @@ Useful Ediff keys:
 #+begin_src emacs-lisp
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads
-  ;; (boost--try-require 'ediff-hook)
+  ;; (require 'ediff-hook nil 'noerror)
   ;; already loaded (by Emacs?)
 
   (with-eval-after-load 'ediff
@@ -5351,7 +5384,7 @@ before running helm-flycheck"
     ;; For multi-line items in e.g. minibuffer history, match entire items,
     ;; not individual lines within items.
 
-    ;; (boost--try-require 'helm-dictionary)
+    ;; (require 'helm-dictionary nil 'noerror)
 
     ;; Use the *current window* (no popup) to show the candidates.
     (setq helm-full-frame nil)
@@ -6223,7 +6256,7 @@ Get EXIF data with ~image-dired-get-exif-data~.
   (leuven--section "20.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
 
   ;; Unique buffer names dependent on file name.
-  (boost--try-require 'uniquify)
+  (require 'uniquify nil 'noerror)
 
   (with-eval-after-load 'uniquify
 
@@ -6307,7 +6340,7 @@ windows and keeping only the currently selected one.
 The following code flips a two-window frame so that left becomes right.
 
 #+begin_src emacs-lisp
-  (when (boost--try-require 'transpose-frame)
+  (when (require 'transpose-frame nil 'noerror)
 
     ;; Swap the left/right positions of the windows in the current frame.
     (global-set-key (kbd "C-c ~") #'flop-frame)
@@ -6935,7 +6968,7 @@ For a list of buffer beginnings, see ~magic-mode-alist~.
 
 #+begin_src emacs-lisp
   ;; ;; Load generic modes which support e.g. batch files.
-  ;; (boost--try-require 'generic-x)
+  ;; (require 'generic-x nil 'noerror)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -7381,12 +7414,12 @@ Invoking the command twice consecutively unfills the paragraph."
              (or (not (equal mode-name "Org"))
                  (not (member (org-element-type (org-element-at-point))
                               '(src-block keyword table dynamic-block)))))
-        (backward-delete-char 1)
+        (delete-char 1)
         (insert "«  »")
         (backward-char 2))
        ((and (eq (char-before) ?\")
              (derived-mode-p 'latex-mode))
-        (backward-delete-char 1)
+        (delete-char 1)
         (insert "\\enquote{}")
         (backward-char 1))
        (t
@@ -7550,7 +7583,7 @@ See https://github.com/zk-phi/dotfiles/blob/master/emacs/init.el.
 
     ;; ;; Make other `outline-minor-mode' files (LaTeX, etc.) feel the Org
     ;; ;; mode outline navigation (written by Carsten Dominik).
-    ;; (boost--try-require 'outline-magic)
+    ;; (require 'outline-magic nil 'noerror)
     ;; (with-eval-after-load 'outline-magic
     ;;   (add-hook 'outline-minor-mode-hook
     ;;             (lambda ()
@@ -7566,7 +7599,7 @@ See https://github.com/zk-phi/dotfiles/blob/master/emacs/init.el.
     ;;                           (kbd "<M-down>") #'outline-move-subtree-down))))
 
     ;; ;; Extra support for outline minor mode.
-    ;; (boost--try-require 'out-xtra)
+    ;; (require 'out-xtra nil 'noerror)
 
 
     ;; Org-style folding for a `.emacs' (and much more).
@@ -7724,7 +7757,7 @@ This helps me survive in files like ~org.el~ and ~org-agenda.el~.
 
 #+begin_src emacs-lisp :tangle no
   ;; ;; Unified user interface for Emacs folding modes, bound to Org key-strokes.
-  ;; (boost--try-require 'fold-dwim-org)
+  ;; (require 'fold-dwim-org nil 'noerror)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -8016,7 +8049,7 @@ aliases ~(la)tex-mode~ to ~(La)TeX-mode~.
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  ;; (boost--try-require 'tex-site)
+  ;; (require 'tex-site nil 'noerror)
 
   ;; Support for LaTeX documents.
   (with-eval-after-load 'latex
@@ -8662,7 +8695,7 @@ Some key bindings:
 
 #+begin_src emacs-lisp
   ;; Highlight the current tag and its matching opening/closing tag.
-  (when (boost--try-require 'hl-tags-mode)
+  (when (require 'hl-tags-mode nil 'noerror)
     (add-hook 'html-mode-hook #'hl-tags-mode)
 
     (add-hook 'nxml-mode-hook
@@ -8810,7 +8843,7 @@ to add an Imenu index to the menu bar in any mode that supports Imenu.
 
 #+begin_src emacs-lisp
   ;; Making buffer indexes as menus.
-  (boost--try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
+  (require 'imenu nil 'noerror)         ; Awesome 'imenu' library.
 
   (when (require 'imenu nil 'noerror)
     (with-eval-after-load 'imenu
@@ -9305,7 +9338,7 @@ corresponding region."
 
               (overlay-put
                ov 'display
-               (propertize "# {{{ Boilerplate… }}}"
+               (propertize "# {{{Boilerplate…}}}"
                            'face 'boost-hs-face))))))))
 
   (defun boost--hs-fold-setup ()
@@ -11477,7 +11510,7 @@ Alternatively,
   (with-eval-after-load 'etags
 
     ;; Tags enhancements.
-    (boost--try-require 'sure-tags))
+    (require 'sure-tags nil 'noerror))
 #+end_src
 
 will make sure that ~TAGS~ file exists (and builds it if it doesn't), allowing
@@ -11520,7 +11553,7 @@ the TAGS table, by using ~M-x tags-search RET~.
   ;; (with-eval-after-load 'etags
   ;;
   ;;   ;; Select from multiple tags.
-  ;;   (boost--try-require 'etags-select))
+  ;;   (require 'etags-select nil 'noerror))
 
   (with-eval-after-load 'etags-select
 
@@ -11789,7 +11822,7 @@ Keyboard navigation:
 #+begin_src emacs-lisp :tangle no
   ;; Emacs Code Browser.
   (custom-set-variables '(ecb-options-version "2.40"))
-  (boost--try-require 'ecb-autoloads)
+  (require 'ecb-autoloads nil 'noerror)
   (with-eval-after-load 'ecb-autoloads
 
     ;; Trick for starting ECB 2.40 (with CEDET merged in Emacs since 23.2).
@@ -11819,7 +11852,7 @@ narrows down the list as you type substrings. Tastes differ, but I for one
 really like this.
 
 #+begin_src emacs-lisp :tangle no
-  (boost--try-require 'eassist)
+  (require 'eassist nil 'noerror)
   (with-eval-after-load 'eassist
 
     (defun leuven--c-mode-eassist ()
@@ -12496,7 +12529,7 @@ When the menu (with completion candidates) is displayed, press:
 
 Not all back-ends support these last 2 commands.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Modular text completion framework.
   (with-eval-after-load 'company-autoloads
     (idle-require 'company)
@@ -12530,7 +12563,7 @@ Not all back-ends support these last 2 commands.
 
 **** Common
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (with-eval-after-load 'company
 
     ;; ... Except in some modes.
@@ -12544,14 +12577,14 @@ Not all back-ends support these last 2 commands.
 By default, the list of candidates is sorted alphabetically, unless the backend
 (or we) choose(s) to sort them in a different way.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; ;; Sort candidates according to their occurrences.
     ;; (setq company-transformers '(company-sort-by-occurrence))
     ;; (setq company-transformers '(;; company-sort-by-statistics ;; unknown
     ;;                              company-sort-by-backend-importance))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; Align annotations to the right tooltip border.
     (setq company-tooltip-align-annotations t)
 
@@ -12601,7 +12634,7 @@ By default, the list of candidates is sorted alphabetically, unless the backend
     (setq company-require-match nil)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; Do nothing if the indicated candidate contains digits (actually, it will
     ;; try to insert the digit you type).
     (advice-add 'company-complete-number :around
@@ -12662,7 +12695,7 @@ See also https://github.com/company-mode/company-mode/issues/123.
 
 Provide letters as key bindings for completion of strings.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     ;; From https://github.com/company-mode/company-mode/issues/188
     (defun leuven-company-quick-access-key (numbered)
       "Replace default behavior of `company--show-numbers' function.
@@ -12744,7 +12777,7 @@ altering the keymaps of company and yas-minor modes.
 (add-hook 'company-mode-hook #'bind-tab-properly)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     )                                   ; with-eval-after-load "company".
 #+end_src
 
@@ -12763,7 +12796,7 @@ good|
 In "code" modes (see ~company-dabbrev-code-modes~) and their derivatives, Company
 will -- by default -- complete only symbols, not text in comments or strings.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Dabbrev-like company-mode back-end for code.
   (with-eval-after-load 'company-dabbrev-code
 
@@ -12781,12 +12814,6 @@ will -- by default -- complete only symbols, not text in comments or strings.
     )
 #+end_src
 
-Problem:
-Company: backend (company-dabbrev-code company-gtags company-etags
-company-keywords) user-error: File /cygdrive/d/Users/fni/TAGS does not exist
-
-Use command ~company-diag~ in bug reports.
-
 **** Company-yasnippet
 
 In a JS file, type ~al~, and see ~al -> alert~ in the Company popup. TAB'ing on that
@@ -12798,7 +12825,7 @@ are snippets defined for the current major mode, this backend will always shadow
 backends that come after it.
 #+end_warning
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-hook 'js2-mode-hook
             (lambda ()
               (set (make-local-variable 'company-backends)
@@ -12830,31 +12857,16 @@ The completions from back-ends in a group are merged (but only from those that
 return the same ~prefix~).
 #+end_note
 
-**** Tern
-
-- http://stackoverflow.com/questions/18102833/could-not-start-tern-server-in-emacs?rq=1
-- https://github.com/syl20bnr/spacemacs/issues/5733
-- https://github.com/ternjs/tern/issues/256
-- https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE
-- https://github.com/angelozerr/tern.java/wiki/Getting-Started
-- http://emmet.io/blog/sublime-tern/
-- http://emacs.stackexchange.com/questions/3093/how-to-navigate-a-javascript-project
-- https://truongtx.me/2014/04/20/emacs-javascript-completion-and-refactoring
-
-Installing https://github.com/angelozerr/tern.java/wiki/Installation-Update-Site.
-
-https://nodejs.org/download/release/latest/win-x64/
-
 **** Text modes
 
 In the other modes, Company will pass control to other back-ends
 (e.g. ~company-dabbrev~).
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Dabbrev-like company-mode completion back-end.
   (with-eval-after-load 'company-dabbrev
 
-    ;; Only search in the current buffer
+    ;; Only search in the current buffer.
     (setq company-dabbrev-other-buffers nil) ; Prevent Company completing
                                              ; numbers coming from other files.
 
@@ -12874,7 +12886,7 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 
 **** Company-quickhelp frontend
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (with-eval-after-load 'company-quickhelp-autoloads
 
     ;; Enable `company-quickhelp-mode'.
@@ -12885,6 +12897,384 @@ XXX What about ~company-search-candidates~ vs ~company-filter-candidates~?
 
     ;; Maximum number of lines to show in the popup.
     (setq company-quickhelp-max-lines 10))
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+)                                       ; Chapter 30 ends here.
+#+end_src
+
+*** Corfu ("COmpletion in Region FUnction")
+
+Corfu is a small, fast completion *UI* that sits on top of Emacs' built-in
+~completion-at-point~ (CAPF) machinery.  Compared with Company:
+
+- there are no "back-ends" any more: everything is a standard *CAPF* function
+  (~completion-at-point-functions~), so every major mode, Eglot, LSP-mode,
+  Elisp, etc. work out of the box;
+
+- extra sources (dabbrev, file names, keywords, snippets...) come from *Cape*
+  (~cape-dabbrev~, ~cape-file~, ~cape-keyword~...) and can be merged with
+  ~cape-capf-super~ (the equivalent of Company's "grouped back-ends");
+
+- filtering and matching are delegated to ~completion-styles~ (e.g. Orderless)
+  instead of being re-implemented in the UI.
+
+Completion will start automatically after you type a few letters.
+
+When the popup (with completion candidates) is displayed, press:
+
+- ~up~ and ~down~ (or ~C-n~ / ~C-p~) to select,
+- ~RET~ or ~TAB~ to complete with the current selection (~corfu-insert~).
+- ~M-SPC~ to insert a separator (useful with Orderless: keeps the popup open
+  while you type the next component).
+- ~M-q~ (~corfu-quick-insert~) then a letter to complete with a candidate
+  (Azerty second row: ~a z e r t y u i o p~).
+- ~<F1>~ or ~C-h~ to *display the full documentation* for the selected symbol, or
+- ~C-w~ to *show its definition*.
+- ~C-g~ to cancel completion.
+
+Not all CAPFs support these last 2 commands (they need ~:company-doc-buffer~ and
+~:company-location~ properties, which most CAPFs provide).
+
+#+begin_note
+Requires the packages ~corfu~, ~cape~, ~yasnippet-capf~ and (optionally) ~orderless~,
+~consult~.  The Corfu extensions (~corfu-info~, ~corfu-popupinfo~, ~corfu-quick~,
+~corfu-history~) are shipped with the ~corfu~ package.
+#+end_note
+
+#+begin_src emacs-lisp
+;; COmpletion in Region FUnction.
+(with-eval-after-load 'corfu-autoloads
+  (idle-require 'corfu)
+
+  ;; Code: complete automatically while typing.
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (setq-local corfu-auto t) ; The popup is always shown.
+              (corfu-mode 1)
+              (add-hook 'completion-at-point-functions #'cape-dabbrev 90 t))))
+                                        ; local et passe après les CAPF du mode
+                                        ; (Elisp, Eglot...).
+
+(with-eval-after-load 'cape
+  ;; Prose: "ghost text" façon Cursor (Emacs 30+), but no Corfu.
+  (add-hook 'text-mode-hook
+            (lambda ()
+              (setq-local completion-styles '(basic partial-completion))
+              (setq-local completion-at-point-functions '(cape-dabbrev))
+
+              ;; Complete immediately when only one candidate remains.
+              (setq-local completion-cycle-threshold 1)
+
+              ;; Start showing inline completion previews ("ghost text") after
+              ;; one character.
+              (setq-local completion-preview-minimum-symbol-length 1)
+
+              (completion-preview-mode +1))))
+
+(with-eval-after-load 'corfu-autoloads
+  ;; sauf dans les buffers d'édition de source :
+  (add-hook 'org-src-mode-hook #'corfu-mode))
+#+end_src
+
+(setq tab-always-indent 'complete)
+
+**** Common
+
+By default, the list of candidates is sorted by length then alphabetically
+(~corfu-sort-length-alpha~), unless the CAPF (or we) choose(s) to sort them in a
+different way.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'corfu
+
+    ;; ;; Complete automatically while typing (otherwise: manual, on TAB).
+    ;; (setq corfu-auto t)              ; The popup is always shown.
+
+                                        ; To only trigger completion on manual invocation, set ~corfu-auto~ to nil.
+
+    ;; Minimum prefix length for idle completion.
+    (setq corfu-auto-prefix 2)
+
+    ;; Start completion immediately (raise to 0.05--0.2 if Emacs feels sluggish).
+    (setq corfu-auto-delay 0)
+
+    ;; Number of candidates displayed in the popup.
+    (setq corfu-count 10)
+
+    ;; Selecting item before first or after last wraps around.
+    (setq corfu-cycle t)
+
+    ;; Don't require a match: quit the popup when nothing matches anymore.
+    (setq corfu-quit-no-match t)
+
+    ;; Preselect the first candidate, unless the input is already a valid
+    ;; candidate.
+    (setq corfu-preselect 'valid)
+
+    ;; Ignore some keys (inconvenient in Comint buffers).
+    (define-key corfu-map (kbd "M-n")     nil)
+    (define-key corfu-map (kbd "M-p")     nil)
+
+    ;; Completion by TAB (insert the selected candidate).
+    ;; (Use `corfu-complete' instead to also expand the common prefix first.)
+    (define-key corfu-map (kbd "TAB")     #'corfu-insert)
+    (define-key corfu-map (kbd "<tab>")   #'corfu-insert)
+    (define-key corfu-map (kbd "<backtab>") #'corfu-previous)
+
+    ;; Insert a separator (keeps the popup open, for Orderless-like styles).
+    (define-key corfu-map (kbd "M-SPC")   #'corfu-insert-separator))
+#+end_src
+
+**** Search and filter
+
+Company's ~C-s~, ~C-r~, ~C-o~ (search) and ~C-M-s~ (filter) don't exist in Corfu:
+
+- *filtering* is done by typing more characters (with Orderless, several
+  space-separated components, each inserted with ~M-SPC~);
+- to get a full minibuffer-based search/filter UI on the current candidates,
+  transfer the completion session to the minibuffer (needs Consult).
+
+#+begin_src emacs-lisp
+  ;; Flexible matching (space-separated components), in the popup as well.
+  (with-eval-after-load 'orderless-autoloads
+    (setq completion-styles '(orderless basic))
+    (setq completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+With the ~basic~ style only (Emacs default, no Orderless), matching stays
+case-sensitive prefix matching, like Company did.
+
+#+begin_src emacs-lisp
+  ;; Move the current completion session to the minibuffer (Vertico + Consult).
+  (with-eval-after-load 'corfu
+    (defun leuven-corfu-move-to-minibuffer ()
+      "Continue the current Corfu completion in the minibuffer."
+      (interactive)
+      (pcase completion-in-region--data
+        (`(,beg ,end ,table ,pred ,extras)
+         (let ((completion-extra-properties extras)
+               completion-cycle-threshold completion-cycling)
+           (consult-completion-in-region beg end table pred)))))
+
+    (define-key corfu-map (kbd "M-m") #'leuven-corfu-move-to-minibuffer)
+    (add-to-list 'corfu-continue-commands #'leuven-corfu-move-to-minibuffer))
+#+end_src
+
+**** Quick-access letters
+
+Provide letters as key bindings for completion of strings.
+
+~corfu-quick~ displays a letter next to each candidate; ~M-q~ then that letter
+inserts the candidate.  This example uses the Azerty second row keys.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'corfu
+    (require 'corfu-quick)
+
+    ;; First and second level quick keys (Azerty).
+    (setq corfu-quick1 "azertyuiop")
+    (setq corfu-quick2 "qsdfghjklm")
+
+    (define-key corfu-map (kbd "M-q") #'corfu-quick-insert)
+    (define-key corfu-map (kbd "M-Q") #'corfu-quick-complete))
+#+end_src
+
+**** Documentation and location
+
+Replaces ~company-show-doc-buffer~ and ~company-show-location~.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'corfu
+    (require 'corfu-info)
+
+    ;; Temporarily show the documentation buffer for the selection.
+    (define-key corfu-map (kbd "<f1>") #'corfu-info-documentation)
+    (define-key corfu-map (kbd "C-h")  #'corfu-info-documentation)
+    (define-key corfu-map (kbd "C-?")  #'corfu-info-documentation)
+
+    ;; Temporarily display a buffer showing the selected candidate in context.
+    (define-key corfu-map (kbd "C-w")  #'corfu-info-location)
+    (define-key corfu-map (kbd "M-.")  #'corfu-info-location))
+#+end_src
+
+**** Sorting by history
+
+Replaces ~company-sort-by-statistics~: the candidates you pick most recently and
+most often come first.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'corfu
+    (require 'corfu-history)
+    (savehist-mode 1)
+    (add-to-list 'savehist-additional-variables 'corfu-history)
+    (corfu-history-mode 1))
+#+end_src
+
+**** Tab
+
+Company mode and YASnippet used to step on each other's toes, hence a bunch of
+custom functions (~check-expansion~, ~do-yas-expand~, ~tab-indent-or-complete~,
+~bind-tab-properly~).  With Corfu, all this is built into Emacs:
+
+1. expand yas snippet (~yas-minor-mode-map~ binds ~TAB~ and falls back to the
+   next command when there is no snippet to expand),
+2. indent (~indent-for-tab-command~),
+3. if indenting didn't change anything, complete (~tab-always-indent~ set to
+   ~complete~).
+
+Note that it does work in Org files (~org-cycle~ is called first).
+
+#+begin_src emacs-lisp
+  ;; TAB indents first, then completes if the line was already indented.
+  (setq tab-always-indent 'complete)
+
+  ;; Only complete after a word, a closing paren or a punctuation character
+  ;; (like `check-expansion' did).
+  (setq tab-first-completion 'word-or-paren-or-punct)
+
+  ;; Don't start `ispell' completion in Text modes (Emacs 30+).
+  (setq text-mode-ispell-word-completion nil)
+#+end_src
+
+With the following text (where "|" stands for the cursor):
+
+#+begin_example
+GOODBYE
+good|
+#+end_example
+
+- the prefix "good" will match no word (no completion to "goodBYE"!) while
+- the prefix "GOOD" will match "GOODBYE" only.
+
+(with ~basic~ completion style and ~dabbrev-case-fold-search~ set to nil, see
+below).
+
+**** Prog modes
+
+In "code" modes, the source of candidates is the CAPF of the major mode (Elisp,
+Eglot, LSP, etc.).
+
+#+begin_note
+Add functions to the global default value of ~completion-at-point-functions~ which
+is used by ~completion-at-point~.  *The order of the functions matters*, the first
+function returning a result wins.
+#+end_note
+
+#+begin_src emacs-lisp :tangle no
+  ;; Completion At Point Extensions.
+  (with-eval-after-load 'cape-autoloads
+
+    ;; Dabbrev-like completion, everywhere (including in comments and strings).
+    (add-hook 'completion-at-point-functions #'cape-dabbrev)
+
+    ;; Programming language keywords.
+    (add-hook 'completion-at-point-functions #'cape-keyword)
+
+    ;; File names.
+    (add-hook 'completion-at-point-functions #'cape-file))
+#+end_src
+
+To debug, look at the buffer-local ~completion-at-point-functions~ (~C-h v~), and
+call ~M-x completion-at-point~ manually.
+
+**** Text modes
+
+- programmation → CAPF du langage
+- texte/org/markdown → complétion par mots existants
+
+In the other modes, ~cape-dabbrev~ collects words from the buffer(s), following
+the standard ~dabbrev~ options.
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'cape
+
+  ;; Only search in the current buffer.
+  (setq cape-dabbrev-check-other-buffers nil) ; Prevent completing numbers
+                                        ; coming from other files.
+
+  ;; Complete short words too.
+  (setq cape-dabbrev-min-length 2))
+#+end_src
+
+(setq cape-dabbrev-buffer-function #'cape-text-buffers)
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'dabbrev
+
+  ;; Don't ignore case when collecting completion candidates.
+  (setq dabbrev-case-fold-search nil)
+
+  ;; Don't downcase the returned candidates.
+  (setq dabbrev-case-replace nil))
+#+end_src
+
+**** Company-yasnippet
+
+In a JS file, type ~al~, and see ~al -> alert~ in the Corfu popup.  TAB'ing on that
+entry will insert the code template!
+
+With Company, ~company-yasnippet~ shadowed the back-ends after it.  A CAPF from
+~yasnippet-capf~ is non-exclusive, and several CAPFs can be merged into one with
+~cape-capf-super~ (the equivalent of a "grouped" back-end).
+
+#+begin_src emacs-lisp
+  ;; Complete YASnippet keys.
+  (defun leuven-complete-yasnippet ()
+    "Complete the text before point with a YASnippet snippet."
+    (interactive)
+    (let ((completion-at-point-functions '(yasnippet-capf)))
+      (completion-at-point)))
+
+  ;; Better than `helm-yas-complete' as it shows both the key and the
+  ;; replacement.
+  (global-set-key (kbd "C-c y") #'leuven-complete-yasnippet)
+
+  (add-hook 'js2-mode-hook
+            (lambda ()
+              (setq-local completion-at-point-functions
+                          (list (cape-capf-super #'cape-dabbrev
+                                                 #'yasnippet-capf)))))
+#+end_src
+
+#+begin_note
+~completion-at-point-functions~ is a standard Emacs variable.
+
+Documentation: Special hook to find the completion table for the entity at point.
+
+*The first function returning a non-nil result wins* (unless it declares itself
+non-exclusive with ~:exclusive 'no~, in which case the next ones are tried when it
+has no match).  A function can also be built from several ones with
+~cape-capf-super~: the candidates are merged.
+
+The buffer-local value can contain ~t~: it means "then run the global value".
+#+end_note
+
+Useful wrappers from Cape: ~cape-capf-buster~ (recompute candidates on each
+keystroke), ~cape-capf-case-fold~, ~cape-capf-inside-comment~, ~cape-capf-prefix-length~.
+
+**** JS
+
+For JavaScript/TypeScript, use a language server through Eglot
+(~typescript-language-server~), which provides the CAPF itself:
+
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'js2-mode-hook #'eglot-ensure)
+#+end_src
+
+**** Corfu-popupinfo frontend
+
+Replaces ~company-quickhelp~: shows the documentation next to the popup.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'corfu
+    (require 'corfu-popupinfo)
+
+    ;; Enable `corfu-popupinfo-mode'.
+    (corfu-popupinfo-mode 1)
+
+    ;; Maximum number of lines to show in the popup.
+    (setq corfu-popupinfo-max-height 10))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -12899,23 +13289,14 @@ completion-at-point-functions
   ↳ cape-dabbrev
   ↳ elisp-completion-at-point
 
-Corfu = UI
-
 #+begin_src emacs-lisp :tangle no
-(when (boost--try-require 'corfu)
-  (global-corfu-mode 1)
-
-  (setq corfu-auto t)
-  (setq corfu-auto-prefix 2)
-  (setq corfu-popupinfo-mode 1))
-
-(when (boost--try-require 'cape)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'elisp-completion-at-point)
-  (add-to-list 'completion-at-point-functions #'ispell-completion-at-point)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'eglot-completion-at-point) ; LSP
-  (add-to-list 'completion-at-point-functions #'cape-yasnippet t) ; à la fin
+(when (require 'cape nil 'noerror)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'elisp-completion-at-point)
+  (add-hook 'completion-at-point-functions #'ispell-completion-at-point)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'eglot-completion-at-point) ; LSP
+  (add-hook 'completion-at-point-functions #'cape-yasnippet t) ; à la fin
   )
 #+end_src
 
@@ -13229,7 +13610,7 @@ grouping Dirs first:
 
 #+begin_src emacs-lisp
     ;; Dired sort.
-    (boost--try-require 'dired-sort-map)
+    (require 'dired-sort-map nil 'noerror)
 #+end_src
 
 ** Dired and ~find~
@@ -13337,7 +13718,8 @@ into the kill ring (in order to make use of it elsewhere), use
 ~dired-copy-filename-as-kill~, which is bound to ~w~ in Dired.
 
 #+begin_tip
-Use ~0 w~ to put the *full path*.
+Use ~C-u 0 w~ (or ~M-0 w~ or simply ~0 w~) to copy the *full file path* to the kill
+ring.
 #+end_tip
 
 ** Dired "extra" features
@@ -13406,7 +13788,7 @@ a Dired buffer. They are thus similar to the default global bindings ~C-x d~ and
 
   (leuven--section "30.XX Dired+")
 
-  (when (and (boost--try-require 'dired+)
+  (when (and (require 'dired+ nil 'noerror)
              (locate-library "dired-aux"))
 
     ;; Don't hide details in Dired.
@@ -13536,7 +13918,7 @@ But Org outperforms it!
 
   ;; Insinuate appt if `diary-file' exists.
   (if (file-readable-p "~/diary")
-      (boost--try-require 'appt)        ; Requires `diary-lib', which requires
+      (require 'appt nil 'noerror)      ; Requires `diary-lib', which requires
                                         ; `diary-loaddefs'.
     (message "[Appointment reminders lib `appt' not loaded (no diary file found)]"))
 
@@ -14045,7 +14427,7 @@ interfaces (vim, htop, ncurses apps), color output and job control
 
   ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...).
-  ;; (boost--try-require 'comint)
+  ;; (require 'comint nil 'noerror)
   ;; (with-eval-after-load 'comint
 
     ;; Prevent accidental modification of interpreter prompts.
@@ -15727,8 +16109,8 @@ If updates are available, it pulls the latest changes from the repository.
 If the configuration is already up-to-date, it displays a message indicating so.
 After the update, it recommends restarting Emacs to complete the update.
 
-Before using this function, make sure 'lvn--directory' points to the
-directory containing 'emacs-leuven.el' or a symbolic link to the actual
+Before using this function, make sure `lvn--directory' points to the
+directory containing `emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
     (interactive)
     (boost-display-version)
@@ -15767,11 +16149,11 @@ Git repository directory."
     "Display the latest commits in the Emacs-Leuven configuration.
 
 This function fetches the latest changes from the remote Git repository and
-displays the commits made since the current branch diverged from 'origin'. If
+displays the commits made since the current branch diverged from `origin'. If
 the configuration is already up-to-date, it indicates so in the message.
 
-Before using this function, make sure 'lvn--directory' points to the
-directory containing 'emacs-leuven.el' or a symbolic link to the actual
+Before using this function, make sure `lvn--directory' points to the
+directory containing `emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
     (interactive)
     (boost-display-version)
@@ -15779,7 +16161,6 @@ Git repository directory."
     (let* ((el-file-path (locate-library "emacs-leuven.el"))
            (el-file-directory (file-name-directory (file-truename el-file-path)))
            (default-directory el-file-directory)
-           (fetch-status (shell-command "LC_ALL=C git fetch --verbose"))
            (commits-buffer "*Emacs-Leuven latest commits*"))
       (if (string-match "\\(up to date\\|up-to-date\\)" (shell-command-to-string "LC_ALL=C git status"))
           (message "[Configuration already up-to-date]")
@@ -15794,6 +16175,10 @@ Git repository directory."
         (message "[EmacsBoost version %s]" boost-version)
       (message "[Error: EmacsBoost version is not defined]")))
 #+end_src
+
+Updating Emacs Leuven to version abcd123
+Downloading: 100%
+Unpacking: 100%
 
 # See spacemacs/check-for-new-version.
 

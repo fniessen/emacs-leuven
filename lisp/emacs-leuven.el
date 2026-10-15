@@ -1,10 +1,13 @@
 ;;; emacs-leuven.el --- Pleasant defaults for GNU Emacs -*- lexical-binding: t; -*-
 
+;; This file is generated from emacs-leuven.txt.
+;; Edit the Org source, then tangle it again.
+
 ;; Copyright (C) 1999-2026 Fabrice Niessen. All rights reserved.
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20260919.2353>
+;; Version: <20261005.1400>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -62,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20260919.2353>"
+(defconst boost-version "<20261005.1400>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -259,18 +262,6 @@ If END-OF-CHAPTER is non-nil, it will not print the section name."
 
   ;; (lvn--add-dir-to-load-path leuven-user-lisp-directory)
 
-  ;; Require a feature/library if available; if not, fail silently.
-  (defun boost--try-require (feature)
-    "Try to (require FEATURE) silently.
-
-Return t on success, nil on failure. If `init-file-debug' is non-nil,
-emit a warning message when the feature can't be loaded."
-    (if (require feature nil 'noerror)
-        t
-      (when (bound-and-true-p init-file-debug)
-        (message "WARNING [boost]: Cannot load `%s'" feature))
-      nil))
-
 (defun boost--set-key-if-free (keymap key command &optional scope)
   "Bind KEY to COMMAND in KEYMAP only if KEY is unbound.
 KEYMAP may be the map itself or a symbol naming it.
@@ -457,7 +448,7 @@ to it. Otherwise call FUNCTION interactively."
     ;; Archives from which to fetch.
     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") :append))
 
-  (boost--try-require 'package)
+  (require 'package nil 'noerror)
   (with-eval-after-load 'package
 
 
@@ -473,10 +464,11 @@ to it. Otherwise call FUNCTION interactively."
         bbdb
         boxquote
         ;; calfw
+        cape
         circe
         color-identifiers-mode
-        company
-        company-quickhelp
+        consult
+        corfu
         ;; csv-mode
         dashboard
         ;; delight                     ; Instead of diminish.
@@ -495,7 +487,6 @@ to it. Otherwise call FUNCTION interactively."
         ;; git-commit-insert-issue
         git-messenger
         git-timemachine
-        google-translate
         goto-chg
         gptel
         gptel-agent
@@ -643,12 +634,12 @@ to it. Otherwise call FUNCTION interactively."
 )                                       ; Chapter 48 ends here.
 
   ;; Load elisp libraries while Emacs is idle.
-  (boost--try-require 'idle-require)
+  (require 'idle-require nil 'noerror)
 
   ;; Fail-safe for `idle-require`.
   (if (not (featurep 'idle-require))
       (defun idle-require (feature &optional file noerror)
-        (boost--try-require feature)))
+        (require feature nil 'noerror)))
 
   (with-eval-after-load 'idle-require
 
@@ -894,7 +885,7 @@ to it. Otherwise call FUNCTION interactively."
     ;; falling back to the bottom otherwise.
     (which-key-setup-side-window-right-bottom))
 
-(when (boost--try-require 'helpful)
+(when (require 'helpful nil 'noerror)
   (global-set-key [remap describe-function] #'helpful-callable) ; C-h f.
   (global-set-key [remap describe-command]  #'helpful-command)  ; C-h c.
   (global-set-key [remap describe-variable] #'helpful-variable) ; C-h v.
@@ -1053,6 +1044,40 @@ to it. Otherwise call FUNCTION interactively."
   (global-set-key [remap kill-region]    #'boost--slick-kill-region)
   (global-set-key [remap kill-ring-save] #'boost--slick-kill-ring-save)
 
+  (defun boost-wsl--interop-available-p ()
+    "Return non-nil when WSL clipboard interop is available."
+    (and (eq system-type 'gnu/linux)
+         (file-exists-p "/proc/sys/fs/binfmt_misc/WSLInterop")))
+
+  (defun boost-wsl-paste-from-windows ()
+    "Return the current Windows clipboard contents under WSL."
+    (when (boost-wsl--interop-available-p)
+      (with-temp-buffer
+        (let ((coding-system-for-read 'utf-8))
+          (call-process
+           "powershell.exe" nil t nil "-NoProfile" "-Command"
+           "[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false); Get-Clipboard -Raw"))
+        (let ((text (replace-regexp-in-string "\r" "" (buffer-string))))
+          (string-remove-suffix "\n" (string-remove-prefix "\uFEFF" text))))))
+
+  (when (boost-wsl--interop-available-p)
+    (setq interprogram-paste-function #'boost-wsl-paste-from-windows))
+
+  (defun boost--copy-to-windows (text)
+    "Copy TEXT to the Windows clipboard through clip.exe."
+    (gui-select-text text)
+    (let ((proc (make-process :name "clip.exe"
+                              :buffer nil
+                              :command '("clip.exe")
+                              :connection-type 'pipe
+                              :coding 'utf-16le-with-signature)))
+      (process-send-string proc (replace-regexp-in-string "\n" "\r\n" text))
+      (process-send-eof proc)))
+
+  (when (and (getenv "WSL_DISTRO_NAME")
+             (executable-find "clip.exe"))
+    (setq interprogram-cut-function #'boost--copy-to-windows))
+
   (global-set-key (kbd "C-S-d") #'duplicate-dwim)
 
   ;; (setq duplicate-region-final-position 0)
@@ -1194,7 +1219,7 @@ to it. Otherwise call FUNCTION interactively."
   (leuven--section "15.13 (emacs)Font Lock")
 
 ;; Load hl-todo only if it's available.
-(when (boost--try-require 'hl-todo)
+(when (require 'hl-todo nil 'noerror)
 
   ;; Enable hl-todo globally.
   (global-hl-todo-mode 1)
@@ -2437,7 +2462,7 @@ file B."
 
   ;; ;; Ediff, a comprehensive visual interface to diff & patch
   ;; ;; setup for Ediff's menus and autoloads
-  ;; (boost--try-require 'ediff-hook)
+  ;; (require 'ediff-hook nil 'noerror)
   ;; already loaded (by Emacs?)
 
   (with-eval-after-load 'ediff
@@ -2722,7 +2747,7 @@ file B."
     ;; For multi-line items in e.g. minibuffer history, match entire items,
     ;; not individual lines within items.
 
-    ;; (boost--try-require 'helm-dictionary)
+    ;; (require 'helm-dictionary nil 'noerror)
 
     ;; Use the *current window* (no popup) to show the candidates.
     (setq helm-full-frame nil)
@@ -3002,7 +3027,7 @@ file B."
   (leuven--section "20.7 (emacs)Buffer Convenience and Customization of Buffer Handling")
 
   ;; Unique buffer names dependent on file name.
-  (boost--try-require 'uniquify)
+  (require 'uniquify nil 'noerror)
 
   (with-eval-after-load 'uniquify
 
@@ -3051,7 +3076,7 @@ When multiple windows are present, select the next window."
 
   (global-set-key (kbd "<f5>") #'boost-toggle-window-layout)
 
-  (when (boost--try-require 'transpose-frame)
+  (when (require 'transpose-frame nil 'noerror)
 
     ;; Swap the left/right positions of the windows in the current frame.
     (global-set-key (kbd "C-c ~") #'flop-frame)
@@ -3424,7 +3449,7 @@ SUBST-LIST is an alist where each element has the form (REGEXP . REPLACEMENT)."
   (push '("expect" . tcl-mode) interpreter-mode-alist)
 
   ;; ;; Load generic modes which support e.g. batch files.
-  ;; (boost--try-require 'generic-x)
+  ;; (require 'generic-x nil 'noerror)
 
 )                                       ; Chapter 24 ends here.
 
@@ -3722,12 +3747,12 @@ Invoking the command twice consecutively unfills the paragraph."
              (or (not (equal mode-name "Org"))
                  (not (member (org-element-type (org-element-at-point))
                               '(src-block keyword table dynamic-block)))))
-        (backward-delete-char 1)
+        (delete-char 1)
         (insert "«  »")
         (backward-char 2))
        ((and (eq (char-before) ?\")
              (derived-mode-p 'latex-mode))
-        (backward-delete-char 1)
+        (delete-char 1)
         (insert "\\enquote{}")
         (backward-char 1))
        (t
@@ -3973,7 +3998,7 @@ Otherwise toggle `visible-mode' using ARG."
 
 ;;** 1.2 (info "(auctex)Installation") of AUCTeX
 
-  ;; (boost--try-require 'tex-site)
+  ;; (require 'tex-site nil 'noerror)
 
   ;; Support for LaTeX documents.
   (with-eval-after-load 'latex
@@ -4400,7 +4425,7 @@ the parent element."
 )
 
   ;; Highlight the current tag and its matching opening/closing tag.
-  (when (boost--try-require 'hl-tags-mode)
+  (when (require 'hl-tags-mode nil 'noerror)
     (add-hook 'html-mode-hook #'hl-tags-mode)
 
     (add-hook 'nxml-mode-hook
@@ -4473,7 +4498,7 @@ the parent element."
   (global-set-key (kbd "<M-up>")   #'beginning-of-defun) ; C-M-a.
 
   ;; Making buffer indexes as menus.
-  (boost--try-require 'imenu)  ; Attempt to load the awesome 'imenu' library.
+  (require 'imenu nil 'noerror)         ; Awesome 'imenu' library.
 
   (when (require 'imenu nil 'noerror)
     (with-eval-after-load 'imenu
@@ -4725,7 +4750,7 @@ corresponding region."
 
               (overlay-put
                ov 'display
-               (propertize "# {{{ Boilerplate… }}}"
+               (propertize "# {{{Boilerplate…}}}"
                            'face 'boost-hs-face))))))))
 
   (defun boost--hs-fold-setup ()
@@ -5583,7 +5608,7 @@ With prefix ARG, invoke `vc-diff' instead."
   ;; (with-eval-after-load 'etags
   ;;
   ;;   ;; Select from multiple tags.
-  ;;   (boost--try-require 'etags-select))
+  ;;   (require 'etags-select nil 'noerror))
 
   (with-eval-after-load 'etags-select
 
@@ -5855,174 +5880,177 @@ With prefix ARG, invoke `vc-diff' instead."
                                         ; Makes more sense when placed at the
                                         ; top of the list.
 
-  ;; Modular text completion framework.
-  (with-eval-after-load 'company-autoloads
-    (idle-require 'company)
-    (with-eval-after-load 'company
-      ;; Enable Company mode in all buffers ....
-      (global-company-mode 1)
+;; COmpletion in Region FUnction.
+(with-eval-after-load 'corfu-autoloads
+  (idle-require 'corfu)
 
-      (global-set-key (kbd "C-c y") #'company-yasnippet)
-                                        ; Better than `helm-yas-complete' as
-                                        ; `company-yasnippet' shows both the key
-                                        ; and the replacement.
-      ))
+  ;; Code: complete automatically while typing.
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (setq-local corfu-auto t) ; The popup is always shown.
+              (corfu-mode 1)
+              (add-hook 'completion-at-point-functions #'cape-dabbrev 90 t))))
+                                        ; local et passe après les CAPF du mode
+                                        ; (Elisp, Eglot...).
 
-  (with-eval-after-load 'company
+(with-eval-after-load 'cape
+  ;; Prose: "ghost text" façon Cursor (Emacs 30+), but no Corfu.
+  (add-hook 'text-mode-hook
+            (lambda ()
+              (setq-local completion-styles '(basic partial-completion))
+              (setq-local completion-at-point-functions '(cape-dabbrev))
 
-    ;; ... Except in some modes.
-    (setq company-global-modes
-          '(not ess-mode                ; In (i)ESS buffers, Auto-Complete is
-                inferior-ess-mode       ; enabled by default.
-                magit-status-mode
-                help-mode))
+              ;; Complete immediately when only one candidate remains.
+              (setq-local completion-cycle-threshold 1)
 
-    ;; ;; Sort candidates according to their occurrences.
-    ;; (setq company-transformers '(company-sort-by-occurrence))
-    ;; (setq company-transformers '(;; company-sort-by-statistics ;; unknown
-    ;;                              company-sort-by-backend-importance))
+              ;; Start showing inline completion previews ("ghost text") after
+              ;; one character.
+              (setq-local completion-preview-minimum-symbol-length 1)
 
-    ;; Align annotations to the right tooltip border.
-    (setq company-tooltip-align-annotations t)
+              (completion-preview-mode +1))))
+
+(with-eval-after-load 'corfu-autoloads
+  ;; sauf dans les buffers d'édition de source :
+  (add-hook 'org-src-mode-hook #'corfu-mode))
+
+  (with-eval-after-load 'corfu
+
+    ;; ;; Complete automatically while typing (otherwise: manual, on TAB).
+    ;; (setq corfu-auto t)              ; The popup is always shown.
+
+                                        ; To only trigger completion on manual invocation, set ~corfu-auto~ to nil.
 
     ;; Minimum prefix length for idle completion.
-    (setq company-minimum-prefix-length 1)
+    (setq corfu-auto-prefix 2)
 
-    ;; Start completion immediately.
-    (setq company-idle-delay 0)
+    ;; Start completion immediately (raise to 0.05--0.2 if Emacs feels sluggish).
+    (setq corfu-auto-delay 0)
 
-    ;; Show quick-access numbers for the first ten candidates.
-    (setq company-show-numbers t)
+    ;; Number of candidates displayed in the popup.
+    (setq corfu-count 10)
 
     ;; Selecting item before first or after last wraps around.
-    (setq company-selection-wrap-around t)
+    (setq corfu-cycle t)
 
-    ;; Abort.
-    ;; (define-key company-active-map (kbd "<right>") #'company-abort)
-    ;; (define-key company-active-map (kbd "<left>")  #'company-abort)
+    ;; Don't require a match: quit the popup when nothing matches anymore.
+    (setq corfu-quit-no-match t)
+
+    ;; Preselect the first candidate, unless the input is already a valid
+    ;; candidate.
+    (setq corfu-preselect 'valid)
 
     ;; Ignore some keys (inconvenient in Comint buffers).
-    (define-key company-active-map (kbd "M-n")     nil)
-    (define-key company-active-map (kbd "M-p")     nil)
+    (define-key corfu-map (kbd "M-n")     nil)
+    (define-key corfu-map (kbd "M-p")     nil)
 
     ;; Completion by TAB (insert the selected candidate).
-    (define-key company-active-map (kbd "<tab>")   #'company-complete-selection)
+    ;; (Use `corfu-complete' instead to also expand the common prefix first.)
+    (define-key corfu-map (kbd "TAB")     #'corfu-insert)
+    (define-key corfu-map (kbd "<tab>")   #'corfu-insert)
+    (define-key corfu-map (kbd "<backtab>") #'corfu-previous)
 
-    ;; Temporarily show the documentation buffer for the selection. Also on F1 or C-h.
-    (define-key company-active-map (kbd "C-?")     #'company-show-doc-buffer)
+    ;; Insert a separator (keeps the popup open, for Orderless-like styles).
+    (define-key corfu-map (kbd "M-SPC")   #'corfu-insert-separator))
 
-    ;;! Temporarily display a buffer showing the selected candidate in context.
-    (define-key company-active-map (kbd "M-.")     #'company-show-location) ; XXX Also on C-w.
+  ;; Flexible matching (space-separated components), in the popup as well.
+  (with-eval-after-load 'orderless-autoloads
+    (setq completion-styles '(orderless basic))
+    (setq completion-category-overrides '((file (styles basic partial-completion)))))
 
-    (setq company-auto-complete
-          (lambda ()
-            (and (company-tooltip-visible-p)
-                 (company-explicit-action-p))))
+  ;; Move the current completion session to the minibuffer (Vertico + Consult).
+  (with-eval-after-load 'corfu
+    (defun leuven-corfu-move-to-minibuffer ()
+      "Continue the current Corfu completion in the minibuffer."
+      (interactive)
+      (pcase completion-in-region--data
+        (`(,beg ,end ,table ,pred ,extras)
+         (let ((completion-extra-properties extras)
+               completion-cycle-threshold completion-cycling)
+           (consult-completion-in-region beg end table pred)))))
 
-    ;; Configure the list of commands to continue company mode.
-    (setq company-continue-commands
-          '(not save-buffer
-                save-some-buffers
-                save-buffers-kill-terminal
-                save-buffers-kill-emacs
-                comint-previous-matching-input-from-input
-                comint-next-matching-input-from-input))
+    (define-key corfu-map (kbd "M-m") #'leuven-corfu-move-to-minibuffer)
+    (add-to-list 'corfu-continue-commands #'leuven-corfu-move-to-minibuffer))
 
-    (setq company-require-match nil)
+  (with-eval-after-load 'corfu
+    (require 'corfu-quick)
 
-    ;; Do nothing if the indicated candidate contains digits (actually, it will
-    ;; try to insert the digit you type).
-    (advice-add 'company-complete-number :around
-                (lambda (fun n)
-                  (let ((cand (nth (+ (1- n) company-tooltip-offset)
-                                   company-candidates)))
-                    (if (string-match-p "[0-9]" cand)
-                        (let ((last-command-event (+ ?0 n)))
-                          (self-insert-command 1))
-                      (funcall fun n))))
-                '((name . "Don't complete numbers")))
+    ;; First and second level quick keys (Azerty).
+    (setq corfu-quick1 "azertyuiop")
+    (setq corfu-quick2 "qsdfghjklm")
 
-    ;; From https://github.com/company-mode/company-mode/issues/188
-    (defun leuven-company-quick-access-key (numbered)
-      "Replace default behavior of `company--show-numbers' function.
-This example lists Azerty layout second row keys."
-      (let ((value (mod numbered 10)))
-        (format " %s"
-                (cond ((eql value 1) "a")
-                      ((eql value 2) "z")
-                      ((eql value 3) "e")
-                      ((eql value 4) "r")
-                      ((eql value 5) "t")
-                      ((eql value 6) "y")
-                      ((eql value 7) "u")
-                      ((eql value 8) "i")
-                      ((eql value 9) "o")
-                      (t "p")))))
+    (define-key corfu-map (kbd "M-q") #'corfu-quick-insert)
+    (define-key corfu-map (kbd "M-Q") #'corfu-quick-complete))
 
-    (setq company-show-numbers-function #'leuven-company-quick-access-key)
+  (with-eval-after-load 'corfu
+    (require 'corfu-info)
 
-    (define-key company-active-map (kbd "M-a") (kbd "M-1"))
-    (define-key company-active-map (kbd "M-z") (kbd "M-2"))
-    (define-key company-active-map (kbd "M-e") (kbd "M-3"))
-    (define-key company-active-map (kbd "M-r") (kbd "M-4"))
-    (define-key company-active-map (kbd "M-t") (kbd "M-5"))
-    (define-key company-active-map (kbd "M-y") (kbd "M-6"))
-    (define-key company-active-map (kbd "M-u") (kbd "M-7"))
-    (define-key company-active-map (kbd "M-i") (kbd "M-8"))
-    (define-key company-active-map (kbd "M-o") (kbd "M-9"))
-    (define-key company-active-map (kbd "M-p") (kbd "M-0"))
+    ;; Temporarily show the documentation buffer for the selection.
+    (define-key corfu-map (kbd "<f1>") #'corfu-info-documentation)
+    (define-key corfu-map (kbd "C-h")  #'corfu-info-documentation)
+    (define-key corfu-map (kbd "C-?")  #'corfu-info-documentation)
 
-    )                                   ; with-eval-after-load "company".
+    ;; Temporarily display a buffer showing the selected candidate in context.
+    (define-key corfu-map (kbd "C-w")  #'corfu-info-location)
+    (define-key corfu-map (kbd "M-.")  #'corfu-info-location))
 
-  ;; Dabbrev-like company-mode back-end for code.
-  (with-eval-after-load 'company-dabbrev-code
+  (with-eval-after-load 'corfu
+    (require 'corfu-history)
+    (savehist-mode 1)
+    (add-to-list 'savehist-additional-variables 'corfu-history)
+    (corfu-history-mode 1))
 
-    ;; ;; Search all other buffers
-    ;; (setq company-dabbrev-code-other-buffers 'all)
+  ;; TAB indents first, then completes if the line was already indented.
+  (setq tab-always-indent 'complete)
 
-    ;; Offer completions in comments and strings.
-    (setq company-dabbrev-code-everywhere t)
+  ;; Only complete after a word, a closing paren or a punctuation character
+  ;; (like `check-expansion' did).
+  (setq tab-first-completion 'word-or-paren-or-punct)
 
-    ;; ;; Ignore case when collecting completion candidates.
-    ;; (setq company-dabbrev-code-ignore-case t)
+  ;; Don't start `ispell' completion in Text modes (Emacs 30+).
+  (setq text-mode-ispell-word-completion nil)
 
-    (when (locate-library "web-mode")
-      (add-to-list 'company-dabbrev-code-modes 'web-mode))
-    )
+(with-eval-after-load 'cape
+
+  ;; Only search in the current buffer.
+  (setq cape-dabbrev-check-other-buffers nil) ; Prevent completing numbers
+                                        ; coming from other files.
+
+  ;; Complete short words too.
+  (setq cape-dabbrev-min-length 2))
+
+(with-eval-after-load 'dabbrev
+
+  ;; Don't ignore case when collecting completion candidates.
+  (setq dabbrev-case-fold-search nil)
+
+  ;; Don't downcase the returned candidates.
+  (setq dabbrev-case-replace nil))
+
+  ;; Complete YASnippet keys.
+  (defun leuven-complete-yasnippet ()
+    "Complete the text before point with a YASnippet snippet."
+    (interactive)
+    (let ((completion-at-point-functions '(yasnippet-capf)))
+      (completion-at-point)))
+
+  ;; Better than `helm-yas-complete' as it shows both the key and the
+  ;; replacement.
+  (global-set-key (kbd "C-c y") #'leuven-complete-yasnippet)
 
   (add-hook 'js2-mode-hook
             (lambda ()
-              (set (make-local-variable 'company-backends)
-                   '((company-dabbrev-code company-yasnippet)))))
+              (setq-local completion-at-point-functions
+                          (list (cape-capf-super #'cape-dabbrev
+                                                 #'yasnippet-capf)))))
 
-  ;; Dabbrev-like company-mode completion back-end.
-  (with-eval-after-load 'company-dabbrev
+  (with-eval-after-load 'corfu
+    (require 'corfu-popupinfo)
 
-    ;; Only search in the current buffer
-    (setq company-dabbrev-other-buffers nil) ; Prevent Company completing
-                                             ; numbers coming from other files.
-
-    ;; Don't ignore case when collecting completion candidates.
-    (setq company-dabbrev-ignore-case nil)
-
-    ;; Don't downcase the returned candidates.
-    (setq company-dabbrev-downcase nil)
-    ;; Fix problem with lowercased completions in comments and strings, in many
-    ;; programming modes.
-
-    ;; Skip invisible text (Org drawers, etc.).
-    (setq company-dabbrev-ignore-invisible t))
-
-  (with-eval-after-load 'company-quickhelp-autoloads
-
-    ;; Enable `company-quickhelp-mode'.
-    (company-quickhelp-mode 1)
-
-    ;; ;; Delay to show quick help.
-    ;; (setq company-quickhelp-delay 0.5)
+    ;; Enable `corfu-popupinfo-mode'.
+    (corfu-popupinfo-mode 1)
 
     ;; Maximum number of lines to show in the popup.
-    (setq company-quickhelp-max-lines 10))
+    (setq corfu-popupinfo-max-height 10))
 
 )                                       ; Chapter 30 ends here.
 
@@ -6178,7 +6206,7 @@ line at the very bottom."
     (setq dired-auto-revert-buffer t)
 
     ;; Dired sort.
-    (boost--try-require 'dired-sort-map)
+    (require 'dired-sort-map nil 'noerror)
 
 ;;** (info "(emacs)Dired and Find")
 
@@ -6326,7 +6354,7 @@ line at the very bottom."
 
   ;; Insinuate appt if `diary-file' exists.
   (if (file-readable-p "~/diary")
-      (boost--try-require 'appt)        ; Requires `diary-lib', which requires
+      (require 'appt nil 'noerror)      ; Requires `diary-lib', which requires
                                         ; `diary-loaddefs'.
     (message "[Appointment reminders lib `appt' not loaded (no diary file found)]"))
 
@@ -6588,7 +6616,7 @@ line at the very bottom."
 
   ;; General command-interpreter-in-a-buffer stuff (Shell, SQLi, Lisp, R,
   ;; Python, ...).
-  ;; (boost--try-require 'comint)
+  ;; (require 'comint nil 'noerror)
   ;; (with-eval-after-load 'comint
 
     ;; Prevent accidental modification of interpreter prompts.
@@ -7245,8 +7273,8 @@ If updates are available, it pulls the latest changes from the repository.
 If the configuration is already up-to-date, it displays a message indicating so.
 After the update, it recommends restarting Emacs to complete the update.
 
-Before using this function, make sure 'lvn--directory' points to the
-directory containing 'emacs-leuven.el' or a symbolic link to the actual
+Before using this function, make sure `lvn--directory' points to the
+directory containing `emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
     (interactive)
     (boost-display-version)
@@ -7285,11 +7313,11 @@ Git repository directory."
     "Display the latest commits in the Emacs-Leuven configuration.
 
 This function fetches the latest changes from the remote Git repository and
-displays the commits made since the current branch diverged from 'origin'. If
+displays the commits made since the current branch diverged from `origin'. If
 the configuration is already up-to-date, it indicates so in the message.
 
-Before using this function, make sure 'lvn--directory' points to the
-directory containing 'emacs-leuven.el' or a symbolic link to the actual
+Before using this function, make sure `lvn--directory' points to the
+directory containing `emacs-leuven.el' or a symbolic link to the actual
 Git repository directory."
     (interactive)
     (boost-display-version)
@@ -7297,7 +7325,6 @@ Git repository directory."
     (let* ((el-file-path (locate-library "emacs-leuven.el"))
            (el-file-directory (file-name-directory (file-truename el-file-path)))
            (default-directory el-file-directory)
-           (fetch-status (shell-command "LC_ALL=C git fetch --verbose"))
            (commits-buffer "*Emacs-Leuven latest commits*"))
       (if (string-match "\\(up to date\\|up-to-date\\)" (shell-command-to-string "LC_ALL=C git status"))
           (message "[Configuration already up-to-date]")
