@@ -3896,47 +3896,87 @@ Otherwise toggle `visible-mode' using ARG."
 
   (leuven--section "25.11 (emacs)TeX Mode")
 
+  (defface boost-latex-error-face
+    '((t (:inherit compilation-error-face)))
+    "Face used to highlight errors in LaTeX output."
+    :group 'leuven)
+
+  (defface boost-latex-line-face
+    '((t (:inherit compilation-line-face)))
+    "Face used to highlight source lines in LaTeX output."
+    :group 'leuven)
+
+  (defface boost-latex-warning-face
+    '((t (:inherit compilation-warning-face)))
+    "Face used to highlight warnings in LaTeX output."
+    :group 'leuven)
+
+  (defface boost-latex-box-face
+    '((t (:inherit font-lock-string-face)))
+    "Face used to highlight box diagnostics in LaTeX output."
+    :group 'leuven)
+
+  (defface boost-latex-rule-face
+    '((t (:inherit font-lock-function-name-face)))
+    "Face used to highlight LatexMk rules in LaTeX output."
+    :group 'leuven)
+
+  (defface boost-latex-class-face
+    '((t (:inherit font-lock-type-face)))
+    "Face used to highlight document classes in LaTeX output."
+    :group 'leuven)
+
+  (defface boost-latex-info-face
+    '((t (:inherit compilation-info-face)))
+    "Face used to highlight informational lines in LaTeX output."
+    :group 'leuven)
+
+  (defface boost-latex-output-face
+    '((t (:inherit font-lock-function-name-face)))
+    "Face used to highlight successful output in LaTeX output."
+    :group 'leuven)
+
   ;; Extra font-lock keywords for LaTeX output buffers.
   (defconst boost-latex-output-font-lock-keywords
     '(;; Fatal and error messages.
-      ("^.*Package .* Error: .*" . compilation-error-face)
-      ("^.*LaTeX Error: .*" . compilation-error-face)
-      ("^.*Undefined control sequence.*" . compilation-error-face)
-      ("^.*TeX capacity exceeded.*" . compilation-error-face)
-      ("^.*Fatal error.*" . compilation-error-face)
-      ("^!.*" . compilation-error-face)
+      ("^.*Package .* Error: .*" (0 'boost-latex-error-face))
+      ("^.*LaTeX Error: .*" (0 'boost-latex-error-face))
+      ("^.*Undefined control sequence.*" (0 'boost-latex-error-face))
+      ("^.*TeX capacity exceeded.*" (0 'boost-latex-error-face))
+      ("^.*Fatal error.*" (0 'boost-latex-error-face))
+      ("^!.*" (0 'boost-latex-error-face))
 
       ;; Offending TeX command.
       ("^<recently read> \\(\\\\[^[:space:]]+\\)"
-       (1 compilation-error-face))
+       (1 'boost-latex-error-face))
 
       ;; Source line reported by TeX.
-      ("^l\\.[0-9]+ .*" . compilation-line-face)
+      ("^l\\.[0-9]+ .*" (0 'boost-latex-line-face))
 
       ;; Warnings.
-      ("^.*Package .* Warning:.*" . compilation-warning-face)
-      ("^.*Class .* Warning:.*" . compilation-warning-face)
-      ("^.*LaTeX.* Warning:.*" . compilation-warning-face)
-      ("^.*Reference .* undefined" . compilation-warning-face)
+      ("^.*Package .* Warning:.*" (0 'boost-latex-warning-face))
+      ("^.*Class .* Warning:.*" (0 'boost-latex-warning-face))
+      ("^.*LaTeX.* Warning:.*" (0 'boost-latex-warning-face))
+      ("^.*Reference .* undefined" (0 'boost-latex-warning-face))
 
       ;; Box diagnostics.
       ("^\\s-*\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*"
-       . font-lock-string-face)
+       (0 'boost-latex-box-face))
 
       ;; LatexMk rule information.
       ("^Rule '\\([^']+\\)':.*"
-       (1 font-lock-function-name-face))
+       (1 'boost-latex-rule-face))
 
       ;; Document class.
       ("^Document Class: \\([^[:space:]]+\\)"
-       (1 font-lock-type-face))
+       (1 'boost-latex-class-face))
 
       ;; LatexMk separator lines.
-      ("^\\s-*-+\\s-*$" . compilation-info-face)
+      ("^\\s-*-+\\s-*$" (0 'boost-latex-info-face))
 
       ;; Successful output.
       ("^Output written on .*\\.pdf.*"
-       . font-lock-function-name-face))
+       (0 'boost-latex-output-face)))
     "Additional font-lock keywords for LaTeX output buffers.")
 
   (defun boost--fontify-latex-output ()
