@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261005.1400>
+;; Version: <20261015.1323>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261005.1400>"
+(defconst boost-version "<20261015.1323>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -3940,6 +3940,12 @@ Otherwise toggle `visible-mode' using ARG."
 
   (defun boost--fontify-latex-output ()
     "Apply custom highlighting for LaTeX output."
+    ;; Quotes in compiler diagnostics are text, not string delimiters.  Give
+    ;; this buffer a private syntax table so unmatched quotes cannot color the
+    ;; rest of the output as a string.
+    (set-syntax-table (copy-syntax-table (syntax-table)))
+    (modify-syntax-entry ?\" "." (syntax-table))
+    (syntax-ppss-flush-cache (point-min))
     (font-lock-add-keywords nil boost-latex-output-font-lock-keywords t)
     (font-lock-flush))
 

@@ -53,6 +53,7 @@ test:
 	$(EMACS) --batch --quick -L lisp -L tests \
 		-l lisp/emacs-leuven.el \
 		-l tests/boost-wsl-clipboard-test.el \
+		-l tests/latex-output-font-lock-test.el \
 		-f ert-run-tests-batch-and-exit
 
 # Check parentheses in every Emacs Lisp source file.
