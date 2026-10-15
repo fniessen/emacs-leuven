@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261015.1329>
+;; Version: <20261015.1407>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261015.1329>"
+(defconst boost-version "<20261015.1407>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -3897,44 +3897,44 @@ Otherwise toggle `visible-mode' using ARG."
   (leuven--section "25.11 (emacs)TeX Mode")
 
   (defface boost-latex-error-face
-    '((t (:inherit compilation-error-face)))
+    '((t (:weight bold :foreground "#E62020" :background "#FFCABF")))
     "Face used to highlight errors in LaTeX output."
-    :group 'leuven)
+    :group 'boost)
 
   (defface boost-latex-line-face
-    '((t (:inherit compilation-line-face)))
+    '((t (:inherit compilation-line-number)))
     "Face used to highlight source lines in LaTeX output."
-    :group 'leuven)
+    :group 'boost)
 
   (defface boost-latex-warning-face
-    '((t (:inherit compilation-warning-face)))
+    '((t (:foreground "#EA8820" :background "#FFF4BF")))
     "Face used to highlight warnings in LaTeX output."
-    :group 'leuven)
+    :group 'boost)
 
   (defface boost-latex-box-face
-    '((t (:inherit font-lock-string-face)))
+    '((t (:foreground "#1F4E79")))
     "Face used to highlight box diagnostics in LaTeX output."
-    :group 'leuven)
+    :group 'boost)
 
   (defface boost-latex-rule-face
     '((t (:inherit font-lock-function-name-face)))
     "Face used to highlight LatexMk rules in LaTeX output."
-    :group 'leuven)
+    :group 'boost)
 
   (defface boost-latex-class-face
-    '((t (:inherit font-lock-type-face)))
+    '((t (:weight bold :inherit font-lock-type-face)))
     "Face used to highlight document classes in LaTeX output."
-    :group 'leuven)
+    :group 'boost)
 
   (defface boost-latex-info-face
-    '((t (:inherit compilation-info-face)))
+    '((t (:background "#E1F1FF")))
     "Face used to highlight informational lines in LaTeX output."
-    :group 'leuven)
+    :group 'boost)
 
-  (defface boost-latex-output-face
-    '((t (:inherit font-lock-function-name-face)))
+  (defface boost-latex-successful-output-face
+    '((t (:weight bold :background "#56EB54")))
     "Face used to highlight successful output in LaTeX output."
-    :group 'leuven)
+    :group 'boost)
 
   ;; Extra font-lock keywords for LaTeX output buffers.
   (defconst boost-latex-output-font-lock-keywords
@@ -3976,7 +3976,7 @@ Otherwise toggle `visible-mode' using ARG."
 
       ;; Successful output.
       ("^Output written on .*\\.pdf.*"
-       (0 'boost-latex-output-face)))
+       (0 'boost-latex-successful-output-face)))
     "Additional font-lock keywords for LaTeX output buffers.")
 
   (defun boost--fontify-latex-output ()

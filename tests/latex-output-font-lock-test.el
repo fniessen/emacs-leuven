@@ -23,7 +23,15 @@
     (font-lock-ensure)
     (goto-char (point-min))
     (should (eq (get-text-property (point) 'face)
-                'compilation-warning))))
+                'boost-latex-warning-face))))
+
+(ert-deftest boost-latex-warning-face-has-visible-foreground ()
+  (should (equal (face-attribute 'boost-latex-warning-face :foreground)
+                 "#EA8820")))
+
+(ert-deftest boost-latex-box-face-has-visible-foreground ()
+  (should (equal (face-attribute 'boost-latex-box-face :foreground)
+                 "#1F4E79")))
 
 (provide 'latex-output-font-lock-test)
 
