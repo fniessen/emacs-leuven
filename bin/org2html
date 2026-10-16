@@ -10,5 +10,30 @@ if [ ! -f "$1" ]; then
     exit 2
 fi
 
-exec emacs --batch --quick "$1" \
-    --eval "(progn (require 'ox-html) (org-html-export-to-html))"
+start_time=$SECONDS
+
+emacs --batch --quick "$1" \
+    --eval "(progn (require 'package) (package-initialize) (require 'htmlize) (require 'ox-html) (org-html-export-to-html))" &
+export_pid=$!
+
+if [ -t 2 ]; then
+    printf 'Exporting to HTML' >&2
+    elapsed=0
+    while [[ " $(jobs -pr) " == *" $export_pid "* ]]; do
+        sleep 1
+        elapsed=$((elapsed + 1))
+        if (( elapsed % 5 == 0 )) && [[ " $(jobs -pr) " == *" $export_pid "* ]]; then
+            printf '.' >&2
+        fi
+    done
+    printf '\n' >&2
+fi
+
+wait "$export_pid"
+export_status=$?
+
+if [ -t 2 ]; then
+    printf 'Export completed in %d seconds.\n' "$((SECONDS - start_time))" >&2
+fi
+
+exit "$export_status"
