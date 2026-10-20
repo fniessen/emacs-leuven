@@ -65,8 +65,13 @@ When WITHOUT-REGION is non-nil, copy the current line instead of a region."
          (boost-wsl-clipboard-test--copy-to-windows-with-m-w "one line")))
     (should (equal (nth 0 result) "one line"))
     (should (equal (nth 1 result) "one line"))
-    (should (eq (plist-get (nth 2 result) :coding)
-                'utf-16le-with-signature))
+    (should (eq (plist-get (nth 2 result) :coding) 'utf-16le))
+    (should-not
+     (equal (substring
+             (encode-coding-string (nth 1 result)
+                                   (plist-get (nth 2 result) :coding))
+             0 2)
+            "\377\376"))
     (should (eq (nth 3 result) 'fake-clip-process))))
 
 (ert-deftest boost-wsl-clipboard-emacs-to-windows-multiline ()

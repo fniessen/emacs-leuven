@@ -1812,7 +1812,7 @@ WSL clipboard integration:
                               :buffer nil
                               :command '("clip.exe")
                               :connection-type 'pipe
-                              :coding 'utf-16le-with-signature)))
+                              :coding 'utf-16le)))
       (process-send-string proc (replace-regexp-in-string "\n" "\r\n" text))
       (process-send-eof proc)))
 
