@@ -1,6 +1,13 @@
 # Hey Emacs, this is a -*- org -*- file ...
 #+TITLE:     TODO des chose à faire
 
+#+begin_src shell
+emacs --batch --quick --eval "(progn (require 'ob-tangle) (require 'ob-emacs-lisp) (org-babel-tangle-file \"README.org\"))" >/tmp/gptel-tangle.log 2>&1
+
+# count source blocks
+emacs --batch --quick --eval "(progn (require 'org) (with-temp-buffer (insert-file-contents "/home/fni/.dotfiles/emacs-boost-gptel/README.org") (org-mode) (message "src blocks: %s" (length (org-element-map (org-element-parse-buffer) 'src-block #'identity)))))"
+#+end_src
+
 * TODO Inbox: Priorities or Must-Do Today                       :urgent:FLAGGED:
 
 - Voir les réponses de ChatGPT en tant qu'expert en catégories de TODO listes
@@ -17,7 +24,54 @@
   + Sans assignee tag = "pour moi", ou "on ne sait pas pour qui" selon une
     variable à setter pour savoir comment interpréter...
 
+* TODO Fix pdflang in Hyperref
+
+| LANGUAGE | babel                               | hyperref/pdflang               |
+|----------+-------------------------------------+--------------------------------|
+| en       | \usepackage[french, english]{babel} | \hypersetup{pdflang={English}} |
+| en-US    | \usepackage[french, ]{babel}        | \hypersetup{pdflang={En-Us}}   |
+| en_US    | \usepackage[french, ]{babel}        | \hypersetup{pdflang={En_Us}}   |
+| fr       | \usepackage[french]{babel}          | \hypersetup{pdflang={French}}  |
+| fr-FR    | \usepackage[french, ]{babel}        | \hypersetup{pdflang={Fr-Fr}}   |
+| fr_FR    | \usepackage[french, ]{babel}        | \hypersetup{pdflang={Fr_Fr}}   |
+
+Valeurs correctes (attention à la casse) :
+
+| babel    | pdflang (BCP 47) |
+|----------+------------------|
+| english  | en               |
+| american | en-US            |
+| british  | en-GB            |
+| french   | fr               |
+| french   | fr-FR            |
+
 * Tasks
+
+** Improvements
+
+*** TODO Factoriser `lvn--add-dir-to-load-path` : extraire la validation de répertoire et `add-to-list` dans une fonction utilitaire
+
+Solution: définir une fonction `lvn--ensure-load-path (dir)` qui vérifie
+`(file-directory-p dir)` puis `(add-to-list 'load-path dir)`, et remplacer
+l'ancien code par cet appel unique.
+
+*** TODO Utiliser la macro `benchmark` au lieu de `measure-time` pour chronométrage
+
+Solution: remplacer l'usage de `measure-time` par `(let ((res
+(benchmark-run 1 (progn body)))) (message "[%s (in %.2f s)]" message (cadr
+res)))`, et supprimer le macro `measure-time` de la codebase.
+
+*** TODO Consolider le code de timing dans `leuven--chapter` pour éviter les duplications
+
+Solution: extraire la logique de calcul et d'enregistrement du temps dans
+une fonction interne `leuven--record-chapter (name start-time)`, puis
+l'appeler à chaque fin de chapitre.
+
+*** TODO Réécrire `boost--set-key-if-free` en s'appuyant sur `condition-case` pour simplifier la détection de conflits de touches
+
+Solution: envelopper `define-key` dans `(condition-case err (define-key map
+key cmd) (error (message "Conflit %s: %s" key err)))` et supprimer les
+branches manuelles de vérification de binding.
 
 ** Configuration de base et personnalisation
 
