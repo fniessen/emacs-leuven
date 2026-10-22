@@ -13,12 +13,16 @@ fi
 start_time=$SECONDS
 
 emacs --batch --quick "$1" \
-    --eval "(progn (require 'ox-latex) (org-latex-export-to-latex))" &
+    --eval "(progn
+              (require 'ox-latex)
+              (org-latex-export-to-latex))" &
 export_pid=$!
 
+# Show progress only when stderr is connected to a terminal, not redirected.
 if [ -t 2 ]; then
     printf 'Exporting to LaTeX' >&2
     elapsed=0
+    # Check each second for prompt completion; print a dot only every five seconds.
     while [[ " $(jobs -pr) " == *" $export_pid "* ]]; do
         sleep 1
         elapsed=$((elapsed + 1))
@@ -32,6 +36,7 @@ fi
 wait "$export_pid"
 export_status=$?
 
+# Keep the elapsed-time message out of redirected output too.
 if [ -t 2 ]; then
     printf 'Export completed in %d seconds.\n' "$((SECONDS - start_time))" >&2
 fi
