@@ -1,9 +1,10 @@
 EMACS ?= emacs
 
+.DEFAULT_GOAL := help
 ELISP_DIRS := lisp
 ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
-.PHONY: all check check-parens test compile clean help tangle
+.PHONY: help all tangle lint-shell test check check-parens check-links check-org-structure compile clean
 
 # Show this help.
 help:
@@ -22,6 +23,9 @@ help:
 		next; \
 	} \
 	{ description = "" }' [Mm]akefile
+
+# Run all validation and compilation targets.
+all: lint-shell check compile
 
 # Tangle every .org and .txt file in the repository.
 tangle:
@@ -42,11 +46,13 @@ tangle:
         (error \
          (message \"Failed to tangle %s: %s\" file (error-message-string error)))))))"
 
-# Run all validation and compilation targets.
-all: check compile
-
-# Run the source checks.
-check: check-parens
+# Run ShellCheck on shell scripts in the repository.
+lint-shell:
+	@command -v shellcheck >/dev/null || { printf 'ShellCheck is required.\n' >&2; exit 127; }
+	@find . -type f -not -path './.git/*' \
+		\( -perm /111 -o -name '*.sh' -o -name '*.bash' \) -print0 \
+		| xargs -0 -r grep -IlZ -m1 -E '^#!.*(bash|/sh|/dash|/ksh)([[:space:]]|$$)' \
+		| xargs -0 -r shellcheck
 
 # Run WSL clipboard ERT tests with Emacs-Leuven.
 test:
@@ -55,6 +61,9 @@ test:
 		-l tests/boost-wsl-clipboard-test.el \
 		-l tests/latex-output-font-lock-test.el \
 		-f ert-run-tests-batch-and-exit
+
+# Run the source checks.
+check: check-parens check-links check-org-structure
 
 # Check parentheses in every Emacs Lisp source file.
 check-parens:
@@ -67,6 +76,14 @@ check-parens:
       (message \"Checking %s\" file) \
       (insert-file-contents file) \
       (check-parens))))"
+
+# Check HTTP(S) links in repository text files.
+check-links:
+	check-links
+
+# Check that Org headings do not skip outline levels.
+check-org-structure:
+	check-org-structure
 
 # Byte-compile the Emacs Lisp source files.
 compile:
