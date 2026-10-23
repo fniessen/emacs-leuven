@@ -477,41 +477,45 @@ Signal an error if no ID or file is found."
 ;;   :config
 (with-eval-after-load 'org-faces
   ;; Define non-standard faces for specific TODO states.
-  (defface leuven-org-todo-kwd
+  (defface leuven-org-mayb-kwd
     '((t (:weight bold :box "#BBBBBB"
-          :foreground "#BBBBBB" :background "#F0F0F0")))
-    "Face used to display state TODO.")
+          :foreground "#64748B" :background "#F1F5F9")))
+    "Face used to display state MAYB.")
+  (defface leuven-org-next-kwd
+    '((t (:weight bold :box "#BBBBBB"
+          :foreground "#2563EB" :background "#DBEAFE")))
+    "Face used to display state NEXT.")
   (defface leuven-org-strt-kwd
     '((t (:weight bold :box "#D9D14A"
-          :foreground "#D9D14A" :background "#FCFCDC")))
+          :foreground "#EA580C" :background "#FFEDD5")))
     "Face used to display state STRT.")
   (defface leuven-org-wait-kwd
     '((t (:weight bold :box "#9EB6D4"
-          :foreground "#9EB6D4" :background "#E0EFFF")))
+          :foreground "#CA8A04" :background "#FEF3C7")))
     "Face used to display state WAIT.")
   (defface leuven-org-canx-kwd
     '((t (:weight bold :box "#BBBBBB"
-          :foreground "#BBBBBB" :background "#F0F0F0")))
+          :foreground "#4B5563" :background "#E5E7EB")))
     "Face used to display state CANX.")
+
+  (set-face-attribute 'org-todo nil
+                      :weight 'bold :box "#D8ABA7"
+                      :foreground "#DC2626" :background "#FEE2E2")
+
+  (set-face-attribute 'org-done nil
+                      :weight 'bold :box "#89C58F"
+                      :foreground "#16A34A" :background "#DCFCE7")
 
   ;; Set the specific faces for Org TODO keywords.
   (setq org-todo-keyword-faces
-        '(("MAYB" . leuven-org-todo-kwd)
-          ("TODO" . leuven-org-todo-kwd)
-          ("NEXT" . org-todo)
+        '(("MAYB" . leuven-org-mayb-kwd)
+          ("TODO" . org-todo)
+          ("NEXT" . leuven-org-next-kwd)
           ("STRT" . leuven-org-strt-kwd)
           ("WAIT" . leuven-org-wait-kwd)
           ("DONE" . org-done)
           ("CANX" . leuven-org-canx-kwd)))
-
-  ;; Org standard faces with specific attributes.
-  (set-face-attribute 'org-todo nil
-                      :weight 'bold :box "#D8ABA7"
-                      :foreground "#D8ABA7" :background "#FFE6E4")
-
-  (set-face-attribute 'org-done nil
-                      :weight 'bold :box "#89C58F"
-                      :foreground "#89C58F" :background "#E2FEDE"))
+  )
 
 ;; Block switching entries to DONE if
 ;; 1) there are undone child entries, or
