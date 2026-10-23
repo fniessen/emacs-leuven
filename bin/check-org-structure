@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+
+ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+if (($# > 1)); then
+    printf 'Usage: %s [ORG-DIRECTORY]\n' "${0##*/}" >&2
+    exit 2
+fi
+
+if (($# == 1)); then
+    if ! ORG_DIR=$(cd -- "$1" 2>/dev/null && pwd); then
+        printf 'Org directory not found: %s\n' "$1" >&2
+        exit 2
+    fi
+    REPORT_ROOT=$(dirname -- "$ORG_DIR")
+else
+    ORG_DIR="$ROOT/org"
+    REPORT_ROOT=$ROOT
+fi
+
+if [[ ! -d "$ORG_DIR" ]]; then
+    printf 'Org directory not found: %s\n' "$ORG_DIR" >&2
+    exit 2
+fi
+
+files=$(mktemp) || {
+    printf 'Could not create a temporary file list.\n' >&2
+    exit 1
+}
+trap 'rm -f -- "$files"' EXIT
+
+if ! find "$ORG_DIR" -type f -name '*.org' -print0 >"$files"; then
+    printf 'Could not enumerate Org files in %s.\n' "$ORG_DIR" >&2
+    exit 1
+fi
+if ! sort -z -o "$files" "$files"; then
+    printf 'Could not sort the Org file list.\n' >&2
+    exit 1
+fi
+
+file_count=0
+failures=0
+
+while IFS= read -r -d '' file; do
+    file_count=$((file_count + 1))
+    relative_path=${file#"$REPORT_ROOT"/}
+    if [[ ! -r "$file" ]]; then
+        printf '%s: cannot read file: permission denied\n' "$relative_path" >&2
+        failures=$((failures + 1))
+        continue
+    fi
+
+    previous_level=0
+    block=
+    line_number=0
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        line_number=$((line_number + 1))
+
+        if [[ -n "$block" ]]; then
+            lowercase_line=${line,,}
+            if [[ "$lowercase_line" =~ ^[[:blank:]]*#\+end_([a-z0-9_-]+)([[:blank:]]|$) \
+                && "${BASH_REMATCH[1]}" == "$block" ]]; then
+                block=
+            fi
+            continue
+        fi
+
+        lowercase_line=${line,,}
+        if [[ "$lowercase_line" =~ ^[[:blank:]]*#\+begin_([a-z0-9_-]+)([[:blank:]]|$) ]]; then
+            block=${BASH_REMATCH[1]}
+            continue
+        fi
+
+        if [[ "$line" =~ ^(\*+)[[:blank:]]+ ]]; then
+            level=${#BASH_REMATCH[1]}
+            expected_level=$((previous_level + 1))
+            if ((level > expected_level)); then
+                printf '%s:%d: level %d follows level %d; expected at most level %d\n' \
+                    "$relative_path" "$line_number" "$level" "$previous_level" \
+                    "$expected_level"
+                failures=$((failures + 1))
+            fi
+            previous_level=$level
+        fi
+    done <"$file"
+done <"$files"
+
+if ((failures > 0)); then
+    printf 'Found %d Org heading level error(s) in %d file(s).\n' \
+        "$failures" "$file_count"
+    exit 1
+fi
+
+printf 'Org heading levels are valid in %d file(s).\n' "$file_count"

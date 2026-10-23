@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+
+ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+cd "$ROOT" || exit 1
+
+if ! command -v curl >/dev/null 2>&1; then
+    printf 'curl is required to check HTTP(S) links.\n' >&2
+    exit 127
+fi
+
+tmp_files=$(mktemp) || {
+    printf 'Could not create a temporary file list.\n' >&2
+    exit 1
+}
+tmp_dir=$(mktemp -d) || {
+    rm -f -- "$tmp_files"
+    printf 'Could not create a temporary directory.\n' >&2
+    exit 1
+}
+tmp_links="$tmp_dir/links"
+trap 'rm -f -- "$tmp_files"; rm -rf -- "$tmp_dir"' EXIT
+
+if ! find . \
+    -type d \( -name .git -o -name __pycache__ -o -name .venv \
+        -o -name venv -o -name node_modules \) -prune -o \
+    -type f -size -5120k \
+    ! -iname '*.pdf' ! -iname '*.doc' ! -iname '*.docx' \
+    ! -iname '*.xls' ! -iname '*.xlsx' ! -iname '*.ppt' ! -iname '*.pptx' \
+    ! -iname '*.mp3' ! -iname '*.mp4' ! -iname '*.mov' ! -iname '*.avi' \
+    ! -iname '*.zip' ! -iname '*.gz' ! -iname '*.png' ! -iname '*.jpg' \
+    ! -iname '*.jpeg' ! -iname '*.gif' ! -iname '*.webp' ! -iname '*.svg' \
+    -print0 >"$tmp_files"
+then
+    printf 'Could not enumerate repository files.\n' >&2
+    exit 1
+fi
+
+declare -A link_references=()
+skipped_templates=0
+scan_errors=0
+
+while IFS= read -r -d '' file; do
+    # Do not mistake the link-matching pattern in this script for a real URL.
+    [[ "$file" == './bin/check-links' ]] && continue
+
+    matches=$(grep -IEnoE "https?://[^[:space:]<>\"']+" "$file")
+    grep_status=$?
+    if ((grep_status > 1)); then
+        printf 'Could not scan %s.\n' "$file" >&2
+        scan_errors=$((scan_errors + 1))
+        continue
+    fi
+    ((grep_status == 0)) || continue
+
+    while IFS= read -r match; do
+        line_number=${match%%:*}
+        url=${match#*:}
+        url=${url%%]*}
+        while [[ "$url" == *'.' || "$url" == *',' || "$url" == *';' \
+            || "$url" == *':' || "$url" == *'!' || "$url" == *'?' \
+            || "$url" == *')' || "$url" == *']' || "$url" == *'}' ]]; do
+            url=${url%?}
+        done
+        [[ -n "$url" ]] || continue
+        if [[ "$url" == *'{'* ]]; then
+            skipped_templates=$((skipped_templates + 1))
+            continue
+        fi
+        reference="${file#./}:${line_number}"
+        if [[ -n "${link_references[$url]+present}" ]]; then
+            link_references["$url"]+=$'\n'"$reference"
+        else
+            link_references["$url"]=$reference
+        fi
+    done <<<"$matches"
+done <"$tmp_files"
+
+link_count=${#link_references[@]}
+if ((link_count == 0)); then
+    printf 'No static HTTP(S) links found.\n'
+else
+    printf 'Checking %d unique HTTP(S) links...\n' "$link_count"
+fi
+
+check_url_record() {
+    local record=$1 url references status curl_status reason result_file curl_error_file
+    url=${record%%$'\t'*}
+    references=${record#*$'\t'}
+    curl_error_file=$(mktemp "$tmp_dir/curl-error.XXXXXX") || return 1
+
+    if status=$(curl --location --silent --show-error \
+        --output /dev/null --write-out '%{http_code}' \
+        --stderr "$curl_error_file" --max-time 15 "$url"); then
+        if [[ "$status" =~ ^[23][0-9][0-9]$ ]]; then
+            rm -f -- "$curl_error_file"
+            return 0
+        fi
+        reason="HTTP $status"
+    else
+        curl_status=$?
+        reason="curl exited with status $curl_status"
+        curl_error=$(<"$curl_error_file")
+        [[ -n "$curl_error" ]] && reason+=": $curl_error"
+    fi
+
+    rm -f -- "$curl_error_file"
+    result_file=$(mktemp "$tmp_dir/result.XXXXXX") || return 1
+    {
+        printf '  %s\n    %s\n' "$url" "$reason"
+        while IFS= read -r reference; do
+            printf '    referenced in %s\n' "$reference"
+        done < <(tr '|' '\n' <<<"$references")
+    } >"$result_file"
+}
+export -f check_url_record
+export tmp_dir
+
+while IFS= read -r url; do
+    references=${link_references[$url]//$'\n'/|}
+    printf '%s\t%s\0' "$url" "$references"
+done < <(printf '%s\n' "${!link_references[@]}" | LC_ALL=C sort) >"$tmp_links"
+
+if ((link_count > 0)); then
+    # Keep the worker command literal for xargs; the record is passed as $1.
+    # shellcheck disable=SC2016
+    if ! xargs -0 -r -P 8 -n 1 bash -c 'check_url_record "$1"' _ \
+        <"$tmp_links"; then
+        printf 'One or more link-check workers failed.\n' >&2
+        exit 1
+    fi
+fi
+
+failures=0
+for result_file in "$tmp_dir"/result.*; do
+    [[ -f "$result_file" ]] || continue
+    failures=$((failures + 1))
+    printf '\n'
+    cat -- "$result_file"
+done
+if ((failures > 0)); then
+    printf '\n%d link(s) failed.\n' "$failures"
+else
+    printf 'All %d unique HTTP(S) links returned a successful status.\n' \
+        "$link_count"
+fi
+if ((skipped_templates > 0)); then
+    printf 'Skipped %d URL template(s) containing unresolved variables.\n' \
+        "$skipped_templates"
+fi
+if ((scan_errors > 0)); then
+    printf '%d file(s) could not be scanned.\n' "$scan_errors" >&2
+fi
+
+((failures == 0 && scan_errors == 0))
