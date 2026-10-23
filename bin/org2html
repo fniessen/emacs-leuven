@@ -19,6 +19,7 @@ emacs --batch --quick "$1" \
               (require 'htmlize)
               (require 'ox-html)
               (setq org-export-with-smart-quotes t)
+              (setq org-export-with-sub-superscripts '{})
               (org-html-export-to-html))" &
 export_pid=$!
 
