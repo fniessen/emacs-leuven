@@ -38,7 +38,7 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     # Open a file in an Emacs terminal frame.
     efindnw() {
         if [[ -z "$1" ]]; then
-            printf >&2 "Error: No file specified.\n"
+            printf "Error: No file specified.\n" >&2
             return 1
         fi
         emacsclient -t -a '' --eval "(find-file \"$1\")"
@@ -47,7 +47,7 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     # Emacsclient with frame focus and file opening.
     efind() {
         if [[ -z "$1" ]]; then
-            printf >&2 "Error: No file specified.\n"
+            printf "Error: No file specified.\n" >&2
             return 1
         fi
         emacsclient -n -r -a '' --eval "(progn
@@ -59,7 +59,7 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     # Open Ediff for two files.
     eediff() {
         if [[ -z "$1" || -z "$2" ]]; then
-            printf >&2 "Error: Two files must be specified.\n"
+            printf "Error: Two files must be specified.\n" >&2
             return 1
         fi
         emacsclient -n -r -a '' --eval "(progn
@@ -71,7 +71,7 @@ if [[ -z "$SSH_CONNECTION" ]]; then
     # Open VC Dir for a version-controlled directory.
     evcdir() {
         if [[ -z "$1" ]]; then
-            printf >&2 "Error: Directory must be specified.\n"
+            printf "Error: Directory must be specified.\n" >&2
             return 1
         fi
         emacsclient -n -r -a '' --eval "(progn
@@ -85,7 +85,7 @@ else
     # Fallback editors for SSH.
     local remote_editors=("emacs -nw" "emacs" "nano" "code -w" "subl")
     for candidate_editor in "${remote_editors[@]}"; do
-        if command -v "${candidate_editor%% *}" > /dev/null 2>&1; then
+        if command -v "${candidate_editor%% *}" >/dev/null 2>&1; then
             export EDITOR="$candidate_editor"
             alias e="$candidate_editor"
             # Use the first available editor.
@@ -99,13 +99,13 @@ export VISUAL="$EDITOR"
 
 # Cd to the directory of the current buffer in Emacs.
 cde() {
-    if ! command -v emacsclient > /dev/null 2>&1; then
-        printf >&2 "Error: 'emacsclient' not found. Please install it.\n"
+    if ! command -v emacsclient >/dev/null 2>&1; then
+        printf "Error: 'emacsclient' not found. Please install it.\n" >&2
         return 2
     fi
 
-    if ! emacsclient -e '(server-running-p)' > /dev/null 2>&1; then
-        printf >&2 "Error: Emacs server not running. Start it with 'emacs --daemon'.\n"
+    if ! emacsclient -e '(server-running-p)' >/dev/null 2>&1; then
+        printf "Error: Emacs server not running. Start it with 'emacs --daemon'.\n" >&2
         return 2
     fi
 
@@ -116,7 +116,7 @@ cde() {
                                 default-directory))' | tr -d '"')"
 
     if [[ ! -d "$dir" ]]; then
-        printf >&2 "Error: Directory not found: %s\n" "$dir"
+        printf "Error: Directory not found: %s\n" "$dir" >&2
         return 2
     fi
 
@@ -135,7 +135,7 @@ elf() {
 
     # Check if the last command is empty.
     if [[ -z "$last_command" ]]; then
-        printf >&2 "Error: No command found in shell history.\n"
+        printf "Error: No command found in shell history.\n" >&2
         return 2
     fi
 
@@ -154,19 +154,19 @@ elf() {
 
     # Return if the last line is empty.
     if [[ -z "$last_file" ]]; then
-        printf >&2 "Error: No valid file found in command output.\n"
+        printf "Error: No valid file found in command output.\n" >&2
         return 2
     fi
 
     if [[ ! -f "$last_file" ]]; then
-        printf >&2 "Error: File not found: '%s'\n" "$last_file"
+        printf "Error: File not found: '%s'\n" "$last_file" >&2
         return 2
     fi
 
     printf "Opening last file: %s\n" "$last_file"
     # Open the last file in Emacs using emacsclient.
     emacsclient -n "$last_file" || {
-        printf >&2 "Error: Failed to open file in Emacs.\n"
+        printf "Error: Failed to open file in Emacs.\n" >&2
         return 2
     }
 }
@@ -200,18 +200,18 @@ eff() {
 
     # Return if the first line is empty.
     if [[ -z "$first_file" ]]; then
-        printf >&2 "Error: No valid file found in command output.\n"
+        printf "Error: No valid file found in command output.\n" >&2
         return 2
     fi
 
     if [[ ! -f "$first_file" ]]; then
-        printf >&2 "Error: File not found: '%s'\n" "$first_file"
+        printf "Error: File not found: '%s'\n" "$first_file" >&2
         return 2
     fi
 
     # Open the first file in Emacs using emacsclient.
     emacsclient -n "$first_file" || {
-        printf >&2 "Error: Failed to open file in Emacs.\n"
+        printf "Error: Failed to open file in Emacs.\n" >&2
         return 2
     }
 }
@@ -239,7 +239,7 @@ fco() {
 
     # Return if the last line is empty.
     if [[ -z "$command_output" ]]; then
-        printf >&2 "Error: No output from previous command.\n"
+        printf "Error: No output from previous command.\n" >&2
         return 2
     fi
 
@@ -254,7 +254,7 @@ fco() {
                       (erase-buffer)
                       (insert \"$escaped_output\")
                       (goto-char (point-min)))" >/dev/null || {
-        printf >&2 "Error: Failed to create buffer in Emacs.\n"
+        printf "Error: Failed to create buffer in Emacs.\n" >&2
         return 2
     }
 }
