@@ -30,7 +30,7 @@ files=$(mktemp) || {
 }
 trap 'rm -f -- "$files"' EXIT
 
-if ! find "$ORG_DIR" -type f -name '*.org' -print0 >"$files"; then
+if ! find "$ORG_DIR" -type f \( -name '*.org' -o -name '*.txt' \) -print0 >"$files"; then
     printf 'Could not enumerate Org files in %s.\n' "$ORG_DIR" >&2
     exit 1
 fi
@@ -43,13 +43,27 @@ file_count=0
 failures=0
 
 while IFS= read -r -d '' file; do
-    file_count=$((file_count + 1))
     relative_path=${file#"$REPORT_ROOT"/}
     if [[ ! -r "$file" ]]; then
         printf '%s: cannot read file: permission denied\n' "$relative_path" >&2
         failures=$((failures + 1))
         continue
     fi
+
+    if [[ "$file" == *.txt ]]; then
+        header=
+        IFS= read -r header <"$file"
+        # Only a first-line mode cookie selects a text file, not examples below.
+        if [[ ! "$header" =~ -\*-(.*)-\*- ]]; then
+            continue
+        fi
+        cookie=${BASH_REMATCH[1]}
+        if [[ ! "$cookie" =~ ^[[:blank:]]*org[[:blank:]]*$ \
+            && ! "$cookie" =~ (^|;)[[:blank:]]*mode:[[:blank:]]*org[[:blank:]]*(;|$) ]]; then
+            continue
+        fi
+    fi
+    file_count=$((file_count + 1))
 
     previous_level=0
     block=
