@@ -10,7 +10,7 @@ check_case() {
     local name=$1 expected_status=$2 expected_output=$3
     local output status=0
     cat >"$directory/headings.org"
-    output=$(bash "$ROOT/bin/check-org-structure" "$directory") || status=$?
+    output=$(cd -- "$directory" && bash "$ROOT/bin/check-org-structure" "${4:-$directory}") || status=$?
     if [[ "$status" != "$expected_status" || "$output" != "$expected_output" ]]; then
         printf 'FAIL: %s\nExpected status: %s\nActual status: %s\nExpected output:\n%s\nActual output:\n%s\n' \
             "$name" "$expected_status" "$status" "$expected_output" "$output" >&2
@@ -20,7 +20,13 @@ check_case() {
 }
 
 valid='Org heading levels are valid in 1 file(s).'
-path=${directory##*/}/headings.org
+path=headings.org
+
+check_case 'current directory is not included in error paths' 1 \
+    "$path:1: level 2 follows level 0; expected at most level 1
+Found 1 Org heading level error(s) in 1 file(s)." . <<'EOF'
+** Invalid first heading
+EOF
 
 check_case 'inline task with END' 0 "$valid" <<'EOF'
 * Heading

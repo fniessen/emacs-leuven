@@ -13,7 +13,7 @@ if (($# == 1)); then
         printf 'Org directory not found: %s\n' "$1" >&2
         exit 2
     fi
-    REPORT_ROOT=$(dirname -- "$ORG_DIR")
+    REPORT_ROOT=$ORG_DIR
 else
     ORG_DIR="$ROOT/org"
     REPORT_ROOT=$ROOT
