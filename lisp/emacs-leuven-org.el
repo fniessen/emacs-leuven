@@ -35,7 +35,6 @@
 
 ;; Getting started.
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 
 (with-eval-after-load 'org
   ;; Tab width in Org files must be 8.
