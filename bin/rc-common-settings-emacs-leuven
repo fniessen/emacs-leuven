@@ -139,15 +139,16 @@ cde() {
     # completed.
 }
 
-# Retrieve and execute the last command from shell history, assuming it outputs
-# a list of files, then open the last file in Emacs for inspection.
-elf() {
-    # Retrieve the last command from the history file.
+# Base function to reduce code duplication in elf/eff/fco.
+_get_last_command_output() {
     local last_command
     last_command=$(HISTTIMEFORMAT="" history 2 \
-                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
+                       | sed -n '1p;s_^[[:space:]]*[0-9]*[[:space:]]*__p')
+                       # | sed -n 's_^[[:space:]]*[0-9]*[[:space:]]*__p;q')
 
-    # Check if the last command is empty.
+    # Debug info: Print the retrieved command.
+    printf "[DEBUG] Retrieved last command: '%s'\n" "$last_command" >&2
+
     if [[ -z "$last_command" ]]; then
         printf "Error: No command found in shell history.\n" >&2
         return 2
@@ -156,17 +157,26 @@ elf() {
     # Run the last command and capture its output, supporting piping or other
     # advanced shell features.
     local command_output
-    command_output=$(eval "$last_command")
+    if ! command_output=$(eval "$last_command" 2>/dev/null); then
+        printf "Error: Failed to execute command '%s'.\n" "$last_command" >&2
+        return 2
+    fi
+    printf "%s" "$command_output"
+}
+
+# Open last file from previous command output in Emacs.
+elf() {
+    # Retrieve the last command from the history file.
+    local command_output
+    if ! command_output=$(_get_last_command_output); then
+        return 1
+    fi
 
     # Extract the last line (assuming it's a list of files).
     local last_file
     last_file=$(printf "%s" "$command_output" | tail -n 1 \
-                    | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
+                    | sed -E 's_\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]__g')
 
-    # Debugging information.
-    printf "Edit last file: %s\n" "$last_file"
-
-    # Return if the last line is empty.
     if [[ -z "$last_file" ]]; then
         printf "Error: No valid file found in command output.\n" >&2
         return 2
@@ -185,34 +195,19 @@ elf() {
     }
 }
 
-# Retrieve and execute the last command from shell history, assuming it outputs
-# a list of files, then open the first file in Emacs for inspection.
+# Open first file from previous command output in Emacs
 eff() {
     # Retrieve the last command from the history file.
-    local last_command
-    last_command=$(HISTTIMEFORMAT="" history 2 \
-                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
-
-    # Check if the last command is empty.
-    if [[ -z "$last_command" ]]; then
-        printf >&2 "No command found in the shell history.\n"
+    local command_output
+    if ! command_output=$(_get_last_command_output); then
         return 2
     fi
-
-    # Run the last command and capture its output, supporting piping or other
-    # advanced shell features.
-    local command_output
-    command_output=$(eval "$last_command")
 
     # Extract the first line (assuming it's a list of files).
     local first_file
     first_file=$(printf "%s" "$command_output" | head -n 1 \
-                    | sed -E 's/\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]//g')
+                    | sed -E 's_\x1b\[([0-9]{1,3}(;[0-9]{1,3})*)?[mK]__g')
 
-    # Debugging information.
-    printf "Edit first file: %s\n" "$first_file"
-
-    # Return if the first line is empty.
     if [[ -z "$first_file" ]]; then
         printf "Error: No valid file found in command output.\n" >&2
         return 2
@@ -223,6 +218,7 @@ eff() {
         return 2
     fi
 
+    printf "Opening first file: '%s'\n" "$first_file"
     # Open the first file in Emacs using emacsclient.
     emacsclient -n "$first_file" || {
         printf "Error: Failed to open file in Emacs.\n" >&2
@@ -232,26 +228,11 @@ eff() {
 
 # Open previous command output in Emacs buffer.
 fco() {
-    # Retrieve the last command from the history file.
-    local last_command
-    last_command=$(HISTTIMEFORMAT="" history 2 \
-                       | sed -n 's/^[[:space:]]*[0-9]*[[:space:]]*//p;q')
-
-    # Check if the last command is empty.
-    if [[ -z "$last_command" ]]; then
-        printf >&2 "No command found in the shell history.\n"
+    local command_output
+    if ! command_output=$(_get_last_command_output); then
         return 2
     fi
 
-    # Run the last command and capture its output, supporting piping or other
-    # advanced shell features.
-    local command_output
-    command_output=$(eval "$last_command")
-
-    # Debugging information.
-    printf "Edit output of last command: %s\n" "$last_command"
-
-    # Return if the last line is empty.
     if [[ -z "$command_output" ]]; then
         printf "Error: No output from previous command.\n" >&2
         return 2

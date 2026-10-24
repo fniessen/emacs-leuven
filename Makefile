@@ -89,7 +89,7 @@ check-parens:
 check-links:
 	check-links
 
-# Check Org heading levels, ignoring inline tasks at levels 15 and above.
+# Check .org and Org-cookie .txt headings, ignoring inline tasks (levels >= 15).
 check-org-structure:
 	check-org-structure
 
