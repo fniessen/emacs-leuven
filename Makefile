@@ -4,7 +4,7 @@ EMACS ?= emacs
 ELISP_DIRS := lisp
 ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
-.PHONY: help all tangle lint-shell test check check-parens check-links check-org-structure compile clean
+.PHONY: help all tangle lint-shell test test-org-structure check check-parens check-links check-org-structure compile clean
 
 # Show this help.
 help:
@@ -54,13 +54,17 @@ lint-shell:
 		| xargs -0 -r grep -IlZ -m1 -E '^#!.*(bash|/sh|/dash|/ksh)([[:space:]]|$$)' \
 		| xargs -0 -r shellcheck
 
-# Run WSL clipboard ERT tests with Emacs-Leuven.
-test:
+# Run shell regression tests and ERT tests with Emacs-Leuven.
+test: test-org-structure
 	$(EMACS) --batch --quick -L lisp -L tests \
 		-l lisp/emacs-leuven.el \
 		-l tests/boost-wsl-clipboard-test.el \
 		-l tests/latex-output-font-lock-test.el \
 		-f ert-run-tests-batch-and-exit
+
+# Run Org heading checker regression tests.
+test-org-structure:
+	bash tests/check-org-structure-test.sh
 
 # Run the source checks.
 check: check-parens check-links check-org-structure
@@ -81,7 +85,7 @@ check-parens:
 check-links:
 	check-links
 
-# Check that Org headings do not skip outline levels.
+# Check Org heading levels, ignoring inline tasks at levels 15 and above.
 check-org-structure:
 	check-org-structure
 

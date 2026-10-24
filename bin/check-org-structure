@@ -75,6 +75,11 @@ while IFS= read -r -d '' file; do
 
         if [[ "$line" =~ ^(\*+)[[:blank:]]+ ]]; then
             level=${#BASH_REMATCH[1]}
+            # Org inline tasks (including END) do not affect the outline.
+            # Use the default org-inlinetask-min-level of 15.
+            if ((level >= 15)); then
+                continue
+            fi
             expected_level=$((previous_level + 1))
             if ((level > expected_level)); then
                 printf '%s:%d: level %d follows level %d; expected at most level %d\n' \
