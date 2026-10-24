@@ -16,6 +16,18 @@
 - Keep changes focused; do not modify bundled libraries or generated files
   unless required.
 
+## Org mode headers
+
+- Recursively scan `.txt` files from the Git repository root. Ensure each file
+  starts with this exact line, adding it only when missing:
+
+  ```text
+  # Hey Emacs, this is a -*- org -*- file ...
+  ```
+
+- Preserve the remaining content and existing line endings. Do not follow
+  symbolic links or modify files outside the repository.
+
 ## Validation
 
 - `make check-parens` checks Emacs Lisp syntax structure.
