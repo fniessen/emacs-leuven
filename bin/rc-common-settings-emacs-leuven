@@ -19,8 +19,22 @@ if [[ -z "$SSH_CONNECTION" ]]; then
         emacsclient -t -a '' "$@"
     }
 
-    # Alias 'e' for running emacsclient in non-blocking mode.
-    alias e="emacsclient -n"
+    # Function 'e' for running emacsclient in non-blocking mode.
+    # Accept file:line references in addition to native emacsclient arguments.
+    function e {
+        local arg
+        local -a args=()
+
+        for arg in "$@"; do
+            if [[ ! -e "$arg" && "$arg" =~ ^(.+):([0-9]+)$ ]]; then
+                args+=("+${BASH_REMATCH[2]}" "${BASH_REMATCH[1]}")
+            else
+                args+=("$arg")
+            fi
+        done
+
+        emacsclient -n "${args[@]}"
+    }
 
     # Open a new Emacs instance in the background.
     alias bgemacs='emacs &'
