@@ -49,9 +49,9 @@ tangle:
 # Run ShellCheck on shell scripts in the repository.
 lint-shell:
 	@command -v shellcheck >/dev/null || { printf 'ShellCheck is required.\n' >&2; exit 127; }
-	@find . -type f -not -path './.git/*' \
+	@find . -type d -name .git -prune -o -type f \
 		\( -perm /111 -o -name '*.sh' -o -name '*.bash' \) -print0 \
-		| xargs -0 -r grep -IlZ -m1 -E '^#!.*(bash|/sh|/dash|/ksh)([[:space:]]|$$)' \
+		| xargs -0 -r grep -IlZ -m1 -E '^#!.*[/ ](bash|sh|dash|ksh)([[:space:]]|$$)' \
 		| xargs -0 -r shellcheck
 
 # Run shell regression tests and ERT tests with Emacs-Leuven.
