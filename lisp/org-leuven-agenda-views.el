@@ -971,7 +971,7 @@ If ROOT-DIR is not provided, it defaults to `~/.dotfiles/`."
          (lambda (subdir)
            (when (and (file-directory-p subdir)
                       (not (file-symlink-p subdir)))
-             (directory-files subdir t "^TODO\\(-.*\\)?\\.org$")))
+             (directory-files subdir t "^TODO\\(-.*\\)?\\.org\\'")))
          (directory-files root-dir t "^[^.]" t)))
   (message "[Org agenda files set to: %s]" org-agenda-files)
   org-agenda-files)
