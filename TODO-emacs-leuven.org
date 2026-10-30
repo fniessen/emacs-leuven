@@ -454,10 +454,10 @@ Nouvelle convention pour ne checker les tâches que dans les fichiers TODO-xxx.o
 
 #+begin_src emacs-lisp
 (setq org-agenda-files
-      (directory-files-recursively "~/.dotfiles" "TODO.*\\.org$"))
+      (directory-files-recursively "~/.dotfiles" "TODO.*\\.org\\'"))
 
 (setq org-agenda-files
-      (directory-files-recursively "~/.dotfiles" "TODO-home\\.org$"))
+      (directory-files-recursively "~/.dotfiles" "TODO-home\\.org\\'"))
 #+end_src
 
 *** TODO Écrire une fonction qui ajoute des demi-espaces fines pour Denis
