@@ -4,7 +4,7 @@ EMACS ?= emacs
 ELISP_DIRS := lisp
 ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
-.PHONY: help all tangle lint-shell test test-shell-utilities test-org-structure check check-parens check-links check-org-structure compile clean
+.PHONY: help all tangle lint-shell test test-org-structure test-shell-utilities test-checker-roots check check-parens check-links check-org-structure compile clean
 
 # Show available targets.
 help:
@@ -55,7 +55,7 @@ lint-shell:
 		| xargs -0 -r shellcheck
 
 # Run shell regression tests and ERT tests with Emacs-Leuven.
-test: test-org-structure test-shell-utilities
+test: test-org-structure test-shell-utilities test-checker-roots
 	$(EMACS) --batch --quick -L lisp -L tests \
 		-l lisp/emacs-leuven.el \
 		-l tests/boost-wsl-clipboard-test.el \
@@ -70,6 +70,10 @@ test-org-structure:
 # Run Emacs shell utility regression tests.
 test-shell-utilities:
 	bash tests/shell-utilities-test.sh
+
+# Test checker scope from Git repositories and through symbolic links.
+test-checker-roots:
+	bash tests/checker-roots-test.sh
 
 # Run the source checks.
 check: check-parens check-links check-org-structure

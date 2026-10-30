@@ -2,7 +2,10 @@
 
 set -uo pipefail
 
-ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+if ! ROOT=$(git rev-parse --show-toplevel); then
+    printf 'Run this checker from inside a Git working tree.\n' >&2
+    exit 2
+fi
 cd "$ROOT" || exit 1
 
 if ! command -v curl >/dev/null 2>&1; then
@@ -37,6 +40,8 @@ then
     exit 1
 fi
 
+max_links=100
+max_failures=10
 declare -A link_references=()
 skipped_templates=0
 scan_errors=0
@@ -78,8 +83,13 @@ while IFS= read -r -d '' file; do
 done <"$tmp_files"
 
 link_count=${#link_references[@]}
+selected_count=$link_count
+((selected_count > max_links)) && selected_count=$max_links
 if ((link_count == 0)); then
     printf 'No static HTTP(S) links found.\n'
+elif ((selected_count < link_count)); then
+    printf 'Checking %d of %d unique HTTP(S) links (limit: %d)...\n' \
+        "$selected_count" "$link_count" "$max_links"
 else
     printf 'Checking %d unique HTTP(S) links...\n' "$link_count"
 fi
@@ -117,33 +127,58 @@ check_url_record() {
 export -f check_url_record
 export tmp_dir
 
+selected=0
 while IFS= read -r url; do
+    ((selected < selected_count)) || break
     references=${link_references[$url]//$'\n'/|}
     printf '%s\t%s\0' "$url" "$references"
+    selected=$((selected + 1))
 done < <(printf '%s\n' "${!link_references[@]}" | LC_ALL=C sort) >"$tmp_links"
 
-if ((link_count > 0)); then
+checked=0
+failures=0
+report_progress() {
+    printf 'Progress: %d/%d links checked (%d%%), %d/%d errors.\n' \
+        "$checked" "$selected_count" "$((checked * 100 / selected_count))" \
+        "$failures" "$max_failures"
+}
+if ((selected_count > 0)); then
+    report_progress
+fi
+while ((checked < selected_count && failures < max_failures)); do
+    # Bound each batch by the remaining error budget so it cannot exceed it.
+    batch_size=$((max_failures - failures))
+    ((batch_size > 8)) && batch_size=8
+    mapfile -d '' -t -n "$batch_size" batch <&3
     # Keep the worker command literal for xargs; the record is passed as $1.
     # shellcheck disable=SC2016
-    if ! xargs -0 -r -P 8 -n 1 bash -c 'check_url_record "$1"' _ \
-        <"$tmp_links"; then
+    if ! printf '%s\0' "${batch[@]}" |
+        xargs -0 -r -P 8 -n 1 bash -c 'check_url_record "$1"' _; then
         printf 'One or more link-check workers failed.\n' >&2
         exit 1
     fi
-fi
-
-failures=0
-for result_file in "$tmp_dir"/result.*; do
-    [[ -f "$result_file" ]] || continue
-    failures=$((failures + 1))
-    printf '\n'
-    cat -- "$result_file"
-done
+    checked=$((checked + ${#batch[@]}))
+    for result_file in "$tmp_dir"/result.*; do
+        [[ -f "$result_file" ]] || continue
+        failures=$((failures + 1))
+        printf '\n'
+        cat -- "$result_file"
+        rm -f -- "$result_file"
+    done
+    report_progress
+done 3<"$tmp_links"
 if ((failures > 0)); then
-    printf '\n%d link(s) failed.\n' "$failures"
+    printf '\n%d link(s) failed out of %d checked.\n' "$failures" "$checked"
 else
     printf 'All %d unique HTTP(S) links returned a successful status.\n' \
-        "$link_count"
+        "$checked"
+fi
+if ((failures >= max_failures)); then
+    printf 'Stopped after %d errors.\n' "$max_failures"
+fi
+if ((checked < link_count)); then
+    printf 'Partial check: %d of %d unique HTTP(S) links were not checked.\n' \
+        "$((link_count - checked))" "$link_count"
 fi
 if ((skipped_templates > 0)); then
     printf 'Skipped %d URL template(s) containing unresolved variables.\n' \

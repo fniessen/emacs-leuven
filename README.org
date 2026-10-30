@@ -93,6 +93,28 @@ Adding the Emacs Leuven library to your Emacs environment is straightforward:
 
 - Restart Emacs to apply the changes.
 
+* Source checks
+
+Run ~make check~ from this repository to check Lisp parentheses, HTTP(S) links,
+and Org heading levels.  The Makefile uses the checker scripts bundled here, not
+commands found through ~PATH~.
+
+The ~check-links~ and ~check-org-structure~ scripts can also be called from other
+Git working trees, including through symbolic links on ~PATH~.  They use the root
+of the caller's Git working tree: ~check-links~ scans that repository, and
+~check-org-structure~ checks its ~org/~ directory.  Without a Git working tree they
+fail explicitly, rather than scanning another directory.
+
+Link checking is limited to the first 100 unique URLs in alphabetical order and
+stops after 10 failed links.  Requests run in parallel batches of up to eight,
+reduced near the error limit so that no more than 10 failures occur.  Progress
+(checked/selected links, percentage and error count) is printed at startup and
+after each batch, along with any failures.  The summary reports any links left
+unchecked; a successful exit status only covers the checked subset.
+
+For an explicit directory (also outside Git), use ~check-org-structure
+/path/to/org-directory~.
+
 * Packages
 
 To effortlessly install all the additional packages referenced below without
