@@ -61,6 +61,7 @@ test: test-org-structure test-shell-utilities test-checker-roots
 		-l tests/boost-wsl-clipboard-test.el \
 		-l tests/latex-output-font-lock-test.el \
 		-l tests/electric-pair-test.el \
+		-l tests/org-typography-test.el \
 		-f ert-run-tests-batch-and-exit
 
 # Run Org heading checker regression tests.

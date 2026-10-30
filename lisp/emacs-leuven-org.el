@@ -18,7 +18,7 @@
 ;; This file configures Org mode: capture templates, agenda views,
 ;; TODO workflow, clocking, export back-ends (HTML, LaTeX/Beamer, ODT),
 ;; Babel source-block languages, and various Leuven-specific tweaks
-;; (faces, typography clean-up, dynamic-block/table refresh on save,
+;; (faces, dynamic-block/table refresh on save,
 ;; org-modern styling, etc.).
 
 ;;; Code:
@@ -2974,44 +2974,6 @@ Example: \"Hello\" becomes \"xxxxx\"."
 
 ;; Ensure dynamic blocks, tables and tags are up to date before writing.
 (add-hook 'before-save-hook #'boost--org-update-generated-content-before-save)
-
-(defvar boost--org-clean-typography-excluded-files
-  '("README.org"
-    "emacs-leuven.txt"
-    "emacs-leuven-org.txt"
-    "emacs.org"
-    "init.org")
-  "List of Org filenames where `boost--org-clean-typography' should NOT run.")
-
-(defun boost--org-clean-typography ()
-  "Replace typographic characters with ASCII equivalents before saving, unless in excluded Org files."
-  (when (and (derived-mode-p 'org-mode)
-             buffer-file-name           ; Ensure that the file name is not nil.
-             (not (member (file-name-nondirectory buffer-file-name)
-                          boost--org-clean-typography-excluded-files)))
-    (let ((replacements
-           '(("—" . "--")               ; Em dash.
-             ("–" . "-")                ; En dash.
-             ("“" . "\"")               ; Left double quote.
-             ("”" . "\"")               ; Right double quote.
-             ("‟" . "\"")               ; Double high reversed-9.
-             ("‘" . "'")                ; Left single quote.
-             ("’" . "'")                ; Right single quote / apostrophe.
-             ("‛" . "'")                ; Single high reversed-9.
-             ("…" . "..."))))           ; Ellipsis.
-      (save-excursion
-        (goto-char (point-min))
-        (dolist (pair replacements)
-          (while (search-forward (car pair) nil t)
-            (replace-match (cdr pair) nil t)))))))
-
-;; Clean up Org typography automatically before saving the current buffer.
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'before-save-hook
-                      #'boost--org-clean-typography
-                      nil
-                      t)))
 
 ;; Add weather forecast in your Org agenda.
 (autoload 'org-google-weather "org-google-weather"

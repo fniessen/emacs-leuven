@@ -1,4 +1,42 @@
-;;; FNI Org agenda dashboard  -*- lexical-binding: t; -*-
+;;; FNI personal Org configuration  -*- lexical-binding: t; -*-
+
+;; Loaded explicitly by the personal init file, not by Emacs Leuven.
+
+(defvar boost--org-clean-typography-excluded-files
+  '("README.org"
+    "emacs-leuven.txt"
+    "emacs-leuven-org.txt"
+    "emacs.org"
+    "init.org")
+  "List of Org filenames where `boost--org-clean-typography' should NOT run.")
+
+(defun boost--org-clean-typography ()
+  "Replace typographic characters with ASCII before saving non-excluded Org files."
+  (when (and (derived-mode-p 'org-mode)
+             buffer-file-name
+             (not (member (file-name-nondirectory buffer-file-name)
+                          boost--org-clean-typography-excluded-files)))
+    (let ((replacements
+           '(("—" . "--")               ; Em dash.
+             ("–" . "-")                ; En dash.
+             ("“" . "\"")               ; Left double quote.
+             ("”" . "\"")               ; Right double quote.
+             ("‟" . "\"")               ; Double high reversed-9.
+             ("‘" . "'")                ; Left single quote.
+             ("’" . "'")                ; Right single quote / apostrophe.
+             ("‛" . "'")                ; Single high reversed-9.
+             ("…" . "..."))))           ; Ellipsis.
+      (save-excursion
+        (dolist (pair replacements)
+          (goto-char (point-min))
+          (while (search-forward (car pair) nil t)
+            (replace-match (cdr pair) nil t)))))))
+
+(defun fni-org-enable-typography-cleanup ()
+  "Enable personal typography clean-up before saving the current Org buffer."
+  (add-hook 'before-save-hook #'boost--org-clean-typography nil t))
+
+(add-hook 'org-mode-hook #'fni-org-enable-typography-cleanup)
 
 (with-eval-after-load 'org-agenda
 
