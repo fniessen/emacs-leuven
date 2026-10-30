@@ -6,7 +6,7 @@ ELISP_FILES := $(foreach dir,$(ELISP_DIRS),$(wildcard $(dir)/*.el))
 
 .PHONY: help all tangle lint-shell test test-shell-utilities test-org-structure check check-parens check-links check-org-structure compile clean
 
-# Show this help.
+# Show available targets.
 help:
 	@printf '%s\n' "Usage: make TARGET" "" "Targets:"
 	@awk '\
@@ -60,6 +60,7 @@ test: test-org-structure test-shell-utilities
 		-l lisp/emacs-leuven.el \
 		-l tests/boost-wsl-clipboard-test.el \
 		-l tests/latex-output-font-lock-test.el \
+		-l tests/electric-pair-test.el \
 		-f ert-run-tests-batch-and-exit
 
 # Run Org heading checker regression tests.

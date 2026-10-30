@@ -788,7 +788,6 @@ like this into your configuration file:
         multiple-cursors
         org-super-agenda
         outli
-        ;; paredit
         ;; pdf-tools
         powerline
         rainbow-delimiters
@@ -796,7 +795,6 @@ like this into your configuration file:
         ;; redshank
         skewer-mode
         smart-comment
-        smartparens
         ;; sql-indent
         sqlup-mode
         symbol-overlay
@@ -2977,8 +2975,6 @@ editing.
       (diminish 'glasses-mode))
     (with-eval-after-load 'hilit-chg
       (diminish 'highlight-changes-mode))
-    (with-eval-after-load 'paredit
-      (diminish 'paredit-mode " Pe"))
     (with-eval-after-load 'projectile-mode
       (diminish 'projectile-mode))
     (with-eval-after-load 'rainbow-mode
@@ -2995,10 +2991,6 @@ editing.
     ;; Keep visible because it displays useful backend/status information.
     ;; (with-eval-after-load 'company
     ;;   (diminish 'company-mode " Cp"))
-
-    ;; Keep visible because it can affect performance on large files.
-    ;; (with-eval-after-load 'smartparens
-    ;;   (diminish 'smartparens-mode)))
 
   )
 #+end_src
@@ -4061,7 +4053,7 @@ memory usage and improve responsiveness, it:
 - turns off JIT fontification,
 - disables undo recording, and
 - turns off selected minor modes that can be costly on large buffers, including
-  ~hl-line-mode~, ~display-line-numbers-mode~, ~smartparens-mode~, and ~anzu-mode~.
+  ~hl-line-mode~, ~display-line-numbers-mode~, and ~anzu-mode~.
 
 The mode is selected automatically through ~magic-mode-alist~ whenever the current
 buffer exceeds the configured size threshold.
@@ -4088,7 +4080,6 @@ buffer exceeds the configured size threshold.
     ;; Disable costly modes.
     (dolist (mode '(hl-line-mode
                     display-line-numbers-mode
-                    smartparens-mode
                     anzu-mode))
       (boost--disable-minor-mode-if-active mode)))
 
@@ -9073,159 +9064,45 @@ http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/.
 
 *** Matching Parentheses
 
-Balanced editing: inserting two matching parentheses at once, etc.
+Balanced editing: insert matching delimiters in pairs and keep point between
+them.
 
-- autopair
+~electric-pair-mode~ (built into Emacs since 24.1), when enabled globally, makes
+typing ~(~ insert ~()~ and leave point between the two parentheses.  Typing ~)~ then
+moves over the existing closing parenthesis instead of inserting a duplicate.
 
-#+begin_src emacs-lisp :tangle no
-  (with-eval-after-load 'autopair-autoloads-XXX
-
-    ;; Attempts to wrap the selected region.
-    (setq autopair-autowrap t)
-
-    ;; Enable Autopair-Global mode.
-    (autopair-global-mode 1))
-#+end_src
-
-- ~electric-pair-mode~ (in Emacs, since 24.1)
-
-  Here's a quick summary (~|~ marks point):
-
-  + typing ~((((~ makes            ~((((|))))~
-  + typing ~))))~ afterwards makes ~(((())))|~
-  + if the buffer has too many closers, an opener before them will *not* autopair
-  + if the buffer has too many openers, a closer after them will *not* autoskip
-  + in a mixed parenthesis situation with ~[]~'s and ~()~'s, it tries to do
-    sensible things
-
-  As of Emacs 24.4, this mode is greatly improved and matches autopair.el in
-  functionality (also recommended by the autopair author).
-
-- *paredit* is (was?) the thing to use for Emacs Lisp!
-
-  Paredit-kill kills text until next paren or double quote!  Also exists now in
-  smartparens strict mode...
-
-#+begin_src emacs-lisp :tangle no
-  ;; Minor mode for editing parentheses.
-  (with-eval-after-load 'paredit-autoloads-XXX
-
-    (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-
-    ;; Common Lisp editing extensions.
-    (with-eval-after-load 'redshank    ; Requires `paredit'.
-
-      (add-hook 'emacs-lisp-mode-hook #'redshank-mode)))
-#+end_src
-
-  Use it in ELisp; use smartparens in other modes (NOT globally!)
-
-  Keep looking at the [[http://www.emacswiki.org/emacs/PareditCheatsheet][cheatsheet]] until you've got the hang of it.
-
-  [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][The Animated Guide to Paredit]]
-
-- *smartparens*
-
-  Pair can be simple as parentheses or brackets, or can be programming tokens
-  such as ~if~ ... ~fi~ or ~if~ ... ~end~ in many languages (see face
-  ~sp-show-pair-match-face~).
-
-  If you get into any serious lisp coding, check out ~paredit~ -- it forces you to
-  always have balanced brackets in the file, thus avoiding a whole class of
-  silly but hard-to-spot mistakes on lines ending with and avalanche of ~)))))~.
-
-  If you are less into bondage & submission, ~smartparens.el~ is another option,
-  it *helps* to have balanced brackets without breaking your will ;-)
-
-  It is more about ease-of-coding than B&D.
-
-  #+begin_note
-  If we believe Xiao Hanyu, smartparens is the future, it is the ultimate
-  solution for paren pairs management in Emacs world. It is flexible, uniform
-  and highly customizable. It is also bundled with a comprehensive
-  documentation, besides a Wiki, you can also ~M-x sp-cheat-sheet~ to get live
-  examples, which, I think, is really a innovative feature.
-  #+end_note
-
-  *Bug 18785: Emacs hangs with Org mode when point is in LOGBOOK.*
-
-  - ~C-M-e~ (~sp-up-sexp~) ::
-       Move forward out of one level of parentheses.
-
-  - ~C-M-u~ (~sp-backward-up-sexp~) ::
-       Move backward out of one level of parentheses.
-
-  - ~C-M-<backspace>~ (~sp-splice-sexp-killing-backward~) ::
-       Unwrap the current list and kill all the expressions between start of
-       this list and the point.
-
-       This one's surpisingly useful for writing prose.
-
-  - ~C-S-<backspace>~ or ~M-R~ ? (~sp-splice-sexp-killing-around~) ::
-       Unwrap the current list and kill everything inside except next
-       expression.
-
-  - ~C-<right>~ (~sp-forward-slurp-sexp~) ::
-       Add sexp following the current list in it by moving the closing
-       delimiter.
-
-  - ~C-<left>~ (~sp-forward-barf-sexp~) ::
-       Remove the last sexp in the current list by moving the closing delimiter.
+In text modes (including Org), only parentheses are paired automatically, so
+that quotes, brackets and braces stay literal in prose.  Programming modes keep
+the standard pairing for brackets, braces and quotes.
 
 #+begin_src emacs-lisp
-  ;; Automatic insertion, wrapping and paredit-like navigation with user defined
-  ;; pairs.
-  (with-eval-after-load 'smartparens-autoloads-XXX
+  (electric-pair-mode 1)
 
-    ;; Default configuration for smartparens package.
-    (require 'smartparens-config)       ; Keybinding management, markdown-mode,
-                                        ; org-mode, (la)tex-mode, Lisp modes,
-                                        ; C++, PHP.
-    (global-set-key "\M-R" #'sp-splice-sexp-killing-around) ; `sp-raise-sexp'.
+  (defun leuven--text-electric-pair-inhibit-p (char)
+    "Inhibit pairing of CHAR other than parentheses in text modes."
+    (and (derived-mode-p 'text-mode)
+         (not (memq char '(?\( ?\))))))
 
-    ;; Toggle Smartparens mode in all buffers.
-    (smartparens-global-mode 1)         ; How to disable this in large files?
+  (add-function :before-until electric-pair-inhibit-predicate
+                #'leuven--text-electric-pair-inhibit-p)
 
-    ;; Toggle Show-Smartparens mode in all buffers.
-    (show-smartparens-global-mode 1)
+  (defun leuven--text-electric-pairs ()
+    "Disable unconditional electric pairs in text modes."
+    (setq-local electric-pair-pairs nil
+                electric-pair-text-pairs nil))
 
-    ;; Remove local pairs in Text mode.
-    (sp-local-pair 'text-mode "'" nil :actions nil)
-    (sp-local-pair 'text-mode "\"" nil :actions nil)
-
-    (push 'latex-mode sp-ignore-modes-list)
+  (add-hook 'text-mode-hook #'leuven--text-electric-pairs)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-    (require 'smartparens-org)
-#+end_src
+Quick summary (~|~ marks point):
 
-  Combining the regular ~kill-line~ with ~sp-kill-sexp~: ~kill-line~ everywhere, and
-  ~sp-kill-sexp~ with a prefix.
-
-#+begin_src emacs-lisp
-    (defun leuven-sp-kill-maybe (arg)
-      (interactive "P")
-      (if (consp arg)
-          (sp-kill-sexp)
-        (kill-line arg)))
-
-    (global-set-key [remap kill-line] #'leuven-sp-kill-maybe)
-#+end_src
-
-  =turn-on-smartparens-strict-mode= adds years to one's life to allow for more
-  hacking. Seriously. XXX
-
-#+begin_src emacs-lisp :tangle no
-    ;; ;; Enable smartparens-strict-mode in all Lisp modes.
-    ;; (dolist (mode sp--lisp-modes)
-    ;;   (add-hook (intern (format "%s-hook" (symbol-name mode)))
-    ;;             #'smartparens-strict-mode))
-#+end_src
-
-#+begin_src emacs-lisp
-    )
-#+end_src
+- typing ~((((~ gives            ~((((|))))~
+- typing ~))))~ afterwards gives ~(((())))|~
+- if the buffer has too many closers, an opener typed before them is *not*
+  auto-paired
+- if the buffer has too many openers, a closer typed after them is *not*
+  auto-skipped
+- with mixed ~[]~ and ~()~, it generally does the sensible thing
 
 ** Manipulating Comments
 

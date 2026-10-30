@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261020.1312>
+;; Version: <20261030.1525>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261020.1312>"
+(defconst boost-version "<20261030.1525>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -520,7 +520,6 @@ to it. Otherwise call FUNCTION interactively."
         multiple-cursors
         org-super-agenda
         outli
-        ;; paredit
         ;; pdf-tools
         powerline
         rainbow-delimiters
@@ -528,7 +527,6 @@ to it. Otherwise call FUNCTION interactively."
         ;; redshank
         skewer-mode
         smart-comment
-        smartparens
         ;; sql-indent
         sqlup-mode
         symbol-overlay
@@ -1486,8 +1484,6 @@ Should be selected from `fringe-bitmaps'.")
       (diminish 'glasses-mode))
     (with-eval-after-load 'hilit-chg
       (diminish 'highlight-changes-mode))
-    (with-eval-after-load 'paredit
-      (diminish 'paredit-mode " Pe"))
     (with-eval-after-load 'projectile-mode
       (diminish 'projectile-mode))
     (with-eval-after-load 'rainbow-mode
@@ -1504,10 +1500,6 @@ Should be selected from `fringe-bitmaps'.")
     ;; Keep visible because it displays useful backend/status information.
     ;; (with-eval-after-load 'company
     ;;   (diminish 'company-mode " Cp"))
-
-    ;; Keep visible because it can affect performance on large files.
-    ;; (with-eval-after-load 'smartparens
-    ;;   (diminish 'smartparens-mode)))
 
   )
 
@@ -2180,7 +2172,6 @@ Otherwise, stop the current recording."
     ;; Disable costly modes.
     (dolist (mode '(hl-line-mode
                     display-line-numbers-mode
-                    smartparens-mode
                     anzu-mode))
       (boost--disable-minor-mode-if-active mode)))
 
@@ -4695,37 +4686,22 @@ the parent element."
   (global-set-key (kbd "C-S-)") #'leuven-goto-matching-paren)
   (global-set-key (kbd "C-°")   #'leuven-goto-matching-paren)
 
-  ;; Automatic insertion, wrapping and paredit-like navigation with user defined
-  ;; pairs.
-  (with-eval-after-load 'smartparens-autoloads-XXX
+  (electric-pair-mode 1)
 
-    ;; Default configuration for smartparens package.
-    (require 'smartparens-config)       ; Keybinding management, markdown-mode,
-                                        ; org-mode, (la)tex-mode, Lisp modes,
-                                        ; C++, PHP.
-    (global-set-key "\M-R" #'sp-splice-sexp-killing-around) ; `sp-raise-sexp'.
+  (defun leuven--text-electric-pair-inhibit-p (char)
+    "Inhibit pairing of CHAR other than parentheses in text modes."
+    (and (derived-mode-p 'text-mode)
+         (not (memq char '(?\( ?\))))))
 
-    ;; Toggle Smartparens mode in all buffers.
-    (smartparens-global-mode 1)         ; How to disable this in large files?
+  (add-function :before-until electric-pair-inhibit-predicate
+                #'leuven--text-electric-pair-inhibit-p)
 
-    ;; Toggle Show-Smartparens mode in all buffers.
-    (show-smartparens-global-mode 1)
+  (defun leuven--text-electric-pairs ()
+    "Disable unconditional electric pairs in text modes."
+    (setq-local electric-pair-pairs nil
+                electric-pair-text-pairs nil))
 
-    ;; Remove local pairs in Text mode.
-    (sp-local-pair 'text-mode "'" nil :actions nil)
-    (sp-local-pair 'text-mode "\"" nil :actions nil)
-
-    (push 'latex-mode sp-ignore-modes-list)
-
-    (defun leuven-sp-kill-maybe (arg)
-      (interactive "P")
-      (if (consp arg)
-          (sp-kill-sexp)
-        (kill-line arg)))
-
-    (global-set-key [remap kill-line] #'leuven-sp-kill-maybe)
-
-    )
+  (add-hook 'text-mode-hook #'leuven--text-electric-pairs)
 
 ;;** 27.5 (info "(emacs)Comments")
 
