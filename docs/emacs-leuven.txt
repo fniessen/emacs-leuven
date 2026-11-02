@@ -13278,8 +13278,8 @@ Use Emacs's own emulation of ~ls~ in all versions of Emacs.
 
     (leuven--section "31.2 (emacs)Dired Navigation")
 
-    ;; Keep line-by-line navigation within file lines only.
-    (setq dired-movement-style 'cycle-files)
+    ;; Stop line-by-line navigation at the first and last file entries.
+    (setq dired-movement-style 'bounded)
 #+end_src
 
 In Dired, ~M->~ and ~M-<~ never took me where I wanted to go. Now, they do.

@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261030.1525>
+;; Version: <20261102.0838>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261030.1525>"
+(defconst boost-version "<20261102.0838>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -6121,8 +6121,8 @@ With prefix ARG, invoke `vc-diff' instead."
 
     (leuven--section "31.2 (emacs)Dired Navigation")
 
-    ;; Keep line-by-line navigation within file lines only.
-    (setq dired-movement-style 'cycle-files)
+    ;; Stop line-by-line navigation at the first and last file entries.
+    (setq dired-movement-style 'bounded)
 
     ;; Function to move the cursor to the top of the Dired buffer.
     (defun boost-dired-move-to-first-file ()
