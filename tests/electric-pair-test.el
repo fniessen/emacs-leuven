@@ -2,28 +2,31 @@
 
 (require 'ert)
 
-(ert-deftest leuven-electric-pair-inserts-and-skips-closing-parenthesis ()
+(ert-deftest leuven-electric-pair-inserts-and-skips-closing-delimiters ()
   (should (bound-and-true-p electric-pair-mode))
   (dolist (mode '(text-mode emacs-lisp-mode org-mode))
-    (with-temp-buffer
-      (let ((text-mode-hook '(leuven--text-electric-pairs))
-            (org-mode-hook nil))
-        (funcall mode))
-      (save-window-excursion
-        (switch-to-buffer (current-buffer))
-        (execute-kbd-macro "(")
-        (should (equal (buffer-string) "()"))
-        (should (= (point) 2))
-        (execute-kbd-macro ")")
-        (should (equal (buffer-string) "()"))
-        (should (= (point) 3))))))
-
-(ert-deftest leuven-electric-pair-text-only-pairs-parentheses ()
-  (dolist (mode '(text-mode org-mode))
-    (dolist (char '(?\[ ?\{ ?\" ?\' ?~ ?* ?/ ?_ ?= ?<))
+    (dolist (pair '((?\( . ?\)) (?\[ . ?\]) (?\{ . ?\})))
       (with-temp-buffer
         (let ((text-mode-hook '(leuven--text-electric-pairs))
-              (org-mode-hook nil))
+              (org-mode-hook '(leuven--text-electric-pairs)))
+          (funcall mode))
+        (save-window-excursion
+          (switch-to-buffer (current-buffer))
+          (execute-kbd-macro (string (car pair)))
+          (should (equal (cons mode (buffer-string))
+                         (cons mode (string (car pair) (cdr pair)))))
+          (should (= (point) 2))
+          (execute-kbd-macro (string (cdr pair)))
+          (should (equal (cons mode (buffer-string))
+                         (cons mode (string (car pair) (cdr pair)))))
+          (should (= (point) 3)))))))
+
+(ert-deftest leuven-electric-pair-text-keeps-other-characters-literal ()
+  (dolist (mode '(text-mode org-mode))
+    (dolist (char '(?\" ?\' ?~ ?* ?/ ?_ ?= ?<))
+      (with-temp-buffer
+        (let ((text-mode-hook '(leuven--text-electric-pairs))
+              (org-mode-hook '(leuven--text-electric-pairs)))
           (funcall mode))
         (save-window-excursion
           (switch-to-buffer (current-buffer))

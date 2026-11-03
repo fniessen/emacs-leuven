@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261102.0838>
+;; Version: <20261103.1547>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261102.0838>"
+(defconst boost-version "<20261103.1547>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -4688,20 +4688,26 @@ the parent element."
 
   (electric-pair-mode 1)
 
+  (setq electric-pair-pairs
+        (append electric-pair-pairs '((?\[ . ?\]) (?\{ . ?\}))))
+
   (defun leuven--text-electric-pair-inhibit-p (char)
-    "Inhibit pairing of CHAR other than parentheses in text modes."
+    "Inhibit pairing of CHAR other than delimiters in text modes."
     (and (derived-mode-p 'text-mode)
-         (not (memq char '(?\( ?\))))))
+         (not (memq char '(?\( ?\) ?\[ ?\] ?\{ ?\})))))
 
   (add-function :before-until electric-pair-inhibit-predicate
                 #'leuven--text-electric-pair-inhibit-p)
 
   (defun leuven--text-electric-pairs ()
-    "Disable unconditional electric pairs in text modes."
-    (setq-local electric-pair-pairs nil
+    "Pair only delimiters in text and Org modes."
+    (setq-local electric-pair-pairs '((?\( . ?\))
+                                      (?\[ . ?\])
+                                      (?\{ . ?\}))
                 electric-pair-text-pairs nil))
 
   (add-hook 'text-mode-hook #'leuven--text-electric-pairs)
+  (add-hook 'org-mode-hook #'leuven--text-electric-pairs)
 
 ;;** 27.5 (info "(emacs)Comments")
 

@@ -9071,27 +9071,33 @@ them.
 typing ~(~ insert ~()~ and leave point between the two parentheses.  Typing ~)~ then
 moves over the existing closing parenthesis instead of inserting a duplicate.
 
-In text modes (including Org), only parentheses are paired automatically, so
-that quotes, brackets and braces stay literal in prose.  Programming modes keep
-the standard pairing for brackets, braces and quotes.
+Parentheses, brackets and braces are paired automatically in every mode.  In
+text modes (including Org), quotes and other characters stay literal in prose;
+programming modes keep their standard pairing for quotes.
 
 #+begin_src emacs-lisp
   (electric-pair-mode 1)
 
+  (setq electric-pair-pairs
+        (append electric-pair-pairs '((?\[ . ?\]) (?\{ . ?\}))))
+
   (defun leuven--text-electric-pair-inhibit-p (char)
-    "Inhibit pairing of CHAR other than parentheses in text modes."
+    "Inhibit pairing of CHAR other than delimiters in text modes."
     (and (derived-mode-p 'text-mode)
-         (not (memq char '(?\( ?\))))))
+         (not (memq char '(?\( ?\) ?\[ ?\] ?\{ ?\})))))
 
   (add-function :before-until electric-pair-inhibit-predicate
                 #'leuven--text-electric-pair-inhibit-p)
 
   (defun leuven--text-electric-pairs ()
-    "Disable unconditional electric pairs in text modes."
-    (setq-local electric-pair-pairs nil
+    "Pair only delimiters in text and Org modes."
+    (setq-local electric-pair-pairs '((?\( . ?\))
+                                      (?\[ . ?\])
+                                      (?\{ . ?\}))
                 electric-pair-text-pairs nil))
 
   (add-hook 'text-mode-hook #'leuven--text-electric-pairs)
+  (add-hook 'org-mode-hook #'leuven--text-electric-pairs)
 #+end_src
 
 Quick summary (~|~ marks point):
