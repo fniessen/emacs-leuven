@@ -2225,6 +2225,41 @@ the table of contents, and similar cross-references can stabilize."
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
+  (defun org-boost-latex-language-options (options backend)
+    "Set Boost class language options from Org's document language.
+OPTIONS is the export options plist and BACKEND is the export backend.
+For registered Boost classes, French and English class options follow
+the LANGUAGE keyword, replacing any conflicting class language option."
+    (if (and (org-export-derived-backend-p backend 'latex)
+             (boundp 'org-boost-latex-class-groups)
+             (member (plist-get options :latex-class)
+                     (apply #'append
+                            (mapcar #'cdr org-boost-latex-class-groups))))
+        (let* ((language (plist-get options :language))
+               (babel-language
+                (pcase language
+                  ("fr" "french")
+                  ("en" "english")
+                  (_ (user-error "Boost LaTeX export supports LANGUAGE fr or en, got %S"
+                                 language))))
+               (class-options
+                (split-string
+                 (string-trim (or (plist-get options :latex-class-options) "")
+                              "\\[" "\\]")
+                 "," t "[ \t\n]+")))
+          (setq class-options
+                (delete "english" (delete "french" class-options)))
+          (plist-put options :latex-class-options
+                     (concat "["
+                             (mapconcat #'identity
+                                        (append class-options (list babel-language))
+                                        ",")
+                             "]")))
+      options))
+
+  (add-hook 'org-export-filter-options-functions
+            #'org-boost-latex-language-options)
+
   (defun boost--org-export-strip-ignore-headlines (data _backend _info)
     "Remove headlines tagged \"ignore\" while preserving their contents.
 
