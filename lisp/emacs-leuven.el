@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261103.1547>
+;; Version: <20261118.0838>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261103.1547>"
+(defconst boost-version "<20261118.0838>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -5472,15 +5472,16 @@ This prevents loading stale byte-compiled code."
   (leuven--section "29.1.10 VC Directory Mode")
 
   ;; Ensure `vc-dir` always operates from the top-level VCS directory.
-  (defun lvn--vcs-goto-top-directory-advice (orig-fun buffer dir backend &rest rest)
+  (defun boost--vc-dir-goto-top-directory-advice (orig-fun buffer dir backend &rest rest)
+    "Call ORIG-FUN with DIR's VCS root when available."
     (let ((vcs-top-dir (vc-call-backend backend 'responsible-p dir)))
       (if (stringp vcs-top-dir)
           (apply orig-fun buffer vcs-top-dir backend rest)
         (apply orig-fun buffer dir backend rest))))
 
-  (advice-add 'vc-dir-prepare-status-buffer :around #'lvn--vcs-goto-top-directory-advice)
+  (advice-add 'vc-dir-prepare-status-buffer :around #'boost--vc-dir-goto-top-directory-advice)
 
-  (defun boost-vc-status-here ()
+  (defun boost-vc-dir-status-here ()
     "Show VC status for the current directory.
 
 When visiting a file, use its parent directory.
@@ -5494,63 +5495,94 @@ Otherwise, use `default-directory'."
       (vc-dir directory)))
 
   ;; Show VC status without prompting for a directory.
-  (global-set-key (kbd "C-<f9>") #'boost-vc-status-here)
+  (global-set-key (kbd "C-<f9>") #'boost-vc-dir-status-here)
+
+  (declare-function vc-dir-hide-state "vc-dir" (state))
+  (defvar ediff-actual-diff-options)
+  (defvar ediff-diff-options)
+  (defvar ediff-ignore-similar-regions)
+
+  (defun boost-vc-dir-hide-up-to-date-and-unregistered-files ()
+    "Hide up-to-date and unregistered files in VC directory buffer."
+    (interactive)
+    (vc-dir-hide-up-to-date)
+    (vc-dir-hide-state 'unregistered))
+
+  (defun boost-vc-ediff-ignore-whitespace (&optional arg)
+    "Run `vc-ediff' while ignoring whitespace-only differences."
+    (interactive "P")
+    (require 'ediff)
+    (let* ((ediff-diff-options (concat ediff-diff-options " -w"))
+           (ediff-actual-diff-options ediff-diff-options)
+           (ediff-ignore-similar-regions t)
+           (current-prefix-arg arg))
+      (vc-ediff)))
 
   (add-hook 'vc-dir-mode-hook
             (lambda ()
               ;; Hide up-to-date and unregistered files.
               (define-key vc-dir-mode-map
-                          (kbd "x") #'lvn-vc-dir-hide-up-to-date-and-unregistered-files)
+                          (kbd "x") #'boost-vc-dir-hide-up-to-date-and-unregistered-files)
               (define-key vc-dir-mode-map
                           (kbd "E") #'vc-ediff)
               (define-key vc-dir-mode-map
-                          (kbd "#") #'lvn-vc-ediff-ignore-whitespace)
-                                        ; ediff-windows-wordwise?
-              ))
+                          (kbd "#") #'boost-vc-ediff-ignore-whitespace)))
 
-  (defun lvn-vc-dir-hide-up-to-date-and-unregistered-files ()
-    "Hide up-to-date and unregistered files in VC directory buffer."
+  (defun boost-magit-status-here ()
+    "Show Magit status for the current directory.
+
+When visiting a file, use its parent directory.
+Otherwise, use `default-directory'."
     (interactive)
-    (vc-dir-hide-up-to-date)
-    ;; (vc-dir-hide-up-to-date 'unregistered)
-    (lvn-vc-dir-hide-unregistered)
-    )
+    (let ((directory
+           (if-let* ((file (buffer-file-name)))
+               (file-name-directory file)
+             default-directory)))
+      (message "[Magit status for directory: %s]" directory)
+      (require 'magit)
+      (let ((default-directory directory))
+        (magit-status))))
 
-  (defun lvn-vc-dir-hide-unregistered ()
-    "Hide 'unregistered' items from display."
+  (defun boost-magit-or-vc-dir-status-here ()
+    "Show Magit status if installed, otherwise show VC directory status."
     (interactive)
-    (let ((current-item (ewoc-nth vc-ewoc -1))
-          (first-item (ewoc-nth vc-ewoc 0)))
-      ;; Iterate from the last item to the first and remove unregistered files
-      ;; and directories without child files.
-      (while (not (eq current-item first-item))
-        (let* ((item-data (ewoc-data current-item))
-               (is-directory (vc-dir-fileinfo->directory item-data))
-               (next-item (ewoc-next vc-ewoc current-item))
-               (prev-item (ewoc-prev vc-ewoc current-item))
-               ;; Necessary for ewoc-delete to work...
-               (inhibit-read-only t))
-          (when (or
-                 ;; Remove directories with no child files.
-                 (and is-directory
-                      (or
-                       ;; No item follows this directory.
-                       (not next-item)
-                       ;; Next item is a directory.
-                       (vc-dir-fileinfo->directory (ewoc-data next-item))))
-                 ;; Remove files in the unregistered state.
-                 (eq (vc-dir-fileinfo->state item-data) 'unregistered))
-            (ewoc-delete vc-ewoc current-item))
-          (setq current-item prev-item)))))
+    (if (locate-library "magit")
+        (boost-magit-status-here)
+      (boost-vc-dir-status-here)))
 
-  (defun lvn-vc-ediff-ignore-whitespace (&optional arg)
-    "Run `vc-ediff' while ignoring whitespace-only differences."
-    (interactive "P")
+  (global-set-key (kbd "C-<f9>") #'boost-magit-or-vc-dir-status-here)
+
+  (defun boost-magit-toggle-untracked-files ()
+    "Toggle visibility of the untracked-files section in Magit status."
+    (interactive)
+    (let ((section (magit-get-section
+                    (cons '(untracked . nil)
+                          (magit-section-ident magit-root-section)))))
+      (if section
+          (magit-section-toggle section)
+        (message "No untracked files to hide or show."))))
+
+  (defvar ediff-diff-options)
+  (defvar ediff-ignore-similar-regions)
+
+  (defun boost-magit-ediff-ignore-whitespace ()
+    "Run Magit's Ediff command while ignoring whitespace-only differences."
+    (interactive)
     (require 'ediff)
-    (let ((ediff-ignore-similar-regions t)
-          (diff-switches "-w")
-          (current-prefix-arg arg))
-      (vc-ediff)))                      ; TEST whether it works...
+    (require 'magit-ediff)
+    (let ((ediff-diff-options "-w")
+          (ediff-ignore-similar-regions t))
+      (call-interactively #'magit-ediff-dwim)))
+
+  (with-eval-after-load 'magit-status
+    (define-key magit-status-mode-map
+                (kbd "x") #'boost-magit-toggle-untracked-files)
+    (define-key magit-status-mode-map
+                (kbd "=") #'magit-diff-dwim)
+    (define-key magit-status-mode-map
+                (kbd "E") #'magit-ediff)
+    (define-key magit-status-mode-map
+                (kbd "#") #'boost-magit-ediff-ignore-whitespace))
 
 ;;*** 29.1.13 (info "(emacs)Customizing VC")
 
