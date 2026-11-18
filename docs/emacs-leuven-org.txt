@@ -3502,8 +3502,18 @@ This approach is appropriate when you want to customize the package list through
 
 *Language options for Boost classes*
 
-For registered Boost classes, use the document's =#+LANGUAGE:= value to select
-the corresponding Babel language option.
+For Boost classes, use =#+LANGUAGE: fr= or =#+LANGUAGE: en= to select the document
+language, including automatic LaTeX titles such as the table of contents. The
+Emacs integration synchronizes the class language option with this keyword,
+preserving other class options and replacing conflicting =french= or =english=
+options. When omitted, Org's default export language is used; the Boost
+integration supports French and English.
+
+#+begin_src org :tangle no
+,#+LANGUAGE: fr
+,#+LATEX_CLASS: boostreport
+,#+LATEX_CLASS_OPTIONS: [final]
+#+end_src
 
 #+begin_src emacs-lisp
   (defun org-boost-latex-language-options (options backend)
