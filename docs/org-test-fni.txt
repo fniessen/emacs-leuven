@@ -148,7 +148,7 @@ For inspiration:
   (let ((entry (assoc filename org-test-fni-test-files)))
     (if entry
         (expand-file-name filename (cdr entry))
-      (error "No base directory defined for %s" filename))))
+      (error "[No base directory defined for %s]" filename))))
 #+end_src
 
 Files to test:

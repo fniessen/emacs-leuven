@@ -85,7 +85,7 @@ If UPDATE-REFERENCE is non-nil, generate and save the reference file."
   (let ((entry (assoc filename org-test-fni-test-files)))
     (if entry
         (expand-file-name filename (cdr entry))
-      (error "No base directory defined for %s" filename))))
+      (error "[No base directory defined for %s]" filename))))
 
 (ert-deftest test-org-export/html-sample-file ()
   "Test that HTML export of `org-test-sample.org` matches its reference file."
