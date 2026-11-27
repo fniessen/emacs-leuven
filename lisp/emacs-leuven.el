@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261127.1211>
+;; Version: <20261127.1219>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261127.1211>"
+(defconst boost-version "<20261127.1219>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -524,7 +524,6 @@ to it. Otherwise call FUNCTION interactively."
         ;; pdf-tools
         powerline
         rainbow-delimiters
-        ;; rainbow-mode
         ;; redshank
         skewer-mode
         smart-comment
@@ -1563,8 +1562,6 @@ Should be selected from `fringe-bitmaps'.")
       (diminish 'highlight-changes-mode))
     (with-eval-after-load 'projectile-mode
       (diminish 'projectile-mode))
-    (with-eval-after-load 'rainbow-mode
-      (diminish 'rainbow-mode))
     (with-eval-after-load 'simple
       (diminish 'auto-fill-function))
     (with-eval-after-load 'volatile-highlights

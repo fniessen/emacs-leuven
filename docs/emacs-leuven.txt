@@ -792,7 +792,6 @@ like this into your configuration file:
         ;; pdf-tools
         powerline
         rainbow-delimiters
-        ;; rainbow-mode
         ;; redshank
         skewer-mode
         smart-comment
@@ -3056,8 +3055,6 @@ editing.
       (diminish 'highlight-changes-mode))
     (with-eval-after-load 'projectile-mode
       (diminish 'projectile-mode))
-    (with-eval-after-load 'rainbow-mode
-      (diminish 'rainbow-mode))
     (with-eval-after-load 'simple
       (diminish 'auto-fill-function))
     (with-eval-after-load 'volatile-highlights
