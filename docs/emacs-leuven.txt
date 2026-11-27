@@ -2416,8 +2416,8 @@ Prior to running their own mode hooks,
 #+begin_src emacs-lisp
   ;; Configure Colorful.
   (when (require 'colorful-mode nil 'noerror)
-    (setq colorful-use-prefix t
-          colorful-prefix-string "■")
+    (setq colorful-use-prefix t)
+    (setq colorful-prefix-string "■")
 
     (unless (image-type-available-p 'pbm)
       (display-warning 'leuven

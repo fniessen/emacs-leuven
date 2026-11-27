@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261127.1110>
+;; Version: <20261127.1117>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261127.1110>"
+(defconst boost-version "<20261127.1117>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -1219,8 +1219,8 @@ to it. Otherwise call FUNCTION interactively."
 
   ;; Configure Colorful.
   (when (require 'colorful-mode nil 'noerror)
-    (setq colorful-use-prefix t
-          colorful-prefix-string "■")
+    (setq colorful-use-prefix t)
+    (setq colorful-prefix-string "■")
 
     (unless (image-type-available-p 'pbm)
       (display-warning 'leuven
