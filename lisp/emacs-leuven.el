@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261127.1219>
+;; Version: <20261127.1238>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261127.1219>"
+(defconst boost-version "<20261127.1238>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -4747,6 +4747,20 @@ the parent element."
   ;; Highlight matching parentheses when the point is in the periphery (before
   ;; or after) of an expression.
   (setq show-paren-when-point-in-periphery t)
+
+  ;; Highlight nested parens, brackets, braces a different color at each depth.
+  (when (require 'rainbow-delimiters nil 'noerror)
+    (let ((colors '("#179fff" "#80d080" "#ffae42" "#ff80bf" "#c39bff")))
+      (setq rainbow-delimiters-max-face-count (length colors)
+            rainbow-delimiters-outermost-only-face-count 0)
+      (dotimes (depth rainbow-delimiters-max-face-count)
+        (custom-theme-set-faces
+         'user
+         `(,(intern (format "rainbow-delimiters-depth-%d-face" (1+ depth)))
+           ((((class color)) (:foreground ,(nth depth colors))))
+           t))))
+    ;; Enable rainbow-delimiters in programming modes.
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
   ;; XXX Navigate to the code block start.
   (global-set-key (kbd "C-)") #'forward-sexp)

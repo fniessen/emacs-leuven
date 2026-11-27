@@ -9107,18 +9107,24 @@ things.
 
 *** Rainbow Parentheses
 
-Automagically highlight matching parentheses in source code.
+Highlight nested parentheses, brackets and braces in programming modes, using
+the same five-color palette on light and dark backgrounds.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   ;; Highlight nested parens, brackets, braces a different color at each depth.
-  (with-eval-after-load 'rainbow-delimiters-autoloads
-
+  (when (require 'rainbow-delimiters nil 'noerror)
+    (let ((colors '("#179fff" "#80d080" "#ffae42" "#ff80bf" "#c39bff")))
+      (setq rainbow-delimiters-max-face-count (length colors)
+            rainbow-delimiters-outermost-only-face-count 0)
+      (dotimes (depth rainbow-delimiters-max-face-count)
+        (custom-theme-set-faces
+         'user
+         `(,(intern (format "rainbow-delimiters-depth-%d-face" (1+ depth)))
+           ((((class color)) (:foreground ,(nth depth colors))))
+           t))))
     ;; Enable rainbow-delimiters in programming modes.
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+end_src
-
-To customize it, see
-http://yoo2080.wordpress.com/2013/12/21/small-rainbow-delimiters-tutorial/.
 
 *** Navigating to Parentheses
 
