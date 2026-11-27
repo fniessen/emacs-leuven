@@ -7844,7 +7844,9 @@ Otherwise toggle `visible-mode' using ARG."
     (if (bound-and-true-p hs-minor-mode)
         (progn
           (hs-show-all)
-          (remove-overlays))
+          (dolist (overlay (overlays-in (point-min) (point-max)))
+            (when (overlay-get overlay 'invisible)
+              (delete-overlay overlay))))
       (visible-mode arg)))
 
   ;; Emacs represents `M-S-a' as `M-A'.
