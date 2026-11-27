@@ -7,7 +7,7 @@
 
 ;; Author: Fabrice Niessen <(concat "fniessen" at-sign "pirilampo.org")>
 ;; URL: https://github.com/fniessen/emacs-leuven
-;; Version: <20261118.0838>
+;; Version: <20261127.1110>
 ;; Package-Requires: ((emacs "31.1"))
 ;; Keywords: emacs, dotfile, config, convenience, tools
 
@@ -65,7 +65,7 @@
 ;; This file is only provided as an example. Customize it to your own taste!
 
 ;; Define the version as the current timestamp of the last change.
-(defconst boost-version "<20261118.0838>"
+(defconst boost-version "<20261127.1110>"
   "Version of Emacs-Leuven.")
 
 ;; Announce the start of the loading process.
@@ -467,6 +467,7 @@ to it. Otherwise call FUNCTION interactively."
         cape
         circe
         color-identifiers-mode
+        colorful-mode
         consult
         corfu
         ;; csv-mode
@@ -1215,6 +1216,63 @@ to it. Otherwise call FUNCTION interactively."
 ;;** 15.13 (info "(emacs)Font Lock")
 
   (leuven--section "15.13 (emacs)Font Lock")
+
+  ;; Configure Colorful.
+  (when (require 'colorful-mode nil 'noerror)
+    (setq colorful-use-prefix t
+          colorful-prefix-string "■")
+
+    (unless (image-type-available-p 'pbm)
+      (display-warning 'leuven
+                       "Colorful squares need PBM image support; using plain symbols."))
+
+    (defun boost--colorful-square-image (color size)
+      "Create a SIZE-pixel square filled with COLOR and outlined in black."
+      (let* ((border (concat (make-string size ?1) "\n"))
+             (middle (concat "1" (make-string (- size 2) ?0) "1\n"))
+             (data (concat (format "P1\n%d %d\n" size size)
+                           border
+                           (apply #'concat (make-list (- size 2) middle))
+                           border)))
+        (create-image data 'pbm t :foreground "black" :background color
+                      :ascent 'center :scale 1.0)))
+
+    (defun boost--colorful-prefix-box (orig-fun &rest args)
+      "Replace the prefix created by ORIG-FUN with ARGS with a bordered square."
+      (let* ((beg (nth 1 args))
+             (existing (overlays-at beg))
+             (result (apply orig-fun args)))
+        (when (and colorful-use-prefix
+                   (display-graphic-p)
+                   (image-type-available-p 'pbm))
+          (let* ((overlay (seq-find
+                           (lambda (ov)
+                             (and (overlay-get ov 'colorful--overlay)
+                                  (not (memq ov existing))))
+                           (overlays-at beg)))
+                 (property (if (eq colorful-prefix-alignment 'left)
+                               'before-string
+                             'after-string))
+                 (prefix (and overlay (overlay-get overlay property)))
+                 (glyph (and (stringp prefix)
+                             (get-text-property 0 'display prefix))))
+            (when (stringp glyph)
+              (let ((square (copy-sequence glyph)))
+                (put-text-property
+                 0 (length square) 'display
+                 (boost--colorful-square-image
+                  (car args) (max 3 (round (* 1.3 (frame-char-width)))))
+                 square)
+                (overlay-put overlay property square)))))
+        result))
+
+    ;; Colorful does not expose a face option for its prefix string.
+    (advice-add 'colorful--colorize-match :around
+                #'boost--colorful-prefix-box)
+
+    (dolist (hook '(text-mode-hook
+                    prog-mode-hook))
+      (add-hook hook #'colorful-mode)))
 
 ;; Load hl-todo only if it's available.
 (when (require 'hl-todo nil 'noerror)
